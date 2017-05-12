@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.Serializable;
 import net.moonlightflower.wc3libs.dataTypes.app.AIPlaceType;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
@@ -31,7 +32,7 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UnitData.slk");
 	
 	public static class States {
-		static public class State<T extends DataType> extends SLKState<T> {
+		static public class State<T extends Serializable> extends SLKState<T> {
 			private static List<State> _values = new ArrayList<>();
 			
 			public static List<State> values() {
@@ -106,7 +107,7 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 			return state.tryCastVal(super.get(state));
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends Serializable> void set(States.State<T> state, T val) {
 			super.set(state, val);
 		}
 		

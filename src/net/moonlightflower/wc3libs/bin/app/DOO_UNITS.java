@@ -8,10 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3bin;
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
-import net.moonlightflower.wc3libs.bin.Wc3bin.StreamException;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -20,7 +19,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
  * unit and item placements file for wrapping war3mapUnits.doo
  */
 public class DOO_UNITS {
-	public final static String GAME_PATH = "war3mapUnits.doo";
+	public final static File GAME_PATH = new File("war3mapUnits.doo");
 	
 	private static class Obj {
 		private ObjId _typeId;
@@ -165,17 +164,17 @@ public class DOO_UNITS {
 					_chance = val;
 				}
 				
-				private void read_0x8(Stream stream) throws StreamException {
+				private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 					setTypeId(ObjId.valueOf(stream.readId()));
 					setChance(stream.readInt());
 				}
 				
-				private void write_0x8(Stream stream) {
+				private void write_0x8(Wc3BinStream stream) {
 					stream.writeId(getTypeId());
 					stream.writeInt(getChance());
 				}
 
-				private void read(Stream stream, EncodingFormat format) throws StreamException {		
+				private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 					switch (format.toEnum()) {
 					case DOO_0x8: {
 						read_0x8(stream);
@@ -185,7 +184,7 @@ public class DOO_UNITS {
 					}
 				}
 				
-				private void write(Stream stream, EncodingFormat format) {
+				private void write(Wc3BinStream stream, EncodingFormat format) {
 					switch (format.toEnum()) {
 					case AUTO:
 					case DOO_0x8: {
@@ -196,7 +195,7 @@ public class DOO_UNITS {
 					}
 				}
 				
-				public Item(Stream stream, EncodingFormat format) throws StreamException {
+				public Item(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 					read(stream, format);
 				}
 				
@@ -218,7 +217,7 @@ public class DOO_UNITS {
 				return item;
 			}
 			
-			private void read_0x8(Stream stream) throws StreamException {
+			private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 				int itemsCount = stream.readInt();
 				
 				for (int i = 1; i <= itemsCount; i++) {
@@ -226,7 +225,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			private void write_0x8(Stream stream) {
+			private void write_0x8(Wc3BinStream stream) {
 				stream.writeInt(_items.size());
 				
 				for (Item item : _items) {
@@ -234,7 +233,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			private void read(Stream stream, EncodingFormat format) throws StreamException {		
+			private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 				switch (format.toEnum()) {
 				case DOO_0x8: {
 					read_0x8(stream);
@@ -244,7 +243,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			private void write(Stream stream, EncodingFormat format) {
+			private void write(Wc3BinStream stream, EncodingFormat format) {
 				switch (format.toEnum()) {
 				case AUTO:
 				case DOO_0x8: {
@@ -255,7 +254,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			public LootSet(Stream stream, EncodingFormat format) throws StreamException {
+			public LootSet(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 				read(stream, format);
 			}
 			
@@ -358,17 +357,17 @@ public class DOO_UNITS {
 				_typeId = val;
 			}
 			
-			private void read_0x8(Stream stream) throws StreamException {
+			private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 				setSlot(stream.readInt());
 				setTypeId(ObjId.valueOf(stream.readId()));
 			}
 			
-			private void write_0x8(Stream stream) {
+			private void write_0x8(Wc3BinStream stream) {
 				stream.writeInt(getSlot());
 				stream.writeId(getTypeId());
 			}
 
-			private void read(Stream stream, EncodingFormat format) throws StreamException {		
+			private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 				switch (format.toEnum()) {
 				case DOO_0x8: {
 					read_0x8(stream);
@@ -378,7 +377,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			private void write(Stream stream, EncodingFormat format) {
+			private void write(Wc3BinStream stream, EncodingFormat format) {
 				switch (format.toEnum()) {
 				case AUTO:
 				case DOO_0x8: {
@@ -389,7 +388,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			public InvItem(Stream stream, EncodingFormat format) throws StreamException {
+			public InvItem(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 				read(stream, format);
 			}
 			
@@ -445,19 +444,19 @@ public class DOO_UNITS {
 				_level = val;
 			}
 			
-			private void read_0x8(Stream stream) throws StreamException {
+			private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 				setTypeId(ObjId.valueOf(stream.readId()));
 				setAutoCast(stream.readInt());
 				setLevel(stream.readInt());
 			}
 
-			private void write_0x8(Stream stream) {
+			private void write_0x8(Wc3BinStream stream) {
 				stream.writeId(getTypeId());
 				stream.writeInt(getAutoCast());
 				stream.writeInt(getLevel());
 			}
 			
-			private void read(Stream stream, EncodingFormat format) throws StreamException {		
+			private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 				switch (format.toEnum()) {
 				case DOO_0x8: {
 					read_0x8(stream);
@@ -467,7 +466,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			private void write(Stream stream, EncodingFormat format) {
+			private void write(Wc3BinStream stream, EncodingFormat format) {
 				switch (format.toEnum()) {
 				case AUTO:
 				case DOO_0x8: {
@@ -478,7 +477,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			public AbilMod(Stream stream, EncodingFormat format) throws StreamException {
+			public AbilMod(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 				read(stream, format);
 			}
 			
@@ -578,17 +577,17 @@ public class DOO_UNITS {
 				_chance = val;
 			}
 
-			private void read_0x8(Stream stream) throws StreamException {
+			private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 				setTypeId(ObjId.valueOf(stream.readId()));
 				setChance(stream.readInt());
 			}
 			
-			private void write_0x8(Stream stream) {
+			private void write_0x8(Wc3BinStream stream) {
 				stream.writeId(getTypeId());
 				stream.writeInt(getChance());
 			}
 			
-			private void read(Stream stream, EncodingFormat format) throws StreamException {		
+			private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 				switch (format.toEnum()) {
 				case DOO_0x8: {
 					read_0x8(stream);
@@ -598,7 +597,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			private void write(Stream stream, EncodingFormat format) {
+			private void write(Wc3BinStream stream, EncodingFormat format) {
 				switch (format.toEnum()) {
 				case AUTO:
 				case DOO_0x8: {
@@ -609,7 +608,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			public RandObj(Stream stream, EncodingFormat format) throws StreamException {
+			public RandObj(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 				read(stream, format);
 			}
 			
@@ -661,7 +660,7 @@ public class DOO_UNITS {
 			_editorId = val;
 		}
 
-		private void read_0x8(Stream stream) throws StreamException {
+		private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId()));
 			
 			setVariation(stream.readInt());
@@ -748,7 +747,7 @@ public class DOO_UNITS {
 			setEditorId(stream.readInt());
 		}
 
-		private void write_0x8(Stream stream) {
+		private void write_0x8(Wc3BinStream stream) {
 			stream.writeId(getTypeId());
 			
 			stream.writeInt(getVariation());
@@ -767,10 +766,10 @@ public class DOO_UNITS {
 			stream.writeFloat(scale.getY());
 			stream.writeFloat(scale.getZ());
 			
-			stream.writeByte(getFlags());
+			stream.writeUByte(getFlags());
 			stream.writeInt(getOwnerIndex());
-			stream.writeByte(getUnknown());
-			stream.writeByte(getUnknownB());
+			stream.writeUByte(getUnknown());
+			stream.writeUByte(getUnknownB());
 			
 			stream.writeInt(getLifePerc());
 			stream.writeInt(getManaPerc());
@@ -823,7 +822,7 @@ public class DOO_UNITS {
 				
 				stream.writeInt(getRandLevel());
 				
-				stream.writeByte(getRandClass());
+				stream.writeUByte(getRandClass());
 				
 				break;
 			}
@@ -849,7 +848,7 @@ public class DOO_UNITS {
 			stream.writeInt(getEditorId());
 		}
 		
-		private void read(Stream stream, EncodingFormat format) throws StreamException {		
+		private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 			switch (format.toEnum()) {
 			case DOO_0x8: {
 				read_0x8(stream);
@@ -859,7 +858,7 @@ public class DOO_UNITS {
 			}
 		}
 		
-		private void write(Stream stream, EncodingFormat format) {
+		private void write(Wc3BinStream stream, EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case DOO_0x8: {
@@ -870,7 +869,7 @@ public class DOO_UNITS {
 			}
 		}
 		
-		public Obj(Stream stream, EncodingFormat format) throws StreamException {
+		public Obj(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -914,22 +913,26 @@ public class DOO_UNITS {
 		}
 	}
 	
-	private void write_0x8(Stream stream) {
+	private void write_0x8(Wc3BinStream stream) {
 		stream.writeId(Id.valueOf("W3do"));
 		
 		stream.writeInt(EncodingFormat.DOO_0x8.getVersion());
 		
 		stream.writeInt(0xB);
 		
-		stream.writeByte(_objs.size());
+		stream.writeInt(_objs.size());
+		
+		for (Obj obj : _objs) {
+			obj.write(stream, EncodingFormat.DOO_0x8);
+		}
 	}
 
-	private void read_0x8(Stream stream) throws StreamException {
+	private void read_0x8(Wc3BinStream stream) throws BinStream.StreamException {
 		Id startToken = stream.readId();
 		
 		int version = stream.readInt(); //0xB
 		
-		Wc3bin.checkFormatVer("dooUnitsMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
+		Wc3BinStream.checkFormatVer("dooUnitsMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
 		
 		int subVersion = stream.readInt();
 		
@@ -940,7 +943,7 @@ public class DOO_UNITS {
 		}
 	}
 
-	private void read_auto(Stream stream) throws StreamException {
+	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
 		Id startToken = stream.readId();
 		
 		int version = stream.readInt();
@@ -950,7 +953,7 @@ public class DOO_UNITS {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 
-	private void read(Stream stream, EncodingFormat format) throws StreamException {		
+	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -965,7 +968,7 @@ public class DOO_UNITS {
 		}
 	}
 	
-	private void write(Stream stream, EncodingFormat format) {
+	private void write(Wc3BinStream stream, EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case DOO_0x8: {
@@ -976,20 +979,20 @@ public class DOO_UNITS {
 		}
 	}
 	
-	private void read(Stream stream) throws StreamException {
+	private void read(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Stream stream) {
+	private void write(Wc3BinStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
 	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3bin.Stream(file), format);
+		read(new Wc3BinStream(file), format);
 	}
 	
 	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3bin.Stream(file), format);
+		write(new Wc3BinStream(file), format);
 	}
 	
 	private void read(File file) throws IOException {
@@ -997,7 +1000,7 @@ public class DOO_UNITS {
 	}
 
 	private void write(File file) throws IOException {
-		write(new Wc3bin.Stream(file));
+		write(new Wc3BinStream(file));
 	}
 	
 	public DOO_UNITS() {

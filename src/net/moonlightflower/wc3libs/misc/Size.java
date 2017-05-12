@@ -16,6 +16,11 @@ public class Size extends Coords2DI {
 	}
 	
 	@Override
+	public String toString() {
+		return String.format("%dx%d", getWidth(), getHeight());
+	}
+	
+	@Override
 	public Size scale(double scale) {
 		return new Size((int) (getX() * scale), (int) (getY() * scale));
 	}

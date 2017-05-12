@@ -18,36 +18,38 @@ public class TypeInfo<boundType> {
 	
 	@Override
 	public String toString() {
-		StringBuilder s = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		
-		s.append(getClass() + " -> ");
+		sb.append(getClass() + " -> ");
 		
-		s.append(getType());
+		sb.append(getType());
 		
 		TypeInfo<? extends boundType>[] generics = getGenerics();
 		
 		if (generics != null) {
-			s.append("[");
+			sb.append("[");
 			
 			for (int i = 0; i < generics.length; i++) {
-				s.append(generics[i]);
+				sb.append(generics[i]);
 				
 				if (i > 0) {
-					s.append(";");
+					sb.append(";");
 				}
 			}
 			
-			s.append("]");
+			sb.append("]");
 		}
 		
-		return s.toString();
+		return sb.toString();
 	}
 
 	public String getTypeName() {		
-		try {
+		/*try {
 			Method method = getType().getDeclaredMethod("name");
 			
-			return (String) method.invoke(null);
+			if (method != null) {
+				return (String) method.invoke(null);
+			}
 		} catch (IllegalAccessException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (InvocationTargetException e) {
@@ -55,7 +57,29 @@ public class TypeInfo<boundType> {
 		} catch (SecurityException e) {
 		}
 		
-		return null;
+		return getType().getSimpleName();*/
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(getType().getSimpleName());
+		
+		TypeInfo<? extends boundType>[] generics = getGenerics();
+		
+		if (generics != null) {
+			sb.append("<");
+			
+			for (int i = 0; i < generics.length; i++) {
+				sb.append(generics[i].getTypeName());
+				
+				if (i > 0) {
+					sb.append(";");
+				}
+			}
+			
+			sb.append(">");
+		}
+		
+		return sb.toString();
 	}
 	
 	@Override

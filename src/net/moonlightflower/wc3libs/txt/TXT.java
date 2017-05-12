@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.txt;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +24,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Translator;
+import net.moonlightflower.wc3libs.port.MpqPort;
 
 /**
  * manages txt files like UI\\WorldEditStrings.txt and parses their entries to register key->value pairings
@@ -119,10 +122,6 @@ public class TXT {
 						
 						val = dequote(val);
 						
-						/*if (tonumber(val) ~= nil) then
-							val = tonumber(val)
-						end*/
-						
 						ret.add(val);
 						
 						startPos = endPos + 1;
@@ -136,10 +135,6 @@ public class TXT {
 						}
 
 						String val = (endPos < startPos) ? "" : line.substring(startPos, endPos + 1);
-						
-						/*if (tonumber(val) ~= nil) then
-							val = tonumber(val)
-						end*/
 						
 						ret.add(val);
 						
@@ -162,7 +157,7 @@ public class TXT {
 				_vals.add(val);
 			}
 			
-			public void merge(Field otherField, boolean overwrite) {				
+			public void merge(Field otherField, boolean overwrite) {
 				for (DataType val : otherField.getVals()) {
 					add(val);
 				}
@@ -222,7 +217,7 @@ public class TXT {
 		public void set(FieldId fieldId, DataType val) {
 			String fieldIdString = fieldId.toString();
 			
-			if (fieldIdString.startsWith("//") || fieldIdString.startsWith("_")) return;
+			if (fieldIdString.startsWith("//")) return;
 			
 			addField(fieldId).set(val);
 		}
@@ -238,19 +233,42 @@ public class TXT {
 		public void setLine(FieldId fieldId, String val) {
 			String fieldIdString = fieldId.toString();
 			
-			if (fieldIdString.startsWith("//") || fieldIdString.startsWith("_")) return;
-			
+			if (fieldIdString.startsWith("//")) return;
+
 			addField(fieldId).setLine(val);
 		}
 		
-		public void merge(Section otherSection, boolean overwrite) {			
+		public void merge(Section otherSection, boolean overwrite) {
 			for (Map.Entry<FieldId, ? extends Field> entry : otherSection.getFields().entrySet()) {
 				FieldId fieldId = entry.getKey();
 				Field otherField = entry.getValue();
-				
+
 				Field field = addField(fieldId);
 
 				field.merge(otherField, overwrite);
+			}
+		}
+		
+		public void print(PrintStream outStream) {
+			for (Map.Entry<FieldId, ? extends TXT.Section.Field> fieldEntry : getFields().entrySet()) {
+				FieldId fieldId = fieldEntry.getKey();
+				TXT.Section.Field field = fieldEntry.getValue();
+				
+				outStream.print(String.format("\t%s: ", fieldId.toString()));
+				
+				int c = 0;
+				
+				for (DataType val : field.getVals()) {
+					outStream.print(val);
+					
+					if (c > 0) {
+						outStream.print("; ");
+					}
+					
+					c++;
+				}
+				
+				outStream.println();
 			}
 		}
 		
@@ -312,6 +330,8 @@ public class TXT {
 	}
 
 	public boolean containsKey(FieldId key) {
+		if (_defaultSection.containsField(key)) return true;
+		
 		for (Section section : getSections().values()) {
 			if (section.containsField(key)) return true;
 		}
@@ -320,6 +340,8 @@ public class TXT {
 	}
 	
 	public DataType get(FieldId key) throws Exception {
+		if (_defaultSection.containsField(key)) return _defaultSection.get(key);
+		
 		for (Section section : getSections().values()) {
 			if (section.containsField(key)) return section.get(key);
 		}
@@ -332,10 +354,12 @@ public class TXT {
 	}
 	
 	public void merge(TXT other, boolean overwrite) {
+		_defaultSection.merge(other._defaultSection, overwrite);
+		
 		for (Map.Entry<TXTSectionId, Section> entry : other.getSections().entrySet()) {
 			TXTSectionId sectionId = entry.getKey();
 			Section otherSection = entry.getValue();
-			
+
 			addSection(sectionId).merge(otherSection, overwrite);
 		}
 	}
@@ -366,14 +390,34 @@ public class TXT {
 		set(addSection(TXTSectionId.valueOf(section)), FieldId.valueOf(field), Wc3String.valueOf(val));
 	}
 	
+	public void set(String field, String val) {
+		_defaultSection.set(field, val);
+	}
+	
+	public void print(PrintStream outStream) {
+		_defaultSection.print(outStream);
+		
+		for (Map.Entry<TXTSectionId, TXT.Section> sectionEntry : getSections().entrySet()) {
+			TXTSectionId sectionId = sectionEntry.getKey();
+			TXT.Section section = sectionEntry.getValue();
+			
+			outStream.println(String.format("[%s]", sectionId.toString()));
+			
+			section.print(outStream);
+		}
+	}
+	
 	public void read(InputStream inStream) throws IOException {
 		Section curSection = _defaultSection;
 		String line;
 
 		UTF8 reader = new UTF8(inStream);
-		boolean found=false;
 		
 		while ((line = reader.readLine()) != null) {
+			line = line.replaceAll("//.*", "");
+
+			if (line.matches("^\\s*$")) continue;
+
 			Pattern sectionPattern = Pattern.compile("^\\[(.+)\\]$");
 			
 			String lineTrimmed = line.replaceAll("\\s", "");
@@ -394,7 +438,9 @@ public class TXT {
 		}
 	}
 	
-	public void read(File file) throws IOException {		
+	public void read(File file) throws IOException {
+		if (file == null) throw new IOException("file is null");
+		
 		InputStream inStream = new FileInputStream(file);
 
 		read(inStream);
@@ -433,5 +479,25 @@ public class TXT {
 	}
 	
 	public TXT() {
+	}
+	
+	public TXT(InputStream inStream) throws IOException {
+		read(inStream);
+	}
+	
+	public static TXT ofGameFile(File inFile) throws Exception {
+		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
+		
+		if (!portResult.getExports().containsKey(inFile)) throw new IOException(String.format("could not extract %s file", inFile.toString()));
+		
+		byte[] bytes = portResult.getExports().get(inFile).getOutBytes();
+		
+		InputStream inStream = new ByteArrayInputStream(bytes);
+		
+		TXT txt = new TXT(inStream);
+		
+		inStream.close();
+		
+		return txt;
 	}
 }

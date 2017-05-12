@@ -15,7 +15,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.AttributeType;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.DefType;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingPreventList;
+import net.moonlightflower.wc3libs.dataTypes.app.PathingPrevent;
 import net.moonlightflower.wc3libs.dataTypes.app.PathingRequire;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.RegenType;
@@ -123,7 +123,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		public final static State<Wc3String> EDITOR_SORT2 = new State<>("sort2", Wc3String.class);
 		public final static State<DataList<Tileset>> EDITOR_TILESETS = new State<>("tilesets", new DataTypeInfo(DataList.class, Tileset.class));
 		
-		static final public State<PathingPreventList> PATH_PREVENT_PLACE = new State<>("preventPlace", PathingPreventList.class);
+		static final public State<DataList<PathingPrevent>> PATH_PREVENT_PLACE = new State<>("preventPlace", new DataTypeInfo(DataList.class, PathingPrevent.class));
 		static final public State<DataList<PathingRequire>> PATH_REQUIRE_PLACE = new State<>("requirePlace", new DataTypeInfo(DataList.class, PathingRequire.class));
 		
 		public final static State<DataList<UpgradeId>> TECH_UPGRADES = new State<>("upgrades", new DataTypeInfo(DataList.class, UpgradeId.class));

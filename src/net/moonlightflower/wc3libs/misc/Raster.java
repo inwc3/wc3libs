@@ -2,12 +2,11 @@ package net.moonlightflower.wc3libs.misc;
 
 import java.util.Arrays;
 
-import net.moonlightflower.wc3libs.bin.Wc3bin;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 
-public abstract class Raster<T> extends Wc3bin implements Boundable {
+public abstract class Raster<T> implements Boundable {
 	private Bounds _bounds;
 	
 	public Bounds getBounds() {
@@ -56,31 +55,35 @@ public abstract class Raster<T> extends Wc3bin implements Boundable {
 		}
 	}
 	
-	public void setBounds(Bounds val, boolean retainContents) {
+	public void setBounds(Bounds val, boolean retainContents, boolean retainContentsByPos) {
 		setSize(val.getSize().getArea(), retainContents);
 		
 		if (retainContents) {
-			Raster<T> temp = clone();
-			
-			_bounds = val;
-			
-			mergeCellsByPos(temp);
+			if (retainContentsByPos) {
+				Raster<T> temp = clone();
+				
+				_bounds = val;
+				
+				mergeCellsByPos(temp);
+			} else {
+				_bounds = val;
+			}
 		} else {
 			_bounds = val;
 		}
 	}
 	
-	public void setBoundsByWorld(Bounds val, boolean retainContents) {
+	public void setBoundsByWorld(Bounds val, boolean retainContents, boolean retainContentsByPos) {
 		val = val.scale(1D / getCellSize());
 		
-		setBounds(val, retainContents);
+		setBounds(val, retainContents, retainContentsByPos);
 	}
 
 	public int getIndexByXY(int x, int y) {
 		return (y * getWidth() + x);
 	}
 
-	protected int size() {
+	public int size() {
 		return _cells.length;
 	}
 	
@@ -88,12 +91,12 @@ public abstract class Raster<T> extends Wc3bin implements Boundable {
 		return _cells[index];
 	}
 	
-	private int CoordsToIndex(Coords2DI pos) {
+	private int coordsToIndex(Coords2DI pos) {
 		return (pos.getY() * getWidth() + pos.getX());
 	}
 	
 	public T get(Coords2DI pos) {
-		return get(CoordsToIndex(pos));
+		return get(coordsToIndex(pos));
 	}
 	
 	public void set(int index, T val) {
@@ -101,10 +104,10 @@ public abstract class Raster<T> extends Wc3bin implements Boundable {
 	}
 	
 	public void set(Coords2DI pos, T val) {
-		set(CoordsToIndex(pos), val);
+		set(coordsToIndex(pos), val);
 	}
 	
-	public Coords2DI worldToSHDCoords(Coords2DF pos) {
+	public Coords2DI worldToLocalCoords(Coords2DF pos) {
 		int x = ((int) (pos.getX().toFloat() - getCenterX())) / getCellSize() + getWidth() / 2;
 		int y = ((int) (pos.getY().toFloat() - getCenterY())) / getCellSize() + getHeight() / 2;
 
@@ -112,11 +115,11 @@ public abstract class Raster<T> extends Wc3bin implements Boundable {
 	}
 	
 	public T getByPos(Coords2DF pos) {
-		return get(worldToSHDCoords(pos));
+		return get(worldToLocalCoords(pos));
 	}
 	
 	public void setByPos(Coords2DF pos, T val) {
-		set(worldToSHDCoords(pos), val);
+		set(worldToLocalCoords(pos), val);
 	}
 	
 	public void clear() {

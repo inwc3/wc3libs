@@ -3,6 +3,8 @@ package net.moonlightflower.wc3libs.bin;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+
 public class MetaState<T> {
 	private T _defVal = null;
 	
@@ -16,22 +18,21 @@ public class MetaState<T> {
 		return _id;
 	}
 	
-	private static List<MetaState> all = new ArrayList<>();
+	private static List<MetaState<?>> all = new ArrayList<>();
 	
 	@Override
 	public String toString() {
 		return _id.toString();
 	}
 	
-	public MetaState(String idString) {
+	public MetaState(String idString, DataTypeInfo typeInfo, T defVal) {
 		_id = MetaFieldId.valueOf(idString);
+		_defVal = defVal;
 		
 		all.add(this);
 	}
 	
-	public MetaState(String idString, T defVal) {
-		this(idString);
-		
-		_defVal = defVal;
+	public MetaState(String idString, DataTypeInfo typeInfo) {
+		this(idString, typeInfo, null);
 	}
 }

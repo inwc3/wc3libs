@@ -9,21 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3bin;
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
-import net.moonlightflower.wc3libs.bin.Wc3bin.StreamException;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 
 /**
  * imports file for wrapping war3map.imp
  */
 interface IMP_Streamable {
-	public void read(Stream stream) throws StreamException;
-	public void write(Stream stream);
+	public void read(Wc3BinStream stream) throws BinStream.StreamException;
+	public void write(Wc3BinStream stream);
 }
 
 public class IMP {
 	public final static String GAME_PATH = "war3map.imp";
+	public final static File CAMPAIGN_PATH = new File("war3campaign.imp");
 	
 	public static class StdFlag {
 		private final static Map<Integer, StdFlag> _map = new HashMap<>();
@@ -76,7 +76,7 @@ public class IMP {
 			_stdFlag = other.getStdFlag();
 		}
 		
-		public void read(Stream stream, EncodingFormat format) throws StreamException {
+		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			Obj other = null;
 			
 			switch (format.toEnum()) {
@@ -90,7 +90,7 @@ public class IMP {
 			if (other != null) merge(other);
 		}
 		
-		public void write(Stream stream, EncodingFormat format) {
+		public void write(Wc3BinStream stream, EncodingFormat format) {
 			Obj other = null;
 			
 			switch (format.toEnum()) {
@@ -108,16 +108,16 @@ public class IMP {
 		}
 		
 		@Override
-		public void read(Stream stream) throws StreamException {
+		public void read(Wc3BinStream stream) throws BinStream.StreamException {
 			read(stream, EncodingFormat.AUTO);
 		}
 
 		@Override
-		public void write(Stream stream) {
+		public void write(Wc3BinStream stream) {
 			write(stream, EncodingFormat.AUTO);
 		}
 		
-		public Obj(Stream stream, EncodingFormat format) throws StreamException {
+		public Obj(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -171,7 +171,7 @@ public class IMP {
 		}
 	}
 	
-	private void read_auto(Stream stream) throws StreamException {
+	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
 		int version = stream.readInt();
 		
 		stream.rewind();
@@ -179,7 +179,7 @@ public class IMP {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 
-	private void read(Stream stream, EncodingFormat format) throws StreamException {
+	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 		IMP other = null;
 		
 		switch (format.toEnum()) {
@@ -198,7 +198,7 @@ public class IMP {
 		if (other != null) merge(other);
 	}
 	
-	private void write(Stream stream, EncodingFormat format) {
+	private void write(Wc3BinStream stream, EncodingFormat format) {
 		IMP other = null;
 		
 		switch (format.toEnum()) {
@@ -215,20 +215,20 @@ public class IMP {
 		other.write(stream);
 	}
 	
-	private void read(Stream stream) throws StreamException {
+	private void read(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	public void write(Stream stream) {
+	public void write(Wc3BinStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
 	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3bin.Stream(file), format);
+		read(new Wc3BinStream(file), format);
 	}
 	
 	public void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3bin.Stream(file), format);
+		write(new Wc3BinStream(file), format);
 	}
 	
 	private void read(File file) throws IOException {
@@ -236,19 +236,19 @@ public class IMP {
 	}
 
 	public void write(File file) throws IOException {
-		Stream stream = new Wc3bin.Stream();
+		Wc3BinStream stream = new Wc3BinStream();
 		
 		write(stream);
 		
-		stream.write(file);
+		stream.writeTo(file);
 	}
 
-	public IMP(Stream stream) throws FileNotFoundException, StreamException {
+	public IMP(Wc3BinStream stream) throws FileNotFoundException, BinStream.StreamException {
 		read(stream);
 	}
 	
-	public IMP(InputStream stream) throws StreamException, IOException {
-		read(new Stream(stream));
+	public IMP(InputStream stream) throws BinStream.StreamException, IOException {
+		read(new Wc3BinStream(stream));
 	}
 	
 	public IMP(File file) throws IOException {

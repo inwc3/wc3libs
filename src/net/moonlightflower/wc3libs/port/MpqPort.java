@@ -4,14 +4,34 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public abstract class MpqPort {		
+public abstract class MpqPort {
+	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
+	
+	private final static File classWorkDir = new File(workDir, Orient.localClassPath().toString());
+	
+	private final static File tempDir = new File(classWorkDir, "temp");
+	
+	private final static File importDir = new File(tempDir, "import");
+	
+	private final static File importFilesDir = new File(importDir, "files");
+	
+	private final static File exportDir = new File(tempDir, "export");
+	
+	private final static File exportFilesDir = new File(exportDir, "files");
+
+	public abstract List<File> listFiles(File mpqFile) throws IOException;
+	
 	public static abstract class In {
 		class FileImport {
 			private File _outFile;
@@ -127,6 +147,32 @@ public abstract class MpqPort {
 				return _exports;
 			}
 			
+			public File getFile(File inFile) throws IOException {
+				Segment segment = getExports().get(inFile);
+				
+				if (segment == null) throw new IOException(String.format("noSuchFile: %s", inFile.toString()));
+				
+				File outFile = segment.getExport().getOutFile();
+				
+				if (outFile != null) {
+					return outFile;
+				}
+				
+				outFile = new File(exportFilesDir, inFile.getName());
+				
+				outFile.getParentFile().mkdirs();
+				
+				FileOutputStream writer = new FileOutputStream(outFile);
+				
+				byte[] outBytes = segment.getOutBytes();
+				
+				writer.write(outBytes, 0, outBytes.length);
+System.out.println(outFile);				
+				writer.close();
+				
+				return outFile;
+			}
+			
 			public InputStream getInputStream(File inFile) throws IOException {
 				Segment segment = getExports().get(inFile);
 				
@@ -156,7 +202,7 @@ public abstract class MpqPort {
 			}
 		}
 		
-		class FileExport {
+		public class FileExport {
 			private File _inFile;
 			private File _outDir = null;
 			private File _outFile = null;
@@ -231,7 +277,7 @@ public abstract class MpqPort {
 			volExports.removeAll(toRemove);
 		}*/
 	
-		public abstract Result commit(Vector<File> mpqFiles) throws Exception;
+		public abstract Result commit(Vector<File> mpqFiles) throws IOException;
 	
 		public Result commit(File mpqFile) throws Exception {
 			Vector<File> mpqFiles = new Vector<>();
@@ -248,7 +294,63 @@ public abstract class MpqPort {
 		files.add(new File(wc3dir, "War3Patch.mpq"));
 		files.add(new File(wc3dir, "War3x.mpq"));
 		files.add(new File(wc3dir, "war3.mpq"));
+		files.add(new File(wc3dir, "War3xlocal.mpq"));
 
 		return files;
+	}
+	
+	private static File _wc3Dir = null;
+	
+	public static File getWc3Dir() {
+		return _wc3Dir;
+	}
+	
+	public static void setWc3Dir(File val) {		
+		for (File mpqFile : getWc3Mpqs(val)) {
+			if (!mpqFile.exists()) {
+				throw new IllegalArgumentException(String.format("%s does not seem to be a wc3 directory (%s does not exist)", val, mpqFile));
+			}
+		}
+		
+		_wc3Dir = val;
+	}
+	
+	public static Vector<File> getWc3Mpqs() throws IOException {
+		if (_wc3Dir == null) throw new IOException("no wc3Dir set");
+		
+		return getWc3Mpqs(_wc3Dir);
+	}
+	
+	public abstract Out.Result getGameFiles(File... files) throws IOException;
+	
+	private static Class<? extends MpqPort> _defaultImpl = LadikMpqPort.class;
+	
+	public static MpqPort getDefaultImpl() {
+		try {
+			return _defaultImpl.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public static void setDefaultImpl(Class<? extends MpqPort> type) {
+		_defaultImpl = type;
+	}
+	
+	static {
+		String dirS = Registry.get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
+		
+		if (dirS == null) dirS = Registry.get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
+		
+		if (dirS == null) dirS = Registry.get("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
+		
+		if (dirS == null) dirS = Registry.get("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
+		
+		if (dirS == null) dirS = Registry.get("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "War3InstallPath");
+		
+		setWc3Dir(new File(dirS));
 	}
 }

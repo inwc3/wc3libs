@@ -1,22 +1,24 @@
 package net.moonlightflower.wc3libs.bin.app;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3bin;
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
-import net.moonlightflower.wc3libs.bin.Wc3bin.StreamException;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort;
 
 /**
  * custom text triggers file for wrapping war3map.wct
  */
 public class WCT {
-	public final static String GAME_PATH = "war3map.wct";
+	public final static File GAME_PATH = new File("war3map.wct");
 	
 	public class Trig {
 		private String _text;
@@ -29,7 +31,7 @@ public class WCT {
 			_text = val;
 		}
 
-		public void read_0x0(Wc3bin.Stream stream) throws StreamException {
+		public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
 			int size = stream.readInt();
 			
 			if (size > 0) {
@@ -37,7 +39,7 @@ public class WCT {
 			}
 		}
 		
-		public void write_0x0(Wc3bin.Stream stream) {
+		public void write_0x0(Wc3BinStream stream) {
 			int textLen = stream.stringToByteArray(getText()).length;
 
 			if (textLen > 0) {
@@ -49,7 +51,7 @@ public class WCT {
 			}
 		}
 		
-		public void read(Stream stream, EncodingFormat format) throws StreamException {
+		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			switch (format.toEnum()) {
 			case WCT_0x1:
 			case WCT_0x0: {
@@ -58,7 +60,7 @@ public class WCT {
 			}
 		}
 		
-		public void write(Stream stream, EncodingFormat format) {
+		public void write(Wc3BinStream stream, EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case WCT_0x1:
@@ -68,7 +70,7 @@ public class WCT {
 			}
 		}
 		
-		public Trig(Stream stream, EncodingFormat format) throws StreamException {
+		public Trig(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -76,7 +78,11 @@ public class WCT {
 		}
 	}
 	
-	private ArrayList<Trig> _trigs = new ArrayList<>();
+	private List<Trig> _trigs = new ArrayList<>();
+	
+	public List<Trig> getTrigs() {
+		return _trigs;
+	}
 	
 	private void addTrig(Trig val) {
 		_trigs.add(val);
@@ -109,11 +115,11 @@ public class WCT {
 			WCT_0x1,
 		}
 
+		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WCT_0x0 = new EncodingFormat(Enum.WCT_0x0, 0x0);
 		public final static EncodingFormat WCT_0x1 = new EncodingFormat(Enum.WCT_0x1, 0x1);
-
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
 		
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
@@ -126,10 +132,10 @@ public class WCT {
 		}
 	}
 	
-	public void read_0x0(Wc3bin.Stream stream) throws StreamException {
+	public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
 		int format = stream.readInt();
 		
-		Wc3bin.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x0.getVersion(), format);
+		Wc3BinStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x0.getVersion(), format);
 
 		int trigsCount = stream.readInt();
 
@@ -138,7 +144,7 @@ public class WCT {
 		}
 	}
 	
-	public void write_0x0(Wc3bin.Stream stream) {
+	public void write_0x0(Wc3BinStream stream) {
 		stream.writeInt(EncodingFormat.WCT_0x0.getVersion());
 		
 		for (Trig trig : _trigs) {
@@ -146,10 +152,10 @@ public class WCT {
 		}
 	}
 
-	public void read_0x1(Wc3bin.Stream stream) throws StreamException {
+	public void read_0x1(Wc3BinStream stream) throws BinStream.StreamException {
 		int version = stream.readInt();
 		
-		Wc3bin.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x1.getVersion(), version);
+		Wc3BinStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x1.getVersion(), version);
 		
 		_headComment = stream.readString();
 		
@@ -162,7 +168,7 @@ public class WCT {
 		}
 	}
 
-	public void write_0x1(Wc3bin.Stream stream) {
+	public void write_0x1(Wc3BinStream stream) {
 		stream.writeInt(EncodingFormat.WCT_0x1.getVersion());
 		
 		stream.writeString(_headComment);
@@ -174,7 +180,7 @@ public class WCT {
 		}
 	}
 	
-	private void read_auto(Stream stream) throws StreamException {
+	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
 		int version = stream.readInt();
 		
 		stream.rewind();
@@ -182,7 +188,7 @@ public class WCT {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 	
-	private void read(Stream stream, EncodingFormat format) throws StreamException {		
+	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -202,7 +208,7 @@ public class WCT {
 		}
 	}
 	
-	private void write(Stream stream, EncodingFormat format) {
+	private void write(Wc3BinStream stream, EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case WCT_0x1: {
@@ -218,20 +224,24 @@ public class WCT {
 		}
 	}
 	
-	private void read(Stream stream) throws StreamException {
+	private void read(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Stream stream) {
+	private void read(InputStream stream) throws IOException {
+		read(new Wc3BinStream(stream), EncodingFormat.AUTO);
+	}
+	
+	private void write(Wc3BinStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
 	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3bin.Stream(file), format);
+		read(new Wc3BinStream(file), format);
 	}
 	
 	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3bin.Stream(file), format);
+		write(new Wc3BinStream(file), format);
 	}
 	
 	private void read(File file) throws IOException {
@@ -239,17 +249,37 @@ public class WCT {
 	}
 
 	private void write(File file) throws IOException {
-		write(new Wc3bin.Stream(file));
+		write(new Wc3BinStream(file));
 	}
 
-	public WCT(Stream stream) throws StreamException {
+	public WCT(InputStream inStream) throws IOException {
+		read(inStream);
+	}
+
+	public WCT(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream);
 	}
 	
 	public WCT(File file) throws IOException {
-		this(new Wc3bin.Stream(file));
+		this(new Wc3BinStream(file));
 	}
 
 	public WCT() {
+	}
+
+	public static WCT ofMapFile(File mapFile) throws Exception {
+		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
+		
+		MpqPort.Out port = new LadikMpqPort.Out();
+		
+		port.add(GAME_PATH);
+		
+		MpqPort.Out.Result portResult = port.commit(mapFile);
+
+		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract wct file");
+
+		InputStream inStream = portResult.getInputStream(GAME_PATH);
+		
+		return new WCT(inStream);
 	}
 }

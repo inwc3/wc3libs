@@ -3,39 +3,30 @@ package net.moonlightflower.wc3libs.bin.app;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3bin;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
-import net.moonlightflower.wc3libs.misc.Raster;
+import net.moonlightflower.wc3libs.misc.ShadowMap;
 import net.moonlightflower.wc3libs.misc.Size;
+import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort;
 
 /**
  * shadow map file file for wrapping war3map.shd
  */
-public class SHD extends Raster<Boolean> {
-	public final static String GAME_PATH = "war3map.shd";
+public class SHD {
+	public final static File GAME_PATH = new File("war3map.shd");
 	
-	public final static int CELL_SIZE = 32;
+	private ShadowMap _shadowMap;
 	
-	@Override
-	public int getCellSize() {
-		return CELL_SIZE;
-	}
-
-	@Override
-	public void setSize(int cellsCount) {
-		_cells = new Boolean[cellsCount];
-	}
-
-	@Override
-	public Boolean mergeCellVal(Boolean oldVal, Boolean other) {
-		return (oldVal && other);
+	public ShadowMap getShadowMap() {
+		return _shadowMap;
 	}
 	
 	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
@@ -44,10 +35,10 @@ public class SHD extends Raster<Boolean> {
 			SHD_0x0,
 		}
 
+		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat SHD_0x0 = new EncodingFormat(Enum.SHD_0x0, 0x0);
-
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
 		
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
@@ -60,9 +51,9 @@ public class SHD extends Raster<Boolean> {
 		}
 	}
 	
-	private void write_0x0(Stream stream) {
-		for (int i = 0; i < size(); i++) {
-			if (get(i)) {
+	private void write_0x0(Wc3BinStream stream) {
+		for (int i = 0; i < _shadowMap.size(); i++) {
+			if (_shadowMap.get(i)) {
 				stream.writeByte((byte) 0xFF);
 			} else {
 				stream.writeByte((byte) 0x00);
@@ -70,25 +61,23 @@ public class SHD extends Raster<Boolean> {
 		}
 	}
 
-	private void read_0x0(Stream stream) throws StreamException {
+	private void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
 		int size = stream.size();
+
+		_shadowMap.setBounds(new Bounds(new Size(1, size), new Coords2DI(0, 0)), false, false);
 		
-		setSize(size, false);
-		
-		int pos = stream.getPos();
-		
-		while (pos < size) {
-			Boolean val = (stream.readByte() == 0xFF);
+		for (int i = 0; i < size; i++) {
+			Boolean val = ((stream.readByte() & 0xFF) == 0xFF);
 			
-			set(pos, val);
+			_shadowMap.set(i, val);
 		}
 	}
 	
-	private void read_auto(Stream stream) throws StreamException {
+	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream, EncodingFormat.SHD_0x0);
 	}
 	
-	private void read(Stream stream, EncodingFormat format) throws StreamException {		
+	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -103,7 +92,7 @@ public class SHD extends Raster<Boolean> {
 		}
 	}
 	
-	private void write(Stream stream, EncodingFormat format) {
+	private void write(Wc3BinStream stream, EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case SHD_0x0: {
@@ -114,20 +103,20 @@ public class SHD extends Raster<Boolean> {
 		}
 	}
 	
-	private void read(Stream stream) throws StreamException {
+	private void read(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Stream stream) {
+	private void write(Wc3BinStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
 	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3bin.Stream(file), format);
+		read(new Wc3BinStream(file), format);
 	}
 	
 	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3bin.Stream(file), format);
+		write(new Wc3BinStream(file), format);
 	}
 	
 	private void read(File file) throws IOException {
@@ -135,32 +124,18 @@ public class SHD extends Raster<Boolean> {
 	}
 
 	private void write(File file) throws IOException {
-		write(new Wc3bin.Stream(file));
-	}
-	
-	private BufferedImage toImg() {
-		BufferedImage img = new BufferedImage(getBounds().getSize().getWidth(), getBounds().getSize().getHeight(), BufferedImage.TYPE_BYTE_BINARY);
-		
-		for (int x = 0; x < getWidth(); x++) {
-			for (int y = 0; y < getHeight(); y++) {
-				img.setRGB(x, y, get(new Coords2DI(x, y)) ? Color.WHITE.getRGB() : Color.BLACK.getRGB());
-			}
-		}
-		
-		return img;
+		write(new Wc3BinStream(file));
 	}
 
 	@Override
 	public SHD clone() {
-		SHD other = new SHD(getBounds());
+		ShadowMap shadowMap = _shadowMap;
 		
-		other.mergeCells(this);
+		SHD other = new SHD(shadowMap.getBounds());
+		
+		other.getShadowMap().mergeCells(shadowMap);
 		
 		return other;
-	}
-	
-	public SHD(Bounds bounds) {
-		setBounds(bounds, false);
 	}
 	
 	public SHD(BufferedImage img) {
@@ -168,8 +143,44 @@ public class SHD extends Raster<Boolean> {
 		
 		for (int x = 0; x < img.getWidth(); x++) {
 			for (int y = 0; y < img.getHeight(); y++) {
-				set(new Coords2DI(x, y), img.getRGB(x, y) != Color.BLACK.getRGB());
+				_shadowMap.set(new Coords2DI(x, y), img.getRGB(x, y) != Color.BLACK.getRGB());
 			}
 		}
+	}
+	
+	public SHD(ShadowMap shadowMap) {
+		this();
+		
+		_shadowMap = shadowMap.clone();
+	}
+	
+	public SHD(Bounds bounds) {
+		this(new ShadowMap(bounds));
+	}
+
+	public SHD(Wc3BinStream stream) throws IOException {
+		this();
+
+		read(stream);
+	}
+	
+	public SHD() {
+		_shadowMap = new ShadowMap(new Bounds(new Size(0, 0), new Coords2DI(0, 0)));
+	}
+	
+	public static SHD ofMap(File mapFile) throws IOException {
+		MpqPort.Out portOut = new LadikMpqPort.Out();
+		
+		portOut.add(GAME_PATH);
+		
+		MpqPort.Out.Result portResult;
+		
+		try {
+			portResult = portOut.commit(mapFile);
+		} catch (Exception e) {
+			throw new IOException(String.format("could not extract %s", GAME_PATH.toString()));
+		}
+		
+		return new SHD(new Wc3BinStream(portResult.getInputStream(GAME_PATH)));
 	}
 }

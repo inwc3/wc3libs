@@ -24,6 +24,11 @@ public class Color extends DataType {
 		return _alpha;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("red=%d green=%d blue=%d alpha=%d", _red, _green, _blue, _alpha);
+	}
+	
 	private Color(int red, int green, int blue) {
 		_red = red;
 		_green = green;

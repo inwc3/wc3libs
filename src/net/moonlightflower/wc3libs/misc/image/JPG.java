@@ -10,15 +10,9 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import net.moonlightflower.wc3libs.misc.Size;
 
-public class JPG extends Wc3Img {
-	Image _fxImg;
-	
-	@Override
-	public Image getFXImg() {
-		return _fxImg;
-	}
-	
+public class JPG extends Wc3RasterImg {
 	private void read(InputStream stream) {
 		Image img = new Image(stream);
 		
@@ -43,7 +37,7 @@ public class JPG extends Wc3Img {
 			}
 		}
 		
-		_fxImg = writeImg;
+		setFXImg(writeImg);
 	}
 	
 	public JPG(InputStream stream) {
@@ -54,9 +48,7 @@ public class JPG extends Wc3Img {
 		this(new FileInputStream(file));
 	}
 	
-	public JPG() {
-		super();
-		
-		_fxImg = new WritableImage(1, 1);
+	public JPG(Size size) {
+		super(size);
 	}
 }

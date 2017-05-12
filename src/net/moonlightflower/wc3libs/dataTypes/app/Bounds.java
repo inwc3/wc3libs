@@ -32,6 +32,11 @@ public class Bounds extends DataType {
 		return getCenter().getY() + getSize().getY() / 2;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("minX=%d minY=%d maxX=%d maxY=%d [%s]", getMinX(), getMinY(), getMaxX(), getMaxY(), getSize().toString());
+	}
+	
 	public Bounds scale(double scale) {
 		return new Bounds(_size.scale(scale), _center);
 	}

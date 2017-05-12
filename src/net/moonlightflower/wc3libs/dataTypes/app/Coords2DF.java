@@ -12,6 +12,11 @@ public class Coords2DF {
 		return _y;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("%s;%s", getX(), getY());
+	}
+	
 	/*public Coords2D<Real> toReal() {
 		return new Coords2D<>(Real.valueOf(getX()), Real.valueOf(getY()));
 	}*/

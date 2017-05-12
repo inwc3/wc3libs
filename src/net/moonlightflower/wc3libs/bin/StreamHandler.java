@@ -1,14 +1,14 @@
 package net.moonlightflower.wc3libs.bin;
 
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 
 public abstract class StreamHandler {
-	protected abstract void read(Stream stream);
-	protected abstract void write(Stream stream);
+	protected abstract void read(Wc3BinStream stream);
+	protected abstract void write(Wc3BinStream stream);
 	
-	Stream _stream;
+	private Wc3BinStream _stream;
 	
-	public Stream getStream() {
+	public Wc3BinStream getStream() {
 		return _stream;
 	}
 	
@@ -20,7 +20,7 @@ public abstract class StreamHandler {
 		write(getStream());
 	}
 	
-	public StreamHandler(Stream stream) {
+	public StreamHandler(Wc3BinStream stream) {
 		_stream = stream;
 	}
 }

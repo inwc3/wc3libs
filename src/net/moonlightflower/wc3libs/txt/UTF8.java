@@ -10,7 +10,7 @@ import java.util.Vector;
 
 public class UTF8 {
 	private Vector<String> _lines = new Vector<>();
-	Iterator<String> _linesItr;
+	private Iterator<String> _linesItr;
 	
 	public String readLine() {
 		if (!_linesItr.hasNext()) {
@@ -20,12 +20,30 @@ public class UTF8 {
 		return _linesItr.next();
 	}
 	
+	public String readAll() {
+		StringBuilder sb = new StringBuilder();
+		String line = readLine();
+		
+		if (line == null) return null;
+		
+		sb.append(line);
+		
+		while ((line = readLine()) != null) {
+			sb.append(System.lineSeparator());
+			sb.append(line);
+		}
+		
+		return sb.toString();
+	}
+	
 	public UTF8(InputStream inStream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
 		
 		String line = reader.readLine();
 		
-		if (line.startsWith("\uFEFF")) _lines.add(line.substring(1));
+		if (line.startsWith("\uFEFF")) line = line.substring(1);
+		
+		_lines.addElement(line);
 		
 		while ((line = reader.readLine()) != null) {
 			_lines.add(line);

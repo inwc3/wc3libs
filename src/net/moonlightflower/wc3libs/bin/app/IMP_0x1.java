@@ -1,26 +1,23 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.Wc3bin;
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
-import net.moonlightflower.wc3libs.bin.Wc3bin.StreamException;
+import net.moonlightflower.wc3libs.bin.BinStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 
 class IMP_0x1 extends IMP implements IMP_Streamable {
 	public static class Obj extends IMP.Obj {
 		@Override
-		public void read(Stream stream) throws StreamException {
-			int val = stream.readByte();
-			
-			setStdFlag(StdFlag.fromVal(val));
+		public void read(Wc3BinStream stream) throws BinStream.StreamException {
+			setStdFlag(StdFlag.fromVal(stream.readUByte()));
 			setPath(stream.readString());
 		}
 		
 		@Override
-		public void write(Stream stream) {
-			stream.writeByte(getStdFlag().getVal());
+		public void write(Wc3BinStream stream) {
+			stream.writeUByte(getStdFlag().getVal());
 			stream.writeString(getPath());
 		}
 		
-		public Obj(Wc3bin.Stream stream) throws StreamException {
+		public Obj(Wc3BinStream stream) throws BinStream.StreamException {
 			read(stream);
 		}
 		
@@ -29,10 +26,10 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	}
 	
 	@Override
-	public void read(Stream stream) throws StreamException {
+	public void read(Wc3BinStream stream) throws BinStream.StreamException {
 		int version = stream.readInt();
 
-		Wc3bin.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
+		Wc3BinStream.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
 		
 		int impsCount = stream.readInt();
 		
@@ -42,7 +39,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	}
 	
 	@Override
-	public void write(Stream stream) {
+	public void write(Wc3BinStream stream) {
 		stream.writeInt(EncodingFormat.IMP_0x1.getVersion());
 		
 		stream.writeInt(_objs.size());
@@ -52,7 +49,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 		}
 	}
 	
-	public IMP_0x1(Stream stream) throws StreamException {
+	public IMP_0x1(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream);
 	}
 	

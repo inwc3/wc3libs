@@ -1,19 +1,54 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-public class FlagsInt {
+import java.lang.reflect.InvocationTargetException;
+
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+
+public abstract class FlagsInt extends DataType {
+	public interface IsFlag {
+		int getVal();
+	}
+	
 	public static class Flag {
-		int _pos;
+		private int _pos;
+		private String _label = null;
 		
 		public int getPos() {
 			return _pos;
 		}
 		
+		@Override
+		public String toString() {
+			return _label;
+		}
+		
 		public Flag(int pos) {
 			_pos = pos;
+			_label = String.format("flag %d", pos);
+		}
+		
+		public Flag(int pos, String label) {
+			_pos = pos;
+			_label = label;
 		}
 	}
 	
-	int _val;
+	//public abstract Class<? extends Enum<Flags>> getEnum();
+	
+	public static Class<Enum> getEnum(Class<?> c) {
+		try {
+			return (Class<Enum>) c.getMethod("getEnumStatic").invoke(null);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	private int _val;
 	
 	public int toInt() {
 		return _val;
@@ -47,9 +82,5 @@ public class FlagsInt {
 	
 	protected FlagsInt(int val) {
 		_val = val;
-	}
-	
-	public static FlagsInt valueOf(int val) {
-		return new FlagsInt(val);
 	}
 }

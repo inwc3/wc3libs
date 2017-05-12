@@ -7,8 +7,8 @@ import net.moonlightflower.wc3libs.bin.app.WCT;
 import net.moonlightflower.wc3libs.bin.app.WTG;
 
 public class Trigs {
-	WCT _wct;
-	WTG _wtg;
+	private WCT _wct;
+	private WTG _wtg;
 	
 	public WCT getWCT() {
 		return _wct;
@@ -207,7 +207,7 @@ public class Trigs {
 	}
 	
 	public class TextTrig extends Trig {
-		String _text;
+		private String _text;
 		
 		public String getText() {
 			return _text;

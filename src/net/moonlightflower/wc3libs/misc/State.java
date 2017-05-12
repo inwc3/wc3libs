@@ -2,8 +2,9 @@ package net.moonlightflower.wc3libs.misc;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.Serializable;
 
-abstract public class State<T extends DataType> {
+abstract public class State<T extends Serializable> {
 	private DataTypeInfo _info;
 	
 	public DataTypeInfo getInfo() {

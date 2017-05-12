@@ -2,10 +2,11 @@ package net.moonlightflower.wc3libs.slk;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.Serializable;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.State;
 
-public class SLKState<T extends DataType> extends State<T> {	
+public class SLKState<T extends Serializable> extends State<T> {	
 	private T _defVal = null;
 	
 	public T getDefVal() {

@@ -1,14 +1,42 @@
 package net.moonlightflower.wc3libs.misc;
 
-import java.util.Arrays;
-
-import net.moonlightflower.wc3libs.bin.app.WPM;
-import net.moonlightflower.wc3libs.bin.app.W3E.Tile;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
+import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 
-public class PathMap extends Raster<Integer> {	
+public class PathMap extends Raster<Integer> {
+	public static class PathingInt extends FlagsInt {
+		static FlagsInt.Flag UNUSED = new FlagsInt.Flag(0, "unused (0)");
+		static FlagsInt.Flag UNWALK = new FlagsInt.Flag(1, "nowalk");
+		static FlagsInt.Flag UNFLY = new FlagsInt.Flag(2, "nofly");
+		static FlagsInt.Flag UNBUILD = new FlagsInt.Flag(3, "nobuild");
+		static FlagsInt.Flag UNUSED4 = new FlagsInt.Flag(4, "unused (4)");
+		static FlagsInt.Flag BLIGHT = new FlagsInt.Flag(5, "blight");
+		static FlagsInt.Flag UNWATER = new FlagsInt.Flag(6, "nowater");
+		static FlagsInt.Flag UNKNOWN = new FlagsInt.Flag(7, "unknown");
+		
+		public Color getColor() {
+			double red = containsFlag(UNWALK) ? 1D : 0D;
+			double green = containsFlag(UNFLY) ? 1D : 0D;
+			double blue = containsFlag(UNBUILD) ? 1D : 0D;
+			
+			return new Color(red, green, blue, 1D);
+		}
+		
+		private PathingInt(int val) {
+			super(val);
+		}
+		
+		public static PathingInt valueOf(int val) {
+			return new PathingInt(val);
+		}
+	}
+	
 	public final static int CELL_SIZE = 32;
 	
 	@Override
@@ -17,10 +45,10 @@ public class PathMap extends Raster<Integer> {
 	}
 
 	@Override
-	public void setBoundsByWorld(Bounds val, boolean retainContents) {
+	public void setBoundsByWorld(Bounds val, boolean retainContents, boolean retainContentsByPos) {
 		val = val.scale(1D / CELL_SIZE);
 		
-		setBounds(val, retainContents);
+		setBounds(val, retainContents, retainContentsByPos);
 	}
 	
 	@Override
@@ -29,7 +57,7 @@ public class PathMap extends Raster<Integer> {
 	}
 
 	@Override
-	protected int size() {
+	public int size() {
 		return _cells.length;
 	}
 	
@@ -50,13 +78,13 @@ public class PathMap extends Raster<Integer> {
 		return new Coords2DI(index % getWidth(), index / getWidth());
 	}
 	
-	private int CoordsToIndex(Coords2DI pos) {
+	private int coordsToIndex(Coords2DI pos) {
 		return (pos.getY() * getWidth() + pos.getX());
 	}
 	
 	@Override
 	public Integer get(Coords2DI pos) {
-		return get(CoordsToIndex(pos));
+		return get(coordsToIndex(pos));
 	}
 	
 	public void set(int index, int val) {
@@ -64,7 +92,7 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	public void set(Coords2DI pos, int val) {
-		set(CoordsToIndex(pos), val);
+		set(coordsToIndex(pos), val);
 	}
 	
 	public boolean get(int index, Integer flag) {
@@ -79,6 +107,7 @@ public class PathMap extends Raster<Integer> {
 		}
 	}
 	
+	@Override
 	public Coords2DI worldToLocalCoords(Coords2DF pos) {
 		int x = ((int) (pos.getX().toFloat() - getCenterX())) / CELL_SIZE + getWidth() / 2;
 		int y = ((int) (pos.getY().toFloat() - getCenterY())) / CELL_SIZE + getHeight() / 2;
@@ -150,8 +179,21 @@ public class PathMap extends Raster<Integer> {
 		return other;
 	}
 	
+	public Wc3RasterImg toImg() {
+		WritableImage fxImg = new WritableImage(getWidth(), getHeight());
+		
+		PixelWriter pxWriter = fxImg.getPixelWriter();
+		
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				pxWriter.setColor(x, y, PathingInt.valueOf(get(new Coords2DI(x, getHeight() - 1 - y))).getColor());
+			}
+		}
+		
+		return new Wc3RasterImg(fxImg);
+	}
+	
 	public PathMap(Bounds bounds) {
-		System.out.println("create " + bounds);
-		setBounds(bounds, false);
+		setBounds(bounds, false, false);
 	}
 }

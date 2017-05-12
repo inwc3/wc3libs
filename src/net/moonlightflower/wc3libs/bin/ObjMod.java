@@ -1,16 +1,16 @@
 package net.moonlightflower.wc3libs.bin;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
-import net.moonlightflower.wc3libs.bin.Wc3bin.StreamException;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -25,37 +25,12 @@ import net.moonlightflower.wc3libs.txt.TXTSectionId;;
  * base class for object modification files
  */
 public class ObjMod {
-	public static class Val {
-		Object _val;
-		
-		private Val(int val) {
-			_val = val;
-		}
-		
-		private Val(float val) {
-			_val = val;
-		}
+	static int c = 0;
+	static int c2=0;
 
-		private Val(String val) {
-			_val = val;
-		}
-		
-		public static Val valueOf(int val) {
-			return new Val(val);
-		}
-		
-		public static Val valueOf(float val) {
-			return new Val(val);
-		}
-
-		public static Val valueOf(String val) {
-			return new Val(val);
-		}
-	}
-	
 	public static class Obj {
 		public static class Field {
-			enum VarType {
+			public enum ValType {
 				INT(0),
 				REAL(1),
 				UNREAL(2),
@@ -67,20 +42,57 @@ public class ObjMod {
 					return _val;
 				}
 				
-				private static Map<Integer, VarType> _map = new HashMap<>();
+				private static Map<Integer, ValType> _map = new HashMap<>();
 				
-				static public VarType fromVal(int val) {
+				static public ValType valueOf(int val) {
 					return _map.get(val);
 				}
 				
-				private VarType(int val) {
+				private ValType(int val) {
 					_val = val;
 				}
 				
 				static {
-					for (VarType varType : VarType.values()) {
+					for (ValType varType : ValType.values()) {
 						_map.put(varType.getVal(), varType);
 					}
+				}
+			}
+			
+			public static class Val {
+				private Object _val;
+				private ValType _valType;
+				
+				public Object getVal() {
+					return _val;
+				}
+				
+				@Override
+				public String toString() {
+					return getVal().toString();
+				}
+				
+				public ValType getType() {
+					return _valType;
+				}
+				
+				private Val(Object val, ValType valType) {
+					_val = val;
+					_valType = valType;
+				}
+				
+				public static Val valueOf(int val) {
+					return new Val(val, ValType.INT);
+				}
+				
+				public static Val valueOf(float val, boolean unreal) {
+					if (unreal) return new Val(val, ValType.UNREAL);
+					
+					return new Val(val, ValType.REAL);
+				}
+				
+				public static Val valueOf(String val) {
+					return new Val(val, ValType.STRING);
 				}
 			}
 			
@@ -98,12 +110,12 @@ public class ObjMod {
 				return getVal(0);
 			}
 			
-			public void setVal(Val val, int level, VarType varType, int dataPt) {
+			public void setVal(Val val, int level, int dataPt) {
 				_vals.put(level, val);
 			}
 			
 			public void setVal(Val val, int level) {
-				setVal(val, level, null, 0);
+				setVal(val, level, 0);
 			}
 			
 			public void setVal(Val val) {
@@ -124,16 +136,6 @@ public class ObjMod {
 				_vals.remove(level);
 			}
 			
-			private VarType _varType;
-			
-			public VarType getVarType() {
-				return _varType;
-			}
-			
-			public void setVarType(VarType val) {
-				_varType = val;
-			}
-			
 			private int _dataPt;
 			
 			public int getDataPt() {
@@ -145,7 +147,6 @@ public class ObjMod {
 			}
 			
 			public void merge(Field otherField) {
-				setVarType(otherField.getVarType());
 				setDataPt(otherField.getDataPt());
 				
 				for (Entry<Integer, Val> valEntry : otherField.getVals().entrySet()) {
@@ -156,10 +157,26 @@ public class ObjMod {
 				}
 			}
 			
+			public void print() {
+				System.out.println(String.format("\t%s", getId()));
+				
+				for (Entry<Integer, Val> valEntry : getVals().entrySet()) {
+					int level = valEntry.getKey();
+					Val val = valEntry.getValue();
+					
+					System.out.println(String.format("\t\t%i -> %s %s %s", level, getVal(level), val.getType().getVal(), getDataPt()));
+				}
+			}
+			
 			private MetaFieldId _id;
 			
 			public MetaFieldId getId() {
 				return _id;
+			}
+			
+			@Override
+			public String toString() {
+				return getId().toString();
 			}
 			
 			public Field(MetaFieldId id) {
@@ -168,9 +185,14 @@ public class ObjMod {
 		}
 
 		private Map<MetaFieldId, Field> _fieldsMap = new HashMap<>();
+		private List<Field> _fieldsList = new ArrayList<>();
 		
 		public Map<MetaFieldId, Field> getFields() {
 			return _fieldsMap;
+		}
+		
+		public List<Field> getFieldsList() {
+			return _fieldsList;
 		}
 		
 		public Field getField(MetaFieldId id) {
@@ -183,12 +205,18 @@ public class ObjMod {
 			Field field = new Field(id);
 			
 			_fieldsMap.put(id, field);
+			_fieldsList.add(field);
 			
 			return field;
 		}
 		
 		public void removeField(MetaFieldId id) {
+			if (!_fieldsMap.containsKey(id)) return;
+			
+			Field field = _fieldsMap.get(id);
+			
 			_fieldsMap.remove(id);
+			_fieldsList.remove(field);
 		}
 		
 		public void remove() {
@@ -224,50 +252,128 @@ public class ObjMod {
 		public ObjId getBaseId() {
 			return _baseId;
 		}
+		
+		@Override
+		public String toString() {
+			if (getBaseId() == null) return String.format("%s", getId().toString());
+			
+			return String.format("%s (%s)", getId().toString(), getBaseId().toString());
+		}
 
-		public void read_0x1(Wc3bin.Stream stream) throws StreamException {
-			int modsAmount = stream.readInt();
+		public void print() {
+			System.out.println(String.format("%s %s", getId(), getBaseId()));
+			
+			for (Field field : getFields().values()) {
+				field.print();
+			}
+		}
+		
+		private void read_0x1(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+			int modsAmount = stream.readInt("modsAmount");
 			
 			for (int i = 0; i < modsAmount; i++) {
-				Field field = addField(MetaFieldId.valueOf(stream.readId()));
+				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
 				
-				Field.VarType varType = Field.VarType.fromVal(stream.readInt());
+				int varTypeI = stream.readInt("varType");
+
+				Field.ValType varType = Field.ValType.valueOf(varTypeI);
 				
-				field.setVarType(varType);
-				
-				Val val = null;
-				
+				int level = 0;
+				int dataPt = 0;
+
+				if (extended) {
+					level = stream.readInt("level/variation");
+					dataPt = stream.readInt("dataPt");
+				}
+
+				Field.Val val = null;
+
 				switch (varType) {
 				case INT: {
-					val = Val.valueOf(stream.readInt());
+					val = Field.Val.valueOf(stream.readInt("val (int)"));
 					
 					break;
 				}
 				case REAL: {
-					val = Val.valueOf(stream.readFloat());
+					val = Field.Val.valueOf(stream.readFloat("val (real)"), false);
 					
 					break;
 				}
 				case UNREAL: {
-					val = val.valueOf(stream.readFloat());
+					val = Field.Val.valueOf(stream.readFloat("val (unreal)"), true);
 					
 					break;
 				}
 				case STRING: {
-					val = val.valueOf(stream.readString());
+					val = Field.Val.valueOf(stream.readString("val (string) "));
 					
 					break;
 				}
 				default: {
-					val = val.valueOf(stream.readString());
+					val = Field.Val.valueOf(stream.readString("val (string default)"));
 				}
 				}
 				
-				field.setVal(val, 0);
+				field.setVal(val, level, dataPt);
+				
+				stream.readId("endToken");
 			}
 		}
 
-		public void write_0x1(Wc3bin.Stream stream) {
+		private void read_0x2(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+			int modsAmount = stream.readInt("modsAmount");
+c=c+modsAmount;
+			for (int i = 0; i < modsAmount; i++) {				
+				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
+
+				Field.ValType varType = Field.ValType.valueOf(stream.readInt("varType"));
+				
+				int level = 0;
+				int dataPt = 0;
+
+				if (extended) {
+					level = stream.readInt("level/variation");
+					dataPt = stream.readInt("dataPt");
+				}
+
+				Field.Val val = null;
+				
+				switch (varType) {
+				case INT: {
+					val = Field.Val.valueOf(stream.readInt("val (int)"));
+					
+					break;
+				}
+				case REAL: {
+					val = Field.Val.valueOf(stream.readFloat("val (real)"), false);
+					
+					break;
+				}
+				case UNREAL: {
+					val = Field.Val.valueOf(stream.readFloat("val (unreal)"), true);
+					
+					break;
+				}
+				case STRING: {
+					val = Field.Val.valueOf(stream.readString("val (string)"));
+					
+					break;
+				}
+				default: {
+					val = Field.Val.valueOf(stream.readString("val (string default)"));
+				}
+				}
+				
+				field.setVal(val, level, dataPt);
+
+				stream.readId("endToken");
+			}
+		}
+		
+		private void write_0x1(Wc3BinStream stream, boolean extended) {
+			stream.writeId(getBaseId());
+			stream.writeId(getId());
+			
 			int modsAmount = 0;
 			
 			for (Field field : getFields().values()) {
@@ -276,70 +382,159 @@ public class ObjMod {
 
 			stream.writeInt(modsAmount);
 			
-			for (Field field : getFields().values()) {
+			for (int i = 0; i < getFieldsList().size(); i++) {
+				Field field = getFieldsList().get(i);
+				
 				MetaFieldId id = field.getId();
+				int dataPt = field.getDataPt();
+				
+				for (Map.Entry<Integer, Field.Val> valEntry : field.getVals().entrySet()) {
+					int level = valEntry.getKey();
+					Field.Val val = valEntry.getValue();
 
-				stream.writeId(id);
-				
-				Field.VarType varType = field.getVarType();
-				
-				stream.writeInt(varType.getVal());
-				
-				Object val = field.getVal(0);
-				
-				switch (varType) {
-				case INT: {
-					stream.writeInt((Integer) val);
+					stream.writeId(id);
 					
-					break;
-				}
-				case REAL: {
-					stream.writeFloat((Float) val);
+					Field.ValType valType = val.getType();
 					
-					break;
-				}
-				case UNREAL: {
-					stream.writeFloat((Float) val);
+					stream.writeInt(valType.getVal());
+
+					if (extended) {
+						stream.writeInt(level);
+						stream.writeInt(dataPt);
+					}
+
+					switch (valType) {
+					case INT: {
+						stream.writeInt((Integer) val.getVal());
+						
+						break;
+					}
+					case REAL: {
+						stream.writeFloat((Float) val.getVal());
+						
+						break;
+					}
+					case UNREAL: {
+						stream.writeFloat((Float) val.getVal());
+						
+						break;
+					}
+					case STRING: {
+						stream.writeString((String) val.getVal());
+						
+						break;
+					}
+					default: {
+						stream.writeString((String) val.getVal());
+					}
+					}
 					
-					break;
+					stream.writeId(null); //endToken
 				}
-				case STRING: {
-					stream.writeString((String) val);
-					
-					break;
-				}
-				default: {
-					stream.writeString((String) val);
-				}
-				}
-				
-				stream.writeId(null);
 			}
 		}
 		
-		private void read(Stream stream, EncodingFormat format) throws StreamException {		
-			switch (format.toEnum()) {
-			case OBJ_0x1: {
-				read_0x1(stream);
-				
-				break;
+		private void write_0x2(Wc3BinStream stream, boolean extended) {
+			stream.writeId(getBaseId());
+			stream.writeId(getId());
+
+			int modsAmount = 0;
+
+			for (Field field : getFields().values()) {
+				modsAmount += field.getVals().size();
 			}
+c2=c2+modsAmount;
+			stream.writeInt(modsAmount);
+			
+			for (int i = 0; i < getFieldsList().size(); i++) {
+				Field field = getFieldsList().get(i);
+				
+				MetaFieldId id = field.getId();
+				int dataPt = field.getDataPt();
+
+				for (Map.Entry<Integer, Field.Val> valEntry : field.getVals().entrySet()) {
+					int level = valEntry.getKey();
+					Field.Val val = valEntry.getValue();
+					
+					stream.writeId(id);
+					
+					Field.ValType valType = val.getType();
+					
+					stream.writeInt(valType.getVal());
+
+					if (extended) {
+						stream.writeInt(level);
+						stream.writeInt(dataPt);
+					}
+
+					switch (valType) {
+					case INT: {
+						stream.writeInt((Integer) val.getVal());
+						
+						break;
+					}
+					case REAL: {
+						stream.writeFloat((Float) val.getVal());
+						
+						break;
+					}
+					case UNREAL: {
+						stream.writeFloat((Float) val.getVal());
+						
+						break;
+					}
+					case STRING: {
+						stream.writeString((String) val.getVal());
+						
+						break;
+					}
+					default: {
+						stream.writeString((String) val.getVal());
+					}
+					}
+					
+					stream.writeId(null); //endToken
+				}
 			}
 		}
 		
-		private void write(Stream stream, EncodingFormat format) {
+		public void read(Wc3BinStream stream, EncodingFormat format, boolean extended) throws BinStream.StreamException {
+			try {
+				switch (format.toEnum()) {
+				case OBJ_0x1: {
+					read_0x1(stream, extended);
+					
+					break;
+				}
+				case OBJ_0x2: {
+					read_0x2(stream, extended);
+					
+					break;
+				}
+				}
+			} catch (RuntimeException e) {
+				throw new BinStream.StreamException(stream);
+			}
+		}
+		
+		public void write(Wc3BinStream stream, EncodingFormat format, boolean extended) {
 			switch (format.toEnum()) {
 			case AUTO:
+			case OBJ_0x2: {
+				write_0x2(stream, extended);
+				
+				break;
+			}
 			case OBJ_0x1: {
-				write_0x1(stream);
+				write_0x1(stream, extended);
 				
 				break;
 			}
 			}
 		}
 		
-		public Obj(Stream stream, EncodingFormat format) throws StreamException {
-			read(stream, format);
+		public Obj(Wc3BinStream stream, EncodingFormat format, boolean extended) throws BinStream.StreamException {
+			read(stream, format, extended);
 		}
 		
 		public Obj(ObjId id, ObjId baseId) {
@@ -349,15 +544,22 @@ public class ObjMod {
 	}
 	
 	protected Map<ObjId, Obj> _objs = new HashMap<>();
+	private List<Obj> _objsList = new ArrayList<>();
 	
 	public Map<ObjId, ? extends Obj> getObjs() {
 		return _objs;
 	}
 	
+	public List<Obj> getObjsList() {
+		return _objsList;
+	}
+	
 	public List<Obj> getOrigObjs() {
 		List<Obj> ret = new ArrayList<>();
 		
-		for (Obj obj : getObjs().values()) {
+		for (int i = 0; i < getObjsList().size(); i++) {
+			Obj obj = getObjsList().get(i);
+			
 			if (obj.getBaseId() == null) {
 				ret.add(obj);
 			}
@@ -369,7 +571,9 @@ public class ObjMod {
 	public List<Obj> getCustomObjs() {
 		List<Obj> ret = new ArrayList<>();
 		
-		for (Obj obj : getObjs().values()) {
+		for (int i = 0; i < getObjsList().size(); i++) {
+			Obj obj = getObjsList().get(i);
+			
 			if (obj.getBaseId() != null) {
 				ret.add(obj);
 			}
@@ -384,6 +588,12 @@ public class ObjMod {
 	
 	private void addObj(Obj val) {
 		_objs.put(val.getId(), val);
+		_objsList.add(val);
+	}
+	
+	public void removeObj(Obj val) {
+		_objs.remove(val);
+		_objsList.remove(val);
 	}
 
 	public Obj addObj(ObjId id, ObjId baseId) {
@@ -416,18 +626,7 @@ public class ObjMod {
 	
 	public void print() {
 		for (Obj obj : getObjs().values()) {
-			System.out.println(String.format("%s %s", obj.getId(), obj.getBaseId()));
-			
-			for (Obj.Field field : obj.getFields().values()) {
-				System.out.println(String.format("\t%s", field.getId()));
-				
-				for (Entry<Integer, Val> valEntry : field.getVals().entrySet()) {
-					int level = valEntry.getKey();
-					Val val = valEntry.getValue();
-					
-					System.out.println(String.format("\t\t%i -> %s %s %s", level, field.getVal(level), field.getVarType().getVal(), field.getDataPt()));
-				}
-			}
+			obj.print();
 		}
 	}
 	
@@ -450,9 +649,9 @@ public class ObjMod {
 					String slkFieldName = metaObj.getS(FieldId.valueOf("field"));
 					
 					if (slkName.equals("Profile")) {
-						for (Entry<Integer, Val> valEntry : field.getVals().entrySet()) {
+						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
 							int level = valEntry.getKey();
-							Val val = valEntry.getValue();
+							Obj.Field.Val val = valEntry.getValue();
 							
 							int index = level;
 							int metaIndex = Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
@@ -483,9 +682,9 @@ public class ObjMod {
 							outSlks.put(slkName, outSlk);
 						}
 						
-						for (Entry<Integer, Val> valEntry : field.getVals().entrySet()) {
+						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
 							int level = valEntry.getKey();
-							Val val = valEntry.getValue();
+							Obj.Field.Val val = valEntry.getValue();
 							
 							if (metaObj.get(FieldId.valueOf("Field")).equals("Data")) {
 								slkFieldName += (char) ((int) 'A' + field.getDataPt() - 1);
@@ -517,12 +716,14 @@ public class ObjMod {
 		enum Enum {
 			AUTO,
 			OBJ_0x1,
+			OBJ_0x2
 		}
 
 		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat OBJ_0x1 = new EncodingFormat(Enum.OBJ_0x1, 0x1);
+		public final static EncodingFormat OBJ_0x2 = new EncodingFormat(Enum.OBJ_0x2, 0x2);
 		
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
@@ -535,49 +736,192 @@ public class ObjMod {
 		}
 	}
 
-	public void read_0x1(Wc3bin.Stream stream) throws StreamException {
-		int version = stream.readInt();
+	private void read_0x1(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+		int version = stream.readInt("version");
 
-		Wc3bin.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
-		
-		int origObjsAmount = stream.readInt();
+		Wc3BinStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
+
+		int origObjsAmount = stream.readInt("origObjsAmount");
 		
 		for (int i = 0; i < origObjsAmount; i++) {
-			addObj(new Obj(ObjId.valueOf(stream.readId()), ObjId.valueOf(stream.readId())));
+			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
+			ObjId id = ObjId.valueOf(stream.readId("objId"));
+			
+			Obj obj = new Obj(id, null);
+			
+			obj.read(stream, EncodingFormat.OBJ_0x1, extended);
+			
+			addObj(obj);
 		}
 		
-		int customObjsAmount = stream.readInt();
+		int customObjsAmount = stream.readInt("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
-			addObj(new Obj(ObjId.valueOf(stream.readId()), ObjId.valueOf(stream.readId())));
+			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
+			ObjId id = ObjId.valueOf(stream.readId("objId"));
+			
+			Obj obj = new Obj(baseId, baseId);
+			
+			obj.read(stream, EncodingFormat.OBJ_0x1, extended);
+			
+			addObj(obj);
 		}
 	}
 
-	public void write_0x1(Wc3bin.Stream stream) {
+	private void read_0x2(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+		int version = stream.readInt("version");
+
+		Wc3BinStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x2.getVersion(), version);
+
+		int origObjsAmount = stream.readInt("origObjsAmount");
+
+		for (int i = 0; i < origObjsAmount; i++) {
+			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
+			ObjId id = ObjId.valueOf(stream.readId("objId (0)")); //not used
+			
+			Obj obj = new Obj(baseId, null);
+			
+			obj.read(stream, EncodingFormat.OBJ_0x2, extended);
+			
+			addObj(obj);
+		}
+		
+		int customObjsAmount = stream.readInt("customObjsAmount");
+
+		for (int i = 0; i < customObjsAmount; i++) {
+			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
+			ObjId id = ObjId.valueOf(stream.readId("objId"));
+			
+			Obj obj = new Obj(id, baseId);
+			
+			obj.read(stream, EncodingFormat.OBJ_0x2, extended);
+		
+			addObj(obj);
+		}
+	}
+	
+	private void write_0x1(Wc3BinStream stream, boolean extended) {
 		stream.writeInt(EncodingFormat.OBJ_0x1.getVersion());
 		
 		stream.writeInt(getOrigObjs().size());
 		
 		for (Obj obj : getOrigObjs()) {
-			obj.write(stream, EncodingFormat.OBJ_0x1);
+			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
 		}
 		
 		stream.writeInt(getCustomObjs().size());
 		
 		for (Obj obj : getCustomObjs()) {
-			obj.write(stream, EncodingFormat.OBJ_0x1);
+			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
 		}
 	}
 	
-	public void read(File file) throws IOException {
-		read_0x1(new Stream(file));
+	private void write_0x2(Wc3BinStream stream, boolean extended) {
+		stream.writeInt(EncodingFormat.OBJ_0x2.getVersion());
+
+		stream.writeInt(getOrigObjs().size());
+		
+		for (int i = 0; i < getOrigObjs().size(); i++) {
+			Obj obj = getOrigObjs().get(i);
+			
+			obj.write(stream, EncodingFormat.OBJ_0x2, extended);
+		}
+		
+		stream.writeInt(getCustomObjs().size());
+		
+		for (int i = 0; i < getCustomObjs().size(); i++) {
+			Obj obj = getCustomObjs().get(i);
+			
+			obj.write(stream, EncodingFormat.OBJ_0x2, extended);
+		}
 	}
 	
-	public void write(File file) {
+	private void read_auto(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+		int version = stream.readInt("version");
 		
+		stream.rewind();
+
+		read(stream, EncodingFormat.valueOf(version), extended);
+	}
+	
+	public void read(Wc3BinStream stream, EncodingFormat format, boolean extended) throws BinStream.StreamException {
+		switch (format.toEnum()) {
+		case AUTO: {
+			read_auto(stream, extended);
+			
+			break;
+		}
+		case OBJ_0x1: {
+			read_0x1(stream, extended);
+			
+			break;
+		}
+		case OBJ_0x2: {
+			read_0x2(stream, extended);
+			
+			break;
+		}
+		}
+	}
+
+	public void read(Wc3BinStream stream, boolean extended) throws IOException {
+		read(stream, EncodingFormat.AUTO, extended);
+	}
+	
+	public void read(InputStream inStream, boolean extended) throws IOException {
+		read(new Wc3BinStream(inStream), EncodingFormat.AUTO, extended);
+	}
+	
+	public void read(File file, boolean extended) throws IOException {
+		FileInputStream inStream = new FileInputStream(file);
+		
+		read(inStream, extended);
+		
+		inStream.close();
+	}
+	
+	private void write(Wc3BinStream stream, EncodingFormat format, boolean extended) {
+		switch (format.toEnum()) {
+		case AUTO:
+		case OBJ_0x2: {
+			write_0x2(stream, extended);
+			
+			break;
+		}
+		case OBJ_0x1: {
+			write_0x1(stream, extended);
+			
+			break;
+		}
+		}
+		
+		System.out.println(c+";"+c2);
+	}
+	
+	public void write(OutputStream outStream, boolean extended) throws IOException {
+		Wc3BinStream stream = new Wc3BinStream();
+		
+		write(stream, EncodingFormat.AUTO, extended);
+		
+		stream.writeTo(outStream);
+	}
+	
+	public void write(File file, boolean extended) throws IOException {
+		Wc3BinStream outStream = new Wc3BinStream();
+		
+		write(outStream, EncodingFormat.AUTO, extended);
+		
+		outStream.writeTo(file);
+	}
+	
+	public ObjMod(InputStream inStream, boolean extended) throws IOException {
+		read(inStream, extended);
+	}
+	
+	public ObjMod(File inFile, boolean extended) throws IOException {
+		read(inFile, extended);
 	}
 	
 	public ObjMod() {
-		
 	}
 }

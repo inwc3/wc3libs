@@ -18,7 +18,6 @@ import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.TerrainFogType;
 import net.moonlightflower.wc3libs.dataTypes.app.Tex;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.slk.app.terrainArts.TerrainSLK.States.State;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTState;
 
@@ -90,22 +89,22 @@ public class MiscDataTXT extends TXT {
 			return _values;
 		}
 		
-		public State(Section section, String idString, DataTypeInfo typeInfo, T defVal) {
-			super(section.getId(), idString, typeInfo, defVal);
+		public State(Section section, String name, DataTypeInfo typeInfo, T defVal) {
+			super(section.getId(), name, typeInfo, defVal);
 			
 			_values.add(this);
 		}
 		
-		public State(Section section, String idString, DataTypeInfo typeInfo) {
-			this(section, idString, typeInfo, null);
-		}
-
-		public State(Section section, String idString, Class<T> type) {
-			this(section, idString, new DataTypeInfo(type));
+		public State(Section section, String name, Class<T> type, T defVal) {
+			this(section, name, new DataTypeInfo(type), defVal);
 		}
 		
-		public State(Section section, String idString, Class<T> type, T defVal) {
-			this(section, idString, new DataTypeInfo(type), defVal);
+		public State(Section section, String name, DataTypeInfo typeInfo) {
+			this(section, name, typeInfo, null);
+		}
+		
+		public State(Section section, String name, Class<T> type) {
+			this(section, name, new DataTypeInfo(type), null);
 		}
 	}
 	
@@ -406,7 +405,7 @@ public class MiscDataTXT extends TXT {
 		set(sizeState, Int.valueOf(maxSize));
 	}
 	
-	public <T extends DataType> T get(State<T> state) {
+	public <T extends DataType> T get(State<T> state) throws Exception {
 		return (T) super.get(state);
 	}
 	

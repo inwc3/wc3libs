@@ -56,6 +56,8 @@ public class Wc3String extends DataType implements Stringable {
 	}
 	
 	public static Wc3String valueOf(Object val) {
+		if (val == null) return null;
+		
 		return new Wc3String(val.toString());
 	}
 

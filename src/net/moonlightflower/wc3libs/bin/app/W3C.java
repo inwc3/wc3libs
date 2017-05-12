@@ -8,10 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3bin;
-import net.moonlightflower.wc3libs.bin.Wc3bin.Stream;
-import net.moonlightflower.wc3libs.bin.Wc3bin.StreamException;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 
 //import bin.Wc3bin;
@@ -20,10 +19,10 @@ import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
  * cameras file for wrapping war3map.w3c
  */
 public class W3C {
-	public final static String GAME_PATH = "war3map.w3c";
+	public final static File GAME_PATH = new File("war3map.w3c");
 	
-	private class Obj {			
-		Coords2DF _target = new Coords2DF(0F, 0F);
+	private class Obj {
+		private Coords2DF _target = new Coords2DF(0F, 0F);
 		
 		public Coords2DF getTarget() {
 			return _target;
@@ -33,7 +32,7 @@ public class W3C {
 			_target = val;
 		}
 		
-		float _zOffset = 0;
+		private float _zOffset = 0;
 		
 		public float getZOffset() {
 			return _zOffset;
@@ -43,7 +42,7 @@ public class W3C {
 			_zOffset = val;
 		}
 		
-		float _rotation = 0;
+		private float _rotation = 0;
 		
 		public float getRotation() {
 			return _rotation;
@@ -53,7 +52,7 @@ public class W3C {
 			_rotation = val;
 		}
 
-		float _angleOfAttack = 0;
+		private float _angleOfAttack = 0;
 		
 		public float getAngleOfAttack() {
 			return _angleOfAttack;
@@ -63,7 +62,7 @@ public class W3C {
 			_angleOfAttack = val;
 		}
 		
-		float _roll = 0;
+		private float _roll = 0;
 		
 		public float getRoll() {
 			return _roll;
@@ -73,7 +72,7 @@ public class W3C {
 			_roll = val;
 		}
 		
-		float _dist = 0;
+		private float _dist = 0;
 		
 		public float getDist() {
 			return _dist;
@@ -83,7 +82,7 @@ public class W3C {
 			_dist = val;
 		}
 
-		float _fieldOfView = 0;
+		private float _fieldOfView = 0;
 		
 		public float getFieldOfView() {
 			return _fieldOfView;
@@ -93,7 +92,7 @@ public class W3C {
 			_fieldOfView = val;
 		}
 
-		float _farZ = 10000;
+		private float _farZ = 10000;
 		
 		public float getFarZ() {
 			return _farZ;
@@ -103,7 +102,7 @@ public class W3C {
 			_farZ = val;
 		}
 		
-		float _unknown = 100;
+		private float _unknown = 100;
 		
 		public float getUnknown() {
 			return _unknown;
@@ -113,7 +112,7 @@ public class W3C {
 			_unknown = val;
 		}
 
-		String _cineName;
+		private String _cineName;
 		
 		public String getCineName() {
 			return _cineName;
@@ -123,7 +122,7 @@ public class W3C {
 			_cineName = val;
 		}
 
-		public void write_0x0(Wc3bin.Stream stream) {
+		public void write_0x0(Wc3BinStream stream) {
 			Coords2DF target = getTarget();
 			
 			stream.writeFloat(target.getX());
@@ -143,7 +142,7 @@ public class W3C {
 			stream.writeString(getCineName());
 		}
 
-		public void read_0x0(Wc3bin.Stream stream) throws StreamException {
+		public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
 			setTarget(new Coords2DF(stream.readFloat("targetX"), stream.readFloat("targetY")));
 			setZOffset(stream.readFloat("zOffset"));
 
@@ -159,7 +158,7 @@ public class W3C {
 			setCineName(stream.readString("cineName"));
 		}
 		
-		public void read(Stream stream, EncodingFormat format) throws StreamException {
+		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			switch (format.toEnum()) {
 			case W3C_0x0: {
 				read_0x0(stream);
@@ -169,7 +168,7 @@ public class W3C {
 			}
 		}
 		
-		public void write(Stream stream, EncodingFormat format) {
+		public void write(Wc3BinStream stream, EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case W3C_0x0: {
@@ -180,7 +179,7 @@ public class W3C {
 			}
 		}
 		
-		public Obj(Stream stream, EncodingFormat format) throws StreamException {
+		public Obj(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -228,10 +227,10 @@ public class W3C {
 		}
 	}
 	
-	public void read_0x0(Wc3bin.Stream stream) throws StreamException {
+	public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
 		int version = stream.readInt("version");
 
-		Wc3bin.checkFormatVer("camMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
+		Wc3BinStream.checkFormatVer("camMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
 
 		int camsCount = stream.readInt("camsCount");
 
@@ -240,7 +239,7 @@ public class W3C {
 		}
 	}
 	
-	public void write_0x0(Wc3bin.Stream stream) {
+	public void write_0x0(Wc3BinStream stream) {
 		stream.writeInt(EncodingFormat.WPM_0x0.getVersion());
 		
 		stream.writeInt(getObjs().size());
@@ -250,7 +249,7 @@ public class W3C {
 		}
 	}
 	
-	private void read_auto(Stream stream) throws StreamException {
+	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
 		int version = stream.readInt();
 		
 		stream.rewind();
@@ -258,7 +257,7 @@ public class W3C {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 
-	private void read(Stream stream, EncodingFormat format) throws StreamException {		
+	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -273,7 +272,7 @@ public class W3C {
 		}
 	}
 	
-	private void write(Stream stream, EncodingFormat format) {
+	private void write(Wc3BinStream stream, EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case W3C_0x0: {
@@ -284,20 +283,20 @@ public class W3C {
 		}
 	}
 	
-	private void read(Stream stream) throws StreamException {
+	private void read(Wc3BinStream stream) throws BinStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Stream stream) {
+	private void write(Wc3BinStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
-	private void read(InputStream inStream, EncodingFormat format) throws IOException, StreamException {
-		read(new Wc3bin.Stream(inStream), format);
+	private void read(InputStream inStream, EncodingFormat format) throws IOException, BinStream.StreamException {
+		read(new Wc3BinStream(inStream), format);
 	}
 	
 	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3bin.Stream(file), format);
+		write(new Wc3BinStream(file), format);
 	}
 	
 	private void read(InputStream inStream) throws IOException {
@@ -305,10 +304,10 @@ public class W3C {
 	}
 
 	private void write(File file) throws IOException {
-		write(new Wc3bin.Stream(file));
+		write(new Wc3BinStream(file));
 	}
 	
-	public W3C(Wc3bin.Stream inStream) throws StreamException {
+	public W3C(Wc3BinStream inStream) throws BinStream.StreamException {
 		this();
 		
 		read(inStream);

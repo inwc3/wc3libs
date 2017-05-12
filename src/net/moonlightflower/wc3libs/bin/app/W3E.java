@@ -1,13 +1,17 @@
 package net.moonlightflower.wc3libs.bin.app;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3bin;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.Boundable;
@@ -19,7 +23,7 @@ import net.moonlightflower.wc3libs.misc.Size;
  * environment file for wrapping war3map.w3e
  */
 public class W3E extends Raster<W3E.Tile> implements Boundable {
-	public final static String GAME_PATH = "war3map.w3e";
+	public final static File GAME_PATH = new File("war3map.w3e");
 	
 	public final static int CELL_SIZE = 128;
 
@@ -38,7 +42,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		return other;
 	}
 	
-	char _tileset;
+	private char _tileset;
 	
 	public char getTileset() {
 		return _tileset;
@@ -58,7 +62,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_tileset = val;
 	}
 	
-	Map<Integer, Id> _groundTiles = new HashMap<>();
+	private Map<Integer, Id> _groundTiles = new HashMap<>();
 	
 	public Id getGroundTile(int index) {
 		return _groundTiles.get(index);
@@ -68,7 +72,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_groundTiles.put(index, val);
 	}
 	
-	Map<Integer, Id> _cliffTiles = new HashMap<>();
+	private Map<Integer, Id> _cliffTiles = new HashMap<>();
 	
 	public Id getCliffTile(int index) {
 		return _cliffTiles.get(index);
@@ -99,7 +103,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			return ((finalVal + waterZero) * 4 + groundZero);
 		}
 		
-		short _groundHeight = 0;
+		private short _groundHeight = 0;
 		
 		public short getGroundHeight() {
 			return _groundHeight;
@@ -109,7 +113,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_groundHeight = val;
 		}
 		
-		short _waterLevel = 0;
+		private short _waterLevel = 0;
 		
 		public short getWaterLevel() {
 			return _waterLevel;
@@ -119,7 +123,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_waterLevel = val;
 		}
 		
-		int _boundary = 0;
+		private int _boundary = 0;
 		
 		public int getBoundary() {
 			return _boundary;
@@ -129,7 +133,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_boundary = val;
 		}
 		
-		int _boundary2;
+		private int _boundary2;
 		
 		public int getBoundary2() {
 			return _boundary2;
@@ -139,7 +143,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_boundary2 = val;
 		}
 		
-		int _water = 0;
+		private int _water = 0;
 		
 		public int getWater() {
 			return _water;
@@ -149,7 +153,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_water = val;
 		}
 		
-		int _blight = 0;
+		private int _blight = 0;
 		
 		public int getBlight() {
 			return _blight;
@@ -159,7 +163,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_blight = val;
 		}
 		
-		int _ramp = 0;
+		private int _ramp = 0;
 		
 		public int getRamp() {
 			return _ramp;
@@ -169,7 +173,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_ramp = val;
 		}
 		
-		int _tex = 0;
+		private int _tex = 0;
 		
 		public int getTex() {
 			return _tex;
@@ -179,7 +183,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_tex = val;
 		}
 		
-		int _cliffTex = 0;
+		private int _cliffTex = 0;
 		
 		public int getCliffTex() {
 			return _cliffTex;
@@ -189,7 +193,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_cliffTex = val;
 		}
 		
-		int _cliffLayer = 0;
+		private int _cliffLayer = 0;
 		
 		public int getCliffLayer() {
 			return _cliffLayer;
@@ -199,7 +203,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_cliffLayer = val;
 		}
 		
-		int _texDetails = 0;
+		private int _texDetails = 0;
 		
 		public int getTexDetails() {
 			return _texDetails;
@@ -209,7 +213,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_texDetails = val;
 		}
 		
-		int _cliff = 0;
+		private int _cliff = 0;
 		
 		public int getCliff() {
 			return _cliff;
@@ -219,7 +223,14 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			_cliff = val;
 		}
 		
-		public void read_0x11(Stream stream) throws StreamException {
+		public void print() {
+			//TODO
+			System.out.println(getBlight());
+			System.out.println(getBoundary());
+			System.out.println();
+		}
+		
+		public void read_0xB(Wc3BinStream stream) throws BinStream.StreamException {
 			setGroundHeight(stream.readShort());
 			
 			short waterLevel = stream.readShort();
@@ -227,7 +238,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			setWaterLevel((short) (waterLevel & 0x7FFF));
 			setBoundary(waterLevel >> 15);
 			
-			int flags = stream.readByte();
+			int flags = stream.readUByte();
 			
 			setBoundary2(flags & 0x1);
 			setWater((flags >> 1) & 0x1);
@@ -235,15 +246,15 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			setRamp((flags >> 3) & 0x1);
 			setTex(flags >> 4);
 			
-			setTexDetails(stream.readByte());
+			setTexDetails(stream.readUByte());
 			
-			int cliff = stream.readByte();
+			byte cliff = stream.readByte();
 			
 			setCliffTex(cliff & 0xF);
-			setCliffLayer(cliff >> 4);
+			setCliffLayer((cliff >> 4) & 0xF);
 		}
 		
-		private void write_0x11(Stream stream) {
+		private void write_0xB(Wc3BinStream stream) {
 			stream.writeShort(getGroundHeight());
 			
 			short waterLevel = getWaterLevel();
@@ -259,35 +270,37 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			flags |= (getRamp() << 3);
 			flags |= (getTex() << 4);
 			
-			stream.writeByte(flags);
+			stream.writeUByte(flags);
 			
-			stream.writeByte(getTexDetails());
+			stream.writeUByte(getTexDetails());
 			
-			int cliff = getCliffTex();
+			int cliff = getCliffTex() << 4;
 			
-			cliff |= (getCliffLayer() << 4);
+			int layer = Math.min(getCliffLayer(), 14); //15 is bad
 			
-			stream.writeByte(cliff);
+			cliff |= layer;
+
+			stream.writeUByte(cliff);
 		}
 		
-		public void read(Stream stream, EncodingFormat format) throws StreamException {
+		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			switch (format.toEnum()) {
-			case W3E_0x11: {
-				read_0x11(stream);
+			case W3E_0xB: {
+				read_0xB(stream);
 			}
 			}
 		}
 		
-		public void write(Stream stream, EncodingFormat format) {
+		public void write(Wc3BinStream stream, EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
-			case W3E_0x11: {
-				write_0x11(stream);
+			case W3E_0xB: {
+				write_0xB(stream);
 			}
 			}
 		}
 		
-		public Tile(Stream stream, EncodingFormat format) throws StreamException {
+		public Tile(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -298,13 +311,13 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		enum Enum {
 			AUTO,
-			W3E_0x11,
+			W3E_0xB,
 		}
 
-		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
-		public final static EncodingFormat W3E_0x11 = new EncodingFormat(Enum.W3E_0x11, 0x11);
-
 		static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		
+		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+		public final static EncodingFormat W3E_0xB = new EncodingFormat(Enum.W3E_0xB, 0xB);
 		
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
@@ -317,12 +330,12 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		}
 	}
 	
-	private void read_0x11(Stream stream) throws StreamException {
+	private void read_0xB(Wc3BinStream stream) throws BinStream.StreamException {
 		Id startToken = stream.readId();
 		
 		int version = stream.readInt();
 		
-		Wc3bin.checkFormatVer("envMaskFunc", EncodingFormat.W3E_0x11.getVersion(), version);
+		Wc3BinStream.checkFormatVer("envMaskFunc", EncodingFormat.W3E_0xB.getVersion(), version);
 		
 		setTileset(stream.readChar());
 		
@@ -340,22 +353,22 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			setCliffTile(i, stream.readId());
 		}
 
-		setBounds(new Bounds(new Size(stream.readInt(), stream.readInt()), new Coords2DI(stream.readFloat().intValue(), stream.readFloat().intValue())), false);
+		setBounds(new Bounds(new Size(stream.readInt(), stream.readInt()), new Coords2DI(stream.readFloat().intValue(), stream.readFloat().intValue())), false, false);
 		
 		int width = getWidth();
 		int height = getHeight();
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				set(new Coords2DI(x, y), new Tile(stream, EncodingFormat.W3E_0x11));
+				set(new Coords2DI(x, y), new Tile(stream, EncodingFormat.W3E_0xB));
 			}
 		}
 	}
 
-	private void write_0x11(Stream stream) {
+	private void write_0xB(Wc3BinStream stream) {		
 		stream.writeId(Id.valueOf("W3E!"));
 		
-		stream.writeInt(EncodingFormat.W3E_0x11.getVersion());
+		stream.writeInt(EncodingFormat.W3E_0xB.getVersion());
 		
 		stream.writeChar(getTileset());
 		
@@ -375,7 +388,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 		int width = getWidth();
 		int height = getHeight();
-
+		
 		stream.writeInt(width);
 		stream.writeInt(height);
 		
@@ -386,67 +399,75 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				get(new Coords2DI(x, y)).write(stream, EncodingFormat.W3E_0x11);
+				get(new Coords2DI(x, y)).write(stream, EncodingFormat.W3E_0xB);
 			}
 		}
 	}
 	
-	private void read_auto(Stream stream) throws StreamException {
+	private void read_auto(Wc3BinStream stream) throws IOException {
 		Id startToken = stream.readId();
 		
 		int version = stream.readInt();
 		
+		stream.rewind();
+		
 		read(stream, EncodingFormat.valueOf(version));
 	}
 	
-	private void read(Stream stream, EncodingFormat format) throws StreamException {		
+	private void read(Wc3BinStream stream, EncodingFormat format) throws IOException {
+		if (format == null) throw new IOException("no format");
+		
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
 			
 			break;
 		}
-		case W3E_0x11: {
-			read_0x11(stream);
+		case W3E_0xB: {
+			read_0xB(stream);
 			
 			break;
 		}
 		}
 	}
 	
-	private void write(Stream stream, EncodingFormat format) {
+	private void write(Wc3BinStream stream, EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
-		case W3E_0x11: {
-			write_0x11(stream);
+		case W3E_0xB: {
+			write_0xB(stream);
 			
 			break;
 		}
 		}
 	}
 	
-	private void read(Stream stream) throws StreamException {
+	private void read(Wc3BinStream stream) throws IOException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Stream stream) {
+	private void write(Wc3BinStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
-	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3bin.Stream(file), format);
+	private void read(InputStream inStream, EncodingFormat format) throws IOException {
+		read(new Wc3BinStream(inStream), format);
 	}
 	
-	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3bin.Stream(file), format);
+	private void write(InputStream inStream, EncodingFormat format) throws IOException {
+		write(new Wc3BinStream(inStream), format);
 	}
 	
-	private void read(File file) throws IOException {
-		read(file, EncodingFormat.AUTO);
+	private void read(InputStream inStream) throws IOException {
+		read(inStream, EncodingFormat.AUTO);
 	}
 
-	private void write(File file) throws IOException {
-		write(new Wc3bin.Stream(file));
+	public void write(File file) throws IOException {
+		Wc3BinStream outStream = new Wc3BinStream();
+		
+		write(outStream);
+		
+		outStream.writeTo(file);
 	}
 	
 	@Override
@@ -459,6 +480,14 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 	
 	public W3E(Bounds bounds) {
-		setBounds(bounds, false);
+		setBounds(bounds, false, false);
+	}
+	
+	public W3E(File file) throws IOException {
+		InputStream inStream = new FileInputStream(file);
+		
+		read(inStream, EncodingFormat.AUTO);
+		
+		inStream.close();
 	}
 }

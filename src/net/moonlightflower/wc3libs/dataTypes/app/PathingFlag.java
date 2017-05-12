@@ -32,6 +32,10 @@ public class PathingFlag extends Int {
 		_map.put(val, this);
 		_map.put(alias, this);
 	}
+	
+	public static PathingFlag valueOf(Integer val) {
+		return _map.get(val);
+	}
 
 	@Override
 	public PathingFlag decode(Object val) {

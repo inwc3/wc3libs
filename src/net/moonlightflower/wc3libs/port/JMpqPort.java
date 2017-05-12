@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import net.moonlightflower.wc3libs.port.MpqPort.In;
@@ -11,7 +13,7 @@ import net.moonlightflower.wc3libs.port.MpqPort.Out;
 import systems.crigges.jmpq3.JMpqEditor;
 import systems.crigges.jmpq3.JMpqException;
 
-public final class JMpqPort {
+public class JMpqPort extends MpqPort {
 	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
 	
 	private final static File classWorkDir = new File(workDir, Orient.localClassPath().toString());
@@ -22,6 +24,25 @@ public final class JMpqPort {
 	
 	public static String enquote(String s) {
 		return "\"" + s + "\"";
+	}
+	
+	@Override
+	public List<File> listFiles(File mpqFile) throws IOException {
+		try {
+			JMpqEditor jmpq = new JMpqEditor(mpqFile);
+			
+			List<File> ret = new ArrayList<>();
+			
+			for (String fileS : jmpq.getFileNames()) {
+				ret.add(new File(fileS));
+			}
+			
+			jmpq.close();
+			
+			return ret;
+		} catch (JMpqException e) {
+			throw new IOException(e.getMessage());
+		}
 	}
 	
 	public static class In extends MpqPort.In {	
@@ -82,10 +103,8 @@ public final class JMpqPort {
 						FileExport resultFileExport = null;
 						
 						if (outFile != null) {
-							if (outFile != null) {
-								if (fileExport.getOutDir() != null) {
-									fileExport.getOutDir().mkdirs();
-								}
+							if (fileExport.getOutDir() != null) {
+								fileExport.getOutDir().mkdirs();
 							}
 							
 							jmpq.extractFile(inFile.toString(), outFile);
@@ -111,16 +130,24 @@ public final class JMpqPort {
 							result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
 						}
 					} catch (JMpqException e) {
+						System.out.println("failed " + fileExport.getInFile() + " at " + mpqFile);
+						e.printStackTrace();
 						failedExports.add(fileExport);
 					}
 				}
 				
-				jmpq.close();
+				try {
+					jmpq.close();
+				} catch (Exception e) {
+					//e.printStackTrace();
+					
+					//if (e instanceof IOException) throw e;
+				}
 				
 				volExports = failedExports;
 				//removeExistingExports(volExports);
 				
-				failedExports.clear();
+				//failedExports.clear();
 				
 				c++;
 			}
@@ -169,5 +196,16 @@ public final class JMpqPort {
 		mpqFiles.add(mpqFile);
 
 		extractFile(mpqFiles, outFile, inFile, outFileIsDir);
+	}
+	
+	@Override
+	public Out.Result getGameFiles(File... files) throws IOException {
+		MpqPort.Out portOut = new Out();
+		
+		for (File file : files) {
+			portOut.add(file);
+		}
+		
+		return portOut.commit(MpqPort.getWc3Mpqs());
 	}
 }

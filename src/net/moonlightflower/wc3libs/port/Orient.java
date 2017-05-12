@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -18,23 +19,54 @@ import java.util.Vector;
 public class Orient {
 	public static String separator = java.io.File.separator;
 
-	public static File getExecPath() {
+	public static File getExecPath(Class<?> c) {
+		if (c == null) c = Orient.class;
+		
 		File f;
 		
-		try {
-			f = new File(Orient.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+		try {			
+			URI uri = c.getProtectionDomain().getCodeSource().getLocation().toURI();
+			
+			/*File file = new File("D:\\logUri.txt");
+			
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				
+				writer.write(uri.toString());
+		        
+				//writer.write(Runtime.getRuntime().getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString());
+				
+				writer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("the uri is: " + uri);*/
+			
+			f = new File(uri);
 			
 			return f;
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		
 		return null;
 	}
 	
+	public static File getExecPath() {
+		return getExecPath(null);
+	}
+	
+	public static File getExecDir(Class<?> c) {
+		return getExecPath(c).getParentFile();
+	}
+	
 	public static File getExecDir() {
-		return getExecPath().getParentFile();
+		return getExecDir(null);
 	}
 	
 	public static String getWorkingDir() {
@@ -57,14 +89,26 @@ public class Orient {
 		return file.toPath().getFileName().toString();
 	}
 
+	public static String getFileExt(File file) {
+		int index = file.getName().lastIndexOf('.');
+		
+		if (index < 0) return null;
+		
+		return file.getName().substring(index + 1);
+	}
+	
 	public static File getDir(File file) {
 		return file.getParentFile();
 	}
 	
+	public static void checkFileExists(File file) throws IOException {
+		if (file == null) throw new IOException("no file");
+		if (!file.exists()) throw new IOException(String.format("file %s does not exist", file));
+	}
+	
 	public static void log(String s) {
-		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter("D:\\log.txt", true));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Orient.getExecDir(), "log.txt"), true));
 			
 			writer.write(s);
 			

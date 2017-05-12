@@ -2,12 +2,16 @@ package net.moonlightflower.wc3libs.misc;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Map;
+
+import org.omg.Messaging.SyncScopeHelper;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
+import net.moonlightflower.wc3libs.txt.WTS;
 
 /**
  * Translates strings based on previously registered vocabulary, you can add txt game files like UI\WorldEditStrings.txt
@@ -73,6 +77,11 @@ public class Translator {
 		return val.toString();
 	}
 	
+	public String translateText(String text) {
+		// TODO
+		return text;
+	}
+	
 	public void addTXT(TXT other) {
 		_txt.merge(other);
 	}
@@ -103,15 +112,19 @@ public class Translator {
 		
 		addTXT(other);
 		
-		try {
+		/*try {
 			_txt.write(new File("D:\\out.txt"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
-	public Translator() throws IOException {
+	public void print(PrintStream outStream) {
+		_txt.print(outStream);
+	}
+	
+	public Translator() {
 		//addTXT(new TXT(new File("UI\\WorldEditStrings.txt")));
 	}
 }

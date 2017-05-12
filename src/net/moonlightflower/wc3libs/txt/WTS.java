@@ -2,10 +2,12 @@ package net.moonlightflower.wc3libs.txt;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -14,8 +16,40 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort;
+
 public class WTS {
+	public final static File GAME_PATH = new File("war3map.wts");
+	public final static File CAMPAIGN_PATH = new File("war3campaign.wts");
+	
 	private Map<Integer, String> _vals = new HashMap<>();
+	
+	public Map<String, String> getNamedEntries() {
+		Map<String, String> res = new HashMap<>();
+		
+		for (Map.Entry<Integer, String> valEntry : _vals.entrySet()) {
+			int key = valEntry.getKey();
+			String val = valEntry.getValue();
+			
+			res.put(String.format("TRIGSTR_%03d", key), val);
+		}
+		
+		return res;
+	}
+	
+	public TXT toTXT() {
+		TXT txt = new TXT();
+		
+		for (Map.Entry<String, String> entry : getNamedEntries().entrySet()) {
+			String key = entry.getKey();
+			String val = entry.getValue();
+			
+			txt.set(key, val);
+		}
+		
+		return txt;
+	}
 	
 	public String getEntry(int key) {
 		return _vals.get(key);
@@ -62,7 +96,7 @@ public class WTS {
 	return s
 end*/
 	
-	public void writeToFile(File file) throws IOException {
+	public void write(File file) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 		
 		for (Map.Entry<Integer, String> entry : _vals.entrySet()) {
@@ -75,20 +109,18 @@ end*/
 		writer.close();
 	}
 	
-	public void readFromFile(File file) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-
-		char[] buf = new char[(int) file.length()];
+	private void read(InputStream inStream) throws IOException {
+		UTF8 reader = new UTF8(inStream);
 		
-		reader.read(buf);
-
-		reader.close();
+		String input = reader.readAll();
 		
-		String input = new String(buf);
+		Pattern commentPattern = Pattern.compile("//[^\\n]*\\n", Pattern.DOTALL);
 		
-		input.replaceAll("//[^\\n]*\\n", "");
+		Matcher commentMatcher = commentPattern.matcher(input);
 		
-		Pattern pat = Pattern.compile("STRING ([\\d]+)[\\n\\s]*{([^}]*)[\\n]*}");
+		input = commentMatcher.replaceAll("");
+		
+		Pattern pat = Pattern.compile("STRING ([\\d]+)[\\n\\s]*\\{([^\\}]*)[\\n]*\\}");
 		
 		Matcher matcher = pat.matcher(input);
 		
@@ -96,8 +128,13 @@ end*/
 			Integer key = Integer.parseInt(matcher.group(1));
 			String val = matcher.group(2);
 			
-			val = Pattern.compile("^\\p{Cntrl}*(.*)").matcher(val).group(1);
-			val = Pattern.compile("^(.*[\\p{Cntrl}])").matcher(val).group(1);
+			val = val.replaceAll("\\p{Cntrl}", "");
+			
+			Matcher entryMatcher = Pattern.compile("^(.*)").matcher(val);
+			
+			entryMatcher.find();
+			
+			val = entryMatcher.group(1);
 			
 			if (val == null) val = "";
 			
@@ -106,5 +143,29 @@ end*/
 	}
 	
 	public WTS() {
+	}
+	
+	public WTS(InputStream inStream) throws IOException {
+		read(inStream);
+	}
+	
+	public static WTS ofMapFile(File mapFile) throws Exception {
+		MpqPort.Out portOut = new LadikMpqPort.Out();
+		
+		portOut.add(WTS.GAME_PATH);
+		
+		MpqPort.Out.Result portResult = portOut.commit(mapFile);
+		
+		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract wts file");
+		
+		byte[] bytes = portResult.getExports().get(GAME_PATH).getOutBytes();
+		
+		InputStream inStream = new ByteArrayInputStream(bytes);
+		
+		WTS wts = new WTS(inStream);
+		
+		inStream.close();
+		
+		return wts;
 	}
 }

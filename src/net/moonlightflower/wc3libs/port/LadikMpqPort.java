@@ -1,7 +1,5 @@
 package net.moonlightflower.wc3libs.port;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,15 +7,14 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.lang.ProcessBuilder.Redirect;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
-public abstract class LadikMpqPort {
+import net.moonlightflower.wc3libs.misc.ProcCaller;
+
+public class LadikMpqPort extends MpqPort {
 	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
 	
 	private final static File classWorkDir = new File(workDir, Orient.localClassPath().toString());
@@ -38,9 +35,9 @@ public abstract class LadikMpqPort {
 		return "\"" + s + "\"";
 	}
 	
-	private static void exec(Vector<String> lines) throws Exception {
+	private static String exec(Vector<String> lines) throws IOException {
 		File scriptPath = File.createTempFile("temp", ".txt");
-		
+		System.out.println(scriptPath);
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.elementAt(i);
 			
@@ -57,6 +54,8 @@ public abstract class LadikMpqPort {
 			writer.write(line);
 			writer.newLine();
 			Orient.log(line);
+			
+			//System.out.println(line);
 		}
 		
 		writer.close();
@@ -76,12 +75,20 @@ public abstract class LadikMpqPort {
 			
 			outStream.close();
 		}
-	
-		ProcessBuilder procBuild = new ProcessBuilder(editorPath.toString(), "/console", scriptPath.toString());
+
+		ProcCaller proc = new ProcCaller(editorPath.toString(), "/console", scriptPath.toString());
 		
-		//procBuild.redirectInput(Redirect.INHERIT);
-		//procBuild.redirectError(Redirect.INHERIT);
-		//procBuild.redirectOutput(Redirect.INHERIT);
+		proc.setMinimized(true);
+
+		proc.exec();
+		
+		if (proc.exitVal() != 0) {
+			throw new IOException("editor crashed");
+		}
+		
+		return proc.getOutString();
+		
+		/*ProcessBuilder procBuild = new ProcessBuilder(editorPath.toString(), "/console", scriptPath.toString());
 		
 		Process proc = procBuild.start();
 
@@ -91,32 +98,44 @@ public abstract class LadikMpqPort {
 
         while ((in.read() != -1) || (err.read() != -1)) {}
 		
-		proc.waitFor();
+		try {
+			proc.waitFor();
+		} catch (InterruptedException e) {
+			throw new IOException(e.getMessage());
+		}
 		
 		int exitVal = proc.exitValue();
 
 		if (exitVal != 0) {
-			/*String line;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			
-			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
-			};
-			
-			reader.close();
+			throw new IOException("editor crashed");
+		}*/
+	}
 
-			reader = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+	@Override
+	public List<File> listFiles(File mpqFile) throws IOException {
+		Vector<String> lines = new Vector<>();
+		
+		lines.add(String.format("list %s", enquote(mpqFile.getAbsolutePath())));
+		
+		String filesS = exec(lines);
+		
+		/*BufferedWriter writer = new BufferedWriter(new FileWriter(new File("D:\\list.txt")));
+		
+		writer.write(filesS);
+		
+		writer.close();*/
+		
+		Orient.log(filesS);
+		
+		List<File> files = new ArrayList<>();
+		
+		for (String fileS : filesS.split("\n")) {
+			if (fileS.isEmpty() || fileS.contains("\"") || fileS.startsWith("(")) continue;
 			
-			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
-			};
-			
-			reader.close();*/
-			
-			Exception e = new Exception("editor crashed");
-
-			throw e;
+			files.add(new File(fileS));
 		}
+		
+		return files;
 	}
 
 	private final static File getSizeDir = new File(tempDir, "_getSize");
@@ -163,7 +182,7 @@ public abstract class LadikMpqPort {
 					} else {
 						//lines.add(String.format("n %s", enquote(delFile.getAbsolutePath())));
 						//lines.add(String.format("a %s %s %s", "%s", enquote(delFile.getAbsolutePath()), enquote(fileImport.getInFile().getName())));
-						lines.add(String.format("d %s %s", "%s", enquote(fileImport.getInFile().getName())));
+						lines.add(String.format("d %s %s", "%s", enquote(fileImport.getInFile().toString())));
 					}
 				}
 				
@@ -186,7 +205,7 @@ public abstract class LadikMpqPort {
 	
 	public static class Out extends MpqPort.Out {		
 		@Override
-		public Result commit(Vector<File> mpqFiles) throws Exception {
+		public Result commit(Vector<File> mpqFiles) throws IOException {
 			if (getFiles().isEmpty()) return new Result();
 			if (mpqFiles.isEmpty()) return new Result();
 			
@@ -223,7 +242,7 @@ public abstract class LadikMpqPort {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(listFile));
 			
 			for (FileExport fileExport : getFiles()) {
-				writer.write(fileExport.getInFile().getName());
+				writer.write(fileExport.getInFile().toString());
 				writer.newLine();
 			}
 			
@@ -236,7 +255,7 @@ public abstract class LadikMpqPort {
 			}
 			
 			Orient.removeDir(exportDir);
-			Orient.createDir(exportDir);
+			//Orient.createDir(exportDir);
 			
 			Orient.removeDir(exportFilesDir);
 			Orient.createDir(exportFilesDir);
@@ -248,7 +267,7 @@ public abstract class LadikMpqPort {
 
 			while ((c < mpqFiles.size()) && (volExports.size() > 0)) {
 				File mpqFile = mpqFiles.get(c);
-				
+
 				File exportMpqFile = mpqFile;
 
 				lines.clear();
@@ -256,7 +275,11 @@ public abstract class LadikMpqPort {
 				lines.add(openLine);
 				
 				for (FileExport fileExport : volExports) {
-					lines.add(String.format("e %s %s %s /fp", "%s", enquote(fileExport.getInFile().getName()), enquote(exportFilesDir.getAbsolutePath())));
+					File exportFile = new File(exportFilesDir, fileExport.getInFile().toString());
+					
+					//Orient.createDir(exportFile.getParent());
+					
+					lines.add(String.format("e %s %s %s /fp", "%s", enquote(fileExport.getInFile().toString()), enquote(exportFilesDir.getAbsolutePath())));
 				}
 
 				if (Orient.fileIsLocked(mpqFile)) {
@@ -276,8 +299,8 @@ public abstract class LadikMpqPort {
 				Vector<FileExport> failedExports = new Vector<>();
 				
 				for (FileExport fileExport : volExports) {
-					File exportFile = new File(exportFilesDir, fileExport.getInFile().getName());
-					
+					File exportFile = new File(exportFilesDir, fileExport.getInFile().toString());
+
 					if (exportFile.exists()) {
 						File outFile = fileExport.getOutFile();
 						
@@ -314,8 +337,6 @@ public abstract class LadikMpqPort {
 				}
 
 				volExports = failedExports;
-				
-				failedExports.clear();
 				
 				c++;
 			}
@@ -354,5 +375,16 @@ public abstract class LadikMpqPort {
 		mpqFiles.add(mpqFile);
 
 		extractFile(mpqFiles, outFile, inFile, outFileIsDir);
+	}
+	
+	@Override
+	public Out.Result getGameFiles(File... files) throws IOException {
+		MpqPort.Out portOut = new Out();
+		
+		for (File file : files) {
+			portOut.add(file);
+		}
+		
+		return portOut.commit(MpqPort.getWc3Mpqs());
 	}
 }

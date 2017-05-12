@@ -255,8 +255,15 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 		if (onlyHeader) return;
 
-		for (int i = 2; i < data.size(); i++) {
-			ObjId objId = ObjId.valueOf(data.get(i).get(1).toString());
+		//for (int i = 2; i < data.size(); i++) {
+		for (Integer i : data.keySet()) {
+			if (i == 1) continue;
+			
+			DataType val = data.get(i).get(1);
+			
+			if (val == null) continue;
+			
+			ObjId objId = ObjId.valueOf(val.toString());
 			
 			ObjType obj = createObj(objId);
 
