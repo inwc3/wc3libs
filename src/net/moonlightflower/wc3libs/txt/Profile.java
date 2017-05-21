@@ -1,9 +1,12 @@
 package net.moonlightflower.wc3libs.txt;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,65 +21,67 @@ import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.app.terrainArts.WeatherSLK;
 import net.moonlightflower.wc3libs.slk.app.terrainArts.WaterSLK.Obj;
 import net.moonlightflower.wc3libs.slk.app.terrainArts.WeatherSLK.States;
+import net.moonlightflower.wc3libs.txt.TXT.Section;
+import net.moonlightflower.wc3libs.txt.TXT.Section.Field;
 
 /**
  * handles profile files like Units\CommandFunc.txt
  */
 public class Profile extends TXT {
-	public static String[] getNativePaths() {
-		return new String[]{
-			"Units\\CampaignUnitStrings.txt",
+	public static File[] getNativePaths() {
+		return new File[]{
+			new File("Units\\CampaignUnitStrings.txt"),
 
-			"Units\\HumanUnitStrings.txt",
-			"Units\\NeutralUnitStrings.txt",
-			"Units\\NightElfUnitStrings.txt",
-			"Units\\OrcUnitStrings.txt",
-			"Units\\UndeadUnitStrings.txt",
+			new File("Units\\HumanUnitStrings.txt"),
+			new File("Units\\NeutralUnitStrings.txt"),
+			new File("Units\\NightElfUnitStrings.txt"),
+			new File("Units\\OrcUnitStrings.txt"),
+			new File("Units\\UndeadUnitStrings.txt"),
 
-			"Units\\CampaignUnitFunc.txt",
-			"Units\\HumanUnitFunc.txt",
-			"Units\\NeutralUnitFunc.txt",
-			"Units\\NightElfUnitFunc.txt",
-			"Units\\OrcUnitFunc.txt",
-			"Units\\UndeadUnitFunc.txt",
+			new File("Units\\CampaignUnitFunc.txt"),
+			new File("Units\\HumanUnitFunc.txt"),
+			new File("Units\\NeutralUnitFunc.txt"),
+			new File("Units\\NightElfUnitFunc.txt"),
+			new File("Units\\OrcUnitFunc.txt"),
+			new File("Units\\UndeadUnitFunc.txt"),
 
-			"Units\\CampaignAbilityStrings.txt",
-			"Units\\CommonAbilityStrings.txt",
-			"Units\\HumanAbilityStrings.txt",
-			"Units\\NeutralAbilityStrings.txt",
-			"Units\\NightElfAbilityStrings.txt",
-			"Units\\OrcAbilityStrings.txt",
-			"Units\\UndeadAbilityStrings.txt",
-			"Units\\ItemAbilityStrings.txt",
+			new File("Units\\CampaignAbilityStrings.txt"),
+			new File("Units\\CommonAbilityStrings.txt"),
+			new File("Units\\HumanAbilityStrings.txt"),
+			new File("Units\\NeutralAbilityStrings.txt"),
+			new File("Units\\NightElfAbilityStrings.txt"),
+			new File("Units\\OrcAbilityStrings.txt"),
+			new File("Units\\UndeadAbilityStrings.txt"),
+			new File("Units\\ItemAbilityStrings.txt"),
 
-			"Units\\CampaignAbilityFunc.txt",
-			"Units\\CommonAbilityFunc.txt",
-			"Units\\HumanAbilityFunc.txt",
-			"Units\\NeutralAbilityFunc.txt",
-			"Units\\NightElfAbilityFunc.txt",
-			"Units\\OrcAbilityFunc.txt",
-			"Units\\UndeadAbilityFunc.txt",
-			"Units\\ItemAbilityFunc.txt",
+			new File("Units\\CampaignAbilityFunc.txt"),
+			new File("Units\\CommonAbilityFunc.txt"),
+			new File("Units\\HumanAbilityFunc.txt"),
+			new File("Units\\NeutralAbilityFunc.txt"),
+			new File("Units\\NightElfAbilityFunc.txt"),
+			new File("Units\\OrcAbilityFunc.txt"),
+			new File("Units\\UndeadAbilityFunc.txt"),
+			new File("Units\\ItemAbilityFunc.txt"),
 
-			"Units\\CampaignUpgradeStrings.txt",
-			"Units\\HumanUpgradeStrings.txt",
-			"Units\\NightElfUpgradeStrings.txt",
-			"Units\\OrcUpgradeStrings.txt",
-			"Units\\UndeadUpgradeStrings.txt",
-			//"Units\\NeutralUpgradeStrings.txt",
+			new File("Units\\CampaignUpgradeStrings.txt"),
+			new File("Units\\HumanUpgradeStrings.txt"),
+			new File("Units\\NightElfUpgradeStrings.txt"),
+			new File("Units\\OrcUpgradeStrings.txt"),
+			new File("Units\\UndeadUpgradeStrings.txt"),
+			//new File("Units\\NeutralUpgradeStrings.txt"),
 
-			//"Units\\CampaignUpgradeFunc.txt",
-			"Units\\HumanUpgradeFunc.txt",
-			"Units\\NightElfUpgradeFunc.txt",
-			"Units\\OrcUpgradeFunc.txt",
-			"Units\\UndeadUpgradeFunc.txt",
-			"Units\\NeutralUpgradeFunc.txt",
+			//new File("Units\\CampaignUpgradeFunc.txt"),
+			new File("Units\\HumanUpgradeFunc.txt"),
+			new File("Units\\NightElfUpgradeFunc.txt"),
+			new File("Units\\OrcUpgradeFunc.txt"),
+			new File("Units\\UndeadUpgradeFunc.txt"),
+			new File("Units\\NeutralUpgradeFunc.txt"),
 
-			"Units\\CommandStrings.txt",
-			"Units\\ItemStrings.txt",
+			new File("Units\\CommandStrings.txt"),
+			new File("Units\\ItemStrings.txt"),
 
-			"Units\\CommandFunc.txt",
-			"Units\\ItemFunc.txt"
+			new File("Units\\CommandFunc.txt"),
+			new File("Units\\ItemFunc.txt")
 		};
 	}
 	
@@ -89,31 +94,41 @@ public class Profile extends TXT {
 				}
 			}
 			
+			@Override
+			public void merge(TXT.Section.Field otherField) {
+				merge(otherField, true);
+			}
+			
 			public Field(FieldId id) {
 				super(id);
 			}
 		}
 		
-		private Map<FieldId, Field> _fields = new HashMap<>();
+		/*private Map<FieldId, Field> _fields = new HashMap<>();*/
 		
 		@Override
 		public Map<FieldId, Field> getFields() {
-			return _fields;
+			Map<FieldId, Field> ret = new HashMap<>();
+			
+			ret.putAll((Map<? extends FieldId, ? extends Field>) super.getFields());
+			
+			return ret;
 		}
 		
-		@Override
+		/*@Override
 		public boolean containsField(FieldId id) {
 			return _fields.containsKey(id);
-		}
+		}*/
 		
 		@Override
 		public Field getField(FieldId id) {
-			return _fields.get(id);
+			return (Field) _fields.get(id);
 		}
 		
 		@Override
 		public Field addField(FieldId id) {
-			if (containsField(id)) return getField(id); 
+			if (containsField(id)) return getField(id);
+			//super.addField(id);
 
 			Field field = new Field(id);
 
@@ -133,7 +148,12 @@ public class Profile extends TXT {
 			}
 		}
 		
-		public void print() {
+		public void merge(Obj otherObj) {
+			merge(otherObj, true);
+		}
+		
+		@Override
+		public void print(PrintStream outStream) {
 			for (Entry<FieldId, Obj.Field> fieldEntry : getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				Obj.Field field = fieldEntry.getValue();
@@ -145,6 +165,31 @@ public class Profile extends TXT {
 					
 					System.out.println(String.format("%s=%s", fieldId.toTXTVal().toString(), valS));
 				}
+			}
+		}
+		
+		@Override
+		public void print() {
+			print(System.out);
+		}
+		
+		@Override
+		public void write(BufferedWriter writer, Translator translator) throws IOException {
+			if (getId() != null) {
+				writer.write(String.format("[%s]", getId().toString()));
+				
+				writer.newLine();
+			}
+			
+			for (Map.Entry<FieldId, ? extends Obj.Field> fieldEntry : getFields().entrySet()) {
+				FieldId fieldId = fieldEntry.getKey();
+				Field field = fieldEntry.getValue();
+
+				String valLine = field.getValLine(translator);
+
+				writer.write(String.format("%s=%s", fieldId.toString(), valLine));
+				
+				writer.newLine();
 			}
 		}
 		
@@ -191,6 +236,7 @@ public class Profile extends TXT {
 	
 	private void addObj(Obj obj) {
 		_objs.put(obj.getId(), obj);
+		addSection(TXTSectionId.valueOf(obj.getId().toString()));
 	}
 	
 	public Obj addObj(TXTSectionId id) {
@@ -214,12 +260,26 @@ public class Profile extends TXT {
 		}
 	}
 	
+	public void merge(Profile otherProfile) {
+		merge(otherProfile, true);
+	}
+	
 	private Translator _translator;
+	
+	public Translator getTranslator() {
+		return _translator;
+	}
 	
 	public void setTranslator(Translator val) {
 		_translator = val;
 	}
 	
+	@Override
+	public void write(File file) throws IOException {
+		super.write(file, _translator);
+	}
+	
+	@Override
 	public void print() {
 		for (Entry<TXTSectionId, Obj> objEntry : getObjs().entrySet()) {
 			TXTSectionId objId = objEntry.getKey();
@@ -228,6 +288,16 @@ public class Profile extends TXT {
 			System.out.println(String.format("[%s]", objId.toString()));
 			
 			obj.print();
+		}
+	}
+	
+	@Override
+	public void write(BufferedWriter writer, Translator translator) throws IOException {		
+		for (Entry<TXTSectionId, Obj> objEntry : getObjs().entrySet()) {
+			TXTSectionId objId = objEntry.getKey();
+			Obj obj = objEntry.getValue();
+
+			obj.write(writer, translator);
 		}
 	}
 	
@@ -242,7 +312,7 @@ public class Profile extends TXT {
 		for (Entry<? extends TXTSectionId, ? extends TXT.Section> slkEntry : txt.getSections().entrySet()) {
 			TXTSectionId id = slkEntry.getKey();
 			TXT.Section txtSection = slkEntry.getValue();
-			
+
 			Obj otherObj = new Obj(txtSection);
 			
 			other.addObj(otherObj);

@@ -17,6 +17,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.DefType;
 import net.moonlightflower.wc3libs.dataTypes.app.DestructableId;
 import net.moonlightflower.wc3libs.dataTypes.app.DoodadClass;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.Model;
 import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
@@ -28,6 +29,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, DestructableSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\DestructableData.slk");
@@ -175,7 +177,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 		}
 	}
 	
-	private Map<DestructableId, Obj> _objs = new HashMap<>();
+	//private Map<DestructableId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<DestructableId, Obj> getObjs() {
@@ -189,6 +191,8 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 	
 	@Override
 	public Obj addObj(DestructableId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -218,6 +222,10 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 		super.write(file);
 	}
 	
+	public DestructableSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public DestructableSLK() {
 		super();
 		
@@ -227,7 +235,13 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 			addField(state);
 		}
 	}
-
+	
+	public DestructableSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(DestructableId.valueOf(id));
@@ -235,7 +249,13 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 
 	@Override
 	public void merge(DestructableSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<DestructableId, Obj> objEntry : other.getObjs().entrySet()) {
+			DestructableId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

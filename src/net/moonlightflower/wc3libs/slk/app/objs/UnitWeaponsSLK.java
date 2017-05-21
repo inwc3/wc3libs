@@ -17,6 +17,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.CombatSound;
 import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
@@ -25,6 +26,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UnitWeapons.slk");
@@ -181,7 +183,7 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 		}
 	}
 	
-	private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {
@@ -195,6 +197,8 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 	
 	@Override
 	public Obj addObj(UnitId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -224,6 +228,10 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 		super.write(file);
 	}
 	
+	public UnitWeaponsSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public UnitWeaponsSLK() {
 		super();
 		
@@ -234,6 +242,12 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 		}
 	}
 
+	public UnitWeaponsSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(UnitId.valueOf(id));
@@ -241,7 +255,13 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 
 	@Override
 	public void merge(UnitWeaponsSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<UnitId, Obj> objEntry : other.getObjs().entrySet()) {
+			UnitId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

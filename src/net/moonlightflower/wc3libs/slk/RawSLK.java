@@ -24,8 +24,7 @@ public class RawSLK extends SLK<RawSLK, ObjId, RawSLK.Obj> {
 
 	@Override
 	public void merge(RawSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		super.merge(other, overwrite);
 	}
 
 	@Override

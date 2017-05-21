@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +151,7 @@ public abstract class MpqPort {
 			public File getFile(File inFile) throws IOException {
 				Segment segment = getExports().get(inFile);
 				
-				if (segment == null) throw new IOException(String.format("noSuchFile: %s", inFile.toString()));
+				if (segment == null) throw new NoSuchFileException(String.format("noSuchFile: %s", inFile.toString()));
 				
 				File outFile = segment.getExport().getOutFile();
 				

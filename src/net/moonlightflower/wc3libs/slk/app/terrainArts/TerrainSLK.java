@@ -170,7 +170,7 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 		}
 	}
 
-	private Map<TileId, Obj> _objs = new HashMap<>();
+	//private Map<TileId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<TileId, Obj> getObjs() {
@@ -184,6 +184,8 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 	
 	@Override
 	public Obj addObj(TileId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

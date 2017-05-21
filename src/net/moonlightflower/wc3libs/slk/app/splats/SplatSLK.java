@@ -278,7 +278,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 	}
 	
-	private Map<SplatId, Obj> _objs = new HashMap<>();
+	//private Map<SplatId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<SplatId, Obj> getObjs() {
@@ -292,6 +292,8 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 	
 	@Override
 	public Obj addObj(SplatId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

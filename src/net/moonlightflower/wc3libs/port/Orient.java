@@ -3,6 +3,8 @@ package net.moonlightflower.wc3libs.port;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -282,4 +284,16 @@ public class Orient {
 
 		return res;
 	};
+	
+	public static boolean createFile(File file) throws IOException {
+		file.getParentFile().mkdirs();
+		
+		return file.createNewFile();
+	}
+	
+	public static FileOutputStream createFileOutputStream(File file) throws FileNotFoundException {
+		file.getParentFile().mkdirs();
+		
+		return new FileOutputStream(file);
+	}
 }

@@ -108,7 +108,7 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 		}
 	}
 	
-	private Map<SpawnId, Obj> _objs = new HashMap<>();
+	//private Map<SpawnId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<SpawnId, Obj> getObjs() {
@@ -122,6 +122,8 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 	
 	@Override
 	public Obj addObj(SpawnId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

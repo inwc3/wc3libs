@@ -134,7 +134,7 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 		}
 	}
 	
-	private Map<ItemId, Obj> _objs = new HashMap<>();
+	//private Map<ItemId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<ItemId, Obj> getObjs() {
@@ -148,6 +148,8 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 	
 	@Override
 	public Obj addObj(ItemId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -177,6 +179,10 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 		super.write(file);
 	}
 	
+	public ItemSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public ItemSLK() {
 		super();
 		
@@ -187,6 +193,12 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 		}
 	}
 
+	public ItemSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(ItemId.valueOf(id));
@@ -194,7 +206,13 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 
 	@Override
 	public void merge(ItemSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<ItemId, Obj> objEntry : other.getObjs().entrySet()) {
+			ItemId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

@@ -94,7 +94,7 @@ public class JMpqPort extends MpqPort {
 				Vector<FileExport> failedExports = new Vector<>();
 	
 				for (FileExport fileExport: volExports) {
-					System.out.println("export " + fileExport.getInFile() + " from " + mpqFile);
+					//System.out.println("export " + fileExport.getInFile() + " from " + mpqFile);
 					File outFile = fileExport.getOutFile();
 
 					try {
@@ -130,8 +130,8 @@ public class JMpqPort extends MpqPort {
 							result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
 						}
 					} catch (JMpqException e) {
-						System.out.println("failed " + fileExport.getInFile() + " at " + mpqFile);
-						e.printStackTrace();
+						//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
+						//e.printStackTrace();
 						failedExports.add(fileExport);
 					}
 				}

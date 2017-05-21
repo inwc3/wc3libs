@@ -20,11 +20,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.port.Orient;
 
 /**
  * manages txt files like UI\\WorldEditStrings.txt and parses their entries to register key->value pairings
@@ -163,6 +166,10 @@ public class TXT {
 				}
 			}
 			
+			public void merge(Field otherField) {
+				merge(otherField, true);
+			}
+			
 			private FieldId _id;
 			
 			public FieldId getId() {
@@ -174,7 +181,7 @@ public class TXT {
 			}
 		}
 		
-		private Map<FieldId, Field> _fields = new HashMap<>();
+		protected Map<FieldId, Field> _fields = new HashMap<>();
 		
 		public Map<FieldId, ? extends Field> getFields() {
 			return _fields;
@@ -272,6 +279,10 @@ public class TXT {
 			}
 		}
 		
+		public void print() {
+			print(System.out);
+		}
+		
 		private TXTSectionId _id;
 		
 		public TXTSectionId getId() {
@@ -279,14 +290,16 @@ public class TXT {
 		}
 		
 		public void write(BufferedWriter writer, Translator translator) throws IOException {
-			writer.write(String.format("[%s]", getId().toString()));
+			if (getId() != null) {
+				writer.write(String.format("[%s]", getId().toString()));
+				
+				writer.newLine();
+			}
 			
-			writer.newLine();
-			
-			for (Map.Entry<FieldId, ? extends Field> fieldEntry : getFields().entrySet()) {
+			for (Map.Entry<FieldId, ? extends TXT.Section.Field> fieldEntry : getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				Field field = fieldEntry.getValue();
-				
+
 				String valLine = field.getValLine(translator);
 
 				writer.write(String.format("%s=%s", fieldId.toString(), valLine));
@@ -360,7 +373,9 @@ public class TXT {
 			TXTSectionId sectionId = entry.getKey();
 			Section otherSection = entry.getValue();
 
-			addSection(sectionId).merge(otherSection, overwrite);
+			Section section = addSection(sectionId);
+			
+			section.merge(otherSection, overwrite);
 		}
 	}
 	
@@ -407,6 +422,10 @@ public class TXT {
 		}
 	}
 	
+	public void print() {
+		print(System.out);
+	}
+	
 	public void read(InputStream inStream) throws IOException {
 		Section curSection = _defaultSection;
 		String line;
@@ -449,7 +468,9 @@ public class TXT {
 	}
 	
 	public void write(BufferedWriter writer, Translator translator) throws IOException {
-		for (Section section : getSections().values()) {			
+		_defaultSection.write(writer, translator);
+		
+		for (Section section : getSections().values()) {
 			section.write(writer, translator);
 		}
 	}
@@ -463,7 +484,7 @@ public class TXT {
 	}
 	
 	public void write(File file, Translator translator) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(Orient.createFileOutputStream(file), StandardCharsets.UTF_8));
 		
 		write(writer, translator);
 		

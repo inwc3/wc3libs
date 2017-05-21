@@ -17,6 +17,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
 import net.moonlightflower.wc3libs.dataTypes.app.DeathType;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.MoveType;
 import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
@@ -27,12 +28,13 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UnitData.slk");
 	
 	public static class States {
-		static public class State<T extends Serializable> extends SLKState<T> {
+		static public class State<T extends DataType> extends SLKState<T> {
 			private static List<State> _values = new ArrayList<>();
 			
 			public static List<State> values() {
@@ -107,7 +109,7 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 			return state.tryCastVal(super.get(state));
 		}
 		
-		public <T extends Serializable> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(States.State<T> state, T val) {
 			super.set(state, val);
 		}
 		
@@ -136,7 +138,7 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 		}
 	}
 	
-	private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {
@@ -150,6 +152,8 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 	
 	@Override
 	public Obj addObj(UnitId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -179,6 +183,10 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 		super.write(file);
 	}
 	
+	public UnitDataSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public UnitDataSLK() {
 		super();
 		
@@ -189,6 +197,12 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 		}
 	}
 
+	public UnitDataSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(UnitId.valueOf(id));
@@ -196,7 +210,13 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 
 	@Override
 	public void merge(UnitDataSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<UnitId, Obj> objEntry : other.getObjs().entrySet()) {
+			UnitId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

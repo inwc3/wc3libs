@@ -12,6 +12,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
 import net.moonlightflower.wc3libs.dataTypes.app.UpgradeClass;
@@ -22,6 +23,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UpgradeData.slk");
@@ -128,7 +130,7 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 		}
 	}
 	
-	private Map<UpgradeId, Obj> _objs = new HashMap<>();
+	//private Map<UpgradeId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<UpgradeId, Obj> getObjs() {
@@ -142,6 +144,8 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 	
 	@Override
 	public Obj addObj(UpgradeId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -171,6 +175,10 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 		super.write(file);
 	}
 	
+	public UpgradeSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public UpgradeSLK() {
 		super();
 		
@@ -180,7 +188,13 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 			addField(state);
 		}
 	}
-
+	
+	public UpgradeSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(UpgradeId.valueOf(id));
@@ -188,7 +202,13 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 
 	@Override
 	public void merge(UpgradeSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<UpgradeId, Obj> objEntry : other.getObjs().entrySet()) {
+			UpgradeId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

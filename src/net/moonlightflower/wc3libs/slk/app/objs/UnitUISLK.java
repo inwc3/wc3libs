@@ -14,6 +14,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.ArmorSound;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.Icon;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.Model;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.ShadowImage;
@@ -29,6 +30,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\unitUI.slk");
@@ -158,7 +160,7 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		}
 	}
 	
-	private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {
@@ -172,6 +174,8 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 	
 	@Override
 	public Obj addObj(UnitId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -201,6 +205,10 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		super.write(file);
 	}
 	
+	public UnitUISLK(SLK slk) {
+		read(slk);
+	}
+	
 	public UnitUISLK() {
 		super();
 		
@@ -211,6 +219,12 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		}
 	}
 
+	public UnitUISLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(UnitId.valueOf(id));
@@ -218,7 +232,13 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 
 	@Override
 	public void merge(UnitUISLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<UnitId, Obj> objEntry : other.getObjs().entrySet()) {
+			UnitId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

@@ -402,7 +402,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 	}
 	
-	private Map<WeatherId, Obj> _objs = new HashMap<>();
+	//private Map<WeatherId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<WeatherId, Obj> getObjs() {
@@ -421,6 +421,8 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	
 	@Override
 	public Obj addObj(WeatherId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

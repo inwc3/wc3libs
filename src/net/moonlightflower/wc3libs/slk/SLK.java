@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -19,6 +21,16 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Mergeable;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.SLK.Obj;
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements Mergeable<Self>, SLKable {
 	public static class FieldData {
@@ -59,7 +71,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 		_fields.put(field, fieldData);
 
-		if (_pivotField == null) _pivotField = field;
+		if (_pivotField == null) {
+			_pivotField = field;
+		}
 	}
 	
 	public void addField(SLKState state, DataType defVal) {
@@ -137,7 +151,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 	
-	private Map<ObjIdType, ObjType> _objs = new HashMap<>();
+	protected Map<ObjIdType, ObjType> _objs = new HashMap<>();
 	
 	public Map<ObjIdType, ObjType> getObjs() {
 		return _objs;
@@ -165,6 +179,19 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	public void merge(Self other, boolean overwrite) {
+		if (overwrite) {
+			_pivotField = other.getPivotField();
+		}
+		
+		for (Map.Entry<FieldId, FieldData> fieldEntry : other.getFields().entrySet()) {
+			FieldId fieldId = fieldEntry.getKey();
+			FieldData fieldData = fieldEntry.getValue();
+			
+			if (!containsField(fieldId)) {
+				addField(fieldId, fieldData.getDefVal());
+			}
+		}
+		
 		for (ObjType otherObj : other.getObjs().values()) {
 			ObjType obj = addObj(otherObj.getId());
 			
@@ -247,12 +274,12 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 		for (Map.Entry<Integer, DataType> entry : data.get(1).entrySet()) {
 			FieldId field = FieldId.valueOf(entry.getValue().toString());
-
+			
 			addField(field);
 		}
 
 		_pivotField = FieldId.valueOf(data.get(1).get(1).toString());
-
+		
 		if (onlyHeader) return;
 
 		//for (int i = 2; i < data.size(); i++) {
@@ -402,8 +429,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 				writeCell(1, y, objId);
 
-				for (int x = 2; x < fieldsByX.size(); x++) {
-					FieldId field = fieldsByX.get(x);
+				for (Map.Entry<Integer, FieldId> fieldEntry : fieldsByX.entrySet()) {
+					int x = fieldEntry.getKey();
+					FieldId field = fieldEntry.getValue();
 
 					DataType val = obj.get(field);
 
@@ -442,5 +470,119 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	public SLK() {
+	}
+	
+	public static SLK createFromInFile(File inFile, File outFile) throws IOException {
+		SLK slk = null;
+		
+		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
+			slk = new UnitAbilsSLK(outFile);
+		}
+		if (inFile.equals(UnitBalanceSLK.GAME_USE_PATH)) {
+			slk = new UnitBalanceSLK(outFile);
+		}
+		if (inFile.equals(UnitDataSLK.GAME_USE_PATH)) {
+			slk = new UnitDataSLK(outFile);
+		}
+		if (inFile.equals(UnitUISLK.GAME_USE_PATH)) {
+			slk = new UnitUISLK(outFile);
+		}
+		if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+			slk = new UnitWeaponsSLK(outFile);
+		}
+		
+		if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
+			slk = new ItemSLK(outFile);
+		}
+		if (inFile.equals(DestructableSLK.GAME_USE_PATH)) {
+			slk = new DestructableSLK(outFile);
+		}
+		if (inFile.equals(AbilSLK.GAME_USE_PATH)) {
+			slk = new AbilSLK(outFile);
+		}
+		if (inFile.equals(BuffSLK.GAME_USE_PATH)) {
+			slk = new BuffSLK(outFile);
+		}
+		if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
+			slk = new UpgradeSLK(outFile);
+		}
+		
+		return slk;
+	}
+	
+	public static SLK createFromInFile(File inFile, SLK sourceSlk) {
+		SLK slk = null;
+		
+		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
+			slk = new UnitAbilsSLK(sourceSlk);
+		}
+		if (inFile.equals(UnitBalanceSLK.GAME_USE_PATH)) {
+			slk = new UnitBalanceSLK(sourceSlk);
+		}
+		if (inFile.equals(UnitDataSLK.GAME_USE_PATH)) {
+			slk = new UnitDataSLK(sourceSlk);
+		}
+		if (inFile.equals(UnitUISLK.GAME_USE_PATH)) {
+			slk = new UnitUISLK(sourceSlk);
+		}
+		if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+			slk = new UnitWeaponsSLK(sourceSlk);
+		}
+		
+		if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
+			slk = new ItemSLK(sourceSlk);
+		}
+		if (inFile.equals(DestructableSLK.GAME_USE_PATH)) {
+			slk = new DestructableSLK(sourceSlk);
+		}
+		if (inFile.equals(AbilSLK.GAME_USE_PATH)) {
+			slk = new AbilSLK(sourceSlk);
+		}
+		if (inFile.equals(BuffSLK.GAME_USE_PATH)) {
+			slk = new BuffSLK(sourceSlk);
+		}
+		if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
+			slk = new UpgradeSLK(sourceSlk);
+		}
+		
+		return slk;
+	}
+	
+	public static SLK createFromInFile(File inFile) {
+		SLK slk = null;
+		
+		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
+			slk = new UnitAbilsSLK();
+		}
+		if (inFile.equals(UnitBalanceSLK.GAME_USE_PATH)) {
+			slk = new UnitBalanceSLK();
+		}
+		if (inFile.equals(UnitDataSLK.GAME_USE_PATH)) {
+			slk = new UnitDataSLK();
+		}
+		if (inFile.equals(UnitUISLK.GAME_USE_PATH)) {
+			slk = new UnitUISLK();
+		}
+		if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+			slk = new UnitWeaponsSLK();
+		}
+		
+		if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
+			slk = new ItemSLK();
+		}
+		if (inFile.equals(DestructableSLK.GAME_USE_PATH)) {
+			slk = new DestructableSLK();
+		}
+		if (inFile.equals(AbilSLK.GAME_USE_PATH)) {
+			slk = new AbilSLK();
+		}
+		if (inFile.equals(BuffSLK.GAME_USE_PATH)) {
+			slk = new BuffSLK();
+		}
+		if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
+			slk = new UpgradeSLK();
+		}
+		
+		return slk;
 	}
 }

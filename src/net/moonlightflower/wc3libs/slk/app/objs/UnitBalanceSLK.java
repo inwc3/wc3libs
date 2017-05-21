@@ -15,6 +15,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.AttributeType;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.DefType;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.PathingPrevent;
 import net.moonlightflower.wc3libs.dataTypes.app.PathingRequire;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
@@ -28,6 +29,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UnitBalance.slk");
@@ -163,7 +165,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		}
 	}
 	
-	private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {
@@ -177,6 +179,8 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 	
 	@Override
 	public Obj addObj(UnitId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -206,6 +210,10 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		super.write(file);
 	}
 	
+	public UnitBalanceSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public UnitBalanceSLK() {
 		super();
 		
@@ -216,6 +224,12 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		}
 	}
 
+	public UnitBalanceSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
+	
 	@Override
 	public Obj createObj(ObjId id) {
 		return new Obj(UnitId.valueOf(id));
@@ -223,7 +237,13 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 
 	@Override
 	public void merge(UnitBalanceSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<UnitId, Obj> objEntry : other.getObjs().entrySet()) {
+			UnitId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,6 +148,14 @@ end*/
 	
 	public WTS(InputStream inStream) throws IOException {
 		read(inStream);
+	}
+	
+	public WTS(File file) throws IOException {
+		InputStream inStream = new FileInputStream(file);
+		
+		read(inStream);
+		
+		inStream.close();
 	}
 	
 	public static WTS ofMapFile(File mapFile) throws Exception {

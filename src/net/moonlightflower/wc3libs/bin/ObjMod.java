@@ -18,6 +18,17 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
+import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
 import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;;
 
@@ -112,6 +123,7 @@ public class ObjMod {
 			
 			public void setVal(Val val, int level, int dataPt) {
 				_vals.put(level, val);
+				setDataPt(dataPt);
 			}
 			
 			public void setVal(Val val, int level) {
@@ -630,10 +642,66 @@ c2=c2+modsAmount;
 		}
 	}
 	
-	public void reduce(MetaSLK reduceMetaSlk) {
-		Map<String, SLK> outSlks = new HashMap<>();
-		Profile outProfile = new Profile();
-		ObjMod outObjMod = copy();
+	public static class ObjPack {
+		private Map<File, SLK> _slks = new HashMap<>();
+		
+		public Map<File, SLK> getSlks() {
+			return _slks;
+		}
+		
+		private Profile _profile = new Profile();
+		
+		public Profile getProfile() {
+			return _profile;
+		}
+		
+		private ObjMod _objMod;
+		
+		public ObjMod getObjMod() {
+			return _objMod;
+		}
+		
+		private ObjPack(ObjMod orig) {
+			_objMod = orig.copy();
+		}
+	}
+	
+	private File convertSLKName(String slkName) {
+		//convert slk names
+		switch (slkName) {
+		case "AbilityData":
+			return AbilSLK.GAME_USE_PATH;
+		case "AbilityBuffData":
+			return BuffSLK.GAME_USE_PATH;
+		case "DestructableData":
+			return DestructableSLK.GAME_USE_PATH;
+		case "DoodadData":
+			return DoodSLK.GAME_USE_PATH;
+		case "ItemData":
+			return ItemSLK.GAME_USE_PATH;
+		case "UnitAbilities":
+			return UnitAbilsSLK.GAME_USE_PATH;
+		case "UnitBalance":
+			return UnitBalanceSLK.GAME_USE_PATH;
+		case "UnitData":
+			return UnitDataSLK.GAME_USE_PATH;
+		case "UnitUI":
+			return UnitUISLK.GAME_USE_PATH;
+		case "UnitWeapons":
+			return UnitWeaponsSLK.GAME_USE_PATH;
+		case "UpgradeData":
+			return UpgradeSLK.GAME_USE_PATH;
+		}
+		
+		return null;
+	}
+	
+	public ObjPack reduce(MetaSLK reduceMetaSlk) throws Exception {
+		ObjPack pack = new ObjPack(this);
+		
+		Map<File, SLK> outSlks = pack.getSlks();
+		Profile outProfile = pack.getProfile();
+		ObjMod outObjMod = pack.getObjMod();
 		
 		for (Obj obj : getObjs().values()) {
 			ObjId objId = obj.getId();
@@ -669,28 +737,38 @@ c2=c2+modsAmount;
 							profileField.set(profileVal, index);*/
 						}
 					} else {
-						//convert slk names
-						switch (slkName) {
-						
-						}
+						File slkFile = convertSLKName(slkName);
 
-						SLK outSlk = outSlks.get(slkName);
+						assert(slkFile != null);
+						
+						SLK outSlk = outSlks.get(slkFile);
 						
 						if (outSlk == null) {
 							outSlk = new RawSLK();
-							
-							outSlks.put(slkName, outSlk);
+							//System.out.println("slkFile " + slkFile + ";" + slkName);
+							outSlks.put(slkFile, outSlk);
 						}
 						
 						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
 							
-							if (metaObj.get(FieldId.valueOf("Field")).equals("Data")) {
-								slkFieldName += (char) ((int) 'A' + field.getDataPt() - 1);
+							if (metaObj.get(FieldId.valueOf("field")).equals("Data")) {
+								int dataPt = field.getDataPt();
+								
+								if (dataPt < 1) throw new Exception("dataPt < 1");
+								if (dataPt > 8) throw new Exception("dataPt > 9");
+								
+								slkFieldName += (char) ('A' + dataPt - 1);
 							}
 							
-							Integer repeat = Int.valueOf(metaObj.get(FieldId.valueOf("repeat"))).toInt();
+							Integer repeat = null;
+							
+							try {
+								repeat = Int.valueOf(metaObj.get(FieldId.valueOf("repeat"))).toInt();
+							} catch (Exception e) {
+								
+							}
 
 							if ((repeat != null) && (repeat > 0)) {
 								slkFieldName += level;
@@ -710,6 +788,14 @@ c2=c2+modsAmount;
 				}
 			}
 		}
+		
+		for (Map.Entry<File, SLK> slkEntry : outSlks.entrySet()) {
+			SLK convSlk = SLK.createFromInFile(slkEntry.getKey(), slkEntry.getValue());
+			
+			outSlks.put(slkEntry.getKey(), convSlk);
+		}
+		
+		return pack;
 	}
 	
 	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
@@ -895,7 +981,7 @@ c2=c2+modsAmount;
 		}
 		}
 		
-		System.out.println(c+";"+c2);
+		//System.out.println(c+";"+c2);
 	}
 	
 	public void write(OutputStream outStream, boolean extended) throws IOException {

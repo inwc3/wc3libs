@@ -383,7 +383,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 	}
 	
-	private Map<WaterId, Obj> _objs = new HashMap<>();
+	//private Map<WaterId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<WaterId, Obj> getObjs() {
@@ -397,6 +397,8 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 	
 	@Override
 	public Obj addObj(WaterId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

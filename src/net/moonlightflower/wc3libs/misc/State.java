@@ -4,7 +4,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.Serializable;
 
-abstract public class State<T extends Serializable> {
+abstract public class State<T extends DataType> {
 	private DataTypeInfo _info;
 	
 	public DataTypeInfo getInfo() {

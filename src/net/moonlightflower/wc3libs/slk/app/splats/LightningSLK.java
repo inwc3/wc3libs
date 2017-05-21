@@ -174,7 +174,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		}
 	}
 	
-	private Map<LightningId, Obj> _objs = new HashMap<>();
+	//private Map<LightningId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<LightningId, Obj> getObjs() {
@@ -188,6 +188,8 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 	
 	@Override
 	public Obj addObj(LightningId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

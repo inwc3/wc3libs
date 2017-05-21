@@ -221,7 +221,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 	}
 	
-	private Map<UberSplatId, Obj> _objs = new HashMap<>();
+	//private Map<UberSplatId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<UberSplatId, Obj> getObjs() {
@@ -235,6 +235,8 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 	
 	@Override
 	public Obj addObj(UberSplatId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);

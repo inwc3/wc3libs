@@ -14,12 +14,14 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.BuffCode;
 import net.moonlightflower.wc3libs.dataTypes.app.BuffId;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\AbilityBuffData.slk");
@@ -106,7 +108,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		}
 	}
 	
-	private Map<BuffId, Obj> _objs = new HashMap<>();
+	//private Map<BuffId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<BuffId, Obj> getObjs() {
@@ -120,6 +122,8 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 	
 	@Override
 	public Obj addObj(BuffId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
@@ -149,6 +153,10 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		super.write(file);
 	}
 	
+	public BuffSLK(SLK slk) {
+		read(slk);
+	}
+	
 	public BuffSLK() {
 		super();
 		
@@ -158,6 +166,12 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 			addField(state);
 		}
 	}
+	
+	public BuffSLK(File file) throws IOException {
+		this();
+		
+		read(file);
+	}
 
 	@Override
 	public Obj createObj(ObjId id) {
@@ -166,7 +180,13 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 
 	@Override
 	public void merge(BuffSLK other, boolean overwrite) {
-		// TODO Auto-generated method stub
-		
+		for (Map.Entry<BuffId, Obj> objEntry : other.getObjs().entrySet()) {
+			BuffId objId = objEntry.getKey();
+			Obj otherObj = objEntry.getValue();
+			
+			Obj obj = addObj(objId);
+			
+			obj.merge(otherObj);
+		}
 	}
 }

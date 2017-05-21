@@ -178,7 +178,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 		}
 	}
 	
-	private Map<CliffId, Obj> _objs = new HashMap<>();
+	//private Map<CliffId, Obj> _objs = new HashMap<>();
 	
 	@Override
 	public Map<CliffId, Obj> getObjs() {
@@ -192,6 +192,8 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 	
 	@Override
 	public Obj addObj(CliffId id) {
+		if (_objs.containsKey(id)) return _objs.get(id);
+		
 		Obj obj = new Obj(id);
 		
 		addObj(obj);
