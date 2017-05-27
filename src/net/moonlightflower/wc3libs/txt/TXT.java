@@ -35,7 +35,7 @@ import net.moonlightflower.wc3libs.port.Orient;
 public class TXT {	
 	public static class Section {
 		public static class Field {
-			private List<DataType> _vals = new ArrayList<>();
+			private final List<DataType> _vals = new ArrayList<>();
 			
 			public List<DataType> getVals() {
 				return _vals;
@@ -49,13 +49,17 @@ public class TXT {
 				for (DataType val : getVals()) {
 					if (c > 0) s.append(","); 
 					
-					String valS = (String) val.toTXTVal();
+					String valS = (val == null) ? null : val.toTXTVal().toString();
 					
-					if ((valS instanceof String) && (translator != null)) {
-						valS = translator.translate(valS);
+					if (valS != null) {
+						if ((valS instanceof String) && (translator != null)) {
+							valS = translator.translate(valS);
+							
+							valS = "\"" + valS + "\"";
+						}
+						
+						s.append(valS);
 					}
-					
-					s.append(valS);
 					
 					c++;
 				}
@@ -181,7 +185,7 @@ public class TXT {
 			}
 		}
 		
-		protected Map<FieldId, Field> _fields = new HashMap<>();
+		protected final Map<FieldId, Field> _fields = new HashMap<>();
 		
 		public Map<FieldId, ? extends Field> getFields() {
 			return _fields;
@@ -283,7 +287,7 @@ public class TXT {
 			print(System.out);
 		}
 		
-		private TXTSectionId _id;
+		private final TXTSectionId _id;
 		
 		public TXTSectionId getId() {
 			return _id;
@@ -317,8 +321,8 @@ public class TXT {
 		}
 	}
 
-	private Section _defaultSection = new Section((TXTSectionId) null);
-	private Map<TXTSectionId, Section> _sections = new HashMap<>();
+	private final Section _defaultSection = new Section((TXTSectionId) null);
+	private final Map<TXTSectionId, Section> _sections = new HashMap<>();
 	
 	public Map<TXTSectionId, Section> getSections() {
 		return _sections;
@@ -444,7 +448,13 @@ public class TXT {
 			Matcher sectionMatcher = sectionPattern.matcher(lineTrimmed);
 			
 			if (sectionMatcher.matches()) {
-				curSection = addSection(TXTSectionId.valueOf(sectionMatcher.group(1)));
+				TXTSectionId sectionId = TXTSectionId.valueOf(sectionMatcher.group(1));
+				
+				if (sectionId.toString().startsWith("h")) {
+					System.out.println("section " + sectionId);
+				}
+				
+				curSection = addSection(sectionId);
 			}
 			
 			Pattern valPattern = Pattern.compile("([^=]+)=(.+)");
@@ -452,6 +462,7 @@ public class TXT {
 			Matcher valMatcher = valPattern.matcher(line);
 
 			if (valMatcher.matches()) {
+				//System.out.println("setline " + FieldId.valueOf(valMatcher.group(1)) + ";" + valMatcher.group(2));
 				curSection.setLine(FieldId.valueOf(valMatcher.group(1)), valMatcher.group(2));
 			}
 		}

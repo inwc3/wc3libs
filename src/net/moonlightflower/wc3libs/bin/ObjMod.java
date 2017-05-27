@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 
+import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -36,9 +40,6 @@ import net.moonlightflower.wc3libs.txt.TXTSectionId;;
  * base class for object modification files
  */
 public class ObjMod {
-	static int c = 0;
-	static int c2=0;
-
 	public static class Obj {
 		public static class Field {
 			public enum ValType {
@@ -71,7 +72,7 @@ public class ObjMod {
 			}
 			
 			public static class Val {
-				private Object _val;
+				private DataType _val;
 				private ValType _valType;
 				
 				public Object getVal() {
@@ -87,23 +88,23 @@ public class ObjMod {
 					return _valType;
 				}
 				
-				private Val(Object val, ValType valType) {
+				private Val(DataType val, ValType valType) {
 					_val = val;
 					_valType = valType;
 				}
 				
 				public static Val valueOf(int val) {
-					return new Val(val, ValType.INT);
+					return new Val(Int.valueOf(val), ValType.INT);
 				}
 				
 				public static Val valueOf(float val, boolean unreal) {
-					if (unreal) return new Val(val, ValType.UNREAL);
+					if (unreal) return new Val(Real.valueOf(val), ValType.UNREAL);
 					
-					return new Val(val, ValType.REAL);
+					return new Val(Real.valueOf(val), ValType.REAL);
 				}
 				
 				public static Val valueOf(String val) {
-					return new Val(val, ValType.STRING);
+					return new Val(Wc3String.valueOf(val), ValType.STRING);
 				}
 			}
 			
@@ -334,7 +335,7 @@ public class ObjMod {
 
 		private void read_0x2(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
 			int modsAmount = stream.readInt("modsAmount");
-c=c+modsAmount;
+
 			for (int i = 0; i < modsAmount; i++) {				
 				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
 
@@ -455,7 +456,7 @@ c=c+modsAmount;
 			for (Field field : getFields().values()) {
 				modsAmount += field.getVals().size();
 			}
-c2=c2+modsAmount;
+
 			stream.writeInt(modsAmount);
 			
 			for (int i = 0; i < getFieldsList().size(); i++) {
@@ -604,10 +605,18 @@ c2=c2+modsAmount;
 	}
 	
 	public void removeObj(Obj val) {
-		_objs.remove(val);
+		_objs.remove(val.getId());
 		_objsList.remove(val);
 	}
 
+	public void removeObj(ObjId id) {
+		Obj obj = getObj(id);
+		
+		if (obj != null) {
+			removeObj(obj);
+		}
+	}
+	
 	public Obj addObj(ObjId id, ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
@@ -643,6 +652,12 @@ c2=c2+modsAmount;
 	}
 	
 	public static class ObjPack {
+		private Map<ObjId, ObjId> _baseObjIds = new HashMap<>();
+		
+		public Map<ObjId, ObjId> getBaseObjIds() {
+			return _baseObjIds;
+		}
+		
 		private Map<File, SLK> _slks = new HashMap<>();
 		
 		public Map<File, SLK> getSlks() {
@@ -663,6 +678,10 @@ c2=c2+modsAmount;
 		
 		private ObjPack(ObjMod orig) {
 			_objMod = orig.copy();
+			
+			for (Obj obj : _objMod.getCustomObjs()) {
+				_baseObjIds.put(obj.getId(), obj.getBaseId());
+			}
 		}
 	}
 	
@@ -730,22 +749,35 @@ c2=c2+modsAmount;
 							
 							Profile.Obj profileObj = outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
 							
-							Profile.Obj.Field profileField = profileObj.addField(FieldId.valueOf(slkFieldName));
+							FieldId profileFieldId = FieldId.valueOf(slkFieldName);
 							
-							/*TXTVal profileVal = TXTVal.valueOf(val);
+							Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
+							DataType profileVal = null;
 							
-							profileField.set(profileVal, index);*/
+							if (val.getType().equals(Obj.Field.ValType.INT)) {
+								profileVal = Int.valueOf(val.getVal());
+							} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
+								profileVal = Real.valueOf(val.getVal());
+							} else if (val.getType().equals(Obj.Field.ValType.UNREAL)) {
+								profileVal = Real.valueOf(val.getVal());
+							} else {
+								profileVal = Wc3String.valueOf(val.getVal());
+							}
+							
+							profileField.set(profileVal, index);
 						}
+						
+						outObjMod.getObj(objId).removeField(fieldId);
 					} else {
 						File slkFile = convertSLKName(slkName);
 
-						assert(slkFile != null);
-						
+						if (slkFile == null) throw new RuntimeException("no slkFile for name " + slkName);
+
 						SLK outSlk = outSlks.get(slkFile);
 						
 						if (outSlk == null) {
 							outSlk = new RawSLK();
-							//System.out.println("slkFile " + slkFile + ";" + slkName);
+
 							outSlks.put(slkFile, outSlk);
 						}
 						
@@ -771,6 +803,8 @@ c2=c2+modsAmount;
 							}
 
 							if ((repeat != null) && (repeat > 0)) {
+								if (repeat > 4) continue;
+								
 								slkFieldName += level;
 							}
 							
@@ -781,12 +815,14 @@ c2=c2+modsAmount;
 							SLK.Obj slkObj = outSlk.addObj(ObjId.valueOf(objId));
 							
 							slkObj.set(slkFieldId, Wc3String.valueOf(val));
+							
+							outObjMod.getObj(objId).removeField(fieldId);
 						}
 					}
-					
-					outObjMod.getObj(objId).removeField(fieldId);
 				}
 			}
+			
+			outObjMod.removeObj(objId);
 		}
 		
 		for (Map.Entry<File, SLK> slkEntry : outSlks.entrySet()) {
@@ -980,8 +1016,6 @@ c2=c2+modsAmount;
 			break;
 		}
 		}
-		
-		//System.out.println(c+";"+c2);
 	}
 	
 	public void write(OutputStream outStream, boolean extended) throws IOException {

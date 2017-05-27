@@ -1,0 +1,3 @@
+list "D:\Human01.w3m" 1>out2.txt
+
+pause

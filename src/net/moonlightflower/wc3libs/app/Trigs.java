@@ -204,6 +204,9 @@ public class Trigs {
 			setRunOnMapInit(wtgTrig.isRunOnMapInit());
 			setTrigCat(getTrigCats().get(wtgTrig.getCatIndex()));
 		}
+		
+		public Trig() {
+		}
 	}
 	
 	public class TextTrig extends Trig {
@@ -276,6 +279,7 @@ public class Trigs {
 		}
 		
 		public GUITrig() {
+			super();
 		}
 	}
 	

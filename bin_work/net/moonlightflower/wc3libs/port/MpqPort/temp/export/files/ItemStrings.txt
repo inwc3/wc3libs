@@ -1,0 +1,1875 @@
+﻿//names of dependecies
+[TWN1]
+Name=Rathaus oder Haupthaus oder Baum des Lebens oder Nekropole
+
+[TWN2]
+Name=Burg oder Hochburg oder Baum des Alters oder Halle der Toten
+
+[TWN3]
+Name=Schloss oder Festung oder Baum der Ewigkeit oder Schwarze Zitadelle
+
+[TALT]
+Name=Ein Altar
+
+[amrc]
+Name=Amulett des Rückrufs
+Hotkey=R
+Tip=Amulett des |cffffcc00R|rückrufs kaufen
+Ubertip="Teleportiert bei Benutzung <AIrt,DataA1> Einheiten des Spielers aus dem Zielgebiet zum Aufenthaltsort des Helden."
+Description="Kann eingesetzt werden, um Einheiten zum Benutzer zu teleportieren."
+
+[ankh]
+Name=Ankh der Reinkarnation
+Hotkey=A
+Tip=|cffffcc00A|rnkh der Reinkarnation kaufen
+Ubertip="Bringt einen Helden, der das Ankh trägt, mit <AIrc,DataB1> Trefferpunkten wieder ins Leben zurück, sobald er stirbt."
+Description=Ermöglicht die Reinkarnation nach dem Tod.
+
+[belv]
+Name=Stiefel von Quel'Thalas +6
+Hotkey=E
+Tip=Stiefel von Qu|cffffcc00e|rl'Thalas kaufen
+Ubertip="Erhöht die Beweglichkeit eines Helden um 6, wenn getragen."
+Description=Verleiht einen Beweglichkeits-Bonus.
+
+[bgst]
+Name=Gürtel der Gigantenkraft +6
+Hotkey=R
+Tip=Gü|cffffcc00r|rtel der Gigantenkraft kaufen
+Ubertip="Erhöht die Kraft eines Helden um 6, wenn getragen."
+Description=Verleiht einen Kraft-Bonus.
+
+[bspd]
+Name=Stiefel der Geschwindigkeit
+Hotkey=F
+Tip=Stie|cffffcc00f|rel der Geschwindigkeit kaufen
+Ubertip="Erhöht das Bewegungstempo eines Helden, wenn getragen."
+Description=Erhöht die Bewegungsrate.
+
+[ccmd]
+Name=Szepter der Herrschaft
+Hotkey=K
+Tip=Szepter der Herrs|cffffcc00c|rhaft kaufen
+Ubertip="Überträgt die Steuerung einer angewählten Nicht-Helden-Einheit auf den Spieler, der das Szepter benutzt. Die Übertragung der Steuerung erfolgt dauerhaft. |nKann nicht gegen Helden oder Unholde oberhalb der Stufe <AIco,DataA1> eingesetzt werden. |nBietet <ccmd,uses> Aufladungen."
+Description=Ermöglicht die Gedankenkontrolle von Nicht-Helden-Einheiten.
+
+[ciri]
+Name=Robe der Weisen +6
+Hotkey=R
+Tip=|cffffcc00R|robe der Weisen kaufen
+Ubertip="Erhöht die Intelligenz eines Helden um 6, wenn getragen."
+Description=Verleiht einen Intelligenz-Bonus.
+
+[ckng]
+Name=Krone der Könige +5
+Hotkey=K
+Tip=Krone der |cffffcc00K|rönige kaufen
+Ubertip="Erhöht Kraft, Intelligenz und Beweglichkeit eines Helden um 5, wenn getragen."
+Description="Verleiht einen +5-Bonus zu Beweglichkeit, Kraft und Intelligenz."
+
+[clsd]
+Name=Umhang der Schatten
+Hotkey=C
+Tip=Umhang der S|cffffcc00c|rhatten kaufen
+Ubertip="Verleiht einem Helden nachts Unsichtbarkeit, wenn er getragen wird. Ein unsichtbarer Held kann bis zur Entdeckung von feindlichen Einheiten nicht anvisiert werden. Wenn sich der Held bewegt, angreift, eine Fähigkeit benutzt oder einen Zauber wirkt, geht der Unsichtbarkeitseffekt verloren."
+Description=Verleiht die 'Schattenmimik'-Fähigkeit.
+
+[crys]
+Name=Kristallkugel
+Hotkey=K
+Tip=|cffffcc00K|rristallkugel kaufen
+Ubertip="Macht das Zielgebiet sichtbar. Unsichtbare Einheiten werden vom Kristallkugel-Effekt ebenfalls sichtbar gemacht. |nHält <AIta,Dur1> Sekunden lang an."
+Description=Erlaubt das Betrachten entfernter Gebiete.
+
+[desc]
+Name=Kelens Dolch des Entkommens
+Hotkey=E
+Tip=Dolch des |cffffcc00E|rntkommens kaufen
+Ubertip="Ermöglicht dem Helden, über eine kurze Strecke zu teleportieren."
+Description=Teleportiert den Helden über eine kurze Strecke.
+
+[flag]
+Name=Menschen-Flagge
+Tip=Menschen-Flagge kaufen
+Ubertip="Ein Objekt, das häufig in Spezial-Szenarios als Sieg-Bedingung erobert werden muss."
+Description=Kann in speziellen Szenarien gefunden werden.
+
+[nflg]
+Name=Nachtelfen-Flagge
+Tip=Nachtelfen-Flagge kaufen
+Ubertip="Ein Objekt, das häufig in Spezial-Szenarios als Sieg-Bedingung erobert werden muss."
+Description=Kann in speziellen Szenarien gefunden werden.
+
+[oflg]
+Name=Orc-Flagge
+Tip=Orc-Flagge kaufen
+Ubertip="Ein Objekt, das häufig in Spezial-Szenarios als Sieg-Bedingung erobert werden muss."
+Description=Kann in speziellen Szenarien gefunden werden.
+
+[uflg]
+Name=Untoten-Flagge
+Tip=Untoten-Flagge kaufen
+Ubertip="Ein Objekt, das häufig in Spezial-Szenarios als Sieg-Bedingung erobert werden muss."
+Description=Kann in speziellen Szenarien gefunden werden.
+
+[gemt]
+Name=Stein der wahren Sicht
+Hotkey=W
+Tip=Stein der |cffffcc00w|rahren Sicht kaufen
+Ubertip="Ermöglicht dem Helden, versteckte oder unsichtbare Einheiten in seinem Sichtfeld zu entdecken, wenn getragen."
+Description="Ermöglicht es, unsichtbare Einheiten zu sehen."
+
+[gobm]
+Name=Goblin-Landminen
+Hotkey=L
+Tip=Goblin-|cffffcc00L|randminen kaufen
+Ubertip="Platziert eine versteckte Landmine an einer gewählten Stelle. Feindliche Einheiten, die in die Nähe der Landmine kommen, aktivieren die Mine, wodurch die Mine explodiert und in der Nähe befindlichen Einheiten einen Wirkungsbereich-Schaden zufügt. |nBietet <gobm,uses> Aufladungen."
+Description=Explosive Minen.
+
+[gsou]
+Name=Seelenstein
+Hotkey=S
+Tip=|cffffcc00S|reelenstein kaufen
+Ubertip="Kerkert bei Benutzung den anvisierten feindlichen Helden im Seelenstein ein. Der feindliche Held kehrt wieder ins Spiel zurück, wenn der Träger des Seelensteins sein Leben verliert. Während ein feindlicher Held eingekerkert ist, wird der Träger des Seelensteins dem Feind auch durch den Nebel des Krieges hindurch angezeigt."
+Description=Ermöglicht den Diebstahl einer Heldenseele.
+
+[guvi]
+Name=Glyphe der Ultrasicht
+Hotkey=U
+Tip=Glyphe der |cffffcc00U|rltrasicht kaufen
+Ubertip="Verleiht all Euren Einheiten die Fähigkeit, in der Nacht genauso weit zu sehen wie am Tage."
+Description=Verbessert die Nachtsicht.
+
+[gfor]
+Name=Glyphe der Befestigung
+Hotkey=V
+Tip=Glyphe der |cffffcc00V|rerstärkung kaufen
+Ubertip="Verbessert Panzerung und Trefferpunkte Eurer Gebäude."
+Description=Verbessert Panzerung und Trefferpunkte von Gebäuden.
+
+[soul]
+Name=Seele
+Tip=Seele kaufen
+Ubertip="Eine Seele, die mit Hilfe der Magie eines Seelensteins gefangen wurde."
+Description=Dies ist eine gefangene Seele.
+
+[mdpb]
+Name=Medusa-Kiesel
+Purchase Medusa Pebble
+Hotkey=K
+Tip=Medusa-|cffffcc00K|riesel kaufen
+Ubertip="Verwandelt bei Benutzung die angewählte feindliche Nicht-Helden-Einheit in Stein. Eine Einheit, die vom Medusa-Kiesel in Stein verwandelt wird, scheidet dauerhaft aus dem Spiel aus."
+Description=Verwandelt eine angewählte Einheit in Stein.
+
+[rag1]
+Name=Schuhe der Beweglichkeit +3
+Hotkey=W
+Tip=Schuhe der Be|cffffcc00w|reglichkeit +3 kaufen
+Ubertip="Erhöhen die Beweglichkeit eines Helden um 3, wenn getragen."
+Description=Erhöht die Beweglichkeit um 3.
+
+[rat3]
+Name=Klauen des Angriffs +3
+Hotkey=K
+Tip=|cffffcc00K|rlauen des Angriffs +3 kaufen
+Ubertip="Erhöht den Angriffsschaden eines Helden um 3, wenn getragen."
+Description=Verstärkt den Angriffsschaden um 3.
+
+[rin1]
+Name=Mantel der Intelligenz +3
+Hotkey=I
+Tip=Mantel der |cffffcc00I|rntelligenz +3 kaufen
+Ubertip="Erhöht die Intelligenz eines Helden um 3, wenn getragen."
+Description=Erhöht die Intelligenz um 3.
+
+[rde1]
+Name=Ring des Schutzes +2
+Hotkey=2
+Tip=Ring des Schutzes +|cffffcc002|r kaufen
+Ubertip="Erhöht die Rüstung eines Helden um 2, wenn er getragen wird."
+Description=Erhöht die Rüstung um 2.
+
+[rde2]
+Name=Ring des Schutzes +3
+Hotkey=3
+Tip=Ring des Schutzes +|cffffcc003|r kaufen
+Ubertip="Erhöht die Rüstung eines Helden um 3, wenn er getragen wird."
+Description=Erhöht die Rüstung um 3.
+
+[rde3]
+Name=Ring des Schutzes +4
+Hotkey=4
+Tip=Ring des Schutzes +|cffffcc004|r kaufen
+Ubertip="Erhöht die Rüstung eines Helden um 4, wenn er getragen wird."
+Description=Erhöht die Rüstung um 4.
+
+[rhth]
+Name=Khadgars Stein der Gesundheit
+Hotkey=H
+Tip=Khadgars Edelstein der Gesund|cffffcc00h|reit kaufen
+Ubertip="Erhöht die Trefferpunkte des Helden um <AIl2,DataA1>, wenn getragen."
+Description=Erhöht die Trefferpunkte des Helden.
+
+[rst1]
+Name=Oger-Kraft-Handschuhe +3
+Hotkey=K
+Tip=Oger-Kraft-Hand|cffffcc00s|rchuhe +3 kaufen
+Ubertip="Erhöht die Kraft eines Helden um 3, wenn getragen."
+Description=Erhöht die Kraft um 3.
+
+[ofir]
+Name=Feuerkugel
+Hotkey=F
+Tip=|cffffcc00F|reuerkugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Feuerschaden von <AIfb,DataA1> hinzu, wenn getragen. Die Angriffe des Helden werden zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und verursachen auch einen Gebietsschaden an feindlichen Einheiten in seiner Umgebung."
+Description=Angriffe verursachen auch Feuer-Schaden.
+
+[ofro]
+Name=Frostkugel
+Hotkey=R
+Tip=F|cffffcc00r|rostkugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Kälteschaden von <AIob,DataA1> hinzu, wenn getragen. Die Angriffe des Helden werden darüber hinaus zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und verlangsamen dabei auch <AIob,Dur1> Sekunden lang Bewegungstempo und Angriffsrate des Feindes."
+Description=Angriffe verursachen Frost-Schock.
+
+[olig]
+Name=Blitzkugel
+Hotkey=L
+Tip=B|cffffcc00l|ritzkugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Schaden von <AIlb,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden werden darüber hinaus zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, bannen Magie und verlangsamen <AIlp,Dur1> Sekunden lang das Bewegungstempo des Feindes. |n|cffffcc00Verursacht einen zusätzlichen Schaden von <AIlp,DataC1> Punkten an beschworenen Einheiten."
+Description=Angriffe verursachen Blitzschaden.
+
+[oli2]
+Name=Blitzkugel
+Hotkey=L
+Tip=B|cffffcc00l|ritzkugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Schaden von <AIll,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden werden darüber hinaus zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und haben eine Chance, Magie zu bannen und <AIlp,Dur1> Sekunden lang das Bewegungstempo des Feindes zu verlangsamen. |n|cffffcc00Verursacht einen zusätzlichen Schaden von <AIpg,DataC1> Punkten an beschworenen Einheiten."
+Description=Angriffe verursachen Blitzschaden.
+
+[oven]
+Name=Giftkugel
+Hotkey=F
+Tip=Gi|cffffcc00f|rtkugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Schaden von <AIpb,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden werden darüber hinaus zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und sie vergiften feindliche Einheiten <Apo2,Dur1> Sekunden lang."
+Description=Angriffe verursachen Giftschaden.
+
+[odef]
+Name=Dunkelheitskugel
+Hotkey=D
+Tip=|cffffcc00D|runkelheitskugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Schaden von <AIdf,DataA1> Punkten hinzu, wenn getragen. Der Angriff des Helden wird darüber hinaus zum Distanzangriff, wenn Luft-Einheiten angegriffen werden, und erzeugt einen 'Dunklen Diener', wenn dies der Vernichtungsschlag gegen eine feindliche Einheit ist. Der 'Dunkle Diener' existiert <ANbs,DataC1> Sekunden lang."
+Description=Angriffe können 'Dunkle Diener' erzeugen.
+
+[ocor]
+Name=Verderbniskugel
+Hotkey=B
+Tip=Verder|cffffcc00b|rniskugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Schaden von <AIcb,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden werden darüber hinaus zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und reduzieren die Rüstung feindlicher Einheiten für <AIcb,Dur1> Sekunden."
+Description=Angriffe reduzieren Rüstung.
+
+[pdiv]
+Name=Offenbarungstrank
+Hotkey=O
+Tip=|cffffcc00O|rffenbarungstrank kaufen
+Ubertip="Macht den Helden <AIdv,Dur1> Sekunden lang unverwundbar."
+Description=Macht einen Helden unverwundbar.
+
+[phea]
+Name=Heiltrank
+Hotkey=T
+Tip=Heil|cffffcc00t|rrank kaufen
+Ubertip="Heilt bei Benutzung <AIh1,DataA1> Trefferpunkte."
+Description=Stellt verlorene Trefferpunkte wieder her.
+
+[pghe]
+Name=Großer Heiltrank
+Hotkey=R
+Tip=G|cffffcc00r|roßen Heiltrank kaufen
+Ubertip="Heilt bei Benutzung <AIh2,DataA1> Trefferpunkte."
+Description=Stellt verlorene Trefferpunkte wieder her.
+
+[pinv]
+Name=Unsichtbarkeitstrank
+Hotkey=I
+Tip=Uns|cffffcc00i|rchtbarkeitstrank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nMacht den Helden bei Benutzung für <AIv1,Dur1> Sekunden unsichtbar. Ein unsichtbarer Held kann bis zur Entdeckung von feindlichen Einheiten nicht anvisiert werden. Wenn der Held angreift, eine Fähigkeit benutzt oder einen Zauber wirkt, geht der Unsichtbarkeitseffekt verloren."
+Description=Macht einen Helden zeitweise unsichtbar.
+
+[pgin]
+Name=Großer |nUnsichtbarkeitstrank
+Hotkey=I
+Tip=Großen Uns|cffffcc00i|rchtbarkeitstrank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nMacht den Helden bei Benutzung für <AIv2,Dur1> Sekunden unsichtbar. Ein unsichtbarer Held kann bis zur Entdeckung von feindlichen Einheiten nicht anvisiert werden. Wenn der Held angreift, eine Fähigkeit benutzt oder einen Zauber wirkt, geht der Unsichtbarkeitseffekt verloren."
+Description=Macht einen Helden zeitweise unsichtbar.
+
+[pman]
+Name=Manatrank
+Hotkey=M
+Tip=|cffffcc00M|ranatrank kaufen
+Ubertip="Stellt bei Benutzung <AIm1,DataA1> Mana wieder her."
+Description=Stellt verlorenes Mana wieder her.
+
+[pgma]
+Name=Großer Manatrank
+Hotkey=M
+Tip=Großen |cffffcc00M|ranatrank kaufen
+Ubertip="Stellt bei Benutzung <AIm2,DataA1> Mana wieder her."
+Description=Stellt verlorenes Mana wieder her.
+
+[pnvu]
+Name=Unverwundbarkeitstrank
+Hotkey=I
+Tip=Unverwundbarke|cffffcc00i|rtstrank kaufen
+Ubertip="Macht den Helden bei Benutzung für <AIvu,Dur1> Sekunden unverwundbar gegen Schäden. Ein unverwundbarer Held kann nicht als Ziel für Zauber oder Effekte angewählt werden."
+Description=Macht einen Helden zeitweise unverwundbar.
+
+[pnvl]
+Name=Geringer |nUnverwundbarkeitstrank
+Hotkey=N
+Tip=Geringen Unverwu|cffffcc00n|rdbarkeitstrank kaufen
+Ubertip="Macht den Helden bei Benutzung <AIvl,Dur1> Sekunden lang unverwundbar. Ein unverwundbarer Held kann nicht als Ziel für Zauber oder Effekte angewählt werden."
+Description=Macht einen Helden zeitweise unverwundbar.
+
+[pres]
+Name=Wiederherstellungstrank
+Hotkey=R
+Tip=Wiede|cffffcc00r|rherstellungstrank kaufen
+Ubertip="Stellt bei Benutzung <AIre,DataA1> Trefferpunkte und <AIre,DataB1> Mana des Helden wieder her."
+Description=Stellt verlorene Trefferpunkte und Mana wieder her.
+
+[pspd]
+Name=Tempotrank
+Hotkey=T
+Tip=|cffffcc00T|rempotrank kaufen
+Ubertip="Erhöht das Bewegungstempo eines Helden <AIsp,Dur1> Sekunden lang um <AIsp,DataA1,%>%."
+Description=Verleiht einem Helden eine zeitlich beschränkte Tempo-Erhöhung.
+
+[rlif]
+Name=Ring der Regeneration
+Hotkey=R
+Tip=Ring der |cffffcc00R|regeneration kaufen
+Ubertip="Erhöht die Trefferpunkt-Regeneration des Helden um <Arel,DataA1> Trefferpunkte pro Sekunde."
+Description=Verleiht Regeneration.
+
+[rwiz]
+Name=Sobi-Maske
+Hotkey=B
+Tip=So|cffffcc00b|ri-Maske kaufen
+Ubertip="Erhöht die Mana-Regenerationsrate eines Helden um <AIrm,DataA1,%>%, wenn getragen."
+Description=Erhöht die Mana-Regenerationsrate.
+
+[sfog]
+Name=Horn der Wolken
+Hotkey=W
+Tip=Horn der |cffffcc00W|rolken kaufen
+Ubertip="Ermöglicht es dem Helden, die 'Wolke'-Fähigkeit zu lenken, wodurch <AIfg,Dur1> Sekunden lang feindliche Türme eines Gebiets daran gehindert werden anzugreifen."
+Description=Hält feindliche Türme davon ab anzugreifen.
+
+[rhe1]
+Name=Rune der geringen Heilung
+Hotkey=H
+Tip=Rune der geringen |cffffcc00H|reilung kaufen
+Ubertip="Heilt alle in der Nähe befindlichen befreundeten nicht-mechanischen Einheiten um <APh1,DataA1> Trefferpunkte."
+Description=Stellt verlorene Trefferpunkte von in der Nähe befindlichen Einheiten wieder her.
+
+[rhe2]
+Name=Rune der Heilung
+Hotkey=H
+Tip=Rune der |cffffcc00H|reilung kaufen
+Ubertip="Heilt alle in der Nähe befindlichen befreundeten nicht-mechanischen Einheiten um <APh2,DataA1> Trefferpunkte."
+Description=Stellt verlorene Trefferpunkte von in der Nähe befindlichen Einheiten wieder her.
+
+[rhe3]
+Name=Rune der großen Heilung
+Hotkey=H
+Tip=Rune der großen |cffffcc00H|reilung kaufen
+Ubertip="Heilt alle in der Nähe befindlichen befreundeten nicht-mechanischen Einheiten um <APh3,DataA1> Trefferpunkte."
+Description=Stellt verlorene Trefferpunkte von in der Nähe befindlichen Einheiten wieder her.
+
+[shea]
+Name=Rolle der Heilung
+Hotkey=H
+Tip=Rolle der |cffffcc00H|reilung kaufen
+Ubertip="Heilt bei Benutzung alle befreundeten nicht-mechanischen im Umkreis des Helden befindlichen Einheiten um <AIha,DataA1> Trefferpunkte."
+Description=Stellt verlorene Trefferpunkte von in der Nähe befindlichen Einheiten wieder her.
+
+[sman]
+Name=Mana-Rolle
+Hotkey=M
+Tip=|cffffcc00M|rana-Rolle kaufen
+Ubertip="Stellt bei allen befreundeten Einheiten im Umkreis des Helden wieder <AImr,DataA1> Mana her."
+Description=Stellt Mana bei in der Nähe befindlichen Einheiten wieder her.
+
+[rman]
+Name=Rune des Manas
+Hotkey=M
+Tip=Rune des |cffffcc00M|ranas kaufen
+Ubertip="Stellt bei allen in der Nähe befindlichen befreundeten Einheiten <APmr,DataA1> Punkte Mana wieder her."
+Description=Stellt Mana bei in der Nähe befindlichen Einheiten wieder her.
+
+[rma2]
+Name=Rune des großen Manas
+Hotkey=M
+Tip=Rune des großen |cffffcc00M|ranas kaufen
+Ubertip="Stellt bei allen in der Nähe befindlichen befreundeten Einheiten <APmg,DataA1> Punkte Mana wieder her."
+Description=Stellt Mana bei in der Nähe befindlichen Einheiten wieder her.
+
+[spro]
+Name=Rolle des Schutzes
+Hotkey=Z
+Tip=Rolle des Schut|cffffcc00z|res kaufen
+Ubertip="Erhöht <AIda,Dur1> Sekunden lang die Rüstung aller befreundeten Einheiten in einem Gebiet um den Helden um <AIda,DataA1>."
+Description=Erhöht die Rüstung von in der Nähe befindlichen Einheiten für eine begrenzte Zeit.
+
+[sres]
+Name=Rolle der Wiederherstellung
+Hotkey=R
+Tip=Rolle der Wiede|cffffcc00r|rherstellung kaufen
+Ubertip="Stellt <AIra,DataA1> Trefferpunkte und <AIra,DataB1> Mana bei allen befreundeten nicht-mechanischen Einheiten im Gebiet um den Helden wieder her."
+Description=Stellt Trefferpunkte und Mana von in der Nähe befindlichen Einheiten wieder her.
+
+[rres]
+Name=Rune der Wiederherstellung
+Hotkey=R
+Tip=Rune der Wiede|cffffcc00r|rherstellung kaufen
+Ubertip="Stellt <APra,DataA1> Trefferpunkte und <APra,DataB1> Mana bei allen befreundeten nicht-mechanischen Einheiten im Gebiet um den Helden wieder her."
+Description=Stellt Trefferpunkte und Mana von in der Nähe befindlichen Einheiten wieder her.
+
+[ssil]
+Name=Krummstab der Stille
+Hotkey=E
+Tip=Krummstab der Still|cffffcc00e|r kaufen
+Ubertip="Hindert alle Feinde in einem Zielgebiet daran, Zauber zu wirken."
+Description=Stoppt Zauberei durch Feinde.
+
+[stwp]
+Name=Rolle des Stadtportals
+Hotkey=A
+Tip=Rolle des St|cffffcc00a|rdtportals kaufen
+Ubertip="Teleportiert den Helden und alle seine Einheiten um ihn herum zu einem angewählten befreundeten Rathaus."
+Description=Transportiert Truppen zu einem befreundeten Rathaus.
+
+[tels]
+Name=Goblin-Nachtsichtgerät
+Hotkey=T
+Tip=Goblin-Nach|cffffcc00t|rsichtgerät kaufen
+Ubertip="Erhöht den Sichtradius eines Helden bei Nacht, wenn es getragen wird."
+Description=Erhöht den Sichtradius bei Nacht.
+
+[tdex]
+Name=Foliant der Beweglichkeit
+Hotkey=W
+Tip=Folianten der Be|cffffcc00w|reglichkeit kaufen
+Ubertip="Erhöht bei Benutzung die Beweglichkeit eines Helden dauerhaft um <AIam,DataA1>."
+Description=Erhöht dauerhaft die Beweglichkeit.
+
+[texp]
+Name=Foliant der Erfahrung
+Hotkey=E
+Tip=Folianten der |cffffcc00E|rrfahrung kaufen
+Ubertip="Gibt einem Helden bei Benutzung <AIem,DataA1> Erfahrungspunkte."
+Description=Gibt zusätzliche Erfahrungspunkte.
+
+[tint]
+Name=Foliant der Intelligenz
+Hotkey=T
+Tip=Folian|cffffcc00t|ren der Intelligenz kaufen
+Ubertip="Erhöht bei Benutzung die Intelligenz des Helden dauerhaft um <AIim,DataB1>."
+Description=Erhöht dauerhaft die Intelligenz.
+
+[tkno]
+Name=Foliant der Macht
+Hotkey=M
+Tip=Folianten der |cffffcc00M|racht kaufen
+Ubertip="Erhöht bei Benutzung die Stufe eines Helden um <AIlm,DataA1>."
+Description=Gibt einem Helden eine Erfahrungsstufe.
+
+[tstr]
+Name=Foliant der Kraft
+Hotkey=K
+Tip=Folianten der |cffffcc00K|rraft kaufen
+Ubertip="Erhöht bei Benutzung die Kraft eines Helden dauerhaft um <AIsm,DataC1>."
+Description=Erhöht dauerhaft die Kraft.
+
+[ward]
+Name=Warsong-Kriegstrommeln
+Hotkey=W
+Tip=|cffffcc00W|rarsong-Kriegstrommeln kaufen
+Ubertip="Erhöht den Angriffsschaden von in der Nähe befindlichen befreundeten Einheiten um <AIcd,DataA1,%>%, wenn getragen. |nErgänzt sich nicht mit der 'Befehls-Aura'."
+Description=Erhöht die Kampf-Effektivität von in der Nähe befindlichen Einheiten.
+
+[will]
+Name=Zauberstab der Illusion
+Hotkey=I
+Tip=Zauberstab der |cffffcc00I|rllusion kaufen
+Ubertip="Erstellt bei Benutzung eine Doppelgänger-Illusion der angewählten Einheit. Die Doppelgänger-Illusion richtet keinen Schaden bei feindlichen Einheiten an, verkraftet <AIil,DataB1>-mal so viel Schaden bei feindlichen Angriffen und verschwindet nach <AIil,Dur1> Sekunden oder wenn die Trefferpunkte Null erreichen. |nBietet <will,uses> Aufladungen."
+Description=Erstellt einen Phantom-Doppelgänger.
+
+[wneg]
+Name=Zauberstab der Negation
+Hotkey=N
+Tip=Zauberstab der |cffffcc00N|regation kaufen
+Ubertip="Bannt alle magischen Effekte in einem Zielgebiet. |nBietet <wneg,uses> Aufladungen. |n|cffffcc00Verursacht <AIdi,DataB1> Punkte Schaden an beschworenen Einheiten.|r"
+Description=Löst Magie in einem Gebiet auf.
+
+[rdis]
+Name=Rune der Magie-Bannung
+Hotkey=D
+Tip=Rune |cffffcc00d|rer Magie-Bannung kaufen
+Ubertip="Bannt alle Magie-Effekte in der Nähe. |n|cffffcc00Verursacht <APdi,DataB1> Schaden an beschworenen Einheiten.|r"
+Description=Bannt Magie im umliegenden Gebiet.
+
+[rwat]
+Name=Rune des Beobachters
+Hotkey=B
+Tip=Rune des |cffffcc00B|reobachters kaufen
+Ubertip="Erzeugt einen unverwundbaren Wächterschutz, wenn aktiviert."
+Description=Erzeugt hier einen unverwundbaren Wächterschutz.
+
+[fgrd]
+Name=Rotdrachen-Ei
+Tip=Drachen-|cffffcc00E|ri kaufen
+Hotkey=E
+Ubertip="Beschwört einen Rotdrachen, der für den Benutzer kämpft. |nHält <AIfd,Dur1> Sekunden lang an."
+Description=Beschwört einen Rotdrachen.
+
+[fgrg]
+Name=Stein-Marke
+Tip=Stein-Marke kaufen
+Ubertip="Beschwört einen Stein-Golem, der für den Benutzer kämpft. |nHält <AIfr,Dur1> Sekunden lang an."
+Description=Beschwört einen Stein-Golem.
+
+[fgdg]
+Name=Dämonen-Statuette
+Tip=Dämonen-Statuette kaufen
+Ubertip="Beschwört einen Unheilshüter, der für den Benutzer kämpft. |nHält <AIfu,Dur1> Sekunden lang an."
+Description=Beschwört einen Unheilshüter.
+
+[fgfh]
+Name=Stachelhalsband
+Tip=Stachelhalsband kaufen
+Ubertip="Beschwört einen Teufelspirscher, der für den Benutzer kämpft. |nHält <AIfh,Dur1> Sekunden lang an."
+Description=Beschwört einen Teufelspirscher.
+
+[fgsk]
+Name=Buch der Toten
+Tip=Buch der Toten kaufen
+Ubertip="Beschwört <AIfs,DataA1> Skelett-Krieger und <AIfs,DataB1> Skelett-Bogenschützen, die für den Benutzer kämpfen. |nHält <AIfs,Dur1> Sekunden lang an."
+Description=Beschwört Skelette.
+
+[ktrm]
+Name=Urne von König Terenas
+Tip=Urne von König Terenas kaufen
+Ubertip="Ursprünglich wurde die Asche von König Terenas in dieser verzauberten Urne aufbewahrt, bis Tichondrius sie als Gefäß für die sterblichen Überreste von Kel'Thuzad auserwählte."
+Description=Diese Urne enthält die sterblichen Überreste von König Terenas.
+
+[sehr]
+Name=Das Herz von Searinox
+Tip=Das Herz von Searinox kaufen
+Ubertip="Das immer noch schlagende Herz von Searinox kann benutzt werden, um einer Kugel die feurigen Kräfte eines Drachen zu verleihen."
+Description=Das Herz des Drachen Searinox.
+
+[azhr]
+Name=Herz von Aszune
+Tip=Herz von Aszune kaufen
+Ubertip="Den Legenden zufolge ist der eingekerkerte Geist von Aszune bis heute auf der Suche nach ihrem Herzen."
+Description=Das magische Amulett Herz von Aszune.
+
+[bzbe]
+Name=Leere Phiole
+Tip=Leere Phiole kaufen
+Ubertip="Eine besondere Phiole, die das magische Heilwasser des Brunnens des Lebens aufnehmen kann."
+Description=Dies ist eine leere Phiole.
+
+[bzbf]
+Name=Volle Phiole
+Tip=Volle Phiole kaufen
+Ubertip="Eine besondere Phiole, die das magische Heilwasser des Brunnens des Lebens aufnehmen kann."
+Description=Diese Phiole ist mit Heilwasser gefüllt.
+
+[cnhn]
+Name=Horn von Cenarius
+Tip=Horn von Cenarius kaufen
+Ubertip="Diesem uralten Relikt der Nachtelfen wird nachgesagt, dass es die Macht habe, die Geister aller Nachtelfen anzurufen. Es erhöht die Trefferpunkte seines Besitzers um <AIl1,DataA1> und verleiht ihm eine zusätzliche Trefferpunkt-Regeneration von <Arel,DataA1> Trefferpunkten pro Sekunde."
+Description=Dies ist das Horn von Cenarius.
+
+[glsk]
+Name=Schädel des Gul'dan
+Tip=Schädel des Gul'dan kaufen
+Ubertip="Einst war er ein mächtiger Benutzer der Dämonen-Magie, bis die Dämonen einmal seinen Rufen folgten und herausfanden, dass sie eine bessere Verwendung für seinen Kopf hatten."
+Description=Dies ist der Schädel des Guldan.
+
+[engs]
+Name=Verzauberter Edelstein
+Tip=Verzauberten Edelstein kaufen
+Ubertip="Dieses Artefakt der Kelani-Magier soll die Macht haben, Gebilde aus purer Energie zu erschaffen. Als die Kelani untergingen, sicherten sich die Keiler-Stacheleber diese schönen und mächtigen Objekte."
+Description=Dies ist ein verzauberter Edelstein.
+
+[k3m1]
+Name=Mondkristall - 1 Schlüsselteil
+Tip=Mondkristall kaufen
+Ubertip="Aus dem Smaragd 'Auge von Jennala' geschnitten, öffnet er den Geist des Torhüters."
+Description=Dies ist ein Teil des Schlüssels der drei Monde.
+
+[k3m2]
+Name=Mondkristall - 2 Schlüsselteile
+Tip=Teil des Schlüssels der drei Monde kaufen
+Ubertip="Aus dem Amethyst 'Stein von Hannalee' geschnitten, öffnet er das Herz des Torhüters."
+Description=Dies sind zwei Teile des Schlüssels der drei Monde.
+
+[k3m3]
+Name=Schlüssel der drei Monde
+Tip=Schlüssel der drei Monde kaufen
+Ubertip="Aus dem Saphir 'Körper von Enulaia' geschnitten, öffnet er die Seele des Torhüters."
+Description=Dies ist der vollständige Schlüssel der drei Monde.
+
+[modt]
+Name=Maske des Todes
+Tip=Maske des Todes kaufen
+Ubertip="Während ein Held diese Maske trägt, bekommt er Trefferpunkte zurück, die <AIva,DataA1,%>% des einer feindlichen Einheit zugefügten Schadens entsprechen."
+Description="Diese Maske ermöglicht es den Angriffen des Helden, Leben abzuziehen."
+
+[sand]
+Name=Rolle der Totenbelebung
+Tip=Rolle der Totenbelebung kaufen
+Ubertip="Erweckt <AIan,DataA1> in der Nähe befindliche tote Einheiten, damit sie <AIan,Dur1> Sekunden lang kämpfen."
+Description=Belebt Tote, die für den Benutzer kämpfen.
+
+[srrc]
+Name=Rolle der Auferstehung
+Tip=Rolle der Auferstehung kaufen
+Ubertip="Ruft <AIrs,DataA1> der in der Nähe befindlichen toten Einheiten des Spielers wieder ins Leben zurück."
+Description=Lässt die Toten des Benutzers auferstehen, damit sie wieder kämpfen können.
+
+[rre1]
+Name=Rune der geringen Auferstehung
+Tip=Rune der geringen Auferstehung kaufen
+Ubertip="Ruft <APrl,DataA1> der in der Nähe befindlichen toten Einheiten des Spielers wieder ins Leben zurück."
+Description="Lässt die Toten des Benutzers auferstehen, damit sie wieder kämpfen können."
+
+[rre2]
+Name=Rune der großen Auferstehung
+Tip=Rune der großen |nAuferstehung kaufen
+Ubertip="Ruft <APrr,DataA1> der in der Nähe befindlichen toten Einheiten des Spielers wieder ins Leben zurück."
+Description="Lässt die Toten des Benutzers auferstehen, damit sie wieder kämpfen können."
+
+[rspl]
+Name=Rune der Geistverbindung
+Tip=Rune der Geistverbindung kaufen
+Ubertip="Verbindet Seelen von in der Nähe befindlichen Einheiten miteinander, sodass <Aspp,DataA1,%>% des Schadens, den eine Einheit erleidet, auf alle geistverbundenen Einheiten verteilt wird."
+Description="Verbindet Einheiten, um Schaden zu verteilen."
+
+[sror]
+Name=Rolle der Bestie
+Tip=Rolle der Bestie kaufen
+Ubertip="Gibt in der Nähe befindlichen befreundeten Einheiten <AIrr,Dur1> Sekunden lang einen Schaden-Bonus von <AIrr,DataA1,%>%."
+Description=Verstärkt die Schadenswirkung befreundeter Einheiten.
+
+[infs]
+Name=Höllenstein
+Tip=Höllenstein kaufen
+Ubertip="Beschwört eine Höllenbestie aus den Lüften, die an feindlichen Land-Einheiten in einem gewissen Gebiet <AIin,DataA1> Punkte Schaden verursacht und sie für <AIin,Dur1> Sekunden betäubt. Die Höllenbestie existiert <AIin,DataB1> Sekunden lang."
+Description=Ruft einen Höllenbestien-Dämon herbei.
+
+[shar]
+Name=Eissplitter
+Tip=Eissplitter kaufen
+Ubertip="Beschwört einen Eis-Geist. Der Eis-Geist existiert <AIir,Dur1> Sekunden lang."
+Description=Beschwört einen Eis-Geist.
+
+[wild]
+Name=Amulett der Wildnis
+Tip=Amulett der Wildnis kaufen
+Ubertip="Beschwört einen Furbolg-Krieger. Der Furbolg existiert <AIuw,Dur1> Sekunden lang."
+Description=Beschwört einen Furbolg.
+
+[wswd]
+Name=Wächter-Schutzzauber
+Tip=Wächterschutzzauber kaufen
+Ubertip="Hinterlässt einen 'Wächterschutz', der das Gebiet <AIsw,Dur1> Sekunden lang ausspioniert. |nBietet <wswd,uses> Aufladungen." 
+Description=Beschwört einen Wächterschutz herbei.
+
+[whwd]
+Name=Heil-Schutzzauber
+Tip=Heil-Schutzzauber kaufen
+Ubertip="Hinterlässt einen Schutzzauber, der in der Nähe befindliche befreundete Einheiten für die Dauer von <Ahwd,Dur1> Sekunden heilt. |nBietet <whwd,uses> Aufladungen."
+Description=Beschwört einen Heil-Schutzzauber herbei.
+
+[wlsd]
+Name=Stab des Blitzschildes
+Tip=Stab des Blitzschildes kaufen
+Ubertip="Ermöglicht dem Helden, den Zauber 'Blitzschild' auf die angewählte Einheit zu wirken. 'Blitzschild' umgibt eine Einheit mit Elektrizität, die einen Schaden von <AIls,DataA1> Punkten pro Sekunde an in der Nähe befindlichen Einheiten anrichtet. |nBietet <wlsd,uses> Aufladungen. |nHält <AIls,Dur1> Sekunden lang an."
+Description=Wirkt den Zauber 'Blitzschild'.
+
+[wcyc]
+Name=Zauberstab des Windes
+Tip=Zauberstab des Windes kaufen
+Ubertip="Ermöglicht dem Helden, 'Wirbelsturm' zu wirken. 'Wirbelsturm' schleudert eine angewählte feindliche Einheit in die Luft, sodass sie weder angreifen noch sich bewegen noch Zauber wirken kann. |nBietet <wcyc,uses> Aufladungen. |nHält <AIcy,Dur1> Sekunden lang an."
+Description=Wirkt den Zauber 'Wirbelsturm'.
+
+[rnec]
+Name=Rute der Totenbeschwörung
+Hotkey=R
+Tip=|cffffcc00R|rute der Totenbeschwörung kaufen
+Ubertip="Lässt zwei Skelett-Krieger aus einer Leiche entstehen. |nBietet <rnec,uses> Aufladungen."
+Description=Lässt zwei Skelett-Krieger aus einer Leiche entstehen.
+
+[pams]
+Name=Antimagie-Trank
+Hotkey=G
+Tip=Antima|cffffcc00g|rie-Trank kaufen
+Ubertip="Verleiht dem Helden <AIxs,Dur1> Sekunden lang Immunität gegen magische Zauber."
+Description=Macht Helden immun gegen Magie.
+
+[clfm]
+Name=Flammen-Umhang
+Tip=Flammen-Umhang kaufen
+Ubertip="Hüllt den Helden in Flammen ein, die bei feindlichen Land-Einheiten in seiner Umgebung <AIcf,DataA1> Punkte Schaden pro Sekunde verursachen. |nErgänzt sich nicht mit 'Feuerbrand'."
+Description=Umgibt den Helden mit verletzenden Flammen.
+
+[evtl]
+Name=Talisman des Ausweichens
+Tip=Talisman des Ausweichens kaufen
+Ubertip="Angriffe auf den Träger haben zu <AIev,DataA1,%>% keinen Erfolg. |nErgänzt sich nicht mit 'Ausweichen' oder 'Trunkenbold'."
+Description=Ein Held ist dadurch schwerer zu treffen.
+
+[nspi]
+Name=Kette der Zauber-|nImmunität
+Tip=Kette der Zauber-Immunität kaufen
+Ubertip="Magie kann dem Helden keinen Schaden mehr zufügen."
+Description=Verleiht Immunität gegenüber Magie.
+
+[lhst]
+Name=Löwenhorn von |nStormwind
+Tip=Das Löwenhorn von Stormwind kaufen
+Ubertip="Gibt dem Helden und befreundeten in der Nähe befindlichen Einheiten einen Rüstungsbonus von <AIad,DataA1>. |nErgänzt sich nicht mit der Hingabe-Aura."
+Description=Erzeugt eine schützende Aura um den Helden.
+
+[kpin]
+Name=Khadgars Pfeife der Einsicht
+Tip=Khadgars Pfeife der Einsicht kaufen
+Ubertip="Gibt dem Helden und in der Nähe befindlichen befreundeten Einheiten einen Bonus zur Mana-Regeneration. |nErgänzt sich nicht mit der 'Brillanz-Aura'."
+Description=In der Nähe befindliche Einheiten füllen ihr Mana schneller wieder auf.
+
+[sbch]
+Name=Knochenglocken der Geißel
+Tip=Knochenglocken der Geißel kaufen
+Ubertip="Verleiht einem Nahkampf-Helden und in der Nähe befindlichen befreundeten Nahkampf-Einheiten einen Angriff, der Leben stiehlt, indem er <AIav,DataA1,%>% des angerichteten Schadens in Leben umwandelt. |nErgänzt sich nicht mit der 'Vampir-Aura'."
+Description=In der Nähe befindliche Einheiten erhalten etwas Leben für Schaden, den sie an feindlichen Einheiten verursachen.
+
+[afac]
+Name=Allerias Flöte der Genauigkeit
+Tip=Allerias Flöte der Genauigkeit kaufen
+Ubertip="Erhöht die Schadenswirkung in der Nähe befindlicher Distanzkampf-Einheiten um <AIar,DataA1,%>%. |nErgänzt sich nicht mit der 'Volltreffer-Aura'."
+Description="Die Geschossangriffe in der Nähe befindlicher Einheiten richten mehr Schaden an."
+
+[ajen]
+Name=Urtum-Janggo der Ausdauer
+Tip=Urtum-Janggo der Ausdauer kaufen
+Ubertip="Gibt dem Helden und befreundeten in der Nähe befindlichen Einheiten eine erhöhte Angriffsrate und ein erhöhtes Bewegungstempo. |nErgänzt sich nicht mit der 'Ausdauer-Aura'."
+Description=In der Nähe befindliche Einheiten bewegen sich schneller und greifen schneller an.
+
+[lgdh]
+Name=Unheilshorn der Legion
+Tip=Unheilshorn der Legion kaufen
+Ubertip="Verleiht dem Helden und befreundeten in der Nähe befindlichen Einheiten eine erhöhte Leben-Regeneration und ein erhöhtes Bewegungstempo. |nErgänzt sich nicht mit 'Unheilige Aura'."
+Description=In der Nähe befindliche Einheiten heilen und bewegen sich schneller.
+
+[hcun]
+Name=Kapuze der Geschicklichkeit
+Tip=Kapuze der Geschicklichkeit kaufen
+Ubertip="Erhöht Beweglichkeit und Intelligenz eines Helden um 4, wenn getragen."
+Description=Verleiht Boni zu Beweglichkeit und Intelligenz.
+
+[mcou]
+Name=Medaillon des Mutes
+Tip=Medaillon des Mutes kaufen
+Ubertip="Erhöht Kraft und Intelligenz eines Helden um 4, wenn getragen."
+Description=Verleiht Boni zu Kraft und Intelligenz.
+
+[hval]
+Name=Helm der Ehre
+Tip=Helm der Ehre kaufen
+Ubertip="Erhöht Kraft und Beweglichkeit eines Helden um 4, wenn getragen."
+Description=Verleiht Boni zu Kraft und Beweglichkeit.
+
+[cnob]
+Name=Reif des Adels
+Hotkey=R
+Tip=|cffffcc00R|reif des Adels kaufen
+Ubertip="Erhöht Kraft, Beweglichkeit und Intelligenz eines Helden um 2, wenn getragen."
+Description="Verleiht einen +2-Bonus zu Kraft, Beweglichkeit und Intelligenz."
+
+[prvt]
+Name=Talisman der Vitalität
+Hotkey=V
+Tip=Talisman der |cffffcc00V|ritalität kaufen
+Ubertip="Erhöht die Trefferpunkte eines Helden um <AIlf,DataA1>, wenn getragen."
+Description=Erhöht die Trefferpunkte des Helden.
+
+[tgxp]
+Name=Foliant der größeren Erfahrung
+Tip=Folianten der größeren Erfahrung kaufen
+Ubertip="Gibt einem Helden bei Benutzung <AIe2,DataA1> zusätzliche Erfahrungspunkte."
+Description=Gibt zusätzliche Erfahrungspunkte.
+
+[mnst]
+Name=Mana-Stein
+Tip=Mana-Stein kaufen
+Ubertip="Erhöht die Mana-Regenerationsrate eines Helden um <AIrn,DataA1,%>%, wenn getragen. Kann für <AIm2,DataA1> Mana verzehrt werden."
+Description="Verleiht schnellere Mana-Regeneration und kann verzehrt werden, um Mana zu erhalten."
+
+[hlst]
+Name=Gesundheitsstein
+Tip=Gesundheitsstein kaufen
+Ubertip="Erhöht die Leben-Regenerationsrate eines Helden um <Arll,DataA1> Trefferpunkte pro Sekunde, wenn getragen. Kann für <AIh2,DataA1> Gesundheit verzehrt werden."
+Description="Verleiht schnellere Regeneration |nund kann verzehrt werden, um Trefferpunkte zu erhalten."
+
+[tpow]
+Name=Foliant des Wissens
+Tip=Folianten des Wissens kaufen
+Ubertip="Erhöht bei Benutzung Kraft, Beweglichkeit und Intelligenz eines Helden dauerhaft um 1."
+Description="Erhöht dauerhaft die Werte für Kraft, Beweglichkeit und Intelligenz."
+
+[tst2]
+Name=Foliant der Kraft +2
+Tip=Folianten der Kraft +2 kaufen
+Ubertip="Erhöht bei Benutzung die Kraft eines Helden dauerhaft um 2."
+Description=Erhöht dauerhaft die Kraft.
+
+[tin2]
+Name=Foliant der Intelligenz +2
+Tip=Folianten der Intelligenz +2 kaufen
+Ubertip="Erhöht bei Benutzung die Intelligenz eines Helden dauerhaft um 2."
+Description=Erhöht dauerhaft die Intelligenz.
+
+[tdx2]
+Name=Foliant der Beweglichkeit +2
+Tip=Folianten der Beweglichkeit +2 kaufen
+Ubertip="Erhöht bei Benutzung die Beweglichkeit eines Helden dauerhaft um 2."
+Description=Erhöht dauerhaft die Beweglichkeit.
+
+[rde0]
+Name=Ring des Schutzes +1
+Hotkey=1
+Tip=Ring des Schutzes +|cffffcc001|r kaufen
+Ubertip="Erhöht die Rüstung eines Helden um 1, wenn getragen."
+Description=Erhöht die Rüstung um 1.
+
+[rde4]
+Name=Ring des Schutzes +5
+Hotkey=5
+Tip=Ring des Schutzes +|cffffcc005|r kaufen
+Ubertip="Erhöht die Rüstung eines Helden um 5, wenn getragen."
+Description=Erhöht die Rüstung um 5.
+
+[rat6]
+Name=Klauen des Angriffs +6
+Tip=Klauen des Angriffs +6 kaufen
+Ubertip="Erhöht den Angriffsschaden eines Helden um 6, wenn getragen."
+Description=Verstärkt den Angriffsschaden um 6.
+
+[rat9]
+Name=Klauen des Angriffs +9
+Hotkey=K
+Tip=|cffffcc00K|rlauen des Angriffs +9 kaufen
+Ubertip="Erhöht den Angriffsschaden eines Helden um 9, wenn getragen."
+Description=Verstärkt den Angriffsschaden um 9.
+
+[ratc]
+Name=Klauen des Angriffs +12
+Tip=Klauen des Angriffs +12 kaufen
+Ubertip="Erhöht den Angriffsschaden eines Helden um 12, wenn getragen."
+Description=Verstärkt den Angriffsschaden um 12.
+
+[ratf]
+Name=Klauen des Angriffs +15
+Tip=Klauen des Angriffs +15 kaufen
+Ubertip="Erhöht den Angriffsschaden eines Helden um 15, wenn getragen."
+Description=Verstärkt den Angriffsschaden um 15.
+
+[manh]
+Name=Buch der Gesundheit
+Tip=Buch der Gesundheit kaufen
+Ubertip="Erhöht bei Benutzung die Trefferpunkte eines Helden dauerhaft um <AImh,DataA1>."
+Description=Dauerhaft +50 Trefferpunkte.
+
+[pmna]
+Name=Mana-Anhänger
+Tip=Mana-Anhänger kaufen
+Ubertip="Erhöht die Mana-Kapazität des Helden um <AIbm,DataA1>, wenn getragen."
+Description=Verleiht zusätzliches Mana.
+
+[penr]
+Name=Energie-Anhänger
+Hotkey=G
+Tip=Ener|cffffcc00g|rie-Anhänger kaufen
+Ubertip="Erhöht die Mana-Kapazität des Helden um <AImb,DataA1>, wenn getragen."
+Description=Verleiht zusätzliches Mana.
+
+[gcel]
+Name=Handschuhe der Hast
+Tip=Handschuhe der Hast kaufen
+Ubertip="Erhöht das Angriffstempo des Helden um <AIsx,DataA1,%>, wenn getragen."
+Description=Erhöhen das Angriffstempo.
+
+[ledg]
+Name=Gerards Geschäftsbuch
+Tip=Gerards verlorenes Geschäftsbuch kaufen
+Ubertip="Dieses Geschäftsbuch sieht aus, als würde es nur langweilige Fakten und Zahlen enthalten."
+Description=Ein Geschäftsbuch.
+
+[totw]
+Name=Talisman der Wildnis
+Tip=Talisman der Wildnis kaufen
+Ubertip="Dieser mystische Stein beschwört einen Furbolg, der für den Benutzer kämpft. |nBietet <totw,uses> Aufladungen. |nHält <AIff,Dur1> Sekunden lang an."
+Description=Beschwört Furbolgs.
+
+[kybl]
+Name=Blut-Schlüssel
+Tip=Blut-Schlüssel kaufen
+Ubertip="Dieser Schlüssel ist mit Blut bedeckt."
+Description=Ein blutiger Schlüssel.
+
+[kygh]
+Name=Geister-Schlüssel
+Tip=Geister-Schlüssel kaufen
+Ubertip="Dieser Schlüssel hat fast keine Substanz."
+Description=Ein geisterhafter Schlüssel.
+
+[kysn]
+Name=Sonnenschlüssel
+Tip=Sonnenschlüssel kaufen
+Ubertip="Dieser Schlüssel leuchtet hell."
+Description=Ein leuchtender Schlüssel.
+
+[kymn]
+Name=Mondschlüssel
+Tip=Mondschlüssel kaufen
+Ubertip="Dieser Schlüssel leuchtet schwach."
+Description=Ein schwach leuchtender Schlüssel.
+
+[phlt]
+Name=Fette Beute
+Tip=Fette Beute kaufen
+Ubertip="Es gibt keine fettere Beute als diese hier."
+Description="Eindeutig die fetteste Beute!"
+
+[gopr]
+Name=Glyphe der Reinigung
+Tip=Glyphe der Reinigung kaufen
+Ubertip="Diese von uralten Druiden erschaffene Glyphe besitzt die Macht, das Land zu heilen."
+Description=Eine Glyphe.
+
+[ches]
+Name=Käse
+Tip=Den Käse kaufen
+Ubertip="Käse, Käse, Käse, Käse!"
+Description=Das ist der Käse!
+
+[mlst]
+Name=Keule der Kraft
+Tip=Keule der Kraft kaufen
+Ubertip="Erhöht die Kraft eines Helden um 1, wenn getragen."
+Description=Erhöht die Kraft um 1.
+
+[rnsp]
+Name=Ring der Überlegenheit
+Tip=Ring der Überlegenheit kaufen
+Ubertip="Erhöht Kraft, Beweglichkeit und Intelligenz eines Helden um 1, wenn getragen."
+Description="Verleiht einen +1-Bonus zu Kraft, Beweglichkeit und Intelligenz."
+
+[brag]
+Name=Armschiene der |nBeweglichkeit
+Tip=Armschiene der Beweglichkeit kaufen
+Ubertip="Erhöht die Beweglichkeit eines Helden um 1, wenn getragen."
+Description=Erhöht die Beweglichkeit um 1.
+
+[sksh]
+Name=Schädel-Schild
+Tip=Schädel-Schild kaufen
+Ubertip="Erhöht die Kraft eines Helden um 1, wenn getragen."
+Description=Erhöht die Kraft um 1.
+
+[vddl]
+Name=Voodoo-Puppe
+Tip=Voodoo-Puppe kaufen
+Ubertip="Erhöht die Intelligenz eines Helden um 1, wenn getragen."
+Description=Erhöht die Intelligenz um 1.
+
+[sprn]
+Name=Spinnenring
+Tip=Spinnenring kaufen
+Ubertip="Erhöht die Beweglichkeit eines Helden um 1, wenn getragen."
+Description=Erhöht die Beweglichkeit um 1.
+
+[tmmt]
+Name=Totem der Macht
+Tip=Totem der Macht kaufen
+Ubertip="Erhöht die Kraft eines Helden um 1, wenn getragen."
+Description=Erhöht die Kraft um 1.
+
+[anfg]
+Name=Alte Statuette
+Tip=Alte Statuette kaufen
+Ubertip="Erhöht die Intelligenz eines Helden um 1, wenn getragen."
+Description=Erhöht die Intelligenz um 1.
+
+[lnrn]
+Name=Löwenring
+Tip=Löwenring kaufen
+Ubertip="Erhöht die Beweglichkeit eines Helden um 1, wenn getragen."
+Description=Erhöht die Beweglichkeit um 1.
+
+[iwbr]
+Name=Eisenholz-Zweig
+Tip=Eisenholz-Zweig kaufen
+Ubertip="Erhöht die Kraft eines Helden um 1, wenn getragen."
+Description=Erhöht die Kraft um 1.
+
+[jdrn]
+Name=Jadering
+Tip=Jadering kaufen
+Ubertip="Erhöht die Beweglichkeit eines Helden um 1, wenn getragen."
+Description=Erhöht die Beweglichkeit um 1.
+
+[drph]
+Name=Druiden-Beutel
+Tip=Druiden-Beutel kaufen
+Ubertip="Erhöht die Intelligenz eines Helden um 1, wenn getragen."
+Description=Erhöht die Intelligenz um 1.
+
+// Healing Salve
+[hslv]
+Name=Heilsalbe
+Hotkey=E
+Tip=H|cffffcc00e|rilsalbe kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nStellt bei Benutzung <AIrl,Dur1> Sekunden lang die Trefferpunkte einer angewählten Einheit um <AIrl,DataA1> Punkte wieder her. |nBietet <hslv,uses> Aufladungen."
+Description=Stellt im Lauf der Zeit verlorene Trefferpunkte wieder her.
+
+// Clarity Potion
+[pclr]
+Name=Klarsichttrank
+Hotkey=I
+Tip=Klars|cffffcc00i|rchttrank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nStellt das Mana des Helden bei Benutzung <AIpr,Dur1> Sekunden lang um <AIpr,DataB1> Punkte wieder her."
+Description=Regeneriert im Lauf der Zeit Mana.
+
+// Lesser Clarity Potion
+[plcl]
+Name=Geringer Klarsichttrank
+Hotkey=I
+Tip=Geringen Klars|cffffcc00i|rchttrank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nStellt das Mana des Helden bei Benutzung <AIpl,Dur1> Sekunden lang um <AIpl,DataB1> Punkte wieder her."
+Description=Regeneriert im Lauf der Zeit Mana.
+
+// Minor Replenishment Potion
+[rej1]
+Name=Schwacher Auffüllungstrank
+Hotkey=V
+Tip=Schwachen Auffüllungst|cffffcc00r|rank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert <AIp1,Dur1> Sekunden lang <AIp1,DataA1> Trefferpunkte und <AIp1,DataB1> Punkte Mana des Helden."
+Description=Regeneriert Gesundheit und Mana.
+
+// Lesser Replenishment Potion
+[rej2]
+Name=Geringer Auffüllungstrank
+Hotkey=V
+Tip=Geringen Auffüllungst|cffffcc00r|rank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert <AIp2,Dur1> Sekunden lang <AIp2,DataA1> Trefferpunkte und <AIp2,DataB1> Punkte Mana des Helden."
+Description=Regeneriert Gesundheit und Mana.
+
+// Replenishment Potion
+[rej3]
+Name=Auffüllungstrank
+Hotkey=V
+Tip=Auffüllungst|cffffcc00r|rank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert <AIp3,Dur1> Sekunden lang <AIp3,DataA1> Trefferpunkte und <AIp3,DataB1> Punkte Mana des Helden."
+Description=Regeneriert Gesundheit und Mana.
+
+// Greater Replenishment Potion
+[rej4]
+Name=Großer Auffüllungstrank
+Hotkey=V
+Tip=Großen Auffüllungst|cffffcc00r|rank kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert <AIp4,Dur1> Sekunden lang <AIp4,DataA1> Trefferpunkte und <AIp4,DataB1> Punkte Mana des Helden."
+Description=Regeneriert Gesundheit und Mana.
+
+// Lesser Replenishment Scroll
+[rej5]
+Name=Geringe Rolle der Auffüllung 
+Hotkey=R
+Tip=Geringe |cffffcc00R|rolle der Auffüllung kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert <AIp5,Dur1> Sekunden lang <AIp5,DataA1> Trefferpunkte und <AIp5,DataB1> Punkte Mana des Helden sowie in der Nähe befindlicher befreundeter Einheiten."
+Description=Regeneriert Gesundheit und Mana von in der Nähe befindlichen Einheiten.
+
+// Greater Replenishment Scroll
+[rej6]
+Name=Große Rolle der Auffüllung 
+Hotkey=R
+Tip=Große |cffffcc00R|rolle der Auffüllung kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert <AIp6,Dur1> Sekunden lang <AIp6,DataA1> Trefferpunkte und <AIp6,DataB1> Punkte Mana des Helden sowie in der Nähe befindlicher befreundeter Einheiten."
+Description=Regeneriert Gesundheit und Mana von in der Nähe befindlichen Einheiten.
+
+// Scroll of Regeneration
+[sreg]
+Name=Rolle der Regeneration
+Hotkey=R
+Tip=Rolle der |cffffcc00R|regeneration kaufen
+Ubertip="|cff87ceebNicht für Kampf, verbrauchbar|r|nRegeneriert bei Benutzung <AIsl,Dur1> Sekunden lang <AIsl,DataA1> Trefferpunkte bei allen befreundeten, nicht-mechanischen Einheiten im Gebiet um den Helden."
+Description=Regeneriert Gesundheit von in der Nähe befindlichen Einheiten.
+
+// Gold
+[gold]
+Name=Goldmünzen
+Tip=Goldmünzen kaufen
+Ubertip="Gibt dem Spieler bei Benutzung <AIgo,DataA1> Gold."
+Description=Gibt dem Spieler Gold.
+
+// Bundle of Lumber
+[lmbr]
+Name=Holzbündel
+Tip=Holzbündel kaufen
+Ubertip="Gibt dem Spieler bei der Benutzung <AIlu,DataA1> Holz."
+Description=Gibt dem Spieler Holz.
+
+[fgun]
+Name=Leuchtfeuerwaffe
+Hotkey=F
+Tip=Leucht|cffffcc00f|reuerwaffe kaufen
+Ubertip="Macht ein Zielgebiet auf der Karte sichtbar. |nBietet <fgun,uses> Aufladungen."
+Description="Macht ein Gebiet der Karte sichtbar."
+
+// Potion of Omniscience
+[pomn]
+Name=Allwissenheitstrank
+Hotkey=A
+Tip=|cffffcc00A|rllwissenheitstrank kaufen
+Ubertip="Enthüllt bei Benutzung <AIrv,Dur1> Sekunden lang die gesamte Karte."
+Description="Enthüllt die gesamte Karte."
+
+// Glyph of Omniscience
+[gomn]
+Name=Glyphe der Allwissenheit
+Hotkey=A
+Tip=Glyphe der |cffffcc00A|rllwissenheit kaufen
+Ubertip="Enthüllt bei Benutzung <AIrv,Dur1> Sekunden lang die gesamte Karte."
+Description="Enthüllt die gesamte Karte."
+
+[wneu]
+Name=Zauberstab der |nNeutralisierung
+Hotkey=N
+Tip=Zauberstab der |cffffcc00N|reutralisierung kaufen
+Ubertip="Sendet einen Strom neutralisierender Magie aus, der bis zu <AIdc,DataC1>-mal abprallen kann und Einheiten in seinem Einflussbereich bannt. |nBietet <wneu,uses> Aufladungen."
+Description=Bannt der Reihe nach magische Effekte.
+
+[silk]
+Name=Spinnenseiden-Ahle
+Hotkey=S
+Tip=|cffffcc00S|rpinnenseiden-Ahle kaufen
+Ubertip="Spinnt eine angewählte feindliche Luft-Einheit in ein Netz ein, sodass das Ziel zu Boden gezwungen wird. Eingesponnene Einheiten können angegriffen werden, als ob sie Land-Einheiten wären. |nBietet <silk,uses> Aufladungen."
+Description=Spinnt eine Luft-Einheit ein.
+
+[lure]
+Name=Monsterköder
+Hotkey=K
+Tip=Monster|cffffcc00k|röder kaufen
+Ubertip="Erzeugt einen Schutzzauber, der in der Nähe befindliche Unholde anlockt."
+Description=Lockt in der Nähe befindliche Unholde zu einem Schutzzauber.
+
+
+[skul]
+Name=Opferschädel
+Hotkey=P
+Tip=O|cffffcc00p|rferschädel kaufen
+Ubertip="Erzeugt an einem Zielort ein Gebiet der Verseuchung."
+Description=Erzeugt an einem Zielort 'Verseuchung'.
+
+[moon]
+Name=Mondstein
+Hotkey=N
+Tip=Mo|cffffcc00n|rdstein kaufen
+Ubertip="Erzeugt eine Sonnenfinsternis, bei der die Sonne verdeckt und eine künstliche Nacht herbeigeführt wird. |nHält <AIct,Dur1> Sekunden lang an."
+Description="Bewirkt, dass es Nacht wird."
+
+[brac]
+Name=Runen-Armschienen
+Hotkey=R
+Tip=|cffffcc00R|runen-Armschienen kaufen
+Ubertip="Reduziert Magie-Schaden, der dem Helden zugefügt wurde, um <AIsr,DataB1,%>%."
+Description="Reduziert Magie-Schaden, der dem Helden zugefügt wurde."
+
+[vamp]
+Name=Vampirtrank
+Hotkey=V
+Tip=|cffffcc00V|rampirtrank kaufen
+Ubertip="Gibt dem Helden einen zusätzlichen Schaden-Bonus von <AIpv,DataA1> Punkten und einen Leben stehlenden Angriff. |nHält <AIpv,Dur1> Sekunden lang an."
+Description=Schaden-Bonus und Leben stehlender Angriff.
+
+[woms]
+Name=Zauberstab des Mana-Stehlens
+Hotkey=Z
+Tip=|cffffcc00Z|rauberstab des Mana-Stehlens kaufen
+Ubertip="Stiehlt einer angewählten Einheit Mana und gibt es dem Helden. |nBietet <woms,uses> Aufladungen."
+Description=Stiehlt Mana.
+
+[tcas]
+Name=Winziges Schloss
+Hotkey=L
+Tip=Winziges Sch|cffffcc00l|ross kaufen
+Ubertip="Erzeugt an einem Zielort ein Schloss."
+Description="Erzeugt ein Schloss."
+
+[tgrh]
+Name=Winziges Haupthaus
+Hotkey=H
+Tip=Winziges |cffffcc00H|raupthaus kaufen
+Ubertip="Erstellt an einem Zielort ein Haupthaus. Menschen-, Nachtelfen- und Untote-Spieler erhalten ein ihrem Volk entsprechendes Rathaus."
+Description="Errichtet ein Haupthaus."
+
+[tsct]
+Name=Elfenbeinturm
+Hotkey=N
+Tip=Elfe|cffffcc00n|rbeinturm kaufen
+Ubertip="Erzeugt an einem Zielort einen Kontrollturm."
+Description="Errichtet einen Kontrollturm."
+
+[wshs]
+Name=Zauberstab der Schattensicht
+Hotkey=Z
+Tip=|cffffcc00Z|rauberstab der Schattensicht kaufen
+Ubertip="Verleiht dem Spieler die Sicht auf eine angewählte Einheit, bis diese Einheit gebannt ist. |nBietet <wshs,uses> Aufladungen."
+Description="Gewährt die Sicht auf eine angewählte Einheit."
+
+[tret]
+Name=Foliant des Vergessens
+Hotkey=O
+Tip=F|cffffcc00o|rliant des Vergessens kaufen
+Ubertip="Nimmt einem Helden alle erlernten Fertigkeiten, wodurch der Held andere Fertigkeiten erlernen kann."
+Description="Nimmt einem Helden die erlernten Fertigkeiten."
+
+[sneg]
+Name=Krummstab der Negation
+Hotkey=N
+Tip=Krummstab der |cffffcc00N|regation kaufen
+Ubertip="Bannt alle magischen Effekte in einem Zielgebiet. |n|cffffcc00Verursacht <AIdi,DataB1> Punkte Schaden an beschworenen Einheiten.|r"
+Description=Bannt Magie in einem Gebiet.
+
+[stel]
+Name=Krummstab der |nTeleportation
+Hotkey=E
+Tip=Krummstab der T|cffffcc00e|rleportation kaufen
+Ubertip="Teleportiert den Helden zu einer angewählten verbündeten Land-Einheit oder einem Gebäude."
+Description=Teleportiert den Helden.
+
+[spre]
+Name=Krummstab der |nBewahrung
+Hotkey=E
+Tip=Krummstab der B|cffffcc00e|rwahrung kaufen
+Ubertip="Teleportiert eine angewählte befreundete Einheit zu ihrem Rathaus mit der höchsten Stufe."
+Description=Teleportiert eine angewählte Einheit nach Hause.
+
+[mcri]
+Name=Mechanisches Tier
+Hotkey=E
+Tip=M|cffffcc00e|rchanisches Tier kaufen
+Ubertip="Erzeugt ein vom Spieler gesteuertes Tier, mit dem Feinde ausgespäht werden können."
+Description=Erzeugt ein mechanisches Tier.
+
+// Amulet of Spell Shield
+[spsh]
+Name=Amulett des Zauberschilds
+Hotkey=A
+Tip=|cffffcc00A|rmulett des Zauberschilds kaufen
+Ubertip="Blockt einmal alle <ANss,Cool1> Sekunden einen negativen Zauber ab, den ein Feind auf den Helden wirkt."
+Description=Blockiert feindliche Zauber.
+
+// Rune of Shielding
+[rsps]
+Name=Rune des Abschirmens
+Hotkey=S
+Tip=Rune des Ab |cffffcc00s|rchirmens kaufen
+Ubertip="Erzeugt einen Schild über in der Nähe befindlichen befreundeten Einheiten, der den nächsten negativen Zauber abwehrt, den ein Feind auf sie wirkt."
+Description=Verleiht in der Nähe befindlichen Einheiten einen Schild, der einen feindlichen Zauber abwehrt.
+
+// Spell book
+[sbok]
+Name=Zauberbuch
+Hotkey=B
+Tip=Zauber|cffffcc00b|ruch kaufen
+Ubertip="Ein Buch voll mit zufälligen Zaubern."
+Description=Ein Buch voll mit zufälligen Zaubern.
+
+// Staff of Sanctuary
+[ssan]
+Name=Krummstab der Zuflucht
+Hotkey=B
+Tip=Krummsta|cffffcc00b|r der Zuflucht kaufen
+Ubertip="Teleportiert eine angewählte Einheit zu Ihrem Rathaus mit höchster Stufe, betäubt dabei die Einheit und regeneriert pro Sekunde <ANsa,DataE1> Trefferpunkte. Hält an, bis die Einheit vollständig geheilt ist."
+Description=Heilt und teleportiert eine Einheit.
+
+// Scroll of Speed
+[shas]
+Name=Rolle des Tempos
+Hotkey=S
+Tip=Rolle des Tempo|cffffcc00s|r kaufen
+Ubertip="Erhöht das Bewegungstempo des Helden und in der Nähe befindlicher verbündeter Einheiten auf das maximale Bewegungstempo. |nHält <AIsa,Dur1> Sekunden lang an."
+Description=Erhöht das Bewegungstempo von Einheiten.
+
+// Rune of Speed
+[rspd]
+Name=Rune des Tempos
+Hotkey=D
+Tip=Rune |cffffcc00d|res Tempos kaufen
+Ubertip="Erhöht das Bewegungstempo aller in der Nähe befindlicher verbündeter Einheiten auf das maximale Bewegungstempo. |nHält <APsa,Dur1> Sekunden lang an."
+Description=Erhöht das Bewegungstempo von Einheiten.
+
+// Dust of Appearance
+[dust]
+Name=Pulver der Erscheinung
+Hotkey=P
+Tip=|cffffcc00P|rulver der Erscheinung kaufen
+Ubertip="Enthüllt im Bereich um den Helden unsichtbare feindliche Einheiten. |nBietet <dust,uses> Aufladungen. |nHält <AItb,Dur1> Sekunden lang an."
+Description=Enthüllt unsichtbare Einheiten.
+
+// Orb of Slow
+[oslo]
+Name=Langsamkeitskugel
+Hotkey=S
+Tip=Lang|cffffcc00s|ramkeitskugel kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Schaden von <AIsb,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden werden darüber hinaus zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und haben eine Chance, <AIos,Dur1> Sekunden lang das Bewegungstempo einer anvisierten feindlichen Einheit um <AIos,DataA1,%>% und die Angriffsrate um <AIos,DataB1,%>% zu verlangsamen."
+Description=Angriffe können Feinde verlangsamen.
+
+// Rune of Rebirth
+[rreb]
+Name=Rune der Wiedergeburt
+Hotkey=B
+Tip=Rune der Wiederge|cffffcc00b|rurt kaufen
+Ubertip="Bringt das Monster, das diese Rune besaß, unter Eure Kontrolle."
+Description=Macht Euch ein Monster zu eigen.
+
+// Diamond of Summoning
+[dsum]
+Name=Diamant der Beschwörung
+Hotkey=D
+Tip=|cffffcc00D|riamant der Beschwörung kaufen
+Ubertip="Teleportiert bei Benutzung <AUds,DataA1> Einheiten des Spielers aus dem Zielgebiet zum Aufenthaltsort des Helden."
+Description=Beschwört Eure Einheiten zu Eurem Helden.
+
+//#RESTNOBETA
+[sor1]
+Name=Schattenkugel +1
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 1."
+Description="Gul'dans Schattenkugel"
+
+[sor2]
+Name=Schattenkugel +2
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 2."
+Description="Gul'dans Schattenkugel"
+
+[sor3]
+Name=Schattenkugel +3
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 3."
+Description="Gul'dans Schattenkugel"
+
+[sor4]
+Name=Schattenkugel +4
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 4 und die Rüstung um 1."
+Description="Gul'dans Schattenkugel"
+
+[sor5]
+Name=Schattenkugel +5
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 5 und die Rüstung um 1."
+Description="Gul'dans Schattenkugel"
+
+[sor6]
+Name=Schattenkugel +6
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 6 und die Rüstung um 1."
+Description="Gul'dans Schattenkugel"
+
+[sor7]
+Name=Schattenkugel +7
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 7 und die Rüstung um 2."
+Description="Gul'dans Schattenkugel"
+
+[sor8]
+Name=Schattenkugel +8
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 8 und die Rüstung um 2."
+Description="Gul'dans Schattenkugel"
+
+[sor9]
+Name=Schattenkugel +9
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 9, die Rüstung um 2 und verleiht verbesserte Trefferpunkt-Regeneration."
+Description="Gul'dans Schattenkugel"
+
+[sora]
+Name=Schattenkugel +10
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel kaufen
+Ubertip="Dieses Artefakt wurde vom Schattenrat der Orcs mit speziellen Kräften ausgestattet. Es erhöht den Angriffsschaden des Spielers um 10, die Rüstung um 3 und verleiht verbesserte Trefferpunkt-Regeneration."
+Description="Gul'dans Schattenkugel"
+
+[sorf]
+Name=Schattenkugel-Fragment
+Hotkey=K
+Tip=Schatten|cffffcc00k|rugel-Fragment kaufen
+Ubertip="Ein Bruchstück eines mächtigen Artefakts."
+Description="Ein Bruchstück der Schattenkugel"
+
+[fwss]
+Name=Frost-Wyrm-Schädelschild
+Hotkey=F
+Tip=|cffffcc00F|rrost-Wyrm-Schädelschild kaufen
+Ubertip="Dieser uralte Frost-Wyrm-Schädel ist mit Griffen versehen, die ihn zu einem mächtigen Schild machen. Er erhöht die Rüstung um 2 Punkte, wenn er getragen wird, und reduziert Magieschaden, der dem Helden zugefügt wird, um <AIsr,DataB1,%>%."
+Description="Ein mächtiges Untoten-Artefakt."
+
+[gmfr]
+Name=Edelsteinfragment
+Hotkey=G
+Tip=Edelsteinfra|cffffcc00g|rment kaufen
+Ubertip="Das Fragment eines Edelsteins aus einem mächtigen Ring."
+Description="Ein Edelsteinfragment aus einem mächtigen Ring."
+
+[ram1]
+Name=Ring der Erzmagier
+EditorSuffix=(Version 1)
+Hotkey=R
+Tip=|cffffcc00R|ring der Erzmagier kaufen
+Ubertip="Ein mächtiges Artefakt mit einem eingearbeiteten Splitter eines fragmentierten Edelsteins. Erhöht Kraft, Beweglichkeit und Intelligenz eines Helden um 1."
+Description="Ein mächtiges Artefakt mit einem gesplitterten Edelstein."
+
+[ram2]
+Name=Ring der Erzmagier
+EditorSuffix=(Version 2)
+Hotkey=R
+Tip=|cffffcc00R|ring der Erzmagier kaufen
+Ubertip="Ein mächtiges Artefakt mit einem eingearbeiteten Teil eines fragmentierten Edelsteins. Erhöht Kraft, Beweglichkeit und Intelligenz eines Helden um 2."
+Description="Ein mächtiges Artefakt mit einem fragmentierten Edelstein."
+
+[ram3]
+Name=Ring der Erzmagier
+EditorSuffix=(Version 3)
+Hotkey=R
+Tip=|cffffcc00R|ring der Erzmagier kaufen
+Ubertip="Ein mächtiges Artefakt, in das ein Großteil eines fragmentierten Edelsteins eingearbeitet wurde. Erhöht Kraft, Beweglichkeit und Intelligenz eines Helden um 3."
+Description="Ein mächtiges Artefakt mit einem fast intakten Edelstein."
+
+[ram4]
+Name=Ring der Erzmagier
+EditorSuffix=(Version 4)
+Hotkey=R
+Tip=|cffffcc00R|ring der Erzmagier kaufen
+Ubertip="Ein mächtiges Artefakt mit einem wunderbaren darin eingelegten Edelstein. Erhöht Stärke, Beweglichkeit und Intelligenz des Helden um 3 und verschafft in der Nähe befindlichen befreundeten Einheiten einen Bonus zur Mana-Regeneration."
+Description="Ein mächtiges Artefakt mit einem wunderbaren Edelstein."
+
+[shtm]
+Name=Schamanen-Totem
+Hotkey=H
+Tip=Sc|cffffcc00h|ramanen-Totem kaufen
+Ubertip="Dieses mächtige Orc-Artefakt leitet Schamanenkräfte durch den Anwender, wodurch er 'Reinigen' wirken kann."
+Description="Ein mächtiges Orc-Artefakt."
+
+[esaz]
+Name=Essenz von Aszune
+Hotkey=E
+Tip=|cffffcc00E|rssenz von Aszune kaufen
+Ubertip="Legenden erzählen von einem intelligenten Orc, der das Herz von Aszune gefunden haben soll. Dies ist die Essenz ihres Herzens, wertvoll für die Nachtelfen. Sie hat die Macht, den Helden zu heilen, der sie benutzt. Dieser Gegenstand ist permanent."
+Description="Ein mächtiges Nachtelfen-Artefakt."
+
+[jpnt]
+Name=Nachricht für Jaina Proudmoore
+Hotkey=J
+Tip=Nachricht für |cffffcc00J|raina Proudmoore kaufen
+Ubertip="Eine Nachricht von Thrall für Jaina Proudmoore."
+Description="Eine Nachricht für Jaina Proudmoore."
+
+[shwd]
+Name=Schimmerkraut
+Hotkey=S
+Tip=|cffffcc00S|rchimmerkraut kaufen
+Ubertip="Eine Wunderpflanze, der man erstaunliche bewusstseinserweiternde Eigenschaften nachsagt."
+Description="Eine schimmernde Pflanze."
+
+[btst]
+Name=Kampfstandarte
+Tip=Kampfstandarte kaufen
+Ubertip="Die Kampfstandarte von Thralls Orcs, tragt sie voller Stolz."
+Description="Thralls Kampfstandarte"
+
+[skrt]
+Name=Skelett-Artefakt
+Tip=Skelett-Artefakt kaufen
+Ubertip="Dieses uralte Artefakt fängt die Seelen gewaltsam Gestorbener ein und zwingt sie, die letzten Augenblicke ihres Lebens bis in alle Ewigkeit zu erleben."
+Description="Soulfeast der Verschlinger"
+
+[thle]
+Name=Donner-Echsen-Ei
+Tip=Donner-Echsen-Ei kaufen
+Ubertip="Dieses große Ei wird nur ausgebrütet, wenn ein Elternteil es wärmt."
+Description="Großes Echsen-Ei."
+
+[sclp]
+Name=Geheimlevel-Powerup
+Tip=Geheimlevel-Powerup kaufen
+Ubertip="Öffnet ein Geheimlevel!"
+Description="Öffnet ein Geheimlevel!"
+
+[gldo]
+Name=Kugel des Kil'jaeden
+Hotkey=K
+Tip=Kugel des |cffffcc00K|ril'jaeden kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Feuerschaden von <AIgd,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden werden zu Distanzangriffen, wenn Luft-Einheiten angegriffen werden, und verursachen auch einen Gebietsschaden an feindlichen Einheiten in seiner Umgebung."
+Description=Angriffe verursachen auch Feuer-Schaden.
+
+[wtlg]
+Name=Wirts Bein
+Hotkey=B
+Tip=Wirts |cffffcc00B|rein kaufen
+Ubertip="Könnte es sein, dass sich ein Portal auftat und die Überreste unseres besten Freundes aus der Welt von Diablo hier ausspuckte? Wenn ja, war es ein Spieler oder ein Dämon? Wie viele Welten hat die Brennende Legion eigentlich genau erobert? Könnten die Dämonen der Brennenden Legion und die der Zuflucht ein und dieselben sein? Da bekommt man glatt Hirnsausen."
+Description=Das eine Bein.
+
+[wolg]
+Name=Wirts anderes Bein
+Hotkey=A
+Tip=Wirts |cffffcc00a|rnderes Bein kaufen
+Ubertip="Vielleicht brach der übereifrige Abenteurer dies vor seiner Reise hierher ab und dachte, es könnte ihm eine letzte Gelegenheit zu sinnlosem Gemetzel geben. Wie hätte er ahnen können, wohin ihn das führen würde ..."
+Description=Das andere Bein.
+
+[tbsm]
+Name=Winzige Schmiede
+Hotkey=S
+Tip=Winzige |cffffcc00S|rchmiede kaufen
+Ubertip="Erzeugt an einem Zielort eine Schmiede."
+Description="Erzeugt eine Schmiede."
+
+[tfar]
+Name=Winziger Hof
+Hotkey=F
+Tip=Winzigen Ho|cffffcc00f|r kaufen
+Ubertip="Erzeugt an einem Zielort einen Hof."
+Description="Erzeugt einen Hof."
+
+[tlum]
+Name=Winziges Sägewerk
+Hotkey=R
+Tip=Winziges Sägewe|cffffcc00r|rk kaufen
+Ubertip="Erzeugt an einem Zielort ein Sägewerk."
+Description="Erzeugt ein Sägewerk."
+
+[tbar]
+Name=Winzige Kaserne
+Hotkey=K
+Tip=Winzige|cffffcc00K|raserne kaufen
+Ubertip="Erzeugt an einem Zielort eine Kaserne."
+Description="Erzeugt eine Kaserne."
+
+[tbak]
+Name=Winziger Altar der Könige
+Hotkey=K
+Tip=Winzigen Altar der |cffffcc00K|rönige kaufen
+Ubertip="Erzeugt an einem Zielort einen Altar der Könige."
+Description="Erzeugt einen Altar der Könige."
+
+[mgtk]
+Name=Magischer Schlüsselring
+Hotkey=S
+Tip=Magischen |cffffcc00S|rchlüsselring kaufen
+Ubertip="Dieser magische Schlüsselring vermag viele Türen zu öffnen."
+Description="Ein Schlüsselring."
+
+[stre]
+Name=Krummstab der |nWiederbelebung
+Hotkey=R
+Tip=K|cffffcc00r|rummstab der Wiederbelebung kaufen
+Ubertip="Belebt eine in der Nähe befindliche Leiche wieder, damit sie gegen die Feinde des Benutzers kämpft. Hält <AInd,Dur1> Sekunden lang an."
+Description="Erweckt eine Leiche zum Leben."
+
+[horl]
+Name=Heilige Reliquie
+Hotkey=H
+Tip=|cffffcc00H|reilige Reliquie kaufen
+Ubertip="Ein mächtiges Artefakt, das dem Orc-Schamanen heilig ist. |nGibt dem Helden und in der Nähe befindlichen befreundeten Einheiten eine erhöhte Angriffsrate und ein erhöhtes Bewegungstempo. |nErgänzt sich nicht mit der 'Ausdauer-Aura'."
+Description="Ein heiliges Schamanen-Artefakt."
+
+[hbth]
+Name=Helm der Kampfeslust
+Hotkey=K
+Tip=Helm der |cffffcc00K|rampfeslust kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nGewährt die Fähigkeit, 'Berserk' zu werden, sodass der Held <AIxk,DataB1,%>% schneller angreift, allerdings auch <AIxk,DataC1,%>% mehr Schaden nimmt. Erhöht außerdem Kraft und Beweglichkeit um 4, wenn getragen."
+Description="|cff8b00ffEinzigartig|r|nDieser Helm macht den Benutzer kampfeslüstern."
+
+[blba]
+Name=Klingenbann-Rüstung
+Hotkey=A
+Tip=Klingenb|cffffcc00a|rnn-Rüstung kaufen
+Ubertip="Gewährt in der Nähe befindlichen Einheiten einen Verteidigung-Bonus von <AIad,DataA1> Punkten. Erhöht die Rüstung des Helden um <AId7,DataA1>."
+Description="Erhöht die Rüstung."
+
+[rugt]
+Name=Runen-Handschuhe
+Hotkey=R
+Tip=|cffffcc00R|runen-Handschuhe kaufen
+Ubertip="Erhöht Kraft und Rüstung eines Helden um 3, wenn getragen."
+Description="Erhöht Kraft und Rüstung."
+
+[frhg]
+Name=Feuerhand-Handschuhe
+Hotkey=F
+Tip=|cffffcc00F|reuerhand-Handschuhe kaufen
+Ubertip="Erhöht die Rüstung eines Helden um <AId5,DataA1> Punkte sowie die Angriffsrate um <AIs2,DataA1,%>%, wenn getragen."
+Description="Feurige Handschuhe, die Rüstung und Angriffsrate erhöhen."
+
+[gvsm]
+Name=Handschuhe der |nZauberbeherrschung
+Hotkey=S
+Tip=Hand|cffffcc00s|rchuhe der Zauberbeherrschung kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nGewährt die Fähigkeit, beschworene Einheiten zu kontrollieren. Erhöht außerdem die Intelligenz eines Helden um <AIa6,DataA1>, wenn getragen."
+Description="|cff8b00ffEinzigartig|r|nDiese Handschuhe sind von höchst magischer Natur."
+
+[crdt]
+Name=Krone des Todeslords
+Hotkey=D
+Tip=Krone des Todeslor|cffffcc00d|rs kaufen
+Ubertip="|cffff8c00Artefakt|r|nGewährt die Fähigkeit, Schmerzbolzen abzufeuern, die <AIfz,DataC1> Punkte Schaden zufügen. Erhöht außerdem die Trefferpunkte des Helden um <AIlf,DataA1> und das Mana um <AImz,DataA1>, wenn getragen.|n|cffffcc00Geschichte|r|n|cffffdeadTodeslords waren Gerüchten zufolge einst mächtige Paladine. Einer von ihnen wandte sich vom Licht ab, als er seine Familie ermordete, da er sie für unrein hielt.|r"
+
+[arsc]
+Name=Arkane Schriftrolle
+Hotkey=A
+Tip=|cffffcc00A|rrkane Schriftrolle kaufen
+Ubertip="Eine mächtige Schriftrolle, die <AIha,DataA1> Trefferpunkte und <AImr,DataA1> Punkte Mana wiederherstellt und in der Nähe befindlichen befreundeten Einheiten einen Rüstungsbonus von <AIda,DataA1> Punkten gewährt."
+Description="Stellt Trefferpunkte und Mana von in der Nähe befindlichen Einheiten wieder her und erhöht ihre Rüstung."
+
+[scul]
+Name=Rolle der unheiligen Legion
+Hotkey=I
+Tip=Rolle der unheiligen Leg|cffffcc00i|ron kaufen
+Ubertip="Belebt <AIan,DataA1> in der Nähe befindliche Leichen wieder, damit sie für den Benutzer kämpfen. Hält <AIan,Dur1> Sekunden lang an."
+Description="Erweckt in der Nähe befindliche Leichen zum Leben."
+
+[tmsc]
+Name=Foliant der Opfer
+Hotkey=T
+Tip=Folian|cffffcc00t|ren der Opfer kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nGewährt die Fähigkeit, eine befreundete Nicht-Helden-Einheit zu opfern, um Trefferpunkte wiederherzustellen. Erhöht außerdem das Mana eines Helden um <AImz,DataA1> Punkte, wenn getragen."
+Description="|cff8b00ffEinzigartig|r|nEin unheilschwangerer Foliant, in dessen Einband Nekromantie-Runen geprägt sind."
+
+[dtsb]
+Name=Drek'Thars Zauberbuch
+Hotkey=D
+Tip=|cffffcc00D|rrek'Thars Zauberbuch kaufen
+Ubertip="|cffff8c00Artefakt|r|nGewährt die Fähigkeit, den Benutzer in seine Heimatstadt zu transportieren. Reduziert außerdem Zauberschaden um <AIsr,DataB1,%>% und erhöht das Mana des Helden um <AImv,DataA1> Punkte, wenn getragen.|n|cffffcc00Geschichte|r|n|cffffdeadDrek'Thars altes Zauberbuch ist voll mit Seiten, die den in der Schlacht getöteten Magiern der Kirin Tor gestohlen wurden.|r"
+Description="|cffff8c00Artefakt|r|nEin scheinbar schlichtes Zauberbuch, das vom Meister-Scharfseher Drek'Thar vererbt wurde."
+
+[grsl]
+Name=Zauberfoliant der Seelen
+Hotkey=Z
+Tip=|cffffcc00Z|rauberfolianten der Seelen kaufen
+Ubertip="|cff87ceebEinzigartig, verbrauchbar|r|nDieses mächtige Buch erhöht die Trefferpunkte eines Helden bei jeder Benutzung dauerhaft um <AIpx,DataA1> Punkte. |nBietet <grsl,uses> Aufladungen."
+Description="|cff87ceebEinzigartig, verbrauchbar|r|nErhöht dauerhaft die Trefferpunkte."
+
+[arsh]
+Name=Arkanitschild
+Hotkey=A
+Tip=|cffffcc00A|rrkanitschild kaufen
+Ubertip="Reduziert den durch Distanzangriffe verursachten Schaden auf <AIdd,DataA1,%>%. Erhöht außerdem die Rüstung eines Helden um <AId5,DataA1>, wenn getragen."
+Description="Erhöht die Rüstung und reduziert den durch Distanzangriffe verursachten Schaden."
+
+[shdt]
+Name=Schild des Todeslords
+Hotkey=D
+Tip=Schild des Todeslor|cffffcc00d|rs kaufen
+Ubertip="|cffff8c00Artefakt|r|nHüllt den Helden in Flammen ein, die bei feindlichen Land-Einheiten in seiner Umgebung <AIcf,DataA1> Punkte Schaden pro Sekunde verursachen. Erhöht außerdem die Rüstung des Helden um <AId0,DataA1>, die Trefferpunkte um <AIlf,DataA1> und das Mana um <AImz,DataA1>, wenn getragen. |n|cffffcc00Geschichte|r|n|cffffdeadAls Arthas in Stratholme das Schwert gegen sein eigenes Volk erhob, führten die Todeslords dieselbe ruchlose Tat in vielen anderen Städten in ganz Lordaeron aus.|r"
+Description="|cffff8c00Artefakt|r|nEin magischer Schild mit dem Emblem eines unbekannten Paladin-Ordens darauf."
+
+[shhn]
+Name=Schild der Ehre
+Hotkey=E
+Tip=Schild der E|cffffcc00h|rre kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nVerleiht in der Nähe befindlichen befreundeten Einheiten zusätzlichen Angriffsschaden von <AIcd,DataA1,%>%. Erhöht außerdem die Rüstung eines Helden um <AId8,DataA1>, wenn getragen."
+Description="|cff8b00ffEinzigartig|r|nDer Schild eines Marinebefehlshabers der Kul Tiras."
+
+[shen]
+Name=Verzauberter Schild
+Hotkey=E
+Tip=V|cffffcc00e|rrzauberten Schild kaufen
+Ubertip="Erhöht die Rüstung eines Helden um <AId2,DataA1> und die Trefferpunkte um <AIlz,DataA1>, wenn getragen."
+Description="Verbessert Rüstung und Trefferpunkte."
+
+[thdm]
+Name=Donner-Echsen-Diamant
+Hotkey=T
+Tip=Donner-Echsen-Diaman|cffffcc00t|ren kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nFeuert Blitzbolzen ab, die mehreren Zielen auf einmal Schaden zufügen."
+Description="|cff8b00ffEinzigartig|r|nEin massiver Diamant, der vor Elektrizität knistert."
+
+[stpg]
+Name=Aufziehpinguin
+Hotkey=P
+Tip=|cffffcc00A|rufziehpinguin kaufen
+Ubertip="Dieses Pinguin-Quietschespielzeug wurde einst von dem Goblin-Bastler Salzhigh für die Zentauren geschaffen. Die Zentauren betrachteten die Figuren voller Ehrfurcht (da sie vorher noch nie einen Pinguin gesehen hatten) und erwarben sie als Götzenbilder, die auf Altären angebetet wurden."
+Description="Ein kleiner Aufziehpinguin, der quietscht."
+
+[shrs]
+Name=Schimmerkraut-Braten
+Hotkey=S
+Tip=|cffffcc00S|rchimmerkraut-Braten kaufen
+Ubertip="Ein leckerer Braten mit Schimmerkraut-Kruste. Heilt beim Verzehr <AIhx,DataA1> Trefferpunkte. |nBietet <shrs,uses> Aufladungen."
+Description="Stellt verlorene Trefferpunkte wieder her."
+
+[bfhr]
+Name=Bloodfeathers Herz
+Hotkey=B
+Tip=|cffffcc00B|rloodfeathers Herz kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nErhöht die Beweglichkeit des Helden um <AIaz,DataA1> Punkte, wenn getragen."
+Description="|cff8b00ffEinzigartig|r|nDas Herz von Bloodfeather."
+
+[cosl]
+Name=Himmlische Seelenkugel
+Hotkey=C
+Tip=Himmlis|cffffcc00c|rhe Seelenkugel kaufen
+Ubertip="|cffff8c00Artefakt|r|nRuft <AIrx,DataA1> der in der Nähe befindlichen toten Einheiten des Spielers wieder ins Leben zurück. |n|cffffcc00Geschichte|r|n|cffffdeadDie himmlische Seelenkugel, die von den Titanen als Geschenk für ihre liebsten Geschöpfe geschaffen wurde, kanalisiert die Mächte des Lichts, um jüngst Gefallene ins Leben zurückzurufen.|r"
+Description="|cffff8c00Artefakt|r|nEine hell leuchtende Kugel, die Frieden bringt."
+
+[shcw]
+Name=Schamanen-Klauen
+Hotkey=S
+Tip=|cffffcc00S|rchamanen-Klauen kaufen
+Ubertip="|cff8b00ffEinzigartig|r|nSchamanen erhalten sie nach Vollendung ihrer Ausbildung. Erhöhen den Angriffsschaden um <AIlx,DataA1> Punkte. Die Angriffe des Helden erhalten darüber hinaus eine Chance, Magie zu bannen und <AIpg,Dur1> Sekunden lang das Bewegungstempo des Feindes zu verlangsamen."
+Description="|cff8b00ffEinzigartig|r|nErhöht Angriffsschaden und bannt Magie."
+
+[srbd]
+Name=Sengklinge
+Hotkey=S
+Tip=|cffffcc00S|rengklinge kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Feuerschaden von <AIfw,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden verursachen auch einen Gebietsschaden an feindlichen Einheiten in seiner Umgebung und haben eine Chance von <AIcs,DataA1>%, das <AIcs,DataB1> fache ihres normalen Schadens anzurichten."
+Description="Erhöht den Angriffsschaden."
+
+[frgd]
+Name=Frostwache
+Hotkey=F
+Tip=|cffffcc00F|rrostwache kaufen
+Ubertip="Fügt den Angriffen eines Helden einen zusätzlichen Kälteschaden von <AIft,DataA1> Punkten und seiner Rüstung einen Bonus von <AId5,DataA1> Punkten hinzu, wenn getragen. Die Angriffe des Helden verlangsamen dabei auch das Bewegungstempo und die Angriffsrate des Feindes."
+Description="Erhöht den Angriffsschaden."
+
+[envl]
+Name=Verzauberte Phiole
+Hotkey=E
+Tip=V|cffffcc00e|rrzauberte Phiole kaufen
+Ubertip="Regeneriert <AIp3,Dur1> Sekunden lang <AIp3,DataA1> Trefferpunkte und <AIp3,DataB1> Punkte Mana des Helden. |nBietet <envl,uses> Aufladungen."
+Description="Regeneriert Gesundheit und Mana."
+
+[rump]
+Name=Rostige Bergarbeiter-Spitzhacke
+Hotkey=R
+Tip=|cffffcc00R|rostige Bergarbeiter-Spitzhacke kaufen
+Ubertip="Diese schwere Spitzhacke kann mit aller Kraft geschwungen werden. Erhöht den Angriffsschaden eines Helden um <AItg,DataA1> und gibt eine Chance von <AIbx,DataA1>%, den Feind zu betäuben."
+Description="Erhöht den Angriffsschaden und gibt eine Chance zu betäuben."
+
+[mort]
+Name=Mogrins Bericht
+Hotkey=M
+Tip=|cffffcc00M|rogrins Bericht kaufen
+Ubertip="Dieser Brief ist auf magische Weise versiegelt. Auf der Vorderseite steht in großen krakeligen Buchstaben das Wort Thrall."
+Description="Ein Brief für Thrall."
+
+[srtl]
+Name=Serathil
+Hotkey=S
+Tip=|cffffcc00S|rerathil kaufen
+Ubertip="|cffff8c00Artefakt|r|nErhöht die Angriffsrate des Helden um <AIsx,DataA1,%>% und den Angriffsschaden um <AItf,DataA1> Punkte.|n|cffffcc00Geschichte|r|n|cffffdeadDiese Waffe wurde in Draenor für Kash'drakor geschaffen und fand Verwendung im Krieg am Blutfluss, der mit der Auslöschung des Dark Scar-Clans endete. Nazgrel ist der letzte lebende Verwandte von Kash'drakor.|r"
+Description="|cffff8c00Artefakt|r|nDiese schwere Axt ist mit Kerben und Orc-Runen übersät."
+
+[stwa]
+Name=Stabile Kriegsaxt
+Hotkey=X
+Tip=Stabile Kriegsa|cffffcc00x|rt kaufen
+Ubertip="Erhöht den Angriffsschaden eines Helden um <AItj,DataA1>, wenn getragen."
+Description="Erhöht den Angriffsschaden."
+
+[klmm]
+Name=Killerschredder
+Hotkey=K
+Tip=|cffffcc00K|rillerschredder kaufen
+Ubertip="|cffff8c00Artefakt|r|nErhöht den Angriffsschaden eines Helden um <AItx,DataA1> Punkte, wenn getragen. Bewirkt auch, dass Angriffe des Helden Leben stehlen.|n|cffffcc00Geschichte|r|n|cffffdeadAls Dethorin seine Liebste Allurana bei einem anderen fand, ging er ins Brachland und schrie seinen Schmerz hinaus. Wie als Antwort brach eine Axt aus dem Sand hervor. Dethorin erschlug Allurana und ihren Liebhaber und warf die Axt dann in die tiefe See.|r"
+Description="|cffff8c00Artefakt|r|nEine schlanke sichelförmige Axt, die nach Blut und Salz riecht."
+
+[rots]
+Name=Szepter des Meeres
+Hotkey=R
+Tip=Szepter des Mee|cffffcc00r|res kaufen
+Ubertip="|cff87ceebEinzigartig, verbrauchbar|r|nBeschwört <AIwm,DataA1> Murlocs, die für den Benutzer kämpfen. Erhöht außerdem Kraft, Beweglichkeit und Intelligenz eines Helden um 2.|nBietet <rots,uses> Aufladungen."
+Description="|cff87ceebEinzigartig, verbrauchbar|r|nBeschwört Murlocs."
+
+[axas]
+Name=Ahnen-Krummstab
+Hotkey=A
+Tip=|cffffcc00A|rhnen-Krummstab kaufen
+Ubertip="|cffff8c00Artefakt|r|nBeschwört <AIsh,DataB1> Troll-Berserker, die für den Benutzer kämpfen. Gibt dem Helden und in der Nähe befindlichen befreundeten Einheiten außerdem eine erhöhte Angriffsrate und ein erhöhtes Bewegungstempo.|n|cffffcc00Geschichte|r|n|cffffdeadDie Namen vieler Medizinmänner sind in diesen Krummstab eingraviert. In Zeiten der Gefahr kann sein Benutzer sie um Weisheit und Führung bitten.|r"
+Description="|cffff8c00Artefakt|r|nIn diesen aufwendig verzierten Krummstab sind viele Namen eingraviert."
+
+[mnsf]
+Name=Gedanken-Krummstab
+Hotkey=G
+Tip=|cffffcc00G|redanken-Krummstab kaufen
+Ubertip="Erhöht das Mana eines Helden um <AI2m,DataA1> Punkte. Gibt dem Helden und in der Nähe befindlichen befreundeten Einheiten außerdem einen Bonus zur Mana-Regeneration."
+Description="Erhöht Mana."
+
+[schl]
+Name=Szepter der Heilung
+Hotkey=H
+Tip=Szepter der |cffffcc00H|reilung kaufen
+Ubertip="Gewährt die Fähigkeit, eine befreundete Einheit zu heilen. Gibt dem Helden und in der Nähe befindlichen befreundeten Einheiten außerdem eine um <AIgx,DataA1,%>% erhöhte Trefferpunkt-Regeneration."
+Description="Ein Krummstab, der andere heilt."
+
+[asbl]
+Name=Auftragsmörder-Klinge
+Hotkey=A
+Tip=|cffffcc00A|ruftragsmörder-Klinge kaufen
+Ubertip="Erhöht die Schadenswirkung der Angriffe des Helden um zusätzliche <AItj,DataA1> Punkte, wenn getragen. Die Angriffe des Helden richten außerdem <AIsz,DataA1> Punkte Schaden pro Sekunde an und verlangsamen Bewegungstempo und Angriffsrate des Feindes."
+Description="Erhöht den Angriffsschaden."
+
+[kgal]
+Name=Bierfässchen
+Hotkey=B
+Tip=|cffffcc00B|rierfässchen kaufen
+Ubertip="Erhöht Trefferpunkte und Mana-Regeneration."
+Description="Erhöht Trefferpunkte und Mana-Regeneration."
+
+[dphe]
+Name=Donner-Phönix-Ei
+Hotkey=H
+Tip=Donner-P|cffffcc00h|rönix-Ei kaufen
+Ubertip="Ein seltenes Ei eines Donnerfalken."
+Description="Ein seltenes Ei eines Donnerfalken."
+
+[dkfw]
+Name=Donnerwasser-Fässchen
+Hotkey=D
+Tip=Donnerwasser-|cffffcc00F|rässchen kaufen
+Ubertip="Ein Fässchen, randvoll mit dem stärksten Gebräu, das diesseits von Khaz Modan erhältlich ist!"
+Description="Ein Fässchen, randvoll mit dem stärksten Gebräu, das diesseits von Khaz Modan erhältlich ist!"
+
+
+[dthb]
+Name=Donnerblüten-Knolle
+Hotkey=T
+Tip=Donnerblü|cffffcc00t|ren-Knolle kaufen
+Ubertip="Eine exotische Pflanze, die für ihre instabilen und gefährlichen Eigenschaften wohl bekannt ist."
+Description="Eine exotische Pflanze, die für ihre instabilen und gefährlichen Eigenschaften wohl bekannt ist."

@@ -1,6 +1,8 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-public class Coords3DF {
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+
+public class Coords3DF extends DataType {
 	private Real _x;
 	private Real _y;
 	private Real _z;

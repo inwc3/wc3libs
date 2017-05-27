@@ -1,0 +1,126 @@
+[Rhss]
+Name=Magie kontrollieren
+Tip=|cffffcc00M|Ragie kontrollieren erforschen
+Ubertip="Gibt Zauberbrechern die Fähigkeit, die Kontrolle über beschworene feindliche Einheiten zu übernehmen."
+Hotkey=M
+
+[Rhme]
+Name=Eisen-Schwerter,Stahl-Schwerter,Mithril-Schwerter
+Tip=Ausbau zu Eisen-|cffffcc00S|rchwertern,Ausbau zu Stahl-|cffffcc00S|rchwertern,Ausbau zu Mithril-|cffffcc00S|rchwertern
+Ubertip="Verbessert den Angriffsschaden von Milizen, Soldaten, Zauberbrechern, Drachenfalkenreitern, Greifenreitern und Rittern.","Verbessert den Angriffsschaden von Milizen, Soldaten, Zauberbrechern, Drachenfalkenreitern, Greifenreitern und Rittern noch weiter.","Verbessert den Angriffsschaden von Milizen, Soldaten, Zauberbrechern, Drachenfalkenreitern, Greifenreitern und Rittern noch weiter."
+Hotkey=S,S,S
+
+[Rhra]
+Name=Schwarzes Schießpulver,Aufbereitetes Schießpulver,Magisches Schießpulver
+Tip=Ausbau zu schwarzem Schießpul|cffffcc00v|rer,Ausbau zu aufbereitetem Schießpul|cffffcc00v|rer,Ausbau zu magischem Schießpul|cffffcc00v|rer
+Ubertip="Erhöht den Distanzangriff-Schaden von Scharfschützen, Mörser-Trupps, Belagerungsmaschinen und Flugapparaten.","Erhöht den Distanzangriff-Schaden von Scharfschützen, Mörser-Trupps, Belagerungsmaschinen und Flugapparaten noch mehr.","Erhöht den Distanzangriff-Schaden von Scharfschützen, Mörser-Trupps, Belagerungsmaschinen und Flugapparaten noch mehr."
+Hotkey=V,V,V
+
+[Rhar]
+Name=Eisen-Veredelung,Stahl-Veredelung,Mithril-Veredelung
+Tip=Ausbau zu Eisen-Ve|cffffcc00r|redelung,Ausbau zu Stahl-Ve|cffffcc00r|redelung,Ausbau zu Mithril-Ve|cffffcc00r|redelung
+Ubertip="Verbessert die Rüstung von Milizen, Soldaten, Zauberbrechern, Rittern, Flugapparaten und Belagerungsmaschinen.","Verbessert die Rüstung von Milizen, Soldaten, Zauberbrechern, Rittern, Flugapparaten und Belagerungsmaschinen noch weiter.","Verbessert die Rüstung von Milizen, Soldaten, Zauberbrechern, Rittern, Flugapparaten und Belagerungsmaschinen noch weiter."
+Hotkey=R,R,R
+
+[Rhla]
+Name=Beschlagene Lederrüstung,Verstärkte Lederrüstung,Drachenhaut-Rüstung
+Tip=|cffffcc00A|rusbau zur beschlagenen Lederrüstung,|cffffcc00A|rusbau zur verstärkten Lederrüstung,|cffffcc00A|rusbau zur Drachenhaut-Rüstung
+Ubertip="Verbessert die Rüstung von Scharfschützen, Mörser-Teams, Drachenfalkenreitern und Greifenreitern.","Verbessert die Rüstung von Scharfschützen, Mörser-Teams, Drachenfalkenreitern und Greifenreitern noch weiter.","Verbessert die Rüstung von Scharfschützen, Mörser-Teams, Drachenfalkenreitern und Greifenreitern noch weiter."
+Hotkey=A,A,A
+
+[Rhac]
+Name=Verbesserte Baukunst,Hoch entwickelte Baukunst,Magische Baukunst
+Tip=Ausbau zur verbesserten Bau|cffffcc00k|runst,Ausbau zur hoch entwickelten Bau|cffffcc00k|runst,Ausbau zur magischen Bau|cffffcc00k|runst
+Ubertip="Verbessert Panzerung und Trefferpunkte der menschlichen Gebäude.","Verbessert Panzerung und Trefferpunkte der menschlichen Gebäude noch weiter.","Verbessert Panzerung und Trefferpunkte der menschlichen Gebäude noch weiter."
+Hotkey=K,K,K
+
+[Rhgb]
+Name=Flugapparat-Bomben
+Tip=Flugapparat-|cffffcc00B|romben erforschen
+Ubertip="Ermöglicht Flugapparaten, Land-Einheiten anzugreifen."
+Hotkey=B
+
+[Rhlh]
+Name=Verbesserter Holz-Abbau,Hoch entwickelter Holz-Abbau
+Tip=Verbesserter Ho|cffffcc00l|rz-Abbau,Hoch entwickelter Ho|cffffcc00l|rz-Abbau
+Ubertip="Erhöht die Holzmenge, die ein Arbeiter tragen kann, um <Rhlh,mod1>.","Erhöht die Holzmenge, die ein Arbeiter tragen kann, nochmals um <Rhlh,mod1>."
+Hotkey=L,L
+
+[Rhde]
+Name=Verteidigung
+Tip=Vertei|cffffcc00d|rigung erforschen
+UberTip="Ermöglicht Soldaten, die 'Verteidigung'-Fähigkeit zu benutzen, die ihre Verteidigungsfähigkeiten gegen Stichangriffe verbessert."
+Hotkey=D
+
+[Rhan]
+Name=Kampftierausbildung
+Tip=Kampf|cffffcc00t|rierausbildung erforschen
+Ubertip="Erhöht die maximalen Trefferpunkte von Rittern, Drachenfalkenreitern und Greifenreitern um <Rhan,base1>."
+Hotkey=T
+
+[Rhpt]
+Name=Priester-Adepten-Ausbildung,Priester-Meister-Ausbildung
+Tip=Priester-Adep|cffffcc00t|ren-Ausbildung,Priester-Meis|cffffcc00t|rer-Ausbildung
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von Priestern und ermöglicht ihnen, 'Magie auflösen' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von Priestern und ermöglicht ihnen, 'Inneres Feuer' zu wirken."
+Hotkey=T,T
+
+[Rhst]
+Name=Zauberinnen-Adepten-Ausbildung,Zauberinnen-Meister-Ausbildung
+Tip=Zauberinnen-Adepten-Ausbildun|cffffcc00g|r,Zauberinnen-Meister-Ausbildun|cffffcc00g|r
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von Zauberinnen und ermöglicht ihnen, 'Unsichtbarkeit' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von Zauberinnen und ermöglicht ihnen, 'Verwandlung' zu wirken."
+Hotkey=G,G
+
+[Rhri]
+Name=Langflinten
+Tip=Ausbau zu |cffffcc00L|rangflinten
+Ubertip="Erhöht die Reichweite des Scharfschützenangriffs."
+Hotkey=L
+
+[Rhse]
+Name=Magischer Schutz
+Tip=Mag|cffffcc00i|rschen Schutz erforschen
+Ubertip="Verleiht den menschlichen Türmen die Fähigkeit, unsichtbare Einheiten zu entdecken."
+Hotkey=I
+
+[Rhfl]
+Name=Leuchtfeuer
+Tip=Leuchtfeue|cffffcc00r|r erforschen
+Ubertip="Verleiht Mörser-Teams die 'Leuchtfeuer'-Fähigkeit. Das Leuchtfeuer kann benutzt werden, um einen beliebigen Bereich der Karte sichtbar zu machen. |nKann unsichtbare Einheiten sehen."
+Hotkey=R
+
+[Rhhb]
+Name=Sturmhammer
+Tip=Sturm|cffffcc00h|rammer erforschen
+Ubertip="Ermöglicht den Angriffen eines Greifenreiters, mehrere Einheiten zu beschädigen."
+Hotkey=H
+
+[Rhrt]
+Name=Sperrfeuer
+Tip=S|cffffcc00p|rerrfeuer erforschen
+Ubertip="Baut Belagerungsmaschinen aus und gibt ihnen die 'Sperrfeuer'-Fähigkeit, die ihnen ermöglicht, in der Nähe befindlichen feindlichen Luft-Einheiten Schaden zuzufügen."
+Hotkey=P
+
+[Rhpm]
+Name=Rucksack
+EditorSuffix= (Menschen)
+Tip=Ru|cffffcc00c|rksack erforschen
+Ubertip="Verleiht bestimmten Menschen-Land-Einheiten die Fähigkeit, Gegenstände zu tragen."
+Hotkey=C
+
+[Rhfc]
+Name=Flak-Kanonen
+Tip=Flak-K|cffffcc00a|rnonen erforschen
+Ubertip="Erweitert die Waffen von Flugapparaten, sodass sie einen Gebietsschaden-Angriff gegen Luft-Einheiten bekommen."
+Hotkey=A
+
+[Rhfs]
+Name=Schrapnell-Splitter
+Tip=|cffffcc00S|rchrapnell-Splitter erforschen
+Ubertip="Wertet die Mörsergeschosse von Mörser-Teams auf, um den Schaden zu erhöhen, den sie ungepanzerten Einheiten und Einheiten mit mittlerer Rüstung zufügen."
+Hotkey=S
+
+[Rhcd]
+Name=Wolke
+Tip=Wolke er|cffffcc00f|rorschen
+Ubertip="Verleiht Drachenfalkenreitern die 'Wolke'-Fähigkeit, die Angriffe durch Distanzangriff-Gebäude verhindert."
+Hotkey=F

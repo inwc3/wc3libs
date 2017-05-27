@@ -34,7 +34,7 @@ import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements Mergeable<Self>, SLKable {
 	public static class FieldData {
-		private DataType _defVal;
+		private final DataType _defVal;
 
 		public DataType getDefVal() {
 			return _defVal;
@@ -45,7 +45,8 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 
-	private Map<FieldId, FieldData> _fields = new HashMap<>();
+	private final Map<FieldId, FieldData> _fields = new HashMap<>();
+	
 	private FieldId _pivotField = null;
 
 	public Map<FieldId, FieldData> getFields() {
@@ -53,7 +54,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	public boolean containsField(FieldId field) {
-		assert(field != null);
+		if (field == null) throw new RuntimeException("field is null");
 
 		return _fields.containsKey(field);
 	}
@@ -63,7 +64,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	public void addField(FieldId field, DataType defVal) {
-		assert(field != null);
+		if (field == null) throw new RuntimeException("field is null");
 
 		FieldData fieldData = _fields.get(field);
 
@@ -382,7 +383,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 
 		public void exec() throws IOException {
-			assert(_pivotField != null);
+			if (_pivotField == null) throw new RuntimeException("pivotField is null");
 
 			_file.getParentFile().mkdirs();
 

@@ -1,0 +1,178 @@
+//allied building
+[Aall]
+Name=Gemeinsamer Laden, Verbündeten-Gbde.
+
+//burrow detection, fliers
+[Abdt]
+Name=Eingraben-Aufspürung
+EditorSuffix= (Flugobjekte, überflüssig)
+
+//purchase (shop)
+[Apit]
+Name=Laden-Gegenstand kaufen
+
+[Amou]
+Name=Besteigen
+Tip=|cffffcc00W|randlung
+Untip=|cffffcc00R|rück-Wandlung
+Ubertip="Wandelt den Helden in eine andere Alternativgestalt."
+Unubertip="Wandelt den Helden in seine normale Gestalt zurück."
+Hotkey=R
+Unhotkey=R
+
+[Ahar]
+Name=Abbauen
+Tip=Sa|cffffcc00m|rmeln
+Ubertip="Baut Gold in Goldminen ab und gewinnt Holz aus Bäumen."
+Untip=Rohstoff|cffffcc00e|r zurückbringen
+Unubertip="Bringt die mitgeführten Rohstoffe zum nächsten Rathaus."
+Hotkey=M
+Unhotkey=E
+EditorSuffix= (Gold und Holz)
+
+[Ahrl]
+Name=Abbauen
+Tip=Sa|cffffcc00m|rmeln
+Ubertip="Gewinnt Holz aus Bäumen."
+Untip=Rohstoff|cffffcc00e|r zurückbringen
+Unubertip="Bringt die mitgeführten Rohstoffe zur nächsten Nekropole oder zum nächsten Friedhof."
+Hotkey=M
+Unhotkey=E
+EditorSuffix= (Ghuls, Holz)
+
+[Arev]
+Name=Helden wiederbeleben
+
+[Aawa]
+Name=Helden sofort wiederbeleben
+
+// passive 'detector' ability
+[Adet]
+Name=Detektor
+
+[Adt1]
+Name=Detektor
+
+[Adta]
+Name=Sichtbar machen
+Tip=Sichtba|cffffcc00r|r machen
+Hotkey=R
+
+[Bdet]
+Bufftip=Entdeckt
+Buffubertip="Diese Einheit wurde entdeckt; ein feindlicher Spieler kann sie sehen."
+
+[Bvul]
+Bufftip=Unverwundbar
+Buffubertip="Diese Einheit ist unverwundbar; sie nimmt bei Angriffen keinen Schaden und kann auch nicht Ziel eines Zaubers werden."
+
+[Bspe]
+Bufftip=Tempo-Bonus
+Buffubertip="Diese Einheit hat einen Tempo-Bonus; sie bewegt sich schneller als gewöhnlich."
+
+[Bfro]
+Bufftip=Verlangsamt
+Buffubertip="Diese Einheit wurde verlangsamt; sie bewegt sich langsamer als gewöhnlich."
+
+// peon/peasant repair ability
+[Arep]
+Name=Reparieren
+Tip=|cffffcc00R|reparieren
+Ubertip="Repariert mechanische Einheiten und Gebäude, wobei Rohstoffe verbraucht werden."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=R
+Unhotkey=R
+
+// Abilities that need names in the editor
+[AEpa]
+Name=Giftpfeile
+Tip=G|cffffcc00i|rftpfeile [|cffffcc00Stufe 1|r],G|cffffcc00i|rftpfeile [|cffffcc00Stufe 2|r],G|cffffcc00i|rftpfeile [|cffffcc00Stufe 3|r]
+Ubertip="Fügt einem Angriff gegen Feinde einen Feuerschaden-Bonus von <AHfa,DataA1> hinzu, allerdings wird für jeden abgefeuerten Schuss Mana verbraucht.","Fügt einem Angriff einen Feuerschaden-Bonus von <AHfa,DataA2> hinzu, allerdings wird für jeden abgefeuerten Schuss Mana verbraucht.","Fügt einem Angriff einen Feuerschaden-Bonus von <AHfa,DataA3> hinzu, allerdings wird für jeden abgefeuerten Schuss Mana verbraucht."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=R
+Unhotkey=R
+Researchtip="G|cffffcc00i|rftpfeile [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Erhöht die Angriffskampfkraft einer Priesterin durch Feuerschaden. |n|n|cffffcc00Stufe 1|r - <AHfa,DataA1> Punkte Schaden-Bonus. |n|cffffcc00Stufe 2|r - <AHfa,DataA2> Punkte Schaden-Bonus. |n|cffffcc00Stufe 3|r - <AHfa,DataA3> Punkte Schaden-Bonus."
+Researchhotkey=R
+
+[AEbu]
+Name=Bauen (Nachtelfen)
+
+[AGbu]
+Name=Bauen (Naga)
+
+[AHbu]
+Name=Bauen (Menschen)
+
+[AHer]
+Name=Held
+
+[ANbu]
+Name=Bauen (Neutral)
+
+[AObu]
+Name=Bauen (Orc)
+
+[ARal]
+Name=Sammeln
+
+[AUbu]
+Name=Bauen (Untote)
+
+[Aalr]
+Name=Alarmieren
+
+[Aatk]
+Name=Angreifen
+
+[Afih]
+Name=Brennend (Menschen)
+
+[Afin]
+Name=Brennend (Nachtelfen)
+
+[Afio]
+Name=Brennend (Orc)
+
+[Afir]
+Name=Brennend
+
+[Afiu]
+Name=Brennend (Untote)
+
+[Aloc]
+Name=Heuschrecke
+
+[Amov]
+Name=Bewegen
+
+[Atdp]
+Name=Piloten abladen
+
+[Atlp]
+Name=Piloten aufnehmen
+
+[Attu]
+Name=Turm
+
+// Stun buff
+[BSTN]
+Bufftip=Betäubt
+Buffubertip="Diese Einheit ist betäubt; sie kann sich weder bewegen noch angreifen oder Zauber wirken."
+
+// Pause buff
+[BPSE]
+Bufftip=Betäubt
+Buffubertip="Diese Einheit bewegt sich nicht."
+EditorSuffix= (Pause)
+
+[Xbdt]
+EditorName=Sichtbar machen (Effekt)
+
+[Xbli]
+EditorName=Verseuchung (Effekt)
+
+[Xdis]
+EditorName=Helden-Auflösung (Effekt)

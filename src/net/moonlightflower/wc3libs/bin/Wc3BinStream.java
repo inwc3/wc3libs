@@ -372,7 +372,7 @@ public class Wc3BinStream extends BinStream {
 		writeFloat(val);
 	}
 	
-	public void pack() {
+	public void pack() throws StreamException {
 		Wc3BinStream newStream = Packed.compress(this);
 		
 		_bytes = newStream._bytes;

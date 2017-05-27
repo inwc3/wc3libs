@@ -28,7 +28,7 @@ import net.moonlightflower.wc3libs.txt.TXT.Section.Field;
  * handles profile files like Units\CommandFunc.txt
  */
 public class Profile extends TXT {
-	public static File[] getNativePaths() {
+	public final static File[] getNativePaths() {
 		return new File[]{
 			new File("Units\\CampaignUnitStrings.txt"),
 
@@ -157,7 +157,7 @@ public class Profile extends TXT {
 			for (Entry<FieldId, Obj.Field> fieldEntry : getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				Obj.Field field = fieldEntry.getValue();
-				
+
 				for (int i = 0; i < field.getVals().size(); i++) {
 					Object val = field.get(i);
 					
@@ -220,7 +220,7 @@ public class Profile extends TXT {
 		}
 	}
 	
-	private Map<TXTSectionId, Obj> _objs = new HashMap<>();
+	private final Map<TXTSectionId, Obj> _objs = new HashMap<>();
 	
 	public Map<TXTSectionId, Obj> getObjs() {
 		return _objs;

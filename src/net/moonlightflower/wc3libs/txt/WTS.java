@@ -19,12 +19,13 @@ import java.util.regex.Pattern;
 
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort.PortException;
 
 public class WTS {
 	public final static File GAME_PATH = new File("war3map.wts");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.wts");
 	
-	private Map<Integer, String> _vals = new HashMap<>();
+	private final Map<Integer, String> _vals = new HashMap<>();
 	
 	public Map<String, String> getNamedEntries() {
 		Map<String, String> res = new HashMap<>();
@@ -158,7 +159,7 @@ end*/
 		inStream.close();
 	}
 	
-	public static WTS ofMapFile(File mapFile) throws Exception {
+	public static WTS ofMapFile(File mapFile) throws IOException {
 		MpqPort.Out portOut = new LadikMpqPort.Out();
 		
 		portOut.add(WTS.GAME_PATH);

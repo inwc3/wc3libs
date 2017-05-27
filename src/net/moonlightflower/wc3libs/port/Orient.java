@@ -1,11 +1,9 @@
 package net.moonlightflower.wc3libs.port;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +11,6 @@ import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Vector;
@@ -24,33 +21,11 @@ public class Orient {
 	public static File getExecPath(Class<?> c) {
 		if (c == null) c = Orient.class;
 		
-		File f;
-		
 		try {			
 			URI uri = c.getProtectionDomain().getCodeSource().getLocation().toURI();
 			
-			/*File file = new File("D:\\logUri.txt");
-			
-			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				
-				writer.write(uri.toString());
-		        
-				//writer.write(Runtime.getRuntime().getClass().getProtectionDomain().getCodeSource().getLocation().toURI().toString());
-				
-				writer.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			System.out.println("the uri is: " + uri);*/
-			
-			f = new File(uri);
-			
-			return f;
+			return new File(uri);
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -118,7 +93,6 @@ public class Orient {
 			
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -136,20 +110,6 @@ public class Orient {
 	public static File localClassDir() {
 		return localClassPath(1).getParentFile();
 	}
-	
-	/*public static File localDir() {
-		File ret = null;
-		
-		log(traces[2].getClassName().replace(".", java.io.File.separator));
-
-		ret = new File(getExecPath(), traces[2].getClassName().replace(".", java.io.File.separator));
-
-		log(ret.toString());
-		
-		assert (ret != null);
-
-		return getDir(ret);
-	}*/
 
 	public static boolean fileIsLocked(File file) {
 		FileChannel fileChannel = null;

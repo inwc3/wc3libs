@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 public class UTF8 {
-	private Vector<String> _lines = new Vector<>();
-	private Iterator<String> _linesItr;
+	private final Vector<String> _lines = new Vector<>();
+	private final Iterator<String> _linesItr;
 	
 	public String readLine() {
 		if (!_linesItr.hasNext()) {
@@ -51,6 +51,10 @@ public class UTF8 {
 		
 		reader.close();
 		
+		_linesItr = _lines.iterator();
+	}
+	
+	public UTF8() {
 		_linesItr = _lines.iterator();
 	}
 }

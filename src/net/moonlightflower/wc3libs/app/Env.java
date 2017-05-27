@@ -6,6 +6,8 @@ import net.moonlightflower.wc3libs.bin.app.W3E;
 import net.moonlightflower.wc3libs.bin.app.WPM;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
+import net.moonlightflower.wc3libs.misc.PathMap;
+import net.moonlightflower.wc3libs.misc.ShadowMap;
 
 public class Env {
 	private MMP _mmp;
@@ -49,8 +51,8 @@ public class Env {
 		_w3e = w3e;
 		_wpm = wpm;
 
-		_shd.setBounds(_w3e.getBounds().scale(W3E.CELL_SIZE / SHD.CELL_SIZE), true);
-		_wpm.setBounds(_w3e.getBounds().scale(W3E.CELL_SIZE / SHD.CELL_SIZE), true);
+		_shd.setBounds(_w3e.getBounds().scale(W3E.CELL_SIZE / ShadowMap.CELL_SIZE), true);
+		_wpm.setBounds(_w3e.getBounds().scale(W3E.CELL_SIZE / PathMap.CELL_SIZE), true);
 	}
 	
 	public Env(Bounds bounds) {

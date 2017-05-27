@@ -81,6 +81,12 @@ public abstract class MpqPort {
 		}
 	}
 	
+	public class PortException extends IOException {
+		public PortException(String msg) {
+			super(msg);
+		}
+	}
+	
 	public static abstract class Out {
 		class DummyOutputStream extends OutputStream {
 			private ByteArrayOutputStream _outBytes = new ByteArrayOutputStream();
@@ -168,7 +174,7 @@ public abstract class MpqPort {
 				byte[] outBytes = segment.getOutBytes();
 				
 				writer.write(outBytes, 0, outBytes.length);
-System.out.println(outFile);				
+				
 				writer.close();
 				
 				return outFile;
@@ -278,9 +284,9 @@ System.out.println(outFile);
 			volExports.removeAll(toRemove);
 		}*/
 	
-		public abstract Result commit(Vector<File> mpqFiles) throws IOException;
+		public abstract Result commit(Vector<File> mpqFiles) throws PortException;
 	
-		public Result commit(File mpqFile) throws Exception {
+		public Result commit(File mpqFile) throws PortException {
 			Vector<File> mpqFiles = new Vector<>();
 	
 			mpqFiles.add(mpqFile);
@@ -341,16 +347,25 @@ System.out.println(outFile);
 		_defaultImpl = type;
 	}
 	
+	private static String getRegEntry(String dirS, String key) {
+		try {
+			return Registry.get(dirS, key);
+		} catch (IOException e) {
+		}
+		
+		return null;
+	}
+	
 	static {
-		String dirS = Registry.get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
+		String dirS = getRegEntry("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
 		
-		if (dirS == null) dirS = Registry.get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
+		if (dirS == null) dirS = getRegEntry("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
 		
-		if (dirS == null) dirS = Registry.get("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
+		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
 		
-		if (dirS == null) dirS = Registry.get("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
+		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
 		
-		if (dirS == null) dirS = Registry.get("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "War3InstallPath");
+		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "War3InstallPath");
 		
 		setWc3Dir(new File(dirS));
 	}

@@ -62,7 +62,7 @@ public class JMpqPort extends MpqPort {
 					}
 				}
 				
-				jmpq.close();
+				jmpq.close(true, true, false);
 			}
 		}
 	}

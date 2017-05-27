@@ -32,7 +32,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 	
 	public static class States {
 		static public class State<T extends DataType> extends SLKState<T> {
-			private static List<State> _values = new ArrayList<>();
+			private final static List<State> _values = new ArrayList<>();
 			
 			public static List<State> values() {
 				return _values;

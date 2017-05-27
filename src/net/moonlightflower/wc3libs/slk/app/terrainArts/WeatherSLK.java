@@ -32,7 +32,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	
 	static public class States {
 		static public class State<T extends DataType> extends SLKState<T> {
-			private static List<State> _values = new ArrayList<>();
+			private final static List<State> _values = new ArrayList<>();
 			
 			public static List<State> values() {
 				return _values;

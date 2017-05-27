@@ -1,6 +1,8 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-public class Coords2DI {
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+
+public class Coords2DI extends DataType {
 	private int _x;
 	private int _y;
 	
