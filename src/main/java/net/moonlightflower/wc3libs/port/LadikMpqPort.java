@@ -153,8 +153,7 @@ public class LadikMpqPort extends MpqPort {
 	//private final static File delFile = File.createTempFile("delTemp", ".txt");//new File(Orient.localDir(), "del.txt");
 	
 	public static class In extends MpqPort.In {
-		@Override
-		public void commit(Vector<File> mpqFiles) throws Exception {
+		private void commitLadik(Vector<File> mpqFiles) throws IOException {
 			if (getFiles().isEmpty()) return;
 			if (mpqFiles.isEmpty()) return;
 			
@@ -194,11 +193,19 @@ public class LadikMpqPort extends MpqPort {
 				Orient.moveFile(importMpqFile, mpqFile, true);
 			}
 		}
+		
+		@Override
+		public void commit(Vector<File> mpqFiles) throws PortException {
+			try {
+				commitLadik(mpqFiles);
+			} catch (IOException e) {
+				throw new PortException(e);
+			}
+		}
 	}
 	
-	public static class Out extends MpqPort.Out {		
-		@Override
-		public Result commit(Vector<File> mpqFiles) throws IOException {
+	public static class Out extends MpqPort.Out {
+		private Result commitLadik(Vector<File> mpqFiles) throws IOException {
 			if (getFiles().isEmpty()) return new Result();
 			if (mpqFiles.isEmpty()) return new Result();
 			
@@ -335,6 +342,15 @@ public class LadikMpqPort extends MpqPort {
 			}
 			
 			return result;
+		}
+		
+		@Override
+		public Result commit(Vector<File> mpqFiles) throws PortException {
+			try {
+				return commitLadik(mpqFiles);
+			} catch (IOException e) {
+				throw new PortException(e);
+			}
 		}
 	}
 

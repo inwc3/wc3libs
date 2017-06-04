@@ -42,9 +42,8 @@ public class JMpqPort extends MpqPort {
 		}
 	}
 	
-	public static class In extends MpqPort.In {	
-		@Override
-		public void commit(Vector<File> mpqFiles) throws IOException {
+	public static class In extends MpqPort.In {
+		private void commitJ(Vector<File> mpqFiles) throws IOException {
 			Vector<String> lines = new Vector<>();
 			
 			for (File mpqFile : mpqFiles) {
@@ -62,11 +61,20 @@ public class JMpqPort extends MpqPort {
 				jmpq.close(true, true, false);
 			}
 		}
+		
+		@Override
+		public void commit(Vector<File> mpqFiles) throws PortException {
+			try {
+				commitJ(mpqFiles);
+			} catch (IOException e) {
+				throw new PortException(e);
+			}
+		}
 	}
 	
 	public static class Out extends MpqPort.Out {
 		@Override
-		public Result commit(Vector<File> mpqFiles) throws Exception {
+		public Result commit(Vector<File> mpqFiles) throws IOException {
 			Orient.removeDir(exportDir);
 			Orient.createDir(exportDir);
 	

@@ -72,9 +72,13 @@ public abstract class MpqPort {
 		}
 	}
 	
-	public class PortException extends IOException {
+	public static class PortException extends IOException {
 		public PortException(String msg) {
 			super(msg);
+		}
+
+		public PortException(IOException e) {
+			super(e);
 		}
 	}
 	
