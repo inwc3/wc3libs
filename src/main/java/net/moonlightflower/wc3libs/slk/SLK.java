@@ -587,3 +587,4 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		return slk;
 	}
 }
+
