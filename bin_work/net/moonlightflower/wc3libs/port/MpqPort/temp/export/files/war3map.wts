@@ -1,6 +1,6 @@
 ﻿STRING 1
 {
-|cff217199Escape Builder |r[R] 0.89f
+|cff217199Escape Builder |r[R] 0.89n
 }
 
 STRING 2
@@ -200,7 +200,7 @@ STRING 40
 }
 
 STRING 44
-// Units: n00K (|cFF00FF00Volcano|r ), Hotkey (Hotkey (uhot))
+// Units: n00Y (|cFF888888Rocks|r), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -466,7 +466,7 @@ Can be made invisible
 }
 
 STRING 117
-// Units: n01B (|cff08DEFFTexter ), Hotkey (Hotkey (uhot))
+// Units: n00K (|cFF00FF00Volcano|r ), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -646,7 +646,7 @@ STRING 159
 }
 
 STRING 162
-// Units: n00Y (|cFF888888Rocks|r), Hotkey (Hotkey (uhot))
+// Units: n004 (|cffFF7B29Waypoint ), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -724,7 +724,7 @@ Build |cFFFFFF00R|rocks
 }
 
 STRING 184
-// Units: n004 (|cffFF7B29Waypoint ), Hotkey (Hotkey (uhot))
+// Units: h00H (|cff2994EFFountain), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -736,7 +736,7 @@ STRING 186
 }
 
 STRING 188
-// Units: h00H (|cff2994EFFountain), Hotkey (Hotkey (uhot))
+// Units: n015 (|cFF00FF88Poison Eggs|r), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -760,19 +760,13 @@ S
 }
 
 STRING 197
-// Units: n01J (Small |cFF00FF00Obstacle|r: Undead), Hotkey (Hotkey (uhot))
+// Units: n01L (|cffE63A21Tracks 2), Hotkey (Hotkey (uhot))
 {
 B
 }
 
-STRING 198
-// Units: n012 (|cff6B6B6BVortex), EditorSuffix (Name - Editor Suffix (unsf))
-{
-(dummy)
-}
-
 STRING 202
-// Units: n01L (|cffE63A21Tracks 2), Hotkey (Hotkey (uhot))
+// Units: n01N (|cffE63A21Tracks 3), Hotkey (Hotkey (uhot))
 {
 B
 }
@@ -923,7 +917,7 @@ Build O|cFFFFFF00b|rstacle
 }
 
 STRING 251
-// Units: n01N (|cffE63A21Tracks 3), Hotkey (Hotkey (uhot))
+// Units: n01R (|cffE63A21Tracks 1), Hotkey (Hotkey (uhot))
 {
 B
 }
@@ -971,7 +965,7 @@ Build O|cFFFFFF00b|rstacle
 }
 
 STRING 259
-// Units: n01R (|cffE63A21Tracks 1), Hotkey (Hotkey (uhot))
+// Units: n01S (|cffE63A21Tracks), Hotkey (Hotkey (uhot))
 {
 B
 }
@@ -1001,7 +995,7 @@ C
 }
 
 STRING 264
-// Units: n01J (Small |cFF00FF00Obstacle|r: Undead), Ubertip (Tooltip - Extended (utub))
+// Units: n01K (Big Obstacle: Undead), Ubertip (Tooltip - Extended (utub))
 {
 |cFFFF0000Kills escapers which comes too near|r
 }
@@ -1025,7 +1019,7 @@ C
 }
 
 STRING 268
-// Units: n01K (Big Obstacle: Undead), Ubertip (Tooltip - Extended (utub))
+// Units: n005 (Big Obstacle: Sunken), Ubertip (Tooltip - Extended (utub))
 {
 |cFFFF0000Kills escapers which comes too near|r
 }
@@ -1037,43 +1031,37 @@ Small |cFF00FF00Obstacle|r: Grass
 }
 
 STRING 270
-// Units: n01J (Small |cFF00FF00Obstacle|r: Undead), Tip (Tooltip - Basic (utip))
+// Units: n055 (Small |cFF00FF00Obstacle|r: Sunken), Tip (Tooltip - Basic (utip))
 {
 Build O|cFFFFFF00b|rstacle
 }
 
 STRING 271
-// Units: n01S (|cffE63A21Tracks), Hotkey (Hotkey (uhot))
-{
-B
-}
-
-STRING 272
-// Units: n005 (Big Obstacle: Sunken), Ubertip (Tooltip - Extended (utub))
-{
-|cFFFF0000Kills escapers which comes too near|r
-}
-
-STRING 273
-// Units: n01J (Small |cFF00FF00Obstacle|r: Undead), Name (Name (unam))
-{
-Small |cFF00FF00Obstacle|r: Undead
-}
-
-STRING 274
-// Units: n055 (Small |cFF00FF00Obstacle|r: Grass), Tip (Tooltip - Basic (utip))
-{
-Build O|cFFFFFF00b|rstacle
-}
-
-STRING 275
 // Units: u009 (|cFFFF0000Big|r Escaper Killer), Hotkey (Hotkey (uhot))
 {
 B
 }
 
+STRING 272
+// Units: n055 (Small |cFF00FF00Obstacle|r: Sunken), Ubertip (Tooltip - Extended (utub))
+{
+|cFFFF0000Kills escapers which comes too near|r
+}
+
+STRING 274
+// Units: n01W (High |cFF00FF00Obstacle|r: Desert), Tip (Tooltip - Basic (utip))
+{
+Build O|cFFFFFF00b|rstacle
+}
+
+STRING 275
+// Units: n055 (Small |cFF00FF00Obstacle|r: Sunken), Hotkey (Hotkey (uhot))
+{
+B
+}
+
 STRING 276
-// Units: n055 (Small |cFF00FF00Obstacle|r: Grass), Ubertip (Tooltip - Extended (utub))
+// Units: n01V (High |cFF00FF00Obstacle|r: Citadel), Ubertip (Tooltip - Extended (utub))
 {
 |cFFFF0000Kills escapers which comes too near|r
 }
@@ -1097,7 +1085,7 @@ C
 }
 
 STRING 292
-// Units: n055 (Small |cFF00FF00Obstacle|r: Grass), Hotkey (Hotkey (uhot))
+// Units: n01V (High |cFF00FF00Obstacle|r: Citadel), Hotkey (Hotkey (uhot))
 {
 B
 }
@@ -1535,7 +1523,7 @@ X
 }
 
 STRING 413
-// Units: n011 (Verticle Wall), Hotkey (Hotkey (uhot))
+// Units: n011 (Vertical Wall), Hotkey (Hotkey (uhot))
 {
 X
 }
@@ -1688,7 +1676,7 @@ First Wheater Effects
 }
 
 STRING 477
-// Units: n012 (|cff6B6B6BVortex), Hotkey (Hotkey (uhot))
+// Units: obSD (|cffE63A21Small Obstacle ), Hotkey (Hotkey (uhot))
 {
 A
 }
@@ -1946,13 +1934,13 @@ Door: Turn0
 }
 
 STRING 561
-// Units: n013 (|cff636363Vortex ), Hotkey (Hotkey (uhot))
+// Units: n016 (|cFF00FF00Obelisk|r), Hotkey (Hotkey (uhot))
 {
 A
 }
 
 STRING 565
-// Units: u002 (|cFF0080FFSmall|r Escaper Killer), Hotkey (Hotkey (uhot))
+// Units: obBD (|cffE63A21Big Obstacle ), Hotkey (Hotkey (uhot))
 {
 S
 }
@@ -2499,7 +2487,7 @@ Executer: Change to Dark Ice
 }
 
 STRING 746
-// Abilities: A01D (Shiftcam: Turn Shiftmode ON), Hotkey (Hotkey - Normal (ahky))
+// Units: n01U (|cffE63A21High Obstacle ), Hotkey (Hotkey (uhot))
 {
 D
 }
@@ -3051,7 +3039,7 @@ Countains the heros' spells.
 }
 
 STRING 862
-// Units: h0nn (|cff9CA5EFPower Node), Hotkey (Hotkey (uhot))
+// Units: n01B (|cff08DEFFTexter ), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -3219,7 +3207,7 @@ Countains the heros' spells.
 }
 
 STRING 972
-// Units: n00G (|cff1BE6B8Ice Crystal), Hotkey (Hotkey (uhot))
+// Units: h0nn (|cff9CA5EFPower Node), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -3357,7 +3345,7 @@ Countains the heros' spells.
 }
 
 STRING 996
-// Units: u00K (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
+// Units: n00G (|cff1BE6B8Ice Crystal), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -3531,7 +3519,7 @@ Countains the heros' spells.
 }
 
 STRING 1058
-// Units: u00L (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
+// Units: u00K (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -3597,7 +3585,7 @@ Change the Type of the spawned Unit.
 }
 
 STRING 1093
-// Units: u00M (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
+// Units: u00L (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -3814,7 +3802,7 @@ STRING 1144
 }
 
 STRING 1145
-// Units: n016 (|cFF00FF00Obelisk|r), Hotkey (Hotkey (uhot))
+// Items: I00U ([|cFFff4444Weapon|r] Sabre), Hotkey (Hotkey (uhot))
 {
 A
 }
@@ -4054,12 +4042,6 @@ STRING 1232
 Big Obstacle: Sunken
 }
 
-STRING 1233
-// Units: n055 (Small |cFF00FF00Obstacle|r: Grass), Name (Name (unam))
-{
-Small |cFF00FF00Obstacle|r: Grass
-}
-
 STRING 1237
 // Units: n00L (|cff84C54ASwitch), Name (Name (unam))
 {
@@ -4169,37 +4151,37 @@ W
 }
 
 STRING 1289
-// Units: u00J (Flying Killer), Hotkey (Hotkey (uhot))
+// Units: u002 (|cFF0080FFSmall|r Escaper Killer), Hotkey (Hotkey (uhot))
 {
 S
 }
 
 STRING 1296
-// Items: I00U ([|cFFff4444Weapon|r] Sabre), Hotkey (Hotkey (uhot))
-{
-A
-}
-
-STRING 1297
-// Abilities: A011 (Poisondmg: Up), Hotkey (Hotkey - Normal (ahky))
-{
-D
-}
-
-STRING 1298
-// Abilities: A029 (TC: Select Texture), Hotkey (Hotkey - Normal (ahky))
-{
-D
-}
-
-STRING 1299
 // Items: I00V ([|cFFff4444Weapon|r] Glaive), Hotkey (Hotkey (uhot))
 {
 A
 }
 
-STRING 1300
+STRING 1297
+// Abilities: A01D (Shiftcam: Turn Shiftmode ON), Hotkey (Hotkey - Normal (ahky))
+{
+D
+}
+
+STRING 1298
+// Abilities: A011 (Poisondmg: Up), Hotkey (Hotkey - Normal (ahky))
+{
+D
+}
+
+STRING 1299
 // Items: I00W ([|cFFff4444Weapon|r] Hammer), Hotkey (Hotkey (uhot))
+{
+A
+}
+
+STRING 1300
+// Items: I00X ([|cFFff4444Weapon|r] Glacial scepter), Hotkey (Hotkey (uhot))
 {
 A
 }
@@ -4318,12 +4300,6 @@ STRING 1329
 |cff636363Vortex 
 }
 
-STRING 1330
-// Units: n013 (|cff636363Vortex ), Tip (Tooltip - Basic (utip))
-{
-Build |cff636363Vortex [A]
-}
-
 STRING 1331
 // Units: n01B (|cff08DEFFTexter ), Name (Name (unam))
 {
@@ -4433,7 +4409,7 @@ STRING 1361
 }
 
 STRING 1364
-// Units: n015 (|cFF00FF88Poison Eggs|r), Hotkey (Hotkey (uhot))
+// Units: h00G (|cff0894E6Boss Citadel), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -4458,37 +4434,37 @@ Also cures infections.
 }
 
 STRING 1368
-// Items: I00X ([|cFFff4444Weapon|r] Glacial scepter), Hotkey (Hotkey (uhot))
-{
-A
-}
-
-STRING 1371
 // Items: I00Y ([|cFFff4444Weapon|r] Nelf Bow), Hotkey (Hotkey (uhot))
 {
 A
 }
 
-STRING 1372
-// Abilities: A04M (Spinner: Spin Group), Hotkey (Hotkey - Normal (ahky))
-{
-D
-}
-
-STRING 1373
-// Abilities: A05H (UP: Glaive), Hotkey (Hotkey - Normal (ahky))
-{
-D
-}
-
-STRING 1375
+STRING 1371
 // Abilities: A018 (Executer: Enable Object), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
-STRING 1376
+STRING 1372
+// Abilities: A029 (TC: Select Texture), Hotkey (Hotkey - Normal (ahky))
+{
+D
+}
+
+STRING 1373
+// Abilities: A04M (Spinner: Spin Group), Hotkey (Hotkey - Normal (ahky))
+{
+D
+}
+
+STRING 1375
 // Abilities: A01B (Spinner: Spin Unit), Hotkey (Hotkey - Normal (ahky))
+{
+A
+}
+
+STRING 1376
+// Abilities: A01F (Spinner: Increase Spin Speed), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -4506,7 +4482,7 @@ STRING 1381
 }
 
 STRING 1383
-// Units: u00N (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
+// Units: u00M (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -4580,7 +4556,7 @@ This unit has increased moving speed
 }
 
 STRING 1416
-// Units: h00G (|cff0894E6Boss Citadel), Hotkey (Hotkey (uhot))
+// Units: h00I (|cff2994EFFountain), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -4667,7 +4643,7 @@ Train |cffFFFF00B|cff0080FFig |cffDE3A21Escaper Killer [W]
 }
 
 STRING 1439
-// Units: obBD (|cffE63A21Big Obstacle ), Hotkey (Hotkey (uhot))
+// Units: n017 (|cFFFF0000Remains|r), Hotkey (Hotkey (uhot))
 {
 E
 }
@@ -4715,7 +4691,7 @@ C
 }
 
 STRING 1450
-// Units: u00O (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
+// Units: u00N (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -4739,7 +4715,7 @@ X
 }
 
 STRING 1456
-// Units: n001 (|cff4A943AUnitcreator ), Hotkey (Hotkey (uhot))
+// Units: n013 (|cff636363Vortex ), Hotkey (Hotkey (uhot))
 {
 W
 }
@@ -4799,7 +4775,7 @@ Learn Slam - [|cffffcc00Level %d|r] [W]
 }
 
 STRING 1469
-// Units: obSD (|cffE63A21Small Obstacle ), Hotkey (Hotkey (uhot))
+// Units: n001 (|cff4A943AUnitcreator ), Hotkey (Hotkey (uhot))
 {
 W
 }
@@ -4870,12 +4846,6 @@ STRING 1487
 Builder: Menu: Circles
 }
 
-STRING 1488
-// Abilities: A000 (Builder: Menu: Circles), Tip (Tooltip - Normal (atp1))
-{
-Menu: Circles [W]
-}
-
 STRING 1489
 // Abilities: A000 (Builder: Menu: Circles), Ubertip (Tooltip - Normal - Extended (aub1))
 {
@@ -4889,7 +4859,7 @@ W
 }
 
 STRING 1493
-// Abilities: A00O (Builder: Menu: ObjectsW), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: A05D (Builder: Menu: Objects), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Swap to the Buildingmenu for objects.
 }
@@ -4901,63 +4871,27 @@ W
 }
 
 STRING 1497
-// Abilities: A05B (Builder: Menu: EnviromentalE), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: A05E (Builder: Menu: Enviromental), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Swap to the Buildingmenu for enviromental stuff.
 }
 
 STRING 1498
-// Units: n017 (|cFFFF0000Remains|r), Hotkey (Hotkey (uhot))
-{
-E
-}
-
-STRING 1502
-// Units: h00I (|cff2994EFFountain), Hotkey (Hotkey (uhot))
-{
-R
-}
-
-STRING 1503
-// Abilities: A00O (Builder: Menu: ObjectsW), Name (Name (anam))
-{
-Builder: Menu: ObjectsW
-}
-
-STRING 1504
-// Abilities: A05B (Builder: Menu: EnviromentalE), Name (Name (anam))
-{
-Builder: Menu: EnviromentalE
-}
-
-STRING 1505
-// Abilities: A05D (Builder: Menu: ObjectsE), Name (Name (anam))
-{
-Builder: Menu: ObjectsE
-}
-
-STRING 1507
-// Abilities: A05D (Builder: Menu: ObjectsE), Ubertip (Tooltip - Normal - Extended (aub1))
-{
-Swap to the Buildingmenu for objects.
-}
-
-STRING 1508
 // Units: n002 (|cffFF0202Arcanery), Hotkey (Hotkey (uhot))
 {
 E
 }
 
-STRING 1509
-// Abilities: A05E (Builder: Menu: EnviromentalR), Name (Name (anam))
+STRING 1502
+// Units: h00J (|cff2994EFFountain), Hotkey (Hotkey (uhot))
 {
-Builder: Menu: EnviromentalR
+R
 }
 
-STRING 1511
-// Abilities: A05E (Builder: Menu: EnviromentalR), Ubertip (Tooltip - Normal - Extended (aub1))
+STRING 1508
+// Units: n01T (|cff530080Garage), Hotkey (Hotkey (uhot))
 {
-Swap to the Buildingmenu for enviromental stuff.
+E
 }
 
 STRING 1520
@@ -4973,7 +4907,7 @@ W
 }
 
 STRING 1523
-// Units: n01T (|cff530080Garage), Hotkey (Hotkey (uhot))
+// Abilities: A00E (Speed Aura), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -5201,7 +5135,7 @@ W
 }
 
 STRING 1589
-// Abilities: A01G (Spinner: Decrease Spin Speed), Hotkey (Hotkey - Normal (ahky))
+// Units: u00J (Flying Killer), Hotkey (Hotkey (uhot))
 {
 S
 }
@@ -5213,7 +5147,7 @@ Q
 }
 
 STRING 1598
-// Units: h00J (|cff2994EFFountain), Hotkey (Hotkey (uhot))
+// Units: h00L (|cff0894E6Boss Grass), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -5231,7 +5165,7 @@ UP: Bomber
 }
 
 STRING 1605
-// Abilities: A00E (Speed Aura), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A019 (Executer: Change to Ice), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -5651,18 +5585,6 @@ STRING 1737
 Sets the Movementspeed of a Unit(non-Escaper) that walkes over.
 }
 
-STRING 1738
-// Units: n012 (|cff6B6B6BVortex), Name (Name (unam))
-{
-|cff6B6B6BVortex
-}
-
-STRING 1739
-// Units: n012 (|cff6B6B6BVortex), Tip (Tooltip - Basic (utip))
-{
-|cffFFCC00Build |cff6B6B6BVortex [A]
-}
-
 STRING 1741
 // Units: n01B (|cff08DEFFTexter ), Ubertip (Tooltip - Extended (utub))
 {
@@ -5763,12 +5685,6 @@ STRING 1773
 V
 }
 
-STRING 1774
-// Units: n012 (|cff6B6B6BVortex), Ubertip (Tooltip - Extended (utub))
-{
-Creates a radial forcefield that makes Escapers move toward it's center.
-}
-
 STRING 1778
 // Abilities: A01G (Spinner: Decrease Spin Speed), Name (Name (anam))
 {
@@ -5853,7 +5769,7 @@ Adds or removes the selected unit to the units spun by this spinner.
 }
 
 STRING 1799
-// Abilities: A01N (Executer: Disable Object), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A01G (Spinner: Decrease Spin Speed), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
@@ -5871,19 +5787,19 @@ Adds or removes all units in the selected group.
 }
 
 STRING 1803
-// Abilities: A050 (T: Decrease length), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A01N (Executer: Disable Object), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 1804
-// Units: h00L (|cff0894E6Boss Grass), Hotkey (Hotkey (uhot))
+// Units: h00M (|cff0894E6Boss Sand), Hotkey (Hotkey (uhot))
 {
 R
 }
 
 STRING 1805
-// Abilities: A019 (Executer: Change to Ice), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A040 (Items: Lvlup Tome), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -5953,7 +5869,7 @@ Mode: Static
 }
 
 STRING 1832
-// Abilities: A05Y (Color Orange), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05H (UP: Glaive), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
@@ -6049,13 +5965,13 @@ Reincarnation
 }
 
 STRING 1872
-// Abilities: A040 (Items: Lvlup Tome), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A045 (UC: Big Killer), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 1876
-// Abilities: A04K (Vortex: Decrease gravity), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A050 (T: Decrease length), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
@@ -6067,7 +5983,7 @@ CongaLineHead: Add Segment
 }
 
 STRING 1879
-// Abilities: A058 (Lavadmg: Up), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A04K (Vortex: Decrease gravity), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
@@ -6115,7 +6031,7 @@ STRING 1888
 }
 
 STRING 1890
-// Abilities: A06E (Trap: Instant Kill ), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05Y (Color Orange), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
@@ -6205,7 +6121,7 @@ On execution the terrain at the rallypoint will be changed to the selected textu
 }
 
 STRING 1911
-// Units: h00M (|cff0894E6Boss Sand), Hotkey (Hotkey (uhot))
+// Units: h00N (|cff0894E6Boss Sunken), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -6230,7 +6146,7 @@ Size configureable.
 }
 
 STRING 1915
-// Units: h00N (|cff0894E6Boss Sunken), Hotkey (Hotkey (uhot))
+// Units: h00O (|cff0894E6Boss Ice), Hotkey (Hotkey (uhot))
 {
 R
 }
@@ -6261,7 +6177,7 @@ Size configureable.
 }
 
 STRING 1920
-// Abilities: A045 (UC: Big Killer), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05D (Builder: Menu: Objects), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -6292,7 +6208,7 @@ Size configureable.
 }
 
 STRING 1925
-// Abilities: A00O (Builder: Menu: ObjectsW), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05F (UP: Big Escaper Killer), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -6407,13 +6323,13 @@ STRING 1944
 }
 
 STRING 1946
-// Abilities: A05B (Builder: Menu: EnviromentalE), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05N (UP: Teleporter Target), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 1947
-// Abilities: A05F (UP: Big Escaper Killer), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05I (UP: Pointer), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -6461,7 +6377,7 @@ Bomber: Toggle Autoattack
 }
 
 STRING 1978
-// Items: I00P (Enchantment: Raider's hat), Hotkey (Hotkey (uhot))
+// Units: u00O (|cffff8080Minion|r), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -6539,7 +6455,7 @@ X
 }
 
 STRING 2000
-// Items: I00Q (Enchantment: Dragon Wings), Hotkey (Hotkey (uhot))
+// Items: I00P (Enchantment: Pirate Hat), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -6757,7 +6673,7 @@ X
 }
 
 STRING 2053
-// Units: h00O (|cff0894E6Boss Ice), Hotkey (Hotkey (uhot))
+// Abilities: A01A (Executer: Change to Dark Ice), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -6830,7 +6746,7 @@ X
 }
 
 STRING 2065
-// Abilities: A01A (Executer: Change to Dark Ice), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A042 (UC: Select Type), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -6970,7 +6886,7 @@ Increases the traps periodic activation interval.|nTo turn the trap periodic, cl
 }
 
 STRING 2091
-// Abilities: A042 (UC: Select Type), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A01X (SetupUnit: Share Region), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -6988,7 +6904,7 @@ Decreases the traps periodic activation interval.|nTo turn the trap periodic, cl
 }
 
 STRING 2094
-// Items: I00T (Enchantment: Angelic Wings), Hotkey (Hotkey (uhot))
+// Items: I00Q (Enchantment: Dragon Wings), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -7020,7 +6936,7 @@ There will be no more periodic event.
 }
 
 STRING 2100
-// Abilities: A05D (Builder: Menu: ObjectsE), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05V (Color Blue), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -7038,25 +6954,25 @@ Shakes the camera of the entering escaper for a given amount and intensity.
 }
 
 STRING 2105
-// Abilities: A05I (UP: Pointer), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05U (Color Red), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
 STRING 2106
-// Abilities: A01X (SetupUnit: Share Region), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A04Z (Terrain: Normal), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2107
-// Abilities: A05N (UP: Teleporter Target), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A067 (Executer: Mode Lever), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 2108
-// Abilities: A05U (Color Red), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A04R (Executer: Move Unit Direct), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -7068,7 +6984,7 @@ Q
 }
 
 STRING 2110
-// Items: I00Z (|cffFFCC00Coin |cff31ADE2of the bug catcher), Hotkey (Hotkey (uhot))
+// Items: I00T (Enchantment: Angelic Wings), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -7137,19 +7053,19 @@ Increases the duration of the trap effect, in other words: the amount of time it
 }
 
 STRING 2121
-// Abilities: A04Z (Terrain: Normal), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A051 (Powernode: Add target R), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2122
-// Abilities: A05V (Color Blue), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06F (Trap: Poison), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 2123
-// Abilities: A04R (Executer: Move Unit Direct), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A069 (Executer: Mode Repeating), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -7209,13 +7125,13 @@ X
 }
 
 STRING 2136
-// Abilities: A051 (Powernode: Add target R), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A054 (Waypoint: Increase Delay), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2137
-// Abilities: Tank (C: Turn Off), Hotkey (Hotkey - Normal (ahky))
+// Items: I00Z (|cffFFCC00Coin |cff31ADE2of the bug catcher), Hotkey (Hotkey (uhot))
 {
 F
 }
@@ -7251,7 +7167,7 @@ Boss region will allow you to create a boss, and boss objects in the builder's |
 }
 
 STRING 2146
-// Abilities: A067 (Executer: Mode Lever), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A026 (Trap: Increase Duration), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -7269,13 +7185,13 @@ Spawns a Tank at|cffFFCC00 Rallypoint|n|n|cffD64219Kills Escapers
 }
 
 STRING 2150
-// Abilities: A054 (Waypoint: Increase Delay), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05E (Builder: Menu: Enviromental), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2151
-// Abilities: A01Q (Executer: Toggle Object), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06E (Trap: Instant Kill ), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
@@ -7358,12 +7274,6 @@ STRING 2181
 Fast
 }
 
-STRING 2182
-// Units: n00K (|cFF00FF00Volcano|r ), Tip (Tooltip - Basic (utip))
-{
-Build |cffCE4219Volcano |r[|cffFFCC00R|r]
-}
-
 STRING 2184
 // Units: n00P (|cFF00FF00Wall|r ), Tip (Tooltip - Basic (utip))
 {
@@ -7374,18 +7284,6 @@ STRING 2185
 // Units: n00P (|cFF00FF00Wall|r ), Ubertip (Tooltip - Extended (utub))
 {
 Blocks Escapers and Killers.
-}
-
-STRING 2186
-// Units: obSD (|cffE63A21Small Obstacle ), Tip (Tooltip - Basic (utip))
-{
-Build |cffE63A21Small Obstacle |r[|cffFFCC00W|r]
-}
-
-STRING 2188
-// Units: obBD (|cffE63A21Big Obstacle ), Tip (Tooltip - Basic (utip))
-{
-Build |cffB51908Big Obstacle |r[|cffFFCC00E|r]
 }
 
 STRING 2190
@@ -7412,20 +7310,14 @@ STRING 2193
 Blocks Escapers and Killers.
 }
 
-STRING 2194
-// Units: n011 (Verticle Wall), Name (Name (unam))
-{
-Verticle Wall
-}
-
 STRING 2195
-// Units: n011 (Verticle Wall), Tip (Tooltip - Basic (utip))
+// Units: n011 (Vertical Wall), Tip (Tooltip - Basic (utip))
 {
 Vertical Wall [|cffFFCC00X|r]
 }
 
 STRING 2196
-// Units: n011 (Verticle Wall), Ubertip (Tooltip - Extended (utub))
+// Units: n011 (Vertical Wall), Ubertip (Tooltip - Extended (utub))
 {
 Blocks Escapers and Killers.
 }
@@ -7545,19 +7437,19 @@ X
 }
 
 STRING 2221
-// Abilities: A05C (Builder: Menu: Decorations), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05L (UP: TC), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2222
-// Abilities: A069 (Executer: Mode Repeating), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A023 (Trap: Increase Value), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
 STRING 2223
-// Abilities: A025 (Trap: Decrease Duration), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A01Q (Executer: Toggle Object), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
@@ -7569,7 +7461,7 @@ Spinner: Spin Options
 }
 
 STRING 2225
-// Abilities: A05E (Builder: Menu: EnviromentalR), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05M (UP: Tank), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -7669,19 +7561,19 @@ Q
 }
 
 STRING 2259
-// Abilities: A023 (Trap: Increase Value), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A033 (Trap: Shake), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
 STRING 2260
-// Abilities: A06F (Trap: Poison), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A038 (Executer: Change to Ice), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 2261
-// Abilities: A05L (UP: TC), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05W (Color Teal), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -7717,7 +7609,7 @@ Adds a segment at the end of the queue or removes a segment from the queue.
 }
 
 STRING 2268
-// Abilities: A01F (Spinner: Increase Spin Speed), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A04H (T: Increase length), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -7765,7 +7657,7 @@ Spawns a |cffDE3A21SpellTarget|r.|nWhen you cast an ability wit the boss, the ab
 }
 
 STRING 2276
-// Abilities: A026 (Trap: Increase Duration), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A03E (SetupUnit: Boss Mode), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -7789,7 +7681,7 @@ Spawns a |cffadff23Boss Damager|r.|nDamages boss when an escaper steps on the ci
 }
 
 STRING 2280
-// Abilities: A033 (Trap: Shake), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A039 (Executer: Change to Unwalkable), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -7807,7 +7699,7 @@ Make a unit move to the rallypoint when an escaper steps into the executer.
 }
 
 STRING 2286
-// Abilities: A038 (Executer: Change to Ice), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06M (Spinner: Increase Sin Factor), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -7867,7 +7759,7 @@ Decreases selected boss's hitpoints by 250
 }
 
 STRING 2299
-// Abilities: A00A (C: Turn On), Hotkey (Hotkey - Normal (ahky))
+// Abilities: Tank (C: Turn Off), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -7891,7 +7783,7 @@ Increases selected boss's hitpoints by 250
 }
 
 STRING 2303
-// Abilities: A05M (UP: Tank), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A065 (Executer: Move Unit Stop), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -7915,7 +7807,7 @@ Casts Area of Effect ability at the position of boss spell targets. Only effects
 }
 
 STRING 2307
-// Abilities: A02J (Game Options ), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A00A (C: Turn On), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -7939,7 +7831,7 @@ Casts Missile ability at the position of boss spell targets. Only effects spellt
 }
 
 STRING 2311
-// Abilities: A02K (Jukebox Zauberbuch), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02J (Game Options ), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -7957,7 +7849,7 @@ Boss HP Real Small
 }
 
 STRING 2316
-// Abilities: A04H (T: Increase length), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A04J (Vortex: Increase gravity), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -7981,13 +7873,13 @@ STRING 2319
 }
 
 STRING 2321
-// Abilities: A05G (UP: Big Random Killer), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A058 (Lavadmg: Up), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 2322
-// Abilities: A04J (Vortex: Increase gravity), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A057 (Slidespeed: Up), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -8023,13 +7915,13 @@ Q
 }
 
 STRING 2328
-// Abilities: A039 (Executer: Change to Unwalkable), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06L (Spinner: Decrease Cos Factor), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
 STRING 2329
-// Abilities: A03E (SetupUnit: Boss Mode), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06Q (Boss Menu: Create SpellTarget), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -8070,32 +7962,14 @@ STRING 2337
 Y
 }
 
-STRING 2338
-// Abilities: A00O (Builder: Menu: ObjectsW), Tip (Tooltip - Normal (atp1))
-{
-Menu: Objects [|cffFFCC00W|r]
-}
-
-STRING 2339
-// Abilities: A05B (Builder: Menu: EnviromentalE), Tip (Tooltip - Normal (atp1))
-{
-Menu: Enviromental [|cffFFCC00E|r]
-}
-
-STRING 2340
-// Abilities: A05C (Builder: Menu: Decorations), Tip (Tooltip - Normal (atp1))
-{
-Menu: Decorations [|cffFFCC00R|r]
-}
-
 STRING 2341
-// Abilities: A05D (Builder: Menu: ObjectsE), Tip (Tooltip - Normal (atp1))
+// Abilities: A05D (Builder: Menu: Objects), Tip (Tooltip - Normal (atp1))
 {
 Menu: Objects [|cffFFCC00E|r]
 }
 
 STRING 2342
-// Abilities: A05E (Builder: Menu: EnviromentalR), Tip (Tooltip - Normal (atp1))
+// Abilities: A05E (Builder: Menu: Enviromental), Tip (Tooltip - Normal (atp1))
 {
 Menu: Enviromental [|cffFFCC00R|r]
 }
@@ -8167,7 +8041,7 @@ Change color to Purple [|cffFFCC00A|r]
 }
 
 STRING 2354
-// Abilities: A05X (Color Yellow), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05G (UP: Big Random Killer), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
@@ -8179,19 +8053,19 @@ X
 }
 
 STRING 2356
-// Abilities: A057 (Slidespeed: Up), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05J (UP: Random killer), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
 STRING 2357
-// Abilities: A030 (CongaLineHead: Decrease Segment Length), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A025 (Trap: Decrease Duration), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
 
 STRING 2361
-// Abilities: A05W (Color Teal), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A066 (Executer: Mode Pressure Plate), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -8353,13 +8227,13 @@ STRING 2390
 }
 
 STRING 2391
-// Abilities: A06G (Trap: Stun), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05X (Color Yellow), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 2392
-// Abilities: A05J (UP: Random killer), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05O (UP: Bomber), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -8467,7 +8341,7 @@ Reactivate Executer [|cffFFCC00W|r]
 }
 
 STRING 2414
-// Abilities: A06L (Spinner: Decrease Cos Factor), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06R (Boss Menu: Create Boss Damager), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -8503,7 +8377,7 @@ Change Jumper Mode [|cffFFCC00R|r]
 }
 
 STRING 2424
-// Abilities: A065 (Executer: Move Unit Stop), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06I (Trap: Speed), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -8515,19 +8389,19 @@ Change Jumper Mode [|cffFFCC00R|r]
 }
 
 STRING 2426
-// Abilities: A066 (Executer: Mode Pressure Plate), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02O (Trap: Increase Interval), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2430
-// Abilities: A06I (Trap: Speed), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A037 (Executer: Change to Dark Ice), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2434
-// Abilities: A02O (Trap: Increase Interval), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A03H (Spinner: Spin Options), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -8552,7 +8426,7 @@ This makes the trap function like a speed bost.
 }
 
 STRING 2439
-// Abilities: A03X (Items Spellbook), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02K (Jukebox Zauberbuch), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -8576,7 +8450,7 @@ Reset the trap to the normal, pushing mode.
 }
 
 STRING 2443
-// Abilities: A055 (Waypoint: Decrease Delay), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A03X (Items Spellbook), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -8587,34 +8461,22 @@ STRING 2444
 |cffffcc00Goods Store
 }
 
-STRING 2445
-// Items: I00P (Enchantment: Raider's hat), Name (Name (unam))
-{
-Enchantment: Raider's hat
-}
-
 STRING 2446
-// Items: I00P (Enchantment: Raider's hat), Tip (Tooltip - Basic (utip))
+// Items: I00Z (|cffFFCC00Coin |cff31ADE2of the bug catcher), Tip (Tooltip - Basic (utip))
 {
 Purchase |cffccaa88Raider's hat|r.
 }
 
 STRING 2447
-// Items: I00P (Enchantment: Raider's hat), Ubertip (Tooltip - Extended (utub))
+// Items: I00T (Enchantment: Angelic Wings), Ubertip (Tooltip - Extended (utub))
 {
 However this doesnt give you any bonuses, it looks real badass!
 }
 
 STRING 2448
-// Items: I00P (Enchantment: Raider's hat), Description (Description (ides))
+// Items: I00P (Enchantment: Pirate Hat), Description (Description (ides))
 {
 Badass hat.
-}
-
-STRING 2451
-// Items: I00T (Enchantment: Angelic Wings), Ubertip (Tooltip - Extended (utub))
-{
-However this doesnt give you any bonuses, it looks real badass!
 }
 
 STRING 2452
@@ -8696,13 +8558,13 @@ N
 }
 
 STRING 2466
-// Abilities: A05Z (Color Green), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A055 (Waypoint: Decrease Delay), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 2467
-// Abilities: A06H (Trap: Knockback), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05C (Builder: Menu: Decorations), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -8866,13 +8728,13 @@ heal
 }
 
 STRING 2496
-// Abilities: A037 (Executer: Change to Dark Ice), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06N (Spinner: Decrease Sin Factor), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2497
-// Abilities: A03H (Spinner: Spin Options), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06U (Boss: Increase Hit Points), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -9004,13 +8866,13 @@ Spawn |cff0894E6Bombtower Attacktarget |r[|cffFFCC00Q|r]
 }
 
 STRING 2535
-// Abilities: A06R (Boss Menu: Create Boss Damager), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06Z (Executer: Reactivate), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
 STRING 2536
-// Abilities: A06N (Spinner: Decrease Sin Factor), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A070 (Jumper: Mode Forced), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -9028,7 +8890,7 @@ Spawn |cff0894E6Teleporter Target |r[|cffFFCC00E|r]
 }
 
 STRING 2539
-// Abilities: A06M (Spinner: Increase Sin Factor), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06S (Executer: Create Unit), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -9046,7 +8908,7 @@ Spawns a Glaive at|cffFFCC00 Rallypoint|n|n|cffD64219Kills Escapers
 }
 
 STRING 2543
-// Abilities: A02M (Eviroment/Obstacles), Unhotkey (Hotkey - Turn Off (auhk))
+// Units: n01J (High Obstacle |cFF00FF00Ice), Hotkey (Hotkey (uhot))
 {
 C
 }
@@ -9076,7 +8938,7 @@ Spawns a |cffA56308Knockbacker|r at the|cffFFCC00 Rallypoint|n|n|cffFF7331Knocks
 }
 
 STRING 2549
-// Abilities: A02Q (Trap: Decrease Interval), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05Z (Color Green), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -9100,13 +8962,13 @@ Used to kill bosses
 }
 
 STRING 2554
-// Abilities: A05O (UP: Bomber), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A05S (Color Purple), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
 STRING 2557
-// Abilities: A05S (Color Purple), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06A (Executer: Move Unit Select), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -9136,7 +8998,7 @@ Places a weapon at the casting location.
 }
 
 STRING 2564
-// Abilities: A03D (Builder: Menu: Boss), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A030 (CongaLineHead: Decrease Segment Length), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
@@ -9154,7 +9016,7 @@ Used to kill bosses
 }
 
 STRING 2568
-// Abilities: A06A (Executer: Move Unit Select), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06C (Trap: Previous Effect), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -9166,7 +9028,7 @@ Attack [|cffFFCC00A|r]
 }
 
 STRING 2571
-// Abilities: A06C (Trap: Previous Effect), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02Y (CongaLineHead: Add Segment), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -9184,7 +9046,7 @@ Attack [|cffFFCC00A|r]
 }
 
 STRING 2574
-// Abilities: A02Y (CongaLineHead: Add Segment), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07G (Weapon: Attack - Sword), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -9208,15 +9070,9 @@ Spawns a |cffDE3A21Weapon|r.|nEscapers will be able to damage bosses with this.
 }
 
 STRING 2578
-// Abilities: A06U (Boss: Increase Hit Points), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A071 (Jumper: Mode Unforced), Hotkey (Hotkey - Normal (ahky))
 {
 R
-}
-
-STRING 2579
-// Abilities: A03D (Builder: Menu: Boss), Tip (Tooltip - Normal (atp1))
-{
-Boss Menu [|cffffcc00D|r]
 }
 
 STRING 2580
@@ -9244,7 +9100,7 @@ Damages boss with the selected amount. Can be activated by escapers.
 }
 
 STRING 2584
-// Abilities: A06Z (Executer: Reactivate), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A072 (Jumper: Increase Force), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -9256,7 +9112,7 @@ Boss Damager: Decrease DMG
 }
 
 STRING 2587
-// Abilities: A07G (Weapon: Attack - Sword), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07H (Weapon: Attack - Ranged), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -9346,19 +9202,19 @@ Spawns a Tank at|cffFFCC00 Rallypoint|n|n|cffD64219Kills Escapers
 }
 
 STRING 2603
-// Abilities: A070 (Jumper: Mode Forced), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07I (Boss Menu: Create Weapon), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2604
-// Abilities: A071 (Jumper: Mode Unforced), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07P (Executer: Turn on UnitCreator ), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2605
-// Abilities: A07I (Boss Menu: Create Weapon), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A080 (Weapon: Select Type), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -9400,7 +9256,7 @@ Resurrect Boss [|cffFFCC00W|r]
 }
 
 STRING 2613
-// Abilities: A072 (Jumper: Increase Force), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02X (Reincarnation), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -9454,19 +9310,19 @@ Used to kill bosses
 }
 
 STRING 2623
-// Abilities: A07H (Weapon: Attack - Ranged), Hotkey (Hotkey - Normal (ahky))
-{
-A
-}
-
-STRING 2624
 // Abilities: A07J (Boss Damager: Decrease DMG), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
+STRING 2624
+// Abilities: A081 (Weapon: Sabre), Hotkey (Hotkey - Normal (ahky))
+{
+A
+}
+
 STRING 2625
-// Abilities: A06T (Boss: Decrease Hit Points), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06H (Trap: Knockback), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -9646,19 +9502,19 @@ More strength to the tauren
 }
 
 STRING 2675
-// Abilities: A06V (Boss: Ability AOE), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02Q (Trap: Decrease Interval), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 2676
-// Abilities: A06W (Boss: Ability Missile), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06T (Boss: Decrease Hit Points), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 2677
-// Abilities: A074 (Trap: Knockback Pull), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06V (Boss: Ability AOE), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -9700,13 +9556,13 @@ Learn |cffFFF708Reincarnation |r[|cffFFCC00W|r]
 }
 
 STRING 2685
-// Abilities: A02X (Reincarnation), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02X (Reincarnation), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
 
 STRING 2686
-// Abilities: A02X (Reincarnation), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: A07L (Boss: Revive), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -9754,19 +9610,19 @@ Creates a Memory Access Pedestal which allows you to save and load entities
 }
 
 STRING 2694
-// Abilities: U00o (Select single), Name (Name (anam))
+// Abilities: U00r (Select single), Name (Name (anam))
 {
 Select single
 }
 
 STRING 2696
-// Abilities: U00o (Select single), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00r (Select single), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Adds the target entity to the list of saved objects
 }
 
 STRING 2699
-// Abilities: U00p (Select multi), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00s (Select multi), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Adds the target entities to the list of saved objects
 }
@@ -9778,13 +9634,13 @@ Remove this object from the game
 }
 
 STRING 2707
-// Abilities: A06Q (Boss Menu: Create SpellTarget), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A073 (Jumper: Decrease Force), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 2708
-// Abilities: A07L (Boss: Revive), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07D (Powernode: Add target W), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -9862,7 +9718,7 @@ Create Normal Terrain [|cffFFCC00R|r]
 }
 
 STRING 2732
-// Abilities: A07P (Executer: Turn on UnitCreator ), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07E (Powernode: Select Tether), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
@@ -9976,19 +9832,19 @@ STRING 2756
 }
 
 STRING 2758
-// Abilities: A02M (Eviroment/Obstacles), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02M (Eviroment/Obstacles), Unhotkey (Hotkey - Turn Off (auhk))
 {
 C
 }
 
 STRING 2759
-// Abilities: A02P (Next Page), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02M (Eviroment/Obstacles), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
 
 STRING 2760
-// Abilities: U00: (Decrease Visible Duration), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A02P (Next Page), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
@@ -10006,19 +9862,19 @@ STRING 2762
 }
 
 STRING 2764
-// Abilities: U00: (Decrease Visible Duration), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00: (Decrease Visible Duration), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
 
 STRING 2765
-// Abilities: U00: (Decrease Visible Duration), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00: (Decrease Visible Duration), Researchhotkey (Hotkey - Learn (arhk))
 {
 C
 }
 
 STRING 2766
-// Abilities: U00b (Tmod: 5x5 Brush Idle), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00: (Decrease Visible Duration), Unhotkey (Hotkey - Turn Off (auhk))
 {
 C
 }
@@ -10030,19 +9886,19 @@ STRING 2767
 }
 
 STRING 2769
-// Abilities: A081 (Weapon: Sabre), Hotkey (Hotkey - Normal (ahky))
-{
-A
-}
-
-STRING 2770
 // Abilities: A082 (Weapon: Maul), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
-STRING 2771
+STRING 2770
 // Abilities: A083 (Weapon: Glaive), Hotkey (Hotkey - Normal (ahky))
+{
+A
+}
+
+STRING 2771
+// Abilities: A084 (Weapon: Bow), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -10060,19 +9916,19 @@ STRING 2773
 }
 
 STRING 2775
-// Abilities: A084 (Weapon: Bow), Hotkey (Hotkey - Normal (ahky))
-{
-A
-}
-
-STRING 2776
 // Abilities: A06O (SetupUnit: Special Ability), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
-STRING 2777
+STRING 2776
 // Abilities: A08E (Powernode: Add target A), Hotkey (Hotkey - Normal (ahky))
+{
+A
+}
+
+STRING 2777
+// Abilities: U003 (Knockbacker: Increase Knockback), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -10105,12 +9961,6 @@ STRING 2784
 // Units: obBD (|cffE63A21Big Obstacle ), Ubertip (Tooltip - Extended (utub))
 {
 A small, |cffFFCC00terrainspecific |robstacle.|n|n|cffFF0000Kills Escapers
-}
-
-STRING 2786
-// Units: n013 (|cff636363Vortex ), Ubertip (Tooltip - Extended (utub))
-{
-Why are you looking at this?
 }
 
 STRING 2788
@@ -10150,55 +10000,55 @@ Add or remove a link between two powernodes.|nThe linking lightning |cffFFCC00bo
 }
 
 STRING 2803
-// Abilities: A075 (Trap: Knockback Push), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06W (Boss: Ability Missile), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 2804
-// Abilities: U00i (Increase Bounciness), Name (Name (anam))
+// Abilities: U00l (Increase Bounciness), Name (Name (anam))
 {
 Increase Bounciness
 }
 
 STRING 2805
-// Abilities: U00b (Tmod: 5x5 Brush Idle), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00b (Tmod: 5x5 Brush Idle), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
 
 STRING 2806
-// Abilities: U00b (Tmod: 5x5 Brush Idle), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00b (Tmod: 5x5 Brush Idle), Researchhotkey (Hotkey - Learn (arhk))
 {
 C
 }
 
 STRING 2807
-// Abilities: U00c (Tmod: 3x3 Brush Active), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00b (Tmod: 5x5 Brush Idle), Unhotkey (Hotkey - Turn Off (auhk))
 {
 C
 }
 
 STRING 2809
-// Abilities: U00j (Decrease Bounciness), Name (Name (anam))
+// Abilities: U00m (Decrease Bounciness), Name (Name (anam))
 {
 Decrease Bounciness
 }
 
 STRING 2810
-// Abilities: A080 (Weapon: Select Type), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A08N (Items: Coin), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2811
-// Abilities: A07E (Powernode: Select Tether), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U005 (Knockbacker: Increase Damage), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2812
-// Abilities: A08N (Items: Coin), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U005 (Knockbacker: Increase Damage), Researchhotkey (Hotkey - Learn (arhk))
 {
 R
 }
@@ -10292,7 +10142,7 @@ Remove Object [|cffFFCC00V|r]
 }
 
 STRING 2841
-// Abilities: U005 (Knockbacker: Increase Damage), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U005 (Knockbacker: Increase Damage), Unhotkey (Hotkey - Turn Off (auhk))
 {
 R
 }
@@ -10310,7 +10160,7 @@ Spawns a Glaive at|cffFFCC00 Rallypoint|n|n|cffD64219Kills Escapers
 }
 
 STRING 2845
-// Abilities: U00c (Tmod: 3x3 Brush Active), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00c (Tmod: 3x3 Brush Active), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
@@ -10400,13 +10250,13 @@ Decrease Visible Duration
 }
 
 STRING 2868
-// Abilities: U00c (Tmod: 3x3 Brush Active), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00c (Tmod: 3x3 Brush Active), Researchhotkey (Hotkey - Learn (arhk))
 {
 C
 }
 
 STRING 2869
-// Abilities: U00i (Increase Bounciness), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00c (Tmod: 3x3 Brush Active), Unhotkey (Hotkey - Turn Off (auhk))
 {
 C
 }
@@ -10424,19 +10274,19 @@ Increase Invisible Duration
 }
 
 STRING 2873
-// Abilities: U005 (Knockbacker: Increase Damage), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00; (Increase Invisible Duration), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2874
-// Abilities: U005 (Knockbacker: Increase Damage), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00; (Increase Invisible Duration), Researchhotkey (Hotkey - Learn (arhk))
 {
 R
 }
 
 STRING 2875
-// Abilities: U00; (Increase Invisible Duration), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00; (Increase Invisible Duration), Unhotkey (Hotkey - Turn Off (auhk))
 {
 R
 }
@@ -10454,13 +10304,13 @@ Decrease Invisible Duration
 }
 
 STRING 2878
-// Abilities: A07C (UP: Knockbacker), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A074 (Trap: Knockback Pull), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 2879
-// Abilities: A08J (TC: Select Size), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A075 (Trap: Knockback Push), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -10520,7 +10370,7 @@ This will grant or deny all escapers the ability to |cff0894DEJump |rin your reg
 }
 
 STRING 2891
-// Abilities: U003 (Knockbacker: Increase Knockback), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U003 (Knockbacker: Increase Knockback), Researchhotkey (Hotkey - Learn (arhk))
 {
 A
 }
@@ -10616,7 +10466,7 @@ Spawns a flying Escaperkiller at|cffFFCC00 Rallypoint|n|n|cffD64219Kills Escaper
 }
 
 STRING 2910
-// Abilities: A01S (Trap: Decrease Value), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A06G (Trap: Stun), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
@@ -10735,19 +10585,19 @@ Chooses a random interval between all monsters spawned. The configured interval 
 }
 
 STRING 2933
-// Abilities: U003 (Knockbacker: Increase Knockback), Researchhotkey (Hotkey - Learn (arhk))
-{
-A
-}
-
-STRING 2934
 // Abilities: U003 (Knockbacker: Increase Knockback), Unhotkey (Hotkey - Turn Off (auhk))
 {
 A
 }
 
-STRING 2935
+STRING 2934
 // Abilities: U00e (Tmod: Rectengular Brush Shape), Hotkey (Hotkey - Normal (ahky))
+{
+A
+}
+
+STRING 2935
+// Abilities: U00e (Tmod: Rectengular Brush Shape), Researchhotkey (Hotkey - Learn (arhk))
 {
 A
 }
@@ -10765,19 +10615,19 @@ D
 }
 
 STRING 2939
-// Abilities: U00; (Increase Invisible Duration), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00} (Select multi), Hotkey (Hotkey - Normal (ahky))
 {
 R
 }
 
 STRING 2940
-// Abilities: U00; (Increase Invisible Duration), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00} (Select multi), Researchhotkey (Hotkey - Learn (arhk))
 {
 R
 }
 
 STRING 2941
-// Abilities: U00z (Select multi), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00} (Select multi), Unhotkey (Hotkey - Turn Off (auhk))
 {
 R
 }
@@ -10825,7 +10675,7 @@ Used to kill bosses
 }
 
 STRING 2949
-// Abilities: U00e (Tmod: Rectengular Brush Shape), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00e (Tmod: Rectengular Brush Shape), Unhotkey (Hotkey - Turn Off (auhk))
 {
 A
 }
@@ -10837,7 +10687,7 @@ Slow Wave
 }
 
 STRING 2951
-// Abilities: A07D (Powernode: Add target W), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A00F (SetupUnit: Toggle Dash), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -11053,7 +10903,7 @@ Choose Maul
 }
 
 STRING 2989
-// Abilities: U00e (Tmod: Rectengular Brush Shape), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00d (Tmod: Circular Brush Shape), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
@@ -11071,7 +10921,7 @@ Choose Glaive
 }
 
 STRING 2992
-// Abilities: U00d (Tmod: Circular Brush Shape), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00d (Tmod: Circular Brush Shape), Researchhotkey (Hotkey - Learn (arhk))
 {
 A
 }
@@ -11305,7 +11155,7 @@ Add|cffFFCC00/|rRemove |cff088CDELink |r[|cffFFCC00E|r]
 }
 
 STRING 3043
-// Abilities: A06S (Executer: Create Unit), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A061 (Powernode: Add target E), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -11317,7 +11167,7 @@ Add|cffFFCC00/|rRemove |cff088CDELink |r[|cffFFCC00W|r]
 }
 
 STRING 3048
-// Abilities: A00F (SetupUnit: Toggle Dash), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A088 (Slow Wave), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -11413,43 +11263,43 @@ Spawns a Terrainspecific Minion at|cffFFCC00 Rallypoint|n|n|cffD64219Kills Escap
 }
 
 STRING 3064
-// Abilities: U006 (Knockbacker: Decrease Knockback), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07C (UP: Knockbacker), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 3065
-// Abilities: U006 (Knockbacker: Decrease Knockback), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: A08J (TC: Select Size), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 3066
-// Abilities: U00i (Increase Bounciness), Tip (Tooltip - Normal (atp1))
+// Abilities: U00l (Increase Bounciness), Tip (Tooltip - Normal (atp1))
 {
 Increase Bounciness [|cffFFCC00C|r]
 }
 
 STRING 3068
-// Abilities: U00i (Increase Bounciness), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00l (Increase Bounciness), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
 
 STRING 3071
-// Abilities: U006 (Knockbacker: Decrease Knockback), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U006 (Knockbacker: Decrease Knockback), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 3072
-// Abilities: U00< (Decrease Invisible Duration), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U006 (Knockbacker: Decrease Knockback), Researchhotkey (Hotkey - Learn (arhk))
 {
 F
 }
 
 STRING 3074
-// Abilities: U00j (Decrease Bounciness), Tip (Tooltip - Normal (atp1))
+// Abilities: U00m (Decrease Bounciness), Tip (Tooltip - Normal (atp1))
 {
 Decrease Bounciness [|cffFFCC00D|r]
 }
@@ -11527,7 +11377,7 @@ Increases escaper turnspeed.
 }
 
 STRING 3102
-// Abilities: A087 (SetupUnit: Increase Turnspeed), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A01S (Trap: Decrease Value), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
@@ -11664,12 +11514,6 @@ STRING 3131
 SetupUnit: Special Ability
 }
 
-STRING 3133
-// Abilities: A088 (Slow Wave), Researchtip (Tooltip - Learn (aret))
-{
-Learn Slow Wave [|cffFFCC00Level |r%d] (|cffFFCC00W|r)
-}
-
 STRING 3134
 // Abilities: A07Z (Temporary Revivepoint), Name (Name (anam))
 {
@@ -11713,7 +11557,7 @@ Drops a temporary revivepoint at the escaper's position that allows him and|nhis
 }
 
 STRING 3141
-// Abilities: A088 (Slow Wave), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07Z (Temporary Revivepoint), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -11731,7 +11575,7 @@ Drops a temporary revivepoint at the escaper's position that allows him and|nhis
 }
 
 STRING 3144
-// Abilities: A07Z (Temporary Revivepoint), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A07Z (Temporary Revivepoint), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
@@ -11755,7 +11599,7 @@ Protects the Escaper for 5 seconds while standing still.
 }
 
 STRING 3149
-// Abilities: A073 (Jumper: Decrease Force), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A08C (SetupUnit: Remove Ability), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -11803,7 +11647,7 @@ Let's you set an |cffFFCC00ankh |rat the Escaper's position, where he will |cffF
 }
 
 STRING 3157
-// Abilities: A07Z (Temporary Revivepoint), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: A089 (Reincarnation), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -11821,7 +11665,7 @@ Launches an orb at the target position.|nBy using the spell again during flight,
 }
 
 STRING 3160
-// Abilities: A089 (Reincarnation), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A089 (Reincarnation), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
@@ -11857,7 +11701,7 @@ This will grant or deny all escapers the ability to |cff0894DEDash |rin your reg
 }
 
 STRING 3170
-// Abilities: A089 (Reincarnation), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: A08B (SetupUnit: Toggle Orb), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -11887,7 +11731,7 @@ SetupUnit: Toggle Orb
 }
 
 STRING 3177
-// Abilities: A061 (Powernode: Add target E), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A08H (Waypoint: And Connection), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -11923,7 +11767,7 @@ This will grant or deny all escapers the ability to |cff0894DEuse the orb spell 
 }
 
 STRING 3184
-// Abilities: A08B (SetupUnit: Toggle Orb), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A08F (Setup Unit: Allow cutting diagonal), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -11983,7 +11827,7 @@ Add or remove a link between two powernodes.|nThe linking lightning |cffFFCC00bl
 }
 
 STRING 3202
-// Abilities: A08F (Setup Unit: Allow cutting diagonal), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A08G (Setup Unit: Disable cutting diagonal), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -12025,7 +11869,7 @@ Add|cffFFCC00/|rRemove |cff088CDELink |r[|cffFFCC00A|r]
 }
 
 STRING 3209
-// Abilities: U00d (Tmod: Circular Brush Shape), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00d (Tmod: Circular Brush Shape), Unhotkey (Hotkey - Turn Off (auhk))
 {
 A
 }
@@ -12067,7 +11911,7 @@ STRING 3215
 }
 
 STRING 3216
-// Abilities: A08G (Setup Unit: Disable cutting diagonal), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A08L (Inner Strength), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
@@ -12091,7 +11935,7 @@ Links this waypoint to another one. This waypoint will only trigger when the lin
 }
 
 STRING 3220
-// Abilities: A08C (SetupUnit: Remove Ability), Hotkey (Hotkey - Normal (ahky))
+// Abilities: Afre (UP: Fire Elemental), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -12163,37 +12007,37 @@ Select Escaper
 }
 
 STRING 3233
-// Abilities: U00~ (Go to previous Escaper), Name (Name (anam))
+// Abilities: U01# (Go to previous Escaper), Name (Name (anam))
 {
 Go to previous Escaper
 }
 
 STRING 3234
-// Abilities: U00t (Save Slot 4), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00w (Save Slot 4), Hotkey (Hotkey - Normal (ahky))
 {
 V
 }
 
 STRING 3235
-// Abilities: U00t (Save Slot 4), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00w (Save Slot 4), Researchhotkey (Hotkey - Learn (arhk))
 {
 V
 }
 
 STRING 3236
-// Abilities: U00t (Save Slot 4), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00w (Save Slot 4), Unhotkey (Hotkey - Turn Off (auhk))
 {
 V
 }
 
 STRING 3238
-// Abilities: U01! (Go to next Escaper), Name (Name (anam))
+// Abilities: U01$ (Go to next Escaper), Name (Name (anam))
 {
 Go to next Escaper
 }
 
 STRING 3240
-// Abilities: U01" (Pick Escaper), Name (Name (anam))
+// Abilities: U01% (Pick Escaper), Name (Name (anam))
 {
 Pick Escaper
 }
@@ -12217,26 +12061,26 @@ Q
 }
 
 STRING 3245
-// Abilities: U01" (Pick Escaper), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U01% (Pick Escaper), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 This will start your game as escaper.
 If you have local files enabled your rank will be loaded and saved automatically.
 }
 
 STRING 3246
-// Abilities: U00q (Save Slot 1), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00t (Save Slot 1), Hotkey (Hotkey - Normal (ahky))
 {
 Y
 }
 
 STRING 3247
-// Abilities: U00q (Save Slot 1), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00t (Save Slot 1), Researchhotkey (Hotkey - Learn (arhk))
 {
 Y
 }
 
 STRING 3248
-// Abilities: U00q (Save Slot 1), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00t (Save Slot 1), Unhotkey (Hotkey - Turn Off (auhk))
 {
 Y
 }
@@ -12291,19 +12135,19 @@ In Easy mode escapers don't instantly die when they normally would but instead r
 }
 
 STRING 3257
-// Abilities: A08L (Inner Strength), Researchhotkey (Hotkey - Learn (arhk))
-{
-W
-}
-
-STRING 3258
 // Abilities: A08Q (Fire Resistance), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
 
-STRING 3259
+STRING 3258
 // Abilities: U007 (Enable Easy Mode), Hotkey (Hotkey - Normal (ahky))
+{
+W
+}
+
+STRING 3259
+// Abilities: U007 (Enable Easy Mode), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
@@ -12328,13 +12172,13 @@ Escapers will die normally again.
 }
 
 STRING 3263
-// Abilities: U007 (Enable Easy Mode), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U007 (Enable Easy Mode), Unhotkey (Hotkey - Turn Off (auhk))
 {
 W
 }
 
 STRING 3264
-// Abilities: U007 (Enable Easy Mode), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U008 (Disable Easy Mode), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -12364,19 +12208,19 @@ Q
 }
 
 STRING 3270
-// Abilities: U00~ (Go to previous Escaper), Tip (Tooltip - Normal (atp1))
+// Abilities: U01# (Go to previous Escaper), Tip (Tooltip - Normal (atp1))
 {
 Go to previous Escaper [|cffFFCC00Y|r]
 }
 
 STRING 3271
-// Abilities: U01! (Go to next Escaper), Tip (Tooltip - Normal (atp1))
+// Abilities: U01$ (Go to next Escaper), Tip (Tooltip - Normal (atp1))
 {
 Go to next Escaper [|cffFFCC00V|r]
 }
 
 STRING 3272
-// Abilities: U01" (Pick Escaper), Tip (Tooltip - Normal (atp1))
+// Abilities: U01% (Pick Escaper), Tip (Tooltip - Normal (atp1))
 {
 Pick Escaper [|cffFFCC00Q|r]
 }
@@ -12442,19 +12286,19 @@ In this mode escapers are only affected while on ground
 }
 
 STRING 3283
-// Abilities: U00d (Tmod: Circular Brush Shape), Unhotkey (Hotkey - Turn Off (auhk))
-{
-A
-}
-
-STRING 3284
 // Abilities: U00f (Set no Z Mode), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
-STRING 3285
+STRING 3284
 // Abilities: U00f (Set no Z Mode), Researchhotkey (Hotkey - Learn (arhk))
+{
+A
+}
+
+STRING 3285
+// Abilities: U00f (Set no Z Mode), Unhotkey (Hotkey - Turn Off (auhk))
 {
 A
 }
@@ -12478,19 +12322,19 @@ In this mode escapers are affected also while flying, at any height
 }
 
 STRING 3289
-// Abilities: U00[ (Decrease Scale), Hotkey (Hotkey - Normal (ahky))
+// Abilities: A087 (SetupUnit: Increase Turnspeed), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 3290
-// Abilities: U00[ (Decrease Scale), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00[ (Decrease Scale), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 3291
-// Abilities: U00[ (Decrease Scale), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00[ (Decrease Scale), Researchhotkey (Hotkey - Learn (arhk))
 {
 S
 }
@@ -12520,67 +12364,67 @@ D
 }
 
 STRING 3296
-// Abilities: U00j (Decrease Bounciness), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00m (Decrease Bounciness), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
 
 STRING 3297
-// Abilities: U00j (Decrease Bounciness), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00m (Decrease Bounciness), Researchhotkey (Hotkey - Learn (arhk))
 {
 D
 }
 
 STRING 3298
-// Abilities: U00p (Select multi), Name (Name (anam))
+// Abilities: U00s (Select multi), Name (Name (anam))
 {
 Select multi
 }
 
 STRING 3299
-// Abilities: U00k (Strict mode), Name (Name (anam))
+// Abilities: U00n (Strict mode), Name (Name (anam))
 {
 Strict mode
 }
 
 STRING 3301
-// Abilities: U00k (Strict mode), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00n (Strict mode), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Makes the conga act like a strict chain
 }
 
 STRING 3302
-// Abilities: U00l (Loose mode), Name (Name (anam))
+// Abilities: U00o (Loose mode), Name (Name (anam))
 {
 Loose mode
 }
 
 STRING 3304
-// Abilities: U00l (Loose mode), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00o (Loose mode), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Makes conga elements follow the head smoothly
 }
 
 STRING 3305
-// Abilities: U00n (Conga Config), Name (Name (anam))
+// Abilities: U00q (Conga Config), Name (Name (anam))
 {
 Conga Config
 }
 
 STRING 3307
-// Abilities: U00k (Strict mode), Tip (Tooltip - Normal (atp1))
+// Abilities: U00n (Strict mode), Tip (Tooltip - Normal (atp1))
 {
 Conga: Set strict mode
 }
 
 STRING 3308
-// Abilities: U00l (Loose mode), Tip (Tooltip - Normal (atp1))
+// Abilities: U00o (Loose mode), Tip (Tooltip - Normal (atp1))
 {
 Conga: Set loose mode
 }
 
 STRING 3309
-// Abilities: U00n (Conga Config), Tip (Tooltip - Normal (atp1))
+// Abilities: U00q (Conga Config), Tip (Tooltip - Normal (atp1))
 {
 Conga: Conga Config
 }
@@ -12640,7 +12484,7 @@ Grants or silences spells for the escapers
 }
 
 STRING 3319
-// Abilities: A08H (Waypoint: And Connection), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00k (Size big), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
@@ -12664,7 +12508,7 @@ Allows Escapers to enter a vehicle
 }
 
 STRING 3323
-// Abilities: Afre (UP: Fire Elemental), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00k (Size big), Researchhotkey (Hotkey - Learn (arhk))
 {
 E
 }
@@ -12712,95 +12556,95 @@ Spaceship
 }
 
 STRING 3331
-// Abilities: U00q (Save Slot 1), Name (Name (anam))
+// Abilities: U00t (Save Slot 1), Name (Name (anam))
 {
 Save Slot 1
 }
 
 STRING 3333
-// Abilities: U00q (Save Slot 1), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00t (Save Slot 1), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Saves the currently selected entities to slot 1.
 Experimental - use with caution!
 }
 
 STRING 3334
-// Abilities: U00r (Save Slot 2), Name (Name (anam))
+// Abilities: U00u (Save Slot 2), Name (Name (anam))
 {
 Save Slot 2
 }
 
 STRING 3336
-// Abilities: U00r (Save Slot 2), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00u (Save Slot 2), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Saves the currently selected entities to slot 2.
 Experimental - use with caution!
 }
 
 STRING 3337
-// Abilities: U00s (Save Slot 3), Name (Name (anam))
+// Abilities: U00v (Save Slot 3), Name (Name (anam))
 {
 Save Slot 3
 }
 
 STRING 3338
-// Abilities: U00s (Save Slot 3), Tip (Tooltip - Normal (atp1))
+// Abilities: U00v (Save Slot 3), Tip (Tooltip - Normal (atp1))
 {
 Save Slot 3
 }
 
 STRING 3339
-// Abilities: U00s (Save Slot 3), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00v (Save Slot 3), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Saves the currently selected entities to slot 3.
 Experimental - use with caution!
 }
 
 STRING 3340
-// Abilities: U00t (Save Slot 4), Name (Name (anam))
+// Abilities: U00w (Save Slot 4), Name (Name (anam))
 {
 Save Slot 4
 }
 
 STRING 3341
-// Abilities: U00t (Save Slot 4), Tip (Tooltip - Normal (atp1))
+// Abilities: U00w (Save Slot 4), Tip (Tooltip - Normal (atp1))
 {
 Save Slot 4
 }
 
 STRING 3342
-// Abilities: U00t (Save Slot 4), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00w (Save Slot 4), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Saves the currently selected entities to slot 4.
 Experimental - use with caution!
 }
 
 STRING 3343
-// Abilities: U00y (Select tile), Name (Name (anam))
+// Abilities: U00| (Select tile), Name (Name (anam))
 {
 Select tile
 }
 
 STRING 3346
-// Abilities: U00u (Load 1), Name (Name (anam))
+// Abilities: U00x (Load 1), Name (Name (anam))
 {
 Load 1
 }
 
 STRING 3347
-// Abilities: U00u (Load 1), Tip (Tooltip - Normal (atp1))
+// Abilities: U00x (Load 1), Tip (Tooltip - Normal (atp1))
 {
 Load Slot 1
 }
 
 STRING 3348
-// Abilities: U00v (Load 2), Name (Name (anam))
+// Abilities: U00y (Load 2), Name (Name (anam))
 {
 Load 2
 }
 
 STRING 3349
-// Abilities: U00v (Load 2), Tip (Tooltip - Normal (atp1))
+// Abilities: U00y (Load 2), Tip (Tooltip - Normal (atp1))
 {
 Load Slot 2
 }
@@ -12812,13 +12656,13 @@ Spawn |cffFF8000Bomber |r[|cffFFCC00A|r]
 }
 
 STRING 3355
-// Abilities: U00f (Set no Z Mode), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00x (Load 1), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
 STRING 3356
-// Abilities: U00i (Increase Bounciness), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00l (Increase Bounciness), Researchhotkey (Hotkey - Learn (arhk))
 {
 C
 }
@@ -12899,7 +12743,7 @@ Inner Strength
 }
 
 STRING 3375
-// Abilities: U008 (Disable Easy Mode), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U008 (Disable Easy Mode), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
@@ -12959,7 +12803,7 @@ Adds 100 Hitpoints.
 }
 
 STRING 3405
-// Abilities: U00z (Select multi), Name (Name (anam))
+// Abilities: U00} (Select multi), Name (Name (anam))
 {
 Select multi
 }
@@ -13007,13 +12851,13 @@ X
 }
 
 STRING 3415
-// Abilities: U00< (Decrease Invisible Duration), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U006 (Knockbacker: Decrease Knockback), Unhotkey (Hotkey - Turn Off (auhk))
 {
 F
 }
 
 STRING 3416
-// Abilities: U00j (Decrease Bounciness), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00m (Decrease Bounciness), Unhotkey (Hotkey - Turn Off (auhk))
 {
 D
 }
@@ -13091,49 +12935,49 @@ Knockbacker: Decrease Knockback
 }
 
 STRING 3430
-// Abilities: U00u (Load 1), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00x (Load 1), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Load Sata from slot 1
 }
 
 STRING 3431
-// Abilities: U00v (Load 2), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00y (Load 2), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Load Sata from slot 2
 }
 
 STRING 3432
-// Abilities: U00w (Load 3), Name (Name (anam))
+// Abilities: U00z (Load 3), Name (Name (anam))
 {
 Load 3
 }
 
 STRING 3433
-// Abilities: U00w (Load 3), Tip (Tooltip - Normal (atp1))
+// Abilities: U00z (Load 3), Tip (Tooltip - Normal (atp1))
 {
 Load Slot 3
 }
 
 STRING 3434
-// Abilities: U00w (Load 3), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00z (Load 3), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Load Sata from slot 3
 }
 
 STRING 3435
-// Abilities: U00x (Load 4), Name (Name (anam))
+// Abilities: U00{ (Load 4), Name (Name (anam))
 {
 Load 4
 }
 
 STRING 3436
-// Abilities: U00x (Load 4), Tip (Tooltip - Normal (atp1))
+// Abilities: U00{ (Load 4), Tip (Tooltip - Normal (atp1))
 {
 Load Slot 4
 }
 
 STRING 3437
-// Abilities: U00x (Load 4), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00{ (Load 4), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Load Sata from slot 1
 }
@@ -13146,193 +12990,175 @@ Maximum Range: 750
 }
 
 STRING 3439
-// Abilities: U00y (Select tile), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00| (Select tile), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Adds or removes the target tile from the saved tiles. Hold shift to manage multiples tiles easily.
 }
 
 STRING 3440
-// Abilities: U00y (Select tile), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00k (Size big), Unhotkey (Hotkey - Turn Off (auhk))
 {
 E
 }
 
 STRING 3441
-// Abilities: U00y (Select tile), Researchhotkey (Hotkey - Learn (arhk))
-{
-E
-}
-
-STRING 3442
-// Abilities: U00y (Select tile), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00| (Select tile), Hotkey (Hotkey - Normal (ahky))
 {
 E
 }
 
 STRING 3443
-// Abilities: U00z (Select multi), Tip (Tooltip - Normal (atp1))
+// Abilities: U00} (Select multi), Tip (Tooltip - Normal (atp1))
 {
 Select multiple tiles [R]
 }
 
 STRING 3444
-// Abilities: U00z (Select multi), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U00} (Select multi), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Adds all walkable tiles in the AoE to the saved tiles. Does not deselect tiles. Hold shift to select multiples areas easily.
 }
 
-STRING 3445
-// Abilities: U00z (Select multi), Researchhotkey (Hotkey - Learn (arhk))
-{
-R
-}
-
-STRING 3446
-// Abilities: U00z (Select multi), Unhotkey (Hotkey - Turn Off (auhk))
-{
-R
-}
-
 STRING 3448
-// Abilities: U00~ (Go to previous Escaper), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U01# (Go to previous Escaper), Hotkey (Hotkey - Normal (ahky))
 {
 Y
 }
 
 STRING 3449
-// Abilities: U00~ (Go to previous Escaper), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U01# (Go to previous Escaper), Researchhotkey (Hotkey - Learn (arhk))
 {
 Y
 }
 
 STRING 3450
-// Abilities: U00~ (Go to previous Escaper), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U01# (Go to previous Escaper), Unhotkey (Hotkey - Turn Off (auhk))
 {
 Y
 }
 
 STRING 3451
-// Abilities: U00r (Save Slot 2), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00u (Save Slot 2), Hotkey (Hotkey - Normal (ahky))
 {
 X
 }
 
 STRING 3452
-// Abilities: U00r (Save Slot 2), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00u (Save Slot 2), Researchhotkey (Hotkey - Learn (arhk))
 {
 X
 }
 
 STRING 3453
-// Abilities: U00r (Save Slot 2), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00u (Save Slot 2), Unhotkey (Hotkey - Turn Off (auhk))
 {
 X
 }
 
 STRING 3454
-// Abilities: U00s (Save Slot 3), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00l (Increase Bounciness), Unhotkey (Hotkey - Turn Off (auhk))
 {
 C
 }
 
 STRING 3455
-// Abilities: U00s (Save Slot 3), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00v (Save Slot 3), Hotkey (Hotkey - Normal (ahky))
 {
 C
 }
 
 STRING 3456
-// Abilities: U00s (Save Slot 3), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00v (Save Slot 3), Researchhotkey (Hotkey - Learn (arhk))
 {
 C
 }
 
 STRING 3457
-// Abilities: U01! (Go to next Escaper), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U01$ (Go to next Escaper), Hotkey (Hotkey - Normal (ahky))
 {
 V
 }
 
 STRING 3458
-// Abilities: U01! (Go to next Escaper), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U01$ (Go to next Escaper), Researchhotkey (Hotkey - Learn (arhk))
 {
 V
 }
 
 STRING 3459
-// Abilities: U01! (Go to next Escaper), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U01$ (Go to next Escaper), Unhotkey (Hotkey - Turn Off (auhk))
 {
 V
 }
 
 STRING 3460
-// Abilities: U00u (Load 1), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00x (Load 1), Researchhotkey (Hotkey - Learn (arhk))
 {
 A
 }
 
 STRING 3461
-// Abilities: U00u (Load 1), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00x (Load 1), Unhotkey (Hotkey - Turn Off (auhk))
 {
 A
 }
 
 STRING 3462
-// Abilities: U00u (Load 1), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U01* (Summon Minion), Hotkey (Hotkey - Normal (ahky))
 {
 A
 }
 
 STRING 3463
-// Abilities: U00g (Set Cylinder Z Mode), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00[ (Decrease Scale), Unhotkey (Hotkey - Turn Off (auhk))
 {
 S
 }
 
 STRING 3464
-// Abilities: U00g (Set Cylinder Z Mode), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00g (Set Cylinder Z Mode), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 3465
-// Abilities: U00g (Set Cylinder Z Mode), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00g (Set Cylinder Z Mode), Researchhotkey (Hotkey - Learn (arhk))
 {
 S
 }
 
 STRING 3466
-// Abilities: U00w (Load 3), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00z (Load 3), Hotkey (Hotkey - Normal (ahky))
 {
 D
 }
 
 STRING 3467
-// Abilities: U00w (Load 3), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00z (Load 3), Researchhotkey (Hotkey - Learn (arhk))
 {
 D
 }
 
 STRING 3468
-// Abilities: U00w (Load 3), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00z (Load 3), Unhotkey (Hotkey - Turn Off (auhk))
 {
 D
 }
 
 STRING 3469
-// Abilities: U00< (Decrease Invisible Duration), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00< (Decrease Invisible Duration), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
 
 STRING 3470
-// Abilities: U00x (Load 4), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00< (Decrease Invisible Duration), Researchhotkey (Hotkey - Learn (arhk))
 {
 F
 }
 
 STRING 3471
-// Abilities: U00x (Load 4), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00< (Decrease Invisible Duration), Unhotkey (Hotkey - Turn Off (auhk))
 {
 F
 }
@@ -13341,12 +13167,6 @@ STRING 3472
 // Items: I00Z (|cffFFCC00Coin |cff31ADE2of the bug catcher), Name (Name (unam))
 {
 |cffFFCC00Coin |cff31ADE2of the bug catcher
-}
-
-STRING 3473
-// Items: I00Z (|cffFFCC00Coin |cff31ADE2of the bug catcher), Tip (Tooltip - Basic (utip))
-{
-Purchase |cffccaa88Raider's hat|r.
 }
 
 STRING 3474
@@ -13362,7 +13182,7 @@ wut.
 }
 
 STRING 3476
-// Abilities: U00x (Load 4), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00{ (Load 4), Hotkey (Hotkey - Normal (ahky))
 {
 F
 }
@@ -13398,37 +13218,31 @@ Spawns a Firekiller that does damage over time.
 }
 
 STRING 3482
-// Abilities: U01# (Summon Minion), Name (Name (anam))
+// Abilities: U01* (Summon Minion), Name (Name (anam))
 {
 Summon Minion
 }
 
 STRING 3483
-// Abilities: U01# (Summon Minion), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U01* (Summon Minion), Researchhotkey (Hotkey - Learn (arhk))
 {
 A
 }
 
 STRING 3484
-// Abilities: U01# (Summon Minion), Researchhotkey (Hotkey - Learn (arhk))
-{
-A
-}
-
-STRING 3485
-// Abilities: U01# (Summon Minion), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U01* (Summon Minion), Unhotkey (Hotkey - Turn Off (auhk))
 {
 A
 }
 
 STRING 3486
-// Abilities: U01# (Summon Minion), Tip (Tooltip - Normal (atp1))
+// Abilities: U01* (Summon Minion), Tip (Tooltip - Normal (atp1))
 {
 Summon Minion [|cffFFCC00A|r]
 }
 
 STRING 3487
-// Abilities: U01# (Summon Minion), Ubertip (Tooltip - Normal - Extended (aub1))
+// Abilities: U01* (Summon Minion), Ubertip (Tooltip - Normal - Extended (aub1))
 {
 Summons a minion that follows the nearest escaper
 }
@@ -13464,67 +13278,67 @@ Creates an immovable portal that teleports you and your allies to a target posit
 }
 
 STRING 3493
-// Abilities: U00o (Select single), Tip (Tooltip - Normal (atp1))
+// Abilities: U00r (Select single), Tip (Tooltip - Normal (atp1))
 {
 Select single entity [Q]
 }
 
 STRING 3494
-// Abilities: U00y (Select tile), Tip (Tooltip - Normal (atp1))
+// Abilities: U00| (Select tile), Tip (Tooltip - Normal (atp1))
 {
 Select tile [E]
 }
 
 STRING 3495
-// Abilities: U00p (Select multi), Tip (Tooltip - Normal (atp1))
+// Abilities: U00s (Select multi), Tip (Tooltip - Normal (atp1))
 {
 Select multiple entities [W]
 }
 
 STRING 3496
-// Abilities: U008 (Disable Easy Mode), Researchhotkey (Hotkey - Learn (arhk))
-{
-W
-}
-
-STRING 3497
 // Abilities: U008 (Disable Easy Mode), Unhotkey (Hotkey - Turn Off (auhk))
 {
 W
 }
 
-STRING 3498
+STRING 3497
 // Abilities: U00@ (Increase Scale), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
+STRING 3498
+// Abilities: U00@ (Increase Scale), Researchhotkey (Hotkey - Learn (arhk))
+{
+W
+}
+
 STRING 3499
-// Abilities: U00q (Save Slot 1), Tip (Tooltip - Normal (atp1))
+// Abilities: U00t (Save Slot 1), Tip (Tooltip - Normal (atp1))
 {
 Save Slot 1 [Y]
 }
 
 STRING 3500
-// Abilities: U00r (Save Slot 2), Tip (Tooltip - Normal (atp1))
+// Abilities: U00u (Save Slot 2), Tip (Tooltip - Normal (atp1))
 {
 Save Slot 2 [X]
 }
 
 STRING 3501
-// Abilities: U00o (Select single), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00i (Size small), Hotkey (Hotkey - Normal (ahky))
 {
 Q
 }
 
 STRING 3502
-// Abilities: U00o (Select single), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00i (Size small), Researchhotkey (Hotkey - Learn (arhk))
 {
 Q
 }
 
 STRING 3503
-// Abilities: U00o (Select single), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00i (Size small), Unhotkey (Hotkey - Turn Off (auhk))
 {
 Q
 }
@@ -13662,7 +13476,7 @@ Lava damage reduced to |cffFFCC0070%
 }
 
 STRING 3528
-// Abilities: U00@ (Increase Scale), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00@ (Increase Scale), Unhotkey (Hotkey - Turn Off (auhk))
 {
 W
 }
@@ -13680,7 +13494,7 @@ Place Level up Tome [|cffffcc00E|r]
 }
 
 STRING 3531
-// Abilities: U00@ (Increase Scale), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00j (Size medium), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
@@ -13840,56 +13654,434 @@ STRING 3554
 }
 
 STRING 3555
-// Abilities: U00p (Select multi), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00j (Size medium), Researchhotkey (Hotkey - Learn (arhk))
 {
 W
 }
 
 STRING 3556
-// Abilities: U00p (Select multi), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00j (Size medium), Unhotkey (Hotkey - Turn Off (auhk))
 {
 W
 }
 
 STRING 3557
-// Abilities: U00p (Select multi), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00s (Select multi), Hotkey (Hotkey - Normal (ahky))
 {
 W
 }
 
 STRING 3558
-// Abilities: U00v (Load 2), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00g (Set Cylinder Z Mode), Unhotkey (Hotkey - Turn Off (auhk))
 {
 S
 }
 
 STRING 3559
-// Abilities: U00v (Load 2), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00y (Load 2), Hotkey (Hotkey - Normal (ahky))
 {
 S
 }
 
 STRING 3560
-// Abilities: U00v (Load 2), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00y (Load 2), Researchhotkey (Hotkey - Learn (arhk))
 {
 S
 }
 
 STRING 3561
-// Abilities: U01" (Pick Escaper), Hotkey (Hotkey - Normal (ahky))
+// Abilities: U00r (Select single), Hotkey (Hotkey - Normal (ahky))
 {
 Q
 }
 
 STRING 3562
-// Abilities: U01" (Pick Escaper), Researchhotkey (Hotkey - Learn (arhk))
+// Abilities: U00r (Select single), Researchhotkey (Hotkey - Learn (arhk))
 {
 Q
 }
 
 STRING 3563
-// Abilities: U01" (Pick Escaper), Unhotkey (Hotkey - Turn Off (auhk))
+// Abilities: U00r (Select single), Unhotkey (Hotkey - Turn Off (auhk))
 {
 Q
+}
+
+STRING 3564
+// Abilities: A07T (Blue Holy Wings), Name (Name (anam))
+{
+Blue Holy Wings
+}
+
+STRING 3567
+// Items: I00P (Enchantment: Pirate Hat), Ubertip (Tooltip - Extended (utub))
+{
+This hat grants you the magic power of looking silly.
+}
+
+STRING 3568
+// Abilities: A08R (Wizard Hat), Name (Name (anam))
+{
+Wizard Hat
+}
+
+STRING 3569
+// Items: I00P (Enchantment: Pirate Hat), Name (Name (unam))
+{
+Enchantment: Pirate Hat
+}
+
+STRING 3570
+// Items: I00P (Enchantment: Pirate Hat), Tip (Tooltip - Basic (utip))
+{
+Purchase |cffccaa88pirate hat|r.
+}
+
+STRING 3571
+// Units: n01U (|cffE63A21High Obstacle ), Name (Name (unam))
+{
+|cffE63A21High Obstacle 
+}
+
+STRING 3573
+// Units: n01U (|cffE63A21High Obstacle ), Ubertip (Tooltip - Extended (utub))
+{
+A small, |cffFFCC00terrainspecific |robstacle with big detection height. Useful to block jumpers.|n|n|cffFF0000Kills Escapers
+}
+
+STRING 3574
+// Units: n01U (|cffE63A21High Obstacle ), EditorSuffix (Name - Editor Suffix (unsf))
+{
+(Dummy)
+}
+
+STRING 3575
+// Units: n01V (High |cFF00FF00Obstacle|r: Citadel), Name (Name (unam))
+{
+High |cFF00FF00Obstacle|r: Citadel
+}
+
+STRING 3576
+// Units: n01V (High |cFF00FF00Obstacle|r: Citadel), Tip (Tooltip - Basic (utip))
+{
+Build high O|cFFFFFF00b|rstacle
+}
+
+STRING 3577
+// Units: n01W (High |cFF00FF00Obstacle|r: Desert), Name (Name (unam))
+{
+High |cFF00FF00Obstacle|r: Desert
+}
+
+STRING 3578
+// Units: n01W (High |cFF00FF00Obstacle|r: Desert), Hotkey (Hotkey (uhot))
+{
+B
+}
+
+STRING 3579
+// Units: n01W (High |cFF00FF00Obstacle|r: Desert), Ubertip (Tooltip - Extended (utub))
+{
+|cFFFF0000Kills escapers which comes too near|r
+}
+
+STRING 3580
+// Units: n01X (High |cFF00FF00Obstacle|r: Grass), Name (Name (unam))
+{
+High |cFF00FF00Obstacle|r: Grass
+}
+
+STRING 3581
+// Units: n01X (High |cFF00FF00Obstacle|r: Grass), Tip (Tooltip - Basic (utip))
+{
+Build O|cFFFFFF00b|rstacle
+}
+
+STRING 3582
+// Units: n01X (High |cFF00FF00Obstacle|r: Grass), Hotkey (Hotkey (uhot))
+{
+B
+}
+
+STRING 3583
+// Units: n01X (High |cFF00FF00Obstacle|r: Grass), Ubertip (Tooltip - Extended (utub))
+{
+|cFFFF0000Kills escapers which comes too near|r
+}
+
+STRING 3585
+// Units: n01Y (High |cFF00FF00Obstacle|r: Sunken), Tip (Tooltip - Basic (utip))
+{
+Build O|cFFFFFF00b|rstacle
+}
+
+STRING 3586
+// Units: n01Y (High |cFF00FF00Obstacle|r: Sunken), Hotkey (Hotkey (uhot))
+{
+B
+}
+
+STRING 3587
+// Units: n01J (High Obstacle |cFF00FF00Ice), Ubertip (Tooltip - Extended (utub))
+{
+|cFFFF0000Kills escapers which comes too near|r
+}
+
+STRING 3588
+// Units: n01J (High Obstacle |cFF00FF00Ice), Name (Name (unam))
+{
+High Obstacle |cFF00FF00Ice
+}
+
+STRING 3589
+// Units: n01J (High Obstacle |cFF00FF00Ice), Tip (Tooltip - Basic (utip))
+{
+Build Ice|cFFFFFF00c|rlaws
+}
+
+STRING 3590
+// Units: n01Y (High |cFF00FF00Obstacle|r: Sunken), Ubertip (Tooltip - Extended (utub))
+{
+|cFFFF0000Kills escapers which comes too near|r
+}
+
+STRING 3592
+// Abilities: U00v (Save Slot 3), Unhotkey (Hotkey - Turn Off (auhk))
+{
+C
+}
+
+STRING 3593
+// Units: n055 (Small |cFF00FF00Obstacle|r: Sunken), Name (Name (unam))
+{
+Small |cFF00FF00Obstacle|r: Sunken
+}
+
+STRING 3594
+// Units: n01Y (High |cFF00FF00Obstacle|r: Sunken), Name (Name (unam))
+{
+High |cFF00FF00Obstacle|r: Sunken
+}
+
+STRING 3595
+// Units: n00K (|cFF00FF00Volcano|r ), Tip (Tooltip - Basic (utip))
+{
+Build |cffCE4219Volcano |r[|cffFFCC00F|r]
+}
+
+STRING 3596
+// Units: obSD (|cffE63A21Small Obstacle ), Tip (Tooltip - Basic (utip))
+{
+Build |cffE63A21Small Obstacle |r[|cffFFCC00A|r]
+}
+
+STRING 3597
+// Units: obBD (|cffE63A21Big Obstacle ), Tip (Tooltip - Basic (utip))
+{
+Build |cffB51908Big Obstacle |r[|cffFFCC00S|r]
+}
+
+STRING 3598
+// Units: n01U (|cffE63A21High Obstacle ), Tip (Tooltip - Basic (utip))
+{
+Build |cffE63A21High Obstacle |r[|cffFFCC00D|r]
+}
+
+STRING 3599
+// Abilities: U00y (Load 2), Unhotkey (Hotkey - Turn Off (auhk))
+{
+S
+}
+
+STRING 3601
+// Abilities: U00{ (Load 4), Researchhotkey (Hotkey - Learn (arhk))
+{
+F
+}
+
+STRING 3602
+// Units: n013 (|cff636363Vortex ), Ubertip (Tooltip - Extended (utub))
+{
+Build a vortex that attracts escapers to it's center.
+}
+
+STRING 3603
+// Units: n013 (|cff636363Vortex ), Tip (Tooltip - Basic (utip))
+{
+Build |cff636363Vortex [W]
+}
+
+STRING 3604
+// Items: I011 (Staff of Teleportation), Name (Name (unam))
+{
+Staff of Teleportation
+}
+
+STRING 3605
+// Items: I011 (Staff of Teleportation), Tip (Tooltip - Basic (utip))
+{
+Purchase Staff of Teleportation
+}
+
+STRING 3606
+// Abilities: A08S (Item Teleport), Name (Name (anam))
+{
+Item Teleport
+}
+
+STRING 3607
+// Abilities: U00i (Size small), Name (Name (anam))
+{
+Size small
+}
+
+STRING 3608
+// Abilities: U00i (Size small), Tip (Tooltip - Normal (atp1))
+{
+Set size to small [Q]
+}
+
+STRING 3609
+// Abilities: U00i (Size small), Ubertip (Tooltip - Normal - Extended (aub1))
+{
+128
+}
+
+STRING 3610
+// Abilities: U00j (Size medium), Name (Name (anam))
+{
+Size medium
+}
+
+STRING 3611
+// Abilities: U00j (Size medium), Tip (Tooltip - Normal (atp1))
+{
+Set size to medium [W]
+}
+
+STRING 3612
+// Abilities: U00j (Size medium), Ubertip (Tooltip - Normal - Extended (aub1))
+{
+256
+}
+
+STRING 3613
+// Abilities: U00k (Size big), Name (Name (anam))
+{
+Size big
+}
+
+STRING 3614
+// Abilities: U00k (Size big), Tip (Tooltip - Normal (atp1))
+{
+Set size to big [E]
+}
+
+STRING 3615
+// Abilities: U00k (Size big), Ubertip (Tooltip - Normal - Extended (aub1))
+{
+128
+}
+
+STRING 3616
+// Abilities: U00| (Select tile), Researchhotkey (Hotkey - Learn (arhk))
+{
+E
+}
+
+STRING 3617
+// Abilities: U00| (Select tile), Unhotkey (Hotkey - Turn Off (auhk))
+{
+E
+}
+
+STRING 3619
+// Abilities: U00s (Select multi), Researchhotkey (Hotkey - Learn (arhk))
+{
+W
+}
+
+STRING 3620
+// Abilities: U00s (Select multi), Unhotkey (Hotkey - Turn Off (auhk))
+{
+W
+}
+
+STRING 3622
+// Abilities: U01% (Pick Escaper), Hotkey (Hotkey - Normal (ahky))
+{
+Q
+}
+
+STRING 3623
+// Abilities: U01% (Pick Escaper), Researchhotkey (Hotkey - Learn (arhk))
+{
+Q
+}
+
+STRING 3624
+// Abilities: U01% (Pick Escaper), Unhotkey (Hotkey - Turn Off (auhk))
+{
+Q
+}
+
+STRING 3625
+// Abilities: S002 (Morph Builder), Name (Name (anam))
+{
+Morph Builder
+}
+
+STRING 3626
+// Abilities: A000 (Builder: Menu: Circles), Tip (Tooltip - Normal (atp1))
+{
+Menu: Circles [|cffFFCC00W|r]
+}
+
+STRING 3627
+// Abilities: A05C (Builder: Menu: Decorations), Tip (Tooltip - Normal (atp1))
+{
+Menu: Decorations [|cffFFCC00F|r]
+}
+
+STRING 3628
+// Abilities: A05D (Builder: Menu: Objects), Name (Name (anam))
+{
+Builder: Menu: Objects
+}
+
+STRING 3629
+// Abilities: A05E (Builder: Menu: Enviromental), Name (Name (anam))
+{
+Builder: Menu: Enviromental
+}
+
+STRING 3630
+// Abilities: A03D (Builder: Menu: Boss), Tip (Tooltip - Normal (atp1))
+{
+Boss Menu [|cffffcc00G|r]
+}
+
+STRING 3631
+// Abilities: A03D (Builder: Menu: Boss), Hotkey (Hotkey - Normal (ahky))
+{
+G
+}
+
+STRING 3632
+// Abilities: U00{ (Load 4), Unhotkey (Hotkey - Turn Off (auhk))
+{
+F
+}
+
+STRING 3633
+// Abilities: A088 (Slow Wave), Researchtip (Tooltip - Learn (aret))
+{
+Learn Slow Wave [|cffFFCC00Level|r %d] (|cffFFCC00W|r)
+}
+
+STRING 3634
+// Units: n011 (Vertical Wall), Name (Name (unam))
+{
+Vertical Wall
 }
 

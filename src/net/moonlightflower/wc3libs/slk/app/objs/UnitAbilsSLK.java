@@ -16,6 +16,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
@@ -143,6 +144,14 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 	
 	@Override
 	public void write(File file) throws IOException {
+		for (Obj obj : getObjs().values()) {
+			String autoS = obj.get(FieldId.valueOf("auto")).toString();
+			
+			if ((autoS == null) || autoS.isEmpty()) {
+				obj.set(FieldId.valueOf("auto"), Wc3String.valueOf("_"));
+			}
+		}
+		
 		super.write(file);
 	}
 	

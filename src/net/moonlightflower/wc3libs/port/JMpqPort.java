@@ -68,8 +68,7 @@ public class JMpqPort extends MpqPort {
 	}
 	
 	public static class Out extends MpqPort.Out {
-		@Override
-		public Result commit(Vector<File> mpqFiles) throws IOException {
+		public Result commitJ(Vector<File> mpqFiles) throws IOException {
 			Orient.removeDir(exportDir);
 			Orient.createDir(exportDir);
 	
@@ -153,6 +152,15 @@ public class JMpqPort extends MpqPort {
 			}
 			
 			return result;
+		}
+		
+		@Override
+		public Result commit(Vector<File> mpqFiles) throws PortException {
+			try {
+				return commitJ(mpqFiles);
+			} catch (IOException e) {
+				throw new PortException(e.getMessage());
+			}
 		}
 	}
 	

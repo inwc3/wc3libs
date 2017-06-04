@@ -11,7 +11,9 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.ArmorSound;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
+import net.moonlightflower.wc3libs.dataTypes.app.Char;
 import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
 import net.moonlightflower.wc3libs.dataTypes.app.DefType;
 import net.moonlightflower.wc3libs.dataTypes.app.DestructableId;
@@ -23,6 +25,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.ShadowTex;
 import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
+import net.moonlightflower.wc3libs.dataTypes.app.Tex;
 import net.moonlightflower.wc3libs.dataTypes.app.Tileset;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -66,8 +69,71 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 		}
 
 		public final static State<DestructableId> OBJ_ID = new State<>("DestructableID", DestructableId.class);
+		
+		public final static State<Model> ART_MODEL = new State<>("file", Model.class);
+		public final static State<Bool> ART_LIGHTWEIGHT = new State<>("lightweight", Bool.class);
+		public final static State<Bool> ART_FAT_LINE_OF_SIGHT = new State<>("fatLOS", Bool.class);
+		public final static State<Int> ART_TEX_ID = new State<>("texID", Int.class);
+		public final static State<Tex> ART_TEX = new State<>("texFile", Tex.class);
+		
+		public final static State<Bool> DATA_WALKABLE = new State<>("walkable", Bool.class);
+		public final static State<Int> DATA_CLIFF_LEVEL = new State<>("cliffHeight", Int.class);
+		
+		public final static State<DataList<CombatTarget>> COMBAT_TARGS = new State<>("targType", new DataTypeInfo(DataList.class, CombatTarget.class));
+		
+		public final static State<Int> ART_COLOR_RED = new State<>("colorR", Int.class);
+		public final static State<Int> ART_COLOR_GREEN = new State<>("colorG", Int.class);
+		public final static State<Int> ART_COLOR_BLUE = new State<>("colorB", Int.class);
+		public final static State<Real> ART_FIXED_ROT = new State<>("fixedRot", Real.class);//unreal
+		public final static State<Real> ART_FLY_HEIGHT = new State<>("flyH", Real.class);//unreal
+		public final static State<Bool> ART_FOG_VISIBLE = new State<>("fogVis", Bool.class);
+		public final static State<Bool> ART_MINIMAP_USE_COLOR = new State<>("useMMColor", Bool.class);
+		public final static State<Int> ART_MINIMAP_RED = new State<>("MMRed", Int.class);
+		public final static State<Int> ART_MINIMAP_GREEN = new State<>("MMGreen", Int.class);
+		public final static State<Int> ART_MINIMAP_BLUE = new State<>("MMBlue", Int.class);
+		public final static State<Model> ART_MODEL_PORTRAIT = new State<>("portraitmodel", Model.class);
+		public final static State<Real> ART_OCCLUSION_HEIGHT = new State<>("occH", Real.class);//unreal
+		public final static State<Real> ART_PITCH_MAX = new State<>("maxPitch", Real.class);//unreal
+		public final static State<Real> ART_ROLL_MAX = new State<>("maxRoll", Real.class);//unreal
+		public final static State<Real> ART_RADIUS = new State<>("radius", Real.class);//unreal
+		public final static State<Real> ART_RADIUS_FOG = new State<>("fogRadius", Real.class);//unreal
+		public final static State<Real> ART_SELECTION_SIZE_CIRCLE = new State<>("selcircsize", Real.class);
+		public final static State<Real> ART_SELECTION_SIZE = new State<>("selSize", Real.class);//unreal
+		public final static State<Real> ART_SCALE_MIN = new State<>("minScale", Real.class);//unreal
+		public final static State<Real> ART_SCALE_MAX = new State<>("maxScale", Real.class);//unreal
+		public final static State<ShadowTex> ART_SHADOW = new State<>("shadow", ShadowTex.class);
+		public final static State<Bool> ART_SHOW_IN_MINIMAP = new State<>("showInMM", Bool.class);
 
-		public static class Art {
+		public final static State<Int> DATA_GOLD_REPAIR = new State<>("goldRep", Int.class);
+		public final static State<Real> DATA_LIFE = new State<>("HP", Real.class);//unreal
+		public final static State<Int> DATA_LUMBER_REPAIR = new State<>("lumberRep", Int.class);
+		public final static State<Wc3String> DATA_NAME = new State<>("Name", Wc3String.class);
+		public final static State<Int> DATA_NUM_VAR = new State<>("numVar", Int.class);
+		public final static State<PathingTex> DATA_PATH_TEX = new State<>("pathTex", PathingTex.class);
+		public final static State<PathingTex> DATA_PATH_TEX_DEAD = new State<>("pathTexDeath", PathingTex.class);
+		public final static State<Bool> DATA_SELECTABLE = new State<>("selectable", Bool.class);
+		public final static State<Int> DATA_TIME_BUILD = new State<>("buildTime", Int.class);
+		public final static State<Int> DATA_TIME_REPAIR = new State<>("repairTime", Int.class);
+		
+		public final static State<Char> EDITOR_CATEGORY = new State<>("category", Char.class);//fix later
+		public final static State<DoodadClass> EDITOR_CLASS = new State<>("doodClass", DoodadClass.class);
+		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment", Wc3String.class);
+		public final static State<Bool> EDITOR_CAN_PLACE_DEAD = new State<>("canPlaceDead", Bool.class);
+		public final static State<Bool> EDITOR_CAN_PLACE_RAND_SCALE = new State<>("canPlaceRandScale", Bool.class);
+		public final static State<Bool> EDITOR_IN_USER_LIST = new State<>("UserList", Bool.class);
+		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
+		public final static State<Bool> EDITOR_ON_CLIFFS = new State<>("onCliffs", Bool.class);
+		public final static State<Bool> EDITOR_ON_WATER = new State<>("onWater", Bool.class);
+		public final static State<Wc3String> EDITOR_SUFFIX = new State<>("EditorSuffix", Wc3String.class);
+		public final static State<Bool> EDITOR_TILESET_SPECIFIC = new State<>("tilesetSpecific", Bool.class);
+		public final static State<DataList<Tileset>> EDITOR_TILESETS = new State<>("tilesets", new DataTypeInfo(DataList.class, Tileset.class));
+		public final static State<Bool> EDITOR_USE_CLICK_HELPER = new State<>("useClickHelper", Bool.class);
+		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		
+		public final static State<ArmorSound> SOUND_ARMOR = new State<>("armor", ArmorSound.class);
+		public final static State<SoundLabel> SOUND_DEATH = new State<>("deathSnd", SoundLabel.class);
+		
+		/*public static class Art {
 			public final static State<Int> COLOR_BLUE = new State<>("colorB", Int.class);
 			public final static State<Int> COLOR_GREEN = new State<>("colorG", Int.class);
 			public final static State<Int> COLOR_RED = new State<>("colorR", Int.class);
@@ -140,7 +206,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 		
 		public static class Text {
 			public final static State<Wc3String> NAME = new State<>("Name", Wc3String.class);
-		}
+		}*/
 	}
 	
 	public static class Obj extends SLK.Obj<DestructableId> {

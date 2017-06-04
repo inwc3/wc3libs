@@ -1,17 +1,16 @@
 package net.moonlightflower.wc3libs.app;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import net.moonlightflower.wc3libs.bin.ObjMod;
@@ -23,8 +22,8 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3H;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
-import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
+import net.moonlightflower.wc3libs.dataTypes.app.Bool;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
@@ -33,6 +32,7 @@ import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 import net.moonlightflower.wc3libs.slk.RawMetaSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
+import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
@@ -94,29 +94,52 @@ public class ObjMerger {
 				File file = slkEntry.getKey();
 				SLK otherSlk = slkEntry.getValue();
 				
-				for (Map.Entry<ObjId, SLK.Obj> objEntry : ((Map<ObjId, SLK.Obj>) otherSlk.getObjs()).entrySet()) {
+				Map<ObjId, SLK.Obj> otherObjs = new HashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
+				
+				otherSlk.clearObjs();
+				
+				for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {
 					ObjId objId = objEntry.getKey();
-					SLK.Obj obj = objEntry.getValue();
+					SLK.Obj otherObj = objEntry.getValue();
+					
+					SLK.Obj obj = otherSlk.addObj(objId);
 					
 					ObjId baseId = baseObjIds.get(objId);
 					
 					if (baseId != null) {
-						obj.merge(_slks.get(file).getObj(baseId));
+						SLK.Obj baseObj = _slks.get(file).getObj(baseId);
+						
+						obj.merge(baseObj);
 					}
+					
+					obj.merge(otherObj);
 				}
-				
+
 				addSlk(file, otherSlk);
 			}
 			
-			for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : pack.getProfile().getObjs().entrySet()) {
+			//
+			Profile otherProfile = pack.getProfile();
+			
+			Map<TXTSectionId, Profile.Obj> otherObjs = new HashMap<>(((Map<TXTSectionId, Profile.Obj>) otherProfile.getObjs()));
+			
+			otherProfile.clearObjs();
+			
+			for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : otherObjs.entrySet()) {
 				ObjId objId = ObjId.valueOf(objEntry.getKey().toString());
-				Profile.Obj obj = objEntry.getValue();
+				Profile.Obj otherObj = objEntry.getValue();
+				
+				Profile.Obj obj = otherProfile.addObj(TXTSectionId.valueOf(objId.toString()));
 				
 				ObjId baseId = baseObjIds.get(objId);
 				
 				if (baseId != null) {
-					obj.merge(_profile.getObj(TXTSectionId.valueOf(baseId.toString())));
+					Profile.Obj baseObj = _profile.getObj(TXTSectionId.valueOf(baseId.toString()));
+					
+					obj.merge(baseObj);
 				}
+				
+				obj.merge(otherObj);
 			}
 			
 			//pack.getProfile().print();
@@ -133,7 +156,7 @@ public class ObjMerger {
 			
 			objMod.merge(pack.getObjMod());
 		} catch (Exception e) {
-			System.err.println(e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -168,8 +191,6 @@ public class ObjMerger {
 			File outFile = fileEntry.getValue();
 			
 			SLK slk = SLK.createFromInFile(inFile, outFile);
-			
-			//System.out.println(inFile);
 			
 			addSlk(inFile, slk);
 		}
@@ -245,6 +266,8 @@ public class ObjMerger {
 	}
 	
 	private final static Collection<File> _metaSlkInFiles = Arrays.asList(new File[]{
+		new File("Doodads\\DoodadMetaData.slk"),
+			
 		new File("Units\\AbilityBuffMetaData.slk"),
 		new File("Units\\AbilityMetaData.slk"),
 		new File("Units\\DestructableMetaData.slk"),
@@ -254,6 +277,8 @@ public class ObjMerger {
 	});
 		
 	private final static Collection<File> _slkInFiles = Arrays.asList(new File[]{
+		DoodSLK.GAME_USE_PATH,
+			
 		UnitAbilsSLK.GAME_USE_PATH,
 		UnitBalanceSLK.GAME_USE_PATH,
 		UnitDataSLK.GAME_USE_PATH,
@@ -472,8 +497,7 @@ public class ObjMerger {
 			
 			portIn.add(outFile, inFile);
 		}
-		
-		//if(true) return;
+
 		portIn.commit(mapFile);
 	}
 
