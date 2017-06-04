@@ -93,7 +93,7 @@ public class JMpqPort extends MpqPort {
 	
 					mpqFile = tempFile;
 				}
-
+System.out.println("mpqFiles " + mpqFile);
 				JMpqEditor jmpq = new JMpqEditor(mpqFile);
 
 				Vector<FileExport> failedExports = new Vector<>();

@@ -16,18 +16,26 @@ public class ObjMergerTest {
             File inMapFile = new File(getClass().getResource("in.w3x").getFile());
 
             File workDir = new File(new File(getClass().getResource("").getFile()), "work");
+            
+            Orient.createDir(workDir);
 
-            System.out.println(workDir);
+            System.out.println("workDir:" + workDir + ";" + workDir.exists());
 
             //merger.setWorkDir(workDir);
 
-            System.out.println("map:" + inMapFile);
+            System.out.println("map:" + inMapFile + ";" + inMapFile.exists());
             //merger.readFromMap(inMapFile, true);
 
             File inDir = new File(workDir, "in");
             File outDir = new File(workDir, "out");
+            
+            Orient.removeDir(inDir);
+            Orient.removeDir(outDir);
+            
+            Orient.createDir(inDir);
+            Orient.createDir(outDir);
 
-            //merger.exportMap(inMapFile, inDir);
+            merger.exportMap(inMapFile, inDir);
 
             merger.addDir(inDir);
 

@@ -257,6 +257,7 @@ public class ObjMerger {
 		Map<File, File> files = new HashMap<>();
 
 		for (File outFile : Orient.getFiles(dir)) {
+			System.err.println(dir + ";" + outFile);
 			File inFile = new File(outFile.toString().substring(dir.toString().length() + 1));
 
 			files.put(inFile, outFile);
@@ -513,6 +514,7 @@ public class ObjMerger {
 	}
 
 	public void exportMap(File mapFile, File outDir) throws Exception {
+		System.out.println("export " + mapFile + ";" + MpqPort.getWc3Dir() + ";" + outDir);
 		exportMap(mapFile, true, MpqPort.getWc3Dir(), outDir);
 	}
 
