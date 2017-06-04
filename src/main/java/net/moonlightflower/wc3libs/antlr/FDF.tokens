@@ -1,0 +1,11 @@
+T__0=1
+CURLY_L=2
+CURLY_R=3
+COMMA=4
+WS=5
+ID=6
+STRING_LITERAL=7
+'StringList'=1
+'{'=2
+'}'=3
+','=4
