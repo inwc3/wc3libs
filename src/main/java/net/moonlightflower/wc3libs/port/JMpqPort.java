@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.port;
 
 import systems.crigges.jmpq3.JMpqEditor;
 import systems.crigges.jmpq3.JMpqException;
+import systems.crigges.jmpq3.MPQOpenOption;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +27,7 @@ public class JMpqPort extends MpqPort {
 	@Override
 	public List<File> listFiles(File mpqFile) throws IOException {
 		try {
-			JMpqEditor jmpq = new JMpqEditor(mpqFile);
-			
+			JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.READ_ONLY);
 			List<File> ret = new ArrayList<>();
 			
 			for (String fileS : jmpq.getFileNames()) {
@@ -35,7 +35,7 @@ public class JMpqPort extends MpqPort {
 			}
 			
 			jmpq.close();
-			
+
 			return ret;
 		} catch (JMpqException e) {
 			throw new IOException(e.getMessage());
@@ -94,7 +94,7 @@ public class JMpqPort extends MpqPort {
 					mpqFile = tempFile;
 				}
 System.out.println("mpqFiles " + mpqFile);
-				JMpqEditor jmpq = new JMpqEditor(mpqFile);
+				JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.READ_ONLY);
 
 				Vector<FileExport> failedExports = new Vector<>();
 	
