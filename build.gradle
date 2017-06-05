@@ -7,7 +7,7 @@ apply plugin: 'antlr'
 apply plugin: 'java'
 
 group 'net.moonlightflower'
-version '1.0.0'
+version '1.0.1'
 
 repositories {
     jcenter()
