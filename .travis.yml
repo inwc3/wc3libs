@@ -16,4 +16,4 @@ cache:
     
 script:
   - ./gradlew check
-  - ./gradlew build
+  - ./gradlew build --info --stacktrace
