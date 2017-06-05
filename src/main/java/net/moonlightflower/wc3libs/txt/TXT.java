@@ -52,11 +52,11 @@ public class TXT {
 					String valS = (val == null) ? null : val.toTXTVal().toString();
 					
 					if (valS != null) {
-						if ((valS instanceof String) && (translator != null)) {
+						if (translator != null) {
 							valS = translator.translate(valS);
-							
-							valS = "\"" + valS + "\"";
 						}
+						
+						valS = "\"" + valS + "\"";
 						
 						s.append(valS);
 					}
@@ -169,8 +169,14 @@ public class TXT {
 			}
 			
 			public void merge(Field otherField, boolean overwrite) {
-				for (DataType val : otherField.getVals()) {
-					add(val);
+				if (overwrite) {
+					_vals.clear();
+
+					_vals.addAll(otherField.getVals());
+				} else {
+					for (DataType val : otherField.getVals()) {
+						add(val);
+					}
 				}
 			}
 			

@@ -1,0 +1,1264 @@
+﻿// Human Units
+[Harf]
+Name=Paladin
+EditorSuffix= (benutzt Frostmourne)
+Hotkey=L
+Propernames=Arthas
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hart]
+Name=Paladin
+Hotkey=L
+Propernames=Arthas
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+
+[Huth]
+Name=Paladin
+Hotkey=L
+Propernames=Uther
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+
+[Hpb1]
+Name=Paladin
+Hotkey=L
+Propernames=Lord Nicholas Buzan
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hpb2]
+Name=Paladin
+Hotkey=L
+Propernames=Sire Gregory Edmunson
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hdgo]
+Name=Paladin
+Hotkey=L
+Propernames=Dagren der Orcschlächter
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hmgd]
+Name=Paladin
+Hotkey=L
+Propernames=Magroth der Verteidiger
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hhkl]
+Name=Paladin
+Hotkey=L
+Propernames=Halahk der Lebenspender
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hjai]
+Name=Erzmagier
+Hotkey=E
+Propernames=Jaina
+Revivetip=|cffffcc00E|rrzmagier wiederbeleben
+Awakentip=|cffffcc00E|rrzmagier wiederbeleben
+Ubertip="Mystischer Held, geschickt bei Distanzangriffen. Kann 'Blizzard', 'Wasser-Elementargeist beschwören', 'Brillanz-Aura' und 'Massen-Teleportation' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Hmbr]
+Name=Bergkönig
+Hotkey=B
+Propernames=Muradin Bronzebeard
+Revivetip=|cffffcc00B|rergkönig wiederbeleben
+Awakentip=|cffffcc00B|rergkönig wiederbeleben
+UberTip="Krieger-Held, Experte im Angriffskampf und im Zerstreuen feindlicher Truppen. Kann 'Sturmschlag', 'Donnerschlag', 'Hieb' und 'Avatar' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Hant]
+Name=Erzmagier
+Hotkey=E
+Propernames=Antonidas
+Revivetip=|cffffcc00E|rrzmagier wiederbeleben
+Awakentip=|cffffcc00E|rrzmagier wiederbeleben
+Ubertip="Mystischer Held, geschickt bei Distanzangriffen. Kann 'Blizzard', 'Wasser-Elementargeist beschwören', 'Brillanz-Aura' und 'Massen-Teleportation' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Hvwd]
+Name=Waldläufer
+Hotkey=W
+Propernames=Sylvanas Windrunner
+Revivetip=|cffffcc00W|raldläufer wiederbeleben
+Awakentip=|cffffcc00W|raldläufer wiederbeleben
+
+[Hkal]
+Name=Blutmagier
+Hotkey=M
+Propernames=Kael
+Revivetip=Blut|cffffcc00m|ragier wiederbeleben
+Awakentip=Blut|cffffcc00m|ragier wiederbeleben
+Ubertip="Mystischer Held, geschickt in der Beherrschung von Magie und bei Distanzangriffen. Kann 'Flammenschlag', 'Bannen', 'Mana abziehen' und 'Phönix' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Hvsh]
+Name=Naga-Meerhexe
+Hotkey=N
+Propernames=Lady Vashj
+Revivetip=|cffffcc00N|raga-Meerhexe wiederbeleben
+Awakentip=|cffffcc00N|raga-Meerhexe wiederbeleben
+Ubertip="Mystischer Held, geschickt im Distanzkampf. Kann 'Gabelblitz', 'Frostpfeile', 'Manaschild' und 'Tornado' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Hlgr]
+Name=Dunkler Ritter
+Hotkey=L
+Propernames=Lord Garithos
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[haro]
+Name=Arkaner Spähposten
+Hotkey=S
+Tip=Arkanen |cffffcc00S|rpähposten errichten
+
+[hcth]
+Name=Captain
+
+[hhdl]
+Name=Reiterloses Pferd
+
+[hhes]
+Name=Schwertkämpfer
+Tip=|cffffcc00S|rchwertkämpfer ausbilden
+Hotkey=S
+Ubertip="Vielseitig einsetzbarer Fußsoldat. Kann die 'Verteidigung'-Fähigkeit erlernen. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[hbew]
+Name=Wagen
+
+[Hapm]
+Name=Paladin
+Hotkey=L
+Propernames=Admiral Proudmoore
+Revivetip=Pa|cffffcc00l|radin wiederbeleben
+Awakentip=Pa|cffffcc00l|radin wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlicher Verteidigung und gutem Einfluss auf in der Nähe befindliche befreundete Truppen. Kann 'Heiliges Licht', 'Gottesschild', 'Hingabe-Aura' und 'Wiederbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[hrdh]
+Name=Packpferd
+
+[Hgam]
+Name=Geisterhafter Erzmagier
+Hotkey=A
+Propernames=Antonidas
+Revivetip=Geisterhaften Erzm|cffffcc00a|rgier wiederbeleben
+Awakentip=Geisterhaften Erzm|cffffcc00a|rgier wiederbeleben
+Ubertip="Mystischer Helden-Geist, geschickt bei Distanzangriffen. Kann 'Blizzard', 'Wasser-Elementargeist beschwören', 'Brillanz-Aura' und 'Massen-Teleportation' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+// Orc Units
+[Othr]
+Name=Scharfseher
+Hotkey=F
+Propernames=Thrall
+Revivetip=Schar|cffffcc00f|rseher wiederbeleben
+Awakentip=Schar|cffffcc00f|rseher wiederbeleben
+Ubertip="Mystischer Held, geschickt bei Distanzangriffen und Aufklärung. Kann 'Kettenblitz', 'Fernsicht', 'Wildgeist' und 'Erdbeben' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Ogrh]
+Name=Klingenmeister
+Hotkey=M
+Propernames=Grom Hellscream
+Revivetip=Klingen|cffffcc00m|reister wiederbeleben
+Awakentip=|cffffcc00K|rlingenmeister wiederbeleben
+Ubertip="Geschickter Held, der schnell einzelne Einheiten töten kann und große Verwirrung unter den Feinden auslöst. Kann 'Spiegelbild', 'Windlauf', 'Kritischer Schlag' und 'Klingensturm' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Opgh]
+Name=Klingenmeister
+EditorSuffix= (Besessen)
+Hotkey=M
+Propernames=Grom Hellscream
+Revivetip=Klingen|cffffcc00m|reister wiederbeleben
+Awakentip=|cffffcc00K|rlingenmeister wiederbeleben
+Ubertip="Geschickter Held, der schnell einzelne Einheiten töten kann und große Verwirrung unter den Feinden auslöst. Kann 'Spiegelbild', 'Windlauf', 'Kritischer Schlag' und 'Klingensturm' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Ocbh]
+Name=Tauren-Häuptling
+Hotkey=T
+Propernames=Cairne Bloodhoof
+Revivetip=|cffffcc00T|rauren-Häuptling wiederbeleben
+Awakentip=|cffffcc00T|rauren-Häuptling wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlichen Nahkampfeigenschaften und hoher Schadensabsorption. Kann 'Schockwelle', 'Kriegsdonner', 'Ausdauer-Aura' und 'Reinkarnation' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+//expansion version of cairne bloodhoof
+[Ocb2]
+Name=Tauren-Häuptling
+Hotkey=T
+Propernames=Cairne Bloodhoof
+Revivetip=|cffffcc00T|rauren-Häuptling wiederbeleben
+Awakentip=|cffffcc00T|rauren-Häuptling wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlichen Nahkampfeigenschaften und hoher Schadensabsorption. Kann 'Schockwelle', 'Kriegsdonner', 'Ausdauer-Aura' und 'Reinkarnation' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+EditorSuffix=(Erweiterung)
+
+[owar]
+Name=Orc-Kriegshäuptling
+
+[ocbw]
+Name=Teufels-Orc-Bau
+Hotkey=O
+Tip=Teufels-|cffffcc00O|rrc-Bau errichten
+Ubertip="Liefert Essen, wodurch die maximale Anzahl von Einheiten erhöht wird, die ausgebildet werden können. Teufels-Orc-Peons können darin stationiert werden, um feindliche Einheiten anzugreifen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+EditorSuffix= (Chaos)
+
+[oosc]
+Name=Kodo-Bestie
+EditorSuffix= (Reiterlos)
+
+[ownr]
+Name=Flügeldrache
+EditorSuffix= (Reiterlos)
+
+[odkt]
+Name=Drak'thul
+
+[onzg]
+Name=Nazgrel
+
+[Odrt]
+Name=Scharfseher
+Propernames=Drek'Thar
+Hotkey=F
+Tip=Schar|cffffcc00f|rseher beschwören
+Ubertip="Mystischer Held, geschickt bei Distanzangriffen und Aufklärung. Kann 'Kettenblitz', 'Fernsicht', 'Wildgeist' und 'Erdbeben' erlernen. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Revivetip=Schar|cffffcc00f|rseher wiederbeleben
+Awakentip=Schar|cffffcc00f|rseher wiederbeleben
+
+[Orkn]
+Name=Schattenjäger
+Propernames=Rokhan
+Hotkey=S
+Tip=|cffffcc00S|rchattenjäger beschwören
+Ubertip="Geschickter Held, meisterhaft beim Heilen von Magie- und Voodoo-Flüchen. Kann 'Heilwelle', 'Hexerei', 'Schlangenschutz' und 'Großer böser Voodoo' erlernen. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Revivetip=|cffffcc00S|rchattenjäger wiederbeleben
+Awakentip=|cffffcc00S|rchattenjäger wiederbeleben
+
+[omtg]
+Name=Mathog
+
+[ovlj]
+Name=Vol'jin
+Casterupgradename=Initiand, Adept, Meister
+Casterupgradetip="- Wächterschutz","- Wächterschutz|n- Stasisfalle","- Wächterschutz|n- Stasisfalle|n- Heil-Schutzzauber"
+
+[Ogld]
+Name=Hexenmeister
+Propernames=Gul’dan
+Hotkey=X
+Tip=He|cffffcc00x|renmeister beschwören
+Ubertip="Mächtiger Hexenmeister, der unter der Federführung von Kil'jaeden persönlich arbeitet. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Revivetip=He|cffffcc00x|renmeister wiederbeleben
+Awakentip=He|cffffcc00x|renmeister wiederbeleben
+
+[Osam]
+Name=Klingenmeister
+Hotkey=K
+Propernames=Samuro
+Revivetip=|cffffcc00K|rlingenmeister wiederbeleben
+Awakentip=|cffffcc00K|rlingenmeister wiederbeleben
+Ubertip="Geschickter Held, der schnell einzelne Einheiten töten kann und große Verwirrung unter den Feinden auslöst. Kann 'Spiegelbild', 'Windlauf', 'Kritischer Schlag' und 'Klingensturm' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Orex]
+Name=Bestienmeister
+Propernames=Rexxar
+Hotkey=B
+Tip=|cffffcc00B|restienmeister beschwören
+Ubertip="Krieger-Held, Experte im Beschwören von Bestien und der Mobilmachung von Verbündeten. Kann 'Bären beschwören', 'Stachelbestie beschwören', 'Kampfschrei' und 'Stampede' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+Revivetip=|cffffcc00B|restienmeister wiederbeleben
+Awakentip=|cffffcc00B|restienmeister wiederbeleben
+
+[ngzc]
+Name=Misha
+EditorSuffix= (Stufe 1)
+
+[ngzd]
+Name=Misha
+EditorSuffix= (Stufe 2)
+
+[ngza]
+Name=Misha
+EditorSuffix= (Stufe 3)
+
+[ngz4]
+Name=Misha
+EditorSuffix= (Stufe 4)
+
+[nqb4]
+Name=Berserker-Stachelbestie
+EditorSuffix= (Stufe 4)
+
+[osp4]
+Name=Schlangenschutz
+EditorSuffix= (Stufe 4)
+
+
+[npn4]
+Name=Feuer
+Tip=|cffffcc00F|reuer beschwören
+Ubertip="Wilder Pandarenen-Krieger des Feuers. Verfügt über 'Dauerhafter Feuerbrand' und 'Festhaut'. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+Hotkey=F
+
+[npn5]
+Name=Sturm
+Tip=S|cffffcc00t|rurm beschwören
+Ubertip="Schneller Pandarenen-Krieger der Stürme. Besitzt 'Festhaut'. Kann 'Magie bannen', 'Wirbelsturm' und 'Windlauf' wirken. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+Hotkey=T
+
+[npn6]
+Name=Erde
+Tip=|cffffcc00E|rrde beschwören
+Ubertip="Gedrungener Pandarenen-Krieger der Erde. Verfügt über 'Festhaut' und 'Zauber-Immunität'. Kann 'Pulverisieren' und 'Spott' wirken. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+Hotkey=E
+
+[oswy]
+Name=Geisterflügeldrache
+
+[ogrk]
+Name=Gar'thok
+
+[ojgn]
+Name=Orc-Kampfschiff
+Hotkey=R
+Tip=O|cffffcc00r|rc-Kampfschiff ausbilden
+Ubertip="Schweres Schlachtschiff, bestens geeignet, um gegnerische Schiffe zu zerstören und Gebäude vom Meer aus zu bombardieren. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+// Undead Units
+[Uear]
+Name=Todesritter
+EditorSuffix= (Böse)
+Hotkey=D
+Propernames=Arthas
+Revivetip=To|cffffcc00d|resritter wiederbeleben
+Awakentip=To|cffffcc00d|resritter wiederbeleben
+Ubertip="Krieger-Held, böses Gegenstück zum menschlichen Paladin. Kann 'Todesmantel', 'Todespakt', 'Unheilige Aura' und 'Totenbelebung' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Uktl]
+Name=Lich
+EditorSuffix= (Lich)
+Hotkey=L
+Propernames=Kel'Thuzad
+Revivetip=|cffffcc00L|rich wiederbeleben
+Awakentip=|cffffcc00L|rich wiederbeleben
+Ubertip="Mystischer Held, besonders geschickt mit Kälte-Magie. Kann 'Frost-Rüstung', 'Frost-Nova', 'Dunkles Ritual' sowie 'Tod und Verfall' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Umal]
+Name=Schreckenslord
+Hotkey=E
+Propernames=Malganis
+Revivetip=Schr|cffffcc00e|rckenslord wiederbeleben
+Awakentip=Schr|cffffcc00e|rckenslord wiederbeleben
+Ubertip="Geschickter Held, meisterhaft bei der Kontrolle von Kämpfen. Kann 'Aas-Schwarm', 'Schlaf', 'Vampir-Aura' und 'Inferno' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Utic]
+Name=Schreckenslord
+Hotkey=E
+Propernames=Tichondrius
+Revivetip=Schr|cffffcc00e|rckenslord wiederbeleben
+Awakentip=Schr|cffffcc00e|rckenslord wiederbeleben
+Ubertip="Geschickter Held, meisterhaft bei der Kontrolle von Kämpfen. Kann 'Aas-Schwarm', 'Schlaf', 'Vampir-Aura' und 'Inferno' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Uvar]
+Name=Schreckenslord
+Hotkey=E
+Propernames=Varimathras
+Revivetip=Schr|cffffcc00e|rckenslord wiederbeleben
+Awakentip=Schr|cffffcc00e|rckenslord wiederbeleben
+Ubertip="Geschickter Held, meisterhaft bei der Kontrolle von Kämpfen. Kann 'Aas-Schwarm', 'Schlaf', 'Vampir-Aura' und 'Inferno' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Udth]
+Name=Schreckenslord
+Hotkey=E
+Propernames=Detheroc
+Revivetip=Schr|cffffcc00e|rckenslord wiederbeleben
+Awakentip=Schr|cffffcc00e|rckenslord wiederbeleben
+Ubertip="Geschickter Held, meisterhaft bei der Kontrolle von Kämpfen. Kann 'Aas-Schwarm', 'Schlaf', 'Vampir-Aura' und 'Inferno' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Ubal]
+Name=Schreckenslord
+Hotkey=E
+Propernames=Balnazzar
+Revivetip=Schr|cffffcc00e|rckenslord wiederbeleben
+Awakentip=Schr|cffffcc00e|rckenslord wiederbeleben
+Ubertip="Geschickter Held, meisterhaft bei der Kontrolle von Kämpfen. Kann 'Aas-Schwarm', 'Schlaf', 'Vampir-Aura' und 'Inferno' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Uvng]
+Name=Schreckenslord
+Hotkey=E
+Propernames=Dalvengyr
+Revivetip=Schr|cffffcc00e|rckenslord wiederbeleben
+Awakentip=Schr|cffffcc00e|rckenslord wiederbeleben
+Ubertip="Geschickter Held, meisterhaft bei der Kontrolle von Kämpfen. Kann 'Aas-Schwarm', 'Schlaf', 'Vampir-Aura' und 'Inferno' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Uanb]
+Name=Gruftlord
+Hotkey=G
+Propernames=Anub'arak
+Revivetip=|cffffcc00G|rruftlord wiederbeleben
+Awakentip=|cffffcc00G|rruftlord wiederbeleben
+Ubertip="Krieger-Held, Experte im Beschwören von Insekten-Dienern und Zerschmettern von Feinden. Kann 'Aufspießen', 'Stachelpanzer', 'Aas-Käfer' und 'Heuschrecken-Schwarm' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Usyl]
+Name=Dunkler Waldläufer
+Propernames=Sylvanas
+Hotkey=D
+Tip=|cffffcc00D|runklen Waldläufer beschwören
+Revivetip=|cffffcc00D|runklen Waldläufer wiederbeleben
+Awakentip=|cffffcc00D|runklen Waldläufer wiederbeleben
+Ubertip="Geschickter Held, meisterhaft in der Manipulation von Gegnern. Kann 'Stille', 'Schwarzer Pfeil', 'Lebensauger' und 'Bezauberung' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[uktn]
+Name=Kel'Thuzad
+EditorSuffix= (Totenbeschwörer)
+
+[uktg]
+Name=Kel'Thuzad
+EditorSuffix= (Geist)
+
+[Uwar]
+Name=Hexenmeister
+Hotkey=X
+Propernames=Archimonde
+Revivetip=He|cffffcc00x|renmeister wiederbeleben
+Awakentip=He|cffffcc00x|renmeister wiederbeleben
+
+[uswb]
+Name=Sylvanas Windrunner
+EditorSuffix= (Banshee)
+
+[uarb]
+Name=Himmelsbarke
+Tip=Himmels|cffffcc00b|rarke beschwören
+Ubertip="Ein schwerer Lufttransporter."
+Hotkey=B
+
+[ubdr]
+Name=Sapphiron
+EditorSuffix= (lebendig)
+
+[ubdd]
+Name=Sapphiron
+EditorSuffix= (untot)
+
+[ushp]
+Name=Untoten-Hafen
+Tip=|cffffcc00H|rafen
+Ubertip="Anlage zum Bau von Booten. Produziert Untoten-Transportschiffe, Untoten-Fregatten und Untoten-Schlachtschiffe."
+Hotkey=H
+
+// Night Elf Units
+[Eill]
+Name=Dämonenjäger
+Hotkey=D
+Propernames=Illidan
+Revivetip=|cffffcc00D|rämonenjäger wiederbeleben
+Awakentip=|cffffcc00D|rämonenjäger wiederbeleben
+Ubertip="Geschickter Held, kann sich meisterlich durch Kämpfe manövrieren. Kann 'Feuerbrand', 'Ausweichen', 'Manabrand' und 'Metamorphose' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Eilm]
+Name=Dämonenjäger
+EditorSuffix= (Verwandelt)
+Hotkey=D
+Propernames=Illidan
+Revivetip=|cffffcc00D|rämonenjäger wiederbeleben
+Awakentip=|cffffcc00D|rämonenjäger wiederbeleben
+Ubertip="Geschickter Held, kann sich meisterlich durch Kämpfe manövrieren. Kann 'Feuerbrand', 'Ausweichen', 'Manabrand' und 'Metamorphose' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Eidm]
+Name=Dämonenjäger
+EditorSuffix= (Dämonengestalt)
+Hotkey=D
+Propernames=Illidan
+Revivetip=|cffffcc00D|rämonenjäger wiederbeleben
+Awakentip=|cffffcc00D|rämonenjäger wiederbeleben
+Ubertip="Geschickter Held, kann sich meisterlich durch Kämpfe manövrieren. Kann 'Feuerbrand', 'Ausweichen', 'Manabrand' und 'Metamorphose' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Ecen]
+Name=Halbgott
+Hotkey=C
+Propernames=Cenarius
+Revivetip=|cffffcc00C|renarius wiederbeleben
+Awakentip=|cffffcc00C|renarius wiederbeleben
+
+[Ekgg]
+Name=Hüter des Hains
+Hotkey=G
+Propernames=Geist
+Revivetip=|cffffcc00G|reist wiederbeleben
+Awakentip=|cffffcc00G|reist wiederbeleben
+Ubertip="Mystischer Held, geschickt bei der Benutzung von Naturzaubern. Kann 'Wucherwurzeln', 'Naturgewalt', 'Dornen-Aura' und 'Gelassenheit' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Efur]
+Name=Hüter des Hains
+Hotkey=H
+Propernames=Furion
+Revivetip=|cffffcc00H|rüter des Hains wiederbeleben
+Awakentip=|cffffcc00H|rüter des Hains wiederbeleben
+Ubertip="Mystischer Held, geschickt bei der Benutzung von Naturzaubern. Kann 'Wucherwurzeln', 'Naturgewalt', 'Dornen-Aura' und 'Gelassenheit' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Emfr]
+Name=Hüter des Hains
+Hotkey=H
+Propernames=Malfurion 
+Revivetip=|cffffcc00H|rüter des Hains wiederbeleben
+Awakentip=|cffffcc00H|rüter des Hains wiederbeleben
+Ubertip="Mystischer Held, geschickt bei der Benutzung von Naturzaubern. Kann 'Wucherwurzeln', 'Naturgewalt', 'Dornen-Aura' und 'Gelassenheit' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Emns]
+Name=Hüter des Hains
+Hotkey=H
+Propernames=Malfurion
+Revivetip=|cffffcc00H|rüter des Hains wiederbeleben
+Awakentip=|cffffcc00H|rüter des Hains wiederbeleben
+EditorSuffix= (ohne Hirsch)
+Ubertip="Mystischer Held, geschickt bei der Benutzung von Naturzaubern. Kann 'Wucherwurzeln', 'Naturgewalt', 'Dornen-Aura' und 'Gelassenheit' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Ewrd]
+Name=Wächterin
+Hotkey=W
+Propernames=Maiev
+Revivetip=|cffffcc00W|rächterin wiederbeleben
+Awakentip=|cffffcc00W|rächterin wiederbeleben
+Ubertip="Geschickte Heldin, meisterhaft bei Eintritt in und Flucht aus Kämpfen. Kann 'Beflügelt', 'Dolchfächer', 'Schattenschlag' und 'Rache' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[eshd]
+Name=Shandris
+
+[Etyr]
+Name=Mond-Priesterin
+Hotkey=P
+Propernames=Tyrande
+Revivetip=Mond-|cffffcc00P|rriesterin wiederbeleben
+Awakentip=Mond-|cffffcc00P|rriesterin wiederbeleben
+Ubertip="Krieger-Heldin, Expertin im Verbessern von Distanzangriffen und Dahinmetzeln von Feinden aus der Entfernung. Kann 'Ausspähen', 'Sengpfeile', 'Volltreffer-Aura' und 'Sternenregen' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[Eevi]
+Name=Dämonenjäger
+Hotkey=D
+Propernames=Illidan
+Revivetip=|cffffcc00D|rämonenjäger wiederbeleben
+Awakentip=|cffffcc00D|rämonenjäger wiederbeleben
+EditorSuffix= (Böse)
+Ubertip="Geschickter Held, kann sich meisterlich durch Kämpfe manövrieren. Kann 'Feuerbrand', 'Ausweichen', 'Manabrand' und 'Metamorphose' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Eevm]
+Name=Dämonenjäger
+EditorSuffix= (Gewandelt)
+Hotkey=D
+Propernames=Illidan
+Revivetip=|cffffcc00D|rämonenjäger wiederbeleben
+Awakentip=|cffffcc00D|rämonenjäger wiederbeleben
+EditorSuffix= (Evil)
+Ubertip="Geschickter Held, kann sich meisterlich durch Kämpfe manövrieren. Kann 'Feuerbrand', 'Ausweichen', 'Manabrand' und 'Metamorphose' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[ensh]
+Name=Naisha
+
+[enec]
+Name=Nachtelf-Bote
+
+[eilw]
+Name=Gefängniswagen
+
+// Neutral Units
+[Nbbc]
+Name=Klingenmeister
+Hotkey=M
+Propernames=Blackrock-Clan-Klingenmeister
+Revivetip=Klingen|cffffcc00m|reister wiederbeleben
+Awakentip=|cffffcc00K|rlingenmeister wiederbeleben
+Ubertip="Geschickter Held, der schnell einzelne Einheiten töten kann und große Verwirrung unter den Feinden auslöst. Kann 'Spiegelbild', 'Windlauf', 'Kritischer Schlag' und 'Klingensturm' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[nckb]
+Name=Teufels-Orc-Kodo-Bestie
+Hotkey=B
+Tip=Teufels-Orc-|cffffcc00K|rodo-Bestie ausbilden
+Ubertip="Schwerfällige Kriegsbestie, geritten von einem Orc-Trommler. Verfügt über die Fähigkeiten 'Kriegstrommeln' und 'Verschlingen'. 'Kriegstrommeln' verleiht in der Nähe befindlichen befreundeten Einheiten zusätzlichen Angriffsschaden. Kann die Ausbaustufe 'Kriegstrommeln' erhalten. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[nchg]
+Name=Teufels-Orc-Grunzer
+Hotkey=G
+Tip=Teufels-Orc-|cffffcc00G|rrunzer ausbilden
+Ubertip="Ungeschlachter Orc-Krieger, in dem Dämonenblut pulst. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[nchr]
+Name=Teufels-Orc-Räuber
+Hotkey=R
+Tip=Teufels-Orc-|cffffcc00R|räuber ausbilden
+Ubertip="Sehr beweglicher Wolfreiter, in dem Dämonenblut pulst. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[nchw]
+Name=Teufels-Orc-Hexenmeister
+Hotkey=X
+Tip=Teufels-Orc-He|cffffcc00x|renmeister ausbilden
+Ubertip="Orc-Zauberer, in dem Dämonenblut pulst. Kann zu Beginn den 'Feuerblitz'-Zauber wirken, der eine feindliche Einheit betäubt und verletzt. Kann auch 'Unheilige Raserei' und 'Verkrüppeln' erlernen. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Casterupgradename=Initiand, Adept, Meister
+Casterupgradetip="- Feuerblitz","- Feuerblitz|n- Unheilige Raserei","- Feuerblitz|n- Unheilige Raserei|n- Verkrüppeln"
+
+[nw2w]
+Name=Orc-Hexenmeister
+Casterupgradename=Initiand, Adept, Meister
+Casterupgradetip="- Feuerblitz","- Feuerblitz|n- Unheilige Raserei","- Feuerblitz|n- Unheilige Raserei|n- Verkrüppeln"
+
+[ncpn]
+Name=Teufels-Orc-Peon
+Hotkey=P
+Tip=Teufels-Orc-|cffffcc00P|reon ausbilden
+Ubertip="Einfache Arbeiter-Einheit. Kann Gold und Holz abbauen, Gebäude errichten und 'Reparieren'. Kann auch in Orc-Baue hineingehen, damit diese über einen Angriff verfügen. |n|n|cffffcc00Greift Land-Einheiten und Bäume an.|r"
+
+[nmed]
+Name=Medivh
+
+[nmdm]
+Name=Medivh
+EditorSuffix= (Krähengestalt)
+
+[Nman]
+Name=Grubenlord
+Propernames=Mannoroth
+Revivetip=|cffffcc00G|rrubenlord wiederbeleben
+Awakentip=|cffffcc00G|rrubenlord wiederbeleben
+Hotkey=M
+
+[Npld]
+Name=Grubenlord
+Propernames=Azgalor,Brutillus,Mongrethod,Destromath,Gogonnash,Magtheridon
+Revivetip=|cffffcc00G|rrubenlord wiederbeleben
+Awakentip=|cffffcc00G|rrubenlord wiederbeleben
+Hotkey=G
+
+[nser]
+Name=Searinox
+
+[nthr]
+Name=Tharifas
+
+[nemi]
+Name=Botschafter
+Casterupgradename=Initiand, Adept, Meister
+Casterupgradetip="- Heilen","- Heilen|n- Magie bannen","- Heilen|n- Magie bannen|n- Inneres Feuer"
+
+[nhem]
+Name=Männlicher Hochelf
+EditorSuffix= (Male)
+
+[nhef]
+Name=Weiblicher Hochelf
+EditorSuffix= (Female)
+
+[nhea]
+Name=Bogenschützin
+Tip=|cffffcc00B|rogenschützin ausbilden
+Hotkey=B
+Ubertip="Einfacher Angreifer mit hoher Reichweite. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[nshr]
+Name=Schrein
+
+[ndmg]
+Name=Dämonentor
+
+[nefm]
+Name=Hochelfen-Hof
+
+[nef0]
+Name=Hochelfen-Hof
+EditorSuffix=1
+
+[nef1]
+Name=Hochelfen-Hof
+EditorSuffix=2
+
+[nef2]
+Name=Hochelfen-Hof
+EditorSuffix=3
+
+[nef3]
+Name=Hochelfen-Hof
+EditorSuffix=4
+
+[nef4]
+Name=Hochelfen-Hof
+EditorSuffix=5
+
+[nef5]
+Name=Hochelfen-Hof
+EditorSuffix=6
+
+[nef6]
+Name=Hochelfen-Hof
+EditorSuffix=7
+
+[nef7]
+Name=Hochelfen-Hof
+EditorSuffix=8
+
+[negt]
+Name=Hochelfen-Wachturm
+Hotkey=G
+Tip=Hochelfen-Wachturm errichten (|cffffcc00G|r)
+Ubertip="Primäres Verteidigungsgebäude.|n|n|cffffcc00Angriffsziele sind Luft- und Land-Einheiten.|r"
+
+
+[negf]
+Name=Erdzorn-Turm
+
+[negm]
+Name=Himmelszorn-Turm
+
+[ndgt]
+Name=Dalaran-Wachturm
+
+[npgf]
+Name=Bauernhof
+Tip=Bauernho|cffffcc00f|r errichten
+Hotkey=F
+
+[nheb]
+Name=Hochelfen-Kaserne
+Hotkey=B
+Tip=Kaserne errichten (|cffffcc00B|r)
+Ubertip="Primäres Truppen-Produktionsgebäude. Bildet Hochelfen-Schwertkämpfer, Hochelfen-Bogenschützen und Drachenfalken aus. |nBietet auch die 'Verteidigung'-Ausbaustufe für Hochelfen-Schwertkämpfer."
+
+
+[nbfl]
+Name=Brunnen des Blutes
+
+[nfnp]
+Name=Brunnen der Macht
+
+[ndfl]
+Name=Entweihter Brunnen d. Lebens
+
+[nbsm]
+Name=Buch d. Beschwörung-|nPostament
+
+[nhcn]
+Name=Sockel des Horns von Cenarius
+
+[nfrm]
+Name=Frostmourne-Sockel
+
+[ngob]
+Name=Verzauberter Edelstein-Obelisk
+
+[nbwd]
+Name=Grabhügel
+
+[ncap]
+Name=Verderbter Urtum-Beschützer
+Hotkey=C
+Tip=Verderbten Urtum-Bes|cffffcc00c|rhützer erstellen
+Ubertip="Defensives Urtum. Wenn es im Boden verwurzelt ist, kann es riesige Felsen auf in der Nähe befindliche Einheiten schleudern. |nGreift Land- und Luft-Einheiten an."
+
+[ncmw]
+Name=Verderbter Mondbrunnen
+Hotkey=M
+Tip=Verderbten |cffffcc00M|rondbrunnen erstellen
+Ubertip="Liefert Essen, wodurch die maximale Anzahl von Einheiten erhöht wird, die ausgebildet werden können. Besitzt die Fähigkeit 'Mana und Leben auffüllen'."
+
+[nctl]
+Name=Verderbter Baum d. Lebens
+Hotkey=T
+Tip=Verderbten Baum des |cffffcc00L|rebens erstellen
+Ubertip="Primäres Gebäude, wird zum Ausbilden von Irrwischen und Durchwuchern von Goldminen verwendet. Kann erst zum verderbten Baum des Alters und dann zum verderbten Baum der Ewigkeit ausgebaut werden, um die Produktion weiterer Gebäude- und Einheitenarten zu ermöglichen."
+
+[ncta]
+Name=Verderbter Baum des Alters
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu verderbtem Baum des Alters
+Ubertip="Der Ausbau zum verderbten Baum des Alters ermöglicht die Produktion weiterer Gebäude- und Einheitenarten."
+
+[ncte]
+Name=Verderbter Baum d. Ewigkeit
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu verderbtem Baum der Ewigkeit
+Ubertip="Der Ausbau zum verderbten Baum der Ewigkeit ermöglicht die Produktion weiterer Gebäude- und Einheitenarten."
+
+[ncaw]
+Name=Verderbtes Urtum des Krieges
+Hotkey=R
+Tip=Verderbtes Urtum des K|cffffcc00r|rieges erstellen
+Ubertip="Hüter der primären Angriffstruppen. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[nbsp]
+Name=Schiff
+
+[nssn]
+Name=Wache
+
+[nwat]
+Name=Wächter
+
+[ndrb]
+Name=Drachenhorst
+Tip=Drachenhorst errichten
+
+[Uclc]
+Name=Lich
+EditorSuffix=" (Lich, Video)"
+Hotkey=L
+Propernames=Kel'Thuzad
+Revivetip=|cffffcc00L|rich wiederbeleben
+Awakentip=|cffffcc00L|rich wiederbeleben
+Ubertip="Mystischer Held, besonders geschickt mit Kälte-Magie. Kann 'Frost-Rüstung', 'Frost-Nova', 'Dunkles Ritual' sowie 'Tod und Verfall' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[uabc]
+Name=Monstrosität
+EditorSuffix= (Video)
+Tip=M|cffffcc00o|rnstrosität ausbilden
+Ubertip="Schwere Nahkampf-Einheit. Kann die 'Seuchenwolke'-Fähigkeit erlernen. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+Hotkey=O
+
+[Otcc]
+Name=Tauren-Häuptling
+EditorSuffix= (Video)
+Hotkey=T
+Propernames=Cairne Bloodhoof
+Revivetip=|cffffcc00T|rauren-Häuptling wiederbeleben
+Awakentip=|cffffcc00T|rauren-Häuptling wiederbeleben
+Ubertip="Krieger-Held mit außergewöhnlichen Nahkampfeigenschaften und hoher Schadensabsorption. Kann 'Schockwelle', 'Kriegsdonner', 'Ausdauer-Aura' und 'Reinkarnation' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[zmar]
+Name=Marine
+Hotkey=M
+Tip=|cffffcc00M|rarine ausbilden
+Ubertip="Mächtiger terranischer Marine, der mit einem automatischen Pulsgewehr ausgerüstet ist. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[zjug]
+Name=Orc-Kampfschiff
+Hotkey=R
+Tip=O|cffffcc00r|rc-Kampfschiff ausbilden
+Ubertip="Schweres Schlachtschiff, bestens geeignet, um gegnerische Schiffe zu zerstören und Gebäude vom Meer aus zu bombardieren. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+EditorSuffix= (Video)
+
+[zzrg]
+Name=Zergling
+Hotkey=Z
+Tip=|cffffcc00Z|rergling ausbilden
+Ubertip="Kleine Nahkampf-Kreatur der Zerg-Armee. Ist zwar zierlich, aber in großer Zahl recht gefährlich. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[zhyd]
+Name=Hydralisk
+Hotkey=H
+Tip=|cffffcc00H|rydralisken ausbilden
+Ubertip="Mächtige Zerg-Kreatur, Experte im Vernichten von Gegnern mit in Säure getauchten Stachelgeschossen. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[zcso]
+Name=Weltraum-Teufels-Orc
+Hotkey=C
+Tip=Weltraum-Teufels-Or|cffffcc00c|r ausbilden
+Ubertip="Teufels-Orcs werden ins Weltall geschickt, um für die dämonische Legion zu kämpfen. Sie sind mit einem mächtigen Flammenwerfer bewaffnet und können zusammengedrängte feindliche Truppen in großer Zahl ausschalten. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[zsmc]
+Name=Sammy!
+Hotkey=M
+Tip=Sa|cffffcc00m|rmy ausbilden
+Ubertip="Sam Didier, leitender Grafiker. Experte für die Konzept-Grafiken und Texturen. Viele Grafik-Untergebene gehorchen ihm aufs Wort. |n|n|cffffcc00Greift miese Grafik an.|r"
+
+[zshv]
+Name=Kobold-Schaufler
+Hotkey=K
+Tip=|cffffcc00K|robold-Schaufler ausbilden
+Ubertip="Frank Pearce, Vizepräsident von Blizzard. Mächtiger Programmierer, Experte darin, die Spreu vom Weizen zu trennen und Aufgaben zu erledigen. |n|n|cffffcc00Greift Bugs an.|r"
+
+// naga units/buildings
+[nmpe]
+Name=Mur'gul-Sklave
+Hotkey=V
+Tip=Mur'gul-Skla|cffffcc00v|ren ausbilden
+Ubertip="Einfache Arbeiter-Einheit. Kann Gold und Holz abbauen, Gebäude errichten und 'Reparieren'. |n|n|cffffcc00Greift Land-Einheiten und Bäume an.|r"
+
+[nnfm]
+Name=Korallenbank
+Tip=|cffffcc00K|rorallenbank errichten
+Hotkey=K
+Ubertip="Liefert Essen, wodurch die maximale Anzahl von Einheiten erhöht wird, die ausgebildet werden können."
+
+[nntg]
+Name=Flutwächter
+Tip=Flu|cffffcc00t|rwächter erschaffen
+Hotkey=T
+Ubertip="Primäres Verteidigungsgebäude. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[nntt]
+Name=Tempel der Gezeiten
+Tip=T|cffffcc00e|rmpel der Gezeiten errichten
+Hotkey=E
+Ubertip="Primäres Gebäude, wird zum Ausbilden von Mur'gul-Sklaven und Mur'gul-Schleppern sowie zum Lagern gesammelter Rohstoffe verwendet. Bietet auch Ausbaustufen für Naga-Waffen, Naga-Rüstung und die Fähigkeit 'Abtauchen'."
+
+[nnsg]
+Name=Brutstätte
+Tip=Brut|cffffcc00s|rtätte errichten
+Hotkey=S
+Ubertip="Bildet Naga-Myrmidons, Schnappdrachen und Drachenschildkröten aus. Bietet auch die Ausbaustufe 'Einschnüren'."
+
+[nnsa]
+Name=Schrein von Azshara
+Tip=Schrein von |cffffcc00A|rzshara errichten
+Hotkey=A
+Ubertip="Bildet Naga-Sirenen und Coatls aus. Bietet auch Zauber-Ausbaustufen für Naga-Sirenen."
+
+[nnad]
+Name=Altar der Tiefen
+Tip=A|cffffcc00l|rtar der Tiefen errichten
+Hotkey=L
+Ubertip="Beschwört Helden. Belebt getötete Helden wieder."
+
+[nnmg]
+Name=Mur'gul-Schlepper
+Tip=Mu|cffffcc00r|r'gul-Schlepper ausbilden
+Hotkey=R
+Ubertip="Leichte amphibische Nahkampf-Einheit. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[nmyr]
+Name=Naga-Myrmidon
+Hotkey=M
+Tip=Naga-|cffffcc00M|ryrmidon ausbilden
+Ubertip="Mächtige Nahkampf-Einheit. Besitzt die 'Abtauchen'-Fähigkeit, mit der sich diese Einheit unter Wasser verstecken kann. Kann die 'Einschnüren'-Fähigkeit erlernen. |n|n|cffffcc00Greift Land-Einheiten an."
+
+[nmys]
+Name=Abgetauchter |nNaga-Myrmidon
+Hotkey=M
+Tip=Naga-|cffffcc00M|ryrmidon ausbilden
+Ubertip="Mächtige Nahkampf-Einheit. Besitzt die 'Abtauchen'-Fähigkeit, mit der sich diese Einheit unter Wasser verstecken kann. Kann die 'Einschnüren'-Fähigkeit erlernen. |n|n|cffffcc00Greift Land-Einheiten an."
+
+[nnrg]
+Name=Naga-Königswache
+Tip=Naga-Königswache ausbilden
+Ubertip="Unglaublich mächtige Nahkampf-Einheit. Besitzt die 'Abtauchen'-Fähigkeit, mit der sich diese Einheit unter Wasser verstecken kann. Besitzt darüber hinaus die Fähigkeiten 'Festhaut', wodurch die Dauer negativer Zauber verringert wird, 'Frostschlag', wodurch eine feindliche Einheit gelähmt wird, 'Schmetterwelle', wodurch Schaden an in einer Reihe stehenden Einheiten angerichtet wird, und 'Meeres-Elementargeist beschwören', wodurch eine Distanz-Angriffseinheit beschworen wird. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[nnrs]
+Name=Abgetauchte |nNaga-Königswache
+Tip=Naga-Königswache ausbilden
+Ubertip="Unglaublich mächtige Nahkampf-Einheit. Besitzt die 'Abtauchen'-Fähigkeit, mit der sich diese Einheit unter Wasser verstecken kann. Besitzt darüber hinaus die Fähigkeiten 'Festhaut', wodurch die Dauer negativer Zauber verringert wird, 'Frostschlag', wodurch eine feindliche Einheit gelähmt wird, 'Schmetterwelle', wodurch Schaden an in einer Reihe stehenden Einheiten angerichtet wird, und 'Meeres-Elementargeist beschwören', wodurch eine Distanz-Angriffseinheit beschworen wird. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[nnsw]
+Name=Naga-Sirene
+Hotkey=S
+Tip=Naga-|cffffcc00S|rirene ausbilden
+Ubertip="Mächtige Zauberin. Kann zu Beginn 'Parasit' wirken, wodurch Einheiten im Lauf der Zeit Schaden zugefügt wird, und kann einen Wasser-Diener aus deren Leichen erzeugen. Kann auch 'Frost-Rüstung' und 'Wirbelsturm' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+Casterupgradename=Initiand, Adept, Meister
+Casterupgradetip="- Parasit","- Parasit|n- Frost-Rüstung","- Parasit|n- Frost-Rüstung|n- Wirbelsturm"
+
+[nnsu]
+Name=Beschwörer
+Hotkey=S
+Tip=|cffffcc00B|reschwörer ausbilden
+Ubertip="Mächtiger Beschwörer. Kann zu Beginn 'Parasit' wirken, wodurch Einheiten im Lauf der Zeit Schaden zugefügt wird, und kann einen Wasser-Diener aus deren Leichen erzeugen. Kann auch 'Frost-Rüstung' und 'Wirbelsturm' erlernen. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+Casterupgradename=Initiand, Adept, Meister
+Casterupgradetip="- Parasit","- Parasit|n- Frost-Rüstung","- Parasit|n- Frost-Rüstung|n- Wirbelsturm"
+
+[nsnp]
+Name=Schnappdrache
+Hotkey=D
+Tip=Schnapp|cffffcc00d|rrachen ausbilden
+Ubertip="Leichte Distanz-Einheit, die über einen Giftangriff verfügt, der feindliche Einheiten verlangsamt und verletzt. Besitzt die 'Abtauchen'-Fähigkeit, mit der sich diese Einheit unter Wasser verstecken kann. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[nsbs]
+Name=Abgetauchter |nSchnappdrache
+Hotkey=D
+Tip=Schnapp|cffffcc00d|rrachen ausbilden
+Ubertip="Leichte Distanz-Einheit, die über einen Giftangriff verfügt, der feindliche Einheiten verlangsamt und verletzt. Besitzt die 'Abtauchen'-Fähigkeit, mit der sich diese Einheit unter Wasser verstecken kann. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[nwgs]
+Name=Coatl
+Hotkey=C
+Tip=|cffffcc00C|roatl ausbilden
+Ubertip="Leichte Flug-Einheit, die 'Magie aufheben' erlernen kann. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+
+[nhyc]
+Name=Drachenschildkröte
+Hotkey=T
+Tip=Drachenschildkrö|cffffcc00t|re ausbilden
+Ubertip="Eine mächtige Schildkröte, die feindliche Einheiten verschlingen kann. Gut im Zerstören von feindlichen Gebäuden. Verfügt über 'Harthaut', die den erlittenen Schaden reduziert, und 'Stachelpanzerschale', die feindlichen Nahkampf-Angreifern Schaden zufügt. |n|n|cffffcc00Angriffsziele sind Land-Einheiten."
+
+//end naga stuff
+
+[nbel]
+Name=Blutelfen-Offizier
+Hotkey=L
+Tip=B|cffffcc00l|rutelfen-Offizier ausbilden
+Ubertip="Mächtige Offiziere aus Prinz Kaels Blutelfen-Armee. Experten im Vernichten von Zauberern. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+
+[nbee]
+Name=Blutelfen-Pionier
+Hotkey=E
+Tip=Blutelfen-Pioni|cffffcc00e|rr ausbilden
+Ubertip="Außergewöhnlich intelligente Blutelfen, deren Stärke darin besteht, neue Technologien zu entdecken und mächtige Türme herzustellen. |n|n|cffffcc00Greift Land-Einheiten und Bäume an.|r"
+
+[ndmu]
+Name=Dalaran-Mutant
+
+[ndrj]
+Name=Dalaran-Missgeburt
+
+[nfgl]
+Name=Fleischgolem
+
+[njks]
+Name=Jailor Kassan
+
+[Naka]
+Name=Ahnen-Weiser
+Propernames=Akama
+Revivetip=A|cffffcc00k|rama wiederbeleben
+Awakentip=A|cffffcc00k|rama wiederbeleben
+Hotkey=K
+
+[ndrl]
+Name=Draenei-Arbeiter
+Hotkey=D
+Tip=|cffffcc00D|rraenei-Arbeiter ausbilden
+Ubertip="Einfache Arbeiter-Einheit. Kann Gold und Holz abbauen, Gebäude errichten und 'Reparieren'. |n|n|cffffcc00Angriffsziele sind Land-Einheiten und Bäume.|r"
+
+[ndh4]
+Name=Seher-Hütte
+Tip=Seher-Hütte errichten
+Ubertip="Produziert Draenei-Seher und -Herolde."
+
+[ndh3]
+Name=Draenei-Kaserne
+Tip=Draenei-Kaserne errichten
+Ubertip="Produziert Draenei-Verteidiger, -Pirscher, -Verwüster und -Salamander."
+
+[ndh2]
+Name=Draenei-Hafen
+Tip=Draenei-Hafen errichten
+Ubertip="Ermöglicht das Sammeln von Gold, produziert Arbeitskräfte und kann Helden wiederbeleben."
+
+[ndsa]
+Name=Salamander
+Tip=Salamander ausbilden
+Ubertip="Schwere Distanzkampf-Einheit, die Blitze schleudert.|n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[nsw1]
+Name=Geringe Geisterbestie
+EditorSuffix= (Stufe 1)
+
+[nsw2]
+Name=Geisterbestie
+EditorSuffix= (Stufe 2)
+
+[nsw3]
+Name=Große Geisterbestie
+EditorSuffix= (Stufe 3)
+
+[ncat]
+Name=Draenei-Verwüster
+Hotkey=D
+Tip=|cffffcc00D|rraenei-Verwüster ausbilden
+Ubertip="Belagerungswaffe mit hoher Reichweite. Wirksam gegen Gebäude, allerdings langsam und verletzbar. Kann die 'Ölbrand'-Fähigkeit erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten und Bäume.|r"
+
+[Nmag]
+Name=Grubenlord
+Propernames=Magtheridon
+Revivetip=|cffffcc00G|rrubenlord wiederbeleben
+Awakentip=|cffffcc00G|rrubenlord wiederbeleben
+Hotkey=G
+Ubertip="Krieger-Held, geschickt im Terrorisieren von Feinden. Kann 'Feuerregen', 'Schreckgeheul', 'Schmetter-Angriff' und 'Verhängnis' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[Nklj]
+Name=Hexenmeister
+Hotkey=X
+Propernames=Kil’jaeden
+Revivetip=He|cffffcc00x|renmeister wiederbeleben
+Awakentip=He|cffffcc00x|renmeister wiederbeleben
+
+[Nkjx]
+Name=Hexenmeister
+Hotkey=X
+Propernames=Kil’jaeden
+Revivetip=He|cffffcc00x|renmeister wiederbeleben
+Awakentip=He|cffffcc00x|renmeister wiederbeleben
+EditorSuffix=(Video)
+
+[nfv0]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (zweistöckig, Ausrichtung Südwest)
+
+[nfv1]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (gekrönt, Ausrichtung Südwest)
+
+[nfv2]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (einstöckig)
+
+[nfv3]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (zweistöckig, Ausrichtung Südost)
+
+[nfv4]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (gekrönt, Ausrichtung Südost)
+
+[nvr0]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (verfallen)
+
+[nvr1]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (verfallen)
+
+[nvr2]
+Name=Nachtelfen-Fischerdorf
+EditorSuffix= (verfallen)
+
+[npgr]
+Name=Energiegenerator
+
+[nmsh]
+Name=Misha
+
+[negz]
+Name=Ingenieur Gazlowe
+
+[Nsjs]
+Name=Pandarenen-Braumeister
+Propernames=Chen Stormstout
+Hotkey=N
+Tip=Pa|cffffcc00n|rdarenen-Braumeister beschwören
+Ubertip="Krieger-Held mit außergewöhnlichen Nahkampfeigenschaften und hoher Schadensabsorption. Kann 'Feuer-Odem', 'Trunkenheit', 'Trunkenbold' und 'Sturm-Erd-Feuer' erlernen. |n|n|cffffcc00Greift Land-Einheiten an.|r"
+Revivetip=Pa|cffffcc00n|rdarenen-Braumeister wiederbeleben
+Awakentip=Pa|cffffcc00n|rdarenen-Braumeister wiederbeleben
+
+[nhew]
+Name=Arbeiter
+EditorSuffix= (Blutelf)
+Hotkey=A
+Tip=|cffffcc00A|rrbeiter ausbilden
+Ubertip="Einfache Arbeiter-Einheit. Kann Gebäude errichten und 'Reparieren'."
+
+[nspc]
+Name=Stützsäule
+
+[ngbl]
+Name=Goblin-Töter
+
+[ndkw]
+Name=Dimensionstor
+EditorSuffix= (Ausrichtung Südwest)
+
+[ndke]
+Name=Dimensionstor
+EditorSuffix= (Ausrichtung Südost)
+
+[nico]
+Name=Eiskrone-Obelisk
+
+[net1]
+Name=Energie-Turm
+Hotkey=E
+Tip=|cffffcc00E|rnergie-Turm errichten
+Ubertip="Feuert Energieblitze ab. Gut im Zerstören von Luft-Einheiten. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[net2]
+Name=Hoch entwickelter Energie-Turm
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu hoch entwickeltem Energie-Turm
+Ubertip="Erhöht den Schaden der Energieblitze. Gut im Zerstören von Luft-Einheiten. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[nbt1]
+Name=Felsen-Turm
+Hotkey=F
+Tip=|cffffcc00F|relsen-Turm errichten
+Ubertip="Feuert massive Felsbrocken ab, die Gebietsschaden anrichten. Gut im Zerstören von Land-Einheiten. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[nbt2]
+Name=Hoch entwickelter Felsen-Turm
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu hoch entwickeltem Felsen-Turm
+Ubertip="Erhöht den Schaden der Felsbrocken. Gut im Zerstören von Land-Einheiten. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+
+[nft1]
+Name=Flammen-Turm
+Hotkey=L
+Tip=F|cffffcc00l|rammen-Turm errichten
+Ubertip="Feuert kurze Flammenstöße ab. Gut im Zerstören von Feinden, die nahe herankommen. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[nft2]
+Name=Hoch entwickelter Flammen-Turm
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu hoch entwickeltem Flammen-Turm
+Ubertip="Erhöht den Schaden der Flammenstöße. Gut im Zerstören von Feinden, die nahe herankommen. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[ndt1]
+Name=Kälte-Turm
+Hotkey=K
+Tip=|cffffcc00K|rälte-Turm errichten
+Ubertip="Feuert Eisbrocken ab. Gut im Ausbremsen von Feinden. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[ndt2]
+Name=Hoch entwickelter Kälte-Turm
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu hoch entwickeltem Kälte-Turm
+Ubertip="Feuert Eisbrocken in größerem Tempo ab. Gut im Ausbremsen von Feinden. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[ntt1]
+Name=Todes-Turm
+Hotkey=D
+Tip=To|cffffcc00d|resturm-Turm errichten
+Ubertip="Feuert tödliche Energieblitze ab. Richtet schweren Schaden bei einfach allem an. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[ntx2]
+Name=Hoch entwickelter Todes-Turm
+Hotkey=U
+Tip=A|cffffcc00u|rsbau zu hoch entwickeltem Todes-Turm
+Ubertip="Feuert Todesblitze ab. Ausgezeichnet im Zerstören von allem. Immun gegen Magie. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[nfrt]
+Name=Obststand
+Tip=Obststand errichten
+Ubertip="Der unglaublichste Obststand, den Sie in Ihrem ganzen Leben gesehen haben."
+
+[hprt]
+Name=Portal
+Tip=Offenes Portal
+Ubertip="Öffnet das Portal."
+
+[nzlc]
+Name=Lich-König
+Tip=Lich-König
+Ubertip="Das ist der Lich-König, ganz ehrlich, das ist er. Glaubt mir denn keiner?"
+EditorSuffix= (Video Kampagnen-Einheit)
+
+[nchp]
+Name=Kaplan
+Hotkey=K
+Tip=|cffffcc00K|raplan ausbilden
+Ubertip="Unterstützender Zauberer. Kann die Zauber 'Heilen', 'Magie bannen' und 'Inneres Feuer' wirken. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[nhym]
+Name=Wasserbeschwörer
+Hotkey=W
+Tip=|cffffcc00W|rasserbeschwörer ausbilden
+Ubertip="Vielseitiger Zauberer. Kann 'Langsam', 'Schmetterwelle' und 'Verwandlung' wirken. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+
+[nzin]
+Name=Zonen-Indikator
+Tip=Zonen-Indikator
+Ubertip="Zonen-Indikator"
+EditorSuffix= (Eigene Kampagne)
+
+[nbse]
+Name=Auferstehungsstein
+Tip=Auferstehungsstein erstellen
+Ubertip=""
+EditorSuffix= (Südost-Ausrichtung)
+
+[nbsw]
+Name=Auferstehungsstein
+Tip=Auferstehungsstein erstellen
+Ubertip=""
+EditorSuffix= (Südwest-Ausrichtung)

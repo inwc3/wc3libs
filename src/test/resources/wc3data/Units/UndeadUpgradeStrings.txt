@@ -1,0 +1,109 @@
+﻿[Rusp]
+Name=Zerstörergestalt
+Tip=Zers|cffffcc00t|rörergestalt erforschen
+Ubertip="Ermöglicht es der Obsidian-Statue, sich in einen Zerstörer zu verwandeln, eine große Flug-Einheit, die Magie verschlingen muss, um ihr Mana zu erhalten. Der Zerstörer besitzt die Fähigkeiten 'Zauber-Immunität', 'Magie verschlingen', 'Mana-Absorption' und 'Vernichtungskugel'. |n|n|cffffcc00Angriffsziele sind Land- und Luft-Einheiten.|r"
+Hotkey=T
+
+[Rume]
+Name=Unheilige Kraft,Verbesserte unheilige Kraft,Hoch entwickelte unheilige Kraft
+Tip=Ausbau zur unheiligen |cffffcc00K|rraft,Ausbau zur verbesserten unheiligen |cffffcc00K|rraft,Ausbau zur hoch entwickelten unheiligen |cffffcc00K|rraft
+Ubertip="Verbessert den Angriffsschaden von Ghuls, Fleischwagen, Monstrositäten, Skelett-Kriegern und Skelett-Magiern.","Verbessert den Angriffsschaden von Ghuls, Fleischwagen, Monstrositäten, Skelett-Kriegern und Skelett-Magiern noch weiter.","Verbessert den Angriffsschaden von Ghuls, Fleischwagen, Monstrositäten, Skelett-Kriegern und Skelett-Magiern noch weiter."
+Hotkey=K,K,K
+
+[Rura]
+Name=Kreaturen-Angriff,Verbesserter Kreaturen-Angriff,Hoch entwickelter Kreaturen-Angriff
+Tip=Ausbau zum Kreaturen-|cffffcc00A|rngriff,Ausbau zum verbesserten Kreaturen-|cffffcc00A|rngriff,Ausbau zum hoch entwickelten Kreaturen-|cffffcc00A|rngriff
+Ubertip="Verbessert den Angriffsschaden von Gruftbestien, Gargoyles, Zerstörern und Frost-Wyrms.","Verbessert den Angriffsschaden von Gruftbestien, Gargoyles, Zerstörern und Frost-Wyrms noch weiter.","Verbessert den Angriffsschaden von Gruftbestien, Gargoyles, Zerstörern und Frost-Wyrms noch weiter."
+Hotkey=A,A,A
+
+[Ruar]
+Name=Unheilige Rüstung,Verbesserte unheilige Rüstung,Hoch entwickelte unheilige Rüstung
+Tip=Ausbau zur |cffffcc00u|rnheiligen Rüstung,Ausbau zur verbesserten |cffffcc00u|rnheiligen Rüstung,Ausbau zur hoch entwickelten |cffffcc00u|rnheiligen Rüstung
+Ubertip="Verbessert die Rüstung von Ghuls, Monstrositäten, Skelett-Kriegern und Skelett-Magiern.","Verbessert die Rüstung von Ghuls, Monstrositäten, Skelett-Kriegern und Skelett-Magiern noch weiter.","Verbessert die Rüstung von Ghuls, Monstrositäten, Skelett-Kriegern und Skelett-Magiern noch weiter."
+Hotkey=U,U,U
+
+[Rucr]
+Name=Kreaturen-Panzer,Verbesserter Kreaturen-Panzer,Hoch entwickelter Kreaturen-Panzer
+Tip=Ausbau zum Kreaturen-Pan|cffffcc00z|rer,Ausbau zum verbesserten Kreaturen-Pan|cffffcc00z|rer,Ausbau zum hoch entwickelten Kreaturen-Pan|cffffcc00z|rer
+Ubertip="Verbessert die Rüstung von Gruftbestien, Gargoyles, Zerstörern und Frost-Wyrms.","Verbessert die Rüstung von Gruftbestien, Gargoyles, Zerstörern und Frost-Wyrms noch weiter.","Verbessert die Rüstung von Gruftbestien, Gargoyles, Zerstörern  und Frost-Wyrms noch weiter."
+Hotkey=Z,Z,Z
+
+[Ruac]
+Name=Kannibalismus
+Tip=Ka|cffffcc00n|rnibalismus erforschen
+Ubertip="Ermöglicht Ghuls und Monstrositäten, die 'Kannibalismus'-Fähigkeit zu benutzen. 'Kannibalismus' verzehrt eine in der Nähe befindliche Leiche, um Gesundheit wiederherzustellen."
+Hotkey=N
+
+[Rugf]
+Name=Ghul-Raserei
+Tip=Ghul-Rasere|cffffcc00i|r erforschen
+Ubertip="Erhöht das Bewegungstempo von Ghuls sowie deren Angriffsrate um <Rugf,base1,%>%."
+Hotkey=I
+
+[Ruwb]
+Name=Gespinst
+Tip=Ges|cffffcc00p|rinst erforschen
+Ubertip="Ermöglicht Gruftbestien, die 'Gespinst'-Fähigkeit zu benutzen. 'Gespinst' spinnt eine angewählte feindliche Luft-Einheit in ein Netz ein, sodass sie zu Boden gezwungen wird. Eingesponnene Einheiten können angegriffen werden, als ob sie Land-Einheiten wären."
+Hotkey=P
+
+[Rusf]
+Name=Steingestalt
+Tip=|cffffcc00S|rteingestalt erforschen
+Ubertip="Ermöglicht Gargoyles, die Fähigkeit 'Steingestalt' zu verwenden. Durch 'Steingestalt' verwandelt sich ein Gargoyle in eine Statue mit starker Rüstung, Zauber-Immunität und Regeneration. Gargoyles können in dieser Form nicht angreifen."
+Hotkey=S
+
+[Rune]
+Name=Totenbeschwörer-Adepten-Ausbildung,Totenbeschwörer-Meister-Ausbildung
+Tip=|cffffcc00T|rotenbeschwörer-Adepten-Ausbildung,|cffffcc00T|rotenbeschwörer-Meister-Ausbildung
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von Totenbeschwörern und ermöglicht ihnen, 'Unheilige Raserei' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von Totenbeschwörern und ermöglicht ihnen, 'Verkrüppeln' zu wirken."
+Hotkey=T,T
+
+[Ruba]
+Name=Banshee-Adepten-Ausbildung,Banshee-Meister-Ausbildung
+Tip=Bans|cffffcc00h|ree-Adepten-Ausbildung,Bans|cffffcc00h|ree-Meister-Ausbildung
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Banshees und ermöglicht ihnen, 'Antimagie-Hülle' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Banshees und ermöglicht ihnen, 'Besessenheit' zu wirken."
+Hotkey=H,H
+
+[Rufb]
+Name=Eis-Atem
+Tip=E|cffffcc00i|rs-Atem erforschen
+Ubertip="Ermöglicht Frost-Wyrms, die 'Eis-Atem'-Fähigkeit zu benutzen. Wenn dieser Zauber gegen ein Gebäude eingesetzt wird, wird die Produktion für eine begrenzte Zeit gestoppt."
+Hotkey=I
+
+[Rusl]
+Name=Skelett-Langlebigkeit
+Tip=|cffffcc00S|rkelett-Langlebigkeit erforschen
+Ubertip="Erhöht die Lebensdauer erweckter Skelett-Krieger und Skelett-Magier um <Rusl,base1> Sekunden."
+Hotkey=S
+
+[Rupc]
+Name=Seuchenwolke
+Tip=Seuchen|cffffcc00w|rolke erforschen
+Ubertip="Verleiht Monstrositäten eine 'Seuchenwolke'-Aura, die <Aap1,DataA1> Sekunden lang einen Schaden von <Aap1,DataB1> Punkten pro Sekunde an in der Nähe befindlichen feindlichen Einheiten anrichtet. Fleischwagen verursachen bei Angriffen immer 'Seuchenwolken', die <Aap2,DataA1> Sekunden lang einen Schaden von <Aap2,DataB1> Punkten pro Sekunde an in der Nähe befindlichen feindlichen Einheiten anrichten. |nUntote sind gegen 'Seuchenwolke' immun."
+Hotkey=W
+
+[Rusm]
+Name=Skelett-Herrschaft
+Tip=Skelett-H|cffffcc00e|rrrschaft erforschen
+Ubertip="Macht eines der zwei durch 'Totenerweckung' erschaffenen Skelette zu einem Skelett-Magier."
+Hotkey=E
+
+[Rubu]
+Name=Eingraben
+Tip=Eingrab|cffffcc00e|rn erforschen
+Ubertip="Gruftbestien erhalten die Fähigkeit, sich einzugraben. Eingegrabene Gruftbestien sind unsichtbar und erhalten eine erhöhte Trefferpunkt-Regenerierung, können aber nicht angreifen."
+Hotkey=E
+
+
+[Ruex]
+Name=Leichen exhumieren
+Tip=Leichen |cffffcc00e|rxhumieren erforschen
+Ubertip="Gibt Fleischwagen die Fähigkeit, Leichen zu erzeugen."
+Hotkey=E
+
+[Rupm]
+Name=Rucksack
+EditorSuffix= (Untote)
+Tip=Ru|cffffcc00c|rksack erforschen
+Ubertip="Verleiht bestimmten Untoten-Land-Einheiten die Fähigkeit, Gegenstände zu tragen."
+Hotkey=C

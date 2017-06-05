@@ -14,13 +14,16 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
+import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Mergeable;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.SLK.Obj;
+import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
@@ -130,7 +133,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 				DataType val = entry.getValue();
 
 				if (overwrite || (get(field) == null)) {
-					set(field, val);
+					if (val != null) {
+						set(field, val);
+					}
 				}
 			}
 		}
@@ -166,6 +171,17 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		_objs.put(val.getId(), val);
 	}
 
+	public void removeObj(ObjType val) {
+		_objs.remove(val.getId());
+	}
+	
+	public void removeObj(ObjIdType id) {
+		if (_objs.containsKey(id)) removeObj(_objs.get(id));
+	}
+	
+	public void clearObjs() {
+		_objs.clear();
+	}
 	
 	protected abstract ObjType createObj(ObjId id);
 	
@@ -183,7 +199,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		if (overwrite) {
 			_pivotField = other.getPivotField();
 		}
-		
+
 		for (Map.Entry<FieldId, FieldData> fieldEntry : other.getFields().entrySet()) {
 			FieldId fieldId = fieldEntry.getKey();
 			FieldData fieldData = fieldEntry.getValue();
@@ -241,6 +257,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 						y = Integer.parseInt(t[i].substring(1, t[i].length()));
 					}
 					if (symbol.equals("K")) {
+						boolean skip = false;
 						String valS = t[i].substring(1, t[i].length());
 
 						if (valS.substring(0, 1).equals("\"")) {
@@ -251,7 +268,21 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 							try {
 								val = Int.valueOf(Integer.parseInt(valS));
 							} catch (NumberFormatException e) {
+								try {
+									val = Real.valueOf(Float.parseFloat(valS));
+								} catch (NumberFormatException e2) {
+								}
 							}
+							
+							if (val == null) {
+								if (valS.equals("#VALUE!")) skip = true;
+								if (valS.equals("FALSE")) val = Bool.valueOf(false);
+								if (valS.equals("TRUE")) val = Bool.valueOf(true);
+							}
+						}
+						
+						if (!skip) {
+							if (val == null) throw new RuntimeException("could not parse value " + valS);
 						}
 					}
 				}
@@ -262,9 +293,11 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 				if (x > maxX) maxX = x;
 				if (y > maxY) maxY = y;
 
-				if (!data.containsKey(y)) data.put(y, new HashMap<Integer, DataType>());
-
-				data.get(y).put(x, val);
+				if (val != null) {
+					if (!data.containsKey(y)) data.put(y, new HashMap<Integer, DataType>());
+	
+					data.get(y).put(x, val);
+				}
 
 				curX = x;
 				curY = y;
@@ -324,6 +357,44 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		private int _slkCurX;
 		private int _slkCurY;
 
+		private Object formatVal(Object val) {
+			if (val == null) return null;
+			
+			try {
+				return Integer.parseInt(val.toString());
+			} catch (NumberFormatException e) {
+			}
+			try {
+				return Float.parseFloat(val.toString());
+			} catch (NumberFormatException e) {
+			}
+			try {
+				return Double.parseDouble(val.toString());
+			} catch (NumberFormatException e) {
+			}
+			
+			if (val instanceof Boolean) {
+				if (((Boolean) val).booleanValue()) return 1;
+			} else if (val instanceof Integer) {
+				if (((Integer) val) != 0) return val;
+			} else if (val instanceof Float) {
+				if (((Float) val) != 0F) return val;
+			} else if (val instanceof Double) {
+				if (((Double) val) != 0D) return val;
+			} else {
+				val = val.toString();
+				
+				if (val.toString().isEmpty()) return null;
+				if (val.equals("")) return null;
+				if (val.equals("\"\"")) return null;
+				if (val.equals("-")) return null;
+
+				return "\"" + val + "\"";
+			}
+			
+			return null;
+		}
+		
 		private void writeCell(int x, int y, DataType slkVal) throws IOException {			
 			if (slkVal == null) return;
 
@@ -331,31 +402,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 			if (val == null) return;
 
-			if (val instanceof Boolean) {
-				if (((Boolean) val).booleanValue()) {
-					val = 1;
-				} else {
-					val = null;
-				}
-			} else if (val instanceof Integer) {
-				if (((Integer) val) == 0) {
-					val = null;
-				}
-			} else if (val instanceof String) {
-				if ((((String) val).equals("")) || (((String) val).equals("\"\"")) || (((String) val).equals("0")) || (((String) val).equals("-"))) {
-					val = null;
-				} else {
-					val = "\"" + ((String) val) + "\"";
-				}
-			} else if (val instanceof Id) {
-				val = val.toString();
-				
-				if ((((String) val).equals("")) || (((String) val).equals("\"\"")) || (((String) val).equals("0")) || (((String) val).equals("-"))) {
-					val = null;
-				} else {
-					val = "\"" + ((String) val) + "\"";
-				}
-			}
+			val = formatVal(val);
 
 			if (val == null) return;
 
@@ -476,6 +523,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	public static SLK createFromInFile(File inFile, File outFile) throws IOException {
 		SLK slk = null;
 		
+		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
+			slk = new DoodSLK(outFile);
+		}
+		
 		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
 			slk = new UnitAbilsSLK(outFile);
 		}
@@ -513,6 +564,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	
 	public static SLK createFromInFile(File inFile, SLK sourceSlk) {
 		SLK slk = null;
+
+		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
+			slk = new DoodSLK(sourceSlk);
+		}
 		
 		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
 			slk = new UnitAbilsSLK(sourceSlk);
@@ -551,6 +606,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	
 	public static SLK createFromInFile(File inFile) {
 		SLK slk = null;
+
+		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
+			slk = new DoodSLK();
+		}
 		
 		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
 			slk = new UnitAbilsSLK();

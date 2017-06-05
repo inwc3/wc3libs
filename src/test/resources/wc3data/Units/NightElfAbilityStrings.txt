@@ -1,0 +1,758 @@
+﻿// Vengeance
+[Avng]
+Name=Rachegeist
+Tip=Ra|cffffcc00c|rhegeist
+Ubertip="Lässt einen unverwundbaren Wildgeist aus einer Leiche entstehen. Hält <Avng,Dur1> Sekunden lang oder bis der Avatar stirbt."
+Hotkey=C
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren."
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren."
+
+[Bvng]
+Bufftip=Rachegeist
+Buffubertip="Rache war hier."
+
+// Mana Flare
+[Amfl]
+Name=Mana-Leuchtfeuer
+Tip=Mana-Leucht|cffffcc00f|reuer
+Untip=Mana-Leucht|cffffcc00f|reuer beenden
+Ubertip="Bringt den Feendrachen dazu, negative magische Energien zu kanalisieren, die in der Nähe befindlichen feindlichen Einheiten Schaden zufügen, wenn sie Zauber wirken. Erhöht außerdem die Rüstung des Feendrachens um <Amfl,DataE1>. |nHält <Amfl,Dur1> Sekunden lang an."
+Unubertip="Beendet die Kanalisierung von Mana-Leuchtfeuer."
+Hotkey=F
+Unhotkey=F
+
+[Bmfl]
+Bufftip=Mana-Leuchtfeuer
+Buffubertip="Diese Einheit steht unter dem Effekt von 'Mana-Leuchtfeuer'; feindliche in der Nähe befindliche Einheiten, die Zauber wirken, nehmen Schaden."
+
+[Bmfa]
+Bufftip=Mana-Leuchtfeuer
+Buffubertip="Diese Einheit steht unter dem Effekt von 'Mana-Leuchtfeuer'; feindliche in der Nähe befindliche Einheiten, die Zauber wirken, nehmen Schaden."
+EditorSuffix= (Extra)
+
+// Phase Shift
+[Apsh]
+Name=Phasenverschiebung
+Tip=Phas|cffffcc00e|rnverschiebung
+Ubertip="Lässt diese Einheit aus der existenziellen Ebene verschwinden, wann immer sie Schaden erleidet, und vermeidet so vorübergehend weiteren Schaden. |nHält <Apsh,Dur1> Sekunde(n) lang an."
+Untip="|cffc3dbff|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=E
+Unhotkey=E
+
+[Bpsh]
+Bufftip=Phasenverschiebung
+Buffubertip="Diese Einheit ist aus der existenziellen Ebene verschwunden. Ihr kann vorübergehend kein Schaden zugefügt werden."
+
+// Ethereal
+[Aetl]
+Name=Astral
+Tip=Astral
+Ubertip="Astrale Kreaturen können nicht angreifen, können aber Zauber wirken und erleiden zusätzlichen Schaden durch Magie-Angriffe und Zauber."
+Hotkey=A
+
+// Sphere
+[Asp1]
+Name=Sphäre
+EditorSuffix= (Rache - Stufe 1)
+
+// Sphere
+[Asp2]
+Name=Sphäre
+EditorSuffix= (Rache - Stufe 2)
+
+// Sphere
+[Asp3]
+Name=Sphäre
+EditorSuffix= (Rache - Stufe 3)
+
+// Sphere
+[Asp4]
+Name=Sphäre
+EditorSuffix= (Rache - Stufe 4)
+
+// Sphere
+[Asp5]
+Name=Sphäre
+EditorSuffix= (Rache - Stufe 5)
+
+// Sphere
+[Asp6]
+Name=Sphäre
+EditorSuffix= (Rache - Stufe 6)
+
+// War Club
+[Agra]
+Name=Kriegskeule
+Tip=|cffffcc00K|rriegskeule
+Ubertip="Nimmt einen Baum auf, um dem Bergriesen Belagerungsschaden und eine größere Angriffs-Reichweite zu verleihen. |nHält <Agra,DataE1> Angriffe lang an."
+Hotkey=K
+
+// Hardened Skin
+[Assk]
+Name=Harthaut
+Tip=Harthaut
+Ubertip="Reduziert alle Angriffe auf den Bergriesen um <Assk,DataC1> Punkte Schaden. Angriffe können nicht unter <Assk,DataB1> Punkte Schaden reduziert werden."
+Hotkey=H
+
+// Resistant Skin
+[Arsk]
+Name=Festhaut
+Tip=Festhaut
+Ubertip="Reduziert die Dauer negativer Zauber und macht den Bergriesen immun gegen bestimmte Zauber."
+Hotkey=E
+
+// Taunt
+[Atau]
+Name=Spott
+Tip=Spo|cffffcc00t|rt
+Ubertip="Die <ANta,DataA1> am nächsten befindlichen Feinde werden gezwungen, diese Einheit anzugreifen."
+Hotkey=T
+
+[Btau]
+Bufftip=Spott
+Buffubertip="Diese Einheit wurde verspottet und ist jetzt immun."
+
+// Blink
+[AEbl]
+Name=Beflügelt
+Tip=B|cffffcc00e|rflügelt [|cffffcc00Stufe 1|r],B|cffffcc00e|rflügelt [|cffffcc00Stufe 2|r],B|cffffcc00e|rflügelt [|cffffcc00Stufe 3|r]
+Ubertip="Teleportiert die Wächterin über eine kurze Strecke und ermöglicht es ihr auf diese Weise, in Kämpfe einzugreifen oder sie zu verlassen.","Teleportiert die Wächterin über eine kurze Strecke und ermöglicht es ihr auf diese Weise, in Kämpfe einzugreifen oder sie zu verlassen.","Teleportiert die Wächterin über eine kurze Strecke und ermöglicht es ihr auf diese Weise, in Kämpfe einzugreifen oder sie zu verlassen."
+Hotkey=E
+Researchtip="B|cffffcc00e|rflügelt [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Eine Teleportation über eine kurze Strecke, die es der Wächterin ermöglicht, in Kämpfe einzugreifen oder sie zu verlassen. |n|n|cffffcc00Stufe 1|r - <AEbl,Cool1> Sekunden Abklingzeit, <AEbl,Cost1> Punkte Mana. |n|cffffcc00Stufe 2|r - <AEbl,Cool2> Sekunden Abklingzeit, <AEbl,Cost2> Punkte Mana. |n|cffffcc00Stufe 3|r - <AEbl,Cool3> Sekunden Abklingzeit, <AEbl,Cost3> Punkte Mana."
+Researchhotkey=E
+
+// Fan of Knives
+[AEfk]
+Name=Dolchfächer
+Tip=Dolch|cffffcc00f|rächer [|cffffcc00Stufe 1|r],Dolch|cffffcc00f|rächer [|cffffcc00Stufe 2|r],Dolch|cffffcc00f|rächer [|cffffcc00Stufe 3|r]
+Ubertip="Die Wächterin schleudert einen Dolchhagel und schadet damit Feinden in ihrer Umgebung. Jedes Messer richtet <AEfk,DataA1> Punkte Schaden an.","Die Wächterin schleudert einen Dolchhagel und schadet damit Feinden in ihrer Umgebung. Jedes Messer richtet <AEfk,DataA2> Punkte Schaden an.","Die Wächterin schleudert einen Dolchhagel und schadet damit Feinden in ihrer Umgebung. Jedes Messer richtet <AEfk,DataA3> Punkte Schaden an."
+Hotkey=F
+Researchtip="Dolch|cffffcc00f|rächer [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Die Wächterin schleudert einen Dolchhagel und schadet damit Feinden in ihrer Umgebung. |n|n|cffffcc00Stufe 1|r - <AEfk,DataA1> Punkte Schaden pro Ziel. |n|cffffcc00Stufe 2|r - <AEfk,DataA2> Punkte Schaden pro Ziel. |n|cffffcc00Stufe 3|r - <AEfk,DataA3> Punkte Schaden pro Ziel."
+Researchhotkey=F
+
+// Shadow Strike
+[AEsh]
+Name=Schattenschlag
+Tip=Scha|cffffcc00t|rtenschlag [|cffffcc00Stufe 1|r],Scha|cffffcc00t|rtenschlag [|cffffcc00Stufe 2|r],Scha|cffffcc00t|rtenschlag [|cffffcc00Stufe 3|r]
+Ubertip="Schleudert einen vergifteten Dolch auf eine angewählte feindliche Einheit und verursacht dabei einen Anfangsschaden von <AEsh,DataE1> Punkten sowie <AEsh,Dur1> Sekunden lang einen weiteren Schaden von <AEsh,DataA1> Punkten alle <AEsh,Cast1> Sekunden. Das Gift verlangsamt für kurze Zeit das Bewegungstempo der angewählten feindlichen Einheit.","Schleudert einen vergifteten Dolch auf eine angewählte feindliche Einheit und verursacht dabei einen Anfangsschaden von <AEsh,DataE2> Punkten sowie <AEsh,Dur2> Sekunden lang einen weiteren Schaden von <AEsh,DataA2> Punkten alle <AEsh,Cast2> Sekunden. Das Gift verlangsamt für kurze Zeit das Bewegungstempo der angewählten feindlichen Einheit.","Schleudert einen vergifteten Dolch auf eine angewählte feindliche Einheit und verursacht dabei einen Anfangsschaden von <AEsh,DataE3> Punkten sowie <AEsh,Dur3> Sekunden lang einen weiteren Schaden von <AEsh,DataA3> Punkten alle <AEsh,Cast3> Sekunden. Das Gift verlangsamt für kurze Zeit das Bewegungstempo der angewählten feindlichen Einheit."
+Hotkey=T
+Researchtip="Scha|cffffcc00t|rtenschlag [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Schleudert einen vergifteten Dolch, der erst einen großen Anfangsschaden und dann Schaden im Lauf der Zeit verursacht. Bei der vergifteten Einheit ist das Bewegungstempo für kurze Zeit verlangsamt. |n|n|cffffcc00Stufe 1|r - <AEsh,DataE1> Punkte Anfangsschaden, <AEsh,DataA1> Punkte Schaden im Lauf der Zeit. |n|cffffcc00Stufe 2|r - <AEsh,DataE2> Punkte Anfangsschaden, <AEsh,DataA2> Punkte Schaden im Lauf der Zeit. |n|cffffcc00Stufe 3|r - <AEsh,DataE3> Punkte Anfangsschaden, <AEsh,DataA3> Punkte Schaden im Lauf der Zeit."
+Researchhotkey=T
+
+// Shadow Strike Non Stack Buff
+[BEsh]
+Bufftip=Schattenschlag
+Buffubertip="Diese Einheit wurde von einem 'Schattenschlag' getroffen; sie nimmt im Lauf der Zeit Schaden und bewegt sich langsamer."
+
+// Shadow Strike Stack Buff
+[BEsi]
+Bufftip=Schattenschlag
+Buffubertip="Diese Einheit wurde von einem 'Schattenschlag' getroffen; sie nimmt im Lauf der Zeit Schaden und bewegt sich langsamer."
+
+// Vengeance
+[AEsv]
+Name=Rache
+Tip=Ra|cffffcc00c|rhe
+Ubertip="Erzeugt einen mächtigen Avatar, der unverwundbare Geister aus in der Nähe befindlichen Leichen beschwört, die die Feinde des Spielers angreifen. Wenn der Avatar der Rache stirbt, verschwinden die Geister. |nHält <AEsv,Dur1> Sekunden lang an."
+Hotkey=C
+Researchtip="Ra|cffffcc00c|rhe erlernen"
+Researchubertip="Erzeugt einen mächtigen Avatar, der unverwundbare Geister aus in der Nähe befindlichen Leichen beschwört, die die Feinde des Spielers angreifen. Wenn der Avatar der Rache stirbt, verschwinden die Geister. |nHält <AEsv,Dur1> Sekunden lang an."
+Researchhotkey=C
+
+[BEsv]
+Bufftip=Rache
+Buffubertip="Rache ist wütend."
+
+// Cargo Load entangled mine
+[Slo2]
+Name=Irrwisch laden
+Tip=Irrwisch |cffffcc00l|raden
+Ubertip="Lädt einen angewählten befreundeten Irrwisch ein."
+Hotkey=L
+
+// see unitstrings
+//[Aimp]
+//Name=Vorpal Blades
+//Tip=Vorpal Blades
+//Ubertip="Permits the glaives launched by the Glaive Thrower to strike through initial ground targets and damage those behind."
+
+[Amgl]
+Name=Mondgleve
+Tip=Mondgleve
+Ubertip="Verleiht der Jägerin die Fähigkeit, mit ihren weiterspringenden Gleven-Angriffen zusätzliche Einheiten zu treffen."
+
+[Amgr]
+Name=Mondgleve
+EditorSuffix= (Naisha)
+Tip=Mondgleve
+Ubertip="Verleiht der Jägerin die Fähigkeit, mit ihren weiterspringenden Gleven-Angriffen zusätzliche Einheiten zu treffen."
+
+[Aspo]
+Name=Schleichendes Gift
+Tip=Schleichendes Gift
+Ubertip="Ein Giftangriff, der pro Sekunde <Aspo,DataA1> Punkte Schaden anrichtet und <Aspo,Dur1> Sekunden lang die Bewegung der angewählten feindlichen Einheit um <Aspo,DataB1,%>% und den Angriff um <Aspo,DataC1,%>% verlangsamt."
+
+// Slow Poison Non Stack Buff
+[Bspo]
+Bufftip=Schleichendes Gift
+Buffubertip="Diese Einheit wurde durch 'Schleichendes Gift' getroffen; Bewegungstempo und Angriffsrate sind reduziert und sie nimmt im Lauf der Zeit Schaden."
+EditorSuffix= (Nicht ergänzend)
+
+// Slow Poison Stack Buff
+[Bssd]
+Bufftip=Schleichendes Gift
+Buffubertip="Diese Einheit wurde durch 'Schleichendes Gift' getroffen; Bewegungstempo und Angriffsrate sind reduziert und sie nimmt im Lauf der Zeit Schaden."
+EditorSuffix= (Ergänzend)
+
+// Shadow Meld passive nighttime cloaking ability, with its "Hide" button
+[Ashm]
+Name=Schattenmimik
+Tip=|cffffcc00V|rerbergen
+Ubertip="Beendet das automatische Erfassen von Feinden bei einer Einheit, sodass sie die 'Schattenmimik'-Fähigkeit benutzen und nachts nicht gesehen werden kann."
+Hotkey=V
+
+[Sshm]
+Name=Schattenmimik
+Tip=|cffffcc00V|rerbergen
+Ubertip="Beendet das automatische Erfassen von Feinden bei einer Einheit, sodass sie die 'Schattenmimik'-Fähigkeit benutzen und nachts nicht gesehen werden kann."
+Hotkey=V
+EditorSuffix= (Sofort)
+
+// Shadow Meld passive nighttime cloaking ability, with its "Hide" button
+[Ahid]
+Name=Schattenmimik
+Tip=|cffffcc00V|rerbergen
+Ubertip="Beendet das automatische Erfassen von Feinden bei einer Einheit, sodass sie die 'Schattenmimik'-Fähigkeit benutzen und nachts nicht gesehen werden kann."
+Hotkey=V
+EditorSuffix= (Akama)
+
+// Sentinel
+[Aesn]
+Name=Wächter
+Tip=Wächt|cffffcc00e|rr
+Ubertip="Schickt eine Eule auf einen Baum in der Nähe, um aufzudecken, was in dessen Umkreis ist. |nKann unsichtbare Einheiten sehen."
+Hotkey=E
+
+// Sentinel
+[Aesr]
+Name=Wächter
+EditorSuffix= (Naisha)
+Tip=Wächt|cffffcc00e|rr
+Ubertip="Schickt eine Eule auf einen in der Nähe befindlichen Baum, um sichtbar zu machen, was in dessen Umkreis ist. |nKann unsichtbare Einheiten sehen."
+Hotkey=E
+
+// Eat Tree
+[Aeat]
+Name=Baum essen
+Tip=Baum |cffffcc00e|rssen
+Ubertip="Einen Baum verzehren, um <Aeat,Dur1> Sekunden lang <Aeat,DataC1> Trefferpunkte wiederherzustellen."
+Hotkey=E
+
+// Moon pool mana battery
+[Ambt]
+Name=Leben und Mana auffüllen
+Tip=Leben und Mana au|cffffcc00f|rfüllen
+Ubertip="Füllt das Leben und das Mana einer angewählten befreundeten Einheit wieder auf."
+Untip="|cffc3dbff|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=F
+Unhotkey=R
+Order=Auffüllen
+
+// Wisp Harvest
+[Awha]
+Name=Sammeln
+Tip=Sa|cffffcc00m|rmeln
+Ubertip="Baut Gold in durchwucherten Goldminen ab und gewinnt Holz aus Bäumen."
+Hotkey=M
+EditorSuffix= (Irrwisch, Gold und Holz)
+
+// Wisp Harvest (Invulnerable)
+[Awh2]
+Name=Sammeln
+Tip=Sa|cffffcc00m|rmeln
+Ubertip="Baut Gold in durchwucherten Goldminen ab und gewinnt Holz aus Bäumen."
+Hotkey=M
+EditorSuffix= (Irrwisch, Gold und Holz - Alte Geister)
+
+// Detonate
+[Adtn]
+Name=Explodieren
+Tip=Explo|cffffcc00d|rieren
+Ubertip="Zerstört den Irrwisch, wodurch im Gebiet um den Irrwisch alle magischen Zauberverstärker gebannt werden und <Adtn,DataA1> Mana von jeder Einheit in diesem Gebiet abgesaugt wird. |n|cffffcc00Verursacht <Adtn,DataB1> Punkte Schaden an beschworenen Einheiten.|r"
+Hotkey=D
+
+// Wisp Healing
+[Awhe]
+Name=Heilen
+Tip=Hei|cffffcc00l|ren
+Ubertip="Heilt verletzte in der Nähe befindliche Einheiten."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=L
+Unhotkey=L
+
+// Entangle
+[Aent]
+Name=Goldmine durchwuchern
+Tip=|cffffcc00G|roldmine durchwuchern
+Ubertip="Durchwuchert eine Goldmine und ermöglicht es so einem Irrwisch, sie zu betreten und Gold abzubauen."
+Hotkey=G
+
+// Entangled Gold Mine Cargo
+[Aenc]
+Name=Beladen
+EditorSuffix= (Durchwucherte Goldmine)
+Tip=Be|cffffcc00l|raden
+Ubertip="Befiehlt einem Irrwisch, eine Goldmine zu betreten."
+Hotkey=L
+Untip=Alle |cffffcc00e|rntladen
+Unubertip="Entfernt alle Irrwische aus der Goldmine."
+Unhotkey=E
+
+// Root
+[Aroo]
+Name=Einwurzeln
+Tip=Einwu|cffffcc00r|rzeln
+Ubertip="Schlägt die Wurzeln eines Urtums in den Boden, wodurch es zwar unbeweglich wird, aber dafür Einheiten erstellen kann. Der Urtum-Beschützer kann dann riesige Felsen durch die Luft schleudern, um feindliche Einheiten zu verletzen. Gibt dem Urtum darüber hinaus verstärkte Rüstung."
+Hotkey=R
+Untip=Auswu|cffffcc00r|rzeln
+Unubertip="Ermöglicht dem Urtum, seine Wurzeln aus dem Boden zu ziehen, sodass es sich bewegen kann. Gibt dem Urtum darüber hinaus schwere Rüstung."
+Unhotkey=R
+
+// Bear Form
+[Abrf]
+Name=Bärengestalt
+Tip=Bären|cffffcc00g|restalt
+Ubertip="Verwandelt den Druiden in einen Bären, wodurch er zu einem hervorragenden Krieger wird. Allerdings wird dabei seine Mana-Regeneration verlangsamt."
+Hotkey=G
+Untip=Nachtelfen|cffffcc00g|restalt
+Unubertip="Verwandelt den Druiden in einen Nachtelfen."
+Unhotkey=G
+
+[Sbr2]
+EditorSuffix= (Alternative)
+
+// Crow Form
+[Arav]
+Name=Sturmkrähengestalt
+Tip=Sturmkrähen|cffffcc00g|restalt
+Ubertip="Verwandelt einen Druiden in eine Sturmkrähe, sodass er fliegen kann."
+Hotkey=G
+Untip=Nachtelfen|cffffcc00g|restalt
+Unubertip="Verwandelt den Druiden in einen Nachtelfen."
+Unhotkey=G
+
+[Sra2]
+EditorSuffix= (Alternative)
+
+// Auto-Dispel Magic
+[Aadm]
+Name=Magie aufheben
+Tip=|cffffcc00M|ragie aufheben
+Ubertip="Bannt positive Zauberverstärker von feindlichen Einheiten und negative Zauberverstärker von befreundeten Einheiten. |n|cffffcc00Verursacht <Aadm,DataB1> Punkte Schaden an beschworenen Einheiten.|r"
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=M
+Unhotkey=M
+
+// Spell Immunity
+[Amim]
+Name=Zauber-Immunität
+Tip=Zauber-Immunität
+Ubertip="Macht diese Einheit gegenüber allen Zaubern immun."
+
+// Ultravision
+[Ault]
+Name=Ultrasicht
+
+//Elune's Grace
+[Aegr]
+Name=Elunes Anmut
+Tip=Elunes Anmut
+Ubertip="Reduziert den durch Stichangriffe erlittenen Schaden um <Aegr,DataA1,%>%, durch Zauber- und Magie-Angriffe erlittenen Schaden um <Aegr,DataE1,%>%."
+
+// Mount Hippogryph
+[Acoa]
+Name=Hippogryph besteigen
+EditorSuffix=(Alt)
+Tip=Hippogr|cffffcc00y|rph besteigen
+Ubertip="Ein Hippogryph wird bestiegen, sodass die Bogenschützin aus der Luft angreifen kann. Die reitende Einheit kann nicht wieder absteigen. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Hotkey=Y
+Order=Hippogryph besteigen
+
+// Mount Hippogryph
+[Aco2]
+Name=Hippogryph besteigen
+Tip=Hippogr|cffffcc00y|rph besteigen
+Ubertip="Ein Hippogryph wird bestiegen, sodass die Bogenschützin aus der Luft angreifen kann. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Hotkey=Y
+Order=Besteig-Ziel
+
+// Pick up Archer
+[Acoh]
+Name=Bogenschützin aufnehmen
+EditorSuffix=(Alt)
+Tip=Bogenschützin a|cffffcc00u|rfnehmen
+Ubertip="Nimmt eine Bogenschützin auf, sodass sie aus der Luft angreifen kann. Die reitende Einheit kann nicht wieder absteigen. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Hotkey=U
+Order=Bogenschützin aufnehmen
+
+// Pick up Archer
+[Aco3]
+Name=Bogenschützin aufnehmen
+Tip=Bogenschützin a|cffffcc00u|rfnehmen
+Ubertip="Nimmt eine Bogenschützin auf, sodass sie aus der Luft angreifen kann. |n|n|cffffcc00Greift Land- und Luft-Einheiten an.|r"
+Hotkey=U
+Order=Besteig-Ziel
+
+// Dismount
+[Adec]
+Name=Absitzen
+Tip=Bogenschützin |cffffcc00v|rom Hippogryphen absitzen lassen
+Ubertip="Lässt die Bogenschützin vom Hippogryphen absteigen."
+Hotkey=V
+
+// Corrosive Breath
+[Acor]
+Name=Ätz-Atem
+Tip=Ätz-Atem
+Ubertip="Schleudert eine Kugel aus ätzender Galle, die effektiv gegen Gebäude ist."
+
+[Bcor]
+Bufftip=Ätz-Atem
+Buffubertip="Dieses Gebäude wurde vom 'Ätz-Atem' getroffen; es nimmt im Lauf der Zeit Schaden."
+
+// Mana Burn
+[AEmb]
+Name=Manabrand
+Tip=Manab|cffffcc00r|rand [|cffffcc00Stufe 1|r],Manab|cffffcc00r|rand [|cffffcc00Stufe 2|r],Manab|cffffcc00r|rand [|cffffcc00Stufe 3|r]
+Ubertip="Verschießt einen Blitz negativer Energie, mit dem bei der angewählten feindlichen Einheit bis zu <AEmb,DataA1> Punkte Mana verbrannt werden. Das Mana explodiert und richtet dabei Schaden an, der der Menge Mana entspricht, die verbrannt wird.","Verschießt einen Blitz negativer Energie, mit dem bei der angewählten feindlichen Einheit bis zu <AEmb,DataA2> Punkte Mana verbrannt werden. Das Mana explodiert und richtet dabei Schaden an, der der Menge Mana entspricht, die verbrannt wird.","Verschießt einen Blitz negativer Energie, mit dem bei der angewählten feindlichen Einheit bis zu <AEmb,DataA3> Punkte Mana verbrannt werden. Das Mana explodiert und richtet dabei Schaden an, der der Menge Mana entspricht, die verbrannt wird."
+Hotkey=R
+Researchtip="Manab|cffffcc00r|rand [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Verschießt einen Blitz negativer Energie, mit dem bei der angewählten feindlichen Einheit Mana verbrannt wird. Verbranntes Mana explodiert und richtet dabei Schaden am Ziel an, der der Menge Mana entspricht, die verbrannt wird. |n|n|cffffcc00Stufe 1|r - Verbrennt bis zu <AEmb,DataA1> Mana. |n|cffffcc00Stufe 2|r - Verbrennt bis zu <AEmb,DataA2> Mana. |n|cffffcc00Stufe 3|r - Verbrennt bis zu <AEmb,DataA3> Mana."
+Researchhotkey=R
+
+// Immolation
+[AEim]
+Name=Feuerbrand
+Tip=|cffffcc00F|reuerbrand [|cffffcc00Stufe 1|r] aktivieren,|cffffcc00F|reuerbrand [|cffffcc00Stufe 2|r] aktivieren,|cffffcc00F|reuerbrand [|cffffcc00Stufe 3|r] aktivieren
+Ubertip="'Feuerbrand' aktivieren, um diese Einheit in Flammen zu hüllen, was den sie umgebenden feindlichen Land-Einheiten <AEim,DataA1> Punkte Schaden pro Sekunde zufügt. |nVerbraucht Mana bis zur Deaktivierung.","'Feuerbrand' aktivieren, um diese Einheit in Flammen zu hüllen, was den sie umgebenden feindlichen Land-Einheiten <AEim,DataA2> Punkte Schaden pro Sekunde zufügt. |nVerbraucht Mana bis zur Deaktivierung.","'Feuerbrand' aktivieren, um diese Einheit in Flammen zu hüllen, was den sie umgebenden feindlichen Land-Einheiten <AEim,DataA3> Punkte Schaden pro Sekunde zufügt. |nVerbraucht Mana bis zur Deaktivierung."
+Unubertip="Feuerbrand deaktivieren, um den Verbrauch von Mana zu stoppen."
+Hotkey=F
+Untip=|cffffcc00F|reuerbrand deaktivieren
+Unhotkey=F
+Researchtip="|cffffcc00F|reuerbrand [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Hüllt den Dämonenjäger in Flammen ein, was feindlichen Land-Einheiten in seiner Umgebung schadet. |nVerbraucht Mana bis zur Deaktivierung. |n|n|cffffcc00Stufe 1|r - <AEim,DataA1> Punkte Schaden pro Sekunde. |n|cffffcc00Stufe 2|r - <AEim,DataA2> Punkte Schaden pro Sekunde. |n|cffffcc00Stufe 3|r - <AEim,DataA3> Punkte Schaden pro Sekunde."
+Researchhotkey=F
+
+[BEim]
+Bufftip=Feuerbrand
+Buffubertip="Diese Einheit verfügt über 'Feuerbrand'; feindliche in der Nähe befindliche Land-Einheiten nehmen im Lauf der Zeit Schaden."
+
+// Evasion
+[AEev]
+Name=Ausweichen
+Tip=Ausweichen [|cffffcc00Stufe 1|r],Ausweichen [|cffffcc00Stufe 2|r],Ausweichen [|cffffcc00Stufe 3|r]
+Ubertip="Verleiht eine Chance von <AEev,DataA1,%>%, einem Angriff auszuweichen.","Verleiht eine Chance von <AEev,DataA2,%>%, einem Angriff auszuweichen.","Verleiht eine Chance von <AEev,DataA3,%>%, einem Angriff auszuweichen."
+Researchtip="Ausw|cffffcc00e|richen [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Verleiht eine prozentuale Chance, einem Angriff auszuweichen. |n|n|cffffcc00Stufe 1|r - <AEev,DataA1,%>% Chance, dass ein Gegner nicht trifft. |n|cffffcc00Stufe 2|r - <AEev,DataA2,%>% Chance, dass ein Gegner nicht trifft. |n|cffffcc00Stufe 3|r - <AEev,DataA3,%>% Chance, dass ein Gegner nicht trifft."
+Researchhotkey=E
+
+// Metamorphosis
+[AEme]
+Name=Metamorphose
+Tip=Me|cffffcc00t|ramorphose
+Ubertip="Verwandelt den Dämonenjäger in einen starken Dämon mit einem Distanzangriff und <AEme,DataE1> zusätzlichen Trefferpunkten. |nHält <AEme,HeroDur1> Sekunden lang an."
+Hotkey=T
+Researchtip=Me|cffffcc00t|ramorphose erlernen
+Researchubertip="Verwandelt den Dämonenjäger in einen starken Dämon mit einem Distanzangriff und <AEme,DataE1> zusätzlichen Trefferpunkten. |nHält <AEme,HeroDur1> Sekunden lang an."
+Researchhotkey=T
+Globalmessage=
+Globalsound=
+
+// Illidan Metamorphosis
+[AEIl]
+Name=Metamorphose
+Tip=Me|cffffcc00t|ramorphose
+Ubertip="Verwandelt einen Dämonenjäger in einen starken Dämon mit Distanzangriff."
+Hotkey=T
+Researchtip=Me|cffffcc00t|ramorphose erlernen
+Researchubertip="Verwandelt einen Dämonenjäger in einen starken Dämon mit Distanzangriff."
+Researchhotkey=T
+EditorSuffix= (Illidan)
+Globalmessage=
+Globalsound=
+
+// Illidan Metamorphosis
+[AEvi]
+Name=Metamorphose
+Tip=Me|cffffcc00t|ramorphose
+Ubertip="Verwandelt den Dämonenjäger in einen starken Dämon mit Distanzangriff."
+Hotkey=T
+Researchtip=Me|cffffcc00t|ramorphose erlernen
+Researchubertip="Verwandelt den Dämonenjäger in einen starken Dämon mit Distanzangriff."
+Researchhotkey=T
+EditorSuffix= (Böser Illidan)
+Globalmessage=
+Globalsound=
+
+[BEme]
+Bufftip=Metamorphose
+Buffubertip="Verwandelt den Dämonenjäger in einen starken Dämon mit Distanzangriff."
+
+// Entangling Roots
+[AEer]
+Name=Wucherwurzeln
+Tip=Wuch|cffffcc00e|rrwurzeln [|cffffcc00Stufe 1|r],Wuch|cffffcc00e|rrwurzeln [|cffffcc00Stufe 2|r],Wuch|cffffcc00e|rrwurzeln [|cffffcc00Stufe 3|r]
+Ubertip="Wurzeln schießen aus dem Boden heraus, verletzen eine feindliche Einheit um <AEer,DataA1> Punkte pro Sekunde, entwaffnen sie und machen sie <AEer,Dur1> Sekunden lang unbeweglich.","Wurzeln schießen aus dem Boden heraus, verletzen eine feindliche Einheit um <AEer,DataA2> Punkte pro Sekunde, entwaffnen sie und machen sie <AEer,Dur2> Sekunden lang unbeweglich.","Wurzeln schießen aus dem Boden heraus, verletzen eine feindliche Einheit um <AEer,DataA3> Punkte pro Sekunde, entwaffnen sie und machen sie <AEer,Dur3> Sekunden lang unbeweglich."
+Hotkey=E
+Researchtip="Wuch|cffffcc00e|rrwurzeln [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Wurzeln schießen aus dem Boden heraus, verletzen und entwaffnen eine feindliche Einheit eine Zeit lang und machen sie unbeweglich. |n|n|cffffcc00Stufe 1|r - <AEer,DataA1> Punkte Schaden pro Sekunde für die Dauer von <AEer,Dur1> Sekunden. |n|cffffcc00Stufe 2|r - <AEer,DataA2> Punkte Schaden pro Sekunde für die Dauer von <AEer,Dur2> Sekunden. |n|cffffcc00Stufe 3|r - <AEer,DataA3> Punkte Schaden pro Sekunde für die Dauer von <AEer,Dur3> Sekunden."
+Researchhotkey=E
+
+[BEer]
+Bufftip=Wucherwurzeln
+Buffubertip="Diese Einheit wurde von 'Wucherwurzeln' getroffen; sie kann sich nicht bewegen und nimmt im Lauf der Zeit Schaden."
+
+// Force of Nature
+[AEfn]
+Name=Naturgewalt
+Tip=Naturge|cffffcc00w|ralt [|cffffcc00Stufe 1|r],Naturge|cffffcc00w|ralt [|cffffcc00Stufe 2|r],Naturge|cffffcc00w|ralt [|cffffcc00Stufe 3|r]
+Ubertip="Wandelt ein kleines Gebiet mit Bäumen in <AEfn,DataA1> Treants um. Treants haben <efon,realHP> Trefferpunkte und verursachen <efon,mindmg1> - <efon,maxdmg1> Punkte Schaden. Kann 'Naturverbundenheit' erlernen. |nHält <AEfn,Dur1> Sekunden lang an. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r","Wandelt ein großes Gebiet mit Bäumen in <AEfn,DataA2> Treants um. Treants haben <efon,realHP> Trefferpunkte und verursachen <efon,mindmg1> - <efon,maxdmg1> Punkte Schaden. Kann 'Naturverbundenheit' erlernen. |nHält <AEfn,Dur2> Sekunden lang an. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r","Wandelt ein sehr großes Gebiet mit Bäumen in <AEfn,DataA3> Treants um. Treants haben <efon,realHP> Trefferpunkte und verursachen <efon,mindmg1> - <efon,maxdmg1> Punkte Schaden. Kann 'Naturverbundenheit' erlernen. |nHält <AEfn,Dur3> Sekunden lang an. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
+Hotkey=W
+Researchtip="Naturge|cffffcc00w|ralt [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Wandelt ein Gebiet mit Bäumen in Treants um. Treants haben <efon,realHP> Trefferpunkte und verursachen <efon,mindmg1> - <efon,maxdmg1> Punkte Schaden. Kann 'Naturverbundenheit' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r |n|n|cffffcc00Stufe 1|r - Lässt <AEfn,DataA1> Treants für die Dauer von <AEfn,Dur1> Sekunden entstehen. |n|cffffcc00Stufe 2|r - Lässt <AEfn,DataA2> Treants für die Dauer von <AEfn,Dur2> Sekunden entstehen. |n|cffffcc00Stufe 3|r - Lässt <AEfn,DataA3> Treants für die Dauer von <AEfn,Dur3> Sekunden entstehen."
+Researchhotkey=W
+
+[BEfn]
+Bufftip=Naturgewalt
+Buffubertip="Beschworene Einheiten nehmen durch 'Bannen' Schaden."
+
+// Thorns Aura
+[AEah]
+Name=Dornen-Aura
+Tip=Dornen-Aura [|cffffcc00Stufe 1|r],Dornen-Aura [|cffffcc00Stufe 2|r],Dornen-Aura [|cffffcc00Stufe 3|r]
+Ubertip="Eine Aura, die in der Nähe befindlichen befreundeten Einheiten einen Schadensschild verleiht, der <AEah,DataA1,%>% des durch eine feindliche Einheit verursachten Nahkampf-Angriffsschadens auf diese zurückwirft.","Eine Aura, die in der Nähe befindlichen befreundeten Einheiten einen Schadensschild verleiht, der <AEah,DataA2,%>% des durch eine feindliche Einheit verursachten Nahkampf-Angriffsschadens auf diese zurückwirft.","Eine Aura, die in der Nähe befindlichen befreundeten Einheiten einen Schadensschild verleiht, der <AEah,DataA3,%>% des durch eine feindliche Einheit verursachten Nahkampf-Angriffsschadens auf diese zurückwirft."
+Researchtip="Dornen-Au|cffffcc00r|ra [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Eine Aura, die in der Nähe befindlichen befreundeten Einheiten einen Schadensschild gibt, der einen Teil des durch einen Nahkampf-Angreifer verursachten Schadens auf diesen zurückwirft. |n|n|cffffcc00Stufe 1|r - Wirft <AEah,DataA1,%>% Schaden zurück. |n|cffffcc00Stufe 2|r - Wirft <AEah,DataA2,%>% Schaden zurück. |n|cffffcc00Stufe 3|r - Wirft <AEah,DataA3,%>% Schaden zurück."
+Researchhotkey=R
+
+
+[BEah]
+Bufftip=Dornen-Aura
+Buffubertip="Diese Einheit steht unter der Wirkung von 'Dornen-Aura'; Nahkampf-Einheiten, die sie angreifen, nehmen Schaden."
+
+// Tranquility
+[AEtq]
+Name=Gelassenheit
+Tip=Ge|cffffcc00l|rassenheit
+Ubertip="Verursacht einen Regen aus heilender Energie, der über einem großen Gebiet niedergeht und befreundete verbündete Einheiten um <AEtq,DataA1> Trefferpunkte pro Sekunde heilt. |nHält <AEtq,Dur1> Sekunden lang an."
+Hotkey=L
+Researchtip="Ge|cffffcc00l|rassenheit erlernen"
+Researchubertip="Verursacht einen Regen aus heilender Energie, der über einem großen Gebiet niedergeht und befreundete verbündete Einheiten um <AEtq,DataA1> Trefferpunkte pro Sekunde heilt. |nHält <AEtq,Dur1> Sekunden lang an."
+Researchhotkey=L
+Globalmessage=
+Globalsound=
+
+// Scout
+[AEst]
+Name=Ausspähen
+Tip=A|cffffcc00u|rsspähen [|cffffcc00Stufe 1|r],A|cffffcc00u|rsspähen [|cffffcc00Stufe 2|r],A|cffffcc00u|rsspähen [|cffffcc00Stufe 3|r]
+Ubertip="Beschwört einen Eulen-Späher, der zum Ausspähen benutzt werden kann.|nKann unsichtbare Einheiten sehen. |nHält <AEst,Dur1> Sekunden lang an.","Beschwört einen schnellen Eulen-Späher, der zum Ausspähen benutzt werden kann.|nKann unsichtbare Einheiten sehen. |nHält <AEst,Dur2> Sekunden lang an.","Beschwört einen sehr schnellen Eulen-Späher, der zum Ausspähen benutzt werden kann.|nKann unsichtbare Einheiten sehen. |nHält <AEst,Dur3> Sekunden lang an."
+Hotkey=U
+Researchtip="A|cffffcc00u|rsspähen [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Beschwört für bestimmte Zeit einen Eulen-Späher, der zum Ausspähen der Karte benutzt werden kann. |nKann unsichtbare Einheiten sehen. |n|n|cffffcc00Stufe 1|r - Beschwört einen Eulen-Späher für <AEst,Cost1> Mana. |n|cffffcc00Stufe 2|r - Beschwört einen besseren Eulen-Späher für <AEst,Cost2> Mana. |n|cffffcc00Stufe 3|r - Beschwört den besten Eulen-Späher für <AEst,Cost3> Mana."
+Researchhotkey=U
+
+[BEst]
+Bufftip=Ausspähen
+Buffubertip="Beschworene Einheiten nehmen durch 'Bannen' Schaden."
+
+// Searing Arrows
+[AHfa]
+Name=Sengpfeile
+Tip=Se|cffffcc00n|rgpfeile [|cffffcc00Stufe 1|r],Se|cffffcc00n|rgpfeile [|cffffcc00Stufe 2|r],Se|cffffcc00n|rgpfeile [|cffffcc00Stufe 3|r]
+Ubertip="Fügt einem Angriff gegen Feinde einen Feuerschaden-Bonus von <AHfa,DataA1> hinzu, allerdings wird für jeden abgefeuerten Schuss Mana verbraucht.","Fügt einem Angriff einen Feuerschaden-Bonus von <AHfa,DataA2> hinzu, allerdings wird für jeden abgefeuerten Schuss Mana verbraucht.","Fügt einem Angriff einen Feuerschaden-Bonus von <AHfa,DataA3> hinzu, allerdings wird für jeden abgefeuerten Schuss Mana verbraucht."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=N
+Unhotkey=N
+Researchtip="Se|cffffcc00n|rgpfeile [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Erhöht die Angriffskampfkraft einer Priesterin durch Feuerschaden. |n|n|cffffcc00Stufe 1|r - <AHfa,DataA1> Punkte Schaden-Bonus. |n|cffffcc00Stufe 2|r - <AHfa,DataA2> Punkte Schaden-Bonus. |n|cffffcc00Stufe 3|r - <AHfa,DataA3> Punkte Schaden-Bonus."
+Researchhotkey=N
+
+// Trueshot Aura
+[AEar]
+Name=Volltreffer-Aura
+Tip=Volltreffer-Aura [|cffffcc00Stufe 1|r],Volltreffer-Aura [|cffffcc00Stufe 2|r],Volltreffer-Aura [|cffffcc00Stufe 3|r]
+Ubertip="Eine Aura, die dem Distanzangriff von in der Nähe befindlichen befreundeten Einheiten eine zusätzliche Schadenswirkung von <AEar,DataA1,%>% verleiht.","Eine Aura, die dem Distanzangriff von in der Nähe befindlichen befreundeten Einheiten eine zusätzliche Schadenswirkung von <AEar,DataA2,%>% verleiht.","Eine Aura, die dem Distanzangriff von in der Nähe befindlichen befreundeten Einheiten eine zusätzliche Schadenswirkung von <AEar,DataA3,%>% verleiht."
+Researchtip="Voll|cffffcc00t|rreffer-Aura [|cffffcc00Stufe %d|r] erlernen"
+Researchubertip="Eine Aura, die befreundeten in der Nähe befindlichen Einheiten einen Schaden-Bonus bei Distanzangriffen gibt. |n|n|cffffcc00Stufe 1|r - Erhöht den Grundschaden bei Distanzangriffen um <AEar,DataA1,%>%. |n|cffffcc00Stufe 2|r - Erhöht den Grundschaden bei Distanzangriffen um <AEar,DataA2,%>%. |n|cffffcc00Stufe 3|r - Erhöht den Grundschaden bei Distanzangriffen um <AEar,DataA3,%>%."
+Researchhotkey=T
+
+[BEar]
+Bufftip=Volltreffer-Aura
+Buffubertip="Diese Einheit steht unter der Wirkung von 'Volltreffer-Aura'; ihre Distanzangriffe verursachen größeren Schaden."
+
+// Starfall
+[AEsf]
+Name=Sternenregen
+Tip=Sternen|cffffcc00r|regen
+Ubertip="Ruft Wellen aus herabfallenden Sternen herbei, die in der Nähe befindliche feindliche Einheiten verletzen. Jede Welle richtet <AEsf,DataA1> Punkte Schaden an. |nHält <AEsf,Dur1> Sekunden lang an."
+Hotkey=R
+Researchtip=Sternen|cffffcc00r|regen erlernen
+Researchubertip="Ruft Wellen aus herabfallenden Sternen herbei, die in der Nähe befindliche feindliche Einheiten verletzen. Jede Welle richtet <AEsf,DataA1> Punkte Schaden an. |nHält <AEsf,Dur1> Sekunden lang an."
+Researchhotkey=R
+
+// beefy starfall - campaign spell
+[AEsb]
+Name=Sternenregen
+Tip=Sternen|cffffcc00r|regen
+Ubertip="Ruft alle <AEsb,DataB1> Sekunden eine Welle aus herabfallenden Sternen herbei, die in der Nähe befindliche feindliche Einheiten verletzt. Jede Welle richtet <AEsb,DataA1> Punkte Schaden an. |nHält <AEsb,Dur1> Sekunden lang an."
+Hotkey=R
+Researchtip=Sternen|cffffcc00r|regen erlernen
+Researchubertip="Ruft Wellen aus herabfallenden Sternen herbei, die in der Nähe befindliche feindliche Einheiten verletzen. Jede Welle richtet <AEsb,DataA1> Punkte Schaden an. |nHält <AEsb,Dur1> Sekunden lang an."
+Researchhotkey=R
+EditorSuffix= (mächtiger)
+
+// Faerie Fire
+[Afae]
+Name=Feenfeuer
+Tip=Feenfeue|cffffcc00r|r
+Ubertip="Reduziert die Rüstung einer angewählten feindlichen Einheit um <Afae,DataA1> und macht die Einheit sichtbar. |nHält <Afae,Dur1> Sekunden lang an."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=R
+Unhotkey=R
+
+// Faerie Fire
+[Afa2]
+Name=Feenfeuer
+EditorSuffix=(Wandeln)
+Tip=Feenfeue|cffffcc00r|r
+Ubertip="Reduziert die Rüstung einer angewählten feindlichen Einheit um <Afae,DataA1> und macht die Einheit sichtbar. |nHält <Afae,Dur1> Sekunden lang an."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=R
+Unhotkey=R
+
+[Bfae]
+Bufftip=Feenfeuer
+Buffubertip="Diese Einheit verfügt über 'Feenfeuer'; sie hat reduzierte Rüstung und kann vom Feind gesehen werden."
+
+// Cyclone
+//Unused line: When that unit lands, its movement speed is slowed by a factor of <Acyc,DataC1>, and it will regain 1/<Acyc,DataC1> of its movement every <Acyc,DataB1> seconds.
+[Acyc]
+Name=Wirbelsturm
+Tip=Wirbelstur|cffffcc00m|r
+Ubertip="Schleudert eine angewählte nicht-mechanische feindliche Einheit in die Luft, sodass sie weder angreifen noch sich bewegen noch Zauber wirken kann. Andere Einheiten werden daran gehindert, die Einheit anzugreifen oder Zauber auf sie zu wirken. |nHält <Acyc,Dur1> Sekunden lang an."
+Hotkey=M
+
+[Bcyc]
+Bufftip=Wirbelsturm
+Buffubertip="Diese Einheit befindet sich in einem Wirbelsturm; sie kann sich weder bewegen noch angreifen oder Zauber wirken."
+
+[Bcy2]
+Bufftip=Wirbelsturm
+Buffubertip="Diese Einheit befindet sich in einem Wirbelsturm; sie kann sich weder bewegen noch angreifen oder Zauber wirken."
+EditorSuffix= (Extra)
+
+// Rejuvenation
+[Arej]
+Name=Verjüngung
+Tip=V|cffffcc00e|rrjüngung
+Ubertip="Heilt eine befreundete nicht-mechanische Einheit während <Arej,Dur1> Sekunden um <Arej,DataA1> Trefferpunkte."
+Hotkey=E
+
+[Brej]
+Bufftip=Verjüngung
+Buffubertip="Diese Einheit steht unter dem Effekt 'Verjüngung'; ihre Trefferpunkte heilen im Lauf der Zeit."
+
+// Renew
+[Aren]
+Name=Erneuern
+Tip=|cffffcc00E|rrneuern
+Ubertip="Erneuert befreundete Nachtelfen-Gebäude, verbündete Gebäude und befreundete mechanische Einheiten."
+Untip="|cffc3dbffMit Rechtsklick automatisches Zaubern aktivieren.|r"
+Unubertip="|cffc3dbffMit Rechtsklick automatisches Zaubern deaktivieren.|r"
+Hotkey=E
+Unhotkey=E
+
+// Roar
+[Aroa]
+Name=Gebrüll
+Tip=Geb|cffffcc00r|rüll
+Ubertip="Gibt in der Nähe befindlichen befreundeten Einheiten einen Schaden-Bonus von <Aroa,DataA1,%>%. |nHält <Aroa,Dur1> Sekunden lang an."
+Hotkey=R
+
+// Roar
+[Ara2]
+Name=Gebrüll
+EditorSuffix=(Wandeln)
+Tip=Geb|cffffcc00r|rüll
+Ubertip="Gibt in der Nähe befindlichen befreundeten Einheiten einen Schaden-Bonus von <Ara2,DataA1,%>%. |nHält <Ara2,Dur1> Sekunden lang an."
+Hotkey=R
+
+[Broa]
+Bufftip=Gebrüll
+Buffubertip="Diese Einheit verfügt über 'Gebrüll'; ihr Angriffsschaden wurde erhöht."
+
+[Alit]
+Name=Blitzangriff
+
+// used by creep ability
+[Bbar]
+Bufftip=Baumrinde
+Buffubertip="Diese Einheit verfügt über 'Baumrinde'; sie hat eine erhöhte Rüstung."
+
+// tree of life upgrade
+[Atol]
+
+
+//----------------------------------------------------
+// Buffs with no in-game text
+// EditorName is for the Object Editor list only
+
+[BEia]
+EditorName=Feuerbrand (Zaubernder)
+
+[Beat]
+EditorName=Baum essen
+
+[Bgra]
+EditorName=Kriegskeule
+
+[Bssi]
+EditorName=Schleichendes Gift (Info)
+
+[AEsd]
+EditorName=Sternenregen (Ziel)
+
+[AEtr]
+EditorName=Gelassenheit (Ziel)
+
+[Bult]
+EditorName=Ultrasicht
+
+[XEsf]
+EditorName=Sternenregen (Effekt)
+
+[XEtq]
+EditorName=Gelassenheit (Effekt)
+
+[XEsn]
+EditorName=Wächter (Effekt)
+
+[Xfns]
+EditorName=Gebäude-Schaden - Nachtelfen, klein
+
+[Xfnm]
+EditorName=Gebäude-Schaden - Nachtelfen, mittel
+
+[Xfnl]
+EditorName=Gebäude-Schaden - Nachtelfen, groß

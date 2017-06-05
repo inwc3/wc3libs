@@ -89,9 +89,7 @@ public class Profile extends TXT {
 		public class Field extends TXT.Section.Field {
 			@Override
 			public void merge(TXT.Section.Field otherField, boolean overwrite) {
-				for (DataType val : otherField.getVals()) {
-					add(val);
-				}
+				super.merge(otherField, overwrite);
 			}
 			
 			@Override
@@ -249,6 +247,20 @@ public class Profile extends TXT {
 		return obj;
 	}
 
+	public void removeObj(Obj obj) {
+		if (!containsObj(obj.getId())) return;
+		
+		_objs.remove(obj.getId());
+	}
+	
+	public void removeObj(TXTSectionId id) {
+		if (containsObj(id)) removeObj(getObj(id));
+	}
+	
+	public void clearObjs() {
+		_objs.clear();
+	}
+	
 	public void merge(Profile otherProfile, boolean overwrite) {
 		for (Entry<TXTSectionId, Obj> objEntry : otherProfile.getObjs().entrySet()) {
 			TXTSectionId id = objEntry.getKey();

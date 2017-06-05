@@ -75,7 +75,7 @@ public class ObjMod {
 				private DataType _val;
 				private ValType _valType;
 				
-				public Object getVal() {
+				public DataType getVal() {
 					return _val;
 				}
 				
@@ -418,27 +418,35 @@ public class ObjMod {
 
 					switch (valType) {
 					case INT: {
-						stream.writeInt((Integer) val.getVal());
+						Int valSpec = (Int) val.getVal();
+						
+						stream.writeInt(valSpec.toInt());
 						
 						break;
 					}
 					case REAL: {
-						stream.writeFloat((Float) val.getVal());
+						Real valSpec = (Real) val.getVal();
+						
+						stream.writeFloat(valSpec.toFloat());
 						
 						break;
 					}
 					case UNREAL: {
-						stream.writeFloat((Float) val.getVal());
+						Real valSpec = (Real) val.getVal();
+						
+						stream.writeFloat(valSpec.toFloat());
 						
 						break;
 					}
 					case STRING: {
-						stream.writeString((String) val.getVal());
+						Wc3String valSpec = (Wc3String) val.getVal();
+						
+						stream.writeString(valSpec.getVal());
 						
 						break;
 					}
 					default: {
-						stream.writeString((String) val.getVal());
+						stream.writeString(val.getVal().toString());
 					}
 					}
 					
@@ -482,27 +490,35 @@ public class ObjMod {
 
 					switch (valType) {
 					case INT: {
-						stream.writeInt((Integer) val.getVal());
+						Int valSpec = (Int) val.getVal();
+						
+						stream.writeInt(valSpec.toInt());
 						
 						break;
 					}
-					case REAL: {
-						stream.writeFloat((Float) val.getVal());
+					case REAL: {						
+						Real valSpec = (Real) val.getVal();
+
+						stream.writeFloat(valSpec.toFloat());
 						
 						break;
 					}
 					case UNREAL: {
-						stream.writeFloat((Float) val.getVal());
+						Real valSpec = (Real) val.getVal();
+						
+						stream.writeFloat(valSpec.toFloat());
 						
 						break;
 					}
 					case STRING: {
-						stream.writeString((String) val.getVal());
+						Wc3String valSpec = (Wc3String) val.getVal();
+						
+						stream.writeString(valSpec.getVal());
 						
 						break;
 					}
 					default: {
-						stream.writeString((String) val.getVal());
+						stream.writeString(val.getVal().toString());
 					}
 					}
 					
@@ -617,6 +633,11 @@ public class ObjMod {
 		}
 	}
 	
+	public void clearObjs() {
+		_objs.clear();
+		_objsList.clear();
+	}
+	
 	public Obj addObj(ObjId id, ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
@@ -725,6 +746,11 @@ public class ObjMod {
 		for (Obj obj : getObjs().values()) {
 			ObjId objId = obj.getId();
 			
+			//
+			//outObjMod.getObj(objId).removeField(MetaFieldId.valueOf("wurs"));
+			
+			//if (!objId.toString().matches("[0-9A-za-z]{4}")) continue;
+			
 			for (Obj.Field field : obj.getFields().values()) {
 				MetaFieldId fieldId = field.getId();
 				
@@ -740,11 +766,11 @@ public class ObjMod {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
 							
-							int index = level;
+							int index = (level == 0) ? 0 : (level - 1);
 							int metaIndex = Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
 							
 							if (metaIndex > 0) {
-								level += metaIndex;
+								index += metaIndex;
 							}
 							
 							Profile.Obj profileObj = outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
@@ -754,17 +780,29 @@ public class ObjMod {
 							Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
 							DataType profileVal = null;
 							
-							if (val.getType().equals(Obj.Field.ValType.INT)) {
-								profileVal = Int.valueOf(val.getVal());
-							} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
-								profileVal = Real.valueOf(val.getVal());
-							} else if (val.getType().equals(Obj.Field.ValType.UNREAL)) {
-								profileVal = Real.valueOf(val.getVal());
-							} else {
-								profileVal = Wc3String.valueOf(val.getVal());
+							if (metaObj.getS(FieldId.valueOf("type")).equals("stringList")) {
+								profileVal = val.getVal();
+								
+								if (profileVal != null) {
+									String[] vals = profileVal.toString().split(",");
+									
+									for (int i = 0; i < vals.length; i++) {
+										profileField.set(Wc3String.valueOf(vals[i]), index + i);
+									}
+								}
+							} else {							
+								if (val.getType().equals(Obj.Field.ValType.INT)) {
+									profileVal = Int.valueOf(val.getVal());
+								} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
+									profileVal = Real.valueOf(val.getVal());
+								} else if (val.getType().equals(Obj.Field.ValType.UNREAL)) {
+									profileVal = Real.valueOf(val.getVal());
+								} else {
+									profileVal = Wc3String.valueOf(val.getVal());
+								}
+								
+								profileField.set(profileVal, index);
 							}
-							
-							profileField.set(profileVal, index);
 						}
 						
 						outObjMod.getObj(objId).removeField(fieldId);
@@ -803,9 +841,25 @@ public class ObjMod {
 							}
 
 							if ((repeat != null) && (repeat > 0)) {
-								if (repeat > 4) continue;
+								int places = 1;
 								
-								slkFieldName += level;
+								if (slkFile.equals(DoodSLK.GAME_USE_PATH)) {
+									if (repeat > 10) continue;
+									
+									places = 2;
+								} else {
+									if (repeat > 4) continue;
+									
+									places = 1;
+								}
+								
+								String add = Integer.toString(level);
+								
+								while(add.length() < places) {
+									add = "0" + add;
+								}
+								
+								slkFieldName += add;
 							}
 							
 							FieldId slkFieldId = FieldId.valueOf(slkFieldName);
@@ -813,6 +867,34 @@ public class ObjMod {
 							outSlk.addField(slkFieldId);
 							
 							SLK.Obj slkObj = outSlk.addObj(ObjId.valueOf(objId));
+							
+							if (slkFile.equals(UnitBalanceSLK.GAME_USE_PATH) || slkFile.equals(UnitAbilsSLK.GAME_USE_PATH) || slkFile.equals(UnitUISLK.GAME_USE_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+								File unitBaseSLKFile = UnitDataSLK.GAME_USE_PATH;
+								
+								SLK unitBaseSLK = outSlks.get(unitBaseSLKFile);
+								
+								if (unitBaseSLK == null) {
+									unitBaseSLK = new RawSLK();
+
+									outSlks.put(unitBaseSLKFile, unitBaseSLK);
+								}
+								
+								unitBaseSLK.addObj(objId);
+								
+								//
+								
+								File unitAbilSLKFile = UnitAbilsSLK.GAME_USE_PATH;
+								
+								SLK unitAbilSLK = outSlks.get(unitAbilSLKFile);
+								
+								if (unitAbilSLK == null) {
+									unitAbilSLK = new RawSLK();
+
+									outSlks.put(unitAbilSLKFile, unitAbilSLK);
+								}
+								
+								unitAbilSLK.addObj(objId);
+							}
 							
 							slkObj.set(slkFieldId, Wc3String.valueOf(val));
 							
@@ -822,7 +904,15 @@ public class ObjMod {
 				}
 			}
 			
-			outObjMod.removeObj(objId);
+			Obj outObj = outObjMod.getObj(objId); 
+			
+			if (outObj.getFields().isEmpty()) {
+				outObjMod.removeObj(objId);
+			} else {
+				outObjMod.removeObj(objId);
+				
+				outObjMod.addObj(objId, null).merge(outObj);;
+			}
 		}
 		
 		for (Map.Entry<File, SLK> slkEntry : outSlks.entrySet()) {

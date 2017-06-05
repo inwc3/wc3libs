@@ -1,0 +1,132 @@
+﻿[Resm]
+Name=Kraft des Mondes,Verbesserte Kraft des Mondes,Hoch entwickelte Kraft des Mondes
+Tip=Ausbau zur |cffffcc00K|rraft des Mondes,Ausbau zur verbesserten |cffffcc00K|rraft des Mondes,Ausbau zur hoch entwickelten |cffffcc00K|rraft des Mondes
+Ubertip="Verbessert den Schaden durch Bogenschützinnen, Jägerinnen, Gleve-Werferinnen und Hippogryph-Reiterinnen.","Verbessert den Schaden durch Bogenschützinnen, Jägerinnen, Gleve-Werferinnen und Hippogryph-Reiterinnen noch weiter.","Verbessert den Schaden durch Bogenschützinnen, Jägerinnen, Gleve-Werferinnen und Hippogryph-Reiterinnen noch weiter."
+Hotkey=K,K,K
+
+[Resw]
+Name=Kraft der Wildnis,Verbesserte Kraft der Wildnis,Hoch entwickelte Kraft der Wildnis
+Tip=Ausbau zur Kraft der |cffffcc00W|rildnis,Ausbau zur verbesserten Kraft der |cffffcc00W|rildnis,Ausbau zur hoch entwickelten Kraft der |cffffcc00W|rildnis
+Ubertip="Verbessert die Schadenswirkung von Krallen-Druiden in Bärengestalt, Klauen-Druiden in Sturmkrähengestalt, Dryaden, Bergriesen, Feendrachen, Hippogryphen und Schimären.","Verbessert die Schadenswirkung von Krallen-Druiden in Bärengestalt, Klauen-Druiden in Sturmkrähengestalt, Dryaden, Bergriesen, Feendrachen, Hippogryphen und Schimären noch weiter.","Verbessert die Schadenswirkung von Krallen-Druiden in Bärengestalt, Klauen-Druiden in Sturmkrähengestalt, Dryaden, Bergriesen, Feendrachen, Hippogryphen und Schimären noch weiter."
+Hotkey=W,W,W
+
+[Rema]
+Name=Mond-Rüstung,Verbesserte Mond-Rüstung,Hoch entwickelte Mond-Rüstung
+Tip=Ausbau zur |cffffcc00M|rond-Rüstung,Ausbau zur verbesserten |cffffcc00M|rond-Rüstung,Ausbau zur hoch entwickelten |cffffcc00M|rond-Rüstung
+Ubertip="Verbessert die Rüstung von Bogenschützinnen, Jägerinnen und Hippogryphen-Reiterinnen.","Verbessert die Rüstung von Bogenschützinnen, Jägerinnen und Hippogryphen-Reiterinnen noch weiter.","Verbessert die Rüstung von Bogenschützinnen, Jägerinnen und Hippogryphen-Reiterinnen noch weiter."
+Hotkey=M,M,M
+
+[Rerh]
+Name=Verstärkte Haut,Verbesserte verstärkte Haut,Hoch entwickelte verstärkte Haut
+Tip=Ausbau zur ve|cffffcc00r|rstärkten Haut,Ausbau zur verbesserten ve|cffffcc00r|rstärkten Haut,Ausbau zur hoch entwickelten ve|cffffcc00r|rstärkten Haut
+Ubertip="Verbessert die Rüstung von Krallen-Druiden in Bärengestalt, Klauen-Druiden in Sturmkrähengestalt, Dryaden, Bergriesen, Feendrachen, Hippogryphen und Schimären.","Verbessert die Rüstung von Krallen-Druiden in Bärengestalt, Klauen-Druiden in Sturmkrähengestalt, Dryaden, Bergriesen, Feendrachen, Hippogryphen und Schimären noch weiter.","Verbessert die Rüstung von Krallen-Druiden in Bärengestalt, Klauen-Druiden in Sturmkrähengestalt, Dryaden, Bergriesen, Feendrachen, Hippogryphen und Schimären noch weiter."
+Hotkey=R,R,R
+
+[Reuv]
+Name=Ultrasicht
+Tip=Ausbau zur |cffffcc00U|rltrasicht
+Ubertip="Verleiht den Nachtelfen die Fähigkeit, in der Nacht genauso weit zu sehen wie am Tage."
+Hotkey=U
+
+[Renb]
+Name=Naturverbundenheit
+Tip=|cffffcc00N|raturverbundenheit erforschen
+Ubertip="Baut das Bewegungstempo und die Rüstung aller Urtume und Treants aus."
+Hotkey=N
+
+[Reib]
+Name=Verbesserte Bogen
+Tip=Verbesserte B|cffffcc00o|rgen erforschen
+Ubertip="Erhöht die Angriffs-Reichweite der Bogenschützin und der Hippogryph-Reiterin."
+Hotkey=O
+
+[Remk]
+Name=Treffsicherheit
+Tip=Tre|cffffcc00f|rfsicherheit erforschen
+Ubertip="Erhöht die Schadenswirkung der Bogenschützinnen und Hippogryph-Reiterinnen um <Remk,base1>."
+Hotkey=F
+
+[Resc]
+Name=Wächter
+Tip=|cffffcc00W|rächter erforschen
+Ubertip="Verleiht der Jägerin die Fähigkeit, ihre Begleit-Eule auf einen Baum in der Nähe zu schicken, um so mehr zu sehen. |nKann unsichtbare Einheiten sehen."
+Hotkey=W
+
+[Remg]
+Name=Mondgleve ausbauen
+Tip=Z|cffffcc00u|rr Mondgleve ausbauen
+Ubertip="Verleiht der Jägerin die Fähigkeit, mit ihren weiterspringenden Gleven-Angriffen zusätzliche Einheiten zu treffen."
+Hotkey=U
+
+[Redt]
+Name=Adepten-Ausbildung für |nKlauen-Druiden,Meister-Ausbildung für |nKlauen-Druiden
+Tip=Adepten-Ausbildun|cffffcc00g|r für Klauen-Druiden,Meister-Ausbildun|cffffcc00g|r für Klauen-Druiden
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von deren Nachtelfengestalt und verleiht ihnen die Fähigkeit 'Sturmkrähengestalt'.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate und die Trefferpunkte von deren Nachtelfengestalt und ermöglicht ihnen, 'Wirbelsturm' zu wirken."
+Hotkey=G,G
+
+[Redc]
+Name=Adepten-Ausbildung für |nKrallen-Druiden,Meister-Ausbildung für |nKrallen-Druiden
+Tip=Adepten-Ausb|cffffcc00i|rldung für Krallen-Druiden,Meister-Ausb|cffffcc00i|rldung für Krallen-Druiden
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate, die Trefferpunkte sowie den Angriffsschaden von deren Nachtelfengestalt und verleiht ihnen die Fähigkeit 'Verjüngung'.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate, die Trefferpunkte sowie den Angriffsschaden von deren Nachtelfengestalt und verleiht ihnen die Fähigkeit 'Bärengestalt'."
+Hotkey=I,I
+
+[Resi]
+Name=Magie aufheben
+Tip=Magie aufheben erfor|cffffcc00s|rchen
+Ubertip="Verleiht der Dryade die Fähigkeit, positive Zauber von feindlichen Einheiten und negative Zauber von befreundeten Einheiten zu entfernen. |nBeschädigt beschworene Einheiten."
+Hotkey=S
+
+[Reht]
+Name=Hippogryphen-Zähmung
+Tip=Hippogryphen-|cffffcc00Z|rähmung erforschen
+Ubertip="Bildet Hippogryphen aus, damit Bogenschützen auf ihnen reiten können. Dadurch können sie sowohl Luft- als auch Land-Einheiten angreifen."
+Hotkey=Z
+
+[Recb]
+Name=Ätz-Atem
+Tip=Ät|cffffcc00z|r-Atem erforschen
+Ubertip="Verleiht Schimären die Fähigkeit, ätzende Galle gegen feindliche Gebäude einzusetzen."
+Hotkey=Z
+
+[Repb]
+Name=Vorpal-Klingen
+Tip=Vor|cffffcc00p|ral-Klingen erforschen
+Ubertip="Ermöglicht der von der Gleve-Werferin geworfenen Glevenmunition, durch erste Bodenziele durchzuschlagen und dahinter stehende Ziele zu verletzen. Ermöglicht auch, Bäume anzugreifen."
+Hotkey=P
+
+[Rers]
+Name=Festhaut
+Tip=Fes|cffffcc00t|rhaut erforschen
+Ubertip="Verleiht Bergriesen höhere Widerstandskraft gegen Zauberschäden."
+Hotkey=T
+
+[Rehs]
+Name=Harthaut
+Tip=|cffffcc00H|rarthaut erforschen
+Ubertip="Verleiht Bergriesen höhere Widerstandskraft gegen Angriffsschäden."
+Hotkey=H
+
+[Reeb]
+Name=Mal der Kralle
+Tip=|cffffcc00M|ral der Kralle erforschen
+Ubertip="Ermöglicht es Krallen-Druiden, 'Gebrüll' zu wirken, während sie Bärengestalt haben."
+Hotkey=M
+
+[Reec]
+Name=Mal der Klaue
+Tip=|cffffcc00M|ral der Klaue erforschen
+Ubertip="Ermöglicht es Klauen-Druiden, 'Feenfeuer' zu wirken, während sie Sturmkrähengestalt haben."
+Hotkey=M
+
+[Rews]
+Name=Quellbrunnen
+Tip=Qu|cffffcc00e|rllbrunnen erforschen
+Ubertip="Erhöht die Mana-Menge, die in Mondbrunnen aufbewahrt werden kann, um <Rews,base1> und deren Mana-Regenerationsrate um <Rews,base2,%>%."
+Hotkey=E
+
+[Repm]
+Name=Rucksack
+EditorSuffix= (Nachtelfen)
+Tip=Ru|cffffcc00c|rksack erforschen
+Ubertip="Verleiht bestimmten Nachtelfen-Land-Einheiten die Fähigkeit, Gegenstände zu tragen."
+Hotkey=C

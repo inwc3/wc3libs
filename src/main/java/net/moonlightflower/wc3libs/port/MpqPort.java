@@ -22,7 +22,18 @@ public abstract class MpqPort {
 	
 	private final static File exportFilesDir = new File(exportDir, "files");
 
-	public abstract List<File> listFiles(File mpqFile) throws IOException;
+	public static class ResourceFile extends File {
+		public ResourceFile(String pathname) {
+			super(pathname);
+		}
+
+		public ResourceFile(File parent, String child) {
+			super(parent, child);
+			// TODO Auto-generated constructor stub
+		}
+	}
+	
+	public abstract List<File> listFiles(File mpqFile) throws IOException; 
 	
 	public static abstract class In {
 		class FileImport {
@@ -307,10 +318,12 @@ public abstract class MpqPort {
 		return _wc3Dir;
 	}
 	
-	public static void setWc3Dir(File val) {		
-		for (File mpqFile : getWc3Mpqs(val)) {
-			if (!mpqFile.exists()) {
-				throw new IllegalArgumentException(String.format("%s does not seem to be a wc3 directory (%s does not exist)", val, mpqFile));
+	public static void setWc3Dir(File val) {
+		if (val != null) {
+			for (File mpqFile : getWc3Mpqs(val)) {
+				if (!mpqFile.exists()) {
+					throw new IllegalArgumentException(String.format("%s does not seem to be a wc3 directory (%s does not exist)", val, mpqFile));
+				}
 			}
 		}
 		

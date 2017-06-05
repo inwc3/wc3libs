@@ -1,0 +1,118 @@
+[Roch]
+Name=Chaos
+
+[Rome]
+Name=Stahl-Nahkampfwaffen,Thorium-Nahkampfwaffen,Arkanit-Nahkampfwaffen
+Tip=Ausbau zu Stahl-|cffffcc00N|rahkampfwaffen,Ausbau zu Thorium-|cffffcc00N|rahkampfwaffen,Ausbau zu Arkanit-|cffffcc00N|rahkampfwaffen
+Ubertip="Verbessert die Kampfkraft bei Nahkampfangriffen von Grunzern, Räubern und Tauren.","Verbessert die Kampfkraft bei Nahkampfangriffen von Grunzern, Räubern und Tauren noch weiter.","Verbessert die Kampfkraft bei Nahkampfangriffen von Grunzern, Räubern und Tauren noch weiter."
+Hotkey=N,N,N
+
+[Rora]
+Name=Stahl-Distanzwaffen,Thorium-Distanzwaffen,Arkanit-Distanzwaffen
+Tip=Ausbau zu Stahl-Distanz|cffffcc00w|raffen,Ausbau zu Thorium-Distanz|cffffcc00w|raffen,Ausbau zu Arkanit-Distanz|cffffcc00w|raffen
+Ubertip="Verbessert den Distanz-Angriffsschaden von Kopfjägern, Windreitern, Troll-Fledermausreitern und Verwüstern.","Verbessert den Distanz-Angriffsschaden von Kopfjägern, Windreitern, Troll-Fledermausreitern und Verwüstern noch weiter.","Verbessert den Distanz-Angriffsschaden von Kopfjägern, Windreitern, Troll-Fledermausreitern und Verwüstern noch weiter."
+Hotkey=W,W,W
+
+[Roar]
+Name=Stahl-Rüstung,Thorium-Rüstung,Arkanit-Rüstung
+Tip=|cffffcc00A|rusbau zur Stahl-Einheitenrüstung,|cffffcc00A|rusbau zur Thorium-Einheitenrüstung,|cffffcc00A|rusbau zur Arkanit-Einheitenrüstung
+Ubertip="Verbessert die Rüstung von Grunzern, Räubern, Troll-Fledermausreitern, Tauren, Kopfjägern, Windreitern und Verwüstern.","Verbessert die Rüstung von Grunzern, Räubern, Tauren, Troll-Fledermausreitern, Kopfjägern, Windreitern und Verwüstern noch weiter.","Verbessert die Rüstung von Grunzern, Räubern, Troll-Fledermausreitern, Tauren, Kopfjägern, Windreitern und Verwüstern noch weiter."
+Hotkey=A,A,A
+
+[Rwdm]
+Name=Kriegstrommel-Schadenserhöhung
+Tip=Kriegstr|cffffcc00o|rmmeln ausbauen
+Ubertip="Erhöht den Schadens-Bonus, den die 'Kriegstrommel-Aura' der Kodo-Bestie verursacht. 'Kriegstrommeln' erhöht die Schadenswirkung befreundeter Einheiten um die Kodo-Bestie herum."
+Hotkey=O
+
+// pillage
+[Ropg]
+Name=Plündern erforschen
+Tip=Plünd|cffffcc00e|rrn erforschen
+Ubertip="Bei Angriffen von Peons, Grunzern und Räubern werden Rohstoffe erbeutet, wenn Gebäude getroffen werden."
+Hotkey=E
+
+[Robs]
+Name=Berserker-Kraft
+Tip=|cffffcc00B|rerserker-Kraft erforschen
+Ubertip="Verbessert die Kampffähigkeit von Grunzern durch eine Trefferpunkt-Erhöhung von <Robs,base1> und einen zusätzlichen Angriffsschaden von <Robs,base2>."
+Hotkey=B
+
+[Rows]
+Name=Pulverisieren
+Tip=|cffffcc00P|rulverisieren erforschen
+Ubertip="Verleiht Tauren die 'Pulverisieren'-Fähigkeit. Durch 'Pulverisieren' haben die Tauren eine Chance, bei ihren Angriffen einen Gebietsschaden zu verursachen."
+Hotkey=P
+
+[Roen]
+Name=Einschnüren
+Tip=Ei|cffffcc00n|rschnüren erforschen
+Ubertip="Ermöglicht Räubern, die 'Einschnüren'-Fähigkeit zu benutzen. Durch 'Einschnüren' wird die angewählte feindliche Einheit an den Boden gefesselt, sodass sie sich nicht bewegen kann. Luft-Einheiten, die eingeschnürt werden, können angegriffen werden, als ob sie Land-Einheiten wären."
+Hotkey=N
+
+[Rovs]
+Name=Giftspeere
+Tip=Giftsp|cffffcc00e|rere erforschen
+Ubertip="Ergänzt die Windreiter-Angriffe um zusätzlichen Giftschaden. Eine von Giftspeeren getroffene Einheit nimmt im Laufe der Zeit Schaden."
+Hotkey=E
+
+[Rowd]
+Name=Medizinmann-Adepten-Ausbildung,Medizinmann-Meister-Ausbildung
+Tip=Me|cffffcc00d|rizinmann-Adepten-Ausbildung,Me|cffffcc00d|rizinmann-Meister-Ausbildung
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Medizinmännern und gibt ihnen die Fähigkeit, 'Stasisfalle' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Medizinmännern und gibt ihnen die Fähigkeit, 'Heil-Schutzzauber' zu wirken."
+Hotkey=D,D
+
+[Rost]
+Name=Schamanen-Adepten-Ausbildung,Schamanen-Meister-Ausbildung
+Tip=Scha|cffffcc00m|ranen-Adepten-Ausbildung,Scha|cffffcc00m|ranen-Meister-Ausbildung
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Schamanen und ermöglicht ihnen, 'Blitzschild' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Schamanen und ermöglicht ihnen, 'Kampfrausch' zu wirken."
+Hotkey=M,M
+
+[Rosp]
+Name=Stachelbarrikaden,Verbesserte Stachelbarrikaden,Hoch entwickelte Stachelbarrikaden
+Tip=Ausbau zur |cffffcc00S|rtachelbarrikade,Ausbau zur verbesserten |cffffcc00S|rtachelbarrikade,Ausbau zur hoch entwickelten |cffffcc00S|rtachelbarrikade
+Ubertip="Umgibt Orc-Gebäude mit Stacheln, die feindliche Nahkampf-Angreifer verletzen. Verursacht <Rosp,base1> Schaden pro Angriff.","Erhöht den bei Nahkampf-Angreifern verursachten Schaden um <Rosp,mod1>.","Erhöht den bei Nahkampf-Angreifern verursachten Schaden nochmals um <Rosp,mod1>."
+Hotkey=S,S,S
+
+[Rotr]
+Name=Troll-Regeneration,Verbesserte Troll-Regeneration,Hoch entwickelte Troll-Regeneration
+Tip=Troll-|cffffcc00R|regeneration erforschen,Verbesserte Troll-|cffffcc00R|regeneration erforschen,Hoch entwickelte Troll-|cffffcc00R|regeneration erforschen
+Ubertip="Verbessert die Regenerationsrate der Trefferpunkte von Kopfjägern, Medizinmännern und Troll-Fledermausreitern.","Verbessert die Regenerationsrate der Trefferpunkte von Kopfjägern, Medizinmännern und Troll-Fledermausreitern noch weiter.","Verbessert die Regenerationsrate der Trefferpunkte von Kopfjägern, Medizinmännern und Troll-Fledermausreitern noch weiter."
+Hotkey=R
+
+[Rolf]
+Name=Flüssiges Feuer
+Tip=F|cffffcc00l|rüssiges Feuer erforschen
+Ubertip="Verleiht Troll-Fledermausreitern den Angriff 'Flüssiges Feuer', wodurch sie im Lauf der Zeit Schaden an feindlichen Gebäuden verursachen können. Außerdem verhindert er Reparaturen an den Gebäuden und verringert die Angriffsrate von feindlichen Gebäuden."
+Hotkey=L
+
+[Ropm]
+Name=Rucksack
+EditorSuffix= (Orc)
+Tip=Ru|cffffcc00c|rksack erforschen
+Ubertip="Verleiht bestimmten Orc-Land-Einheiten die Fähigkeit, Gegenstände zu tragen."
+Hotkey=C
+
+[Rowt]
+Name=Geistläufer-Adepten-Ausbildung,Geistläufer-Meister-Ausbildung
+Tip=Geistläufe|cffffcc00r|r-Adepten-Ausbildung,Geistläufe|cffffcc00r|r-Meister-Ausbildung
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Geistläufern und gibt ihnen die Fähigkeit, 'Entzaubern' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Geistläufern und gibt ihnen die Fähigkeit, 'Ahnen-Geist' zu wirken."
+Hotkey=R,R
+
+[Robk]
+Name=Berserker-Ausbau
+Tip=B|cffffcc00e|rrserker-Ausbau
+Ubertip="Verwandelt Kopfjäger in Troll-Berserker und gibt ihnen erhöhte Trefferpunkte sowie die 'Berserk'-Fähigkeit."
+Hotkey=E
+
+[Rorb]
+Name=Verstärkte Verteidigung
+Tip=Verstärkte Vertei|cffffcc00d|rigung
+Ubertip="Baut Baue und Wachtürme aus, indem sie verstärkte Panzerung erhalten."
+Hotkey=D
+
+[Robf]
+Name=Ölbrand
+Tip=Ölbra|cffffcc00n|rd
+Ubertip="Verbessert Verwüster, sodass sie mit brennendem Öl getränkte Felsen schleudern, die den Boden in Brand setzen."
+Hotkey=N

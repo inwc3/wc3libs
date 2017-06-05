@@ -5,10 +5,31 @@ import systems.crigges.jmpq3.JMpqException;
 import systems.crigges.jmpq3.MPQOpenOption;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.AccessMode;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.LinkOption;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.FileAttributeView;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 public class JMpqPort extends MpqPort {
@@ -85,74 +106,201 @@ public class JMpqPort extends MpqPort {
 
 			while ((c < mpqFiles.size()) && (volExports.size() > 0)) {
 				File mpqFile = mpqFiles.get(c);
-
-				if (Orient.fileIsLocked(mpqFile)) {
-					File tempFile = new File(tempDir, Orient.getFileName(mpqFile));
-	
-					Orient.copyFileIfNewer(mpqFile, tempFile);
-	
-					mpqFile = tempFile;
-				}
-System.out.println("mpqFiles " + mpqFile);
-				JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.READ_ONLY);
-
-				Vector<FileExport> failedExports = new Vector<>();
-	
-				for (FileExport fileExport: volExports) {
-					//System.out.println("export " + fileExport.getInFile() + " from " + mpqFile);
-					File outFile = fileExport.getOutFile();
-
-					try {
-						File inFile = fileExport.getInFile();
-						
-						FileExport resultFileExport = null;
-						
-						if (outFile != null) {
-							if (fileExport.getOutDir() != null) {
-								fileExport.getOutDir().mkdirs();
-							}
-							
-							jmpq.extractFile(inFile.toString(), outFile);
-							
-							resultFileExport = new FileExport(inFile, outFile, false);
-							
-							result.addExport(mpqFile, resultFileExport);
-						} else {
-							DummyOutputStream dummyStream = new DummyOutputStream();
-							
-							jmpq.extractFile(inFile.toString(), dummyStream);
-							
-							OutputStream outStream = fileExport.getOutStream();
-
-							if (outStream != null) {
-								dummyStream.close(outStream);
-							} else {
-								dummyStream.close();
-							}
-							
-							resultFileExport = new FileExport(inFile, outStream);
-							
-							result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
-						}
-					} catch (JMpqException e) {
-						//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
-						//e.printStackTrace();
-						failedExports.add(fileExport);
-					}
-				}
 				
-				try {
-					jmpq.close();
-				} catch (Exception e) {
-					//e.printStackTrace();
+				if (mpqFile instanceof ResourceFile) {
+					Vector<FileExport> failedExports = new Vector<>();
 					
-					//if (e instanceof IOException) throw e;
+					for (FileExport fileExport : volExports) {
+						File outFile = fileExport.getOutFile();
+						
+						try {
+							File inFile = fileExport.getInFile();
+							
+							inFile = new File(mpqFile, inFile.toString());
+							
+							FileExport resultFileExport = null;
+							
+							if (outFile != null) {
+								if (fileExport.getOutDir() != null) {
+									fileExport.getOutDir().mkdirs();
+								}
+
+								InputStream inStream = getClass().getResourceAsStream(inFile.getName());
+								
+								if (inStream == null) throw new FileNotFoundException();
+								
+								byte[] buf = new byte[8192];
+								int len = 0;
+								
+								OutputStream outStream = Orient.createFileOutputStream(outFile);
+								
+								while ((len = inStream.read(buf, 0, buf.length)) > 0) {
+									outStream.write(buf, 0, len);
+								}
+								
+								resultFileExport = new FileExport(inFile, outFile, false);
+								
+								result.addExport(mpqFile, resultFileExport);
+							} else {
+								DummyOutputStream dummyStream = new DummyOutputStream();
+								
+								InputStream inStream = getClass().getClassLoader().getResourceAsStream(inFile.getName());
+								
+								if (inStream == null) throw new FileNotFoundException();
+								
+								byte[] buf = new byte[8192];
+								int len = 0;
+								
+								while ((len = inStream.read(buf, 0, buf.length)) > 0) {
+									dummyStream.write(buf, 0, len);
+								}
+								
+								inStream.close();
+								
+								OutputStream outStream = fileExport.getOutStream();
+	
+								if (outStream != null) {
+									dummyStream.close(outStream);
+								} else {
+									dummyStream.close();
+								}
+								
+								resultFileExport = new FileExport(inFile, outStream);
+								
+								result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
+							}
+						} catch (IOException e) {
+							//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
+							//e.printStackTrace();
+							failedExports.add(fileExport);
+						}
+					}
+					
+					volExports = failedExports;
+				} else if (mpqFile.isDirectory()) {
+					Vector<FileExport> failedExports = new Vector<>();
+					
+					for (FileExport fileExport : volExports) {
+						File outFile = fileExport.getOutFile();
+						
+						try {
+							File inFile = new File(mpqFile, fileExport.getInFile().toString());
+							
+							FileExport resultFileExport = null;
+							
+							if (outFile != null) {
+								if (fileExport.getOutDir() != null) {
+									fileExport.getOutDir().mkdirs();
+								}
+
+								Orient.copyFile(inFile, outFile);
+								
+								resultFileExport = new FileExport(inFile, outFile, false);
+								
+								result.addExport(mpqFile, resultFileExport);
+							} else {
+								DummyOutputStream dummyStream = new DummyOutputStream();
+								
+								FileInputStream inStream = new FileInputStream(inFile);
+								
+								byte[] buf = new byte[8192];
+								int len = 0;
+								
+								while ((len = inStream.read(buf, 0, buf.length)) > 0) {
+									dummyStream.write(buf, 0, len);
+								}
+								
+								inStream.close();
+								
+								OutputStream outStream = fileExport.getOutStream();
+	
+								if (outStream != null) {
+									dummyStream.close(outStream);
+								} else {
+									dummyStream.close();
+								}
+								
+								resultFileExport = new FileExport(inFile, outStream);
+								
+								result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
+							}
+						} catch (IOException e) {
+							//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
+							//e.printStackTrace();
+							failedExports.add(fileExport);
+						}
+					}
+					
+					volExports = failedExports;
+				} else {
+					if (Orient.fileIsLocked(mpqFile)) {
+						File tempFile = new File(tempDir, Orient.getFileName(mpqFile));
+		
+						Orient.copyFileIfNewer(mpqFile, tempFile);
+		
+						mpqFile = tempFile;
+					}
+	
+					JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.READ_ONLY);
+	
+					Vector<FileExport> failedExports = new Vector<>();
+		
+					for (FileExport fileExport: volExports) {
+						//System.out.println("export " + fileExport.getInFile() + " from " + mpqFile);
+						File outFile = fileExport.getOutFile();
+	
+						try {
+							File inFile = fileExport.getInFile();
+							
+							FileExport resultFileExport = null;
+							
+							if (outFile != null) {
+								if (fileExport.getOutDir() != null) {
+									fileExport.getOutDir().mkdirs();
+								}
+								
+								jmpq.extractFile(inFile.toString(), outFile);
+								
+								resultFileExport = new FileExport(inFile, outFile, false);
+								
+								result.addExport(mpqFile, resultFileExport);
+							} else {
+								DummyOutputStream dummyStream = new DummyOutputStream();
+								
+								jmpq.extractFile(inFile.toString(), dummyStream);
+								
+								OutputStream outStream = fileExport.getOutStream();
+	
+								if (outStream != null) {
+									dummyStream.close(outStream);
+								} else {
+									dummyStream.close();
+								}
+								
+								resultFileExport = new FileExport(inFile, outStream);
+								
+								result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
+							}
+						} catch (JMpqException e) {
+							//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
+							//e.printStackTrace();
+							failedExports.add(fileExport);
+						}
+					}
+					
+					try {
+						jmpq.close();
+					} catch (Exception e) {
+						//e.printStackTrace();
+						
+						//if (e instanceof IOException) throw e;
+					}
+					
+					volExports = failedExports;
+					//removeExistingExports(volExports);
+					
+					//failedExports.clear();
 				}
-				
-				volExports = failedExports;
-				//removeExistingExports(volExports);
-				
-				//failedExports.clear();
 				
 				c++;
 			}

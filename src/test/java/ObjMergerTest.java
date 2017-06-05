@@ -36,6 +36,8 @@ public class ObjMergerTest {
             Orient.createDir(inDir);
             Orient.createDir(outDir);
             
+            //MpqPort.setWc3Dir(null);
+            
             merger.exportMap(inMapFile, inDir);
             
             merger.addDir(inDir);
@@ -46,7 +48,7 @@ public class ObjMergerTest {
 
             Orient.copyFile(inMapFile, outMapFile, true);
             
-            System.out.println(outMapFile + ";" + outMapFile.exists());
+            System.out.println("outMap:" + outMapFile + ";" + outMapFile.exists());
             
             merger.writeToMap(outMapFile, outDir);
         } catch (Exception e) {

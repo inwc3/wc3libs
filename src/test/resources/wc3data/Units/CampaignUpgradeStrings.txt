@@ -1,0 +1,35 @@
+[Rnsw]
+Name=Naga-Sirene-Adepten-Ausbildung,Naga-Sirene-Meister-Ausbildung
+Tip=N|cffffcc00a|rga-Sirene-Adepten-Ausbildung erforschen,N|cffffcc00a|rga-Sirene-Meister-Ausbildung erforschen
+Ubertip="Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Naga-Sirenen und ermöglicht ihnen, 'Frost-Rüstung' zu wirken.","Erhöht die Mana-Kapazität, die Mana-Regenerationsrate sowie die Trefferpunkte von Naga-Sirenen und ermöglicht ihnen, 'Wirbelsturm' zu wirken."
+Hotkey=A,A
+
+[Rnen]
+Name=Einschnüren
+Tip=Ei|cffffcc00n|rschnüren erforschen
+Ubertip="Ermöglicht Naga-Myrmidons, die 'Einschnüren'-Fähigkeit zu benutzen. Durch 'Einschnüren' wird die angewählte feindliche Einheit an den Boden gefesselt, sodass sie sich nicht bewegen kann. Luft-Einheiten, die eingeschnürt werden, können angegriffen werden, als ob sie Land-Einheiten wären."
+Hotkey=N
+
+[Rnsi]
+Name=Magie aufheben
+Tip=Mag|cffffcc00i|re aufheben erforschen
+Ubertip="Verleiht dem Coatl die Fähigkeit, positive Zauber von feindlichen Einheiten und negative Zauber von befreundeten Einheiten zu entfernen. |nBeschädigt beschworene Einheiten."
+Hotkey=I
+
+[Rnam]
+Name=Korallen-Schuppen,Chitin-Schuppen,Scharfmesser-Schuppen
+Tip=Ausbau zu Korallen-S|cffffcc00c|rhuppen,Ausbau zu Chitin-S|cffffcc00c|rhuppen,Ausbau zu Scharfmesser-S|cffffcc00c|rhuppen
+Ubertip="Erhöht die Rüstung der Naga-Angriffseinheiten.","Erhöht die Rüstung der Naga-Angriffseinheiten noch mehr.","Erhöht die Rüstung der Naga-Angriffseinheiten noch mehr."
+Hotkey=C,C,C
+
+[Rnat]
+Name=Korallen-Klingen,Chitin-Klingen,Scharfmesser-Klingen
+Tip=Aus|cffffcc00b|rau zu Korallen-Klingen,Aus|cffffcc00b|rau zu Chitin-Klingen,Aus|cffffcc00b|rau zu Scharfmesser-Klingen
+Ubertip="Erhöht den Angriffsschaden der Naga-Angriffseinheiten.","Erhöht den Angriffsschaden der Naga-Angriffseinheiten noch mehr.","Erhöht den Angriffsschaden der Naga-Angriffseinheiten noch mehr."
+Hotkey=B,B,B
+
+[Rnsb]
+Name=Abtauchen
+Tip=Abta|cffffcc00u|rchen erforschen
+Ubertip="Verleiht Naga-Myrmidons und Schnappdrachen die Fähigkeit, unter die Wasseroberfläche zu tauchen und sich so zu verbergen."
+Hotkey=U
