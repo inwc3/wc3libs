@@ -375,6 +375,8 @@ public abstract class MpqPort {
 		
 		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "War3InstallPath");
 		
-		setWc3Dir(new File(dirS));
+		if (dirS != null) {
+			setWc3Dir(new File(dirS));
+		}
 	}
 }
