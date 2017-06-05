@@ -1,7 +1,8 @@
+[![Build Status](https://travis-ci.org/inwc3/wc3libs.svg?branch=master)](https://travis-ci.org/inwc3/wc3libs)
 # wc3libs
-general java wc3libs
+Java library for general wc3 modding.
 
-What do we have here? Rudimentary stuff for reading/writing the various wc3 formats and wc3 modding in general:
+Supports parsing and generating various wc3 formats including:
 
 map formats:
   .w3c, .w3i, .shd, .mmp, ...
@@ -11,7 +12,7 @@ map formats:
 campaign formats: 
   .w3f
 
-mpq extracting/inserting (uses Ladik or jmpq3)
+mpq extracting/inserting (uses Ladik or https://github.com/inwc3/JMPQ3)
 
 lots of interfaces/abstract classes for the data types etc.
 
