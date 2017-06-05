@@ -1,4 +1,5 @@
 import net.moonlightflower.wc3libs.app.ObjMerger;
+import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,17 +35,19 @@ public class ObjMergerTest {
             
             Orient.createDir(inDir);
             Orient.createDir(outDir);
-
+            
             merger.exportMap(inMapFile, inDir);
-
+            
             merger.addDir(inDir);
-
+            
             merger.writeToDir(outDir);
 
             File outMapFile = new File(workDir, "merged.w3x");
 
             Orient.copyFile(inMapFile, outMapFile, true);
+            
             System.out.println(outMapFile + ";" + outMapFile.exists());
+            
             merger.writeToMap(outMapFile, outDir);
         } catch (Exception e) {
             e.printStackTrace();

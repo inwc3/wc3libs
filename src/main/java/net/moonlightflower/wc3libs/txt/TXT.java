@@ -103,8 +103,12 @@ public class TXT {
 			}
 			
 			private static String dequote(String s) {
-				if ((s.charAt(0) == '\"') && (s.charAt(s.length() - 1) == '\"')) {
-					s = s.substring(1, s.length() - 1);
+				Pattern pattern = Pattern.compile("^\"(.*)\"$");
+				
+				Matcher matcher = pattern.matcher(s);
+				
+				if (matcher.find()) {
+					s = matcher.group(1);
 				}
 				
 				return s;
@@ -449,10 +453,6 @@ public class TXT {
 			
 			if (sectionMatcher.matches()) {
 				TXTSectionId sectionId = TXTSectionId.valueOf(sectionMatcher.group(1));
-				
-				if (sectionId.toString().startsWith("h")) {
-					System.out.println("section " + sectionId);
-				}
 				
 				curSection = addSection(sectionId);
 			}

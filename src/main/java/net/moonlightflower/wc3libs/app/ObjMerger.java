@@ -127,7 +127,7 @@ public class ObjMerger {
 
 			_profile.setTranslator(translator);
 		}
-
+		
 		for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
 			File inFile = fileEntry.getKey();
 			File outFile = fileEntry.getValue();
@@ -147,7 +147,7 @@ public class ObjMerger {
 
 			addSlk(inFile, slk);
 		}
-
+		
 		for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
 			File inFile = fileEntry.getKey();
 			File outFile = fileEntry.getValue();
@@ -156,7 +156,7 @@ public class ObjMerger {
 
 			addProfile(profile);
 		}
-
+		
 		for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
 			File inFile = fileEntry.getKey();
 			File outFile = fileEntry.getValue();
@@ -257,7 +257,6 @@ public class ObjMerger {
 		Map<File, File> files = new HashMap<>();
 
 		for (File outFile : Orient.getFiles(dir)) {
-			System.err.println(dir + ";" + outFile);
 			File inFile = new File(outFile.toString().substring(dir.toString().length() + 1));
 
 			files.put(inFile, outFile);
@@ -514,7 +513,6 @@ public class ObjMerger {
 	}
 
 	public void exportMap(File mapFile, File outDir) throws Exception {
-		System.out.println("export " + mapFile + ";" + MpqPort.getWc3Dir() + ";" + outDir);
 		exportMap(mapFile, true, MpqPort.getWc3Dir(), outDir);
 	}
 
