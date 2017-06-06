@@ -1,19 +1,18 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.ObjId;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * unit and item placements file for wrapping war3mapUnits.doo
@@ -900,7 +899,7 @@ public class DOO_UNITS {
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);

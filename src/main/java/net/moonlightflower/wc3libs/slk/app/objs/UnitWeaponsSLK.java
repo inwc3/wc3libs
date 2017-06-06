@@ -183,7 +183,7 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 		}
 	}
 	
-	//private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {

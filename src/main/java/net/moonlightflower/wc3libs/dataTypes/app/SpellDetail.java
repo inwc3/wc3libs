@@ -1,17 +1,19 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 public class SpellDetail extends Int {
 	public final static SpellDetail LOW = new SpellDetail(0);
 	public final static SpellDetail MEDIUM = new SpellDetail(1);
 	public final static SpellDetail HIGH = new SpellDetail(2);
 	
-	private static Map<Integer, SpellDetail> _map = new HashMap<>();
-	
+	private static Map<Integer, SpellDetail> _map;
+
+	static {
+		_map = new LinkedHashMap<>();
+	}
+
 	public SpellDetail(int val) {
 		super(val);
 		

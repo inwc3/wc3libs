@@ -174,7 +174,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		}
 	}
 	
-	//private Map<LightningId, Obj> _objs = new HashMap<>();
+	//private Map<LightningId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<LightningId, Obj> getObjs() {

@@ -1,17 +1,17 @@
 package net.moonlightflower.wc3libs.bin.app;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
+import net.moonlightflower.wc3libs.bin.Format;
+import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.moonlightflower.wc3libs.bin.BinStream;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 
 /**
  * imports file for wrapping war3map.imp
@@ -26,7 +26,7 @@ public class IMP {
 	public final static File CAMPAIGN_PATH = new File("war3campaign.imp");
 	
 	public static class StdFlag {
-		private final static Map<Integer, StdFlag> _map = new HashMap<>();
+		private final static Map<Integer, StdFlag> _map = new LinkedHashMap<>();
 		
 		public final static StdFlag CUSTOM = new StdFlag(0xA, 0xD);
 		public final static StdFlag STD = new StdFlag(0x0, 0x5, 0x8);
@@ -155,7 +155,7 @@ public class IMP {
 			IMP_0x1,
 		}
 
-		static final Map<Integer, EncodingFormat> _map = new HashMap<>();
+		static final Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat IMP_0x1 = new EncodingFormat(Enum.IMP_0x1, 0x1);

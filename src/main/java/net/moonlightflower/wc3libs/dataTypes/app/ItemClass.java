@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ItemClass extends Wc3String {
@@ -12,7 +12,7 @@ public class ItemClass extends Wc3String {
 	public final static ItemClass POWERUP = new ItemClass("PowerUp");
 	public final static ItemClass PURCHASE = new ItemClass("Purchasable");
 	
-	private Map<String, ItemClass> _map = new HashMap<>();
+	private Map<String, ItemClass> _map = new LinkedHashMap<>();
 	
 	public ItemClass(String name) {
 		super(name);

@@ -1,10 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DoodadClass extends Wc3String {
-	private final static Map<Object, DoodadClass> _map = new HashMap<>();
+	private final static Map<Object, DoodadClass> _map = new LinkedHashMap<>();
 	
 	public final static DoodadClass CINEMATIC = new DoodadClass("Z");
 	public final static DoodadClass CLIFF = new DoodadClass("C");

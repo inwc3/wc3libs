@@ -130,7 +130,7 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 		}
 	}
 	
-	//private Map<UpgradeId, Obj> _objs = new HashMap<>();
+	//private Map<UpgradeId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<UpgradeId, Obj> getObjs() {

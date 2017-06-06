@@ -1,66 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.moonlightflower.wc3libs.dataTypes.app.AIPlaceType;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
-import net.moonlightflower.wc3libs.dataTypes.app.AlphaMode;
-import net.moonlightflower.wc3libs.dataTypes.app.ArmorSound;
-import net.moonlightflower.wc3libs.dataTypes.app.AttackBits;
-import net.moonlightflower.wc3libs.dataTypes.app.AttackTable;
-import net.moonlightflower.wc3libs.dataTypes.app.AttackType;
-import net.moonlightflower.wc3libs.dataTypes.app.AttributeType;
-import net.moonlightflower.wc3libs.dataTypes.app.BlendMode;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.BuffId;
-import net.moonlightflower.wc3libs.dataTypes.app.Char;
-import net.moonlightflower.wc3libs.dataTypes.app.CombatSound;
-import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
-import net.moonlightflower.wc3libs.dataTypes.app.DeathType;
-import net.moonlightflower.wc3libs.dataTypes.app.DefType;
-import net.moonlightflower.wc3libs.dataTypes.app.DestructableClass;
-import net.moonlightflower.wc3libs.dataTypes.app.DoodadClass;
-import net.moonlightflower.wc3libs.dataTypes.app.Effect;
-import net.moonlightflower.wc3libs.dataTypes.app.Icon;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemClass;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
-import net.moonlightflower.wc3libs.dataTypes.app.LightningId;
-import net.moonlightflower.wc3libs.dataTypes.app.Model;
-import net.moonlightflower.wc3libs.dataTypes.app.MoveType;
-import net.moonlightflower.wc3libs.dataTypes.app.MusicFile;
-import net.moonlightflower.wc3libs.dataTypes.app.OrderString;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingPrevent;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingRequire;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
-import net.moonlightflower.wc3libs.dataTypes.app.PlayerColor;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.RegenType;
-import net.moonlightflower.wc3libs.dataTypes.app.Req;
-import net.moonlightflower.wc3libs.dataTypes.app.ShadowImage;
-import net.moonlightflower.wc3libs.dataTypes.app.ShadowTex;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.SpellDetail;
-import net.moonlightflower.wc3libs.dataTypes.app.TeamColor;
-import net.moonlightflower.wc3libs.dataTypes.app.TechId;
-import net.moonlightflower.wc3libs.dataTypes.app.TerrainFogType;
-import net.moonlightflower.wc3libs.dataTypes.app.Tex;
-import net.moonlightflower.wc3libs.dataTypes.app.TileId;
-import net.moonlightflower.wc3libs.dataTypes.app.Tileset;
-import net.moonlightflower.wc3libs.dataTypes.app.UberSplatId;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitClass;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitSound;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeClass;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeEffect;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeId;
-import net.moonlightflower.wc3libs.dataTypes.app.VersionFlags;
-import net.moonlightflower.wc3libs.dataTypes.app.WaterCode;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.dataTypes.app.WeaponType;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.TypeInfoed;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class DataType implements Serializable, TypeInfoed {
 	public abstract DataType decode(Object val);
@@ -96,7 +40,7 @@ public abstract class DataType implements Serializable, TypeInfoed {
 		return null;
 	}*/
 	
-	private static Map<String, DataTypeInfo> _typeInfoMap = new HashMap<>();
+	private static Map<String, DataTypeInfo> _typeInfoMap = new LinkedHashMap<>();
 	
 	public static DataTypeInfo getTypeInfoFromName(String name) {
 		return _typeInfoMap.get(name);

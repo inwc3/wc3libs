@@ -12,10 +12,7 @@ import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements Mergeable<Self>, SLKable {
 	public static class FieldData {
@@ -30,7 +27,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 
-	private final Map<FieldId, FieldData> _fields = new HashMap<>();
+	private final Map<FieldId, FieldData> _fields = new LinkedHashMap<>();
 	
 	private FieldId _pivotField = null;
 
@@ -51,9 +48,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	public void addField(FieldId field, DataType defVal) {
 		if (field == null) throw new RuntimeException("field is null");
 
-		FieldData fieldData = _fields.get(field);
-
-		fieldData = new FieldData(defVal);
+		FieldData fieldData = new FieldData(defVal);
 
 		_fields.put(field, fieldData);
 
@@ -75,7 +70,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	public abstract static class Obj<T extends ObjId> {		
-		private Map<FieldId, DataType> _vals = new HashMap<>();
+		private Map<FieldId, DataType> _vals = new LinkedHashMap<>();
 		
 		public Map<FieldId, DataType> getVals() {
 			return _vals;
@@ -139,7 +134,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 	
-	protected Map<ObjIdType, ObjType> _objs = new HashMap<>();
+	protected Map<ObjIdType, ObjType> _objs = new LinkedHashMap<>();
 	
 	public Map<ObjIdType, ObjType> getObjs() {
 		return _objs;
@@ -217,7 +212,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		int maxX = 0;
 		int maxY = 0;
 
-		Map<Integer, Map<Integer, DataType>> data = new HashMap<>();
+		Map<Integer, Map<Integer, DataType>> data = new LinkedHashMap<>();
 
 		while ((line = reader.readLine()) != null) {
 			line = line.replaceAll("[\u0000-\u001f]", "");
@@ -276,7 +271,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 				if (y > maxY) maxY = y;
 
 				if (val != null) {
-					if (!data.containsKey(y)) data.put(y, new HashMap<Integer, DataType>());
+					if (!data.containsKey(y)) data.put(y, new LinkedHashMap<Integer, DataType>());
 	
 					data.get(y).put(x, val);
 				}
@@ -424,8 +419,8 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 			_writer.write("B;Y" + (_objs.size() + 1) + ";X" + _fields.size() + ";D0");
 
-			Map<FieldId, Integer> fieldX = new HashMap<>();
-			Map<Integer, FieldId> fieldsByX = new HashMap<>();
+			Map<FieldId, Integer> fieldX = new LinkedHashMap<>();
+			Map<Integer, FieldId> fieldsByX = new LinkedHashMap<>();
 
 			fieldX.put(_pivotField, 1);
 

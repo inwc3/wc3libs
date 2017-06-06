@@ -1,13 +1,13 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class LoadingScreenBackground {
 	public static class PresetBackground extends LoadingScreenBackground {
 		private int curIndex = 0;
-		private static Map<Integer, PresetBackground> _map = new HashMap<>();
+		private static Map<Integer, PresetBackground> _map = new LinkedHashMap<>();
 		
 		public final static PresetBackground TUTORIAL = new PresetBackground("TUTORIAL");
 		public final static PresetBackground HUMAN = new PresetBackground("HUMAN");

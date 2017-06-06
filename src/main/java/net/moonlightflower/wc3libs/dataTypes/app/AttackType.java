@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AttackType extends Wc3String {
@@ -13,7 +13,7 @@ public class AttackType extends Wc3String {
 	public final static AttackType SIEGE = new AttackType(3, "siege");
 	public final static AttackType UNKNOWN = new AttackType(0, "unknown");
 	
-	private Map<String, AttackType> _map = new HashMap<>();
+	private Map<String, AttackType> _map = new LinkedHashMap<>();
 	
 	public AttackType(int val, String name) {
 		super(name);

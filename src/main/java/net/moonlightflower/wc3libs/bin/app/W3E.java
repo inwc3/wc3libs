@@ -1,14 +1,5 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinStream;
@@ -18,6 +9,13 @@ import net.moonlightflower.wc3libs.misc.Boundable;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Raster;
 import net.moonlightflower.wc3libs.misc.Size;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * environment file for wrapping war3map.w3e
@@ -62,7 +60,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_tileset = val;
 	}
 	
-	private Map<Integer, Id> _groundTiles = new HashMap<>();
+	private Map<Integer, Id> _groundTiles = new LinkedHashMap<>();
 	
 	public Id getGroundTile(int index) {
 		return _groundTiles.get(index);
@@ -72,7 +70,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_groundTiles.put(index, val);
 	}
 	
-	private Map<Integer, Id> _cliffTiles = new HashMap<>();
+	private Map<Integer, Id> _cliffTiles = new LinkedHashMap<>();
 	
 	public Id getCliffTile(int index) {
 		return _cliffTiles.get(index);
@@ -314,7 +312,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			W3E_0xB,
 		}
 
-		static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3E_0xB = new EncodingFormat(Enum.W3E_0xB, 0xB);

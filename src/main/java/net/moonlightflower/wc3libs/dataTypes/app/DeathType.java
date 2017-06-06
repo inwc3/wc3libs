@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DeathType extends Int {
@@ -8,7 +8,7 @@ public class DeathType extends Int {
 		return "deathType";
 	}
 	
-	private static Map<Integer, DeathType> _map = new HashMap<>();
+	private static Map<Integer, DeathType> _map = new LinkedHashMap<>();
 	
 	public final static DeathType NONE = new DeathType(0x0);
 	public final static DeathType RAISE = new DeathType(0x1);

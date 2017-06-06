@@ -1,33 +1,20 @@
 package net.moonlightflower.wc3libs.txt;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.plaf.synth.SynthSpinnerUI;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * manages txt files like UI\\WorldEditStrings.txt and parses their entries to register key->value pairings
@@ -195,7 +182,7 @@ public class TXT {
 			}
 		}
 		
-		protected final Map<FieldId, Field> _fields = new HashMap<>();
+		protected final Map<FieldId, Field> _fields = new LinkedHashMap<>();
 		
 		public Map<FieldId, ? extends Field> getFields() {
 			return _fields;
@@ -332,7 +319,7 @@ public class TXT {
 	}
 
 	private final Section _defaultSection = new Section((TXTSectionId) null);
-	private final Map<TXTSectionId, Section> _sections = new HashMap<>();
+	private final Map<TXTSectionId, Section> _sections = new LinkedHashMap<>();
 	
 	public Map<TXTSectionId, Section> getSections() {
 		return _sections;

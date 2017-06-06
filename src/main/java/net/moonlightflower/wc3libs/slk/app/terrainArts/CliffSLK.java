@@ -178,7 +178,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 		}
 	}
 	
-	//private Map<CliffId, Obj> _objs = new HashMap<>();
+	//private Map<CliffId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<CliffId, Obj> getObjs() {

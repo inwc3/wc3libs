@@ -160,7 +160,7 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		}
 	}
 	
-	//private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {

@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -39,7 +39,7 @@ public class SHD {
             SHD_0x0,
         }
 
-        private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+        private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
         public final static EncodingFormat SHD_0x0 = new EncodingFormat(Enum.SHD_0x0, 0x0);

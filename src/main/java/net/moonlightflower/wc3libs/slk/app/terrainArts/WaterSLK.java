@@ -383,7 +383,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 	}
 	
-	//private Map<WaterId, Obj> _objs = new HashMap<>();
+	//private Map<WaterId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<WaterId, Obj> getObjs() {

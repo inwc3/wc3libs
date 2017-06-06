@@ -1,32 +1,17 @@
 package net.moonlightflower.wc3libs.bin.app;
 
+import net.moonlightflower.wc3libs.bin.*;
+import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.moonlightflower.wc3libs.bin.Bin;
-import net.moonlightflower.wc3libs.bin.BinState;
-import net.moonlightflower.wc3libs.bin.BinStream;
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Packed;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
-import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
-import net.moonlightflower.wc3libs.dataTypes.app.Color;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.dataTypes.app.WeatherId;
 
 /**
  * gamecache file
@@ -1009,7 +994,7 @@ public class W3V {
 			W3V_0x0
 		}
 
-		static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3V_0x0 = new EncodingFormat(Enum.W3V_0x0, 0x0);

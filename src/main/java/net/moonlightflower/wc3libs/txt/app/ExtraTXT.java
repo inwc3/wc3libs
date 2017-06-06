@@ -1,25 +1,24 @@
 package net.moonlightflower.wc3libs.txt.app;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.TXTState;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ExtraTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapExtra.txt");
 	
 	public static class SkyModel extends Int {
-		private static Map<Integer, SkyModel> _map = new HashMap<>();
+		private static Map<Integer, SkyModel> _map = new LinkedHashMap<>();
 		
 		public final static SkyModel BLIZZARD = new SkyModel(0, "SKY08");
 		public final static SkyModel DALARAN = new SkyModel(1, "SKY02");
@@ -59,7 +58,7 @@ public class ExtraTXT extends TXT {
 	}
 
 	public static class TimeOfDay extends Int {
-		private static Map<Integer, TimeOfDay> _map = new HashMap<>();
+		private static Map<Integer, TimeOfDay> _map = new LinkedHashMap<>();
 		
 		public final static TimeOfDay UNFIXED = new TimeOfDay(0, "MAPPREFS_TIMEOFDAY_UNFIXED", null);
 		public final static TimeOfDay DAWN = new TimeOfDay(1, "MAPPREFS_TIMEOFDAY_FIXED", "DAWN");

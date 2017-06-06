@@ -1,10 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DestructableClass extends Wc3String {
-	private final static Map<Object, DestructableClass> _map = new HashMap<>();
+	private final static Map<Object, DestructableClass> _map = new LinkedHashMap<>();
 	
 	public final static DestructableClass BRIDGE = new DestructableClass("B");
 	public final static DestructableClass DESTRUCTABLE = new DestructableClass("D");

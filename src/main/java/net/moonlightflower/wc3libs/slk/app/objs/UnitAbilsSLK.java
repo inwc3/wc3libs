@@ -102,7 +102,7 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 		}
 	}
 	
-	//private Map<UnitId, Obj> _objs = new HashMap<>();
+	//private Map<UnitId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<UnitId, Obj> getObjs() {

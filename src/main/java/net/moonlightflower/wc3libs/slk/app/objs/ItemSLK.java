@@ -134,7 +134,7 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 		}
 	}
 	
-	//private Map<ItemId, Obj> _objs = new HashMap<>();
+	//private Map<ItemId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<ItemId, Obj> getObjs() {

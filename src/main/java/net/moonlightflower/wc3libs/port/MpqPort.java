@@ -2,7 +2,7 @@ package net.moonlightflower.wc3libs.port;
 
 import java.io.*;
 import java.nio.file.NoSuchFileException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -154,7 +154,7 @@ public abstract class MpqPort {
 				}
 			}
 			
-			private Map<File, Segment> _exports = new HashMap<>();
+			private Map<File, Segment> _exports = new LinkedHashMap<>();
 			
 			public Map<File, Segment> getExports() {
 				return _exports;

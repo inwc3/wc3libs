@@ -4,32 +4,9 @@ import systems.crigges.jmpq3.JMpqEditor;
 import systems.crigges.jmpq3.JMpqException;
 import systems.crigges.jmpq3.MPQOpenOption;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.AccessMode;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.DirectoryStream.Filter;
-import java.nio.file.FileStore;
-import java.nio.file.FileSystem;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.FileAttributeView;
-import java.nio.file.spi.FileSystemProvider;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 public class JMpqPort extends MpqPort {
@@ -68,7 +45,7 @@ public class JMpqPort extends MpqPort {
 			Vector<String> lines = new Vector<>();
 			
 			for (File mpqFile : mpqFiles) {
-				JMpqEditor jmpq = new JMpqEditor(mpqFile);
+				JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.FORCE_V0);
 				
 				for (FileImport fileImport : getFiles()) {
 					//jmpq.insertFile(fileImport.getOutFile().getAbsolutePath(), fileImport.getInFile(), false);

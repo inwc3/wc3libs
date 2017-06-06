@@ -1,10 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Controller extends Int {
-	private static Map<Integer, Controller> _map = new HashMap<>();
+	private static Map<Integer, Controller> _map = new LinkedHashMap<>();
 	
 	public final static Controller CPU = new Controller(2, "COMPUTER");
 	public final static Controller HUMAN = new Controller(1, "USER");

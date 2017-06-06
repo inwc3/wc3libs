@@ -1,9 +1,7 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 public class PathingFlag extends Int {
 	public static class Ints {
@@ -17,7 +15,7 @@ public class PathingFlag extends Int {
 		public final static Integer UNKNOWN3 = 0x80;
 	}
 	
-	private final static Map<Object, PathingFlag> _map = new HashMap<>();
+	private final static Map<Object, PathingFlag> _map = new LinkedHashMap<>();
 	
 	public final static PathingFlag BLIGHT = new PathingFlag("blighted", Ints.UNKNOWN);
 	public final static PathingFlag UNAMPH = new PathingFlag("unamph", null);

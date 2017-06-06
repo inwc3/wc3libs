@@ -1,6 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-public interface Stringable {
+public interface Stringable extends Comparable<Stringable> {
 	@Override
-	public String toString();
+	String toString();
+
+	default int compareTo(Stringable o) {
+		return this.toString().compareTo(o.toString());
+	}
 }

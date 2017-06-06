@@ -1,9 +1,7 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 public class CombatTarget extends Wc3String {
 	public final static CombatTarget AIR = new CombatTarget("air");
@@ -38,7 +36,7 @@ public class CombatTarget extends Wc3String {
 	public final static CombatTarget WALL = new CombatTarget("wall");
 	public final static CombatTarget WARD = new CombatTarget("ward");
 	
-	private static Map<String, CombatTarget> _map = new HashMap<>();
+	private static Map<String, CombatTarget> _map = new LinkedHashMap<>();
 	
 	public static CombatTarget valueOf(String val) {
 		return _map.get(val);

@@ -1,10 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TerrainFogType extends Int {
-	private static Map<Integer, TerrainFogType> _map = new HashMap<>();
+	private static Map<Integer, TerrainFogType> _map = new LinkedHashMap<>();
 	
 	public final static TerrainFogType EXP = new TerrainFogType(2);
 	public final static TerrainFogType EXP2 = new TerrainFogType(3);

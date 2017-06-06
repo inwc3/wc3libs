@@ -1,64 +1,22 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
+import net.moonlightflower.wc3libs.bin.MetaState;
+import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.dataTypes.DataList;
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.misc.ObjId;
+import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.moonlightflower.wc3libs.bin.MetaState;
-import net.moonlightflower.wc3libs.bin.ObjMod;
-import net.moonlightflower.wc3libs.bin.app.objMod.W3Q.States.State;
-import net.moonlightflower.wc3libs.dataTypes.DataList;
-import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.AIPlaceType;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilCode;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
-import net.moonlightflower.wc3libs.dataTypes.app.AttackBits;
-import net.moonlightflower.wc3libs.dataTypes.app.AttackType;
-import net.moonlightflower.wc3libs.dataTypes.app.AttributeType;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Char;
-import net.moonlightflower.wc3libs.dataTypes.app.CombatSound;
-import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
-import net.moonlightflower.wc3libs.dataTypes.app.DeathType;
-import net.moonlightflower.wc3libs.dataTypes.app.DefType;
-import net.moonlightflower.wc3libs.dataTypes.app.Icon;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemList;
-import net.moonlightflower.wc3libs.dataTypes.app.Model;
-import net.moonlightflower.wc3libs.dataTypes.app.MoveType;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingPrevent;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingRequire;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.RegenType;
-import net.moonlightflower.wc3libs.dataTypes.app.ShadowImage;
-import net.moonlightflower.wc3libs.dataTypes.app.ShadowTex;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.StringList;
-import net.moonlightflower.wc3libs.dataTypes.app.TargetList;
-import net.moonlightflower.wc3libs.dataTypes.app.TeamColor;
-import net.moonlightflower.wc3libs.dataTypes.app.TechId;
-import net.moonlightflower.wc3libs.dataTypes.app.TechList;
-import net.moonlightflower.wc3libs.dataTypes.app.Tileset;
-import net.moonlightflower.wc3libs.dataTypes.app.UberSplatId;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitClass;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitList;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitSound;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeId;
-import net.moonlightflower.wc3libs.dataTypes.app.VersionFlags;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.dataTypes.app.WeaponType;
-import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
-import net.moonlightflower.wc3libs.port.MpqPort;
 
 /**
  * unit modifications file for wrapping war3map.w3u
@@ -349,7 +307,7 @@ public class W3U extends ObjMod {
 		}
 	}
 	
-	private Map<ObjId, Unit> _objs = new HashMap<>();
+	private Map<ObjId, Unit> _objs = new LinkedHashMap<>();
 
 	@Override
 	public Map<ObjId, Unit> getObjs() {

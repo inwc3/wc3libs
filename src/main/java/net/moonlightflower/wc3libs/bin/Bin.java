@@ -1,12 +1,12 @@
 package net.moonlightflower.wc3libs.bin;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public abstract class Bin {
-	private Map<BinState<?>, DataType> _vals = new HashMap<>();
+	private Map<BinState<?>, DataType> _vals = new LinkedHashMap<>();
 	
 	public Map<BinState<?>, DataType> getVals() {
 		return _vals;

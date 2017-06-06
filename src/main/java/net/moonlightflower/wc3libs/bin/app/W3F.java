@@ -10,7 +10,7 @@ import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -195,7 +195,7 @@ public class W3F {
 	public static class AmbientSound {};
 
 	public static class PresetAmbientSound extends AmbientSound {
-		private static Map<Integer, AmbientSound> _map = new HashMap<>();
+		private static Map<Integer, AmbientSound> _map = new LinkedHashMap<>();
 		
 		public final static PresetAmbientSound TUTORIAL = new PresetAmbientSound(0, "TUTORIAL");
 		public final static PresetAmbientSound HUMAN = new PresetAmbientSound(1, "HUMAN");
@@ -283,7 +283,7 @@ public class W3F {
 	}
 	
 	public static class UIRace {
-		private static Map<Integer, UIRace> _map = new HashMap<>();
+		private static Map<Integer, UIRace> _map = new LinkedHashMap<>();
 		
 		public final static UIRace HUMAN = new UIRace(0, "HUMAN");
 		public final static UIRace ORC = new UIRace(1, "ORC");
@@ -569,7 +569,7 @@ public class W3F {
 			W3F_0x1
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3F_0x1 = new EncodingFormat(Enum.W3F_0x1, 0x1);

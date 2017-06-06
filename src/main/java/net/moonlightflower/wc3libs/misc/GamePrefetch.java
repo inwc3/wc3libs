@@ -123,7 +123,7 @@ public class GamePrefetch {
 	private Queue<Obj> _objs = new LinkedList<>();
 	private List<File> _loadingFiles = new ArrayList<>();
 	
-	private static Map<File, MpqPort.Out.FileExport> _cache = new HashMap<>();
+	private static Map<File, MpqPort.Out.FileExport> _cache = new LinkedHashMap<>();
 	
 	private boolean _started = false;
 	

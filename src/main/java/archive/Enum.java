@@ -1,3 +1,4 @@
+package archive;
 
 public class Enum {
 	/*private static class EncodingFormat {
@@ -7,7 +8,7 @@ public class Enum {
 		return _val;
 	}
 	
-	private static Map<Integer, EncodingFormatEnum> _map = new HashMap<Integer, EncodingFormatEnum>();
+	private static Map<Integer, EncodingFormatEnum> _map = new LinkedHashMap<Integer, EncodingFormatEnum>();
 	
 	private EncodingFormatEnum _enumVal;
 	
@@ -61,7 +62,7 @@ enum EncodingFormatEnum {
 		return _val;
 	}
 	
-	private static Map<Integer, EncodingFormat> _map = new HashMap<Integer, EncodingFormat>();
+	private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<Integer, EncodingFormat>();
 	
 	public static EncodingFormat valueOf(int val) {
 		return _map.get(val);

@@ -1,12 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.moonlightflower.wc3libs.dataTypes.DataType;
-
 public class Tileset extends Char {
-	private static Map<Character, Tileset> _map = new HashMap<>();
+	private static Map<Character, Tileset> _map = new LinkedHashMap<>();
 	
 	public final static Tileset ASHENVALE = new Tileset('A', "ASHENVALE");
 	public final static Tileset BARRENS = new Tileset('B', "BARRENS");

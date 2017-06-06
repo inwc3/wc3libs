@@ -1,18 +1,18 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * custom text triggers file for wrapping war3map.wct
@@ -115,7 +115,7 @@ public class WCT {
 			WCT_0x1,
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WCT_0x0 = new EncodingFormat(Enum.WCT_0x0, 0x0);

@@ -29,7 +29,7 @@ public class ObjMerger {
 		_workDir = dir;
 	}*/
 
-	private Map<File, SLK> _slks = new HashMap<>();
+	private Map<File, SLK> _slks = new LinkedHashMap<>();
 
 	private void addSlk(File inFile, SLK otherSlk) {
 		assert(inFile != null);
@@ -57,7 +57,7 @@ public class ObjMerger {
 		_profile.merge(otherProfile);
 	}
 
-	private Map<File, ObjMod> _objMods = new HashMap<>();
+	private Map<File, ObjMod> _objMods = new LinkedHashMap<>();
 
 	private void addObjMod(File inFile, ObjMod otherObjMod) {
 		try {
@@ -69,7 +69,7 @@ public class ObjMerger {
 				File file = slkEntry.getKey();
 				SLK otherSlk = slkEntry.getValue();
 				
-				Map<ObjId, SLK.Obj> otherObjs = new HashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
+				Map<ObjId, SLK.Obj> otherObjs = new LinkedHashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
 				
 				otherSlk.clearObjs();
 				
@@ -96,7 +96,7 @@ public class ObjMerger {
 			//
 			Profile otherProfile = pack.getProfile();
 			
-			Map<TXTSectionId, Profile.Obj> otherObjs = new HashMap<>(((Map<TXTSectionId, Profile.Obj>) otherProfile.getObjs()));
+			Map<TXTSectionId, Profile.Obj> otherObjs = new LinkedHashMap<>(((Map<TXTSectionId, Profile.Obj>) otherProfile.getObjs()));
 			
 			otherProfile.clearObjs();
 			
@@ -205,7 +205,7 @@ public class ObjMerger {
 	}
 
 	private void exportFiles(File outDir, Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws IOException {
-		Map<File, File> fileEntries = new HashMap<>();
+		Map<File, File> fileEntries = new LinkedHashMap<>();
 
 		for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
 			File inFile = fileEntry.getKey();
@@ -281,7 +281,7 @@ public class ObjMerger {
 	});
 
 	public void addDir(File dir) throws IOException {
-		Map<File, File> files = new HashMap<>();
+		Map<File, File> files = new LinkedHashMap<>();
 
 		for (File outFile : Orient.getFiles(dir)) {
 			File inFile = new File(outFile.toString().substring(dir.toString().length() + 1));
@@ -289,10 +289,10 @@ public class ObjMerger {
 			files.put(inFile, outFile);
 		}
 
-		Map<File, File> metaSlkFiles = new HashMap<>();
-		Map<File, File> slkFiles = new HashMap<>();
-		Map<File, File> profileFiles = new HashMap<>();
-		Map<File, File> objModFiles = new HashMap<>();
+		Map<File, File> metaSlkFiles = new LinkedHashMap<>();
+		Map<File, File> slkFiles = new LinkedHashMap<>();
+		Map<File, File> profileFiles = new LinkedHashMap<>();
+		Map<File, File> objModFiles = new LinkedHashMap<>();
 		File wtsFile = null;
 
 		for (Map.Entry<File, File> fileEntry : files.entrySet()) {
@@ -320,7 +320,7 @@ public class ObjMerger {
 	}
 
 	private void addExports(File outDir, MpqPort.Out.Result metaSlkResult, MpqPort.Out.Result slkResult, MpqPort.Out.Result profileResult, MpqPort.Out.Result objModResult, MpqPort.Out.Result wtsResult) throws IOException {
-		Map<File, File> metaSlkFiles = new HashMap<>();
+		Map<File, File> metaSlkFiles = new LinkedHashMap<>();
 
 		for (MpqPort.Out.Result.Segment segment : metaSlkResult.getExports().values()) {
 			File inFile = segment.getExport().getInFile();
@@ -333,7 +333,7 @@ public class ObjMerger {
 			}
 		}
 
-		Map<File, File> slkFiles = new HashMap<>();
+		Map<File, File> slkFiles = new LinkedHashMap<>();
 
 		for (MpqPort.Out.Result.Segment segment : slkResult.getExports().values()) {
 			File inFile = segment.getExport().getInFile();
@@ -346,7 +346,7 @@ public class ObjMerger {
 			}
 		}
 
-		Map<File, File> profileFiles = new HashMap<>();
+		Map<File, File> profileFiles = new LinkedHashMap<>();
 
 		for (MpqPort.Out.Result.Segment segment : slkResult.getExports().values()) {
 			File inFile = segment.getExport().getInFile();
@@ -359,7 +359,7 @@ public class ObjMerger {
 			}
 		}
 
-		Map<File, File> objModFiles = new HashMap<>();
+		Map<File, File> objModFiles = new LinkedHashMap<>();
 
 		for (MpqPort.Out.Result.Segment segment : objModResult.getExports().values()) {
 			File inFile = segment.getExport().getInFile();
@@ -526,7 +526,7 @@ public class ObjMerger {
 
 		MpqPort.Out.Result portResult = portOut.commit(mpqFiles);
 
-		Map<File, File> outFiles = new HashMap<>();
+		Map<File, File> outFiles = new LinkedHashMap<>();
 
 		for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
 			File inFile = segmentEntry.getKey();

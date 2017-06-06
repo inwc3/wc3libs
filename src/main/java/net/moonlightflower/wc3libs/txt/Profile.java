@@ -1,28 +1,12 @@
 package net.moonlightflower.wc3libs.txt;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import net.moonlightflower.wc3libs.misc.FieldId;
+import net.moonlightflower.wc3libs.misc.Translator;
+
+import java.io.*;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.WaterId;
-import net.moonlightflower.wc3libs.dataTypes.app.WeatherId;
-import net.moonlightflower.wc3libs.misc.FieldId;
-import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.misc.Translator;
-import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.app.terrainArts.WeatherSLK;
-import net.moonlightflower.wc3libs.slk.app.terrainArts.WaterSLK.Obj;
-import net.moonlightflower.wc3libs.slk.app.terrainArts.WeatherSLK.States;
-import net.moonlightflower.wc3libs.txt.TXT.Section;
-import net.moonlightflower.wc3libs.txt.TXT.Section.Field;
 
 /**
  * handles profile files like Units\CommandFunc.txt
@@ -102,11 +86,11 @@ public class Profile extends TXT {
 			}
 		}
 		
-		/*private Map<FieldId, Field> _fields = new HashMap<>();*/
+		/*private Map<FieldId, Field> _fields = new LinkedHashMap<>();*/
 		
 		@Override
 		public Map<FieldId, Field> getFields() {
-			Map<FieldId, Field> ret = new HashMap<>();
+			Map<FieldId, Field> ret = new LinkedHashMap<>();
 			
 			ret.putAll((Map<? extends FieldId, ? extends Field>) super.getFields());
 			
@@ -218,7 +202,7 @@ public class Profile extends TXT {
 		}
 	}
 	
-	private final Map<TXTSectionId, Obj> _objs = new HashMap<>();
+	private final Map<TXTSectionId, Obj> _objs = new LinkedHashMap<>();
 	
 	public Map<TXTSectionId, Obj> getObjs() {
 		return _objs;

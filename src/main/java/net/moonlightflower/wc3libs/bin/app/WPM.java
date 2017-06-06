@@ -16,7 +16,7 @@ import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -93,7 +93,7 @@ public class WPM extends Raster<FlagsInt> {
 			WPM_0x0,
 		}
 
-		private final static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WPM_0x0 = new EncodingFormat(Enum.WPM_0x0, 0x0);

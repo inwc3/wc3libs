@@ -5,7 +5,7 @@ import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,10 +14,10 @@ public class WTS {
 	public final static File GAME_PATH = new File("war3map.wts");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.wts");
 	
-	private final Map<Integer, String> _vals = new HashMap<>();
+	private final Map<Integer, String> _vals = new LinkedHashMap<>();
 	
 	public Map<String, String> getNamedEntries() {
-		Map<String, String> res = new HashMap<>();
+		Map<String, String> res = new LinkedHashMap<>();
 		
 		for (Map.Entry<Integer, String> valEntry : _vals.entrySet()) {
 			int key = valEntry.getKey();

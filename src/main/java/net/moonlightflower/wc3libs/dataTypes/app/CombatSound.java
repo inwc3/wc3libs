@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CombatSound extends Wc3String {
@@ -18,7 +18,7 @@ public class CombatSound extends Wc3String {
 	public final static CombatSound WOOD_LIGHT_BASH = new CombatSound("WoodLightBash");
 	public final static CombatSound WOOD_MEDIUM_BASH = new CombatSound("WoodMediumBash");
 	
-	private Map<String, CombatSound> _map = new HashMap<>();
+	private Map<String, CombatSound> _map = new LinkedHashMap<>();
 	
 	public CombatSound(String name) {
 		super(name);

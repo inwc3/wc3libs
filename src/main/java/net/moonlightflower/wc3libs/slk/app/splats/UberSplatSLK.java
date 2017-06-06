@@ -221,7 +221,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 	}
 	
-	//private Map<UberSplatId, Obj> _objs = new HashMap<>();
+	//private Map<UberSplatId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<UberSplatId, Obj> getObjs() {

@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +42,7 @@ public class Jass {
 		
 		JassParser parser = new JassParser(tokens);
 		
-		Map<String, String> newEntries = new HashMap<>();
+		Map<String, String> newEntries = new LinkedHashMap<>();
 		
 		parser.addParseListener(new ParseTreeListener() {
 			@Override

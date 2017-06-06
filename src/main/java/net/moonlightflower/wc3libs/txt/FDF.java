@@ -13,7 +13,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -94,7 +94,7 @@ public class FDF extends UTF8 {
 		return ret;
 	}
 	
-	private final Map<String, String> _map = new HashMap<>();
+	private final Map<String, String> _map = new LinkedHashMap<>();
 	
 	public TXT toTXT() {
 		TXT txt = new TXT();
@@ -119,7 +119,7 @@ public class FDF extends UTF8 {
 		
 		FDFParser parser = new FDFParser(tokens);
 		
-		Map<String, String> newEntries = new HashMap<>();
+		Map<String, String> newEntries = new LinkedHashMap<>();
 		
 		parser.addParseListener(new ParseTreeListener() {
 			@Override

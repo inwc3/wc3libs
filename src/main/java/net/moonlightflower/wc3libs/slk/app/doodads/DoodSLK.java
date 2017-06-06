@@ -170,7 +170,7 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 		}
 	}
 	
-	//private Map<DoodId, Obj> _objs = new HashMap<>();
+	//private Map<DoodId, Obj> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<DoodId, Obj> getObjs() {

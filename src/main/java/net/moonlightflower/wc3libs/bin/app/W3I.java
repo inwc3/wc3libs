@@ -14,7 +14,7 @@ import net.moonlightflower.wc3libs.port.Orient;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -519,7 +519,7 @@ public class W3I {
 	}
 	
 	public static class GameDataSet {
-		private static Map<Integer, GameDataSet> _map = new HashMap<>();
+		private static Map<Integer, GameDataSet> _map = new LinkedHashMap<>();
 		
 		public final static GameDataSet STANDARD = new GameDataSet(0, "DEFAULT");
 		public final static GameDataSet CUSTOM_V1 = new GameDataSet(1, "CUSTOM_V1");
@@ -636,7 +636,7 @@ public class W3I {
 		}
 		
 		public static class UnitRace extends Int {
-			private static Map<Integer, UnitRace> _map = new HashMap<>();
+			private static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
 			
 			public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF");
 			public final static UnitRace HUMAN = new UnitRace(1, "HUMAN");
@@ -1256,7 +1256,7 @@ public class W3I {
 				return _val;
 			}
 			
-			private static Map<Integer, PositionType> _valToPositionTypeMap = new HashMap<>();
+			private static Map<Integer, PositionType> _valToPositionTypeMap = new LinkedHashMap<>();
 			
 			PositionType(int val) {
 				_val = val;
@@ -1271,7 +1271,7 @@ public class W3I {
 			}
 		}
 		
-		private Map<Integer, PositionType> _positionTypes = new HashMap<>();
+		private Map<Integer, PositionType> _positionTypes = new LinkedHashMap<>();
 		
 		public PositionType getPositionType(int index) {
 			return _positionTypes.get(index);
@@ -1294,7 +1294,7 @@ public class W3I {
 				_chance = val;
 			}
 			
-			private Map<Integer, Id> _typeIds = new HashMap<>();
+			private Map<Integer, Id> _typeIds = new LinkedHashMap<>();
 			
 			public Id getTypeId(int pos) {
 				return _typeIds.get(pos);
@@ -1657,7 +1657,7 @@ public class W3I {
 			W3I_0x12,
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3I_0x19 = new EncodingFormat(Enum.W3I_0x19, 0x19);

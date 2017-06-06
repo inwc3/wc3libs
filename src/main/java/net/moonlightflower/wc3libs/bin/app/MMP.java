@@ -1,15 +1,5 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -20,10 +10,15 @@ import net.moonlightflower.wc3libs.dataTypes.app.Color;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 import net.moonlightflower.wc3libs.misc.image.BLP;
-import net.moonlightflower.wc3libs.misc.image.Wc3Img;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 public class MMP {
 	public final static File GAME_PATH = new File("war3map.mmp");
@@ -36,7 +31,7 @@ public class MMP {
 			HOUSE(0x1, new File("UI\\MiniMap\\minimap-neutralbuilding.blp")),
 			PLAYER_START(2, new File("UI\\MiniMap\\MiniMapIcon\\MinimapIconStartLoc.blp"));
 			
-			private final static Map<Integer, IconType> _map = new HashMap<>();
+			private final static Map<Integer, IconType> _map = new LinkedHashMap<>();
 			
 			private int _val;
 			
@@ -207,7 +202,7 @@ public class MMP {
 		
 		PixelWriter pxWriter = img.getPixelWriter();
 		
-		Map<File, IconImg> iconImgMap = new HashMap<>();
+		Map<File, IconImg> iconImgMap = new LinkedHashMap<>();
 		
 		for (Icon icon : getIcons()) {
 			File imgPath = icon.getType().getImgPath();
@@ -289,7 +284,7 @@ public class MMP {
 			MMP_0x0,
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat MMP_0x0 = new EncodingFormat(Enum.MMP_0x0, 0x0);

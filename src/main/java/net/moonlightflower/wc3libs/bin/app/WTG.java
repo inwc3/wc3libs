@@ -1,17 +1,5 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import java.awt.Window.Type;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
 import net.moonlightflower.wc3libs.bin.Format;
@@ -22,6 +10,17 @@ import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * gui triggers file for wrapping war3map.wtg
@@ -51,7 +50,7 @@ public class WTG {
 		}
 	}
 	
-	private Map<FieldId, FuncCat> _funcCats = new HashMap<>();
+	private Map<FieldId, FuncCat> _funcCats = new LinkedHashMap<>();
 	
 	public Map<FieldId, FuncCat> getFuncCats() {
 		return _funcCats;
@@ -131,7 +130,7 @@ public class WTG {
 		public Func(String name) {
 			_name = name;
 
-			Map<String, SpecialType> typeMap = new HashMap<>();
+			Map<String, SpecialType> typeMap = new LinkedHashMap<>();
 			
 			typeMap.put("boolcall", SpecialType.BOOLCALL);
 			typeMap.put("boolexpr", SpecialType.BOOLEXPR);
@@ -140,7 +139,7 @@ public class WTG {
 		}
 	}
 	
-	private Map<String, Func> _funcs = new HashMap<>();
+	private Map<String, Func> _funcs = new LinkedHashMap<>();
 	
 	private Map<String, Func> getFuncs() {
 		return _funcs;
@@ -196,7 +195,7 @@ public class WTG {
 		}
 		
 		public static class TrigType {
-			private static Map<Integer, TrigType> _map = new HashMap<>();
+			private static Map<Integer, TrigType> _map = new LinkedHashMap<>();
 			
 			public final static TrigType COMMENT = new TrigType(1);
 			public final static TrigType NORMAL = new TrigType(0);
@@ -280,7 +279,7 @@ public class WTG {
 		
 		public static class ECA {
 			public static class ECAType {
-				private static Map<Integer, ECAType> _map = new HashMap<>();
+				private static Map<Integer, ECAType> _map = new LinkedHashMap<>();
 				
 				public final static ECAType ACTION = new ECAType(2);
 				public final static ECAType CONDITION = new ECAType(1);
@@ -377,7 +376,7 @@ public class WTG {
 			
 			public static class NormalParam extends Param {				
 				public static class SpecType {
-					private static Map<Integer, SpecType> _map = new HashMap<>();
+					private static Map<Integer, SpecType> _map = new LinkedHashMap<>();
 					
 					public final static SpecType PRESET = new SpecType(0);
 					public final static SpecType VARIABLE = new SpecType(1);
@@ -1220,7 +1219,7 @@ System.out.println(val);
 		}
 		
 		public static class Type {
-			private static Map<Integer, Type> _map = new HashMap<>();
+			private static Map<Integer, Type> _map = new LinkedHashMap<>();
 			
 			public final static Type COMMENT = new Type(1);
 			public final static Type NORMAL = new Type(0);
@@ -1490,7 +1489,7 @@ System.out.println(val);
 		}
 	}
 
-	private Map<String, Var> _vars = new HashMap<>();
+	private Map<String, Var> _vars = new LinkedHashMap<>();
 	
 	public Map<String, Var> getVars() {
 		return _vars;
@@ -1524,7 +1523,7 @@ System.out.println(val);
 			addFuncCat(cat);
 		}
 		
-		Map<String, Integer> sections = new HashMap<>();
+		Map<String, Integer> sections = new LinkedHashMap<>();
 		
 		sections.put("TriggerEvents", 1);
 		sections.put("TriggerConditions", 1);
@@ -1590,7 +1589,7 @@ System.out.println(val);
 			WTG_0x7
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WTG_0x4 = new EncodingFormat(Enum.WTG_0x4, 0x4);

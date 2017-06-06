@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class UnitRace extends Wc3String {
@@ -8,7 +8,7 @@ public class UnitRace extends Wc3String {
 		return "unitRace";
 	}
 	
-	private static Map<String, UnitRace> _map = new HashMap<>();
+	private static Map<String, UnitRace> _map = new LinkedHashMap<>();
 	
 	public final static UnitRace HUMAN = new UnitRace("human");
 	public final static UnitRace ORC = new UnitRace("orc");

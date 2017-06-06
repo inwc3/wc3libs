@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DefType extends Wc3String {
@@ -13,7 +13,7 @@ public class DefType extends Wc3String {
 	public final static DefType NORMAL = new DefType(4, "normal");
 	public final static DefType SMALL = new DefType(0, "small");
 	
-	private Map<String, DefType> _map = new HashMap<>();
+	private Map<String, DefType> _map = new LinkedHashMap<>();
 	
 	public DefType(int val, String name) {
 		super(name);

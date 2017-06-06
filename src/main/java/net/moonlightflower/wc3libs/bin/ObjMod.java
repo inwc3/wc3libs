@@ -1,18 +1,5 @@
 package net.moonlightflower.wc3libs.bin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
@@ -23,18 +10,18 @@ import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.*;
 import net.moonlightflower.wc3libs.txt.Profile;
-import net.moonlightflower.wc3libs.txt.TXTSectionId;;
+import net.moonlightflower.wc3libs.txt.TXTSectionId;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+;
 
 /**
  * base class for object modification files
@@ -54,7 +41,7 @@ public class ObjMod {
 					return _val;
 				}
 				
-				private static Map<Integer, ValType> _map = new HashMap<>();
+				private static Map<Integer, ValType> _map = new LinkedHashMap<>();
 				
 				static public ValType valueOf(int val) {
 					return _map.get(val);
@@ -108,7 +95,7 @@ public class ObjMod {
 				}
 			}
 			
-			private Map<Integer, Val> _vals = new HashMap<>();
+			private Map<Integer, Val> _vals = new LinkedHashMap<>();
 			
 			public Map<Integer, Val> getVals() {
 				return _vals;
@@ -197,7 +184,7 @@ public class ObjMod {
 			}
 		}
 
-		private Map<MetaFieldId, Field> _fieldsMap = new HashMap<>();
+		private Map<MetaFieldId, Field> _fieldsMap = new LinkedHashMap<>();
 		private List<Field> _fieldsList = new ArrayList<>();
 		
 		public Map<MetaFieldId, Field> getFields() {
@@ -572,7 +559,7 @@ public class ObjMod {
 		}
 	}
 	
-	protected Map<ObjId, Obj> _objs = new HashMap<>();
+	protected Map<ObjId, Obj> _objs = new LinkedHashMap<>();
 	private List<Obj> _objsList = new ArrayList<>();
 	
 	public Map<ObjId, ? extends Obj> getObjs() {
@@ -673,13 +660,13 @@ public class ObjMod {
 	}
 	
 	public static class ObjPack {
-		private Map<ObjId, ObjId> _baseObjIds = new HashMap<>();
+		private Map<ObjId, ObjId> _baseObjIds = new LinkedHashMap<>();
 		
 		public Map<ObjId, ObjId> getBaseObjIds() {
 			return _baseObjIds;
 		}
 		
-		private Map<File, SLK> _slks = new HashMap<>();
+		private Map<File, SLK> _slks = new LinkedHashMap<>();
 		
 		public Map<File, SLK> getSlks() {
 			return _slks;
@@ -931,7 +918,7 @@ public class ObjMod {
 			OBJ_0x2
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new HashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat OBJ_0x1 = new EncodingFormat(Enum.OBJ_0x1, 0x1);
