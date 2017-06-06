@@ -82,9 +82,9 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
         public final static State<Model> ART_MODEL = new State<>("file", Model.class);
         public final static State<Real> ART_SCALE = new State<>("scale", Real.class);
         public final static State<Real> ART_SELECTION_SCALE = new State<>("selSize", Real.class);
+        public final static State<Int> ART_COLOR_RED = new State<>("colorB", Int.class);
         public final static State<Int> ART_COLOR_BLUE = new State<>("colorR", Int.class);
         public final static State<Int> ART_COLOR_GREEN = new State<>("colorG", Int.class);
-        public final static State<Int> ART_COLOR_RED = new State<>("colorB", Int.class);
         public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
     }
 
