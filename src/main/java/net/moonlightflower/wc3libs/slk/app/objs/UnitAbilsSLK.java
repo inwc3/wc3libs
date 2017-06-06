@@ -1,19 +1,10 @@
 package net.moonlightflower.wc3libs.slk.app.objs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -21,7 +12,13 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
-import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UnitAbilities.slk");
@@ -58,14 +55,14 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 		}
 
 		public final static State<UnitId> OBJ_ID = new State<>("unitAbilID", UnitId.class);
-		
+
+		public final static State<Wc3String> EDITOR_SORT = new State<>("sortAbil", Wc3String.class);
+		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment(s)", Wc3String.class);
+		public final static State<AbilId> DATA_AUTO = new State<>("auto", AbilId.class);
+
 		public final static State<DataList<AbilId>> DATA_ABILS = new State<>("abilList", new DataTypeInfo(DataList.class, AbilId.class));
 		public final static State<DataList<AbilId>> DATA_ABILS_HERO = new State<>("heroAbilList", new DataTypeInfo(DataList.class, AbilId.class));
-		public final static State<AbilId> DATA_AUTO = new State<>("auto", AbilId.class);
-		
-		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment(s)", Wc3String.class);
 		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
-		public final static State<Wc3String> EDITOR_SORT = new State<>("sortAbil", Wc3String.class);
 	}
 	
 	public static class Obj extends SLK.Obj<UnitId> {
