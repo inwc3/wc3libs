@@ -23,400 +23,368 @@ import java.nio.file.NoSuchFileException;
 import java.util.*;
 
 public class ObjMerger {
-	/*private File _workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
-
-	public void setWorkDir(File dir) {
-		_workDir = dir;
-	}*/
-
-	private Map<File, SLK> _slks = new LinkedHashMap<>();
-
-	private void addSlk(File inFile, SLK otherSlk) {
-		assert(inFile != null);
-
-		SLK slk = _slks.get(inFile);
-
-		if (slk == null) {
-			slk = SLK.createFromInFile(inFile);
-
-			_slks.put(inFile, slk);
-		}
-
-		slk.merge(otherSlk);
-	}
-
-	private RawMetaSLK _metaSlk = new RawMetaSLK();
-
-	private void addMetaSlk(RawMetaSLK slk) {
-		_metaSlk.merge(slk);
-	}
-
-	private Profile _profile = new Profile();
-
-	private void addProfile(Profile otherProfile) {
-		_profile.merge(otherProfile);
-	}
-
-	private Map<File, ObjMod> _objMods = new LinkedHashMap<>();
-
-	private void addObjMod(File inFile, ObjMod otherObjMod) {
-		try {
-			ObjPack pack = otherObjMod.reduce(_metaSlk);
-
-			Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
-
-			for (Map.Entry<File, SLK> slkEntry : pack.getSlks().entrySet()) {
-				File file = slkEntry.getKey();
-				SLK otherSlk = slkEntry.getValue();
-				
-				Map<ObjId, SLK.Obj> otherObjs = new LinkedHashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
-				
-				otherSlk.clearObjs();
-				
-				for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {
-					ObjId objId = objEntry.getKey();
-					SLK.Obj otherObj = objEntry.getValue();
-					
-					SLK.Obj obj = otherSlk.addObj(objId);
-					
-					ObjId baseId = baseObjIds.get(objId);
-					
-					if (baseId != null) {
-						SLK.Obj baseObj = _slks.get(file).getObj(baseId);
-						
-						obj.merge(baseObj);
-					}
-					
-					obj.merge(otherObj);
-				}
-
-				addSlk(file, otherSlk);
-			}
-
-			//
-			Profile otherProfile = pack.getProfile();
-			
-			Map<TXTSectionId, Profile.Obj> otherObjs = new LinkedHashMap<>(((Map<TXTSectionId, Profile.Obj>) otherProfile.getObjs()));
-			
-			otherProfile.clearObjs();
-			
-			for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : otherObjs.entrySet()) {
-				ObjId objId = ObjId.valueOf(objEntry.getKey().toString());
-				Profile.Obj otherObj = objEntry.getValue();
-				
-				Profile.Obj obj = otherProfile.addObj(TXTSectionId.valueOf(objId.toString()));
-				
-				ObjId baseId = baseObjIds.get(objId);
-				
-				if (baseId != null) {
-					Profile.Obj baseObj = _profile.getObj(TXTSectionId.valueOf(baseId.toString()));
-					
-					obj.merge(baseObj);
-				}
-				
-				obj.merge(otherObj);
-			}
-			
-			//pack.getProfile().print();
-			
-			addProfile(pack.getProfile());
-
-			ObjMod objMod = _objMods.get(inFile);
-
-			if (objMod == null) {
-				objMod = new ObjMod();
+    private Map<File, SLK> _slks = new LinkedHashMap<>();
 
-				_objMods.put(inFile, objMod);
-			}
+    private void addSlk(File inFile, SLK otherSlk) {
+        assert (inFile != null);
 
-			objMod.merge(pack.getObjMod());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        SLK slk = _slks.get(inFile);
 
-	private boolean isObjModFileExtended(File inFile) {
-		return (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3D.GAME_PATH) || inFile.equals(W3Q.GAME_PATH));
-	}
+        if (slk == null) {
+            slk = SLK.createFromInFile(inFile);
 
-	private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws IOException {
-		if (wtsFile == null) {
-			System.out.println("no wts file");
-		} else {
-			WTS wts = new WTS(wtsFile);
+            _slks.put(inFile, slk);
+        }
 
-			Translator translator = new Translator();
+        slk.merge(otherSlk);
+    }
 
-			translator.addTXT(wts.toTXT());
+    private RawMetaSLK _metaSlk = new RawMetaSLK();
 
-			_profile.setTranslator(translator);
-		}
-		
-		for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
+    private void addMetaSlk(RawMetaSLK slk) {
+        _metaSlk.merge(slk);
+    }
 
-			RawMetaSLK metaSlk = new RawMetaSLK(outFile);
+    private Profile _profile = new Profile();
 
-			addMetaSlk(metaSlk);
-		}
-
-		for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			SLK slk = SLK.createFromInFile(inFile, outFile);
-
-			//System.out.println(inFile);
-
-			addSlk(inFile, slk);
-		}
-		
-		for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			Profile profile = new Profile(outFile);
-
-			addProfile(profile);
-		}
-		
-		for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			ObjMod objMod = new ObjMod(outFile, isObjModFileExtended(inFile));
-
-			addObjMod(inFile, objMod);
-		}
-	}
-
-
-	private void exportFiles(File dir, Map<File, File> fileEntries) throws IOException {
-		Orient.removeDir(dir);
-		Orient.createDir(dir);
-
-		for (Map.Entry<File, File> fileEntry : fileEntries.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			Orient.copyFile(outFile, new File(dir, inFile.toString()), true);
-		}
-	}
-
-	private void exportFiles(File outDir, Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws IOException {
-		Map<File, File> fileEntries = new LinkedHashMap<>();
-
-		for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			fileEntries.put(inFile, outFile);
-		}
-
-		for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			fileEntries.put(inFile, outFile);
-		}
-
-		for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			fileEntries.put(inFile, outFile);
-		}
-
-		for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
-
-			fileEntries.put(inFile, outFile);
-		}
-
-		if (wtsFile != null) {
-			fileEntries.put(WTS.GAME_PATH, wtsFile);
-		}
-
-		exportFiles(outDir, fileEntries);
-	}
-
-	private final static Collection<File> _metaSlkInFiles = Arrays.asList(new File[]{
-		new File("Doodads\\DoodadMetaData.slk"),
-			
-		new File("Units\\AbilityBuffMetaData.slk"),
-		new File("Units\\AbilityMetaData.slk"),
-		new File("Units\\DestructableMetaData.slk"),
-		new File("Units\\UnitMetaData.slk"),
-		new File("Units\\UpgradeMetaData.slk")
-	});
-
-	private final static Collection<File> _slkInFiles = Arrays.asList(new File[]{
-		DoodSLK.GAME_USE_PATH,
-		
-		UnitAbilsSLK.GAME_USE_PATH,
-		UnitBalanceSLK.GAME_USE_PATH,
-		UnitDataSLK.GAME_USE_PATH,
-		UnitUISLK.GAME_USE_PATH,
-		UnitWeaponsSLK.GAME_USE_PATH,
-
-		ItemSLK.GAME_USE_PATH,
-		DestructableSLK.GAME_USE_PATH,
-		AbilSLK.GAME_USE_PATH,
-		BuffSLK.GAME_USE_PATH,
-		UpgradeSLK.GAME_USE_PATH
-	});
-
-	private final static Collection<File> _profileInFiles = Arrays.asList(Profile.getNativePaths());
-
-	private final static Collection<File> _objModInFiles = Arrays.asList(new File[]{
-		W3A.GAME_PATH,
-		W3B.GAME_PATH,
-		W3D.GAME_PATH,
-		W3H.GAME_PATH,
-		W3Q.GAME_PATH,
-		W3T.GAME_PATH,
-		W3U.GAME_PATH
-	});
-
-	public void addDir(File dir) throws IOException {
-		Map<File, File> files = new LinkedHashMap<>();
-
-		for (File outFile : Orient.getFiles(dir)) {
-			File inFile = new File(outFile.toString().substring(dir.toString().length() + 1));
-
-			files.put(inFile, outFile);
-		}
-
-		Map<File, File> metaSlkFiles = new LinkedHashMap<>();
-		Map<File, File> slkFiles = new LinkedHashMap<>();
-		Map<File, File> profileFiles = new LinkedHashMap<>();
-		Map<File, File> objModFiles = new LinkedHashMap<>();
-		File wtsFile = null;
+    private void addProfile(Profile otherProfile) {
+        _profile.merge(otherProfile);
+    }
 
-		for (Map.Entry<File, File> fileEntry : files.entrySet()) {
-			File inFile = fileEntry.getKey();
-			File outFile = fileEntry.getValue();
+    private Map<File, ObjMod> _objMods = new LinkedHashMap<>();
 
-			if (_metaSlkInFiles.contains(inFile)) {
-				metaSlkFiles.put(inFile, outFile);
-			}
-			if (_slkInFiles.contains(inFile)) {
-				slkFiles.put(inFile, outFile);
-			}
-			if (_profileInFiles.contains(inFile)) {
-				profileFiles.put(inFile, outFile);
-			}
-			if (_objModInFiles.contains(inFile)) {
-				objModFiles.put(inFile, outFile);
-			}
-			if (WTS.GAME_PATH.equals(inFile)) {
-				wtsFile = outFile;
-			}
-		}
+    private void addObjMod(File inFile, ObjMod otherObjMod) {
+        try {
+            ObjPack pack = otherObjMod.reduce(_metaSlk);
 
-		addFiles(metaSlkFiles, slkFiles, profileFiles, objModFiles, wtsFile);
-	}
+            Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
 
-	private void addExports(File outDir, MpqPort.Out.Result metaSlkResult, MpqPort.Out.Result slkResult, MpqPort.Out.Result profileResult, MpqPort.Out.Result objModResult, MpqPort.Out.Result wtsResult) throws IOException {
-		Map<File, File> metaSlkFiles = new LinkedHashMap<>();
+            for (Map.Entry<File, SLK> slkEntry : pack.getSlks().entrySet()) {
+                File file = slkEntry.getKey();
+                SLK otherSlk = slkEntry.getValue();
 
-		for (MpqPort.Out.Result.Segment segment : metaSlkResult.getExports().values()) {
-			File inFile = segment.getExport().getInFile();
+                Map<ObjId, SLK.Obj> otherObjs = new LinkedHashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
 
-			try {
-				File outFile = metaSlkResult.getFile(inFile);
+                otherSlk.clearObjs();
 
-				metaSlkFiles.put(inFile, outFile);
-			} catch (NoSuchFileException e) {
-			}
-		}
+                for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {
+                    ObjId objId = objEntry.getKey();
+                    SLK.Obj otherObj = objEntry.getValue();
 
-		Map<File, File> slkFiles = new LinkedHashMap<>();
+                    SLK.Obj obj = otherSlk.addObj(objId);
 
-		for (MpqPort.Out.Result.Segment segment : slkResult.getExports().values()) {
-			File inFile = segment.getExport().getInFile();
+                    ObjId baseId = baseObjIds.get(objId);
 
-			try {
-				File outFile = slkResult.getFile(inFile);
+                    if (baseId != null) {
+                        SLK.Obj baseObj = _slks.get(file).getObj(baseId);
 
-				slkFiles.put(inFile, outFile);
-			} catch (NoSuchFileException e) {
-			}
-		}
+                        obj.merge(baseObj);
+                    }
 
-		Map<File, File> profileFiles = new LinkedHashMap<>();
+                    obj.merge(otherObj);
+                }
 
-		for (MpqPort.Out.Result.Segment segment : slkResult.getExports().values()) {
-			File inFile = segment.getExport().getInFile();
+                addSlk(file, otherSlk);
+            }
 
-			try {
-				File outFile = profileResult.getFile(inFile);
+            //
+            Profile otherProfile = pack.getProfile();
 
-				profileFiles.put(inFile, outFile);
-			} catch (NoSuchFileException e) {
-			}
-		}
+            Map<TXTSectionId, Profile.Obj> otherObjs = new LinkedHashMap<>(otherProfile.getObjs());
 
-		Map<File, File> objModFiles = new LinkedHashMap<>();
+            otherProfile.clearObjs();
 
-		for (MpqPort.Out.Result.Segment segment : objModResult.getExports().values()) {
-			File inFile = segment.getExport().getInFile();
+            for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : otherObjs.entrySet()) {
+                ObjId objId = ObjId.valueOf(objEntry.getKey().toString());
+                Profile.Obj otherObj = objEntry.getValue();
 
-			try {
-				File outFile = objModResult.getFile(inFile);
+                Profile.Obj obj = otherProfile.addObj(TXTSectionId.valueOf(objId.toString()));
 
-				objModFiles.put(inFile, outFile);
-			} catch (NoSuchFileException e) {
-			}
-		}
+                ObjId baseId = baseObjIds.get(objId);
 
-		File wtsFile = null;
+                if (baseId != null) {
+                    Profile.Obj baseObj = _profile.getObj(TXTSectionId.valueOf(baseId.toString()));
 
-		try {
-			wtsFile = wtsResult.getFile(WTS.GAME_PATH);
-		} catch (NoSuchFileException e) {
-		}
+                    obj.merge(baseObj);
+                }
 
-		exportFiles(outDir, metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile);
+                obj.merge(otherObj);
+            }
 
-		addFiles(metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile);
-	}
+            //pack.getProfile().print();
 
-	private final static File PROFILE_OUTPUT_PATH = new File("Units\\CampaignUnitStrings.txt");
+            addProfile(pack.getProfile());
 
-	public void writeToDir(File outDir) throws Exception {
-		Orient.createDir(outDir);
+            ObjMod objMod = _objMods.get(inFile);
 
-		for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
-			File inFile = slkEntry.getKey();
-			SLK slk = slkEntry.getValue();
+            if (objMod == null) {
+                objMod = new ObjMod();
 
-			File outFile = new File(outDir, inFile.toString());
+                _objMods.put(inFile, objMod);
+            }
 
-			slk.write(outFile);
-		}
+            objMod.merge(pack.getObjMod());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		File emptyFile = new File(outDir, "empty.txt");
+    private boolean isObjModFileExtended(File inFile) {
+        return (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3D.GAME_PATH) || inFile.equals(W3Q.GAME_PATH));
+    }
 
-		OutputStream emptyFileStream = Orient.createFileOutputStream(emptyFile);
+    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile)
+            throws IOException {
+        if (wtsFile == null) {
+            System.out.println("no wts file");
+        } else {
+            WTS wts = new WTS(wtsFile);
 
-		//emptyFileStream.write(0x00);
+            Translator translator = new Translator();
 
-		emptyFileStream.close();
+            translator.addTXT(wts.toTXT());
 
-		//Orient.createFile(emptyFile);
+            _profile.setTranslator(translator);
+        }
 
-		for (File inFile : _profileInFiles) {
-			File outFile = new File(outDir, inFile.toString());
+        for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
 
-			Orient.copyFile(emptyFile, outFile, true);
-		}
+            RawMetaSLK metaSlk = new RawMetaSLK(outFile);
 
-		File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
+            addMetaSlk(metaSlk);
+        }
 
-		_profile.write(profileOutFile);
+        for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            SLK slk = SLK.createFromInFile(inFile, outFile);
+
+            //System.out.println(inFile);
+
+            addSlk(inFile, slk);
+        }
+
+        for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            Profile profile = new Profile(outFile);
+
+            addProfile(profile);
+        }
+
+        for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            ObjMod objMod = new ObjMod(outFile, isObjModFileExtended(inFile));
+
+            addObjMod(inFile, objMod);
+        }
+    }
+
+
+    private void exportFiles(File dir, Map<File, File> fileEntries) throws IOException {
+        Orient.removeDir(dir);
+        Orient.createDir(dir);
+
+        for (Map.Entry<File, File> fileEntry : fileEntries.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            Orient.copyFile(outFile, new File(dir, inFile.toString()), true);
+        }
+    }
+
+    private void exportFiles(File outDir, Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles,
+							 File wtsFile) throws IOException {
+        Map<File, File> fileEntries = new LinkedHashMap<>();
+
+        for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            fileEntries.put(inFile, outFile);
+        }
+
+        for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            fileEntries.put(inFile, outFile);
+        }
+
+        for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            fileEntries.put(inFile, outFile);
+        }
+
+        for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            fileEntries.put(inFile, outFile);
+        }
+
+        if (wtsFile != null) {
+            fileEntries.put(WTS.GAME_PATH, wtsFile);
+        }
+
+        exportFiles(outDir, fileEntries);
+    }
+
+    private final static Collection<File> _metaSlkInFiles = Arrays.asList(new File("Doodads\\DoodadMetaData.slk"),
+
+            new File("Units\\AbilityBuffMetaData.slk"),
+            new File("Units\\AbilityMetaData.slk"),
+            new File("Units\\DestructableMetaData.slk"),
+            new File("Units\\UnitMetaData.slk"),
+            new File("Units\\UpgradeMetaData.slk"));
+
+    private final static Collection<File> _slkInFiles = Arrays.asList(DoodSLK.GAME_USE_PATH,
+
+            UnitAbilsSLK.GAME_USE_PATH,
+            UnitBalanceSLK.GAME_USE_PATH,
+            UnitDataSLK.GAME_USE_PATH,
+            UnitUISLK.GAME_USE_PATH,
+            UnitWeaponsSLK.GAME_USE_PATH,
+
+            ItemSLK.GAME_USE_PATH,
+            DestructableSLK.GAME_USE_PATH,
+            AbilSLK.GAME_USE_PATH,
+            BuffSLK.GAME_USE_PATH,
+            UpgradeSLK.GAME_USE_PATH);
+
+    private final static Collection<File> _profileInFiles = Arrays.asList(Profile.getNativePaths());
+
+    private final static Collection<File> _objModInFiles = Arrays.asList(W3A.GAME_PATH,
+            W3B.GAME_PATH,
+            W3D.GAME_PATH,
+            W3H.GAME_PATH,
+            W3Q.GAME_PATH,
+            W3T.GAME_PATH,
+            W3U.GAME_PATH);
+
+    public void addDir(File dir) throws IOException {
+        Map<File, File> files = new LinkedHashMap<>();
+
+        for (File outFile : Orient.getFiles(dir)) {
+            File inFile = new File(outFile.toString().substring(dir.toString().length() + 1));
+
+            files.put(inFile, outFile);
+        }
+
+        Map<File, File> metaSlkFiles = new LinkedHashMap<>();
+        Map<File, File> slkFiles = new LinkedHashMap<>();
+        Map<File, File> profileFiles = new LinkedHashMap<>();
+        Map<File, File> objModFiles = new LinkedHashMap<>();
+        File wtsFile = null;
+
+        for (Map.Entry<File, File> fileEntry : files.entrySet()) {
+            File inFile = fileEntry.getKey();
+            File outFile = fileEntry.getValue();
+
+            if (_metaSlkInFiles.contains(inFile)) {
+                metaSlkFiles.put(inFile, outFile);
+            }
+            if (_slkInFiles.contains(inFile)) {
+                slkFiles.put(inFile, outFile);
+            }
+            if (_profileInFiles.contains(inFile)) {
+                profileFiles.put(inFile, outFile);
+            }
+            if (_objModInFiles.contains(inFile)) {
+                objModFiles.put(inFile, outFile);
+            }
+            if (WTS.GAME_PATH.equals(inFile)) {
+                wtsFile = outFile;
+            }
+        }
+
+        addFiles(metaSlkFiles, slkFiles, profileFiles, objModFiles, wtsFile);
+    }
+
+    private void addExports(File outDir, MpqPort.Out.Result metaSlkResult, MpqPort.Out.Result slkResult, MpqPort.Out.Result profileResult, MpqPort.Out.Result
+			objModResult, MpqPort.Out.Result wtsResult) throws IOException {
+        Map<File, File> metaSlkFiles = new LinkedHashMap<>();
+
+        processSegments(metaSlkResult, metaSlkFiles);
+
+        Map<File, File> slkFiles = new LinkedHashMap<>();
+
+        processSegments(slkResult, slkFiles);
+
+        Map<File, File> profileFiles = new LinkedHashMap<>();
+
+        processSegments(slkResult, profileFiles);
+
+        Map<File, File> objModFiles = new LinkedHashMap<>();
+
+        processSegments(objModResult, objModFiles);
+
+        File wtsFile = null;
+
+        try {
+            wtsFile = wtsResult.getFile(WTS.GAME_PATH);
+        } catch (NoSuchFileException e) {
+        }
+
+        exportFiles(outDir, metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile);
+
+        addFiles(metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile);
+    }
+
+    private void processSegments(MpqPort.Out.Result metaSlkResult, Map<File, File> metaSlkFiles) throws IOException {
+        for (MpqPort.Out.Result.Segment segment : metaSlkResult.getExports().values()) {
+            File inFile = segment.getExport().getInFile();
+
+            try {
+                File outFile = metaSlkResult.getFile(inFile);
+
+                metaSlkFiles.put(inFile, outFile);
+            } catch (NoSuchFileException e) {
+            }
+        }
+    }
+
+    private final static File PROFILE_OUTPUT_PATH = new File("Units\\CampaignUnitStrings.txt");
+
+    public void writeToDir(File outDir) throws Exception {
+        Orient.createDir(outDir);
+
+        for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
+            File inFile = slkEntry.getKey();
+            SLK slk = slkEntry.getValue();
+
+            File outFile = new File(outDir, inFile.toString());
+
+            slk.write(outFile);
+        }
+
+        File emptyFile = new File(outDir, "empty.txt");
+
+        OutputStream emptyFileStream = Orient.createFileOutputStream(emptyFile);
+
+        //emptyFileStream.write(0x00);
+
+        emptyFileStream.close();
+
+        //Orient.createFile(emptyFile);
+
+        for (File inFile : _profileInFiles) {
+            File outFile = new File(outDir, inFile.toString());
+
+            Orient.copyFile(emptyFile, outFile, true);
+        }
+
+        File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
+
+        _profile.write(profileOutFile);
 
 		/*for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
 			File inFile = objModEntry.getKey();
@@ -426,208 +394,208 @@ public class ObjMerger {
 
 			objMod.write(outFile, isObjModFileExtended(inFile));
 		}*/
-	}
+    }
 
-	public void writeToMap(File mapFile, File outDir) throws Exception {
-		//File outDir = _workDir;
+    public void writeToMap(File mapFile, File outDir) throws Exception {
+        //File outDir = _workDir;
 
-		Orient.removeDir(outDir);
-		Orient.createDir(outDir);
+        Orient.removeDir(outDir);
+        Orient.createDir(outDir);
 
-		MpqPort.In portIn = new JMpqPort.In();
+        MpqPort.In portIn = new JMpqPort.In();
 
-		for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
-			File inFile = slkEntry.getKey();
-			SLK slk = slkEntry.getValue();
+        for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
+            File inFile = slkEntry.getKey();
+            SLK slk = slkEntry.getValue();
 
-			File outFile = new File(outDir, inFile.toString());
+            File outFile = new File(outDir, inFile.toString());
 
-			slk.write(outFile);
+            slk.write(outFile);
 
-			portIn.add(outFile, inFile);
-		}
+            portIn.add(outFile, inFile);
+        }
 
-		for (File inFile : _profileInFiles) {
-			File outFile = new File(outDir, inFile.toString());
+        for (File inFile : _profileInFiles) {
+            File outFile = new File(outDir, inFile.toString());
 
-			new Profile().write(outFile);
-		}
+            new Profile().write(outFile);
+        }
 
-		File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
+        File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
 
-		_profile.write(profileOutFile);
+        _profile.write(profileOutFile);
 
-		for (File inFile : _profileInFiles) {
-			File outFile = new File(outDir, inFile.toString());
+        for (File inFile : _profileInFiles) {
+            File outFile = new File(outDir, inFile.toString());
 
-			portIn.add(outFile, inFile);
-		}
+            portIn.add(outFile, inFile);
+        }
 
-		for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
-			File inFile = objModEntry.getKey();
-			ObjMod objMod = objModEntry.getValue();
+        for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
+            File inFile = objModEntry.getKey();
+            ObjMod objMod = objModEntry.getValue();
 
-			File outFile = new File(outDir, inFile.toString());
+            File outFile = new File(outDir, inFile.toString());
 
-			objMod.write(outFile, isObjModFileExtended(inFile));
+            objMod.write(outFile, isObjModFileExtended(inFile));
 
-			portIn.add(outFile, inFile);
-		}
+            portIn.add(outFile, inFile);
+        }
 
-		//if(true) return;
-		portIn.commit(mapFile);
-	}
+        //if(true) return;
+        portIn.commit(mapFile);
+    }
 
-	public void exportMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
-		Vector<File> mpqFiles = new Vector<>();
+    public void exportMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+        Vector<File> mpqFiles = new Vector<>();
 
-		mpqFiles.add(mapFile);
+        mpqFiles.add(mapFile);
 
-		if (includeNativeMpqs) {
-			if (wc3Dir == null) {
-				//throw new Exception("no wc3Dir");
-				mpqFiles.add(new MpqPort.ResourceFile(""));
-			} else {
-				mpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
-			}
-		}
+        if (includeNativeMpqs) {
+            if (wc3Dir == null) {
+                //throw new Exception("no wc3Dir");
+                mpqFiles.add(new MpqPort.ResourceFile(""));
+            } else {
+                mpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
+            }
+        }
 
-		MpqPort.Out portOut = new JMpqPort.Out();
+        MpqPort.Out portOut = new JMpqPort.Out();
 
-		for (File inFile : _metaSlkInFiles) {
-			portOut.add(inFile);
-		}
+        for (File inFile : _metaSlkInFiles) {
+            portOut.add(inFile);
+        }
 
-		Collection<File> slkFiles = new ArrayList<>();
+        Collection<File> slkFiles = new ArrayList<>();
 
-		for (File inFile : _slkInFiles) {
-			slkFiles.add(inFile);
-		}
+        for (File inFile : _slkInFiles) {
+            slkFiles.add(inFile);
+        }
 
-		for (File inFile : slkFiles) {
-			portOut.add(inFile);
-		}
+        for (File inFile : slkFiles) {
+            portOut.add(inFile);
+        }
 
-		Collection<File> profileFiles = new ArrayList<>();
+        Collection<File> profileFiles = new ArrayList<>();
 
-		for (File file : _profileInFiles) {
-			profileFiles.add(file);
-		}
+        for (File file : _profileInFiles) {
+            profileFiles.add(file);
+        }
 
-		for (File inFile : profileFiles) {
-			portOut.add(inFile);
-		}
+        for (File inFile : profileFiles) {
+            portOut.add(inFile);
+        }
 
-		for (File inFile : _objModInFiles) {
-			portOut.add(inFile);
-		}
+        for (File inFile : _objModInFiles) {
+            portOut.add(inFile);
+        }
 
-		portOut.add(WTS.GAME_PATH);
+        portOut.add(WTS.GAME_PATH);
 
-		MpqPort.Out.Result portResult = portOut.commit(mpqFiles);
+        MpqPort.Out.Result portResult = portOut.commit(mpqFiles);
 
-		Map<File, File> outFiles = new LinkedHashMap<>();
+        Map<File, File> outFiles = new LinkedHashMap<>();
 
-		for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
-			File inFile = segmentEntry.getKey();
+        for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
+            File inFile = segmentEntry.getKey();
 
-			try {
-				File outFile = portResult.getFile(inFile);
+            try {
+                File outFile = portResult.getFile(inFile);
 
-				outFiles.put(inFile, outFile);
-			} catch (NoSuchFileException e) {
-			}
-		}
+                outFiles.put(inFile, outFile);
+            } catch (NoSuchFileException e) {
+            }
+        }
 
-		exportFiles(outDir, outFiles);
-	}
+        exportFiles(outDir, outFiles);
+    }
 
-	public void exportMap(File mapFile, File outDir) throws Exception {
-		exportMap(mapFile, true, MpqPort.getWc3Dir(), outDir);
-	}
+    public void exportMap(File mapFile, File outDir) throws Exception {
+        exportMap(mapFile, true, MpqPort.getWc3Dir(), outDir);
+    }
 
-	public void readFromMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
-		//File outDir = _workDir;
+    public void readFromMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+        //File outDir = _workDir;
 
-		Orient.removeDir(outDir);
-		Orient.createDir(outDir);
+        Orient.removeDir(outDir);
+        Orient.createDir(outDir);
 
-		exportMap(mapFile, includeNativeMpqs, wc3Dir, outDir);
+        exportMap(mapFile, includeNativeMpqs, wc3Dir, outDir);
 
-		addDir(outDir);
-	}
+        addDir(outDir);
+    }
 
-	public void readFromMap2(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
-		Vector<File> mpqFiles = new Vector<>();
+    public void readFromMap2(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+        Vector<File> mpqFiles = new Vector<>();
 
-		mpqFiles.add(mapFile);
+        mpqFiles.add(mapFile);
 
-		if (includeNativeMpqs) {
-			if (wc3Dir == null) throw new Exception("no wc3Dir");
+        if (includeNativeMpqs) {
+            if (wc3Dir == null) throw new Exception("no wc3Dir");
 
-			mpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
-		}
+            mpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
+        }
 
-		MpqPort.Out metaSlkPortOut = new JMpqPort.Out();
+        MpqPort.Out metaSlkPortOut = new JMpqPort.Out();
 
-		for (File inFile : _metaSlkInFiles) {
-			metaSlkPortOut.add(inFile);
-		}
+        for (File inFile : _metaSlkInFiles) {
+            metaSlkPortOut.add(inFile);
+        }
 
-		MpqPort.Out.Result metaSlkResult = metaSlkPortOut.commit(mpqFiles);
+        MpqPort.Out.Result metaSlkResult = metaSlkPortOut.commit(mpqFiles);
 
-		MpqPort.Out slkPortOut = new JMpqPort.Out();
+        MpqPort.Out slkPortOut = new JMpqPort.Out();
 
-		Collection<File> slkFiles = new ArrayList<>();
+        Collection<File> slkFiles = new ArrayList<>();
 
-		for (File inFile : _slkInFiles) {
-			slkFiles.add(inFile);
-		}
+        for (File inFile : _slkInFiles) {
+            slkFiles.add(inFile);
+        }
 
-		for (File inFile : slkFiles) {
-			slkPortOut.add(inFile);
-		}
+        for (File inFile : slkFiles) {
+            slkPortOut.add(inFile);
+        }
 
-		MpqPort.Out.Result slkResult = slkPortOut.commit(mpqFiles);
+        MpqPort.Out.Result slkResult = slkPortOut.commit(mpqFiles);
 
-		Collection<File> profileFiles = new ArrayList<>();
+        Collection<File> profileFiles = new ArrayList<>();
 
-		for (File file : _profileInFiles) {
-			profileFiles.add(file);
-		}
+        for (File file : _profileInFiles) {
+            profileFiles.add(file);
+        }
 
-		MpqPort.Out profilePortOut = new JMpqPort.Out();
+        MpqPort.Out profilePortOut = new JMpqPort.Out();
 
-		for (File inFile : profileFiles) {
-			profilePortOut.add(inFile);
-		}
+        for (File inFile : profileFiles) {
+            profilePortOut.add(inFile);
+        }
 
-		MpqPort.Out.Result profileResult = profilePortOut.commit(mpqFiles);
+        MpqPort.Out.Result profileResult = profilePortOut.commit(mpqFiles);
 
-		MpqPort.Out objModPortOut = new JMpqPort.Out();
+        MpqPort.Out objModPortOut = new JMpqPort.Out();
 
-		for (File inFile : _objModInFiles) {
-			objModPortOut.add(inFile);
-		}
+        for (File inFile : _objModInFiles) {
+            objModPortOut.add(inFile);
+        }
 
-		MpqPort.Out.Result objModResult = objModPortOut.commit(mapFile);
+        MpqPort.Out.Result objModResult = objModPortOut.commit(mapFile);
 
-		MpqPort.Out wtsPortOut = new JMpqPort.Out();
+        MpqPort.Out wtsPortOut = new JMpqPort.Out();
 
-		objModPortOut.add(WTS.GAME_PATH);
+        objModPortOut.add(WTS.GAME_PATH);
 
-		MpqPort.Out.Result wtsResult = wtsPortOut.commit(mapFile);
+        MpqPort.Out.Result wtsResult = wtsPortOut.commit(mapFile);
 
-		addExports(outDir, metaSlkResult, slkResult, profileResult, objModResult, wtsResult);
-	}
+        addExports(outDir, metaSlkResult, slkResult, profileResult, objModResult, wtsResult);
+    }
 
-	public void readFromMap(File mapFile, boolean includeNativeMpqs, File outDir) throws Exception {
-		readFromMap(mapFile, includeNativeMpqs, MpqPort.getWc3Dir(), outDir);
-	}
+    public void readFromMap(File mapFile, boolean includeNativeMpqs, File outDir) throws Exception {
+        readFromMap(mapFile, includeNativeMpqs, MpqPort.getWc3Dir(), outDir);
+    }
 
-	public ObjMerger() {
-		for (File file : _slkInFiles) {
+    public ObjMerger() {
+        for (File file : _slkInFiles) {
 
-		}
-	}
+        }
+    }
 }
