@@ -1,39 +1,21 @@
 package net.moonlightflower.wc3libs.slk;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
-import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Mergeable;
 import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.slk.SLK.Obj;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.*;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements Mergeable<Self>, SLKable {
 	public static class FieldData {
@@ -568,7 +550,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
 			slk = new DoodSLK(sourceSlk);
 		}
-		
+
 		if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
 			slk = new UnitAbilsSLK(sourceSlk);
 		}
@@ -584,7 +566,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
 			slk = new UnitWeaponsSLK(sourceSlk);
 		}
-		
+
 		if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
 			slk = new ItemSLK(sourceSlk);
 		}
@@ -600,10 +582,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
 			slk = new UpgradeSLK(sourceSlk);
 		}
-		
+
 		return slk;
 	}
-	
+
 	public static SLK createFromInFile(File inFile) {
 		SLK slk = null;
 
