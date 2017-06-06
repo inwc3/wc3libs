@@ -1,31 +1,23 @@
 package net.moonlightflower.wc3libs.slk.app.terrainArts;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.AlphaMode;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Color;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.dataTypes.app.WeatherId;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("TerrainArt\\Weather.slk");
@@ -479,9 +471,9 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		
 		other.merge(this);
 		
-		other.reduce();
-		
-		other.write(file);
+//		other.reduce();
+//
+//		other.write(file);
 	}
 	
 	public WeatherSLK(SLK slk) {
@@ -489,7 +481,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		
 		read(slk);
 		
-		reduce();
+//		reduce();
 	}
 	
 	public WeatherSLK(File file) throws IOException {

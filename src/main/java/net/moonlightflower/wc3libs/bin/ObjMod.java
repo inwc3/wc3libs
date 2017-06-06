@@ -729,57 +729,57 @@ public class ObjMod {
 		Map<File, SLK> outSlks = pack.getSlks();
 		Profile outProfile = pack.getProfile();
 		ObjMod outObjMod = pack.getObjMod();
-		
 		for (Obj obj : getObjs().values()) {
+
 			ObjId objId = obj.getId();
 			if(objId.toString().equals("n01M")) {
 				System.out.println("yay");
 			}
 			//
 			//outObjMod.getObj(objId).removeField(MetaFieldId.valueOf("wurs"));
-			
+
 			//if (!objId.toString().matches("[0-9A-za-z]{4}")) continue;
-			
+
 			for (Obj.Field field : obj.getFields().values()) {
 				MetaFieldId fieldId = field.getId();
-				
+
 				MetaSLK.Obj metaObj = reduceMetaSlk.getObj(ObjId.valueOf(fieldId));
-				
+
 				if (metaObj != null) {
 					String slkName = metaObj.getS(FieldId.valueOf("slk"));
-					
+
 					String slkFieldName = metaObj.getS(FieldId.valueOf("field"));
-					
+
 					if (slkName.equals("Profile")) {
 						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
-							
+
 							int index = (level == 0) ? 0 : (level - 1);
 							int metaIndex = Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
-							
+
 							if (metaIndex > 0) {
 								index += metaIndex;
 							}
-							
+
 							Profile.Obj profileObj = outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
-							
+
 							FieldId profileFieldId = FieldId.valueOf(slkFieldName);
-							
+
 							Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
 							DataType profileVal = null;
-							
+
 							if (metaObj.getS(FieldId.valueOf("type")).equals("stringList")) {
 								profileVal = val.getVal();
-								
+
 								if (profileVal != null) {
 									String[] vals = profileVal.toString().split(",");
-									
+
 									for (int i = 0; i < vals.length; i++) {
 										profileField.set(Wc3String.valueOf(vals[i]), index + i);
 									}
 								}
-							} else {							
+							} else {
 								if (val.getType().equals(Obj.Field.ValType.INT)) {
 									profileVal = Int.valueOf(val.getVal());
 								} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
@@ -789,11 +789,11 @@ public class ObjMod {
 								} else {
 									profileVal = Wc3String.valueOf(val.getVal());
 								}
-								
+
 								profileField.set(profileVal, index);
 							}
 						}
-						
+
 						outObjMod.getObj(objId).removeField(fieldId);
 					} else {
 						File slkFile = convertSLKName(slkName);
@@ -805,90 +805,90 @@ public class ObjMod {
 						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
-							
+
 							if (metaObj.get(FieldId.valueOf("field")).equals("Data")) {
 								int dataPt = field.getDataPt();
-								
+
 								if (dataPt < 1) throw new Exception("dataPt < 1");
 								if (dataPt > 8) throw new Exception("dataPt > 9");
-								
+
 								slkFieldName += (char) ('A' + dataPt - 1);
 							}
-							
+
 							Integer repeat = null;
-							
+
 							try {
 								repeat = Int.valueOf(metaObj.get(FieldId.valueOf("repeat"))).toInt();
 							} catch (Exception e) {
-								
+
 							}
 
 							if ((repeat != null) && (repeat > 0)) {
 								int places = 1;
-								
+
 								if (slkFile.equals(DoodSLK.GAME_USE_PATH)) {
 									if (repeat > 10) continue;
-									
+
 									places = 2;
 								} else {
 									if (repeat > 4) continue;
-									
+
 									places = 1;
 								}
-								
+
 								StringBuilder add = new StringBuilder(Integer.toString(level));
-								
+
 								while(add.length() < places) {
 									add.insert(0, "0");
 								}
-								
+
 								slkFieldName += add;
 							}
-							
+
 							FieldId slkFieldId = FieldId.valueOf(slkFieldName);
-							
+
 							outSlk.addField(slkFieldId);
-							
+
 							SLK.Obj slkObj = outSlk.addObj(ObjId.valueOf(objId));
-							
+
 							if (slkFile.equals(UnitBalanceSLK.GAME_USE_PATH) || slkFile.equals(UnitAbilsSLK.GAME_USE_PATH) || slkFile.equals(UnitUISLK.GAME_USE_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
 								File unitBaseSLKFile = UnitDataSLK.GAME_USE_PATH;
 
 								SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
 
 								unitBaseSLK.addObj(objId);
-								
+
 								//
-								
+
 								File unitAbilSLKFile = UnitAbilsSLK.GAME_USE_PATH;
 
 								SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
 
 								unitAbilSLK.addObj(objId);
 							}
-							
+
 							slkObj.set(slkFieldId, Wc3String.valueOf(val));
-							
+
 							outObjMod.getObj(objId).removeField(fieldId);
 						}
 					}
 				}
 			}
-			
-			Obj outObj = outObjMod.getObj(objId); 
-			
+
+			Obj outObj = outObjMod.getObj(objId);
+
 			if (outObj.getFields().isEmpty()) {
 				outObjMod.removeObj(objId);
 			} else {
 				outObjMod.removeObj(objId);
-				
+
 				outObjMod.addObj(objId, null).merge(outObj);
 			}
 		}
-		
+
 		for (Map.Entry<File, SLK> slkEntry : outSlks.entrySet()) {
 			SLK convSlk = SLK.createFromInFile(slkEntry.getKey(), slkEntry.getValue());
-			
+
 			outSlks.put(slkEntry.getKey(), convSlk);
 		}
 		

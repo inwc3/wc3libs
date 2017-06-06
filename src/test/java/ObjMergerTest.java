@@ -1,5 +1,5 @@
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.app.ObjMerger;
-import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,10 +39,16 @@ public class ObjMergerTest {
             //MpqPort.setWc3Dir(null);
             
             merger.exportMap(inMapFile, inDir);
+
+            Log.info("Exported map");
             
             merger.addDir(inDir);
+
+            Log.info("Added in dir");
             
             merger.writeToDir(outDir);
+
+            Log.info("Written to directory");
 
             File outMapFile = new File(workDir, "merged.w3x");
 

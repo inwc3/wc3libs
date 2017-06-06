@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.app;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
@@ -123,6 +124,7 @@ public class ObjMerger {
 
     private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile)
             throws IOException {
+        Log.info("add Files");
         if (wtsFile == null) {
             System.out.println("no wts file");
         } else {
@@ -136,7 +138,6 @@ public class ObjMerger {
         }
 
         for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
-            File inFile = fileEntry.getKey();
             File outFile = fileEntry.getValue();
 
             RawMetaSLK metaSlk = new RawMetaSLK(outFile);
@@ -226,22 +227,21 @@ public class ObjMerger {
         exportFiles(outDir, fileEntries);
     }
 
-    private final static Collection<File> _metaSlkInFiles = Arrays.asList(new File("Doodads\\DoodadMetaData.slk"),
-
+    private final static Collection<File> _metaSlkInFiles = Arrays.asList(
+            new File("Doodads\\DoodadMetaData.slk"),
             new File("Units\\AbilityBuffMetaData.slk"),
             new File("Units\\AbilityMetaData.slk"),
             new File("Units\\DestructableMetaData.slk"),
             new File("Units\\UnitMetaData.slk"),
             new File("Units\\UpgradeMetaData.slk"));
 
-    private final static Collection<File> _slkInFiles = Arrays.asList(DoodSLK.GAME_USE_PATH,
-
+    private final static Collection<File> _slkInFiles = Arrays.asList(
+            DoodSLK.GAME_USE_PATH,
             UnitAbilsSLK.GAME_USE_PATH,
             UnitBalanceSLK.GAME_USE_PATH,
             UnitDataSLK.GAME_USE_PATH,
             UnitUISLK.GAME_USE_PATH,
             UnitWeaponsSLK.GAME_USE_PATH,
-
             ItemSLK.GAME_USE_PATH,
             DestructableSLK.GAME_USE_PATH,
             AbilSLK.GAME_USE_PATH,
@@ -250,7 +250,8 @@ public class ObjMerger {
 
     private final static Collection<File> _profileInFiles = Arrays.asList(Profile.getNativePaths());
 
-    private final static Collection<File> _objModInFiles = Arrays.asList(W3A.GAME_PATH,
+    private final static Collection<File> _objModInFiles = Arrays.asList(
+            W3A.GAME_PATH,
             W3B.GAME_PATH,
             W3D.GAME_PATH,
             W3H.GAME_PATH,
@@ -259,6 +260,7 @@ public class ObjMerger {
             W3U.GAME_PATH);
 
     public void addDir(File dir) throws IOException {
+        Log.info("Adding directory of files to be merged: " + dir.getAbsolutePath());
         Map<File, File> files = new LinkedHashMap<>();
 
         for (File outFile : Orient.getFiles(dir)) {
@@ -435,6 +437,7 @@ public class ObjMerger {
     }
 
     public void exportMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+        Log.info("Exporting map: " + mapFile.getAbsolutePath());
         Vector<File> mpqFiles = new Vector<>();
 
         mpqFiles.add(mapFile);
@@ -480,6 +483,7 @@ public class ObjMerger {
 
         Map<File, File> outFiles = new LinkedHashMap<>();
 
+
         for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
             File inFile = segmentEntry.getKey();
 
@@ -490,6 +494,7 @@ public class ObjMerger {
             } catch (NoSuchFileException e) {
             }
         }
+        Log.info("Extracting following files: " + Arrays.toString(outFiles.values().toArray()));
 
         exportFiles(outDir, outFiles);
     }
@@ -573,9 +578,4 @@ public class ObjMerger {
         readFromMap(mapFile, includeNativeMpqs, MpqPort.getWc3Dir(), outDir);
     }
 
-    public ObjMerger() {
-        for (File file : _slkInFiles) {
-
-        }
-    }
 }
