@@ -649,7 +649,7 @@ public class W3F {
 
 		if (ambientSound != null) {
 			stream.writeInt((ambientSound instanceof PresetAmbientSound) ? ((PresetAmbientSound) ambientSound).getIndex() : -1);
-			stream.writeString((ambientSound instanceof CustomAmbientSound) ? ((CustomAmbientSound) ambientSound).getCustomPath().toString() : (String) null);
+			stream.writeString((ambientSound instanceof CustomAmbientSound) ? ((CustomAmbientSound) ambientSound).getCustomPath().toString() : null);
 		} else {
 			stream.writeInt(0);
 			stream.writeString((String) null);

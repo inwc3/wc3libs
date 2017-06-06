@@ -1,24 +1,10 @@
 package net.moonlightflower.wc3libs.bin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
-import net.moonlightflower.wc3libs.dataTypes.Stringable;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.misc.Id;
 
 public class BinStream {
 	public static class StreamException extends IOException {
@@ -77,7 +63,7 @@ public class BinStream {
 			if (i < _bytes.size()) {					
 				bytesPart.append(String.format("%02X", _bytes.get(i)));
 			} else {
-				bytesPart.append(String.format("?"));
+				bytesPart.append("?");
 			}
 		}
 		
@@ -175,14 +161,14 @@ public class BinStream {
 	public void writeByte(byte val) {
 		ensureCap(_pos + 1);
 
-		_bytes.set(_pos++, (byte) val);
+		_bytes.set(_pos++, val);
 	}
 	
 	public void writeBytes(byte[] vals) {
 		ensureCap(_pos + vals.length);
-		
-		for (int i = 0; i < vals.length; i++) {
-			_bytes.set(_pos++, vals[i]);
+
+		for (byte val : vals) {
+			_bytes.set(_pos++, val);
 		}
 	}
 	
@@ -226,7 +212,7 @@ public class BinStream {
 		byte[] buf = new byte[bytes.size()];
 		
 		for (int i = 0; i < bytes.size(); i++) {
-			buf[i] = (Byte) bytes.get(i);
+			buf[i] = bytes.get(i);
 		}
 
 		outStream.write(buf);

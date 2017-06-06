@@ -10,7 +10,7 @@ public class WeatherId extends ObjId {
 	}
 	
 	public static WeatherId valueOf(String id) {
-		return new WeatherId(id.toString());
+		return new WeatherId(id);
 	}
 	
 	public static WeatherId valueOf(Stringable id) {

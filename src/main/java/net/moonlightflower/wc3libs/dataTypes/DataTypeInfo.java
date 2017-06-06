@@ -34,14 +34,10 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 			Method method = getType().getDeclaredMethod("getDefVal");
 			
 			return (DataType) method.invoke(null);
-		} catch (IllegalAccessException e) {
-		} catch (IllegalArgumentException e) {
-		} catch (InvocationTargetException e) {
-		} catch (NoSuchMethodException e) {
-		} catch (SecurityException e) {
+		} catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException e) {
 		}
-		
-		return null;
+
+        return null;
 	}
 	
 	public String getTranslatorSection() {		
@@ -49,14 +45,10 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 			Method method = getType().getDeclaredMethod("getTranslatorSection");
 			
 			return (String) method.invoke(null);
-		} catch (IllegalAccessException e) {
-		} catch (IllegalArgumentException e) {
-		} catch (InvocationTargetException e) {
-		} catch (NoSuchMethodException e) {
-		} catch (SecurityException e) {
+		} catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException e) {
 		}
-		
-		return null;
+
+        return null;
 	}
 	
 	public DataType tryCastVal(DataType val) {

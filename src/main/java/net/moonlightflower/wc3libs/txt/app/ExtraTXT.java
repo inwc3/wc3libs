@@ -113,21 +113,21 @@ public class ExtraTXT extends TXT {
 				return _values;
 			}
 			
-			public State(Section section, String name, DataTypeInfo typeInfo, T defVal) {
+			public State(States.Section section, String name, DataTypeInfo typeInfo, T defVal) {
 				super(section.getId(), name, typeInfo, defVal);
 				
 				_values.add(this);
 			}
 			
-			public State(Section section, String name, Class<T> type, T defVal) {
+			public State(States.Section section, String name, Class<T> type, T defVal) {
 				this(section, name, new DataTypeInfo(type), defVal);
 			}
 			
-			public State(Section section, String name, DataTypeInfo typeInfo) {
+			public State(States.Section section, String name, DataTypeInfo typeInfo) {
 				this(section, name, typeInfo, null);
 			}
 			
-			public State(Section section, String name, Class<T> type) {
+			public State(States.Section section, String name, Class<T> type) {
 				this(section, name, new DataTypeInfo(type), null);
 			}
 		}

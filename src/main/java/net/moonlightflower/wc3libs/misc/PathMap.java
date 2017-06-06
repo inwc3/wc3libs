@@ -171,9 +171,9 @@ public class PathMap extends Raster<Integer> {
 		Size size = getSize();
 		Size otherSize = other.getSize();
 		
-		int minX = (((int) otherCenter.getX()) - otherSize.getWidth() / 2) - (((int) center.getX()) - size.getWidth() / 2);
+		int minX = (otherCenter.getX() - otherSize.getWidth() / 2) - (center.getX() - size.getWidth() / 2);
 		int maxX = minX + otherSize.getWidth() - 1;
-		int minY = (((int) otherCenter.getY()) - otherSize.getHeight() / 2) - (((int) center.getY()) - size.getHeight() / 2);
+		int minY = (otherCenter.getY() - otherSize.getHeight() / 2) - (center.getY() - size.getHeight() / 2);
 		int maxY = minY + otherSize.getHeight() - 1;
 
 		for (int y = minY; y <= maxY; y++) {

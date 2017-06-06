@@ -1,15 +1,11 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import javafx.beans.InvalidationListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+
+import java.util.*;
 
 public class DataList<T extends DataType> extends DataType implements ObservableList<T> {
 	public static DataTypeInfo getTypeDescriptor() {
@@ -62,7 +58,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		StringBuilder s = new StringBuilder();
 		
 		for (T el : asList()) {
-			if (s.toString() != null) s.append(",");
+            s.append(",");
 			
 			s.append(el.toSLKVal().toString());
 		}
@@ -75,7 +71,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		StringBuilder s = new StringBuilder();
 		
 		for (T el : asList()) {
-			if (s.toString() != null) s.append(",");
+			s.append(",");
 			
 			s.append(el.toTXTVal().toString());
 		}
@@ -226,7 +222,8 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 	
 	@Override
-	public DataList<T> clone() {
+	public DataList<T> clone() throws CloneNotSupportedException {
+		DataList<T> ts = (DataList<T>) super.clone();
 		DataList<T> other = new DataList<>(getElementsTypeInfo());
 		
 		for (T val : this) {

@@ -132,7 +132,8 @@ public class SHD {
     }
 
     @Override
-    public SHD clone() {
+    public SHD clone() throws CloneNotSupportedException {
+        SHD shd = (SHD) super.clone();
         ShadowMap shadowMap = _shadowMap;
 
         SHD other = new SHD(shadowMap.getBounds());

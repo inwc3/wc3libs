@@ -167,34 +167,27 @@ public class GamePrefetch {
 						
 						if (procFiles.size() == MAX_OBJS_PER_CYCLE) break;
 					}
-					
-					for (File inFile : procFiles) {
-						_loadingFiles.remove(inFile);
-					}
+
+                    _loadingFiles.removeAll(procFiles);
 
 					final EventHandler<ActionEvent> eventHandler = this;
 					
-					AsyncTask task = new PortTask(procFiles, _objs, new AsyncTask.FinishedHandler() {
-						@Override
-						public void finished() {
-							List<Obj> removeObjs = new ArrayList<>();
-							
-							for (Obj obj : _objs) {
-								removeObjs.add(obj);
-							}
-							
-							_objs.removeAll(removeObjs);
-							
-							if (_loadingFiles.isEmpty()) {
-								_started = false;
-								_timeline = null;
-							} else {
-								_timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), eventHandler));
-								
-								_timeline.play();
-							}
-						}
-					});
+					AsyncTask task = new PortTask(procFiles, _objs, () -> {
+                        List<Obj> removeObjs = new ArrayList<>();
+
+removeObjs.addAll(_objs);
+
+                        _objs.removeAll(removeObjs);
+
+                        if (_loadingFiles.isEmpty()) {
+                            _started = false;
+                            _timeline = null;
+                        } else {
+                            _timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), eventHandler));
+
+                            _timeline.play();
+                        }
+                    });
 					
 					task.start();
 				}

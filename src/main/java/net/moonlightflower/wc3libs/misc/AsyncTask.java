@@ -20,25 +20,17 @@ public abstract class AsyncTask extends Thread {
 	@Override
 	public void start() {
 		setDaemon(true);
-		setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread thread, Throwable exception) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						if (exception instanceof FinishedException) {
-							onPostExec();
-						} else {
-							exception.printStackTrace();
-						}
-						
-						if (_finishedHandler != null) {
-							_finishedHandler.finished();
-						}
-					}
-				});
-			}
-		});
+		setUncaughtExceptionHandler((thread, exception) -> Platform.runLater(() -> {
+if (exception instanceof FinishedException) {
+onPostExec();
+} else {
+exception.printStackTrace();
+}
+
+if (_finishedHandler != null) {
+_finishedHandler.finished();
+}
+}));
 		
 		super.start();
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ProcCaller {
@@ -92,9 +93,7 @@ public class ProcCaller {
 	private List<String> _cmds = new ArrayList<>();
 	
 	public ProcCaller(String... command) {
-		for (int i = 0; i < command.length; i++) {
-			_cmds.add(command[i]);
-		}
+        Collections.addAll(_cmds, command);
 		
 		_builder = new ProcessBuilder(_cmds);
 	}

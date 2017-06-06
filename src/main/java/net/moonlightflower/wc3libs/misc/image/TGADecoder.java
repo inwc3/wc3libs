@@ -1,15 +1,14 @@
 package net.moonlightflower.wc3libs.misc.image;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.bin.StdBinStream;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class TGADecoder {
 	private int _height;
@@ -376,7 +375,7 @@ public class TGADecoder {
 					devEntries[i] = new byte[10];
 					
 					for (int j = 0; j < 10; j++) {
-						devEntries[i][j] = (byte) _stream.readByte(String.format("devEntry %d;%d", i, j));
+						devEntries[i][j] = _stream.readByte(String.format("devEntry %d;%d", i, j));
 					}
 				}
 			}

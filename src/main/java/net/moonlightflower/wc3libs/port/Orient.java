@@ -25,13 +25,11 @@ public class Orient {
 			URI uri = c.getProtectionDomain().getCodeSource().getLocation().toURI();
 			
 			return new File(uri);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
+		} catch (URISyntaxException | IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		
-		return null;
+
+        return null;
 	}
 	
 	public static File getExecPath() {

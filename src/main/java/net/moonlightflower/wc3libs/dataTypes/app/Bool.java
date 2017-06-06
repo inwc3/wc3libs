@@ -19,7 +19,7 @@ public class Bool extends DataType {
 
 	@Override
 	public String toString() {
-		return new Boolean(getVal()).toString();
+		return Boolean.valueOf(getVal()).toString();
 	}
 	
 	@Override

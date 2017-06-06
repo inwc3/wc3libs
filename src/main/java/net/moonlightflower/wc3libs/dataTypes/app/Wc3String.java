@@ -32,9 +32,8 @@ public class Wc3String extends DataType implements Stringable {
 	public boolean equals(Object other) {
 		if (this == other) return true;
 
-		if (!((other instanceof Wc3String) || (other instanceof String))) return false;
+		return ((other instanceof Wc3String) || (other instanceof String)) && (hashCode() == other.hashCode());
 
-		return (hashCode() == other.hashCode());
 	}
 	
 	@Override

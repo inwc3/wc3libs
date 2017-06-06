@@ -1,17 +1,11 @@
 package net.moonlightflower.wc3libs.misc;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map;
-
-import org.omg.Messaging.SyncScopeHelper;
-
-import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
-import net.moonlightflower.wc3libs.txt.WTS;
+
+import java.io.PrintStream;
+import java.util.Map;
 
 /**
  * Translates strings based on previously registered vocabulary, you can add txt game files like UI\WorldEditStrings.txt
@@ -29,10 +23,9 @@ public class Translator {
 	
 	public boolean contains(String sectionName, String key) {
 		TXT.Section section = _txt.getSection(TXTSectionId.valueOf(sectionName));
-		
-		if (section == null) return false;
-		
-		return section.containsField(FieldId.valueOf(key));
+
+		return section != null && section.containsField(FieldId.valueOf(key));
+
 	}
 	
 	public String get(String key) {
@@ -66,7 +59,7 @@ public class Translator {
 			return get(key);
 		}
 		
-		return key.toString();
+		return key;
 	}
 
 	public String translate(String sectionName, String val) {		
@@ -74,7 +67,7 @@ public class Translator {
 			return get(sectionName, val);
 		}
 		
-		return val.toString();
+		return val;
 	}
 	
 	public String translateText(String text) {

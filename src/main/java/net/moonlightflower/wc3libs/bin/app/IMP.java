@@ -103,8 +103,8 @@ public class IMP {
 			}
 			
 			other.merge(this);
-			
-			if (other != null) other.write(stream);
+
+            other.write(stream);
 		}
 		
 		@Override

@@ -16,7 +16,7 @@ public class WAV {
 	final static int RATE = 16 * 1024;
 	
    public static byte[] createSinWaveBuffer(double freq, int ms) {
-       int samples = (int)((ms * RATE) / 1000);
+       int samples = (ms * RATE) / 1000;
        byte[] output = new byte[samples];
            //
        double period = (double)RATE / freq;

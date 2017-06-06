@@ -550,7 +550,7 @@ public class WTG {
 					stream.readInt("endToken"); //endToken = 0
 System.out.println(val);
 					if ((specType == SpecType.VARIABLE) && (varMap.containsKey(val) && varMap.get(val).isArray())) {
-						stream.beginGroup(String.format("arrayIndex"));
+						stream.beginGroup("arrayIndex");
 						
 						Param sub = new NormalParam(stream, EncodingFormat.WTG_0x7, funcMap, varMap, false);
 						

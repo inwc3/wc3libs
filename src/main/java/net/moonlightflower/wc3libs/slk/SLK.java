@@ -224,22 +224,22 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 				int x = 0;
 				int y = 0;
 
-				for (int i = 0; i < t.length; i++) {
-					String symbol = t[i].substring(0, 1);
+				for (String aT : t) {
+					String symbol = aT.substring(0, 1);
 
 					if (symbol.equals("X")) {
-						x = Integer.parseInt(t[i].substring(1, t[i].length()));
+						x = Integer.parseInt(aT.substring(1, aT.length()));
 					}
 					if (symbol.equals("Y")) {
-						y = Integer.parseInt(t[i].substring(1, t[i].length()));
+						y = Integer.parseInt(aT.substring(1, aT.length()));
 					}
 					if (symbol.equals("K")) {
 						boolean skip = false;
-						String valS = t[i].substring(1, t[i].length());
+						String valS = aT.substring(1, aT.length());
 
 						if (valS.substring(0, 1).equals("\"")) {
 							valS = valS.substring(1, valS.length() - 1);
-							
+
 							val = Wc3String.valueOf(valS);
 						} else {
 							try {
@@ -250,14 +250,14 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 								} catch (NumberFormatException e2) {
 								}
 							}
-							
+
 							if (val == null) {
 								if (valS.equals("#VALUE!")) skip = true;
 								if (valS.equals("FALSE")) val = Bool.valueOf(false);
 								if (valS.equals("TRUE")) val = Bool.valueOf(true);
 							}
 						}
-						
+
 						if (!skip) {
 							if (val == null) throw new RuntimeException("could not parse value " + valS);
 						}
@@ -271,7 +271,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 				if (y > maxY) maxY = y;
 
 				if (val != null) {
-					if (!data.containsKey(y)) data.put(y, new LinkedHashMap<Integer, DataType>());
+					if (!data.containsKey(y)) data.put(y, new LinkedHashMap<>());
 	
 					data.get(y).put(x, val);
 				}
@@ -351,7 +351,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 			}
 			
 			if (val instanceof Boolean) {
-				if (((Boolean) val).booleanValue()) return 1;
+				if ((Boolean) val) return 1;
 			} else if (val instanceof Integer) {
 				if (((Integer) val) != 0) return val;
 			} else if (val instanceof Float) {

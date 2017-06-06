@@ -732,7 +732,9 @@ public class ObjMod {
 		
 		for (Obj obj : getObjs().values()) {
 			ObjId objId = obj.getId();
-			
+			if(objId.toString().equals("n01M")) {
+				System.out.println("yay");
+			}
 			//
 			//outObjMod.getObj(objId).removeField(MetaFieldId.valueOf("wurs"));
 			
@@ -798,14 +800,8 @@ public class ObjMod {
 
 						if (slkFile == null) throw new RuntimeException("no slkFile for name " + slkName);
 
-						SLK outSlk = outSlks.get(slkFile);
-						
-						if (outSlk == null) {
-							outSlk = new RawSLK();
+						SLK outSlk = outSlks.computeIfAbsent(slkFile, k -> new RawSLK());
 
-							outSlks.put(slkFile, outSlk);
-						}
-						
 						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
@@ -840,10 +836,10 @@ public class ObjMod {
 									places = 1;
 								}
 								
-								String add = Integer.toString(level);
+								StringBuilder add = new StringBuilder(Integer.toString(level));
 								
 								while(add.length() < places) {
-									add = "0" + add;
+									add.insert(0, "0");
 								}
 								
 								slkFieldName += add;
@@ -857,29 +853,17 @@ public class ObjMod {
 							
 							if (slkFile.equals(UnitBalanceSLK.GAME_USE_PATH) || slkFile.equals(UnitAbilsSLK.GAME_USE_PATH) || slkFile.equals(UnitUISLK.GAME_USE_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
 								File unitBaseSLKFile = UnitDataSLK.GAME_USE_PATH;
-								
-								SLK unitBaseSLK = outSlks.get(unitBaseSLKFile);
-								
-								if (unitBaseSLK == null) {
-									unitBaseSLK = new RawSLK();
 
-									outSlks.put(unitBaseSLKFile, unitBaseSLK);
-								}
-								
+								SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
+
 								unitBaseSLK.addObj(objId);
 								
 								//
 								
 								File unitAbilSLKFile = UnitAbilsSLK.GAME_USE_PATH;
-								
-								SLK unitAbilSLK = outSlks.get(unitAbilSLKFile);
-								
-								if (unitAbilSLK == null) {
-									unitAbilSLK = new RawSLK();
 
-									outSlks.put(unitAbilSLKFile, unitAbilSLK);
-								}
-								
+								SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
+
 								unitAbilSLK.addObj(objId);
 							}
 							
@@ -898,7 +882,7 @@ public class ObjMod {
 			} else {
 				outObjMod.removeObj(objId);
 				
-				outObjMod.addObj(objId, null).merge(outObj);;
+				outObjMod.addObj(objId, null).merge(outObj);
 			}
 		}
 		
@@ -1113,10 +1097,12 @@ public class ObjMod {
 	
 	public ObjMod(InputStream inStream, boolean extended) throws IOException {
 		read(inStream, extended);
+		System.out.println("read.");
 	}
 	
 	public ObjMod(File inFile, boolean extended) throws IOException {
 		read(inFile, extended);
+		System.out.println("read.");
 	}
 	
 	public ObjMod() {

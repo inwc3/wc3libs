@@ -378,7 +378,7 @@ public class W3I {
 			
 			if (background != null) {
 				stream.writeInt(background instanceof LoadingScreenBackground.PresetBackground ? ((LoadingScreenBackground.PresetBackground) background).getIndex() : -1);
-				stream.writeString(background instanceof LoadingScreenBackground.CustomBackground ? ((LoadingScreenBackground.CustomBackground) background).getCustomPath().toString() : (String) null);
+				stream.writeString(background instanceof LoadingScreenBackground.CustomBackground ? ((LoadingScreenBackground.CustomBackground) background).getCustomPath().toString() : null);
 			} else {
 				stream.writeInt(-1);
 				stream.writeString((String) null);

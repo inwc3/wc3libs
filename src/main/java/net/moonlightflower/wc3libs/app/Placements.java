@@ -110,12 +110,7 @@ public class Placements {
 	
 		getRects().add(rect);
 
-		rect.addRemovalListener(new IRemovalListener() {
-			@Override
-			public void exec() {
-				getRects().remove(rect);
-			}
-		});
+		rect.addRemovalListener(() -> getRects().remove(rect));
 
 		return rect;
 	}

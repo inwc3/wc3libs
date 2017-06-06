@@ -28,13 +28,7 @@ public class ObjMerger {
     private void addSlk(File inFile, SLK otherSlk) {
         assert (inFile != null);
 
-        SLK slk = _slks.get(inFile);
-
-        if (slk == null) {
-            slk = SLK.createFromInFile(inFile);
-
-            _slks.put(inFile, slk);
-        }
+        SLK slk = _slks.computeIfAbsent(inFile, SLK::createFromInFile);
 
         slk.merge(otherSlk);
     }
@@ -115,13 +109,7 @@ public class ObjMerger {
 
             addProfile(pack.getProfile());
 
-            ObjMod objMod = _objMods.get(inFile);
-
-            if (objMod == null) {
-                objMod = new ObjMod();
-
-                _objMods.put(inFile, objMod);
-            }
+            ObjMod objMod = _objMods.computeIfAbsent(inFile, k -> new ObjMod());
 
             objMod.merge(pack.getObjMod());
         } catch (Exception e) {
@@ -468,9 +456,7 @@ public class ObjMerger {
 
         Collection<File> slkFiles = new ArrayList<>();
 
-        for (File inFile : _slkInFiles) {
-            slkFiles.add(inFile);
-        }
+        slkFiles.addAll(_slkInFiles);
 
         for (File inFile : slkFiles) {
             portOut.add(inFile);
@@ -478,9 +464,7 @@ public class ObjMerger {
 
         Collection<File> profileFiles = new ArrayList<>();
 
-        for (File file : _profileInFiles) {
-            profileFiles.add(file);
-        }
+        profileFiles.addAll(_profileInFiles);
 
         for (File inFile : profileFiles) {
             portOut.add(inFile);
@@ -548,9 +532,7 @@ public class ObjMerger {
 
         Collection<File> slkFiles = new ArrayList<>();
 
-        for (File inFile : _slkInFiles) {
-            slkFiles.add(inFile);
-        }
+        slkFiles.addAll(_slkInFiles);
 
         for (File inFile : slkFiles) {
             slkPortOut.add(inFile);
@@ -560,9 +542,7 @@ public class ObjMerger {
 
         Collection<File> profileFiles = new ArrayList<>();
 
-        for (File file : _profileInFiles) {
-            profileFiles.add(file);
-        }
+        profileFiles.addAll(_profileInFiles);
 
         MpqPort.Out profilePortOut = new JMpqPort.Out();
 

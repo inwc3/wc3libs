@@ -1,26 +1,23 @@
 package net.moonlightflower.wc3libs.misc;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class TypeInfo<boundType> {
 	private Class<? extends boundType> _type;
 	
 	public Class<? extends boundType> getType() {
-		return (Class<? extends boundType>) _type;
+		return _type;
 	}
 	
 	private TypeInfo<? extends boundType>[] _generics;
 	
 	public TypeInfo<? extends boundType>[] getGenerics() {
-		return (TypeInfo<? extends boundType>[]) _generics;
+		return _generics;
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(getClass() + " -> ");
+		sb.append(getClass()).append(" -> ");
 		
 		sb.append(getType());
 		
@@ -90,10 +87,9 @@ public class TypeInfo<boundType> {
 	@Override
 	public boolean equals(Object other) {
 		if (this == other) return true;
-		
-		if (!(other instanceof TypeInfo)) return false;
 
-		return (hashCode() == other.hashCode());
+		return other instanceof TypeInfo && (hashCode() == other.hashCode());
+
 	}
 	
 	public TypeInfo(Class<? extends boundType> type, Class<? extends boundType>[] generics) {
