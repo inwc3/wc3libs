@@ -20,11 +20,9 @@ public class ObjMergerTest {
             
             Orient.createDir(workDir);
 
-            System.out.println("workDir:" + workDir + ";" + workDir.exists());
-
+            Log.info("workDir: " + workDir + "; exists: " + workDir.exists());
             //merger.setWorkDir(workDir);
-
-            System.out.println("map:" + inMapFile + ";" + inMapFile.exists());
+            Log.info("map: " + inMapFile + "; exists: " + inMapFile.exists());
             //merger.readFromMap(inMapFile, true);
 
             File inDir = new File(workDir, "in");
@@ -36,15 +34,13 @@ public class ObjMergerTest {
             Orient.createDir(inDir);
             Orient.createDir(outDir);
             
-            //MpqPort.setWc3Dir(null);
-            
-            merger.exportMap(inMapFile, inDir);
+            merger.exportMap(inMapFile, inDir, false);
 
-            Log.info("Exported map");
+            Log.info("exported all files from input map");
             
             merger.addDir(inDir);
 
-            Log.info("Added in dir");
+            Log.info("added all exported files to the objectmerger");
             
             merger.writeToDir(outDir);
 

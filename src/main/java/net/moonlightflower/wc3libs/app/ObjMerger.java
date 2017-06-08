@@ -124,7 +124,7 @@ public class ObjMerger {
 
     private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile)
             throws IOException {
-        Log.info("add Files");
+        Log.info("adding exported files to object merger");
         if (wtsFile == null) {
             System.out.println("no wts file");
         } else {
@@ -311,7 +311,7 @@ public class ObjMerger {
 
         Map<File, File> profileFiles = new LinkedHashMap<>();
 
-        processSegments(slkResult, profileFiles);
+        processSegments(profileResult, profileFiles);
 
         Map<File, File> objModFiles = new LinkedHashMap<>();
 

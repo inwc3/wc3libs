@@ -1097,12 +1097,10 @@ public class ObjMod {
 	
 	public ObjMod(InputStream inStream, boolean extended) throws IOException {
 		read(inStream, extended);
-		System.out.println("read.");
 	}
 	
 	public ObjMod(File inFile, boolean extended) throws IOException {
 		read(inFile, extended);
-		System.out.println("read.");
 	}
 	
 	public ObjMod() {
