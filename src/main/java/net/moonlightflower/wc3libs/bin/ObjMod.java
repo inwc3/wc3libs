@@ -561,7 +561,7 @@ public class ObjMod {
 	
 	protected Map<ObjId, Obj> _objs = new LinkedHashMap<>();
 	private List<Obj> _objsList = new ArrayList<>();
-	
+
 	public Map<ObjId, ? extends Obj> getObjs() {
 		return _objs;
 	}
@@ -569,7 +569,7 @@ public class ObjMod {
 	public List<Obj> getObjsList() {
 		return _objsList;
 	}
-	
+
 	public List<Obj> getOrigObjs() {
 		List<Obj> ret = new ArrayList<>();
 		
@@ -743,7 +743,8 @@ public class ObjMod {
 			for (Obj.Field field : obj.getFields().values()) {
 				MetaFieldId fieldId = field.getId();
 
-				MetaSLK.Obj metaObj = reduceMetaSlk.getObj(ObjId.valueOf(fieldId));
+				ObjId id = ObjId.valueOf(fieldId);
+				MetaSLK.Obj metaObj = reduceMetaSlk.getObj(id);
 
 				if (metaObj != null) {
 					String slkName = metaObj.getS(FieldId.valueOf("slk"));

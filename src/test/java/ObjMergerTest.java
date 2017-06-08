@@ -34,7 +34,7 @@ public class ObjMergerTest {
             Orient.createDir(inDir);
             Orient.createDir(outDir);
             
-            merger.exportMap(inMapFile, inDir, false);
+            merger.exportMap(inMapFile, inDir);
 
             Log.info("exported all files from input map");
             
