@@ -146,6 +146,8 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 	@Override
 	public void addObj(Obj val) {
 		_objs.put(val.getId(), val);
+		
+		val.set(UnitUISLK.States.TEXT_NAME, Wc3String.valueOf("custom_" + val.getId()));
 	}
 	
 	@Override
@@ -182,6 +184,8 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 	}
 	
 	public UnitUISLK(SLK slk) {
+		this();
+		
 		read(slk);
 	}
 	

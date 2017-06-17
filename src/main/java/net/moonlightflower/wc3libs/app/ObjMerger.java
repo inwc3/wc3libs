@@ -4,6 +4,7 @@ import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
@@ -87,8 +88,6 @@ public class ObjMerger {
 
                 addSlk(file, otherSlk);
             }
-            
-            
             
             for (File baseSLKFile : otherObjMod.getSLKs()) {
             	SLK newSLK = SLK.createFromInFile(baseSLKFile);
