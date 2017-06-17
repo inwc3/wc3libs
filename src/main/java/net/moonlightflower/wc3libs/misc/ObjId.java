@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.misc;
 
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 
 public class ObjId extends Id {
 	@Override

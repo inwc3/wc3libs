@@ -10,8 +10,11 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
 
 import java.io.File;
 import java.io.IOException;
@@ -342,6 +345,11 @@ public class W3U extends ObjMod {
 		return obj;
 	}*/
 
+	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(UnitAbilsSLK.GAME_USE_PATH, UnitBalanceSLK.GAME_USE_PATH, UnitDataSLK.GAME_USE_PATH, UnitUISLK.GAME_USE_PATH, UnitWeaponsSLK.GAME_USE_PATH);
+	}
+	
 	@Override
 	public Collection<File> getNecessarySLKs() {
 		return Arrays.asList(UnitDataSLK.GAME_USE_PATH, UnitUISLK.GAME_USE_PATH);

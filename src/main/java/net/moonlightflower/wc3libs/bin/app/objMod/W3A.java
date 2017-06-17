@@ -150,6 +150,11 @@ public class W3A extends ObjMod {
 			super(id, baseId);
 		}
 	}
+
+	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(AbilSLK.GAME_USE_PATH);
+	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {

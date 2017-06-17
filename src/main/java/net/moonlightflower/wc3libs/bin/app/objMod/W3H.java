@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
@@ -105,6 +106,11 @@ public class W3H extends ObjMod {
 		}
 	}
 
+	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(BuffSLK.GAME_USE_PATH);
+	}
+	
 	@Override
 	public Collection<File> getNecessarySLKs() {
 		return Arrays.asList(BuffSLK.GAME_USE_PATH);

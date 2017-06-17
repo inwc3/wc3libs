@@ -115,6 +115,11 @@ public class W3D extends ObjMod {
 	}
 
 	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(DoodSLK.GAME_USE_PATH);
+	}
+	
+	@Override
 	public Collection<File> getNecessarySLKs() {
 		return Arrays.asList(DoodSLK.GAME_USE_PATH);
 	}
