@@ -122,8 +122,7 @@ public class ObjMerger {
         return (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3D.GAME_PATH) || inFile.equals(W3Q.GAME_PATH));
     }
 
-    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile)
-            throws IOException {
+    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws IOException {
         Log.info("adding exported files to object merger");
         if (wtsFile == null) {
             System.out.println("no wts file");

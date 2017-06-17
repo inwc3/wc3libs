@@ -1,5 +1,24 @@
 package net.moonlightflower.wc3libs.bin;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
+
+import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3H;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
@@ -10,16 +29,18 @@ import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.*;
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
 import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 ;
 
@@ -723,14 +744,18 @@ public class ObjMod {
 		return null;
 	}
 	
+	public Collection<File> getNecessarySLKs() {
+		return null;
+	}
+	
 	public ObjPack reduce(MetaSLK reduceMetaSlk) throws Exception {
 		ObjPack pack = new ObjPack(this);
 		
 		Map<File, SLK> outSlks = pack.getSlks();
 		Profile outProfile = pack.getProfile();
 		ObjMod outObjMod = pack.getObjMod();
-		for (Obj obj : getObjs().values()) {
 
+		for (Obj obj : getObjs().values()) {
 			ObjId objId = obj.getId();
 			if(objId.toString().equals("n01M")) {
 				System.out.println("yay");
@@ -765,6 +790,12 @@ public class ObjMod {
 
 							Profile.Obj profileObj = outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
 
+							for (File necessarySlkFile : getNecessarySLKs()) {
+								SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
+								
+								necessarySlk.addObj(objId);
+							}
+							
 							FieldId profileFieldId = FieldId.valueOf(slkFieldName);
 
 							Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
@@ -811,7 +842,7 @@ public class ObjMod {
 								int dataPt = field.getDataPt();
 
 								if (dataPt < 1) throw new Exception("dataPt < 1");
-								if (dataPt > 8) throw new Exception("dataPt > 9");
+								if (dataPt > 9) throw new Exception("dataPt > 9");
 
 								slkFieldName += (char) ('A' + dataPt - 1);
 							}
@@ -839,7 +870,7 @@ public class ObjMod {
 
 								StringBuilder add = new StringBuilder(Integer.toString(level));
 
-								while(add.length() < places) {
+								while (add.length() < places) {
 									add.insert(0, "0");
 								}
 
@@ -850,9 +881,15 @@ public class ObjMod {
 
 							outSlk.addField(slkFieldId);
 
-							SLK.Obj slkObj = outSlk.addObj(ObjId.valueOf(objId));
+							SLK.Obj slkObj = outSlk.addObj(objId);
 
-							if (slkFile.equals(UnitBalanceSLK.GAME_USE_PATH) || slkFile.equals(UnitAbilsSLK.GAME_USE_PATH) || slkFile.equals(UnitUISLK.GAME_USE_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+							for (File necessarySlkFile : getNecessarySLKs()) {
+								SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
+								
+								necessarySlk.addObj(objId);
+							}
+							
+							/*if (slkFile.equals(UnitBalanceSLK.GAME_USE_PATH) || slkFile.equals(UnitAbilsSLK.GAME_USE_PATH) || slkFile.equals(UnitUISLK.GAME_USE_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
 								File unitBaseSLKFile = UnitDataSLK.GAME_USE_PATH;
 
 								SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
@@ -866,7 +903,7 @@ public class ObjMod {
 								SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
 
 								unitAbilSLK.addObj(objId);
-							}
+							}*/
 
 							slkObj.set(slkFieldId, Wc3String.valueOf(val));
 
@@ -1105,5 +1142,89 @@ public class ObjMod {
 	}
 	
 	public ObjMod() {
+	}
+
+	public static ObjMod createFromInFile(File inFile, File outFile) throws Exception {
+		ObjMod ret = null;
+
+		if (inFile.equals(W3A.GAME_PATH)) {
+			ret = new W3A(outFile);
+		}
+		if (inFile.equals(W3B.GAME_PATH)) {
+			ret = new W3B(outFile);
+		}
+		if (inFile.equals(W3D.GAME_PATH)) {
+			ret = new W3D(outFile);
+		}
+		if (inFile.equals(W3H.GAME_PATH)) {
+			ret = new W3H(outFile);
+		}
+		if (inFile.equals(W3Q.GAME_PATH)) {
+			ret = new W3Q(outFile);
+		}
+		if (inFile.equals(W3U.GAME_PATH)) {
+			ret = new W3U(outFile);
+		}
+		if (inFile.equals(W3H.GAME_PATH)) {
+			ret = new W3H(outFile);
+		}
+		
+		return ret;
+	}
+	
+	/*public static ObjMod createFromInFile(File inFile, ObjMod source) {
+		ObjMod ret = null;
+
+		if (inFile.equals(W3A.GAME_PATH)) {
+			ret = new W3A(source);
+		}
+		if (inFile.equals(W3B.GAME_PATH)) {
+			ret = new W3B(source);
+		}
+		if (inFile.equals(W3D.GAME_PATH)) {
+			ret = new W3D(source);
+		}
+		if (inFile.equals(W3H.GAME_PATH)) {
+			ret = new W3H(source);
+		}
+		if (inFile.equals(W3Q.GAME_PATH)) {
+			ret = new W3Q(source);
+		}
+		if (inFile.equals(W3U.GAME_PATH)) {
+			ret = new W3U(source);
+		}
+		if (inFile.equals(W3H.GAME_PATH)) {
+			ret = new W3H(source);
+		}
+		
+		return ret;
+	}*/
+
+	public static ObjMod createFromInFile(File inFile) {
+		ObjMod ret = null;
+
+		if (inFile.equals(W3A.GAME_PATH)) {
+			ret = new W3A();
+		}
+		if (inFile.equals(W3B.GAME_PATH)) {
+			ret = new W3B();
+		}
+		if (inFile.equals(W3D.GAME_PATH)) {
+			ret = new W3D();
+		}
+		if (inFile.equals(W3H.GAME_PATH)) {
+			ret = new W3H();
+		}
+		if (inFile.equals(W3Q.GAME_PATH)) {
+			ret = new W3Q();
+		}
+		if (inFile.equals(W3U.GAME_PATH)) {
+			ret = new W3U();
+		}
+		if (inFile.equals(W3H.GAME_PATH)) {
+			ret = new W3H();
+		}
+		
+		return ret;
 	}
 }

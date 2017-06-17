@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
@@ -28,6 +30,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 import net.moonlightflower.wc3libs.txt.TXT;
 
 /**
@@ -146,6 +149,11 @@ public class W3A extends ObjMod {
 		public Obj(ObjId id, ObjId baseId) {
 			super(id, baseId);
 		}
+	}
+	
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Arrays.asList(AbilSLK.GAME_USE_PATH);
 	}
 	
 	public W3A(InputStream inStream) throws IOException {

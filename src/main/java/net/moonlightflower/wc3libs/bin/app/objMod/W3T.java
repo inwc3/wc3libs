@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
@@ -27,6 +29,8 @@ import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
 
 /**
  * item modifications file for wrapping war3map.w3t
@@ -119,6 +123,11 @@ public class W3T extends ObjMod {
 		}
 	}
 
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Arrays.asList(ItemSLK.GAME_USE_PATH);
+	}
+	
 	public W3T(InputStream inStream) throws IOException {
 		super(inStream, false);
 	}

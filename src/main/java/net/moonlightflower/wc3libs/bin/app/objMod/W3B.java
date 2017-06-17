@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
+import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
@@ -21,14 +24,12 @@ import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.ShadowTex;
 import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.TargetList;
 import net.moonlightflower.wc3libs.dataTypes.app.Tex;
 import net.moonlightflower.wc3libs.dataTypes.app.Tileset;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 /**
  * destructable modifications file for wrapping war3map.w3b
@@ -132,6 +133,11 @@ public class W3B extends ObjMod {
 		public Obj(ObjId id, ObjId baseId) {
 			super(id, baseId);
 		}
+	}
+	
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Arrays.asList(DestructableSLK.GAME_USE_PATH);
 	}
 	
 	public W3B(InputStream inStream) throws IOException {

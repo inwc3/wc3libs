@@ -9,11 +9,16 @@ import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -339,6 +344,11 @@ public class W3U extends ObjMod {
 		return obj;
 	}
 
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Arrays.asList(UnitDataSLK.GAME_USE_PATH, UnitUISLK.GAME_USE_PATH);
+	}
+	
 	public void read(InputStream inStream) throws IOException {
 		ObjMod other = new ObjMod();
 		
