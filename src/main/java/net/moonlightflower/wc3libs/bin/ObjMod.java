@@ -761,12 +761,12 @@ public class ObjMod {
 		Map<File, SLK> outSlks = pack.getSlks();
 		Profile outProfile = pack.getProfile();
 		ObjMod outObjMod = pack.getObjMod();
-
+		
 		for (Obj obj : getObjs().values()) {
 			ObjId objId = obj.getId();
-			if(objId.toString().equals("n01M")) {
+			/*if(objId.toString().equals("n01M")) {
 				System.out.println("yay");
-			}
+			}*/
 			//
 			//outObjMod.getObj(objId).removeField(MetaFieldId.valueOf("wurs"));
 
@@ -799,7 +799,7 @@ public class ObjMod {
 
 							for (File necessarySlkFile : getNecessarySLKs()) {
 								SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
-								
+
 								necessarySlk.addObj(objId);
 							}
 							
@@ -808,7 +808,8 @@ public class ObjMod {
 							Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
 							DataType profileVal = null;
 
-							if (metaObj.getS(FieldId.valueOf("type")).equals("stringList")) {
+							if (metaObj.getS(FieldId.valueOf("type")).endsWith("List")) {
+								//split up list types like stringList
 								profileVal = val.getVal();
 
 								if (profileVal != null) {
@@ -892,7 +893,7 @@ public class ObjMod {
 
 							for (File necessarySlkFile : getNecessarySLKs()) {
 								SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
-								
+
 								necessarySlk.addObj(objId);
 							}
 							
@@ -1197,11 +1198,11 @@ public class ObjMod {
 		if (inFile.equals(W3Q.GAME_PATH)) {
 			ret = new W3Q(source);
 		}
+		if (inFile.equals(W3T.GAME_PATH)) {
+			ret = new W3T(source);
+		}
 		if (inFile.equals(W3U.GAME_PATH)) {
 			ret = new W3U(source);
-		}
-		if (inFile.equals(W3H.GAME_PATH)) {
-			ret = new W3H(source);
 		}
 		
 		return ret;
@@ -1225,11 +1226,11 @@ public class ObjMod {
 		if (inFile.equals(W3Q.GAME_PATH)) {
 			ret = new W3Q();
 		}
+		if (inFile.equals(W3T.GAME_PATH)) {
+			ret = new W3T();
+		}
 		if (inFile.equals(W3U.GAME_PATH)) {
 			ret = new W3U();
-		}
-		if (inFile.equals(W3H.GAME_PATH)) {
-			ret = new W3H();
 		}
 		
 		return ret;

@@ -312,11 +312,10 @@ public class W3U extends ObjMod {
 		}
 	}
 	
-	private Map<ObjId, Unit> _objs = new LinkedHashMap<>();
+	/*private Map<ObjId, Unit> _objs = new LinkedHashMap<>();
 
 	@Override
 	public Map<ObjId, Unit> getObjs() {
-		System.out.println("get units");
 		return _objs;
 	}
 	
@@ -334,7 +333,6 @@ public class W3U extends ObjMod {
 	
 	@Override
 	public Unit addObj(ObjId id, ObjId baseId) {
-		System.out.println("add unit");
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
 		Unit obj = new Unit(id, baseId);
@@ -342,7 +340,7 @@ public class W3U extends ObjMod {
 		addObj(obj);
 		
 		return obj;
-	}
+	}*/
 
 	@Override
 	public Collection<File> getNecessarySLKs() {
