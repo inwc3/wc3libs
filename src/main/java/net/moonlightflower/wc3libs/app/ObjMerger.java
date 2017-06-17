@@ -122,7 +122,7 @@ public class ObjMerger {
         return (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3D.GAME_PATH) || inFile.equals(W3Q.GAME_PATH));
     }
 
-    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws IOException {
+    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws Exception {
         Log.info("adding exported files to object merger");
         if (wtsFile == null) {
             System.out.println("no wts file");
@@ -168,7 +168,7 @@ public class ObjMerger {
             File inFile = fileEntry.getKey();
             File outFile = fileEntry.getValue();
 
-            ObjMod objMod = new ObjMod(outFile, isObjModFileExtended(inFile));
+            ObjMod objMod = ObjMod.createFromInFile(inFile, outFile);
 
             addObjMod(inFile, objMod);
         }
@@ -258,7 +258,7 @@ public class ObjMerger {
             W3T.GAME_PATH,
             W3U.GAME_PATH);
 
-    public void addDir(File dir) throws IOException {
+    public void addDir(File dir) throws Exception {
         Log.info("Adding directory of files to be merged: " + dir.getAbsolutePath());
         Map<File, File> files = new LinkedHashMap<>();
 
@@ -299,7 +299,7 @@ public class ObjMerger {
     }
 
     private void addExports(File outDir, MpqPort.Out.Result metaSlkResult, MpqPort.Out.Result slkResult, MpqPort.Out.Result profileResult, MpqPort.Out.Result
-			objModResult, MpqPort.Out.Result wtsResult) throws IOException {
+			objModResult, MpqPort.Out.Result wtsResult) throws Exception {
         Map<File, File> metaSlkFiles = new LinkedHashMap<>();
 
         processSegments(metaSlkResult, metaSlkFiles);

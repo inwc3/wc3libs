@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3H;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
@@ -745,7 +747,7 @@ public class ObjMod {
 	}
 	
 	public Collection<File> getNecessarySLKs() {
-		return null;
+		return Arrays.asList();
 	}
 	
 	public ObjPack reduce(MetaSLK reduceMetaSlk) throws Exception {
@@ -1162,11 +1164,11 @@ public class ObjMod {
 		if (inFile.equals(W3Q.GAME_PATH)) {
 			ret = new W3Q(outFile);
 		}
+		if (inFile.equals(W3T.GAME_PATH)) {
+			ret = new W3T(outFile);
+		}
 		if (inFile.equals(W3U.GAME_PATH)) {
 			ret = new W3U(outFile);
-		}
-		if (inFile.equals(W3H.GAME_PATH)) {
-			ret = new W3H(outFile);
 		}
 		
 		return ret;
