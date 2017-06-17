@@ -42,6 +42,7 @@ import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
 import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
 import net.moonlightflower.wc3libs.txt.Profile;
+import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
 ;
@@ -833,7 +834,7 @@ public class ObjMod {
 								} else {
 									profileVal = Wc3String.valueOf(val.getVal());
 								}
-
+								
 								profileField.set(profileVal, index);
 							}
 						}
@@ -941,7 +942,7 @@ public class ObjMod {
 
 			outSlks.put(slkEntry.getKey(), convSlk);
 		}
-		
+
 		return pack;
 	}
 	

@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Translator;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * manages txt files like UI\\WorldEditStrings.txt and parses their entries to register key->value pairings
  */
-public class TXT {	
+public class TXT {
 	public static class Section {
 		public static class Field {
 			private final List<DataType> _vals = new ArrayList<>();
@@ -73,7 +74,7 @@ public class TXT {
 			
 			public void ensureSize(int size) {
 				while (_vals.size() < size) {
-					_vals.add(null);
+					_vals.add(Int.valueOf(10));
 				}
 			}
 			
@@ -157,9 +158,22 @@ public class TXT {
 			
 			public void merge(Field otherField, boolean overwrite) {
 				if (overwrite) {
-					_vals.clear();
-
-					_vals.addAll(otherField.getVals());
+					//TODO: buttonpos field uses index and objmod reductions should only per-index overwrite one another
+					if (getId().lower().equals(FieldId.valueOf("buttonpos"))) {
+						List<DataType> otherVals = new ArrayList<>(otherField.getVals());
+						
+						ensureSize(otherVals.size());
+						
+						for (int i = 0; i < otherVals.size(); i++) {
+							if (otherVals.get(i) == null) continue;
+							
+							_vals.set(i, otherVals.get(i));
+						}
+					} else {
+						_vals.clear();
+	
+						_vals.addAll(otherField.getVals());
+					}
 				} else {
 					for (DataType val : otherField.getVals()) {
 						add(val);
@@ -189,11 +203,11 @@ public class TXT {
 		}
 		
 		public Field getField(FieldId fieldId) {
-			return getFields().get(fieldId);
+			return getFields().get(fieldId.lower());
 		}
-
+		
 		public boolean containsField(FieldId fieldId) {
-			return getFields().containsKey(fieldId);
+			return getFields().containsKey(fieldId.lower());
 		}
 		
 		public DataType get(FieldId fieldId, int index) throws Exception {
@@ -209,7 +223,7 @@ public class TXT {
 		}
 		
 		protected void addField(Field field) {
-			_fields.put(field.getId(), field);
+			_fields.put(field.getId().lower(), field);
 		}
 		
 		public Field addField(FieldId fieldId) {

@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.misc.FieldId;
+import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
 
 import java.io.*;
@@ -104,7 +105,7 @@ public class Profile extends TXT {
 		
 		@Override
 		public Field getField(FieldId id) {
-			return (Field) _fields.get(id);
+			return (Field) _fields.get(id.lower());
 		}
 		
 		@Override
@@ -114,7 +115,7 @@ public class Profile extends TXT {
 
 			Field field = new Field(id);
 
-			_fields.put(id, field);
+			_fields.put(id.lower(), field);
 			
 			return field;
 		}
@@ -125,7 +126,7 @@ public class Profile extends TXT {
 				Field otherField = fieldEntry.getValue();
 				
 				Field field = addField(fieldId);
-				
+
 				field.merge(otherField, overwrite);
 			}
 		}
@@ -140,13 +141,15 @@ public class Profile extends TXT {
 				FieldId fieldId = fieldEntry.getKey();
 				Obj.Field field = fieldEntry.getValue();
 
-				for (int i = 0; i < field.getVals().size(); i++) {
+				System.out.println(String.format("%s=%s", fieldId.toTXTVal().toString(), field.getValLine(null)));
+				
+				/*for (int i = 0; i < field.getVals().size(); i++) {
 					Object val = field.get(i);
 					
 					String valS = (val == null) ? "" : val.toString();
 					
 					System.out.println(String.format("%s=%s", fieldId.toTXTVal().toString(), valS));
-				}
+				}*/
 			}
 		}
 		

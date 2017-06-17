@@ -88,6 +88,8 @@ public class ObjMerger {
                 addSlk(file, otherSlk);
             }
             
+            
+            
             for (File baseSLKFile : otherObjMod.getSLKs()) {
             	SLK newSLK = SLK.createFromInFile(baseSLKFile);
             	
@@ -97,7 +99,7 @@ public class ObjMerger {
             		if ((reducedSLK != null) && reducedSLK.containsObj(objId)) continue;
             		
             		ObjId baseId = baseObjIds.get(objId);
-
+            		
                     if (baseId != null) {
                         SLK.Obj baseObj = _slks.get(baseSLKFile).getObj(baseId);
 
@@ -118,7 +120,7 @@ public class ObjMerger {
             Map<TXTSectionId, Profile.Obj> otherObjs = new LinkedHashMap<>(otherProfile.getObjs());
 
             otherProfile.clearObjs();
-
+            
             for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : otherObjs.entrySet()) {
                 ObjId objId = ObjId.valueOf(objEntry.getKey().toString());
                 Profile.Obj otherObj = objEntry.getValue();
@@ -132,7 +134,7 @@ public class ObjMerger {
 
                     obj.merge(baseObj);
                 }
-
+                
                 obj.merge(otherObj);
             }
 

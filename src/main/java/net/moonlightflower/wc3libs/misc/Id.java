@@ -60,4 +60,8 @@ public class Id extends Wc3String {
 	public Id decode(Object val) {
 		return Id.valueOf(val.toString());
 	}
+	
+	public Id lower() {
+		return Id.valueOf(getVal().toLowerCase());
+	}
 }

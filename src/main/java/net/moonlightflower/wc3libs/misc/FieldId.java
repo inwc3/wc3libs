@@ -12,4 +12,9 @@ public class FieldId extends Id {
 	public static FieldId valueOf(Id id) {
 		return valueOf(id.toString());
 	}
+	
+	@Override
+	public FieldId lower() {
+		return FieldId.valueOf(super.lower());
+	}
 }
