@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
@@ -133,6 +134,11 @@ public class W3B extends ObjMod {
 		public Obj(ObjId id, ObjId baseId) {
 			super(id, baseId);
 		}
+	}
+	
+	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(DestructableSLK.GAME_USE_PATH);
 	}
 	
 	@Override

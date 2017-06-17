@@ -124,6 +124,11 @@ public class W3T extends ObjMod {
 	}
 
 	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(ItemSLK.GAME_USE_PATH);
+	}
+	
+	@Override
 	public Collection<File> getNecessarySLKs() {
 		return Arrays.asList(ItemSLK.GAME_USE_PATH);
 	}

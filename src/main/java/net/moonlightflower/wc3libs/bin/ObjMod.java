@@ -745,7 +745,11 @@ public class ObjMod {
 		
 		return null;
 	}
-	
+
+	public Collection<File> getSLKs() {
+		return Arrays.asList();
+	}
+
 	public Collection<File> getNecessarySLKs() {
 		return Arrays.asList();
 	}

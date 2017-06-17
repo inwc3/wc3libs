@@ -116,6 +116,11 @@ public class W3Q extends ObjMod {
 	}
 
 	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(UpgradeSLK.GAME_USE_PATH);
+	}
+	
+	@Override
 	public Collection<File> getNecessarySLKs() {
 		return Arrays.asList(UpgradeSLK.GAME_USE_PATH);
 	}

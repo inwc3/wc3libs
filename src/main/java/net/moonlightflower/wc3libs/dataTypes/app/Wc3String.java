@@ -33,7 +33,6 @@ public class Wc3String extends DataType implements Stringable {
 		if (this == other) return true;
 
 		return ((other instanceof Wc3String) || (other instanceof String)) && (hashCode() == other.hashCode());
-
 	}
 	
 	@Override

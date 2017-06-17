@@ -4,6 +4,7 @@ import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
+import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.JMpqPort;
@@ -54,6 +55,8 @@ public class ObjMerger {
 
             Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
 
+            Set<ObjId> objIds = new HashSet<>();
+
             for (Map.Entry<File, SLK> slkEntry : pack.getSlks().entrySet()) {
                 File file = slkEntry.getKey();
                 SLK otherSlk = slkEntry.getValue();
@@ -62,8 +65,11 @@ public class ObjMerger {
 
                 otherSlk.clearObjs();
 
-                for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {
+                for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {                	
                     ObjId objId = objEntry.getKey();
+
+                    objIds.add(objId);
+                    
                     SLK.Obj otherObj = objEntry.getValue();
 
                     SLK.Obj obj = otherSlk.addObj(objId);
@@ -81,7 +87,31 @@ public class ObjMerger {
 
                 addSlk(file, otherSlk);
             }
+            
+            for (File baseSLKFile : otherObjMod.getSLKs()) {
+            	SLK newSLK = SLK.createFromInFile(baseSLKFile);
+            	
+            	for (ObjId objId : objIds) {
+            		SLK reducedSLK = pack.getSlks().get(baseSLKFile);
 
+            		if ((reducedSLK != null) && reducedSLK.containsObj(objId)) continue;
+            		
+            		ObjId baseId = baseObjIds.get(objId);
+
+                    if (baseId != null) {
+                        SLK.Obj baseObj = _slks.get(baseSLKFile).getObj(baseId);
+
+                        if (baseObj != null) {
+                        	SLK.Obj obj = newSLK.addObj(objId);
+
+                        	obj.merge(baseObj);
+                        }
+                    }
+            	}
+            	
+            	addSlk(baseSLKFile, newSLK);
+            }
+            
             //
             Profile otherProfile = pack.getProfile();
 
@@ -149,8 +179,6 @@ public class ObjMerger {
             File outFile = fileEntry.getValue();
 
             SLK slk = SLK.createFromInFile(inFile, outFile);
-
-            //System.out.println(inFile);
 
             addSlk(inFile, slk);
         }
@@ -349,7 +377,7 @@ public class ObjMerger {
         for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
             File inFile = slkEntry.getKey();
             SLK slk = slkEntry.getValue();
-
+            
             File outFile = new File(outDir, inFile.toString());
 
             slk.write(outFile);

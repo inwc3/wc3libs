@@ -121,6 +121,19 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 			merge(otherObj, true);
 		}
 		
+		public void print(PrintStream stream) {
+			for (Map.Entry<FieldId, DataType> valEntry : getVals().entrySet()) {
+				FieldId fieldId = valEntry.getKey();
+				DataType val = valEntry.getValue();
+				
+				stream.println(fieldId + " -> " + val);
+			}
+		}
+		
+		public void print() {
+			print(System.out);
+		}
+		
 		public abstract void reduce();
 		
 		private T _id;
@@ -135,6 +148,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	protected Map<ObjIdType, ObjType> _objs = new LinkedHashMap<>();
+	
+	public boolean containsObj(ObjIdType objId) {
+		return _objs.containsKey(objId);
+	}
 	
 	public Map<ObjIdType, ObjType> getObjs() {
 		return _objs;
