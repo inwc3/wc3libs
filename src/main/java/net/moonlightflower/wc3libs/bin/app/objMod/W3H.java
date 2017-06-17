@@ -1,33 +1,20 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Icon;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.LightningId;
-import net.moonlightflower.wc3libs.dataTypes.app.Model;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.SpellDetail;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * buff modifications file for wrapping war3map.w3h
@@ -108,12 +95,12 @@ public class W3H extends ObjMod {
 
 	@Override
 	public Collection<File> getSLKs() {
-		return Arrays.asList(BuffSLK.GAME_USE_PATH);
+		return Collections.singletonList(BuffSLK.GAME_USE_PATH);
 	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList(BuffSLK.GAME_USE_PATH);
+		return Collections.singletonList(BuffSLK.GAME_USE_PATH);
 	}
 	
 	public W3H(InputStream inStream) throws IOException {

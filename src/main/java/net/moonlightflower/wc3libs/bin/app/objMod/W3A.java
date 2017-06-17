@@ -1,37 +1,20 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Char;
-import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
-import net.moonlightflower.wc3libs.dataTypes.app.Effect;
-import net.moonlightflower.wc3libs.dataTypes.app.Icon;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.LightningId;
-import net.moonlightflower.wc3libs.dataTypes.app.Model;
-import net.moonlightflower.wc3libs.dataTypes.app.OrderString;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.TechId;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.txt.TXT;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * ability modifications file for wrapping war3map.w3a
@@ -153,12 +136,12 @@ public class W3A extends ObjMod {
 
 	@Override
 	public Collection<File> getSLKs() {
-		return Arrays.asList(AbilSLK.GAME_USE_PATH);
+		return Collections.singletonList(AbilSLK.GAME_USE_PATH);
 	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList(AbilSLK.GAME_USE_PATH);
+		return Collections.singletonList(AbilSLK.GAME_USE_PATH);
 	}
 	
 	public W3A(InputStream inStream) throws IOException {
