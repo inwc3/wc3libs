@@ -171,7 +171,9 @@ public class Profile extends TXT {
 				Field field = fieldEntry.getValue();
 
 				String valLine = field.getValLine(translator);
-
+				
+				if (valLine.equals("\"\"")) continue;
+				
 				writer.write(String.format("%s=%s", fieldId.toString(), valLine));
 				
 				writer.newLine();

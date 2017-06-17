@@ -74,7 +74,7 @@ public class TXT {
 			
 			public void ensureSize(int size) {
 				while (_vals.size() < size) {
-					_vals.add(Int.valueOf(10));
+					_vals.add(null);
 				}
 			}
 			
