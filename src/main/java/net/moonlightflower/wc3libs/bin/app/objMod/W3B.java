@@ -1,36 +1,20 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
-import net.moonlightflower.wc3libs.dataTypes.app.DefType;
-import net.moonlightflower.wc3libs.dataTypes.app.DestructableClass;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Model;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingTex;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.ShadowTex;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.Tex;
-import net.moonlightflower.wc3libs.dataTypes.app.Tileset;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * destructable modifications file for wrapping war3map.w3b
@@ -138,12 +122,12 @@ public class W3B extends ObjMod {
 	
 	@Override
 	public Collection<File> getSLKs() {
-		return Arrays.asList(DestructableSLK.GAME_USE_PATH);
+		return Collections.singletonList(DestructableSLK.GAME_USE_PATH);
 	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList(DestructableSLK.GAME_USE_PATH);
+		return Collections.singletonList(DestructableSLK.GAME_USE_PATH);
 	}
 	
 	public W3B(InputStream inStream) throws IOException {

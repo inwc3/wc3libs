@@ -59,8 +59,8 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
         public final static State<Int> DATA_LEVEL = new State<>("Level", Int.class);
         public final static State<Int> DATA_LEVEL_OLD = new State<>("oldLevel", Int.class);
         public final static State<DataList<AbilId>> DATA_ABILS = new State<>("abilList", new DataTypeInfo(DataList.class, AbilId.class));
-        public final static State<Bool> DATA_IGNORE_COOLDOWN = new State<>("ignoreCD", Bool.class);
         public final static State<AbilId> DATA_COOLDOWN_ID = new State<>("cooldownID", AbilId.class);
+        public final static State<Bool> DATA_IGNORE_COOLDOWN = new State<>("ignoreCD", Bool.class);
         public final static State<Int> DATA_CHARGES = new State<>("uses", Int.class);
         public final static State<Int> DATA_PRIO = new State<>("prio", Int.class);
         public final static State<Bool> DATA_USABLE = new State<>("usable", Bool.class);

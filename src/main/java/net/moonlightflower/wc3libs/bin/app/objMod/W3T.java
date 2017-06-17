@@ -1,36 +1,20 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilCode;
-import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Char;
-import net.moonlightflower.wc3libs.dataTypes.app.DefType;
-import net.moonlightflower.wc3libs.dataTypes.app.Icon;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemClass;
-import net.moonlightflower.wc3libs.dataTypes.app.Model;
-import net.moonlightflower.wc3libs.dataTypes.app.PathingRequire;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.RequireList;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.port.LadikMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * item modifications file for wrapping war3map.w3t
@@ -125,12 +109,12 @@ public class W3T extends ObjMod {
 
 	@Override
 	public Collection<File> getSLKs() {
-		return Arrays.asList(ItemSLK.GAME_USE_PATH);
+		return Collections.singletonList(ItemSLK.GAME_USE_PATH);
 	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList(ItemSLK.GAME_USE_PATH);
+		return Collections.singletonList(ItemSLK.GAME_USE_PATH);
 	}
 	
 	public W3T(InputStream inStream) throws IOException {
