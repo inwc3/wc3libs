@@ -750,6 +750,11 @@ public class ObjMod {
 		return Arrays.asList();
 	}
 	
+	//data pts are used by abilities, a value of 1 maps to DataA, 2 to DataB, 3 to DataC and so on
+	//the ability slk defines up to DataI, hence 9 is the max
+	public final int DATA_PT_MIN = 1;
+	public final int DATA_PT_MAX = 9;
+	
 	public ObjPack reduce(MetaSLK reduceMetaSlk) throws Exception {
 		ObjPack pack = new ObjPack(this);
 		
@@ -843,8 +848,8 @@ public class ObjMod {
 							if (metaObj.get(FieldId.valueOf("field")).equals("Data")) {
 								int dataPt = field.getDataPt();
 
-								if (dataPt < 1) throw new Exception("dataPt < 1");
-								if (dataPt > 9) throw new Exception("dataPt > 9");
+								if (dataPt < DATA_PT_MIN) throw new Exception("dataPt < " + DATA_PT_MIN);
+								if (dataPt > DATA_PT_MAX) throw new Exception("dataPt > " + DATA_PT_MAX);
 
 								slkFieldName += (char) ('A' + dataPt - 1);
 							}
