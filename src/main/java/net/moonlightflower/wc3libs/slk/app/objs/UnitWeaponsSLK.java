@@ -57,7 +57,7 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
         public final static State<Wc3String> EDITOR_SORT2 = new State<>("sort2", Wc3String.class);
         public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comment(s)", Wc3String.class);
 
-        public final static State<AttackBits> COMBAT_ATTACKS_USED = new State<>("weaposOn", AttackBits.class);
+        public final static State<AttackBits> COMBAT_ATTACKS_USED = new State<>("weapsOn", AttackBits.class);
         public final static State<Real> COMBAT_ACQUIRE = new State<>("acquire", Real.class);
         public final static State<Real> COMBAT_RANGE_MIN = new State<>("minRange", Real.class);
         public final static State<Real> COMBAT_CAST_PT = new State<>("castpt", Real.class);
