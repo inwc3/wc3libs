@@ -8,7 +8,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Size;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 
@@ -2114,7 +2114,7 @@ public class W3I {
 	public static W3I ofMapFile(File mapFile) throws Exception {
 		Orient.checkFileExists(mapFile);
 		
-		MpqPort.Out port = new LadikMpqPort.Out();
+		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(GAME_PATH);
 		

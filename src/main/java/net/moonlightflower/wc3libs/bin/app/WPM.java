@@ -11,7 +11,7 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.PathMap;
 import net.moonlightflower.wc3libs.misc.Raster;
 import net.moonlightflower.wc3libs.misc.Size;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.File;
@@ -231,7 +231,7 @@ public class WPM extends Raster<FlagsInt> {
 	}
 	
 	public static WPM ofMap(File mapFile) throws IOException {
-		MpqPort.Out portOut = new LadikMpqPort.Out();
+		MpqPort.Out portOut = new JMpqPort.Out();
 		
 		portOut.add(GAME_PATH);
 		

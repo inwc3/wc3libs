@@ -338,7 +338,7 @@ public abstract class MpqPort {
 	
 	public abstract Out.Result getGameFiles(File... files) throws Exception;
 	
-	private static Class<? extends MpqPort> _defaultImpl = LadikMpqPort.class;
+	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
 	
 	public static MpqPort getDefaultImpl() {
 		try {

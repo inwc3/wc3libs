@@ -3,7 +3,7 @@ package net.moonlightflower.wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinStream;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.File;
@@ -270,7 +270,7 @@ public class WCT {
 	public static WCT ofMapFile(File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
-		MpqPort.Out port = new LadikMpqPort.Out();
+		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(GAME_PATH);
 		

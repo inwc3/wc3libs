@@ -11,7 +11,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 import net.moonlightflower.wc3libs.misc.image.BLP;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.File;
@@ -212,7 +212,7 @@ public class MMP {
 			IconImg iconImg = null;
 			
 			if (!iconImgMap.containsKey(imgPath)) {			
-				MpqPort.Out.Result portResult = new LadikMpqPort().getGameFiles(imgPath);
+				MpqPort.Out.Result portResult = new JMpqPort().getGameFiles(imgPath);
 				
 				InputStream inStream = portResult.getInputStream(imgPath);
 				
@@ -400,7 +400,7 @@ public class MMP {
 	}
 
 	public static MMP ofMapFile(File mapFile) throws Exception {
-		MpqPort.Out port = new LadikMpqPort.Out();
+		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(GAME_PATH);
 		

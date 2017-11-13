@@ -196,14 +196,7 @@ public class BinStream {
 				_bytes.add(buf[i]);
 			}
 		}
-		
-		/*OutputStream out = new FileOutputStream("D:\\test.txt");
-		
-		for (Byte b : _bytes) {
-			out.write(b);
-		}
-		
-		out.close();*/
+
 	}
 	
 	public void writeTo(OutputStream outStream) throws IOException {			

@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.txt;
 
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.io.*;
@@ -149,7 +149,7 @@ end*/
 	}
 	
 	public static WTS ofMapFile(File mapFile) throws Exception {
-		MpqPort.Out portOut = new LadikMpqPort.Out();
+		MpqPort.Out portOut = new JMpqPort.Out();
 		
 		portOut.add(WTS.GAME_PATH);
 		

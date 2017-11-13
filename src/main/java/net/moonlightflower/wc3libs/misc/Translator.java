@@ -105,12 +105,6 @@ public class Translator {
 		
 		addTXT(other);
 		
-		/*try {
-			_txt.write(new File("D:\\out.txt"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 	}
 	
 	public void print(PrintStream outStream) {

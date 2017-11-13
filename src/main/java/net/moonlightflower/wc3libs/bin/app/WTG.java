@@ -6,7 +6,7 @@ import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
@@ -1843,7 +1843,7 @@ System.out.println(val);
 	public static WTG ofMapFile(File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
-		MpqPort.Out port = new LadikMpqPort.Out();
+		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(GAME_PATH);
 		

@@ -7,14 +7,9 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
+import net.moonlightflower.wc3libs.slk.app.objs.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * unit modifications file for wrapping war3map.w3u
@@ -352,7 +345,7 @@ public class W3U extends ObjMod {
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList(UnitDataSLK.GAME_USE_PATH, UnitUISLK.GAME_USE_PATH);
+		return Arrays.asList(UnitAbilsSLK.GAME_USE_PATH, UnitBalanceSLK.GAME_USE_PATH, UnitDataSLK.GAME_USE_PATH, UnitUISLK.GAME_USE_PATH, UnitWeaponsSLK.GAME_USE_PATH);
 	}
 	
 	public void read(InputStream inStream) throws IOException {
@@ -378,7 +371,7 @@ public class W3U extends ObjMod {
 	public static W3U ofMapFile(File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
-		MpqPort.Out port = new LadikMpqPort.Out();
+		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(GAME_PATH);
 		

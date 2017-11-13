@@ -5,7 +5,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort.Out.FileExport;
 import net.moonlightflower.wc3libs.port.MpqPort.Out.Result;
@@ -69,7 +69,7 @@ public class GamePrefetch {
 		
 		@Override
 		public void run() {
-			MpqPort.Out port = new LadikMpqPort.Out();
+			MpqPort.Out port = new JMpqPort.Out();
 			
 			for (File inFile : _procFiles) {
 				File outFile = new File(STORAGE_DIR, inFile.toString());

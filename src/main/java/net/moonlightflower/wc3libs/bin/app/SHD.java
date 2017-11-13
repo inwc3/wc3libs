@@ -7,7 +7,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.ShadowMap;
 import net.moonlightflower.wc3libs.misc.Size;
-import net.moonlightflower.wc3libs.port.LadikMpqPort;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import java.awt.*;
@@ -174,7 +174,7 @@ public class SHD {
     }
 
     public static SHD ofMap(File mapFile) throws IOException {
-        MpqPort.Out portOut = new LadikMpqPort.Out();
+        MpqPort.Out portOut = new JMpqPort.Out();
 
         portOut.add(GAME_PATH);
 
