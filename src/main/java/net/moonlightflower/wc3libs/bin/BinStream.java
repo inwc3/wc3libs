@@ -198,12 +198,23 @@ public class BinStream {
 		}
 
 	}
-	
-	public void writeTo(OutputStream outStream) throws IOException {			
+
+	public byte[] writeToByteArray() throws IOException {
 		List<Byte> bytes = _bytes;
 
 		byte[] buf = new byte[bytes.size()];
-		
+
+		for (int i = 0; i < bytes.size(); i++) {
+			buf[i] = bytes.get(i);
+		}
+		return buf;
+	}
+
+	public void writeTo(OutputStream outStream) throws IOException {
+		List<Byte> bytes = _bytes;
+
+		byte[] buf = new byte[bytes.size()];
+
 		for (int i = 0; i < bytes.size(); i++) {
 			buf[i] = bytes.get(i);
 		}

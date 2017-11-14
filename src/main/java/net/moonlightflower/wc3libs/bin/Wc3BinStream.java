@@ -1,26 +1,18 @@
 package net.moonlightflower.wc3libs.bin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.Id;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * deals with wc3's binary encoding
@@ -251,8 +243,6 @@ public class Wc3BinStream extends BinStream {
 	}
 	
 	public byte[] stringToByteArray(String val) {
-		byte[] buf = val.getBytes(StandardCharsets.UTF_8);
-
 		return val.getBytes(StandardCharsets.UTF_8);
 	}
 

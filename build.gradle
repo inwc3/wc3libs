@@ -21,7 +21,7 @@ jar {
 }
 
 dependencies {
-    compile 'com.github.inwc3:JMPQ3:1.5.1'
+    compile 'com.github.inwc3:JMPQ3:1.5.7'
     compile group: 'com.esotericsoftware.minlog', name: 'minlog', version: '1.2'
     antlr "org.antlr:antlr4:4.5.3"
     testCompile 'org.testng:testng:6.1.1'
