@@ -6,7 +6,7 @@ import java.util.Map;
 
 public abstract class LoadingScreenBackground {
 	public static class PresetBackground extends LoadingScreenBackground {
-		private int curIndex = 0;
+		private static int curIndex = 0;
 		private static Map<Integer, PresetBackground> _map = new LinkedHashMap<>();
 		
 		public final static PresetBackground TUTORIAL = new PresetBackground("TUTORIAL");
@@ -58,6 +58,10 @@ public abstract class LoadingScreenBackground {
 		
 		protected PresetBackground(String label) {
 			this(label, null);
+		}
+		
+		static {
+			PresetBackgroundEx.init();
 		}
 	}
 
@@ -172,6 +176,10 @@ public abstract class LoadingScreenBackground {
 		
 		private PresetBackgroundEx(String label) {
 			super(label, "WESTRING_LOADINGSCREEN_");
+		}
+		
+		private static void init() {
+			
 		}
 	}
 	

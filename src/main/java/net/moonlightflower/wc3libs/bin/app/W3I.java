@@ -281,7 +281,7 @@ public class W3I {
         _tileset = val;
     }
 
-    public class LoadingScreen {
+    public static class LoadingScreen {
         private LoadingScreenBackground _background;
 
         public LoadingScreenBackground getBackground() {
@@ -348,7 +348,11 @@ public class W3I {
                 background = LoadingScreenBackground.PresetBackground.valueOf(backgroundIndex);
             }
 
-            setLoadingScreen(new LoadingScreen(background, text, title, subtitle, index));
+            setBackground(background);
+            setText(text);
+            setTitle(title);
+            setSubtitle(subtitle);
+            setIndex(index);
         }
 
         private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
@@ -400,7 +404,6 @@ public class W3I {
             stream.writeString(getText());
             stream.writeString(getTitle());
             stream.writeString(getSubtitle());
-            stream.writeInt(getIndex());
         }
 
         private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
@@ -617,7 +620,7 @@ public class W3I {
         _tilesetLightEnv = val;
     }
 
-    private Color _waterColor = Color.fromBGRA(255, 255, 255, 255);
+    private Color _waterColor = Color.fromRGBA(255, 255, 255, 255);
 
     public Color getWaterColor() {
         return _waterColor;
@@ -1868,7 +1871,7 @@ public class W3I {
                 stream.readFloat("terrainFogZHeightStart"),
                 stream.readFloat("terrainFogZHeightEnd"),
                 stream.readFloat("terrainFogDensity"),
-                Color.fromBGRA(
+                Color.fromRGBA(
                         stream.readUByte("terrainFogRed"),
                         stream.readUByte("terrainFogGreen"),
                         stream.readUByte("terrainFogBlue"),
