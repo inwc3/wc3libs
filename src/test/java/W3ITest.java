@@ -42,5 +42,7 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(w3I2.getWorldBounds().toString(), w3I.getWorldBounds().toString());
         Assert.assertEquals(w3I2.getTerrainFog().toString(), w3I.getTerrainFog().toString());
         Assert.assertEquals(w3I2.getGlobalWeatherId().hashCode(), w3I.getGlobalWeatherId().hashCode());
+        Assert.assertEquals(w3I2.getTilesetLightEnv(), w3I.getTilesetLightEnv());
+        Assert.assertEquals(w3I2.getSoundEnv(), w3I.getSoundEnv());
     }
 }
