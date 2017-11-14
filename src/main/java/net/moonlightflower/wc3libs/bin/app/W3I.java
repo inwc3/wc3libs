@@ -1998,9 +1998,9 @@ public class W3I {
 
         Color waterColor = getWaterColor();
 
-        stream.writeUByte(waterColor.getBlue());
-        stream.writeUByte(waterColor.getGreen());
         stream.writeUByte(waterColor.getRed());
+        stream.writeUByte(waterColor.getGreen());
+        stream.writeUByte(waterColor.getBlue());
         stream.writeUByte(waterColor.getAlpha());
 
         stream.writeInt(_players.size());
