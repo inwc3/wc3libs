@@ -1,6 +1,9 @@
+package wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.app.W3I;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import Wc3LibTest;
 
 import java.io.File;
 import java.util.Arrays;
@@ -37,10 +40,10 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(Arrays.toString(w3I2.getTechMods().toArray()), Arrays.toString(w3I.getTechMods().toArray()));
         Assert.assertEquals(Arrays.toString(w3I2.getForces().toArray()), Arrays.toString(w3I.getForces().toArray()));
         Assert.assertEquals(Arrays.toString(w3I2.getItemTables().toArray()), Arrays.toString(w3I.getItemTables().toArray()));
-        Assert.assertEquals(Arrays.toString(w3I2.getUnitTables().toArray()), Arrays.toString(w3I.getUnitTables().toArray()));
+        Assert.assertEquals(w3I2.getUnitTables(), w3I.getUnitTables());
         Assert.assertEquals(w3I2.getPlayersRecommendedAmount(), w3I.getPlayersRecommendedAmount());
         Assert.assertEquals(w3I2.getWorldBounds().toString(), w3I.getWorldBounds().toString());
-        Assert.assertEquals(w3I2.getTerrainFog().toString(), w3I.getTerrainFog().toString());
-        Assert.assertEquals(w3I2.getGlobalWeatherId().hashCode(), w3I.getGlobalWeatherId().hashCode());
+        Assert.assertEquals(w3I2.getTerrainFog(), w3I.getTerrainFog());
+        Assert.assertEquals(w3I2.getGlobalWeatherId(), w3I.getGlobalWeatherId());
     }
 }

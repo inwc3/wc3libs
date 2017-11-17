@@ -12,11 +12,11 @@ public abstract class Bin {
 		return _vals;
 	}
 	
-	protected DataType get(BinState<?> state) {
+	public DataType get(BinState<?> state) {
 		return getVals().get(state);
 	}
 	
-	protected void set(BinState<?> state, DataType val) {
+	public void set(BinState<?> state, DataType val) {
 		_vals.put(state, val);
 	}
 }

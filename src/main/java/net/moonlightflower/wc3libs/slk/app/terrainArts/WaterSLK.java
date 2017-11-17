@@ -138,10 +138,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 			set(States.TEX_FILE, Wc3String.valueOf(val.toString()));
 		}
 		
-		private Color _minimapColor = Color.fromBGRA(0, 0, 0, 0);
+		private Color _minimapColor = Color.fromBGRA255(0, 0, 0, 0);
 		
 		public Color getMinimapColor() {
-			return Color.fromBGRA(get(States.MINIMAP_COLOR_BLUE).toInt(), get(States.MINIMAP_COLOR_GREEN).toInt(), get(States.MINIMAP_COLOR_RED).toInt(), get(States.MINIMAP_COLOR_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.MINIMAP_COLOR_BLUE).toInt(), get(States.MINIMAP_COLOR_GREEN).toInt(), get(States.MINIMAP_COLOR_RED).toInt(), get(States.MINIMAP_COLOR_ALPHA).toInt());
 		}
 		
 		public void setMinimapColor(Color val) {
@@ -303,7 +303,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public Color getSMinColor() {
-			return Color.fromBGRA(get(States.S_MIN_BLUE).toInt(), get(States.S_MIN_GREEN).toInt(), get(States.S_MIN_RED).toInt(), get(States.S_MIN_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.S_MIN_BLUE).toInt(), get(States.S_MIN_GREEN).toInt(), get(States.S_MIN_RED).toInt(), get(States.S_MIN_ALPHA).toInt());
 		}
 		
 		public void setSMinColor(Color val) {
@@ -314,7 +314,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 
 		public Color getSMaxColor() {
-			return Color.fromBGRA(get(States.S_MAX_BLUE).toInt(), get(States.S_MAX_GREEN).toInt(), get(States.S_MAX_RED).toInt(), get(States.S_MAX_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.S_MAX_BLUE).toInt(), get(States.S_MAX_GREEN).toInt(), get(States.S_MAX_RED).toInt(), get(States.S_MAX_ALPHA).toInt());
 		}
 
 		public void setSMaxColor(Color val) {
@@ -325,7 +325,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public Color getDMinColor() {
-			return Color.fromBGRA(get(States.D_MIN_BLUE).toInt(), get(States.D_MIN_GREEN).toInt(), get(States.D_MIN_RED).toInt(), get(States.D_MIN_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.D_MIN_BLUE).toInt(), get(States.D_MIN_GREEN).toInt(), get(States.D_MIN_RED).toInt(), get(States.D_MIN_ALPHA).toInt());
 		}
 		
 		public void setDMinColor(Color val) {
@@ -336,7 +336,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public Color getDMaxColor() {
-			return Color.fromBGRA(get(States.D_MAX_BLUE).toInt(), get(States.D_MAX_GREEN).toInt(), get(States.D_MAX_RED).toInt(), get(States.D_MAX_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.D_MAX_BLUE).toInt(), get(States.D_MAX_GREEN).toInt(), get(States.D_MAX_RED).toInt(), get(States.D_MAX_ALPHA).toInt());
 		}
 		
 		public void setDMaxColor(Color val) {

@@ -14,6 +14,19 @@ public class Coords2DI extends DataType {
 		return _y;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Coords2DI)
+			return equals((Coords2DI) other);
+		
+		return super.equals(other);
+	}
+	
+	public boolean equals(Coords2DI other) {
+		return getX() == ((Coords2DI) other).getX() &&
+				getY() == (((Coords2DI) other).getY());
+	}
+	
 	public Coords2DF toReal() {
 		return new Coords2DF(Real.valueOf(getX()), Real.valueOf(getY()));
 	}

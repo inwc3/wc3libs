@@ -74,7 +74,7 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 		} catch (InvocationTargetException e) {
 			System.out.println("invoc");
 		} catch (NoSuchMethodException e) {
-			System.out.println("noSuch");
+			System.out.println("noSuchMethod");
 		} catch (SecurityException e) {
 			System.out.println("secu");
 		}

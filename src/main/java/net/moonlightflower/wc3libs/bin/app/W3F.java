@@ -608,7 +608,7 @@ public class W3F {
 				TerrainFogType.valueOf(stream.readInt()),
 				stream.readFloat(), stream.readFloat(), 
 				stream.readFloat(),
-				Color.fromRGBA(stream.readUByte(), stream.readUByte(), stream.readUByte(), stream.readUByte())
+				Color.fromRGBA255(stream.readUByte(), stream.readUByte(), stream.readUByte(), stream.readUByte())
 		));
 		
 		setUIRace(UIRace.valueOf(stream.readInt()));

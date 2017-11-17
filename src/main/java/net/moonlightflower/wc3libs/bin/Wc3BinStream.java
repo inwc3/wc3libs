@@ -257,7 +257,10 @@ public class Wc3BinStream extends BinStream {
 	}
 
 	public void writeString(Stringable val) {
-		writeString(val.toString());
+		if (val == null)
+			writeString((String) null);
+		else
+			writeString(val.toString());
 	}
 	
 	private Id readId_priv() throws StreamException {

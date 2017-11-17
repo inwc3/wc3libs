@@ -132,7 +132,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		Color _colorStart;
 		
 		public Color getColorStart() {
-			return Color.fromBGRA(get(States.ART_COLOR_BLUE_START).toInt(), get(States.ART_COLOR_GREEN_START).toInt(), get(States.ART_COLOR_RED_START).toInt(), get(States.ART_COLOR_ALPHA_START).toInt());
+			return Color.fromBGRA255(get(States.ART_COLOR_BLUE_START).toInt(), get(States.ART_COLOR_GREEN_START).toInt(), get(States.ART_COLOR_RED_START).toInt(), get(States.ART_COLOR_ALPHA_START).toInt());
 		}
 		
 		public void setColorStart(Color val) {
@@ -143,7 +143,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 		
 		public Color getColorMid() {
-			return Color.fromBGRA(get(States.ART_COLOR_BLUE_MID).toInt(), get(States.ART_COLOR_GREEN_MID).toInt(), get(States.ART_COLOR_RED_MID).toInt(), get(States.ART_COLOR_ALPHA_MID).toInt());
+			return Color.fromBGRA255(get(States.ART_COLOR_BLUE_MID).toInt(), get(States.ART_COLOR_GREEN_MID).toInt(), get(States.ART_COLOR_RED_MID).toInt(), get(States.ART_COLOR_ALPHA_MID).toInt());
 		}
 		
 		public void setColorMid(Color val) {
@@ -154,7 +154,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 		
 		public Color getColorEnd() {
-			return Color.fromBGRA(get(States.ART_COLOR_BLUE_END).toInt(), get(States.ART_COLOR_GREEN_END).toInt(), get(States.ART_COLOR_RED_END).toInt(), get(States.ART_COLOR_ALPHA_END).toInt());
+			return Color.fromBGRA255(get(States.ART_COLOR_BLUE_END).toInt(), get(States.ART_COLOR_GREEN_END).toInt(), get(States.ART_COLOR_RED_END).toInt(), get(States.ART_COLOR_ALPHA_END).toInt());
 		}
 		
 		public void setColorEnd(Color val) {

@@ -11,6 +11,19 @@ public class Size extends Coords2DI {
 		return getY();
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Size)
+			return equals((Size) other);
+		
+		return super.equals(other);
+	}
+	
+	public boolean equals(Size other) {
+		return getWidth() == ((Size) other).getWidth() &&
+				getHeight() == ((Size) other).getHeight();
+	}
+	
 	public int getArea() {
 		return getWidth() * getHeight();
 	}

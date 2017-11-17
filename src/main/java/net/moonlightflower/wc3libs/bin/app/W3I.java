@@ -620,7 +620,7 @@ public class W3I {
         _tilesetLightEnv = val;
     }
 
-    private Color _waterColor = Color.fromRGBA(255, 255, 255, 255);
+    private Color _waterColor = Color.fromRGBA255(255, 255, 255, 255);
 
     public Color getWaterColor() {
         return _waterColor;
@@ -1871,7 +1871,7 @@ public class W3I {
                 stream.readFloat("terrainFogZHeightStart"),
                 stream.readFloat("terrainFogZHeightEnd"),
                 stream.readFloat("terrainFogDensity"),
-                Color.fromRGBA(
+                Color.fromRGBA255(
                         stream.readUByte("terrainFogRed"),
                         stream.readUByte("terrainFogGreen"),
                         stream.readUByte("terrainFogBlue"),
@@ -1882,7 +1882,7 @@ public class W3I {
         setSoundEnv(stream.readString("soundEnv"));
         setTilesetLightEnv(stream.readChar("tilesetLightEnv"));
 
-        setWaterColor(Color.fromRGBA(
+        setWaterColor(Color.fromRGBA255(
                 stream.readUByte("waterRed"),
                 stream.readUByte("waterGreen"),
                 stream.readUByte("waterBlue"),

@@ -12,6 +12,11 @@ public class BinState<T extends DataType> extends State<T> {
 		return _fieldId;
 	}
 	
+	@Override
+	public String toString() {
+		return _fieldId.toString();
+	}
+	
 	private T _defVal = null;
 	
 	public T getDefVal() {

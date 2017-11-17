@@ -43,7 +43,7 @@ public class TerrainFog extends DataType {
 		_density = val;
 	}
 	
-	private Color _color = Color.fromBGRA(0, 0, 0, 0);
+	private Color _color = Color.fromBGRA255(0, 0, 0, 0);
 	
 	public Color getColor() {
 		return _color;

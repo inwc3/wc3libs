@@ -18,6 +18,17 @@ public class Int extends DataType implements Wc3Num {
 		return _val;
 	}
 	
+	public boolean equals(Object other) {
+		if (other instanceof Int)
+			return equals((Int) other);
+		
+		return super.equals(other);
+	}
+	
+	public boolean equals(Int other) {
+		return getVal().equals(other.getVal());
+	}
+	
 	@Override
 	public String toString() {
 		return getVal().toString();

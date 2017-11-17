@@ -33,6 +33,19 @@ public class Bounds extends DataType {
 	}
 	
 	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Bounds)
+			return equals((Bounds) other);
+		
+		return super.equals(other);
+	}
+	
+	public boolean equals(Bounds other) {
+		return getCenter().equals(((Bounds) other).getCenter()) &&
+				getSize().equals(((Bounds) other).getSize());
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("minX=%d minY=%d maxX=%d maxY=%d [%s]", getMinX(), getMinY(), getMaxX(), getMaxY(), getSize().toString());
 	}
@@ -59,6 +72,13 @@ public class Bounds extends DataType {
 		return valueOf(0, 0, 0, 0);
 	}
 
+	public static Bounds decodeStatic(Object val) {
+		if (val instanceof Bounds)
+			return valueOf(((Bounds) val).getMinX(), ((Bounds) val).getMaxX(), ((Bounds) val).getMinY(), ((Bounds) val).getMaxY());
+		
+		return null;
+	}
+	
 	@Override
 	public Object toSLKVal() {
 		// TODO Auto-generated method stub

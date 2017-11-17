@@ -189,7 +189,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public Color getColorStart() {
-			return Color.fromBGRA(get(States.ART_COLOR_START_BLUE).toInt(), get(States.ART_COLOR_START_GREEN).toInt(), get(States.ART_COLOR_START_RED).toInt(), get(States.ART_COLOR_START_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.ART_COLOR_START_BLUE).toInt(), get(States.ART_COLOR_START_GREEN).toInt(), get(States.ART_COLOR_START_RED).toInt(), get(States.ART_COLOR_START_ALPHA).toInt());
 		}
 		
 		public void setColorStart(Color val) {
@@ -200,7 +200,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public Color getColorMid() {
-			return Color.fromBGRA(get(States.ART_COLOR_MID_BLUE).toInt(), get(States.ART_COLOR_MID_GREEN).toInt(), get(States.ART_COLOR_MID_RED).toInt(), get(States.ART_COLOR_MID_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.ART_COLOR_MID_BLUE).toInt(), get(States.ART_COLOR_MID_GREEN).toInt(), get(States.ART_COLOR_MID_RED).toInt(), get(States.ART_COLOR_MID_ALPHA).toInt());
 		}
 		
 		public void setColorMid(Color val) {
@@ -211,7 +211,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public Color getColorEnd() {
-			return Color.fromBGRA(get(States.ART_COLOR_END_BLUE).toInt(), get(States.ART_COLOR_END_GREEN).toInt(), get(States.ART_COLOR_END_RED).toInt(), get(States.ART_COLOR_END_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.ART_COLOR_END_BLUE).toInt(), get(States.ART_COLOR_END_GREEN).toInt(), get(States.ART_COLOR_END_RED).toInt(), get(States.ART_COLOR_END_ALPHA).toInt());
 		}
 		
 		public void setColorEnd(Color val) {

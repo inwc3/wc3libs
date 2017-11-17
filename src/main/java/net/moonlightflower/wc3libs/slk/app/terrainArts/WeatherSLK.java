@@ -254,7 +254,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 	
 		public Color getColorStart() {
-			return Color.fromBGRA(get(States.ART_START_BLUE).toInt(), get(States.ART_START_GREEN).toInt(), get(States.ART_START_RED).toInt(), get(States.ART_START_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.ART_START_BLUE).toInt(), get(States.ART_START_GREEN).toInt(), get(States.ART_START_RED).toInt(), get(States.ART_START_ALPHA).toInt());
 		}
 		
 		public void setColorStart(Color val) {
@@ -265,7 +265,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		public Color getColorMid() {
-			return Color.fromBGRA(get(States.ART_MID_BLUE).toInt(), get(States.ART_MID_GREEN).toInt(), get(States.ART_MID_RED).toInt(), get(States.ART_MID_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.ART_MID_BLUE).toInt(), get(States.ART_MID_GREEN).toInt(), get(States.ART_MID_RED).toInt(), get(States.ART_MID_ALPHA).toInt());
 		}
 		
 		public void setColorMid(Color val) {
@@ -276,7 +276,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		public Color getColorEnd() {
-			return Color.fromBGRA(get(States.ART_END_BLUE).toInt(), get(States.ART_END_GREEN).toInt(), get(States.ART_END_RED).toInt(), get(States.ART_END_ALPHA).toInt());
+			return Color.fromBGRA255(get(States.ART_END_BLUE).toInt(), get(States.ART_END_GREEN).toInt(), get(States.ART_END_RED).toInt(), get(States.ART_END_ALPHA).toInt());
 		}
 		
 		public void setColorEnd(Color val) {

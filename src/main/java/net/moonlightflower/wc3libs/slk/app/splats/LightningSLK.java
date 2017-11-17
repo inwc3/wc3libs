@@ -101,7 +101,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		}
 		
 		public Color getColor() {
-			return Color.fromBGRA((int) get(States.ART_COLOR_BLUE).toFloat() * 255, (int) get(States.ART_COLOR_GREEN).toFloat() * 255, (int) get(States.ART_COLOR_RED).toFloat() * 255, (int) get(States.ART_COLOR_ALPHA).toFloat() * 255);
+			return Color.fromBGRA255((int) get(States.ART_COLOR_BLUE).toFloat() * 255, (int) get(States.ART_COLOR_GREEN).toFloat() * 255, (int) get(States.ART_COLOR_RED).toFloat() * 255, (int) get(States.ART_COLOR_ALPHA).toFloat() * 255);
 		}
 		
 		public void setColor(Color val) {

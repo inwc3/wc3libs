@@ -28,7 +28,7 @@ public class PlayerColor extends DataType {
 	}
 	
 	public PlayerColor(int blue, int green, int red, int alpha) {
-		_color = Color.fromBGRA(blue, green, red, alpha);
+		_color = Color.fromBGRA255(blue, green, red, alpha);
 	}
 
 	@Override

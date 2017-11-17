@@ -25,6 +25,17 @@ public class Color extends DataType {
 	}
 	
 	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Color)
+			return getRed() == ((Color) other).getRed() &&
+					getGreen() == ((Color) other).getGreen() &&
+					getBlue() == ((Color) other).getBlue() &&
+					getAlpha() == ((Color) other).getAlpha();
+		
+		return super.equals(other);
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("red=%d green=%d blue=%d alpha=%d", _red, _green, _blue, _alpha);
 	}
@@ -45,28 +56,34 @@ public class Color extends DataType {
 	/**
 	 * Gets a color from red, green and blue values in the range 0-255.
 	 */
-	public static Color fromRGB(int red, int green, int blue) {
+	public static Color fromRGB255(int red, int green, int blue) {
 		return new Color(red, green, blue);
 	}
 
-	public static Color fromRGBA(int red, int green, int blue, int alpha) {
+	public static Color fromRGBA255(int red, int green, int blue, int alpha) {
 		return new Color(red, green, blue, alpha);
 	}
 	
-	public static Color fromBGR(int blue, int green, int red) {
+	public static Color fromBGR255(int blue, int green, int red) {
 		return new Color(red, green, blue);
 	}
 
-	public static Color fromBGRA(int blue, int green, int red, int alpha) {
+	public static Color fromBGRA255(int blue, int green, int red, int alpha) {
 		return new Color(red, green, blue, alpha);
 	}
 
 	@Override
 	public DataType decode(Object val) {
-		// TODO
-		return null;
+		return decodeStatic(val);
 	}
 
+	public static DataType decodeStatic(Object val) {
+		if (val instanceof Color)
+			return Color.fromBGRA255(((Color) val).getBlue(), ((Color) val).getGreen(), ((Color) val).getRed(), ((Color) val).getAlpha());
+		
+		return null;
+	}
+	
 	@Override
 	public Object toSLKVal() {
 		// TODO

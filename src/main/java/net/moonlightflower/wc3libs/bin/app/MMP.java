@@ -81,7 +81,7 @@ public class MMP {
 			_coords = val;
 		}
 		
-		private Color _color = Color.fromBGRA(0, 0, 0, 0);
+		private Color _color = Color.fromBGRA255(0, 0, 0, 0);
 		
 		public Color getColor() {
 			return _color;
@@ -104,7 +104,7 @@ public class MMP {
 			if (blue == 0xFF && green == 0xFF && red == 0xFF && alpha == 0xFF) {
 				setColor(null);
 			} else {
-				setColor(Color.fromBGRA(blue, green, red, alpha));
+				setColor(Color.fromBGRA255(blue, green, red, alpha));
 			}
 		}
 		
