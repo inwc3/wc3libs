@@ -10,6 +10,8 @@ import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 
+import javax.annotation.Nonnull;
+
 public class PathMap extends Raster<Integer> {
 	public static class PathingInt extends FlagsInt {
 		static FlagsInt.Flag UNUSED = new FlagsInt.Flag(0, "unused (0)");
@@ -20,7 +22,8 @@ public class PathMap extends Raster<Integer> {
 		static FlagsInt.Flag BLIGHT = new FlagsInt.Flag(5, "blight");
 		static FlagsInt.Flag UNWATER = new FlagsInt.Flag(6, "nowater");
 		static FlagsInt.Flag UNKNOWN = new FlagsInt.Flag(7, "unknown");
-		
+
+		@Nonnull
 		public Color getColor() {
 			double red = containsFlag(UNWALK) ? 1D : 0D;
 			double green = containsFlag(UNFLY) ? 1D : 0D;
@@ -32,7 +35,7 @@ public class PathMap extends Raster<Integer> {
 		private PathingInt(int val) {
 			super(val);
 		}
-		
+
 		public static PathingInt valueOf(int val) {
 			return new PathingInt(val);
 		}
@@ -64,7 +67,7 @@ public class PathMap extends Raster<Integer> {
 	}
 
 	@Override
-	public void setBoundsByWorld(Bounds val, boolean retainContents, boolean retainContentsByPos) {
+	public void setBoundsByWorld(@Nonnull Bounds val, boolean retainContents, boolean retainContentsByPos) {
 		val = val.scale(1D / CELL_SIZE);
 		
 		setBounds(val, retainContents, retainContentsByPos);
@@ -91,7 +94,7 @@ public class PathMap extends Raster<Integer> {
 		return _cells[index];
 	}
 	
-	public Coords2DI indexToCoords(int index) {
+	public @Nonnull Coords2DI indexToCoords(int index) {
 		if ((index < 0) || (index >= size())) return null; 
 		
 		return new Coords2DI(index % getWidth(), index / getWidth());
@@ -102,7 +105,7 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	@Override
-	public Integer get(Coords2DI pos) {
+	public Integer get(@Nonnull Coords2DI pos) {
 		return get(coordsToIndex(pos));
 	}
 	
@@ -110,7 +113,7 @@ public class PathMap extends Raster<Integer> {
 		_cells[index] = val;
 	}
 	
-	public void set(Coords2DI pos, int val) {
+	public void set(@Nonnull Coords2DI pos, int val) {
 		set(coordsToIndex(pos), val);
 	}
 	
@@ -127,7 +130,7 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	@Override
-	public Coords2DI worldToLocalCoords(Coords2DF pos) {
+	public Coords2DI worldToLocalCoords(@Nonnull Coords2DF pos) {
 		int x = ((int) (pos.getX().toFloat() - getCenterX())) / CELL_SIZE + getWidth() / 2;
 		int y = ((int) (pos.getY().toFloat() - getCenterY())) / CELL_SIZE + getHeight() / 2;
 
@@ -135,11 +138,11 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	@Override
-	public Integer getByPos(Coords2DF pos) {
+	public Integer getByPos(@Nonnull Coords2DF pos) {
 		return get(worldToLocalCoords(pos));
 	}
 	
-	public void setByPos(Coords2DF pos, int val) {
+	public void setByPos(@Nonnull Coords2DF pos, int val) {
 		set(worldToLocalCoords(pos), val);
 	}
 	
@@ -151,17 +154,17 @@ public class PathMap extends Raster<Integer> {
 	}
 
 	@Override
-	public Integer mergeCellVal(Integer oldVal, Integer other) {
+	public Integer mergeCellVal(@Nonnull Integer oldVal, @Nonnull Integer other) {
 		return (oldVal | other);
 	}
 	
-	public void mergeCells(PathMap other) {
+	public void mergeCells(@Nonnull PathMap other) {
 		for (int i = 0; i < other.size(); i++) {
 			set(i, get(i));
 		}
 	}
 	
-	public void mergeCellsByPos(PathMap other, boolean additive) {
+	public void mergeCellsByPos(@Nonnull PathMap other, boolean additive) {
 		assert getBounds() != null: "no bounds set yet";
 		assert other.getBounds() != null: "no bounds of other set yet";
 		
@@ -197,7 +200,8 @@ public class PathMap extends Raster<Integer> {
 		
 		return other;
 	}
-	
+
+	@Nonnull
 	public Wc3RasterImg toImg() {
 		WritableImage fxImg = new WritableImage(getWidth(), getHeight());
 		
