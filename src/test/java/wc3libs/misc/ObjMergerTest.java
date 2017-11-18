@@ -16,9 +16,9 @@ public class ObjMergerTest {
             ObjMerger merger = new ObjMerger();
 
             //File classDir = new File(Orient.getWorkingDir(), "tests\\objMergerTest");
-            File inMapFile = new File(getClass().getResource("in.w3x").getFile());
+            File inMapFile = new File(getClass().getClassLoader().getResource("in.w3x").getFile());
 
-            File workDir = new File(new File(getClass().getResource("").getFile()), "work");
+            File workDir = new File(new File(getClass().getClassLoader().getResource("").getFile()), "work");
             
             Orient.createDir(workDir);
 
