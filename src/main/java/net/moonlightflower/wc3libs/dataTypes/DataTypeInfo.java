@@ -8,6 +8,8 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.misc.TypeInfo;
 
+import javax.annotation.Nonnull;
+
 public class DataTypeInfo extends TypeInfo<DataType> {
 	@Override
 	public Class<? extends DataType> getType() {
@@ -83,19 +85,19 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 		return null;
 	}
 	
-	public DataTypeInfo(Class<? extends DataType> type, Class<? extends DataType> generics) {
+	public DataTypeInfo(@Nonnull Class<? extends DataType> type, Class<? extends DataType> generics) {
 		super(type, new DataTypeInfo(generics));
 	}
 	
-	public DataTypeInfo(Class<? extends DataType> type, DataTypeInfo[] generics) {
+	public DataTypeInfo(@Nonnull Class<? extends DataType> type, DataTypeInfo[] generics) {
 		super(type, generics);
 	}
 	
-	public DataTypeInfo(Class<? extends DataType> type, DataTypeInfo generics) {
+	public DataTypeInfo(@Nonnull Class<? extends DataType> type, @Nonnull DataTypeInfo generics) {
 		this(type, generics.getType());
 	}
 
-	public DataTypeInfo(Class<? extends DataType> type) {
+	public DataTypeInfo(@Nonnull Class<? extends DataType> type) {
 		super(type);
 	}
 }

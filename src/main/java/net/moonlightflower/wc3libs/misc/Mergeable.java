@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
+
 public interface Mergeable<T> {
-	public void merge(T other);
+	void merge(@Nonnull T other);
 }

@@ -18,6 +18,7 @@ public class Int extends DataType implements Wc3Num {
 		return _val;
 	}
 	
+	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Int)
 			return equals((Int) other);

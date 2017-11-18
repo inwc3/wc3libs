@@ -1,9 +1,13 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CombatSound extends Wc3String {
+	private static Map<String, CombatSound> _map = new LinkedHashMap<>();
+
 	public final static CombatSound AXE_MEDIUM_CHOP = new CombatSound("AxeMediumChop");
 	public final static CombatSound METAL_HEAVY_BASH = new CombatSound("MetalHeavyBash");
 	public final static CombatSound METAL_HEAVY_CHOP = new CombatSound("MetalHeavyChop");
@@ -17,11 +21,28 @@ public class CombatSound extends Wc3String {
 	public final static CombatSound WOOD_HEAVY_BASH = new CombatSound("WoodHeavyBash");
 	public final static CombatSound WOOD_LIGHT_BASH = new CombatSound("WoodLightBash");
 	public final static CombatSound WOOD_MEDIUM_BASH = new CombatSound("WoodMediumBash");
-	
-	private Map<String, CombatSound> _map = new LinkedHashMap<>();
-	
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof CombatTarget)
+			return equals((CombatTarget) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(CombatTarget other) {
+		return getVal().equals(other.getVal());
+	}
+
 	public CombatSound(String name) {
 		super(name);
+
+		_map.put(name, this);
+	}
+
+	@Nullable
+	public static CombatSound valueOf(@Nonnull String name) {
+		return _map.get(name);
 	}
 
 	@Override

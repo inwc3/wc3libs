@@ -7,6 +7,8 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 
+import javax.annotation.Nonnull;
+
 public class ShadowMap extends Raster<Boolean> {
 	public final static int CELL_SIZE = 32;
 	
@@ -34,6 +36,7 @@ public class ShadowMap extends Raster<Boolean> {
 		return other;
 	}
 
+	@Nonnull
 	public Wc3RasterImg toImg() {
 		WritableImage fxImg = new WritableImage(getWidth(), getHeight());
 		

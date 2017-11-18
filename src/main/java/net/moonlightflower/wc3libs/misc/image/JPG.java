@@ -12,8 +12,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.misc.Size;
 
+import javax.annotation.Nonnull;
+
 public class JPG extends Wc3RasterImg {
-	private void read(InputStream stream) {
+	private void read(@Nonnull InputStream stream) {
 		Image img = new Image(stream);
 		
 		WritableImage writeImg = new WritableImage((int) img.getWidth(), (int) img.getHeight());
@@ -40,15 +42,15 @@ public class JPG extends Wc3RasterImg {
 		setFXImg(writeImg);
 	}
 	
-	public JPG(InputStream stream) {
+	public JPG(@Nonnull InputStream stream) {
 		read(stream);
 	}
 	
-	public JPG(File file) throws FileNotFoundException {
+	public JPG(@Nonnull File file) throws FileNotFoundException {
 		this(new FileInputStream(file));
 	}
 	
-	public JPG(Size size) {
+	public JPG(@Nonnull Size size) {
 		super(size);
 	}
 }

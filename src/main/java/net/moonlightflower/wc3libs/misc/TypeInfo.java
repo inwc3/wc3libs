@@ -1,14 +1,19 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class TypeInfo<boundType> {
 	private Class<? extends boundType> _type;
-	
+
+	@Nonnull
 	public Class<? extends boundType> getType() {
 		return _type;
 	}
 	
 	private TypeInfo<? extends boundType>[] _generics;
-	
+
+	@Nullable
 	public TypeInfo<? extends boundType>[] getGenerics() {
 		return _generics;
 	}
@@ -40,6 +45,7 @@ public class TypeInfo<boundType> {
 		return sb.toString();
 	}
 
+	@Nonnull
 	public String getTypeName() {		
 		/*try {
 			Method method = getType().getDeclaredMethod("name");
@@ -92,7 +98,7 @@ public class TypeInfo<boundType> {
 
 	}
 	
-	public TypeInfo(Class<? extends boundType> type, Class<? extends boundType>[] generics) {
+	public TypeInfo(@Nonnull Class<? extends boundType> type, @Nonnull Class<? extends boundType>[] generics) {
 		_type = type;
 		
 		TypeInfo[] genericsInfo = new TypeInfo[generics.length];
@@ -107,20 +113,20 @@ public class TypeInfo<boundType> {
 		_generics = genericsInfo;
 	}
 
-	public TypeInfo(Class<? extends boundType> type, TypeInfo<? extends boundType>[] generics) {
+	public TypeInfo(@Nonnull Class<? extends boundType> type, @Nullable TypeInfo<? extends boundType>[] generics) {
 		_type = type;
 		_generics = generics;
 	}
 	
-	public TypeInfo(Class<? extends boundType> type, TypeInfo<? extends boundType> generics) {
+	public TypeInfo(@Nonnull Class<? extends boundType> type, @Nullable TypeInfo<? extends boundType> generics) {
 		this(type, new TypeInfo[]{generics});
 	}
 	
-	public TypeInfo(Class<? extends boundType> type, Class<? extends boundType> generics) {
+	public TypeInfo(@Nonnull Class<? extends boundType> type, @Nullable Class<? extends boundType> generics) {
 		this(type, new Class[]{generics});
 	}
 	
-	public TypeInfo(Class<? extends boundType> type) {
+	public TypeInfo(@Nonnull Class<? extends boundType> type) {
 		_type = type;
 		_generics = null;
 	}

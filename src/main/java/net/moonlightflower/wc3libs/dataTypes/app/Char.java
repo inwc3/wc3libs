@@ -26,6 +26,7 @@ public class Char extends DataType {
 		_val = val;
 	}
 
+	@Nonnull
 	public static Char valueOf(char val) {
 		return new Char(val);
 	}

@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,16 +20,18 @@ public class AttackBits extends Int {
 		
 		_map.put(val, this);
 	}
-	
+
+	@Nullable
 	public static AttackBits valueOf(int val) {
 		return _map.get(val);
 	}
 	
 	public static AttackBits decodeStatic(Object val) {
-		try {
-			return valueOf(Integer.parseInt(val.toString()));
-		} catch (NumberFormatException e) {
-		}
+		if (val != null)
+			try {
+				return valueOf(Integer.parseInt(val.toString()));
+			} catch (NumberFormatException e) {
+			}
 		
 		return null;
 	}

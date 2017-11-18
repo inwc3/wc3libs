@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,13 +11,26 @@ public class TerrainFogType extends Int {
 	public final static TerrainFogType EXP2 = new TerrainFogType(3);
 	public final static TerrainFogType LINEAR = new TerrainFogType(1);
 	public final static TerrainFogType NONE = new TerrainFogType(0);
-	
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof TerrainFogType)
+			return equals((TerrainFogType) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(TerrainFogType other) {
+		return getVal().equals(other.getVal());
+	}
+
 	private TerrainFogType(int val) {
 		super(val);
 		
 		_map.put(val, this);
 	}
-	
+
+	@Nullable
 	public static TerrainFogType valueOf(Integer val) {
 		return _map.get(val);
 	}

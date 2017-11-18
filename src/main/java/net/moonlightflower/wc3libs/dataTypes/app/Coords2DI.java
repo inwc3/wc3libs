@@ -23,8 +23,8 @@ public class Coords2DI extends DataType {
 	}
 	
 	public boolean equals(Coords2DI other) {
-		return getX() == ((Coords2DI) other).getX() &&
-				getY() == (((Coords2DI) other).getY());
+		return getX() == (other).getX() &&
+				getY() == (other).getY();
 	}
 	
 	public Coords2DF toReal() {

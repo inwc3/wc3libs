@@ -44,6 +44,18 @@ public class Tileset extends DataType {
 		return _char;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Tileset)
+			return equals((Tileset) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(Tileset other) {
+		return getChar().equals(other.getChar());
+	}
+
 	private Tileset(char val, @Nonnull String label) {
 		_char = Char.valueOf(val);
 

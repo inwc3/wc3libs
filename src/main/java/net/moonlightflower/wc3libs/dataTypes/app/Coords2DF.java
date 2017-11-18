@@ -2,14 +2,18 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+
 public class Coords2DF extends DataType {
 	private Real _x;
 	private Real _y;
-	
+
+	@Nonnull
 	public Real getX() {
 		return _x;
 	}
 
+	@Nonnull
 	public Real getY() {
 		return _y;
 	}
@@ -48,7 +52,7 @@ public class Coords2DF extends DataType {
 		_y = Real.valueOf(y);
 	}
 	
-	public Coords2DF(Real x, Real y) {
+	public Coords2DF(@Nonnull Real x, @Nonnull Real y) {
 		this(x.toFloat(), y.toFloat());
 	}
 

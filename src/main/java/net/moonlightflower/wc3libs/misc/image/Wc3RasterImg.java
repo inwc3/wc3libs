@@ -9,6 +9,7 @@ import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,7 +18,8 @@ import java.io.InputStream;
 
 public class Wc3RasterImg extends Wc3Img {	
 	private BufferedImage _bufImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-	
+
+	@Nonnull
 	public BufferedImage getBufImg() {
 		return _bufImg;
 	}
@@ -30,7 +32,7 @@ public class Wc3RasterImg extends Wc3Img {
 		return _bufImg.getHeight();
 	}
 	
-	public void setRGB(int x, int y, Color color) {
+	public void setRGB(int x, int y, @Nonnull Color color) {
 		_bufImg.setRGB(x, y, color.getRGB());
 	}
 	
@@ -49,15 +51,16 @@ public class Wc3RasterImg extends Wc3Img {
 	}*/
 	
 	@Override
+	@Nonnull
 	public Image getFXImg() {
 		return SwingFXUtils.toFXImage(_bufImg, null);
 	}
 	
-	public void setBufImg(BufferedImage bufImg) {
+	public void setBufImg(@Nonnull BufferedImage bufImg) {
 		_bufImg = bufImg;
 	}
 	
-	public void setFXImg(javafx.scene.image.Image fxImg) {
+	public void setFXImg(@Nonnull javafx.scene.image.Image fxImg) {
 		setBufImg(SwingFXUtils.fromFXImage(fxImg, null));
 	}
 	
@@ -68,7 +71,7 @@ public class Wc3RasterImg extends Wc3Img {
 		}
 
 		@Override
-		public Color mergeCellVal(Color oldVal, Color other) {
+		public Color mergeCellVal(@Nonnull Color oldVal, @Nonnull Color other) {
 			return other;
 		}
 
@@ -132,7 +135,7 @@ public class Wc3RasterImg extends Wc3Img {
 		setBufImg(_bufImg);
 	}
 	
-	public void enlarge(Size size, javafx.scene.paint.Color color) {
+	public void enlarge(@Nonnull Size size, @Nonnull javafx.scene.paint.Color color) {
 		javafx.scene.image.WritableImage fxImg = new javafx.scene.image.WritableImage(Math.max(size.getWidth(), getWidth()), Math.max(size.getHeight(), getHeight()));
 		
 		javafx.scene.image.PixelWriter pxWriter = fxImg.getPixelWriter();
@@ -153,7 +156,7 @@ public class Wc3RasterImg extends Wc3Img {
 		setBufImg(other.getBufImg());
 	}
 	
-	public void merge(Wc3RasterImg other, Coords2DI otherOffset, boolean retainBounds) {		
+	public void merge(@Nonnull Wc3RasterImg other, @Nonnull Coords2DI otherOffset, boolean retainBounds) {
 		int width = getWidth();
 		int height = getHeight();
 		
@@ -221,7 +224,7 @@ public class Wc3RasterImg extends Wc3Img {
 	
 	public void ignoreAlpha() {
 		BufferedImage oldImg = getBufImg();
-		
+
 		BufferedImage newImg = oldImg;
 		
 		for (int y = 0; y < newImg.getHeight(); y++) {
@@ -264,7 +267,7 @@ public class Wc3RasterImg extends Wc3Img {
 		super();
 	}
 	
-	public Wc3RasterImg(Size size) {
+	public Wc3RasterImg(@Nonnull Size size) {
 		this();
 		
 		javafx.scene.image.WritableImage fxImg = new javafx.scene.image.WritableImage(size.getWidth(), size.getHeight());
@@ -282,17 +285,18 @@ public class Wc3RasterImg extends Wc3Img {
 		//_bufImg = new BufferedImage(size.getWidth(), size.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	}
 	
-	public Wc3RasterImg(BufferedImage bufImg) {
+	public Wc3RasterImg(@Nonnull BufferedImage bufImg) {
 		this();
 		
 		_bufImg = bufImg;
 	}
 	
-	public Wc3RasterImg(javafx.scene.image.Image fxImg) {
+	public Wc3RasterImg(@Nonnull javafx.scene.image.Image fxImg) {
 		this(SwingFXUtils.fromFXImage(fxImg, null));
 	}
-	
-	public static Wc3RasterImg ofInputStream(InputStream inStream, String ext) throws UnsupportedFormatException, IOException {
+
+	@Nonnull
+	public static Wc3RasterImg ofInputStream(@Nonnull InputStream inStream, @Nonnull String ext) throws UnsupportedFormatException, IOException {
 		switch (ext.toLowerCase()) {
 		case "jpeg":
 		case "jpg": {
@@ -308,12 +312,13 @@ public class Wc3RasterImg extends Wc3Img {
 			throw new UnsupportedFormatException(String.format("extension %s not supported", ext.toLowerCase()));
 		}
 	}
-	
-	public static Wc3RasterImg ofFile(File file) throws UnsupportedFormatException, IOException {
+
+	@Nonnull
+	public static Wc3RasterImg ofFile(@Nonnull File file) throws UnsupportedFormatException, IOException {
 		Orient.checkFileExists(file);
 		
 		String ext = Orient.getFileExt(file);
-System.out.println("read " + file + ";" + ext);
+
 		switch (ext.toLowerCase()) {
 		case "jpeg":
 		case "jpg": {
@@ -329,8 +334,9 @@ System.out.println("read " + file + ";" + ext);
 			throw new UnsupportedFormatException(String.format("extension %s of file %s not supported", ext.toLowerCase(), file.toString()));
 		}
 	}
-	
-	public static Wc3RasterImg ofGameFile(File inFile) throws Exception {
+
+	@Nonnull
+	public static Wc3RasterImg ofGameFile(@Nonnull File inFile) throws Exception {
 		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
 
 		Wc3RasterImg img = Wc3RasterImg.ofFile(portResult.getFile(inFile));

@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nonnull;
+
 public class UnitClass extends Wc3String {
 	public final UnitClass ANCIENT = new UnitClass("ancient");
 	public final UnitClass GIANT = new UnitClass("giant");
@@ -14,12 +16,24 @@ public class UnitClass extends Wc3String {
 	public final UnitClass UNDEAD = new UnitClass("undead");
 	public final UnitClass WALKABLE = new UnitClass("standon");
 	public final UnitClass WARD = new UnitClass("ward");
-	
-	private UnitClass(String val) {
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof UnitClass)
+			return equals((UnitClass) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(UnitClass other) {
+		return getVal().equals(other.getVal());
+	}
+
+	private UnitClass(@Nonnull String val) {
 		super(val);
 	}
 	
-	public static UnitClass valueOf(String val) {
+	public static UnitClass valueOf(@Nonnull String val) {
 		return new UnitClass(val);
 	}
 

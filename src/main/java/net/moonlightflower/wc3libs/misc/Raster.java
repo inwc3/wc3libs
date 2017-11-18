@@ -4,11 +4,14 @@ import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public abstract class Raster<T> implements Boundable {
 	private Bounds _bounds;
-	
+
+	@Nullable
 	public Bounds getBounds() {
 		return _bounds;
 	}
@@ -29,6 +32,7 @@ public abstract class Raster<T> implements Boundable {
 	}
 
 	@Override
+	@Nonnull
 	public Size getSize() {
 		return getBounds().getSize();
 	}
@@ -55,7 +59,7 @@ public abstract class Raster<T> implements Boundable {
 		}
 	}
 	
-	public void setBounds(Bounds val, boolean retainContents, boolean retainContentsByPos) {
+	public void setBounds(@Nonnull Bounds val, boolean retainContents, boolean retainContentsByPos) {
 		setSize(val.getSize().getArea(), retainContents);
 		
 		if (retainContents) {
@@ -73,7 +77,7 @@ public abstract class Raster<T> implements Boundable {
 		}
 	}
 	
-	public void setBoundsByWorld(Bounds val, boolean retainContents, boolean retainContentsByPos) {
+	public void setBoundsByWorld(@Nonnull Bounds val, boolean retainContents, boolean retainContentsByPos) {
 		val = val.scale(1D / getCellSize());
 		
 		setBounds(val, retainContents, retainContentsByPos);
@@ -107,18 +111,18 @@ public abstract class Raster<T> implements Boundable {
 		set(coordsToIndex(pos), val);
 	}
 	
-	public Coords2DI worldToLocalCoords(Coords2DF pos) {
+	public Coords2DI worldToLocalCoords(@Nonnull Coords2DF pos) {
 		int x = ((int) (pos.getX().toFloat() - getCenterX())) / getCellSize() + getWidth() / 2;
 		int y = ((int) (pos.getY().toFloat() - getCenterY())) / getCellSize() + getHeight() / 2;
 
 		return new Coords2DI(x, y);
 	}
 	
-	public T getByPos(Coords2DF pos) {
+	public T getByPos(@Nonnull Coords2DF pos) {
 		return get(worldToLocalCoords(pos));
 	}
 	
-	public void setByPos(Coords2DF pos, T val) {
+	public void setByPos(@Nonnull Coords2DF pos, T val) {
 		set(worldToLocalCoords(pos), val);
 	}
 	
@@ -140,7 +144,7 @@ public abstract class Raster<T> implements Boundable {
 		}
 	}
 	
-	public void mergeCellsByPos(Raster<T> other, boolean... extra) {
+	public void mergeCellsByPos(@Nonnull Raster<T> other, boolean... extra) {
 		assert _bounds != null: "no bounds set yet";
 		assert other.getBounds() != null: "no bounds of other set yet";
 		

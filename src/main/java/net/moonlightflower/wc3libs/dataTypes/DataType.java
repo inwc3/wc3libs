@@ -3,6 +3,8 @@ package net.moonlightflower.wc3libs.dataTypes;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.TypeInfoed;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,21 +43,21 @@ public abstract class DataType implements Serializable, TypeInfoed {
 	}*/
 	
 	private static Map<String, DataTypeInfo> _typeInfoMap = new LinkedHashMap<>();
-	
-	public static DataTypeInfo getTypeInfoFromName(String name) {
+
+	@Nullable
+	public static DataTypeInfo getTypeInfoFromName(@Nonnull String name) {
 		return _typeInfoMap.get(name);
 	}
 	
-	public static void regClass(String name, DataTypeInfo typeInfo) {
+	public static void regClass(@Nonnull String name, @Nonnull DataTypeInfo typeInfo) {
 		_typeInfoMap.put(name, typeInfo);
 	}
 	
-	public static void regClass(String name, Class<? extends DataType> type) {
+	public static void regClass(@Nonnull String name, @Nonnull Class<? extends DataType> type) {
 		regClass(name, new DataTypeInfo(type));
 	}
 	
-	public DataType() {
-		
+	protected DataType() {
 	}
 	
 	static {

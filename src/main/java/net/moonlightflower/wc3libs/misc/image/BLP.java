@@ -18,6 +18,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -88,7 +89,7 @@ public class BLP extends Wc3RasterImg {
 		}
 	}
 	
-	private void read(InputStream inStream) throws UnsupportedFormatException {
+	private void read(@Nonnull InputStream inStream) throws UnsupportedFormatException {
 		try {
 			Reader reader = new Reader(inStream);
 			
@@ -334,13 +335,13 @@ public class BLP extends Wc3RasterImg {
 		}
 	}
 	
-	public BLP(InputStream inStream) throws UnsupportedFormatException {
+	public BLP(@Nonnull InputStream inStream) throws UnsupportedFormatException {
 		super();
 		
 		read(inStream);
 	}
 	
-	public BLP(File file) throws IOException, UnsupportedFormatException {
+	public BLP(@Nonnull File file) throws IOException, UnsupportedFormatException {
 		super();
 		
 		InputStream inStream = new FileInputStream(file);
@@ -350,7 +351,7 @@ public class BLP extends Wc3RasterImg {
 		inStream.close();
 	}
 	
-	public BLP(Size size) {
+	public BLP(@Nonnull Size size) {
 		super(size);
 	}
 }

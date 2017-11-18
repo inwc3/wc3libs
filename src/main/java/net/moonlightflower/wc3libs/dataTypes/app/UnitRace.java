@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,14 +22,26 @@ public class UnitRace extends Wc3String {
 	public final static UnitRace COMMONER = new UnitRace("commoner");
 	public final static UnitRace NAGA = new UnitRace("naga");
 	public final static UnitRace UNKNOWN = new UnitRace("unknown");
-	
-	public UnitRace(String val) {
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof UnitRace)
+			return equals((UnitRace) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(UnitRace other) {
+		return getVal().equals(other.getVal());
+	}
+
+	public UnitRace(@Nonnull String val) {
 		super(val);
 		
 		_map.put(val, this);
 	}
 
-	public static UnitRace valueOf(String val) {
+	public static UnitRace valueOf(@Nonnull String val) {
 		return _map.get(val);
 	}
 	

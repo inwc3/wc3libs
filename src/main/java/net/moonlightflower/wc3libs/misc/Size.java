@@ -20,8 +20,8 @@ public class Size extends Coords2DI {
 	}
 	
 	public boolean equals(Size other) {
-		return getWidth() == ((Size) other).getWidth() &&
-				getHeight() == ((Size) other).getHeight();
+		return getWidth() == other.getWidth() &&
+				getHeight() == other.getHeight();
 	}
 	
 	public int getArea() {

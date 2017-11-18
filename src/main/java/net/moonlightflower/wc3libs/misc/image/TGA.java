@@ -12,12 +12,15 @@ import javafx.scene.image.Image;
 import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 
+import javax.annotation.Nonnull;
+
 public class TGA extends Wc3RasterImg {	
-	public void write(OutputStream outStream) throws IOException {		
+	public void write(@Nonnull OutputStream outStream) throws IOException {
 		//TODO
+		throw new UnsupportedOperationException();
 	}
 	
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		OutputStream outStream = new FileOutputStream(file);
 		
 		write(outStream);
@@ -25,21 +28,21 @@ public class TGA extends Wc3RasterImg {
 		outStream.close();
 	}
 	
-	private void read(InputStream inStream) throws IOException, UnsupportedFormatException {
+	private void read(@Nonnull InputStream inStream) throws IOException, UnsupportedFormatException {
 		BufferedImage img = TGADecoder.read(inStream);
 		
 		setBufImg(img);
 	}
 	
-	public TGA(InputStream inStream) throws IOException, UnsupportedFormatException {
+	public TGA(@Nonnull InputStream inStream) throws IOException, UnsupportedFormatException {
 		super();
 		
 		read(inStream);
 	}
 	
-	public TGA(File file) throws IOException, UnsupportedFormatException {
+	public TGA(@Nonnull File file) throws IOException, UnsupportedFormatException {
 		super();
-		System.out.println("read " + file);
+
 		InputStream inStream = new FileInputStream(file);
 		
 		read(inStream);
@@ -47,7 +50,7 @@ public class TGA extends Wc3RasterImg {
 		inStream.close();
 	}
 	
-	public TGA(Size size) {
+	public TGA(@Nonnull Size size) {
 		super(size);
 	}
 }

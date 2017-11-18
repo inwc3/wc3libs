@@ -2,6 +2,8 @@ package net.moonlightflower.wc3libs.misc;
 
 import javafx.application.Platform;
 
+import javax.annotation.Nonnull;
+
 public abstract class AsyncTask extends Thread {
 	public class FinishedException extends RuntimeException {
 		
@@ -12,7 +14,7 @@ public abstract class AsyncTask extends Thread {
 	public abstract void onPostExec();
 	
 	public interface FinishedHandler {
-		public void finished();
+		void finished();
 	}
 	
 	private final FinishedHandler _finishedHandler;
@@ -21,21 +23,21 @@ public abstract class AsyncTask extends Thread {
 	public void start() {
 		setDaemon(true);
 		setUncaughtExceptionHandler((thread, exception) -> Platform.runLater(() -> {
-if (exception instanceof FinishedException) {
-onPostExec();
-} else {
-exception.printStackTrace();
-}
+			if (exception instanceof FinishedException) {
+				onPostExec();
+			} else {
+				exception.printStackTrace();
+			}
 
-if (_finishedHandler != null) {
-_finishedHandler.finished();
-}
-}));
+			if (_finishedHandler != null) {
+				_finishedHandler.finished();
+			}
+		}));
 		
 		super.start();
 	}
 	
-	public AsyncTask(FinishedHandler finishedHandler) {
+	public AsyncTask(@Nonnull FinishedHandler finishedHandler) {
 		_finishedHandler = finishedHandler;
 	}
 }

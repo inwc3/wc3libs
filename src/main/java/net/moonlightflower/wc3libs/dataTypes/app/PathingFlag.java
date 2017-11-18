@@ -1,10 +1,13 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PathingFlag extends Int {
 	public static class Ints {
+		public final static Integer NONE = 0x0;
 		public final static Integer UNKNOWN = 0x1;
 		public final static Integer NO_WALK = 0x2;
 		public final static Integer NO_FLY = 0x4;
@@ -18,20 +21,21 @@ public class PathingFlag extends Int {
 	private final static Map<Object, PathingFlag> _map = new LinkedHashMap<>();
 	
 	public final static PathingFlag BLIGHT = new PathingFlag("blighted", Ints.UNKNOWN);
-	public final static PathingFlag UNAMPH = new PathingFlag("unamph", null);
+	public final static PathingFlag UNAMPH = new PathingFlag("unamph", Ints.NONE);
 	public final static PathingFlag UNBUILD = new PathingFlag("unbuildable", Ints.NO_BUILD);
-	public final static PathingFlag UNFLOAT = new PathingFlag("unfloat", null);
+	public final static PathingFlag UNFLOAT = new PathingFlag("unfloat", Ints.NONE);
 	public final static PathingFlag UNFLY = new PathingFlag("unflyable", Ints.NO_FLY);
 	public final static PathingFlag UNWALK = new PathingFlag("unwalkable", Ints.NO_WALK);
-	
-	public PathingFlag(String alias, Integer val) {
+
+	public PathingFlag(@Nonnull String alias, @Nonnull Integer val) {
 		super(val);
 		
 		_map.put(val, this);
 		_map.put(alias, this);
 	}
-	
-	public static PathingFlag valueOf(Integer val) {
+
+	@Nullable
+	public static PathingFlag valueOf(@Nonnull Integer val) {
 		return _map.get(val);
 	}
 

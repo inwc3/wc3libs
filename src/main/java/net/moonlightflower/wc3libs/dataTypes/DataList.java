@@ -5,15 +5,18 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class DataList<T extends DataType> extends DataType implements ObservableList<T> {
+	@Nonnull
 	public static DataTypeInfo getTypeDescriptor() {
 		return new DataTypeInfo(DataList.class);
 	}
 	
 	private List<T> _list = new ArrayList<>();
-	
+
+	@Nonnull
 	public Object getVal() {
 		return _list;
 	}
@@ -79,11 +82,11 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		return s.toString();
 	}
 
-	public DataList(DataTypeInfo elementsTypeInfo) {
+	public DataList(@Nonnull DataTypeInfo elementsTypeInfo) {
 		_elementsTypeInfo = elementsTypeInfo;
 	}
 	
-	public DataList(Class<? extends DataType> elementsType) {
+	public DataList(@Nonnull Class<? extends DataType> elementsType) {
 		this(new DataTypeInfo(elementsType));
 	}
 
@@ -98,12 +101,12 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public boolean addAll(Collection c) {
+	public boolean addAll(@Nonnull Collection c) {
 		return _list.addAll(c);
 	}
 
 	@Override
-	public boolean addAll(int index, Collection c) {
+	public boolean addAll(int index, @Nonnull Collection c) {
 		return _list.addAll(index, c);
 	}
 
@@ -113,12 +116,12 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public boolean contains(Object o) {
+	public boolean contains(@Nonnull Object o) {
 		return _list.contains(o);
 	}
 
 	@Override
-	public boolean containsAll(Collection c) {
+	public boolean containsAll(@Nonnull Collection c) {
 		return _list.containsAll(c);
 	}
 
@@ -128,7 +131,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public int indexOf(Object o) {
+	public int indexOf(@Nonnull Object o) {
 		return _list.indexOf(o);
 	}
 
@@ -143,7 +146,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf(@Nonnull Object o) {
 		return _list.lastIndexOf(o);
 	}
 
@@ -158,7 +161,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public boolean remove(Object o) {
+	public boolean remove(@Nonnull Object o) {
 		return _list.remove(o);
 	}
 
@@ -168,12 +171,12 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public boolean removeAll(Collection c) {
+	public boolean removeAll(@Nonnull Collection c) {
 		return _list.removeAll(c);
 	}
 
 	@Override
-	public boolean retainAll(Collection c) {
+	public boolean retainAll(@Nonnull Collection c) {
 		return _list.retainAll(c);
 	}
 

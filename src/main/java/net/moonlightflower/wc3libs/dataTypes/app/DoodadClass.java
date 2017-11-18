@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -12,19 +13,35 @@ public class DoodadClass extends Wc3String {
 	public final static DoodadClass ITEM = new DoodadClass("O");
 	public final static DoodadClass STRUCTURE = new DoodadClass("S");
 	public final static DoodadClass WATER = new DoodadClass("W");
-	
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof DoodadClass)
+			return equals((DoodadClass) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(DoodadClass other) {
+		return getVal().equals(other.getVal());
+	}
+
 	private DoodadClass(String val) {
 		super(val);
 		
 		_map.put(val, this);
 	}
 
+	@Nullable
 	public DoodadClass valueOf(String val) {
 		return _map.get(val);
 	}
 	
 	@Override
 	public DoodadClass decode(Object val) {
-		return valueOf(val.toString());
+		if (val != null)
+			return valueOf(val.toString());
+
+		return null;
 	}
 }

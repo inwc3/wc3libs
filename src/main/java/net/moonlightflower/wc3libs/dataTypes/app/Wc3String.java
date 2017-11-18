@@ -30,11 +30,18 @@ public class Wc3String extends DataType implements Stringable {
 	
 	@Override
 	public boolean equals(Object other) {
-		if (this == other) return true;
+		if (other instanceof Wc3String)
+			return equals((Wc3String) other);
+		if (other instanceof String)
+			return equals(Wc3String.valueOf(other));
 
-		return ((other instanceof Wc3String) || (other instanceof String)) && (hashCode() == other.hashCode());
+		return super.equals(other);
 	}
-	
+
+	public boolean equals(Wc3String other) {
+		return (hashCode() == other.hashCode());
+	}
+
 	@Override
 	public Object toSLKVal() {
 		return toString();

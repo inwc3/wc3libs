@@ -20,6 +20,9 @@ public class Icon extends FileType {
 	}
 	
 	public static Icon decodeStatic(Object val) {
-		return valueOf(new File(val.toString()));
+		if (val != null)
+			return valueOf(new File(val.toString()));
+
+		return null;
 	}
 }

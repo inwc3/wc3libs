@@ -9,7 +9,19 @@ public class ShadowImage extends FileType {
 	public final static ShadowImage FLY = new ShadowImage("ShadowFlyer");
 	public final static ShadowImage GROUND = new ShadowImage("Shadow");
 	public final static ShadowImage NONE = new ShadowImage("");
-	
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof ShadowImage)
+			return equals((ShadowImage) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(ShadowImage other) {
+		return getVal().equals(other.getVal());
+	}
+
 	public ShadowImage(File file) {
 		super(file);
 	}

@@ -3,6 +3,8 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.Id;
 
+import javax.annotation.Nonnull;
+
 public class UpgradeEffect extends Id {
 	public static UpgradeEffect ABIL_LEVEL_UP = new UpgradeEffect("rlev");
 	public static UpgradeEffect ARMOR_CHANGE = new UpgradeEffect("rart");
@@ -37,12 +39,24 @@ public class UpgradeEffect extends Id {
 	public static UpgradeEffect SPIKE_BARRIER = new UpgradeEffect("rspi");
 	public static UpgradeEffect ULTRA_VISION = new UpgradeEffect("rauv");
 	public static UpgradeEffect UNIT_AVAIL_CHANGE = new UpgradeEffect("rtma");
-	
-	private UpgradeEffect(String val) {
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof UpgradeEffect)
+			return equals((UpgradeEffect) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(UpgradeEffect other) {
+		return getVal().equals(other.getVal());
+	}
+
+	private UpgradeEffect(@Nonnull String val) {
 		super(val);
 	}
 	
-	public static UpgradeEffect valueOf(String val) {
+	public static UpgradeEffect valueOf(@Nonnull String val) {
 		return new UpgradeEffect(val);
 	}
 

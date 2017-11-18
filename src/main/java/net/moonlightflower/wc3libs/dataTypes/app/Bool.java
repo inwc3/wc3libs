@@ -41,15 +41,17 @@ public class Bool extends DataType {
 	}
 
 	public static Bool valueOf(Object val) {
-		String s = val.toString();
-		
-		switch (s) {
-		case "0":
-		case "false":
-			return valueOf(false);
-		case "1":
-		case "true":
-			return valueOf(true);
+		if (val != null) {
+			String s = val.toString();
+
+			switch (s) {
+				case "0":
+				case "false":
+					return valueOf(false);
+				case "1":
+				case "true":
+					return valueOf(true);
+			}
 		}
 		
 		return null;

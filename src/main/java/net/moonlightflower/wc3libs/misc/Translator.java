@@ -4,6 +4,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
+import javax.annotation.Nonnull;
 import java.io.PrintStream;
 import java.util.Map;
 
@@ -75,11 +76,11 @@ public class Translator {
 		return text;
 	}
 	
-	public void addTXT(TXT other) {
+	public void addTXT(@Nonnull TXT other) {
 		_txt.merge(other);
 	}
 
-	public void addDataTypeTXT(TXT txt) {
+	public void addDataTypeTXT(@Nonnull TXT txt) {
 		TXT other = new TXT();
 		
 		for (Map.Entry<TXTSectionId, TXT.Section> sectionEntry : txt.getSections().entrySet()) {
@@ -107,7 +108,7 @@ public class Translator {
 		
 	}
 	
-	public void print(PrintStream outStream) {
+	public void print(@Nonnull PrintStream outStream) {
 		_txt.print(outStream);
 	}
 	

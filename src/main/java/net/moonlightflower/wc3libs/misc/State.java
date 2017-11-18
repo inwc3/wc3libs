@@ -4,9 +4,12 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.Serializable;
 
+import javax.annotation.Nonnull;
+
 abstract public class State<T extends DataType> {
 	private DataTypeInfo _info;
-	
+
+	@Nonnull
 	public DataTypeInfo getInfo() {
 		return _info;
 	}
@@ -28,7 +31,7 @@ abstract public class State<T extends DataType> {
 		return null;*/
 	}
 	
-	public State(DataTypeInfo info) {
+	public State(@Nonnull DataTypeInfo info) {
 		_info = info;
 	}
 }

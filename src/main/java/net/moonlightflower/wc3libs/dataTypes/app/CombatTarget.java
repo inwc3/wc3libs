@@ -1,9 +1,13 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CombatTarget extends Wc3String {
+	private static Map<String, CombatTarget> _map = new LinkedHashMap<>();
+
 	public final static CombatTarget AIR = new CombatTarget("air");
 	public final static CombatTarget ALIVE = new CombatTarget("alive", "aliv");
 	public final static CombatTarget ALLY = new CombatTarget("allies", "alli", "ally");
@@ -35,10 +39,21 @@ public class CombatTarget extends Wc3String {
 	public final static CombatTarget VUL = new CombatTarget("vulnerable", "vuln");
 	public final static CombatTarget WALL = new CombatTarget("wall");
 	public final static CombatTarget WARD = new CombatTarget("ward");
-	
-	private static Map<String, CombatTarget> _map = new LinkedHashMap<>();
-	
-	public static CombatTarget valueOf(String val) {
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof CombatTarget)
+			return equals((CombatTarget) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(CombatTarget other) {
+		return getVal().equals(other.getVal());
+	}
+
+	@Nullable
+	public static CombatTarget valueOf(@Nonnull String val) {
 		return _map.get(val);
 	}
 	

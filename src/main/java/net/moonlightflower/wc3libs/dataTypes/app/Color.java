@@ -27,14 +27,18 @@ public class Color extends DataType {
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Color)
-			return getRed() == ((Color) other).getRed() &&
-					getGreen() == ((Color) other).getGreen() &&
-					getBlue() == ((Color) other).getBlue() &&
-					getAlpha() == ((Color) other).getAlpha();
+			return equals((Color) other);
 		
 		return super.equals(other);
 	}
-	
+
+	public boolean equals(Color other) {
+		return getRed() == other.getRed() &&
+				getGreen() == other.getGreen() &&
+				getBlue() == other.getBlue() &&
+				getAlpha() == other.getAlpha();
+	}
+
 	@Override
 	public String toString() {
 		return String.format("red=%d green=%d blue=%d alpha=%d", _red, _green, _blue, _alpha);

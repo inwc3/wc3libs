@@ -94,6 +94,7 @@ public class TGADecoder {
 				
 				//img data
 				//TODO
+				throw new UnsupportedOperationException();
 			}
 			
 			//colorCorrectionTable
@@ -111,7 +112,8 @@ public class TGADecoder {
 			}
 		}
 	}
-	
+
+	@Nonnull
 	private Color readColor(int bitsPerPx) throws IOException {
 		int bytesPerPx = (bitsPerPx + 8 - 1) / 8;
 		
@@ -140,8 +142,9 @@ public class TGADecoder {
 		}
 		case 8: {
 			//TODO
+			throw new UnsupportedOperationException();
 			
-			break;
+			//break;
 		}
 		case 15: {
 			red = ((float) ((colorData >> 10) & 0x1F)) / 0x1F;
@@ -181,8 +184,9 @@ public class TGADecoder {
 		
 		return new Color(red, green, blue, alpha);
 	}
-	
-	private BufferedImage readPriv(InputStream inStream) throws IOException, UnsupportedFormatException {
+
+	@Nonnull
+	private BufferedImage readPriv(@Nonnull InputStream inStream) throws IOException, UnsupportedFormatException {
 		try {
 			_stream = new StdBinInputStream(inStream);
 			
@@ -418,7 +422,8 @@ public class TGADecoder {
 	
 	private TGADecoder() {
 	}
-	
+
+	@Nonnull
 	public static BufferedImage read(@Nonnull InputStream inStream) throws IOException, UnsupportedFormatException {
 		TGADecoder decoder = new TGADecoder();
 		
