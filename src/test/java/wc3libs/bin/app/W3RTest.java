@@ -1,30 +1,39 @@
 package wc3libs.bin.app;
 
+import net.moonlightflower.wc3libs.bin.BinStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import net.moonlightflower.wc3libs.bin.BinState;
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
 import net.moonlightflower.wc3libs.bin.app.W3R;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class W3RTest {
 	@Test()
-	public void writeTest() throws StreamException {
+	public void writeTest() throws IOException {
 		W3R w3r = new W3R();
 		
 		w3r.addRect();
 		w3r.addRect();
-		
-		Wc3BinStream stream = new Wc3BinStream();
+
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+
+		Wc3BinOutputStream stream = new Wc3BinOutputStream(byteStream);
 		
 		w3r.write_0x5(stream);
+
+		stream.close();
 		
-		stream.rewind();
+		W3R newW3R = new W3R();
+
+		newW3R.read_0x5(new Wc3BinInputStream(new ByteArrayInputStream(byteStream.toByteArray())));
 		
-		W3R newW3R = new W3R(stream);
-		
-		Assert.assertEquals(w3r.getRects().size(), newW3R.getRects().size());
+		Assert.assertEquals(newW3R.getRects().size(), w3r.getRects().size());
 		
 		for (int i = 0; i < w3r.getRects().size(); i++) {
 			W3R.Rect rect = w3r.getRects().get(i);

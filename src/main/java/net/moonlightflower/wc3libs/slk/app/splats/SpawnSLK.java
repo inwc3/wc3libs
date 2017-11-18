@@ -108,7 +108,7 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 		}
 	}
 	
-	//private Map<SpawnId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<SpawnId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<SpawnId, Obj> getObjs() {

@@ -1,10 +1,11 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinStream;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
-import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
+import net.moonlightflower.wc3libs.bin.*;
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,108 +22,144 @@ import java.util.Map;
 public class W3C {
 	public final static File GAME_PATH = new File("war3map.w3c");
 	
-	private class Obj {
-		private Coords2DF _target = new Coords2DF(0F, 0F);
-		
+	public static class Camera extends Bin {
+		private static class State<T extends DataType> extends BinState<T> {
+			private static final List<W3C.Camera.State> _values = new ArrayList<>();
+
+			public static List<W3C.Camera.State> values() {
+				return _values;
+			}
+
+			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString, T defVal) {
+				super(typeInfo, idString, defVal);
+
+				_values.add(this);
+			}
+
+			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString) {
+				this(typeInfo, idString, null);
+			}
+
+			public State(@Nonnull Class<T> type, @Nonnull String idString) {
+				this(new DataTypeInfo(type), idString);
+			}
+
+			public State(@Nonnull Class<T> type, @Nonnull String idString, T defVal) {
+				this(new DataTypeInfo(type), idString, defVal);
+			}
+		}
+
+		public final static W3C.Camera.State<Coords2DF> ART_TARGET = new W3C.Camera.State<>(Coords2DF.class, "target", new Coords2DF(0F, 0F));
+		public final static W3C.Camera.State<Real> ART_Z_OFFSET = new W3C.Camera.State<>(Real.class, "zOffset", Real.valueOf(0F));
+		public final static W3C.Camera.State<Real> ART_ROTATION = new W3C.Camera.State<>(Real.class, "rotation", Real.valueOf(0F));
+		public final static W3C.Camera.State<Real> ART_ANGLE_OF_ATTACK = new W3C.Camera.State<>(Real.class, "angleOfAttack", Real.valueOf(0F));
+		public final static W3C.Camera.State<Real> ART_ROLL = new W3C.Camera.State<>(Real.class, "roll", Real.valueOf(0F));
+		public final static W3C.Camera.State<Real> ART_DIST = new W3C.Camera.State<>(Real.class, "dist", Real.valueOf(0F));
+		public final static W3C.Camera.State<Real> ART_FIELD_OF_VIEW = new W3C.Camera.State<>(Real.class, "fieldOfView", Real.valueOf(0F));
+		public final static W3C.Camera.State<Real> ART_FAR_Z = new W3C.Camera.State<>(Real.class, "farZ", Real.valueOf(10000F));
+		public final static W3C.Camera.State<Real> ART_UNKNOWN = new W3C.Camera.State<>(Real.class, "unknown", Real.valueOf(100F));
+
+		public final static W3C.Camera.State<Wc3String> EDITOR_CINE_NAME = new W3C.Camera.State<>(Wc3String.class, "cineName", Wc3String.valueOf("unnamed"));
+
+		public <T extends DataType> T get(@Nonnull W3C.Camera.State<T> state) {
+			return state.tryCastVal(super.get(state));
+		}
+
+		public <T extends DataType> void set(@Nonnull W3C.Camera.State<T> state, T val) {
+			super.set(state, val);
+		}
+
+		public <T extends DataType> void reset(@Nonnull W3C.Camera.State<T> state) {
+			super.set(state, state.getDefVal());
+		}
+
+		public void init() {
+			for (State<?> state : State.values()) {
+				set(state, state.getDefVal());
+			}
+		}
+
 		public Coords2DF getTarget() {
-			return _target;
+			return get(ART_TARGET);
 		}
 		
 		public void setTarget(Coords2DF val) {
-			_target = val;
+			set(ART_TARGET, val);
 		}
 		
-		private float _zOffset = 0;
-		
-		public float getZOffset() {
-			return _zOffset;
+		public Real getZOffset() {
+			return get(ART_Z_OFFSET);
 		}
 		
-		public void setZOffset(float val) {
-			_zOffset = val;
+		public void setZOffset(Real val) {
+			set(ART_Z_OFFSET, val);
 		}
 		
-		private float _rotation = 0;
-		
-		public float getRotation() {
-			return _rotation;
+		public Real getRotation() {
+			return get(ART_ROTATION);
 		}
 		
-		public void setRotation(float val) {
-			_rotation = val;
-		}
-
-		private float _angleOfAttack = 0;
-		
-		public float getAngleOfAttack() {
-			return _angleOfAttack;
+		public void setRotation(Real val) {
+			set(ART_ROTATION, val);
 		}
 		
-		public void setAngleOfAttack(float val) {
-			_angleOfAttack = val;
+		public Real getAngleOfAttack() {
+			return get(ART_ANGLE_OF_ATTACK);
 		}
 		
-		private float _roll = 0;
-		
-		public float getRoll() {
-			return _roll;
+		public void setAngleOfAttack(Real val) {
+			set(ART_ANGLE_OF_ATTACK, val);
 		}
 		
-		public void setRoll(float val) {
-			_roll = val;
+		public Real getRoll() {
+			return get(ART_ROLL);
 		}
 		
-		private float _dist = 0;
-		
-		public float getDist() {
-			return _dist;
+		public void setRoll(Real val) {
+			set(ART_ROLL, val);
 		}
 		
-		public void setDist(float val) {
-			_dist = val;
-		}
-
-		private float _fieldOfView = 0;
-		
-		public float getFieldOfView() {
-			return _fieldOfView;
+		public Real getDist() {
+			return get(ART_DIST);
 		}
 		
-		public void setFieldOfView(float val) {
-			_fieldOfView = val;
-		}
-
-		private float _farZ = 10000;
-		
-		public float getFarZ() {
-			return _farZ;
+		public void setDist(Real val) {
+			set(ART_DIST, val);
 		}
 		
-		public void setFarZ(float val) {
-			_farZ = val;
+		public Real getFieldOfView() {
+			return get(ART_FIELD_OF_VIEW);
 		}
 		
-		private float _unknown = 100;
-		
-		public float getUnknown() {
-			return _unknown;
+		public void setFieldOfView(Real val) {
+			set(ART_FIELD_OF_VIEW, val);
 		}
 		
-		public void setUnknown(float val) {
-			_unknown = val;
+		public Real getFarZ() {
+			return get(ART_FAR_Z);
+		}
+		
+		public void setFarZ(Real val) {
+			set(ART_FAR_Z, val);
+		}
+		
+		public Real getUnknown() {
+			return get(ART_UNKNOWN);
+		}
+		
+		public void setUnknown(Real val) {
+			set(ART_UNKNOWN, val);
+		}
+		
+		public Wc3String getCineName() {
+			return get(EDITOR_CINE_NAME);
+		}
+		
+		public void setCineName(Wc3String val) {
+			set(EDITOR_CINE_NAME, val);
 		}
 
-		private String _cineName;
-		
-		public String getCineName() {
-			return _cineName;
-		}
-		
-		public void setCineName(String val) {
-			_cineName = val;
-		}
-
-		public void write_0x0(Wc3BinStream stream) {
+		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 			Coords2DF target = getTarget();
 			
 			stream.writeFloat(target.getX());
@@ -142,23 +179,23 @@ public class W3C {
 			stream.writeString(getCineName());
 		}
 
-		public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setTarget(new Coords2DF(stream.readFloat("targetX"), stream.readFloat("targetY")));
-			setZOffset(stream.readFloat("zOffset"));
+			setZOffset(stream.readReal("zOffset"));
 
-			setRotation(stream.readFloat("rotation"));
-			setAngleOfAttack(stream.readFloat("angleOfAttack"));
-			setDist(stream.readFloat("dist"));
+			setRotation(stream.readReal("rotation"));
+			setAngleOfAttack(stream.readReal("angleOfAttack"));
+			setDist(stream.readReal("dist"));
 			
-			setRoll(stream.readFloat("roll"));
-			setFieldOfView(stream.readFloat("fieldOfView"));
-			setFarZ(stream.readFloat("farZ"));
-			setUnknown(stream.readFloat("unknown"));
+			setRoll(stream.readReal("roll"));
+			setFieldOfView(stream.readReal("fieldOfView"));
+			setFarZ(stream.readReal("farZ"));
+			setUnknown(stream.readReal("unknown"));
 			
-			setCineName(stream.readString("cineName"));
+			setCineName(Wc3String.valueOf(stream.readString("cineName")));
 		}
 		
-		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case W3C_0x0: {
 				read_0x0(stream);
@@ -168,7 +205,7 @@ public class W3C {
 			}
 		}
 		
-		public void write(Wc3BinStream stream, EncodingFormat format) {
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case W3C_0x0: {
@@ -179,34 +216,38 @@ public class W3C {
 			}
 		}
 		
-		public Obj(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public Camera(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+			this();
+
 			read(stream, format);
 		}
 		
-		public Obj() {
+		public Camera() {
+			init();
 		}
 	}
 	
-	private List<Obj> _objs = new ArrayList<>();
-	
-	public List<Obj> getObjs() {
-		return _objs;
-	}
-	
-	private void addObj(Obj val) {
-		_objs.add(val);
-	}
-	
-	public Obj addObj() {
-		Obj obj = new Obj();
+	private List<Camera> _cameras = new ArrayList<>();
 
-		addObj();
-		
-		return obj;
+	@Nonnull
+	public List<Camera> getCameras() {
+		return _cameras;
 	}
 	
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+	private void addCamera(@Nonnull Camera val) {
+		_cameras.add(val);
+	}
+	
+	public Camera addCamera() {
+		Camera camera = new Camera();
+
+		addCamera(camera);
+		
+		return camera;
+	}
+	
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
+		public enum Enum {
 			AUTO,
 			W3C_0x0,
 		}
@@ -220,36 +261,36 @@ public class W3C {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
 		}
 	}
 	
-	public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt("version");
 
-		Wc3BinStream.checkFormatVer("camMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
+		Wc3BinInputStream.checkFormatVer("camMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
 
 		int camsCount = stream.readInt("camsCount");
 
 		for (int i = 0; i < camsCount; i++) {
-			addObj(new Obj(stream, EncodingFormat.WPM_0x0));
+			addCamera(new Camera(stream, EncodingFormat.WPM_0x0));
 		}
 	}
 	
-	public void write_0x0(Wc3BinStream stream) {
+	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeInt(EncodingFormat.WPM_0x0.getVersion());
 		
-		stream.writeInt(getObjs().size());
+		stream.writeInt(getCameras().size());
 		
-		for (Obj obj : getObjs()) {
-			obj.write(stream, EncodingFormat.WPM_0x0);
+		for (Camera camera : getCameras()) {
+			camera.write(stream, EncodingFormat.WPM_0x0);
 		}
 	}
 	
-	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt();
 		
 		stream.rewind();
@@ -257,7 +298,7 @@ public class W3C {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 
-	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -272,7 +313,7 @@ public class W3C {
 		}
 	}
 	
-	private void write(Wc3BinStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case W3C_0x0: {
@@ -283,43 +324,39 @@ public class W3C {
 		}
 	}
 	
-	private void read(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Wc3BinStream stream) {
+	private void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
-	private void read(InputStream inStream, EncodingFormat format) throws IOException, BinStream.StreamException {
-		read(new Wc3BinStream(inStream), format);
-	}
-	
-	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3BinStream(file), format);
-	}
-	
-	private void read(InputStream inStream) throws IOException {
-		read(inStream, EncodingFormat.AUTO);
+	private void read(@Nonnull InputStream inStream, @Nonnull EncodingFormat format) throws IOException {
+		read(new Wc3BinInputStream(inStream), format);
 	}
 
-	private void write(File file) throws IOException {
-		write(new Wc3BinStream(file));
+	private void write(@Nonnull File file) throws IOException {
+		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
+
+		write(outStream);
+
+		outStream.close();
 	}
 	
-	public W3C(Wc3BinStream inStream) throws BinStream.StreamException {
-		this();
-		
+	public W3C(@Nonnull Wc3BinInputStream inStream) throws BinInputStream.StreamException {
 		read(inStream);
 	}
 	
-	public W3C(InputStream inStream) throws IOException {
-		this();
-		
+	public W3C(@Nonnull File file) throws IOException {
+		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
+
 		read(inStream);
+
+		inStream.close();
 	}
-	
+
 	public W3C() {
-		
+
 	}
 }

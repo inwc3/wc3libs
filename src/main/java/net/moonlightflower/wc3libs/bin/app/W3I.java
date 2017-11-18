@@ -1,9 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinStream;
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.Id;
@@ -12,6 +9,8 @@ import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,15 +23,15 @@ import java.util.Map;
 public class W3I {
     public final static File GAME_PATH = new File("war3map.w3i");
 
-    private int _fileVersion;
+    /*private int _fileVersion;
 
     public int getFileVersion() {
         return _fileVersion;
     }
 
-    public void setFileVersion(int _fileVersion) {
-        this._fileVersion = _fileVersion;
-    }
+    public void setFileVersion(int fileVersion) {
+        _fileVersion = fileVersion;
+    }*/
 
     private int _savesAmount = 0;
 
@@ -56,41 +55,45 @@ public class W3I {
 
     private String _mapName;
 
+    @Nonnull
     public String getMapName() {
         return _mapName;
     }
 
-    public void setMapName(String val) {
+    public void setMapName(@Nonnull String val) {
         _mapName = val;
     }
 
     private String _mapAuthor;
 
+    @Nullable
     public String getMapAuthor() {
         return _mapAuthor;
     }
 
-    public void setMapAuthor(String val) {
+    public void setMapAuthor(@Nullable String val) {
         _mapAuthor = val;
     }
 
+    @Nullable
     private String _mapDescription;
 
     public String getMapDescription() {
         return _mapDescription;
     }
 
-    public void setMapDescription(String val) {
+    public void setMapDescription(@Nullable String val) {
         _mapDescription = val;
     }
 
     private String _playersRecommendedAmount;
 
+    @Nullable
     public String getPlayersRecommendedAmount() {
         return _playersRecommendedAmount;
     }
 
-    public void setPlayersRecommendedAmount(String val) {
+    public void setPlayersRecommendedAmount(@Nullable String val) {
         _playersRecommendedAmount = val;
     }
 
@@ -99,55 +102,42 @@ public class W3I {
     private Coords2DF _cameraBounds3 = new Coords2DF(0F, 0F);
     private Coords2DF _cameraBounds4 = new Coords2DF(0F, 0F);
 
+    @Nonnull
     public Coords2DF getCameraBounds1() {
         return _cameraBounds1;
     }
 
+    @Nonnull
     public Coords2DF getCameraBounds2() {
         return _cameraBounds2;
     }
 
+    @Nonnull
     public Coords2DF getCameraBounds3() {
         return _cameraBounds3;
     }
 
+    @Nonnull
     public Coords2DF getCameraBounds4() {
         return _cameraBounds4;
     }
 
-    public void setCameraBounds(Coords2DF pos1, Coords2DF pos2, Coords2DF pos3, Coords2DF pos4) {
+    public void setCameraBounds(@Nonnull Coords2DF pos1, @Nonnull Coords2DF pos2, @Nonnull Coords2DF pos3, @Nonnull Coords2DF pos4) {
         _cameraBounds1 = pos1;
         _cameraBounds2 = pos2;
         _cameraBounds3 = pos3;
         _cameraBounds4 = pos4;
     }
 
-    private int _marginLeft = 0;
-    private int _marginRight = 0;
-    private int _marginBottom = 0;
-    private int _marginTop = 0;
+    private Bounds _margins = new Bounds(0, 0, 0, 0);
 
-    public int getMarginLeft() {
-        return _marginLeft;
+    @Nonnull
+    public Bounds getMargins() {
+        return _margins;
     }
 
-    public int getMarginRight() {
-        return _marginRight;
-    }
-
-    public int getMarginBottom() {
-        return _marginBottom;
-    }
-
-    public int getMarginTop() {
-        return _marginTop;
-    }
-
-    public void setMargins(int left, int right, int bottom, int top) {
-        _marginLeft = left;
-        _marginRight = right;
-        _marginBottom = bottom;
-        _marginTop = top;
+    public void setMargins(@Nonnull Bounds val) {
+        _margins = val;
     }
 
     private int _width = 32;
@@ -163,7 +153,7 @@ public class W3I {
     }
 
     public Bounds getWorldBounds() {
-        Size size = new Size(getWidth() + getMarginLeft() + getMarginRight(), getHeight() + getMarginTop() + getMarginBottom());
+        Size size = new Size(getWidth() + getMargins().getMinX() + getMargins().getMaxX(), getHeight() + getMargins().getMinY() + getMargins().getMaxY());
 
         return new Bounds(size, new Coords2DI(0, 0));
     }
@@ -273,11 +263,12 @@ public class W3I {
 
     private Tileset _tileset;
 
+    @Nonnull
     public Tileset getTileset() {
         return _tileset;
     }
 
-    public void setTileset(Tileset val) {
+    public void setTileset(@Nonnull Tileset val) {
         _tileset = val;
     }
 
@@ -344,7 +335,7 @@ public class W3I {
                 if ((customPath != null) && !customPath.isEmpty()) {
                     background = new LoadingScreenBackground.CustomBackground(new File(customPath));
                 }
-            } else {
+            } else if (backgroundIndex > 0) {
                 background = LoadingScreenBackground.PresetBackground.valueOf(backgroundIndex);
             }
 
@@ -355,7 +346,7 @@ public class W3I {
             setIndex(index);
         }
 
-        private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             set(
                     stream.readInt("campaignBackgroundIndex"),
                     null,
@@ -366,7 +357,7 @@ public class W3I {
             );
         }
 
-        private void write_0x12(Wc3BinStream stream) {
+        private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             LoadingScreenBackground background = getBackground();
 
             stream.writeInt(background instanceof LoadingScreenBackground.PresetBackground ? ((LoadingScreenBackground.PresetBackground) background).getIndex
@@ -377,7 +368,7 @@ public class W3I {
             stream.writeInt(getIndex());
         }
 
-        private void read_0x19(Wc3BinStream stream) throws StreamException {
+        private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
             set(
                     stream.readInt("campaignBackgroundIndex"),
                     stream.readString("loadingScreenModel"),
@@ -388,7 +379,7 @@ public class W3I {
             );
         }
 
-        private void write_0x19(Wc3BinStream stream) {
+        private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
             LoadingScreenBackground background = getBackground();
 
             if (background != null) {
@@ -406,7 +397,7 @@ public class W3I {
             stream.writeString(getSubtitle());
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
                 case W3I_0x12: {
                     read_0x12(stream);
@@ -421,7 +412,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19: {
@@ -445,7 +436,7 @@ public class W3I {
             setIndex(index);
         }
 
-        public LoadingScreen(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public LoadingScreen(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             read(stream, format);
         }
     }
@@ -516,21 +507,23 @@ public class W3I {
 
     private PrologueScreen _prologueScreen;
 
+    @Nullable
     public PrologueScreen getPrologueScreen() {
         return _prologueScreen;
     }
 
-    public void setPrologueScreen(PrologueScreen val) {
+    public void setPrologueScreen(@Nullable PrologueScreen val) {
         _prologueScreen = val;
     }
 
     private String _loadingScreenModel;
 
+    @Nullable
     public String getLoadingScreenModel() {
         return _loadingScreenModel;
     }
 
-    public void setLoadingScreenModel(String val) {
+    public void setLoadingScreenModel(@Nullable String val) {
         _loadingScreenModel = val;
     }
 
@@ -572,61 +565,67 @@ public class W3I {
 
     private GameDataSet _gameData;
 
+    @Nonnull
     public GameDataSet getGameDataSet() {
         return _gameData;
     }
 
-    public void setGameDataSet(GameDataSet val) {
+    public void setGameDataSet(@Nonnull GameDataSet val) {
         _gameData = val;
     }
 
     private TerrainFog _terrainFog;
 
+    @Nullable
     public TerrainFog getTerrainFog() {
         return _terrainFog;
     }
 
-    public void setTerrainFog(TerrainFog val) {
+    public void setTerrainFog(@Nullable TerrainFog val) {
         _terrainFog = val;
     }
 
     private Id _globalWeatherId;
 
+    @Nullable
     public Id getGlobalWeatherId() {
         return _globalWeatherId;
     }
 
-    public void setGlobalWeatherId(Id val) {
+    public void setGlobalWeatherId(@Nullable WeatherId val) {
         _globalWeatherId = val;
     }
 
-    private String _soundEnv;
+    private SoundLabel _soundEnv;
 
-    public String getSoundEnv() {
+    @Nullable
+    public SoundLabel getSoundEnv() {
         return _soundEnv;
     }
 
-    public void setSoundEnv(String val) {
+    public void setSoundEnv(@Nullable SoundLabel val) {
         _soundEnv = val;
     }
 
-    private char _tilesetLightEnv;
+    private Tileset _tilesetLightEnv;
 
-    public char getTilesetLightEnv() {
+    @Nullable
+    public Tileset getTilesetLightEnv() {
         return _tilesetLightEnv;
     }
 
-    public void setTilesetLightEnv(char val) {
+    public void setTilesetLightEnv(@Nullable Tileset val) {
         _tilesetLightEnv = val;
     }
 
     private Color _waterColor = Color.fromRGBA255(255, 255, 255, 255);
 
+    @Nonnull
     public Color getWaterColor() {
         return _waterColor;
     }
 
-    public void setWaterColor(Color val) {
+    public void setWaterColor(@Nonnull Color val) {
         _waterColor = val;
     }
 
@@ -643,11 +642,12 @@ public class W3I {
 
         private Controller _type = Controller.HUMAN;
 
+        @Nonnull
         public Controller getType() {
             return _type;
         }
 
-        public void setType(Controller val) {
+        public void setType(@Nonnull Controller val) {
             _type = val;
         }
 
@@ -695,11 +695,12 @@ public class W3I {
 
         private UnitRace _race = UnitRace.HUMAN;
 
+        @Nonnull
         public UnitRace getRace() {
             return _race;
         }
 
-        public void setRace(UnitRace val) {
+        public void setRace(@Nonnull UnitRace val) {
             _race = val;
         }
 
@@ -725,11 +726,12 @@ public class W3I {
 
         private Coords2DF _startPos = new Coords2DF(0F, 0F);
 
+        @Nonnull
         public Coords2DF getStartPos() {
             return _startPos;
         }
 
-        public void setStartPos(Coords2DF val) {
+        public void setStartPos(@Nonnull Coords2DF val) {
             _startPos = val;
         }
 
@@ -801,7 +803,7 @@ public class W3I {
                     (), getType(), getRace(), getStartPosFixed(), getStartPos(), allyLowPrioFlagsS, allyHighPrioFlagsS);
         }
 
-        private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setNum(stream.readInt("playerNum"));
 
             setType(Controller.valueOf(stream.readInt("controller")));
@@ -817,7 +819,7 @@ public class W3I {
             setAllyHighPrioFlags(stream.readInt("allyHighPrioFlags"));
         }
 
-        private void write_0x12(Wc3BinStream stream) {
+        private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             stream.writeInt(getNum());
 
             stream.writeInt(getType().getVal());
@@ -836,7 +838,7 @@ public class W3I {
             stream.writeInt(getAllyHighPrioFlags());
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -847,7 +849,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19:
@@ -859,7 +861,7 @@ public class W3I {
             }
         }
 
-        public Player(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public Player(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             read(stream, format);
         }
 
@@ -869,6 +871,7 @@ public class W3I {
 
     private List<Player> _players = new ArrayList<>();
 
+    @Nonnull
     public List<Player> getPlayers() {
         return _players;
     }
@@ -879,7 +882,7 @@ public class W3I {
         return null;
     }
 
-    private void addPlayer(Player val) {
+    private void addPlayer(@Nonnull Player val) {
         _players.add(val);
     }
 
@@ -939,19 +942,20 @@ public class W3I {
 
         private Flags _flags = Flags.valueOf(0);
 
+        @Nonnull
         public Flags getFlags() {
             return _flags;
         }
 
-        public void setFlags(Flags val) {
+        public void setFlags(@Nonnull Flags val) {
             _flags = val;
         }
 
-        public boolean getFlag(Flags.Flag flag) {
+        public boolean getFlag(@Nonnull Flags.Flag flag) {
             return _flags.containsFlag(flag);
         }
 
-        public void setFlag(Flags.Flag flag, boolean val) {
+        public void setFlag(@Nonnull Flags.Flag flag, boolean val) {
             _flags.setFlag(flag, val);
         }
 
@@ -967,11 +971,12 @@ public class W3I {
 
         private String _name;
 
+        @Nullable
         public String getName() {
             return _name;
         }
 
-        public void setName(String val) {
+        public void setName(@Nullable String val) {
             _name = val;
         }
 
@@ -984,7 +989,7 @@ public class W3I {
             return String.format("%s [players=%s, flags=%s]", getName(), playersS, getFlags());
         }
 
-        private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setFlags(Flags.valueOf(stream.readInt("forceFlags")));
 
             setPlayers(stream.readInt("forcePlayers"));
@@ -992,7 +997,7 @@ public class W3I {
             setName(stream.readString("forceName"));
         }
 
-        private void write_0x12(Wc3BinStream stream) {
+        private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             stream.writeInt(getFlags().toInt());
 
             stream.writeInt(getPlayers());
@@ -1000,7 +1005,7 @@ public class W3I {
             stream.writeString(getName());
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1011,7 +1016,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19:
@@ -1023,7 +1028,7 @@ public class W3I {
             }
         }
 
-        public Force(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public Force(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             read(stream, format);
         }
 
@@ -1033,14 +1038,16 @@ public class W3I {
 
     private List<Force> _forces = new ArrayList<>();
 
+    @Nonnull
     public List<Force> getForces() {
         return _forces;
     }
 
-    private void addForce(Force val) {
+    private void addForce(@Nonnull Force val) {
         _forces.add(val);
     }
 
+    @Nonnull
     public Force addForce() {
         Force force = new Force();
 
@@ -1090,7 +1097,7 @@ public class W3I {
             _avail = val;
         }
 
-        private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setPlayers(stream.readInt("abilPlayers"));
 
             setId(stream.readId("abilId"));
@@ -1100,7 +1107,7 @@ public class W3I {
             setAvail(stream.readInt("avail"));
         }
 
-        private void write_0x12(Wc3BinStream stream) {
+        private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             stream.writeInt(getPlayers());
 
             stream.writeId(getId());
@@ -1110,7 +1117,7 @@ public class W3I {
             stream.writeInt(getAvail());
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1121,7 +1128,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19:
@@ -1133,7 +1140,7 @@ public class W3I {
             }
         }
 
-        public UpgradeMod(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public UpgradeMod(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             read(stream, format);
         }
 
@@ -1143,14 +1150,16 @@ public class W3I {
 
     private List<UpgradeMod> _upgradeMods = new ArrayList<>();
 
+    @Nonnull
     public List<UpgradeMod> getUpgradeMods() {
         return _upgradeMods;
     }
 
-    private void addUpgradeMod(UpgradeMod val) {
+    private void addUpgradeMod(@Nonnull UpgradeMod val) {
         _upgradeMods.add(val);
     }
 
+    @Nonnull
     public UpgradeMod addUpgradeMod() {
         UpgradeMod upgradeMod = new UpgradeMod();
 
@@ -1172,27 +1181,28 @@ public class W3I {
 
         private Id _id;
 
+        @Nonnull
         public Id getId() {
             return _id;
         }
 
-        public void setId(Id val) {
+        public void setId(@Nonnull Id val) {
             _id = val;
         }
 
-        private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setPlayers(stream.readInt("techPlayers"));
 
             setId(stream.readId("techId"));
         }
 
-        private void write_0x12(Wc3BinStream stream) {
+        private void write_0x12(Wc3BinOutputStream stream) {
             stream.writeInt(getPlayers());
 
             stream.writeId(getId());
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1203,7 +1213,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19:
@@ -1215,7 +1225,7 @@ public class W3I {
             }
         }
 
-        public TechMod(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public TechMod(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             read(stream, format);
         }
 
@@ -1225,14 +1235,16 @@ public class W3I {
 
     private List<TechMod> _techMods = new ArrayList<>();
 
+    @Nonnull
     public List<TechMod> getTechMods() {
         return _techMods;
     }
 
-    private void addTechMod(TechMod val) {
+    private void addTechMod(@Nonnull TechMod val) {
         _techMods.add(val);
     }
 
+    @Nonnull
     public TechMod addTechMod() {
         TechMod techMod = new TechMod();
 
@@ -1254,15 +1266,16 @@ public class W3I {
 
         private String _name;
 
+        @Nullable
         public String getName() {
             return _name;
         }
 
-        public void setName(String val) {
+        public void setName(@Nullable String val) {
             _name = val;
         }
 
-        enum PositionType {
+        public enum PositionType {
             UNIT(0),
             STRUCTURE(1),
             ITEM(2);
@@ -1279,22 +1292,26 @@ public class W3I {
                 _val = val;
             }
 
+            @Nullable
             public static PositionType valueOf(int val) {
                 return _valToPositionTypeMap.get(val);
             }
 
             static {
                 _valToPositionTypeMap.put(0, UNIT);
+                _valToPositionTypeMap.put(1, STRUCTURE);
+                _valToPositionTypeMap.put(2, ITEM);
             }
         }
 
         private Map<Integer, PositionType> _positionTypes = new LinkedHashMap<>();
 
+        @Nonnull
         public PositionType getPositionType(int index) {
             return _positionTypes.get(index);
         }
 
-        public void setPositionType(int index, PositionType val) {
+        public void setPositionType(int index, @Nonnull PositionType val) {
             _positionTypes.put(index, val);
         }
 
@@ -1321,7 +1338,7 @@ public class W3I {
                 _typeIds.put(pos, val);
             }
 
-            private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+            private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
                 setChance(stream.readInt("chance"));
 
                 for (int i = 0; i < _parent._positionTypes.size(); i++) {
@@ -1329,7 +1346,7 @@ public class W3I {
                 }
             }
 
-            private void write_0x12(Wc3BinStream stream) {
+            private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
                 stream.writeInt(getChance());
 
                 for (int i = 0; i < _parent._positionTypes.size(); i++) {
@@ -1337,7 +1354,7 @@ public class W3I {
                 }
             }
 
-            private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+            private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 switch (format.toEnum()) {
                     case W3I_0x19:
                     case W3I_0x12: {
@@ -1348,7 +1365,7 @@ public class W3I {
                 }
             }
 
-            private void write(Wc3BinStream stream, EncodingFormat format) {
+            private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                 switch (format.toEnum()) {
                     case AUTO:
                     case W3I_0x19:
@@ -1360,7 +1377,7 @@ public class W3I {
                 }
             }
 
-            public Set(Wc3BinStream stream, EncodingFormat format, UnitTable parent) throws BinStream.StreamException {
+            public Set(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull UnitTable parent) throws BinInputStream.StreamException {
                 _parent = parent;
 
                 read(stream, format);
@@ -1385,7 +1402,7 @@ public class W3I {
             return set;
         }
 
-        private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x12(@Nonnull Wc3BinInputStream stream) throws Exception {
             setIndex(stream.readInt("index"));
 
             setName(stream.readString("name"));
@@ -1393,7 +1410,13 @@ public class W3I {
             int positionsCount = stream.readInt("posCount");
 
             for (int i = 0; i < positionsCount; i++) {
-                setPositionType(i, PositionType.valueOf(stream.readInt("posType")));
+                int posTypeI = stream.readInt("posType");
+
+                PositionType posType = PositionType.valueOf(posTypeI);
+
+                if (posType == null) throw new Exception(String.format("unknown type %x", posTypeI));
+
+                setPositionType(i, posType);
             }
 
             int setsCount = stream.readInt("setsCount");
@@ -1403,7 +1426,7 @@ public class W3I {
             }
         }
 
-        private void write_0x12(Wc3BinStream stream) {
+        private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             int positionsCount = _positionTypes.size();
 
             stream.writeInt(positionsCount);
@@ -1417,7 +1440,7 @@ public class W3I {
             }
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
             switch (format.toEnum()) {
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1428,7 +1451,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19:
@@ -1440,7 +1463,7 @@ public class W3I {
             }
         }
 
-        public UnitTable(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public UnitTable(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
             read(stream, format);
         }
 
@@ -1450,14 +1473,16 @@ public class W3I {
 
     private List<UnitTable> _unitTables = new ArrayList<>();
 
+    @Nonnull
     public List<UnitTable> getUnitTables() {
         return _unitTables;
     }
 
-    private void addUnitTable(UnitTable val) {
+    private void addUnitTable(@Nonnull UnitTable val) {
         _unitTables.add(val);
     }
 
+    @Nonnull
     public UnitTable addUnitTable() {
         UnitTable unitTable = new UnitTable();
 
@@ -1500,27 +1525,28 @@ public class W3I {
 
             private Id _id;
 
+            @Nonnull
             public Id getTypeId() {
                 return _id;
             }
 
-            public void setTypeId(Id val) {
+            public void setTypeId(@Nonnull Id val) {
                 _id = val;
             }
 
-            private void read_0x19(Wc3BinStream stream) throws BinStream.StreamException {
+            private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
                 setChance(stream.readInt("chance"));
 
                 setTypeId(stream.readId("typeId"));
             }
 
-            private void write_0x19(Wc3BinStream stream) {
+            private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
                 stream.writeInt(getChance());
 
                 stream.writeId(getTypeId());
             }
 
-            private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+            private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 switch (format.toEnum()) {
                     case W3I_0x19: {
                         read_0x19(stream);
@@ -1530,7 +1556,7 @@ public class W3I {
                 }
             }
 
-            private void write(Wc3BinStream stream, EncodingFormat format) {
+            private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                 switch (format.toEnum()) {
                     case AUTO:
                     case W3I_0x19: {
@@ -1541,7 +1567,7 @@ public class W3I {
                 }
             }
 
-            public Set(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+            public Set(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 read(stream, format);
             }
 
@@ -1551,10 +1577,11 @@ public class W3I {
 
         private List<Set> _sets = new ArrayList<>();
 
-        private void addSet(Set val) {
+        private void addSet(@Nonnull Set val) {
             _sets.add(val);
         }
 
+        @Nonnull
         public Set addSet() {
             Set set = new Set();
 
@@ -1563,7 +1590,7 @@ public class W3I {
             return set;
         }
 
-        private void read_0x19(Wc3BinStream stream) throws BinStream.StreamException {
+        private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setIndex(stream.readInt("index"));
 
             setName(stream.readString("name"));
@@ -1575,7 +1602,7 @@ public class W3I {
             }
         }
 
-        private void write_0x19(Wc3BinStream stream) {
+        private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
             stream.writeInt(getIndex());
 
             stream.writeString(getName());
@@ -1585,7 +1612,7 @@ public class W3I {
             }
         }
 
-        private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
                 case W3I_0x19: {
                     read_0x19(stream);
@@ -1595,7 +1622,7 @@ public class W3I {
             }
         }
 
-        private void write(Wc3BinStream stream, EncodingFormat format) {
+        private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
                 case W3I_0x19: {
@@ -1606,7 +1633,7 @@ public class W3I {
             }
         }
 
-        public ItemTable(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+        public ItemTable(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             read(stream, format);
         }
 
@@ -1616,14 +1643,16 @@ public class W3I {
 
     private List<ItemTable> _itemTables = new ArrayList<>();
 
+    @Nonnull
     public List<ItemTable> getItemTables() {
         return _itemTables;
     }
 
-    private void addItemTable(ItemTable val) {
+    private void addItemTable(@Nonnull ItemTable val) {
         _itemTables.add(val);
     }
 
+    @Nonnull
     public ItemTable addItemTable() {
         ItemTable itemTable = new ItemTable();
 
@@ -1632,7 +1661,7 @@ public class W3I {
         return itemTable;
     }
 
-    public void print(PrintStream outStream) {
+    public void print(@Nonnull PrintStream outStream) {
         outStream.println(String.format("savesAmount: %d", getSavesAmount()));
         outStream.println(String.format("editorVersion: %d", getEditorVersion()));
 
@@ -1642,7 +1671,7 @@ public class W3I {
         outStream.println(String.format("playersRecommended: %s", getPlayersRecommendedAmount()));
 
         outStream.println(String.format("camBounds: [%s,%s,%s,%s]", getCameraBounds1(), getCameraBounds2(), getCameraBounds3(), getCameraBounds4()));
-        outStream.println(String.format("margins: [left=%d right=%d bottom=%d top=%d]", getMarginLeft(), getMarginRight(), getMarginBottom(), getMarginTop()));
+        outStream.println(String.format("margins: %s", getMargins()));
         outStream.println(String.format("dimensions: [width=%d height=%d]", getWidth(), getHeight()));
 
         outStream.println(String.format("flags: %s", getFlags()));
@@ -1668,7 +1697,7 @@ public class W3I {
     }
 
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
-        enum Enum {
+        public enum Enum {
             AUTO,
             W3I_0x19,
             W3I_0x12,
@@ -1680,21 +1709,22 @@ public class W3I {
         public final static EncodingFormat W3I_0x19 = new EncodingFormat(Enum.W3I_0x19, 0x19);
         public final static EncodingFormat W3I_0x12 = new EncodingFormat(Enum.W3I_0x12, 0x12);
 
+        @Nullable
         public static EncodingFormat valueOf(int version) {
             return _map.get(version);
         }
 
-        private EncodingFormat(Enum enumVal, int version) {
+        private EncodingFormat(@Nonnull Enum enumVal, int version) {
             super(enumVal, version);
 
             _map.put(version, this);
         }
     }
 
-    private void read_0x12(Wc3BinStream stream) throws BinStream.StreamException {
+    private void read_0x12(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt("version");
 
-        Wc3BinStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3I_0x12.getVersion(), version);
+        Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3I_0x12.getVersion(), version);
 
         setSavesAmount(stream.readInt("savesAmount"));
         setEditorVersion(stream.readInt("editorVersion"));
@@ -1705,7 +1735,7 @@ public class W3I {
 
         setCameraBounds(new Coords2DF(stream.readFloat("camA"), stream.readFloat("camB")), new Coords2DF(stream.readFloat("camC"), stream.readFloat("camD")),
                 new Coords2DF(stream.readFloat("camE"), stream.readFloat("camF")), new Coords2DF(stream.readFloat("camG"), stream.readFloat("camH")));
-        setMargins(stream.readInt("marginA"), stream.readInt("marginB"), stream.readInt("marginC"), stream.readInt("marginD"));
+        setMargins(new Bounds(stream.readInt("marginA"), stream.readInt("marginB"), stream.readInt("marginC"), stream.readInt("marginD")));
 
         setDimensions(stream.readInt("width"), stream.readInt("height"));
 
@@ -1749,7 +1779,7 @@ public class W3I {
         }
     }
 
-    private void write_0x12(Wc3BinStream stream) {
+    private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
         stream.writeInt(EncodingFormat.W3I_0x12.getVersion());
 
         stream.writeInt(getSavesAmount());
@@ -1772,25 +1802,25 @@ public class W3I {
         stream.writeFloat(camBounds4.getX());
         stream.writeFloat(camBounds4.getY());
 
-        stream.writeInt(getMarginLeft());
-        stream.writeInt(getMarginRight());
-        stream.writeInt(getMarginBottom());
-        stream.writeInt(getMarginTop());
+        stream.writeInt(getMargins().getMinX());
+        stream.writeInt(getMargins().getMaxX());
+        stream.writeInt(getMargins().getMinY());
+        stream.writeInt(getMargins().getMaxY());
 
         stream.writeInt(getWidth());
         stream.writeInt(getHeight());
 
         stream.writeInt(getFlags().toInt());
 
-        stream.writeChar(getTileset().getVal());
+        stream.writeChar(getTileset().getChar());
 
         getLoadingScreen().write(stream, EncodingFormat.W3I_0x12);
 
         PrologueScreen prologueScreen = getPrologueScreen();
 
-        stream.writeString(prologueScreen.getText());
-        stream.writeString(prologueScreen.getTitle());
-        stream.writeString(prologueScreen.getSubtitle());
+        stream.writeString(prologueScreen != null ? prologueScreen.getText() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getTitle() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getSubtitle() : null);
 
         stream.writeInt(_players.size());
 
@@ -1821,12 +1851,18 @@ public class W3I {
         for (UnitTable unitTable : _unitTables) {
             unitTable.write(stream, EncodingFormat.W3I_0x12);
         }
+
+        stream.writeInt(_itemTables.size());
+
+        for (ItemTable itemTable : _itemTables) {
+            itemTable.write(stream, EncodingFormat.W3I_0x12);
+        }
     }
 
-    private void read_0x19(Wc3BinStream stream) throws BinStream.StreamException {
-        setFileVersion(stream.readInt("version"));
+    private void read_0x19(@Nonnull Wc3BinInputStream stream) throws Exception {
+        int version = stream.readInt("version");
 
-        Wc3BinStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3I_0x19.getVersion(), getFileVersion());
+        Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3I_0x19.getVersion(), version);
 
         setSavesAmount(stream.readInt("savesAmount"));
         setEditorVersion(stream.readInt("editorVersion"));
@@ -1847,7 +1883,7 @@ public class W3I {
                 new Coords2DF(stream.readFloat("camG"),
                         stream.readFloat("camH")
                 ));
-        setMargins(stream.readInt("marginA"), stream.readInt("marginB"), stream.readInt("marginC"), stream.readInt("marginD"));
+        setMargins(new Bounds(stream.readInt("marginA"), stream.readInt("marginB"), stream.readInt("marginC"), stream.readInt("marginD")));
 
         setDimensions(stream.readInt("width"), stream.readInt("height"));
 
@@ -1868,9 +1904,9 @@ public class W3I {
 
         setTerrainFog(new TerrainFog(
                 TerrainFogType.valueOf(stream.readInt("terrainFogType")),
-                stream.readFloat("terrainFogZHeightStart"),
-                stream.readFloat("terrainFogZHeightEnd"),
-                stream.readFloat("terrainFogDensity"),
+                stream.readReal("terrainFogZHeightStart"),
+                stream.readReal("terrainFogZHeightEnd"),
+                stream.readReal("terrainFogDensity"),
                 Color.fromRGBA255(
                         stream.readUByte("terrainFogRed"),
                         stream.readUByte("terrainFogGreen"),
@@ -1878,9 +1914,9 @@ public class W3I {
                         stream.readUByte("terrainFogAlpha"))
         ));
 
-        setGlobalWeatherId(stream.readId("globalWeatherId"));
-        setSoundEnv(stream.readString("soundEnv"));
-        setTilesetLightEnv(stream.readChar("tilesetLightEnv"));
+        setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
+        setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
+        setTilesetLightEnv(Tileset.valueOf(stream.readChar("tilesetLightEnv")));
 
         setWaterColor(Color.fromRGBA255(
                 stream.readUByte("waterRed"),
@@ -1905,13 +1941,11 @@ public class W3I {
 
         if (stream.eof()) return;
 
-        if (stream.readByte() == 0xFF) return;
+        if (stream.readUByte() == 0xFF) return;
 
         stream.rewind(1);
 
-        int upgradeModsCount = 0;
-
-        upgradeModsCount = stream.readInt("upgradeModsCount");
+        int upgradeModsCount = stream.readInt("upgradeModsCount");
 
         for (int i = 0; i < upgradeModsCount; i++) {
             addUpgradeMod(new UpgradeMod(stream, EncodingFormat.W3I_0x19));
@@ -1932,9 +1966,17 @@ public class W3I {
         for (int i = 0; i < unitTablesCount; i++) {
             addUnitTable(new UnitTable(stream, EncodingFormat.W3I_0x19));
         }
+
+        if (stream.eof()) return;
+
+        int itemTablesCount = stream.readInt("itemTablesCount");
+
+        for (int i = 0; i < itemTablesCount; i++) {
+            addItemTable(new ItemTable(stream, EncodingFormat.W3I_0x19));
+        }
     }
 
-    private void write_0x19(Wc3BinStream stream) {
+    private void write_0x19(Wc3BinOutputStream stream) {
         stream.writeInt(EncodingFormat.W3I_0x19.getVersion());
 
         stream.writeInt(getSavesAmount());
@@ -1958,17 +2000,17 @@ public class W3I {
         stream.writeFloat(camBounds4.getX());
         stream.writeFloat(camBounds4.getY());
 
-        stream.writeInt(getMarginLeft());
-        stream.writeInt(getMarginRight());
-        stream.writeInt(getMarginBottom());
-        stream.writeInt(getMarginTop());
+        stream.writeInt(getMargins().getMinX());
+        stream.writeInt(getMargins().getMaxX());
+        stream.writeInt(getMargins().getMinY());
+        stream.writeInt(getMargins().getMaxY());
 
         stream.writeInt(getWidth());
         stream.writeInt(getHeight());
 
         stream.writeInt(getFlags().toInt());
 
-        stream.writeChar(getTileset().getVal());
+        stream.writeChar(getTileset().getChar());
 
         getLoadingScreen().write(stream, EncodingFormat.W3I_0x19);
 
@@ -1976,28 +2018,28 @@ public class W3I {
 
         PrologueScreen prologueScreen = getPrologueScreen();
 
-        stream.writeString(prologueScreen.getPath());
-        stream.writeString(prologueScreen.getText());
-        stream.writeString(prologueScreen.getTitle());
-        stream.writeString(prologueScreen.getSubtitle());
+        stream.writeString(prologueScreen != null ? prologueScreen.getPath() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getText() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getTitle() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getSubtitle() : null);
 
         TerrainFog terrainFog = getTerrainFog();
 
-        stream.writeInt(terrainFog.getType());
-        stream.writeFloat(terrainFog.getZStart());
-        stream.writeFloat(terrainFog.getZEnd());
-        stream.writeFloat(terrainFog.getDensity());
+        stream.writeInt(terrainFog != null ? terrainFog.getType() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getZStart() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getDensity() : null);
 
-        Color terrainFogColor = terrainFog.getColor();
+        Color terrainFogColor = (terrainFog != null) ? terrainFog.getColor() : null;
 
-        stream.writeUByte(terrainFogColor.getRed());
-        stream.writeUByte(terrainFogColor.getGreen());
-        stream.writeUByte(terrainFogColor.getBlue());
-        stream.writeUByte(terrainFogColor.getAlpha());
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha() : 0x00);
 
         stream.writeId(getGlobalWeatherId());
         stream.writeString(getSoundEnv());
-        stream.writeChar(getTilesetLightEnv());
+        stream.writeChar(getTilesetLightEnv() != null ? getTilesetLightEnv().getChar() : null);
 
         Color waterColor = getWaterColor();
 
@@ -2037,17 +2079,19 @@ public class W3I {
         }
     }
 
-    private void read_auto(Wc3BinStream stream) throws Exception {
+    private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt("version");
         System.out.println("Detected version: " + version);
         stream.rewind();
 
-        read(stream, EncodingFormat.valueOf(version));
+        EncodingFormat format = EncodingFormat.valueOf(version);
+
+        if (format == null) throw new Exception(String.format("unknown format %x", version));
+
+        read(stream, format);
     }
 
-    private void read(Wc3BinStream stream, EncodingFormat format) throws Exception {
-        if (format == null) throw new Exception("no format");
-
+    private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
         switch (format.toEnum()) {
             case AUTO:
                 read_auto(stream);
@@ -2061,12 +2105,9 @@ public class W3I {
         }
     }
 
-    private void write(Wc3BinStream stream, EncodingFormat format) {
+    private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
         switch (format.toEnum()) {
             case AUTO:
-                EncodingFormat encodingFormat = EncodingFormat.valueOf(getFileVersion());
-                write(stream, encodingFormat);
-                break;
             case W3I_0x19: {
                 write_0x19(stream);
 
@@ -2080,55 +2121,31 @@ public class W3I {
         }
     }
 
-    private void read(Wc3BinStream stream) throws Exception {
+    private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
         read(stream, EncodingFormat.AUTO);
     }
 
-    private void write(Wc3BinStream stream) {
+    private void write(@Nonnull Wc3BinOutputStream stream) {
         write(stream, EncodingFormat.AUTO);
     }
 
-    private void read(File file, EncodingFormat format) throws Exception {
-        read(new Wc3BinStream(file), format);
-    }
-
-    private void write(File file, EncodingFormat format) throws IOException {
-        write(new Wc3BinStream(file), format);
-    }
-
-    private void read(InputStream inStream) throws Exception {
-        read(new Wc3BinStream(inStream), EncodingFormat.AUTO);
-    }
-
-    private void read(File file) throws Exception {
-        read(file, EncodingFormat.AUTO);
-    }
-
-    public void write(File file) throws IOException {
-        Wc3BinStream outStream = new Wc3BinStream();
+    public void write(@Nonnull File file) throws IOException {
+        Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 
         write(outStream);
 
-        outStream.writeTo(file);
+        outStream.close();
     }
 
     public W3I() {
 
     }
 
-    public W3I(InputStream inStream) throws Exception {
-        read(inStream);
+    public W3I(@Nonnull File file) throws Exception {
+        read(new Wc3BinInputStream(file));
     }
 
-    public W3I(File inFile) throws Exception {
-        InputStream inStream = new FileInputStream(inFile);
-
-        read(inStream);
-
-        inStream.close();
-    }
-
-    public static W3I ofMapFile(File mapFile) throws Exception {
+    public static W3I ofMapFile(@Nonnull File mapFile) throws Exception {
         Orient.checkFileExists(mapFile);
 
         MpqPort.Out port = new JMpqPort.Out();
@@ -2139,9 +2156,10 @@ public class W3I {
 
         if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract info file");
 
-        InputStream inStream = portResult.getInputStream(GAME_PATH);
+        W3I w3i = new W3I();
 
-        return new W3I(inStream);
+        w3i.read(new Wc3BinInputStream(GAME_PATH));
+
+        return w3i;
     }
-
 }

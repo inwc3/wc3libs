@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.app;
 import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -455,7 +456,11 @@ public class ObjMerger {
 
             File outFile = new File(outDir, inFile.toString());
 
-            objMod.write(outFile, isObjModFileExtended(inFile));
+            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
+
+            objMod.write(outStream, isObjModFileExtended(inFile));
+
+            outStream.close();
 
             portIn.add(outFile, inFile);
         }

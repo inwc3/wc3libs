@@ -187,7 +187,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		}
 	}
 	
-	//private Map<AbilId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<AbilId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<AbilId, Obj> getObjs() {

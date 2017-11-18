@@ -1,9 +1,12 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Tileset extends Char {
+public class Tileset extends DataType {
 	private static Map<Character, Tileset> _map = new LinkedHashMap<>();
 	
 	public final static Tileset ASHENVALE = new Tileset('A', "ASHENVALE");
@@ -33,10 +36,17 @@ public class Tileset extends Char {
 	public String toString() {
 		return _label;
 	}
-	
-	private Tileset(char val, String label) {
-		super(val);
-		
+
+	private Char _char;
+
+	@Nonnull
+	public Char getChar() {
+		return _char;
+	}
+
+	private Tileset(char val, @Nonnull String label) {
+		_char = Char.valueOf(val);
+
 		_map.put(val, this);
 		
 		_label = String.format("WESTRING_LOCALE_%s", label);
@@ -49,5 +59,15 @@ public class Tileset extends Char {
 	@Override
 	public Tileset decode(Object val) {
 		return valueOf(val.toString().charAt(0));
+	}
+
+	@Override
+	public Object toSLKVal() {
+		return _char;
+	}
+
+	@Override
+	public Object toTXTVal() {
+		return _char;
 	}
 }

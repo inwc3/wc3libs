@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -11,6 +12,7 @@ import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,11 +135,7 @@ public class W3B extends ObjMod {
 		return Collections.singletonList(DestructableSLK.GAME_USE_PATH);
 	}
 	
-	public W3B(InputStream inStream) throws IOException {
-		super(inStream, false);
-	}
-	
-	public W3B(File file) throws Exception {
+	public W3B(@Nonnull File file) throws Exception {
 		super(file, false);
 	}
 	
@@ -156,8 +154,14 @@ public class W3B extends ObjMod {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3b file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
-		
-		return new W3B(inStream);
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3B w3b = new W3B();
+
+		w3b.read(inStream, false);
+
+		inStream.close();
+
+		return w3b;
 	}
 }

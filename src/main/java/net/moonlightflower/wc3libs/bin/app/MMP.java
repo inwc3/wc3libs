@@ -3,9 +3,10 @@ package net.moonlightflower.wc3libs.bin.app;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import net.moonlightflower.wc3libs.bin.BinStream;
+import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
@@ -14,8 +15,9 @@ import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -24,7 +26,7 @@ public class MMP {
 	public final static File GAME_PATH = new File("war3map.mmp");
 	
 	public static class Icon {
-		enum IconType {			
+		public enum IconType {
 			//GOLD_MINE(0x0, new File("UI\\MiniMap\\MiniMapIcon\\MinimapIconGold.blp")),
 			GOLD_MINE(0x0, new File("UI\\MiniMap\\minimap-gold.blp")),
 			//HOUSE(0x1, new File("UI\\MiniMap\\MiniMapIcon\\MinimapIconNeutralBuilding.blp")),
@@ -62,12 +64,13 @@ public class MMP {
 		}
 		
 		private IconType _type = IconType.GOLD_MINE;
-		
+
+		@Nonnull
 		public IconType getType() {
 			return _type;
 		}
 		
-		public void setType(IconType val) {
+		public void setType(@Nonnull IconType val) {
 			_type = val;
 		}
 		
@@ -82,16 +85,17 @@ public class MMP {
 		}
 		
 		private Color _color = Color.fromBGRA255(0, 0, 0, 0);
-		
+
+		@Nullable
 		public Color getColor() {
 			return _color;
 		}
 		
-		public void setColor(Color val) {
+		public void setColor(@Nullable Color val) {
 			_color = val;
 		}
 
-		public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setType(IconType.valueOf(stream.readInt()));
 			
 			setCoords(new Coords2DI(stream.readInt(), stream.readInt()));
@@ -108,7 +112,7 @@ public class MMP {
 			}
 		}
 		
-		public void write_0x0(Wc3BinStream stream) {
+		private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeInt(getType().getVal());
 			
 			Coords2DI coords = getCoords();
@@ -131,7 +135,7 @@ public class MMP {
 			}
 		}
 		
-		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case MMP_0x0: {
 				read_0x0(stream);
@@ -141,7 +145,7 @@ public class MMP {
 			}
 		}
 		
-		public void write(Wc3BinStream stream, EncodingFormat format) {
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case MMP_0x0: {
@@ -152,7 +156,7 @@ public class MMP {
 			}
 		}
 		
-		public Icon(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public Icon(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -161,11 +165,13 @@ public class MMP {
 	}
 	
 	private List<Icon> _icons = new ArrayList<>();
-	
+
+	@Nonnull
 	public List<Icon> getIcons() {
 		return _icons;
 	}
-	
+
+	@Nonnull
 	public Icon addIcon() {
 		Icon icon = new Icon();
 		
@@ -179,7 +185,7 @@ public class MMP {
 		public int _height;
 		public int[] _pxBuf;
 		
-		public IconImg(InputStream inStream) throws UnsupportedFormatException {			
+		public IconImg(@Nonnull InputStream inStream) throws UnsupportedFormatException {
 			javafx.scene.image.Image fxImg = new BLP(inStream).getFXImg();
 			
 			javafx.scene.image.PixelReader pxReader = fxImg.getPixelReader();
@@ -196,7 +202,8 @@ public class MMP {
 			_pxBuf = pxBuf;
 		}
 	}
-	
+
+	@Nonnull
 	public javafx.scene.image.Image toFXImg() throws Exception {
 		WritableImage img = new WritableImage(256, 256);
 		
@@ -274,12 +281,13 @@ public class MMP {
 		return img;
 	}
 
+	@Nonnull
 	public Wc3RasterImg toImg() throws Exception {
 		return new Wc3RasterImg(toFXImg());
 	}
 
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
+		public enum Enum {
 			AUTO,
 			MMP_0x0,
 		}
@@ -288,19 +296,20 @@ public class MMP {
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat MMP_0x0 = new EncodingFormat(Enum.MMP_0x0, 0x0);
-		
+
+		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
 		}
 	}
 
-	private void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int unknown = stream.readInt(); //most probably format
 		
 		int iconsCount = stream.readInt();
@@ -312,7 +321,7 @@ public class MMP {
 		}
 	}
 	
-	private void write_0x0(Wc3BinStream stream) {
+	private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeInt(0x0);
 		
 		stream.writeInt(_icons.size());
@@ -322,15 +331,19 @@ public class MMP {
 		}
 	}
 	
-	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
 		int version = stream.readInt();
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new Exception(String.format("unknown format %x", version));
+
+		read(stream, format);
 	}
 	
-	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -345,7 +358,7 @@ public class MMP {
 		}
 	}
 	
-	private void write(Wc3BinStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case MMP_0x0: {
@@ -356,50 +369,26 @@ public class MMP {
 		}
 	}
 	
-	private void read(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Wc3BinStream stream) {
+	private void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
-	}
-	
-	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3BinStream(file), format);
-	}
-	
-	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3BinStream(file), format);
-	}
-	
-	private void read(InputStream inStream) throws Exception {
-		read(new Wc3BinStream(inStream), EncodingFormat.AUTO);
-	}
-	
-	private void read(File file) throws IOException {
-		read(file, EncodingFormat.AUTO);
-	}
-
-	private void write(File file) throws IOException {
-		write(new Wc3BinStream(file));
 	}
 	
 	public MMP() {
 	}
 	
-	public MMP(InputStream inStream) throws Exception {
+	public MMP(@Nonnull File file) throws Exception {
+		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
+
 		read(inStream);
-	}
-	
-	public MMP(File inFile) throws Exception {
-		InputStream inStream = new FileInputStream(inFile);
-		
-		read(inStream);
-		
+
 		inStream.close();
 	}
 
-	public static MMP ofMapFile(File mapFile) throws Exception {
+	public static MMP ofMapFile(@Nonnull File mapFile) throws Exception {
 		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(GAME_PATH);
@@ -408,8 +397,10 @@ public class MMP {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract info file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
+		MMP mmp = new MMP();
+
+		mmp.read(new Wc3BinInputStream(portResult.getInputStream(GAME_PATH)));
 		
-		return new MMP(inStream);
+		return mmp;
 	}
 }

@@ -99,25 +99,25 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 		}
 	}
 	
-	//private Map<UnitId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<UnitId, Camera> _objs = new LinkedHashMap<>();
 	
 	/*@Override
-	public Map<UnitId, Obj> getObjs() {
+	public Map<UnitId, Camera> getCameras() {
 		return _objs;
 	}
 	
 	@Override
-	public void addObj(Obj val) {
+	public void addCamera(Camera val) {
 		_objs.put(val.getId(), val);
 	}
 	
 	@Override
-	public Obj addObj(UnitId id) {
+	public Camera addCamera(UnitId id) {
 		if (_objs.containsKey(id)) return _objs.get(id);
 		
-		Obj obj = new Obj(id);
+		Camera obj = new Camera(id);
 		
-		addObj(obj);
+		addCamera(obj);
 		
 		return obj;
 	}*/

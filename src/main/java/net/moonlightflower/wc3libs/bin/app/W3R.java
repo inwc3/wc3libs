@@ -1,11 +1,11 @@
 package net.moonlightflower.wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.*;
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,14 +27,6 @@ public class W3R {
 				return _values;
 			}
 			
-			/*public T get() {
-				return Rect.this.get(this);
-			}
-			
-			public void set(T val) {
-				Rect.this.set(this, val);
-			}*/
-			
 			public State(DataTypeInfo typeInfo, String idString, T defVal) {
 				super(typeInfo, idString, defVal);
 				
@@ -54,24 +46,59 @@ public class W3R {
 			}
 		}
 		
-		public final static State<Color> ART_COLOR = new State<>(Color.class, "color");
-		public final static State<WeatherId> ART_WEATHER = new State<>(WeatherId.class, "weather");
+		public final static State<Color> ART_COLOR = new State<>(Color.class, "color", Color.fromBGR255(255, 255, 255));
+		public final static State<WeatherId> ART_WEATHER = new State<>(WeatherId.class, "weather", null);
 		
-		public final static State<Bounds> DATA_BOUNDS = new State<>(Bounds.class, "bounds");
-		public final static State<Int> DATA_INDEX = new State<>(Int.class, "index");
+		public final static State<Bounds> DATA_BOUNDS = new State<>(Bounds.class, "bounds", new Bounds(0, 0, 0, 0));
+		public final static State<Int> DATA_INDEX = new State<>(Int.class, "index", Int.valueOf(0));
 		
-		public final static State<SoundLabel> SOUND_LABEL = new State<>(SoundLabel.class, "sound");
+		public final static State<SoundLabel> SOUND_LABEL = new State<>(SoundLabel.class, "sound", SoundLabel.valueOf("sound"));
 		
-		public final static State<Wc3String> TEXT_NAME = new State<>(Wc3String.class, "name");
-		
+		public final static State<Wc3String> TEXT_NAME = new State<>(Wc3String.class, "name", Wc3String.valueOf("unnamed"));
+
+		public <T extends DataType> T get(State<T> state) {
+			return state.tryCastVal(super.get(state));
+		}
+
+		public <T extends DataType> void set(State<T> state, T val) {
+			super.set(state, val);
+		}
+
+		public <T extends DataType> void reset(State<T> state) {
+			super.set(state, state.getDefVal());
+		}
+
+		public void init() {
+			for (State<?> state : State.values()) {
+				set(state, state.getDefVal());
+			}
+		}
+
+		@Nonnull()
 		public Bounds getBounds() {
-			return get(DATA_BOUNDS);
+			return get(DATA_BOUNDS) != null ? get(DATA_BOUNDS) : DATA_BOUNDS.getDefVal();
 		}
 		
-		public void setBounds(Bounds val) {
+		public void setBounds(@Nonnull Bounds val) {
 			set(DATA_BOUNDS, val);
 		}
-		
+
+		public Color getColor() {
+			return get(ART_COLOR);
+		}
+
+		public void setColor(Color val) {
+			set(ART_COLOR, val);
+		}
+
+		public Int getIndex() {
+			return get(DATA_INDEX);
+		}
+
+		public void setIndex(Int val) {
+			set(DATA_INDEX, val);
+		}
+
 		public Wc3String getName() {
 			return get(TEXT_NAME);
 		}
@@ -80,19 +107,25 @@ public class W3R {
 			set(TEXT_NAME, val);
 		}
 
-		public <T extends DataType> T get(State<T> state) {
-			return state.tryCastVal(super.get(state));
+		public SoundLabel getSound() {
+			return get(SOUND_LABEL);
 		}
-		
-		public <T extends DataType> void set(State<T> state, T val) {
-			super.set(state, val);
+
+		public void setSound(SoundLabel val) {
+			set(SOUND_LABEL, val);
 		}
-		
-		public <T extends DataType> void remove(State<T> state) {
-			super.set(state, null);
+
+		public WeatherId getWeather() {
+			return get(ART_WEATHER);
 		}
-		
-		public void read_0x5(Wc3BinStream stream) throws BinStream.StreamException {
+
+		public void setWeather(WeatherId val) {
+			set(ART_WEATHER, val);
+		}
+
+		public WeatherId NULL_WEATHER_ID = WeatherId.valueOf("0000");
+
+		public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			float minX = stream.readFloat();
 			float minY = stream.readFloat();
 			float maxX = stream.readFloat();
@@ -104,35 +137,29 @@ public class W3R {
 			
 			WeatherId weatherId = WeatherId.valueOf(stream.readId());
 			
-			set(ART_WEATHER, !weatherId.equals(WeatherId.valueOf("0000")) ? weatherId : null);
+			set(ART_WEATHER, !weatherId.equals(NULL_WEATHER_ID) ? weatherId : null);
 			set(SOUND_LABEL, SoundLabel.valueOf(stream.readString()));
 			set(ART_COLOR, Color.fromRGB255(stream.readUByte(), stream.readUByte(), stream.readUByte()));
 			
 			int endToken = stream.readUByte();
 		}
 
-		public void write_0x5(Wc3BinStream stream) {
-			//Bounds bounds = getBounds();
+		public void write_0x5(@Nonnull Wc3BinOutputStream stream) {
 			Bounds bounds = get(DATA_BOUNDS);
 			
-			stream.writeFloat(bounds.getMinX());
-			stream.writeFloat(bounds.getMinY());
-			stream.writeFloat(bounds.getMaxX());
-			stream.writeFloat(bounds.getMaxY());
-			
-			//stream.writeString(_name);
+			stream.writeReal(Real.valueOf(bounds.getMinX()));
+			stream.writeReal(Real.valueOf(bounds.getMinY()));
+			stream.writeReal(Real.valueOf(bounds.getMaxX()));
+			stream.writeReal(Real.valueOf(bounds.getMaxY()));
+
 			stream.writeString(get(TEXT_NAME));
 
-			//stream.writeInt(_index);
 			stream.writeInt(get(DATA_INDEX));
 
-			//stream.writeId(_weather);
-			stream.writeId(get(ART_WEATHER) != null ? get(ART_WEATHER) : WeatherId.valueOf("0000"));
-			//stream.writeString(_sound);
-			System.out.println("write " + get(SOUND_LABEL));
+			stream.writeId(get(ART_WEATHER) != null ? get(ART_WEATHER) : NULL_WEATHER_ID);
+
 			stream.writeString(get(SOUND_LABEL));
-			
-			//Color color = _color;
+
 			Color color = get(ART_COLOR);
 			
 			stream.writeUByte(color.getBlue());
@@ -142,7 +169,7 @@ public class W3R {
 			stream.writeUByte(0); //endToken
 		}
 
-		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case W3R_0x5:
 				read_0x5(stream);
@@ -151,7 +178,7 @@ public class W3R {
 			}
 		}
 		
-		public void write(Wc3BinStream stream, EncodingFormat format) {
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case W3R_0x5:
@@ -161,40 +188,31 @@ public class W3R {
 			}
 		}
 		
-		public Rect(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public Rect(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			this();
 			
 			read(stream, format);
 		}
 		
 		public Rect() {
-			set(DATA_BOUNDS, new Bounds(0, 0, 0, 0));
-			System.out.println("set " + get(DATA_BOUNDS));
-			set(TEXT_NAME, Wc3String.valueOf("unnamed"));
-			set(DATA_INDEX, Int.valueOf(0));
-			set(ART_WEATHER, null);
-			set(SOUND_LABEL, SoundLabel.valueOf("sound"));
-			set(ART_COLOR, Color.fromBGR255(255, 255, 255));
+			init();
 		}
 		
-		public Rect(Bounds bounds) {
+		public Rect(@Nonnull Bounds bounds) {
 			this();
 			
 			set(DATA_BOUNDS, bounds);
 		}
-		
-		public Rect(int minX, int minY, int maxX, int maxY) {
-			this(new Bounds(minX, minY, maxX, maxY));
-		}
 	}
 	
 	private List<Rect> _rects = new ArrayList<>();
-	
+
+	@Nonnull
 	public List<Rect> getRects() {
 		return new ArrayList<>(_rects);
 	}
 	
-	private void addRect(Rect val) {
+	private void addRect(@Nonnull Rect val) {
 		_rects.add(val);
 	}
 	
@@ -206,7 +224,7 @@ public class W3R {
 		return rect;
 	}
 	
-	public Rect addRect(Bounds bounds) {
+	public Rect addRect(@Nonnull Bounds bounds) {
 		Rect rect = addRect();
 
 		rect.setBounds(bounds);
@@ -214,17 +232,13 @@ public class W3R {
 		return rect;
 	}
 	
-	public Rect addRect(int minX, int minY, int maxX, int maxY) {
-		return addRect(new Bounds(minX, minY, maxX, maxY));
-	}
-	
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
+		public enum Enum {
 			AUTO,
 			W3R_0x5
 		}
 
-		static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3R_0x5 = new EncodingFormat(Enum.W3R_0x5, 0x5);
@@ -233,17 +247,17 @@ public class W3R {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
 		}
 	}
 
-	public void read_0x5(Wc3BinStream stream) throws BinStream.StreamException {
+	public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int format = stream.readInt();
 
-		Wc3BinStream.checkFormatVer("rectMaskFunc", EncodingFormat.W3R_0x5.getVersion(), format);
+		Wc3BinInputStream.checkFormatVer("rectMaskFunc", EncodingFormat.W3R_0x5.getVersion(), format);
 
 		int rectsCount = stream.readInt();
 
@@ -252,7 +266,7 @@ public class W3R {
 		}
 	}
 
-	public void write_0x5(Wc3BinStream stream) {
+	public void write_0x5(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeInt(EncodingFormat.W3R_0x5.getVersion());
 		
 		stream.writeInt(_rects.size());
@@ -262,7 +276,7 @@ public class W3R {
 		}
 	}
 	
-	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt();
 		
 		stream.rewind();
@@ -270,7 +284,7 @@ public class W3R {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 
-	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -285,7 +299,7 @@ public class W3R {
 		}
 	}
 	
-	private void write(Wc3BinStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case W3R_0x5: {
@@ -296,38 +310,42 @@ public class W3R {
 		}
 	}
 	
-	private void read(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Wc3BinStream stream) {
+	private void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
-	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3BinStream(file), format);
+	private void read(@Nonnull File file, @Nonnull EncodingFormat format) throws IOException {
+		read(new Wc3BinInputStream(file), format);
 	}
 	
-	public void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3BinStream(file), format);
+	public void write(@Nonnull File file, @Nonnull EncodingFormat format) throws IOException {
+		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
+
+		write(outStream, format);
+
+		outStream.close();
 	}
 	
-	private void read(File file) throws IOException {
+	private void read(@Nonnull File file) throws IOException {
 		read(file, EncodingFormat.AUTO);
 	}
 
-	public void write(File file) throws IOException {
-		write(new Wc3BinStream(file));
+	public void write(@Nonnull File file) throws IOException {
+		write(new Wc3BinOutputStream(file));
 	}
 	
 	public W3R() {
 	}
 	
-	public W3R(Wc3BinStream stream) throws StreamException {
+	public W3R(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
 		read(stream);
 	}
 	
-	public W3R(File file) throws IOException {
+	public W3R(@Nonnull File file) throws IOException {
 		read(file);
 	}
 }

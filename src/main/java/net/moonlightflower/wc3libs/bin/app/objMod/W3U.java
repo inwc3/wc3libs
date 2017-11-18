@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -311,29 +312,29 @@ public class W3U extends ObjMod {
 	/*private Map<ObjId, Unit> _objs = new LinkedHashMap<>();
 
 	@Override
-	public Map<ObjId, Unit> getObjs() {
+	public Map<ObjId, Unit> getCameras() {
 		return _objs;
 	}
 	
 	public Map<ObjId, Unit> getUnits() {
-		return getObjs();
+		return getCameras();
 	}
 	
 	public Unit getUnit(ObjId id) {
-		return getObjs().get(id);
+		return getCameras().get(id);
 	}
 	
-	private void addObj(Unit val) {
+	private void addCamera(Unit val) {
 		_objs.put(val.getId(), val);
 	}
 	
 	@Override
-	public Unit addObj(ObjId id, ObjId baseId) {
-		if (getObjs().containsKey(id)) return getObjs().get(id);
+	public Unit addCamera(ObjId id, ObjId baseId) {
+		if (getCameras().containsKey(id)) return getCameras().get(id);
 		
 		Unit obj = new Unit(id, baseId);
 		
-		addObj(obj);
+		addCamera(obj);
 		
 		return obj;
 	}*/
@@ -356,10 +357,6 @@ public class W3U extends ObjMod {
 		merge(other);
 	}
 	
-	public W3U(InputStream inStream) throws IOException {
-		super(inStream, false);
-	}
-	
 	public W3U(File file) throws Exception {
 		super(file, false);
 	}
@@ -379,8 +376,14 @@ public class W3U extends ObjMod {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3u file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
-		
-		return new W3U(inStream);
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3U w3u = new W3U();
+
+		w3u.read(inStream, false);
+
+		inStream.close();
+
+		return w3u;
 	}
 }

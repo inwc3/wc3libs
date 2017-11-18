@@ -42,7 +42,7 @@ public class RawSLK extends SLK<RawSLK, ObjId, RawSLK.Obj> {
 	}
 	
 	/*@Override
-	public SLK<RawSLK, ObjId, Obj> toSlk() {
+	public SLK<RawSLK, ObjId, Camera> toSlk() {
 		return this;
 	}*/
 }

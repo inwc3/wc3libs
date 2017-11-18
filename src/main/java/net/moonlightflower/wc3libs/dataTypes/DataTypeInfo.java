@@ -62,7 +62,8 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 			} else {
 				Method c = type.getDeclaredMethod("decodeStatic", Object.class);
 
-				if (c == null) return null;
+				assert (c != null) : "decodeStatic not defined on " + type;
+				//if (c == null) return null;
 				
 				return ((DataType) c.invoke(null, val));
 				//return type.newInstance().decode(val);

@@ -2,12 +2,7 @@ package net.moonlightflower.wc3libs.bin;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Vector;
@@ -16,11 +11,10 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
 import net.moonlightflower.wc3libs.misc.Id;
 
 public class Packed {
-	public static Wc3BinStream compress(Wc3BinStream inStream) throws StreamException {
+	public static Wc3BinOutputStream compress(Wc3BinInputStream inStream) throws BinStream.StreamException {
 		//deflate
 		Vector<byte[]> blocks = new Vector<>();
 		Vector<byte[]> uncompressedBlocks = new Vector<>();
@@ -49,7 +43,7 @@ public class Packed {
 		}
 		
 		//write
-		Wc3BinStream outStream = new Wc3BinStream();
+		Wc3BinOutputStream outStream = new Wc3BinOutputStream(new ByteArrayOutputStream());
 		
 		String startTokenS = "Warcraft III recorded game \0x1A";
 		
@@ -97,7 +91,7 @@ public class Packed {
 		return outStream;
 	}
 	
-	public static Wc3BinStream decompress(Wc3BinStream inStream) throws StreamException {
+	public static Wc3BinInputStream decompress(Wc3BinInputStream inStream) throws BinStream.StreamException {
 		byte[] startToken = inStream.readBytes(28);
 		
 		long headerSize = inStream.readUInt();
@@ -190,7 +184,7 @@ public class Packed {
 			
 			outStream.close();
 			
-			return new Wc3BinStream(new ByteArrayInputStream(outStream.toByteArray()));
+			return new Wc3BinInputStream(new ByteArrayInputStream(outStream.toByteArray()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

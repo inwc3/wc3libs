@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -115,10 +116,6 @@ public class W3Q extends ObjMod {
 		return Collections.singletonList(UpgradeSLK.GAME_USE_PATH);
 	}
 	
-	public W3Q(InputStream inStream) throws IOException {
-		super(inStream, true);
-	}
-	
 	public W3Q(File file) throws Exception {
 		super(file, true);
 	}
@@ -138,8 +135,14 @@ public class W3Q extends ObjMod {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3q file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
-		
-		return new W3Q(inStream);
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3Q w3q = new W3Q();
+
+		w3q.read(inStream, true);
+
+		inStream.close();
+
+		return w3q;
 	}
 }

@@ -3,14 +3,13 @@ import net.moonlightflower.wc3libs.bin.app.W3I;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import Wc3LibTest;
+import wc3libs.misc.Wc3LibTest;
 
 import java.io.File;
 import java.util.Arrays;
 
 public class W3ITest extends Wc3LibTest {
-
-    @Test
+    @Test()
     public void testRebuild() throws Exception {
         W3I w3I = new W3I(getFile("war3map.w3i"));
 
@@ -23,10 +22,7 @@ public class W3ITest extends Wc3LibTest {
 
         Assert.assertEquals(w3I2.getHeight(), w3I.getHeight());
         Assert.assertEquals(w3I2.getWidth(), w3I.getWidth());
-        Assert.assertEquals(w3I2.getMarginBottom(), w3I.getMarginBottom());
-        Assert.assertEquals(w3I2.getMarginTop(), w3I.getMarginTop());
-        Assert.assertEquals(w3I2.getMarginLeft(), w3I.getMarginLeft());
-        Assert.assertEquals(w3I2.getMarginRight(), w3I.getMarginRight());
+        Assert.assertEquals(w3I2.getMargins(), w3I.getMargins());
         Assert.assertEquals(Arrays.toString(w3I2.getPlayers().toArray()), Arrays.toString(w3I.getPlayers().toArray()));
         Assert.assertEquals(w3I2.getPrologueScreen().toString(), w3I.getPrologueScreen().toString());
         Assert.assertEquals(w3I2.getLoadingScreen().toString(), w3I.getLoadingScreen().toString());

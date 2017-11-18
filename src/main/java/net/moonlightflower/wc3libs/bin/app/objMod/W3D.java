@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -113,10 +114,6 @@ public class W3D extends ObjMod {
 	public Collection<File> getNecessarySLKs() {
 		return Collections.singletonList(DoodSLK.GAME_USE_PATH);
 	}
-
-	public W3D(InputStream inStream) throws IOException {
-		super(inStream, true);
-	}
 	
 	public W3D(File file) throws Exception {
 		super(file, true);
@@ -137,8 +134,14 @@ public class W3D extends ObjMod {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3d file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
-		
-		return new W3D(inStream);
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3D w3d = new W3D();
+
+		w3d.read(inStream, true);
+
+		inStream.close();
+
+		return w3d;
 	}
 }

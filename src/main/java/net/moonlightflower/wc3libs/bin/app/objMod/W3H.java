@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -106,10 +107,6 @@ public class W3H extends ObjMod {
 		return Collections.singletonList(BuffSLK.GAME_USE_PATH);
 	}
 	
-	public W3H(InputStream inStream) throws IOException {
-		super(inStream, false);
-	}
-	
 	public W3H(File file) throws Exception {
 		super(file, false);
 	}
@@ -129,8 +126,14 @@ public class W3H extends ObjMod {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3h file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
-		
-		return new W3H(inStream);
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3H w3h = new W3H();
+
+		w3h.read(inStream, false);
+
+		inStream.close();
+
+		return w3h;
 	}
 }

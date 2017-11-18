@@ -3,9 +3,10 @@ package net.moonlightflower.wc3libs.misc.image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import net.moonlightflower.wc3libs.bin.StdBinStream;
+import net.moonlightflower.wc3libs.bin.StdBinInputStream;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 
+import javax.annotation.Nonnull;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ public class TGADecoder {
 	private int _metaOffset;
 	private int _devAreaOffset;
 	
-	private StdBinStream _stream;
+	private StdBinInputStream _stream;
 	
 	private void readFooter() throws IOException {
 		String v2Sign = "TRUEVISION_XFILE.";
@@ -183,7 +184,7 @@ public class TGADecoder {
 	
 	private BufferedImage readPriv(InputStream inStream) throws IOException, UnsupportedFormatException {
 		try {
-			_stream = new StdBinStream(inStream);
+			_stream = new StdBinInputStream(inStream);
 			
 			//read footer first to know if it's a V2 TGA
 			readFooter();
@@ -407,7 +408,7 @@ public class TGADecoder {
 			
 			return bufImg;
 		} catch (Exception e) {
-			_stream.printLog();
+			_stream.printLog(System.err);
 			
 			e.printStackTrace();
 			
@@ -418,7 +419,7 @@ public class TGADecoder {
 	private TGADecoder() {
 	}
 	
-	public static BufferedImage read(InputStream inStream) throws IOException, UnsupportedFormatException {		
+	public static BufferedImage read(@Nonnull InputStream inStream) throws IOException, UnsupportedFormatException {
 		TGADecoder decoder = new TGADecoder();
 		
 		BufferedImage img = decoder.readPriv(inStream);

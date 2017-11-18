@@ -1,8 +1,9 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinStream;
+import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
@@ -14,6 +15,8 @@ import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -88,7 +91,7 @@ public class WPM extends Raster<FlagsInt> {
 	}
 	
 	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+		public enum Enum {
 			AUTO,
 			WPM_0x0,
 		}
@@ -97,19 +100,20 @@ public class WPM extends Raster<FlagsInt> {
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WPM_0x0 = new EncodingFormat(Enum.WPM_0x0, 0x0);
-		
+
+		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
 		}
 	}
 
-	public void write_0x0(Wc3BinStream stream) {
+	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("MP3W"));
 		stream.writeInt(EncodingFormat.WPM_0x0.getVersion());
 		
@@ -128,11 +132,11 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 
-	public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {		
+	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
 		int version = stream.readInt("version");
 		
-		Wc3BinStream.checkFormatVer("wpmMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
+		Wc3BinInputStream.checkFormatVer("wpmMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
 		
 		int width = stream.readInt("width");
 		int height = stream.readInt("height");
@@ -151,7 +155,7 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 	
-	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
 		int version = stream.readInt("version");
 		
@@ -160,7 +164,7 @@ public class WPM extends Raster<FlagsInt> {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 	
-	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
+	private void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -175,7 +179,7 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 	
-	private void write(Wc3BinStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinOutputStream stream, EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case WPM_0x0: {
@@ -186,28 +190,20 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 	
-	private void read(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Wc3BinStream stream) {
+	private void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
-	
-	private void read(File file, EncodingFormat format) throws IOException {
-		read(new Wc3BinStream(file), format);
-	}
-	
-	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3BinStream(file), format);
-	}
-	
-	private void read(File file) throws IOException {
-		read(file, EncodingFormat.AUTO);
-	}
 
-	private void write(File file) throws IOException {
-		write(new Wc3BinStream(file));
+	private void write(@Nonnull File file) throws IOException {
+		Wc3BinOutputStream inStream = new Wc3BinOutputStream(file);
+
+		write(inStream);
+
+		inStream.close();
 	}
 	
 	public WPM(PathMap pathMap) {
@@ -220,7 +216,7 @@ public class WPM extends Raster<FlagsInt> {
 		this(new PathMap(bounds));
 	}
 
-	public WPM(Wc3BinStream stream) throws IOException {
+	public WPM(Wc3BinInputStream stream) throws IOException {
 		this();
 		
 		read(stream);
@@ -243,7 +239,7 @@ public class WPM extends Raster<FlagsInt> {
 			throw new IOException(String.format("could not extract %s", GAME_PATH.toString()));
 		}
 		
-		return new WPM(new Wc3BinStream(portResult.getInputStream(GAME_PATH)));
+		return new WPM(new Wc3BinInputStream(portResult.getInputStream(GAME_PATH)));
 	}
 
 	/*@Override

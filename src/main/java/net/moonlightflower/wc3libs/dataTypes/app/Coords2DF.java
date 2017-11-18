@@ -1,6 +1,8 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-public class Coords2DF {
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+
+public class Coords2DF extends DataType {
 	private Real _x;
 	private Real _y;
 	
@@ -11,7 +13,20 @@ public class Coords2DF {
 	public Real getY() {
 		return _y;
 	}
-	
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Coords2DF)
+			return equals((Coords2DF) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(Coords2DF other) {
+		return getX().equals(other.getX()) &&
+				getY().equals(other.getY());
+	}
+
 	@Override
 	public String toString() {
 		return String.format("%s;%s", getX(), getY());
@@ -38,20 +53,31 @@ public class Coords2DF {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Coords2DF coords2DF = (Coords2DF) o;
-
-		if (_x != null ? !_x.equals(coords2DF._x) : coords2DF._x != null) return false;
-		return _y != null ? _y.equals(coords2DF._y) : coords2DF._y == null;
-	}
-
-	@Override
 	public int hashCode() {
 		int result = _x != null ? _x.hashCode() : 0;
 		result = 31 * result + (_y != null ? _y.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public DataType decode(Object val) {
+		return null;
+	}
+
+	public static DataType decodeStatic(Object val) {
+		if (val instanceof Coords2DF)
+			return new Coords2DF(((Coords2DF) val).getX(), ((Coords2DF) val).getY());
+
+		return null;
+	}
+
+	@Override
+	public Object toSLKVal() {
+		return null;
+	}
+
+	@Override
+	public Object toTXTVal() {
+		return null;
 	}
 }

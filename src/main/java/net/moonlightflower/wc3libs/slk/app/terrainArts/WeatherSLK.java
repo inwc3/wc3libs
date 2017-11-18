@@ -394,7 +394,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 	}
 	
-	//private Map<WeatherId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<WeatherId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<WeatherId, Obj> getObjs() {

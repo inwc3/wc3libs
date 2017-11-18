@@ -1,23 +1,26 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+import net.moonlightflower.wc3libs.bin.BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+
+import javax.annotation.Nonnull;
 
 class IMP_0x1 extends IMP implements IMP_Streamable {
 	public static class Obj extends IMP.Obj {
 		@Override
-		public void read(Wc3BinStream stream) throws BinStream.StreamException {
+		public void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setStdFlag(StdFlag.fromVal(stream.readUByte()));
 			setPath(stream.readString());
 		}
 		
 		@Override
-		public void write(Wc3BinStream stream) {
+		public void write(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeUByte(getStdFlag().getVal());
 			stream.writeString(getPath());
 		}
 		
-		public Obj(Wc3BinStream stream) throws BinStream.StreamException {
+		public Obj(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			read(stream);
 		}
 		
@@ -26,10 +29,10 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	}
 	
 	@Override
-	public void read(Wc3BinStream stream) throws BinStream.StreamException {
+	public void read(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt();
 
-		Wc3BinStream.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
+		Wc3BinInputStream.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
 		
 		int impsCount = stream.readInt();
 		
@@ -39,7 +42,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	}
 	
 	@Override
-	public void write(Wc3BinStream stream) {
+	public void write(Wc3BinOutputStream stream) {
 		stream.writeInt(EncodingFormat.IMP_0x1.getVersion());
 		
 		stream.writeInt(_objs.size());
@@ -49,7 +52,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 		}
 	}
 	
-	public IMP_0x1(Wc3BinStream stream) throws BinStream.StreamException {
+	public IMP_0x1(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream);
 	}
 	

@@ -122,25 +122,25 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
         }
     }
 
-    //private Map<ItemId, Obj> _objs = new LinkedHashMap<>();
+    //private Map<ItemId, Camera> _objs = new LinkedHashMap<>();
 
     /*@Override
-    public Map<ItemId, Obj> getObjs() {
+    public Map<ItemId, Camera> getCameras() {
         return _objs;
     }
 
     @Override
-    public void addObj(Obj val) {
+    public void addCamera(Camera val) {
         _objs.put(val.getId(), val);
     }
 
     @Override
-    public Obj addObj(ItemId id) {
+    public Camera addCamera(ItemId id) {
         if (_objs.containsKey(id)) return _objs.get(id);
 
-        Obj obj = new Obj(id);
+        Camera obj = new Camera(id);
 
-        addObj(obj);
+        addCamera(obj);
 
         return obj;
     }*/

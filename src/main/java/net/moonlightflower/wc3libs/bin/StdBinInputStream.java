@@ -1,12 +1,12 @@
 package net.moonlightflower.wc3libs.bin;
 
+import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import net.moonlightflower.wc3libs.bin.BinStream.StreamException;
-
-public class StdBinStream extends BinStream {
+public class StdBinInputStream extends BinInputStream {
 	public byte readByte(String label) throws IOException {
 		logBegin();
 		
@@ -104,12 +104,12 @@ public class StdBinStream extends BinStream {
 		
 		return ret;
 	}
-	
-	public StdBinStream() {
-		super();
+
+	public StdBinInputStream(@Nonnull InputStream inStream) throws IOException {
+		super(inStream);
 	}
 
-	public StdBinStream(InputStream inStream) throws IOException {
-		super(inStream);
+	public StdBinInputStream(@Nonnull File file) throws IOException {
+		super(file);
 	}
 }

@@ -166,17 +166,17 @@ public class W3V {
 //					return Integer.toString(((Int) get(VAL)).toInt());
 //				}
 //
-//				public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
 //					set(VAL, stream.readWc3Int());
 //				}
 //
-//				public void write_0x0(Wc3BinStream stream) {
+//				public void write_0x0(Wc3BinInputStream stream) {
 //					stream.writeString(get(LABEL));
 //					stream.writeInt(get(VAL));
 //				}
 //
-//				public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					switch (format.toEnum()) {
 //					case W3V_0x0:
 //						read_0x0(stream);
@@ -185,7 +185,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public void write(Wc3BinStream stream, EncodingFormat format) {
+//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //					switch (format.toEnum()) {
 //					case AUTO:
 //					case W3V_0x0:
@@ -195,7 +195,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public IntEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public IntEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					read(stream, format);
 //				}
 //
@@ -229,17 +229,17 @@ public class W3V {
 //					return Float.toString(((Real) get(VAL)).toFloat());
 //				}
 //
-//				public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
 //					set(VAL, stream.readReal());
 //				}
 //
-//				public void write_0x0(Wc3BinStream stream) {
+//				public void write_0x0(Wc3BinInputStream stream) {
 //					stream.writeString(get(LABEL));
 //					stream.writeReal(get(VAL));
 //				}
 //
-//				public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					switch (format.toEnum()) {
 //					case W3V_0x0:
 //						read_0x0(stream);
@@ -248,7 +248,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public void write(Wc3BinStream stream, EncodingFormat format) {
+//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //					switch (format.toEnum()) {
 //					case AUTO:
 //					case W3V_0x0:
@@ -258,7 +258,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public RealEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public RealEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					read(stream, format);
 //				}
 //
@@ -287,17 +287,17 @@ public class W3V {
 //			public static class BoolEntry extends Entry {
 //				public final static State<Bool> VAL = new State<>(Bool.class, "val");
 //
-//				public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
 //					set(VAL, Bool.valueOf(((stream.readInt()) > 0)));
 //				}
 //
-//				public void write_0x0(Wc3BinStream stream) {
+//				public void write_0x0(Wc3BinInputStream stream) {
 //					stream.writeString(get(LABEL));
 //					stream.writeInt(((Bool) get(VAL)).getVal() ? 1 : 0);
 //				}
 //
-//				public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					switch (format.toEnum()) {
 //					case W3V_0x0:
 //						read_0x0(stream);
@@ -306,7 +306,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public void write(Wc3BinStream stream, EncodingFormat format) {
+//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //					switch (format.toEnum()) {
 //					case AUTO:
 //					case W3V_0x0:
@@ -321,7 +321,7 @@ public class W3V {
 //					return Boolean.toString(((Bool) get(VAL)).getVal());
 //				}
 //
-//				public BoolEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public BoolEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					read(stream, format);
 //				}
 //
@@ -404,19 +404,19 @@ public class W3V {
 //					public final static State<Int> CHARGES = new State<>(Int.class, "charges");
 //					public final static State<Int> UNKNOWN = new State<>(Int.class, "unknown");
 //
-//					public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //						set(LABEL, ItemId.valueOf(stream.readId()));
 //						set(CHARGES, stream.readWc3Int());
 //						set(UNKNOWN, stream.readWc3Int());
 //					}
 //
-//					public void write_0x0(Wc3BinStream stream) {
+//					public void write_0x0(Wc3BinInputStream stream) {
 //						stream.writeId((ItemId) get(LABEL));
 //						stream.writeInt(get(CHARGES));
 //						stream.writeInt(get(UNKNOWN));
 //					}
 //
-//					public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//					public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //						switch (format.toEnum()) {
 //						case W3V_0x0:
 //							read_0x0(stream);
@@ -425,7 +425,7 @@ public class W3V {
 //						}
 //					}
 //
-//					public void write(Wc3BinStream stream, EncodingFormat format) {
+//					public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //						switch (format.toEnum()) {
 //						case AUTO:
 //						case W3V_0x0:
@@ -435,7 +435,7 @@ public class W3V {
 //						}
 //					}
 //
-//					public InvSlot(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//					public InvSlot(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //						read(stream, format);
 //					}
 //
@@ -511,17 +511,17 @@ public class W3V {
 //					public final static State<AbilId> ID = new State<>(AbilId.class, "id");
 //					public final static State<Int> LEVEL = new State<>(Int.class, "level");
 //
-//					public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //						set(ID, AbilId.valueOf(stream.readId()));
 //						set(LEVEL, stream.readWc3Int());
 //					}
 //
-//					public void write_0x0(Wc3BinStream stream) {
+//					public void write_0x0(Wc3BinInputStream stream) {
 //						stream.writeId(get(ID));
 //						stream.writeInt(get(LEVEL));
 //					}
 //
-//					public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//					public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //						switch (format.toEnum()) {
 //						case W3V_0x0:
 //							read_0x0(stream);
@@ -530,7 +530,7 @@ public class W3V {
 //						}
 //					}
 //
-//					public void write(Wc3BinStream stream, EncodingFormat format) {
+//					public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //						switch (format.toEnum()) {
 //						case AUTO:
 //						case W3V_0x0:
@@ -540,7 +540,7 @@ public class W3V {
 //						}
 //					}
 //
-//					public HeroSkill(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//					public HeroSkill(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //						read(stream, format);
 //					}
 //
@@ -571,7 +571,7 @@ public class W3V {
 //					return get(LABEL).getVal();
 //				}
 //
-//				public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
 //					set(ID, UnitId.valueOf(stream.readId()));
 //
@@ -608,7 +608,7 @@ public class W3V {
 //					stream.readShort();
 //				}
 //
-//				public void write_0x0(Wc3BinStream stream) {
+//				public void write_0x0(Wc3BinInputStream stream) {
 //					stream.writeString(get(LABEL));
 //					stream.writeId(get(ID));
 //
@@ -645,7 +645,7 @@ public class W3V {
 //					stream.writeShort((short) 0);
 //				}
 //
-//				public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					switch (format.toEnum()) {
 //					case W3V_0x0:
 //						read_0x0(stream);
@@ -654,7 +654,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public void write(Wc3BinStream stream, EncodingFormat format) {
+//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //					switch (format.toEnum()) {
 //					case AUTO:
 //					case W3V_0x0:
@@ -664,7 +664,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public UnitEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public UnitEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					read(stream, format);
 //				}
 //
@@ -698,15 +698,15 @@ public class W3V {
 //					return ((Wc3String) get(VAL)).getVal();
 //				}
 //
-//				public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
 //					set(VAL, stream.readWc3String());
 //				}
 //
-//				public void write_0x0(Wc3BinStream stream) {
+//				public void write_0x0(Wc3BinInputStream stream) {
 //				}
 //
-//				public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					switch (format.toEnum()) {
 //					case W3V_0x0:
 //						read_0x0(stream);
@@ -715,7 +715,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public void write(Wc3BinStream stream, EncodingFormat format) {
+//				public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //					switch (format.toEnum()) {
 //					case AUTO:
 //					case W3V_0x0:
@@ -725,7 +725,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public StringEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//				public StringEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //					read(stream, format);
 //				}
 //
@@ -771,7 +771,7 @@ public class W3V {
 //				}
 //			}
 //
-//			public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//			public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //				set(NAME, stream.readWc3String());
 //
 //				for (int i = 0; i < 5; i++) {
@@ -811,7 +811,7 @@ public class W3V {
 //				}
 //			}
 //
-//			public void write_0x0(Wc3BinStream stream) {
+//			public void write_0x0(Wc3BinInputStream stream) {
 //				stream.writeString(get(NAME));
 //
 //				for (int i = 0; i < 5; i++) {
@@ -849,7 +849,7 @@ public class W3V {
 //				}
 //			}
 //
-//			public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//			public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //				switch (format.toEnum()) {
 //				case W3V_0x0:
 //					read_0x0(stream);
@@ -858,7 +858,7 @@ public class W3V {
 //				}
 //			}
 //
-//			public void write(Wc3BinStream stream, EncodingFormat format) {
+//			public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //				switch (format.toEnum()) {
 //				case AUTO:
 //				case W3V_0x0:
@@ -868,7 +868,7 @@ public class W3V {
 //				}
 //			}
 //
-//			public Cat(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//			public Cat(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //				read(stream, format);
 //			}
 //
@@ -902,7 +902,7 @@ public class W3V {
 //			}
 //		}
 //
-//		public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//		public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //			set(NAME, stream.readWc3String());
 //			set(RESERVED, stream.readWc3Int());
 //
@@ -913,7 +913,7 @@ public class W3V {
 //			}
 //		}
 //
-//		public void write_0x0(Wc3BinStream stream) {
+//		public void write_0x0(Wc3BinInputStream stream) {
 //			stream.writeString(get(NAME));
 //			stream.writeInt(get(RESERVED));
 //
@@ -924,7 +924,7 @@ public class W3V {
 //			}
 //		}
 //
-//		public void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//		public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //			switch (format.toEnum()) {
 //			case W3V_0x0:
 //				read_0x0(stream);
@@ -933,7 +933,7 @@ public class W3V {
 //			}
 //		}
 //
-//		public void write(Wc3BinStream stream, EncodingFormat format) {
+//		public void write(Wc3BinInputStream stream, EncodingFormat format) {
 //			switch (format.toEnum()) {
 //			case AUTO:
 //			case W3V_0x0:
@@ -943,7 +943,7 @@ public class W3V {
 //			}
 //		}
 //
-//		public Cache(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//		public Cache(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //			read(stream, format);
 //		}
 //
@@ -997,12 +997,12 @@ public class W3V {
 //		}
 //	}
 //
-//	public void read_0x0(Wc3BinStream stream) throws BinStream.StreamException {
+//	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //		stream = Packed.decompress(stream);
 //
 //		int version = stream.readInt();
 //
-//		Wc3BinStream.checkFormatVer("gamecacheMaskFunc", EncodingFormat.W3V_0x0.getVersion(), version);
+//		Wc3BinInputStream.checkFormatVer("gamecacheMaskFunc", EncodingFormat.W3V_0x0.getVersion(), version);
 //
 //		int cachesCount = stream.readInt();
 //
@@ -1011,10 +1011,10 @@ public class W3V {
 //		}
 //	}
 //
-//	public void write_0x0(Wc3BinStream stream) throws StreamException {
-//		Wc3BinStream outStream = stream;
+//	public void write_0x0(Wc3BinInputStream stream) throws StreamException {
+//		Wc3BinInputStream outStream = stream;
 //
-//		stream = new Wc3BinStream();
+//		stream = new Wc3BinInputStream();
 //
 //		stream.writeInt(EncodingFormat.W3V_0x0.getVersion());
 //
@@ -1024,14 +1024,14 @@ public class W3V {
 //			cache.write(stream, EncodingFormat.W3V_0x0);
 //		}
 //
-//		Wc3BinStream packStream = Packed.compress(stream);
+//		Wc3BinInputStream packStream = Packed.compress(stream);
 //
 //		while (!packStream.eof()) {
 //			outStream.writeBytes(packStream.readBytes(Math.min(1024, packStream.size() - packStream.getPos())));
 //		}
 //	}
 //
-//	private void read_auto(Wc3BinStream stream) throws BinStream.StreamException {
+//	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //		int version = stream.readInt();
 //
 //		stream.rewind();
@@ -1041,7 +1041,7 @@ public class W3V {
 //		read(stream, EncodingFormat.valueOf(version));
 //	}
 //
-//	private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+//	private void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
 //		format = EncodingFormat.W3V_0x0;
 //
 //		switch (format.toEnum()) {
@@ -1058,7 +1058,7 @@ public class W3V {
 //		}
 //	}
 //
-//	private void write(Wc3BinStream stream, EncodingFormat format) throws StreamException {
+//	private void write(Wc3BinInputStream stream, EncodingFormat format) throws StreamException {
 //		switch (format.toEnum()) {
 //		case AUTO:
 //		case W3V_0x0: {
@@ -1069,20 +1069,20 @@ public class W3V {
 //		}
 //	}
 //
-//	private void read(Wc3BinStream stream) throws BinStream.StreamException {
+//	private void read(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //		read(stream, EncodingFormat.AUTO);
 //	}
 //
-//	private void write(Wc3BinStream stream) throws StreamException {
+//	private void write(Wc3BinInputStream stream) throws StreamException {
 //		write(stream, EncodingFormat.AUTO);
 //	}
 //
 //	private void read(File file, EncodingFormat format) throws IOException {
-//		read(new Wc3BinStream(file), format);
+//		read(new Wc3BinInputStream(file), format);
 //	}
 //
 //	public void write(File file, EncodingFormat format) throws IOException {
-//		write(new Wc3BinStream(file), format);
+//		write(new Wc3BinInputStream(file), format);
 //	}
 //
 //	private void read(File file) throws IOException {
@@ -1090,7 +1090,7 @@ public class W3V {
 //	}
 //
 //	public void write(File file) throws IOException {
-//		write(new Wc3BinStream(file));
+//		write(new Wc3BinInputStream(file));
 //	}
 //
 //	public W3V() {

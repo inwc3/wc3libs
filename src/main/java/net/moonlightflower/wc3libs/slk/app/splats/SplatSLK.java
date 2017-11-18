@@ -278,7 +278,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 	}
 	
-	//private Map<SplatId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<SplatId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<SplatId, Obj> getObjs() {

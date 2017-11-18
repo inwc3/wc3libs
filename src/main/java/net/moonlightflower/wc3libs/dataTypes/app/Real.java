@@ -17,7 +17,19 @@ public class Real extends DataType implements Wc3Num {
 	public Float getVal() {
 		return _val;
 	}
-	
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Real)
+			return equals((Real) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(Real other) {
+		return getVal().equals(other.getVal());
+	}
+
 	@Override
 	public String toString() {
 		return getVal().toString();
@@ -59,8 +71,6 @@ public class Real extends DataType implements Wc3Num {
 	public static Real valueOf(Object val) {
 		try {
 			Real ret = valueOf(Float.parseFloat(val.toString()));
-			
-			System.out.println("ret " + ret.getVal());
 			
 			return ret;
 		} catch (NumberFormatException e) {

@@ -1,13 +1,16 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinStream;
+import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -111,7 +114,7 @@ public class W3F {
 				return _all.toArray(flags);
 			}
 			
-			private Flag(int pos, String label) {
+			private Flag(int pos, @Nonnull String label) {
 				super(pos, label);
 				
 				_all.add(this);
@@ -147,29 +150,32 @@ public class W3F {
 	}
 	
 	private Flags _flags = Flags.valueOf(0);
-	
+
+	@Nonnull
 	public Flags getFlags() {
 		return _flags;
 	}
 	
-	public void setFlags(Flags val) {
+	public void setFlags(@Nonnull Flags val) {
 		_flags = val;
 	}
 	
-	public boolean getFlag(Flags.Flag flag) {
+	public boolean getFlag(@Nonnull Flags.Flag flag) {
 		return _flags.containsFlag(flag);
 	}
 	
-	public void setFlag(Flags.Flag flag, boolean val) {
+	public void setFlag(@Nonnull Flags.Flag flag, boolean val) {
 		_flags.setFlag(flag, val);
 	}
 	
 	private LoadingScreenBackground _campaignBackground;
-	
+
+	@Nullable
 	public LoadingScreenBackground getCampaignBackground() {
 		return _campaignBackground;
 	}
 
+	@Nullable
 	public void setCampaignBackground(LoadingScreenBackground val) {
 		_campaignBackground = val;
 	}
@@ -177,18 +183,21 @@ public class W3F {
 	private void setCampaignBackground(int index, String customPath) {
 		if (index < 0) {
 			setCampaignBackground(new LoadingScreenBackground.CustomBackground(new File(customPath)));
-		} else {
+		} else if (index > 0) {
 			setCampaignBackground(LoadingScreenBackground.PresetBackground.valueOf(index));
+		} else {
+			setCampaignBackground(null);
 		}
 	}
 
 	private File _minimapPath;
-	
+
+	@Nullable
 	public File getMinimapPath() {
 		return _minimapPath;
 	}
 	
-	public void setMinimapPath(File val) {
+	public void setMinimapPath(@Nullable File val) {
 		_minimapPath = val;
 	}
 
@@ -227,7 +236,7 @@ public class W3F {
 			return _map.get(index);
 		}
 		
-		private PresetAmbientSound(int index, String label) {
+		private PresetAmbientSound(int index, @Nonnull String label) {
 			_map.put(index, this);
 			
 			_index = index;
@@ -247,18 +256,19 @@ public class W3F {
 			return getCustomPath().toString();
 		}
 		
-		public CustomAmbientSound(File path) {
+		public CustomAmbientSound(@Nonnull File path) {
 			_path = path;
 		}
 	}
 	
 	private AmbientSound _ambientSound;
-	
+
+	@Nullable
 	public AmbientSound getAmbientSound() {
 		return _ambientSound;
 	}
 	
-	public void setAmbientSound(AmbientSound val) {
+	public void setAmbientSound(@Nullable AmbientSound val) {
 		_ambientSound = val;
 	}
 	
@@ -273,12 +283,13 @@ public class W3F {
 	}
 	
 	private TerrainFog _terrainFog;
-	
+
+	@Nullable
 	public TerrainFog getTerrainFog() {
 		return _terrainFog;
 	}
 	
-	public void setTerrainFog(TerrainFog val) {
+	public void setTerrainFog(@Nullable TerrainFog val) {
 		_terrainFog = val;
 	}
 	
@@ -311,7 +322,7 @@ public class W3F {
 			return _map.get(val);
 		}
 		
-		private UIRace(int val, String label) {
+		private UIRace(int val, @Nonnull String label) {
 			_map.put(val, this);
 			
 			_val = val;
@@ -341,37 +352,39 @@ public class W3F {
 		}
 		
 		private String _chapterTitle;
-		
+
+		@Nonnull
 		public String getChapterTitle() {
 			return _chapterTitle;
 		}
 		
-		public void setChapterTitle(String val) {
+		public void setChapterTitle(@Nonnull String val) {
 			_chapterTitle = val;
 		}
 		
 		private String _mapTitle;
-		
+
+		@Nonnull
 		public String getMapTitle() {
 			return _mapTitle;
 		}
-		
 
-		public void setMapTitle(String val) {
+		public void setMapTitle(@Nonnull String val) {
 			_mapTitle = val;
 		}
 
 		private String _mapPath;
-		
+
+		@Nonnull
 		public String getMapPath() {
 			return _mapPath;
 		}
 
-		public void setMapPath(String val) {
+		public void setMapPath(@Nonnull String val) {
 			_mapPath = val;
 		}
 
-		public void print(PrintStream outStream) {
+		public void print(@Nonnull PrintStream outStream) {
 			outStream.println(String.format("isVisible: %s", isVisible()));
 			outStream.println(String.format("chapterTitle: %s", getChapterTitle()));
 			outStream.println(String.format("mapTitle: %s", getMapTitle()));
@@ -382,21 +395,21 @@ public class W3F {
 			print(System.out);
 		}
 
-		private void read_0x1(Wc3BinStream stream) throws BinStream.StreamException {
+		private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setVisible((stream.readInt() > 0));
 			setChapterTitle(stream.readString());
 			setMapTitle(stream.readString());
 			setMapPath(stream.readString());
 		}
 		
-		private void write_0x1(Wc3BinStream stream) {
+		private void write_0x1(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeInt(isVisible() ? 1 : 0);
 			stream.writeString(getChapterTitle());
 			stream.writeString(getMapTitle());
 			stream.writeString(getMapPath());
 		}
 		
-		private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
+		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case W3F_0x1:
 				read_0x1(stream);
@@ -405,7 +418,7 @@ public class W3F {
 			}
 		}
 		
-		private void write(Wc3BinStream stream, EncodingFormat format) {
+		private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case W3F_0x1: {
@@ -416,7 +429,7 @@ public class W3F {
 			}
 		}
 		
-		public MapEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public MapEntry(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -425,15 +438,17 @@ public class W3F {
 	}
 	
 	private List<MapEntry> _maps = new ArrayList<>();
-	
+
+	@Nonnull
 	public List<MapEntry> getMaps() {
 		return _maps;
 	}
 	
-	private void addMap(MapEntry val) {
+	private void addMap(@Nonnull MapEntry val) {
 		_maps.add(val);
 	}
-	
+
+	@Nonnull
 	public MapEntry addMap() {
 		MapEntry map = new MapEntry();
 		
@@ -444,13 +459,13 @@ public class W3F {
 
 	public static class ListedMapEntry {
 		private String _unknown;
-		
+
+		@Nullable
 		public String getUnknown() {
 			return _unknown;
 		}
-		
 
-		public void setUnknown(String val) {
+		public void setUnknown(@Nullable String val) {
 			_unknown = val;
 		}
 
@@ -464,7 +479,7 @@ public class W3F {
 			_mapPath = val;
 		}
 		
-		public void print(PrintStream outStream) {
+		public void print(@Nonnull PrintStream outStream) {
 			outStream.println(String.format("unknown: %s", getUnknown()));
 			outStream.println(String.format("mapPath: %s", getMapPath()));
 		}
@@ -473,17 +488,17 @@ public class W3F {
 			print(System.out);
 		}
 
-		private void read_0x1(Wc3BinStream stream) throws BinStream.StreamException {
+		private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setUnknown(stream.readString());
 			setMapPath(stream.readString());
 		}
 		
-		private void write_0x1(Wc3BinStream stream) {
+		private void write_0x1(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeString(getUnknown());
 			stream.writeString(getMapPath());
 		}
 		
-		private void read(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {		
+		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case W3F_0x1:
 				read_0x1(stream);
@@ -492,7 +507,7 @@ public class W3F {
 			}
 		}
 		
-		private void write(Wc3BinStream stream, EncodingFormat format) {
+		private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case W3F_0x1: {
@@ -503,7 +518,7 @@ public class W3F {
 			}
 		}
 		
-		public ListedMapEntry(Wc3BinStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public ListedMapEntry(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -512,15 +527,17 @@ public class W3F {
 	}
 	
 	private List<ListedMapEntry> _listedMaps = new ArrayList<>();
-	
+
+	@Nonnull
 	public List<ListedMapEntry> getListedMaps() {
 		return _listedMaps;
 	}
 	
-	private void addListedMap(ListedMapEntry val) {
+	private void addListedMap(@Nonnull ListedMapEntry val) {
 		_listedMaps.add(val);
 	}
-	
+
+	@Nonnull
 	public ListedMapEntry addListedMap() {
 		ListedMapEntry map = new ListedMapEntry();
 		
@@ -529,7 +546,7 @@ public class W3F {
 		return map;
 	}
 	
-	public void print(PrintStream outStream) {
+	public void print(@Nonnull PrintStream outStream) {
 		outStream.println(String.format("savesAmount: %d", getSavesAmount()));
 		outStream.println(String.format("editorVersion: %d", getEditorVersion()));
 		outStream.println(String.format("campaignName: %s", getCampaignName()));
@@ -564,7 +581,7 @@ public class W3F {
 	}
 	
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+		public enum Enum {
 			AUTO,
 			W3F_0x1
 		}
@@ -573,22 +590,23 @@ public class W3F {
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3F_0x1 = new EncodingFormat(Enum.W3F_0x1, 0x1);
-		
+
+		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
 		}
 	}
 	
-	private void read_0x1(Wc3BinStream stream) throws BinStream.StreamException {
+	private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt("version");
 		
-		Wc3BinStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3F_0x1.getVersion(), version);
+		Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3F_0x1.getVersion(), version);
 		
 		setSavesAmount(stream.readInt("savesAmount"));
 		setEditorVersion(stream.readInt("editorVersion"));
@@ -606,8 +624,8 @@ public class W3F {
 		
 		setTerrainFog(new TerrainFog(
 				TerrainFogType.valueOf(stream.readInt()),
-				stream.readFloat(), stream.readFloat(), 
-				stream.readFloat(),
+				stream.readReal(), stream.readReal(),
+				stream.readReal(),
 				Color.fromRGBA255(stream.readUByte(), stream.readUByte(), stream.readUByte(), stream.readUByte())
 		));
 		
@@ -626,7 +644,7 @@ public class W3F {
 		}
 	}
 
-	private void write_0x1(Wc3BinStream stream) {
+	private void write_0x1(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeInt(EncodingFormat.W3F_0x1.getVersion());
 		
 		stream.writeInt(getSavesAmount());
@@ -643,7 +661,7 @@ public class W3F {
 
 		stream.writeInt((background instanceof LoadingScreenBackground.PresetBackground) ? ((LoadingScreenBackground.PresetBackground) background).getIndex() : -1);
 		stream.writeString((background instanceof LoadingScreenBackground.CustomBackground) ? ((LoadingScreenBackground.CustomBackground) background).getCustomPath().toString() : null);
-		stream.writeString(getMinimapPath().toString());
+		stream.writeString(getMinimapPath() != null ? getMinimapPath().toString() : null);
 		
 		AmbientSound ambientSound = getAmbientSound();
 
@@ -657,10 +675,10 @@ public class W3F {
 		
 		TerrainFog terrainFog = getTerrainFog();
 		
-		stream.writeInt(terrainFog.getType());
-		stream.writeFloat(terrainFog.getZStart());
-		stream.writeFloat(terrainFog.getZEnd());
-		stream.writeFloat(terrainFog.getDensity());
+		stream.writeInt(terrainFog != null ? terrainFog.getType() : Int.valueOf(0));
+		stream.writeReal(terrainFog != null ? terrainFog.getZStart() : Real.valueOf(0F));
+		stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : Real.valueOf(0F));
+		stream.writeReal(terrainFog != null ? terrainFog.getDensity() : Real.valueOf(0F));
 		
 		Color terrainFogColor = terrainFog.getColor();
 		
@@ -684,17 +702,19 @@ public class W3F {
 		}
 	}
 	
-	private void read_auto(Wc3BinStream stream) throws Exception {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
 		int version = stream.readInt("version");
 
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new Exception(String.format("unknown format %x", version));
+
+		read(stream, format);
 	}
 
-	private void read(Wc3BinStream stream, EncodingFormat format) throws Exception {
-		if (format == null) throw new Exception("no format");
-		
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -709,7 +729,7 @@ public class W3F {
 		}
 	}
 	
-	private void write(Wc3BinStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case W3F_0x1: {
@@ -720,55 +740,35 @@ public class W3F {
 		}
 	}
 	
-	private void read(Wc3BinStream stream) throws Exception {
+	private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(Wc3BinStream stream) {
+	private void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
-	
-	private void read(File file, EncodingFormat format) throws Exception {
-		read(new Wc3BinStream(file), format);
-	}
-	
-	private void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3BinStream(file), format);
-	}
-	
-	private void read(InputStream inStream) throws Exception {
-		read(new Wc3BinStream(inStream), EncodingFormat.AUTO);
-	}
-	
-	private void read(File file) throws Exception {
-		read(file, EncodingFormat.AUTO);
-	}
 
-	public void write(File file) throws IOException {
-		Wc3BinStream outStream = new Wc3BinStream();
+	public void write(@Nonnull File file) throws IOException {
+		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 		
 		write(outStream);
 		
-		outStream.writeTo(file);
+		outStream.close();
 	}
 	
 	public W3F() {
 		
 	}
 	
-	public W3F(InputStream inStream) throws Exception {
+	public W3F(@Nonnull File file) throws Exception {
+		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
+
 		read(inStream);
-	}
-	
-	public W3F(File inFile) throws Exception {
-		InputStream inStream = new FileInputStream(inFile);
-		
-		read(inStream);
-		
+
 		inStream.close();
 	}
 	
-	public static W3F ofCampaignFile(File mapFile) throws Exception {
+	public static W3F ofCampaignFile(@Nonnull File mapFile) throws Exception {
 		MpqPort.Out port = new JMpqPort.Out();
 		
 		port.add(CAMPAIGN_PATH);
@@ -778,7 +778,11 @@ public class W3F {
 		if (!portResult.getExports().containsKey(CAMPAIGN_PATH)) throw new IOException("could not extract info file");
 
 		InputStream inStream = portResult.getInputStream(CAMPAIGN_PATH);
-		
-		return new W3F(inStream);
+
+		W3F w3f = new W3F();
+
+		w3f.read(new Wc3BinInputStream(inStream));
+
+		return w3f;
 	}
 }

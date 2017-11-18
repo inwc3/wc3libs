@@ -144,7 +144,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
         }
     }
 
-    //private Map<DestructableId, Obj> _objs = new LinkedHashMap<>();
+    //private Map<DestructableId, Camera> _objs = new LinkedHashMap<>();
 
     @Override
     public Map<DestructableId, Obj> getObjs() {

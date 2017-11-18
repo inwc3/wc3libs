@@ -1,15 +1,14 @@
 package net.moonlightflower.wc3libs.bin;
 
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
+import net.moonlightflower.wc3libs.dataTypes.app.Char;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.Id;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import javax.annotation.Nonnull;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * deals with wc3's binary encoding
  */
-public class Wc3BinStream extends BinStream {	
+public class Wc3BinInputStream extends BinInputStream {
 	public Integer readUByte() throws StreamException {
 		return readByte() & 0xFF;
 	}
@@ -36,10 +35,6 @@ public class Wc3BinStream extends BinStream {
 			
 			throw e;
 		}
-	}
-	
-	public void writeUByte(int val) {
-		writeByte((byte) val);
 	}
 	
 	private short readShort_priv() throws StreamException {
@@ -74,23 +69,6 @@ public class Wc3BinStream extends BinStream {
 	
 	public int readUShort() throws StreamException {
 		return (readShort() & 0xFFFF);
-	}
-	
-	private final static byte[] _shortBytes = new byte[2];
-	
-	private final static ByteBuffer _shortBuf = ByteBuffer.wrap(_shortBytes);
-	
-	public void writeShort(short val) {
-		_shortBuf.rewind();
-		_shortBuf.order(ByteOrder.LITTLE_ENDIAN);
-		
-		_shortBuf.putShort(val);
-		
-		writeBytes(_shortBytes);
-	}
-
-	public void writeUShort(int val) {
-		writeShort((short) val);
 	}
 	
 	public Integer readInt() throws StreamException {
@@ -133,27 +111,6 @@ public class Wc3BinStream extends BinStream {
 		return Int.valueOf(readInt(label));
 	}
 	
-	private final static byte[] _intBytes = new byte[4];
-	
-	private final static ByteBuffer _intBuf = ByteBuffer.wrap(_intBytes); 
-
-	public void writeInt(int val) {
-		_intBuf.rewind();
-		_intBuf.order(ByteOrder.LITTLE_ENDIAN);
-		
-		_intBuf.putInt(val);
-
-		writeBytes(_intBytes);
-	}
-
-	public void writeInt(Int val) {
-		writeInt(val.getVal());
-	}
-	
-	public void writeUInt(long val) {
-		writeInt((int) val);
-	}
-	
 	private Character readChar_priv() throws StreamException {
 		try {
 			char res = (char) readByte();
@@ -182,10 +139,6 @@ public class Wc3BinStream extends BinStream {
 	
 	public Character readChar() throws StreamException {
 		return readChar(null);
-	}
-	
-	public void writeChar(char val) {
-		writeByte((byte) val);
 	}
 
 	private String readString_priv() throws StreamException {
@@ -242,27 +195,6 @@ public class Wc3BinStream extends BinStream {
 		return Wc3String.valueOf(readString());
 	}
 	
-	public byte[] stringToByteArray(String val) {
-		return val.getBytes(StandardCharsets.UTF_8);
-	}
-
-	public void writeString(String val) {
-		if (val == null) val = "";
-		
-		byte[] valBytes = stringToByteArray(val);
-		
-		writeBytes(valBytes);
-		
-		writeByte((byte) 0);
-	}
-
-	public void writeString(Stringable val) {
-		if (val == null)
-			writeString((String) null);
-		else
-			writeString(val.toString());
-	}
-	
 	private Id readId_priv() throws StreamException {
 		try {
 			byte[] sub = readBytes(4);
@@ -300,14 +232,6 @@ public class Wc3BinStream extends BinStream {
 	public Id readId() throws StreamException {
 		return readId(null);
 	}
-	
-	public void writeId(Id val) {
-		if (val == null) val = Id.valueOf("\0\0\0\0");
-		
-		byte[] sub = val.toString().getBytes(StandardCharsets.US_ASCII);
-
-		writeBytes(sub);
-	}
 
 	private Float readFloat_priv() throws StreamException {
 		try {
@@ -342,45 +266,27 @@ public class Wc3BinStream extends BinStream {
 	public Float readFloat() throws StreamException {
 		return readFloat(null);
 	}
-	
-	public Real readReal() throws StreamException {
-		return Real.valueOf(readFloat());
-	}
-	
-	public void writeFloat(float val) {
-		ByteBuffer buf = ByteBuffer.allocate(4);
-		
-		buf.order(ByteOrder.LITTLE_ENDIAN);
-		
-		buf.putFloat(val);
 
-		writeBytes(buf.array());
+	public Real readReal(String label) throws StreamException {
+		return Real.valueOf(readFloat(label));
 	}
-	
-	public void writeFloat(Real val) {
-		writeFloat(val.toFloat());
+
+	public Real readReal() throws StreamException {
+		return readReal(null);
 	}
-	
-	public void writeReal(Real val) {
-		writeFloat(val);
-	}
-	
+
 	public void pack() throws StreamException {
-		Wc3BinStream newStream = Packed.compress(this);
-		
+		Wc3BinOutputStream newStream = Packed.compress(this);
+
 		_bytes = newStream._bytes;
 	}
-	
-	public Wc3BinStream(InputStream inStream) throws IOException {
-		super(inStream);
+
+	public Wc3BinInputStream(@Nonnull InputStream inputStream) throws IOException {
+		super(inputStream);
 	}
-	
-	public Wc3BinStream(File file) throws IOException {
+
+	public Wc3BinInputStream(@Nonnull File file) throws IOException {
 		super(file);
-	}
-	
-	public Wc3BinStream() {
-		super();
 	}
 
 	public static void checkFormatVer(String string, int targetVersion, int actualVersion) {

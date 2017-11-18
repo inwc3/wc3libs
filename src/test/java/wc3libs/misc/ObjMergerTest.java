@@ -1,3 +1,5 @@
+package wc3libs.misc;
+
 import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.app.ObjMerger;
 import net.moonlightflower.wc3libs.port.Orient;

@@ -170,7 +170,7 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 		}
 	}
 
-	//private Map<TileId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<TileId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<TileId, Obj> getObjs() {

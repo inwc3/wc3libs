@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -11,6 +12,8 @@ import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,11 +150,7 @@ public class W3A extends ObjMod {
 		return Collections.singletonList(AbilSLK.GAME_USE_PATH);
 	}
 	
-	public W3A(InputStream inStream) throws IOException {
-		super(inStream, true);
-	}
-	
-	public W3A(File file) throws Exception {
+	public W3A(@Nonnull File file) throws Exception {
 		super(file, true);
 	}
 	
@@ -159,7 +158,7 @@ public class W3A extends ObjMod {
 		super();
 	}
 
-	public static W3A ofMapFile(File mapFile) throws Exception {
+	public static W3A ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();
@@ -170,8 +169,14 @@ public class W3A extends ObjMod {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3a file");
 
-		InputStream inStream = portResult.getInputStream(GAME_PATH);
-		
-		return new W3A(inStream);
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3A w3a = new W3A();
+
+		w3a.read(inStream, true);
+
+		inStream.close();
+
+		return w3a;
 	}
 }

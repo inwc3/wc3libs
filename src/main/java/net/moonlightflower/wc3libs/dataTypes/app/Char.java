@@ -2,9 +2,12 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+
 public class Char extends DataType {
 	private char _val;
-	
+
+	@Nonnull
 	public Character getVal() {
 		return _val;
 	}
@@ -19,8 +22,12 @@ public class Char extends DataType {
 		return toString();
 	}
 
-	public Char(char val) {
+	private Char(char val) {
 		_val = val;
+	}
+
+	public static Char valueOf(char val) {
+		return new Char(val);
 	}
 
 	@Override

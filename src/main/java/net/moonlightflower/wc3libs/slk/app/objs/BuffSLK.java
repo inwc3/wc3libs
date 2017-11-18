@@ -94,7 +94,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		}
 	}
 	
-	//private Map<BuffId, Obj> _objs = new LinkedHashMap<>();
+	//private Map<BuffId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Override
 	public Map<BuffId, Obj> getObjs() {

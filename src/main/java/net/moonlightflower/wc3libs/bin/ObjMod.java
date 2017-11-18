@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -42,10 +41,10 @@ import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
 import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
 import net.moonlightflower.wc3libs.txt.Profile;
-import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
-;
+;import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * base class for object modification files
@@ -266,13 +265,15 @@ public class ObjMod {
 		}
 		
 		private ObjId _id;
-		
+
+		@Nonnull
 		public ObjId getId() {
 			return _id;
 		}
 		
 		private ObjId _baseId;
-		
+
+		@Nullable
 		public ObjId getBaseId() {
 			return _baseId;
 		}
@@ -292,7 +293,7 @@ public class ObjMod {
 			}
 		}
 		
-		private void read_0x1(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+		private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 			int modsAmount = stream.readInt("modsAmount");
 			
 			for (int i = 0; i < modsAmount; i++) {
@@ -344,7 +345,7 @@ public class ObjMod {
 			}
 		}
 
-		private void read_0x2(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+		private void read_0x2(@Nullable Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 			int modsAmount = stream.readInt("modsAmount");
 
 			for (int i = 0; i < modsAmount; i++) {				
@@ -394,7 +395,7 @@ public class ObjMod {
 			}
 		}
 		
-		private void write_0x1(Wc3BinStream stream, boolean extended) {
+		private void write_0x1(@Nonnull Wc3BinOutputStream stream, boolean extended) {
 			stream.writeId(getBaseId());
 			stream.writeId(getId());
 			
@@ -466,7 +467,7 @@ public class ObjMod {
 			}
 		}
 		
-		private void write_0x2(Wc3BinStream stream, boolean extended) {
+		private void write_0x2(@Nonnull Wc3BinOutputStream stream, boolean extended) {
 			stream.writeId(getBaseId());
 			stream.writeId(getId());
 
@@ -538,7 +539,7 @@ public class ObjMod {
 			}
 		}
 		
-		public void read(Wc3BinStream stream, EncodingFormat format, boolean extended) throws BinStream.StreamException {
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
 			try {
 				switch (format.toEnum()) {
 				case OBJ_0x1: {
@@ -553,11 +554,11 @@ public class ObjMod {
 				}
 				}
 			} catch (RuntimeException e) {
-				throw new BinStream.StreamException(stream);
+				throw new BinInputStream.StreamException(stream);
 			}
 		}
 		
-		public void write(Wc3BinStream stream, EncodingFormat format, boolean extended) {
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case OBJ_0x2: {
@@ -573,11 +574,11 @@ public class ObjMod {
 			}
 		}
 		
-		public Obj(Wc3BinStream stream, EncodingFormat format, boolean extended) throws BinStream.StreamException {
+		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
 			read(stream, format, extended);
 		}
 		
-		public Obj(ObjId id, ObjId baseId) {
+		public Obj(@Nonnull ObjId id, ObjId baseId) {
 			_id = id;
 			_baseId = baseId;
 		}
@@ -586,14 +587,17 @@ public class ObjMod {
 	protected Map<ObjId, Obj> _objs = new LinkedHashMap<>();
 	private List<Obj> _objsList = new ArrayList<>();
 
+	@Nonnull
 	public Map<ObjId, ? extends Obj> getObjs() {
 		return _objs;
 	}
-	
+
+	@Nonnull
 	public List<Obj> getObjsList() {
 		return _objsList;
 	}
 
+	@Nonnull
 	public List<Obj> getOrigObjs() {
 		List<Obj> ret = new ArrayList<>();
 		
@@ -607,7 +611,8 @@ public class ObjMod {
 		
 		return ret;
 	}
-	
+
+	@Nonnull
 	public List<Obj> getCustomObjs() {
 		List<Obj> ret = new ArrayList<>();
 		
@@ -621,22 +626,23 @@ public class ObjMod {
 		
 		return ret;
 	}
-	
-	public Obj getObj(ObjId id) {
+
+	@Nullable
+	public Obj getObj(@Nonnull ObjId id) {
 		return getObjs().get(id);
 	}
 	
-	private void addObj(Obj val) {
+	private void addObj(@Nonnull Obj val) {
 		_objs.put(val.getId(), val);
 		_objsList.add(val);
 	}
 	
-	public void removeObj(Obj val) {
+	public void removeObj(@Nullable Obj val) {
 		_objs.remove(val.getId());
 		_objsList.remove(val);
 	}
 
-	public void removeObj(ObjId id) {
+	public void removeObj(@Nonnull ObjId id) {
 		Obj obj = getObj(id);
 		
 		if (obj != null) {
@@ -649,7 +655,7 @@ public class ObjMod {
 		_objsList.clear();
 	}
 	
-	public Obj addObj(ObjId id, ObjId baseId) {
+	public Obj addObj(@Nullable ObjId id, ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
 		Obj obj = new Obj(id, baseId);
@@ -907,7 +913,7 @@ public class ObjMod {
 
 								SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
 
-								unitBaseSLK.addObj(objId);
+								unitBaseSLK.addCamera(objId);
 
 								//
 
@@ -915,7 +921,7 @@ public class ObjMod {
 
 								SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
 
-								unitAbilSLK.addObj(objId);
+								unitAbilSLK.addCamera(objId);
 							}*/
 
 							slkObj.set(slkFieldId, Wc3String.valueOf(val));
@@ -970,10 +976,10 @@ public class ObjMod {
 		}
 	}
 
-	private void read_0x1(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+	private void read_0x1(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt("version");
 
-		Wc3BinStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
+		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
 
 		int origObjsAmount = stream.readInt("origObjsAmount");
 		
@@ -1002,10 +1008,10 @@ public class ObjMod {
 		}
 	}
 
-	private void read_0x2(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+	private void read_0x2(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt("version");
 
-		Wc3BinStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x2.getVersion(), version);
+		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x2.getVersion(), version);
 
 		int origObjsAmount = stream.readInt("origObjsAmount");
 
@@ -1034,7 +1040,7 @@ public class ObjMod {
 		}
 	}
 	
-	private void write_0x1(Wc3BinStream stream, boolean extended) {
+	private void write_0x1(Wc3BinOutputStream stream, boolean extended) {
 		stream.writeInt(EncodingFormat.OBJ_0x1.getVersion());
 		
 		stream.writeInt(getOrigObjs().size());
@@ -1050,7 +1056,7 @@ public class ObjMod {
 		}
 	}
 	
-	private void write_0x2(Wc3BinStream stream, boolean extended) {
+	private void write_0x2(Wc3BinOutputStream stream, boolean extended) {
 		stream.writeInt(EncodingFormat.OBJ_0x2.getVersion());
 
 		stream.writeInt(getOrigObjs().size());
@@ -1070,7 +1076,7 @@ public class ObjMod {
 		}
 	}
 	
-	private void read_auto(Wc3BinStream stream, boolean extended) throws BinStream.StreamException {
+	private void read_auto(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt("version");
 		
 		stream.rewind();
@@ -1078,7 +1084,7 @@ public class ObjMod {
 		read(stream, EncodingFormat.valueOf(version), extended);
 	}
 	
-	public void read(Wc3BinStream stream, EncodingFormat format, boolean extended) throws BinStream.StreamException {
+	public void read(Wc3BinInputStream stream, EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream, extended);
@@ -1098,23 +1104,15 @@ public class ObjMod {
 		}
 	}
 
-	public void read(Wc3BinStream stream, boolean extended) throws IOException {
+	public void read(@Nonnull Wc3BinInputStream stream, boolean extended) throws IOException {
 		read(stream, EncodingFormat.AUTO, extended);
 	}
 	
-	public void read(InputStream inStream, boolean extended) throws IOException {
-		read(new Wc3BinStream(inStream), EncodingFormat.AUTO, extended);
+	public void read(@Nonnull InputStream inStream, boolean extended) throws IOException {
+		read(new Wc3BinInputStream(inStream), EncodingFormat.AUTO, extended);
 	}
 	
-	public void read(File file, boolean extended) throws IOException {
-		FileInputStream inStream = new FileInputStream(file);
-		
-		read(inStream, extended);
-		
-		inStream.close();
-	}
-	
-	private void write(Wc3BinStream stream, EncodingFormat format, boolean extended) {
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case OBJ_0x2: {
@@ -1129,35 +1127,24 @@ public class ObjMod {
 		}
 		}
 	}
-	
-	public void write(OutputStream outStream, boolean extended) throws IOException {
-		Wc3BinStream stream = new Wc3BinStream();
-		
+
+	public void write(@Nonnull Wc3BinOutputStream stream, boolean extended) {
 		write(stream, EncodingFormat.AUTO, extended);
-		
-		stream.writeTo(outStream);
 	}
-	
-	public void write(File file, boolean extended) throws IOException {
-		Wc3BinStream outStream = new Wc3BinStream();
-		
-		write(outStream, EncodingFormat.AUTO, extended);
-		
-		outStream.writeTo(file);
-	}
-	
-	public ObjMod(InputStream inStream, boolean extended) throws IOException {
+
+	public ObjMod(@Nonnull File file, boolean extended) throws IOException {
+		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
+
 		read(inStream, extended);
-	}
-	
-	public ObjMod(File inFile, boolean extended) throws IOException {
-		read(inFile, extended);
+
+		inStream.close();
 	}
 	
 	public ObjMod() {
 	}
 
-	public static ObjMod createFromInFile(File inFile, File outFile) throws Exception {
+	@Nullable
+	public static ObjMod createFromInFile(@Nonnull File inFile, @Nonnull File outFile) throws Exception {
 		ObjMod ret = null;
 
 		if (inFile.equals(W3A.GAME_PATH)) {
@@ -1184,36 +1171,9 @@ public class ObjMod {
 		
 		return ret;
 	}
-	
-	/*public static ObjMod createFromInFile(File inFile, ObjMod source) {
-		ObjMod ret = null;
 
-		if (inFile.equals(W3A.GAME_PATH)) {
-			ret = new W3A(source);
-		}
-		if (inFile.equals(W3B.GAME_PATH)) {
-			ret = new W3B(source);
-		}
-		if (inFile.equals(W3D.GAME_PATH)) {
-			ret = new W3D(source);
-		}
-		if (inFile.equals(W3H.GAME_PATH)) {
-			ret = new W3H(source);
-		}
-		if (inFile.equals(W3Q.GAME_PATH)) {
-			ret = new W3Q(source);
-		}
-		if (inFile.equals(W3T.GAME_PATH)) {
-			ret = new W3T(source);
-		}
-		if (inFile.equals(W3U.GAME_PATH)) {
-			ret = new W3U(source);
-		}
-		
-		return ret;
-	}*/
-
-	public static ObjMod createFromInFile(File inFile) {
+	@Nullable
+	public static ObjMod createFromInFile(@Nonnull File inFile) {
 		ObjMod ret = null;
 
 		if (inFile.equals(W3A.GAME_PATH)) {
