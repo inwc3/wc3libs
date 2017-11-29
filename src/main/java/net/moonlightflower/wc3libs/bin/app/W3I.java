@@ -2077,6 +2077,8 @@ public class W3I {
         for (UnitTable unitTable : _unitTables) {
             unitTable.write(stream, EncodingFormat.W3I_0x19);
         }
+
+        stream.writeInt(0);
     }
 
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {

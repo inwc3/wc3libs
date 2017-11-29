@@ -4,21 +4,22 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import wc3libs.misc.Wc3LibTest;
+import wc3libs.util.MurmurHash;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 public class W3ITest extends Wc3LibTest {
     @Test()
     public void testRebuild() throws Exception {
-        W3I w3I = new W3I(getFile("war3map.w3i"));
+        File w3iFile = getFile("war3map.w3i");
+        W3I w3I = new W3I(w3iFile);
 
         File temp = new File("out.w3i");
         w3I.write(temp);
 
         W3I w3I2 = new W3I(temp);
-
-        temp.delete();
 
         Assert.assertEquals(w3I2.getHeight(), w3I.getHeight());
         Assert.assertEquals(w3I2.getWidth(), w3I.getWidth());
@@ -39,7 +40,17 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(w3I2.getUnitTables(), w3I.getUnitTables());
         Assert.assertEquals(w3I2.getPlayersRecommendedAmount(), w3I.getPlayersRecommendedAmount());
         Assert.assertEquals(w3I2.getWorldBounds().toString(), w3I.getWorldBounds().toString());
+        Assert.assertEquals(w3I2.getCameraBounds1(), w3I.getCameraBounds1());
+        Assert.assertEquals(w3I2.getCameraBounds2(), w3I.getCameraBounds2());
+        Assert.assertEquals(w3I2.getCameraBounds3(), w3I.getCameraBounds3());
+        Assert.assertEquals(w3I2.getCameraBounds4(), w3I.getCameraBounds4());
         Assert.assertEquals(w3I2.getTerrainFog(), w3I.getTerrainFog());
         Assert.assertEquals(w3I2.getGlobalWeatherId(), w3I.getGlobalWeatherId());
+
+        byte[] ebytes = Files.readAllBytes(temp.toPath());
+        byte[] abytes = Files.readAllBytes(w3iFile.toPath());
+//        temp.delete();
+        Assert.assertEquals(MurmurHash.hash64(ebytes, ebytes.length), MurmurHash.hash64(abytes, abytes.length));
+
     }
 }

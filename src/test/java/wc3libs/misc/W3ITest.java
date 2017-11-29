@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class W3ITest extends Wc3LibTest {
     @Test()
     public void testRebuild() throws Exception {
-        W3I w3I = new W3I(getFile("war3map.w3i"));
+        W3I w3I = new W3I(getFile("war3map2.w3i"));
 
         File temp = new File("out.w3i");
         w3I.write(temp);
