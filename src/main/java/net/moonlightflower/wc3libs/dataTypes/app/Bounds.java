@@ -25,7 +25,7 @@ public class Bounds extends DataType {
 	}
 
 	public int getMaxX() {
-		return getCenter().getX() +- getSize().getX() / 2;
+		return getCenter().getX() + getSize().getX() / 2;
 	}
 	
 	public int getMaxY() {
@@ -60,7 +60,7 @@ public class Bounds extends DataType {
 	}
 	
 	public Bounds(int minX, int maxX, int minY, int maxY) {
-		this(new Size(maxX - minX, maxY - minY), new Coords2DI((maxX - minX) / 2, (maxY - minY) / 2));
+		this(new Size(maxX - minX, maxY - minY), new Coords2DI((maxX + minX) / 2, (maxY + minY) / 2));
 	}
 	
 	public static Bounds valueOf(int minX, int maxX, int minY, int maxY) {

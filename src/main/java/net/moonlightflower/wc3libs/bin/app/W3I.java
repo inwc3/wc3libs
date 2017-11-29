@@ -1735,7 +1735,7 @@ public class W3I {
 
         setCameraBounds(new Coords2DF(stream.readFloat("camA"), stream.readFloat("camB")), new Coords2DF(stream.readFloat("camC"), stream.readFloat("camD")),
                 new Coords2DF(stream.readFloat("camE"), stream.readFloat("camF")), new Coords2DF(stream.readFloat("camG"), stream.readFloat("camH")));
-        setMargins(new Bounds(stream.readInt("marginA"), stream.readInt("marginB"), stream.readInt("marginC"), stream.readInt("marginD")));
+        setMargins(new Bounds(-stream.readInt("marginA"), stream.readInt("marginB"), -stream.readInt("marginC"), stream.readInt("marginD")));
 
         setDimensions(stream.readInt("width"), stream.readInt("height"));
 
@@ -1802,9 +1802,9 @@ public class W3I {
         stream.writeFloat(camBounds4.getX());
         stream.writeFloat(camBounds4.getY());
 
-        stream.writeInt(getMargins().getMinX());
+        stream.writeInt(-getMargins().getMinX());
         stream.writeInt(getMargins().getMaxX());
-        stream.writeInt(getMargins().getMinY());
+        stream.writeInt(-getMargins().getMinY());
         stream.writeInt(getMargins().getMaxY());
 
         stream.writeInt(getWidth());
@@ -1883,7 +1883,7 @@ public class W3I {
                 new Coords2DF(stream.readFloat("camG"),
                         stream.readFloat("camH")
                 ));
-        setMargins(new Bounds(stream.readInt("marginA"), stream.readInt("marginB"), stream.readInt("marginC"), stream.readInt("marginD")));
+        setMargins(new Bounds(-stream.readInt("marginA"), stream.readInt("marginB"), -stream.readInt("marginC"), stream.readInt("marginD")));
 
         setDimensions(stream.readInt("width"), stream.readInt("height"));
 
@@ -2000,9 +2000,9 @@ public class W3I {
         stream.writeFloat(camBounds4.getX());
         stream.writeFloat(camBounds4.getY());
 
-        stream.writeInt(getMargins().getMinX());
+        stream.writeInt(-getMargins().getMinX());
         stream.writeInt(getMargins().getMaxX());
-        stream.writeInt(getMargins().getMinY());
+        stream.writeInt(-getMargins().getMinY());
         stream.writeInt(getMargins().getMaxY());
 
         stream.writeInt(getWidth());
