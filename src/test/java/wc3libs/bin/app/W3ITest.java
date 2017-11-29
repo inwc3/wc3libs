@@ -49,7 +49,7 @@ public class W3ITest extends Wc3LibTest {
 
         byte[] ebytes = Files.readAllBytes(temp.toPath());
         byte[] abytes = Files.readAllBytes(w3iFile.toPath());
-//        temp.delete();
+        temp.delete();
         Assert.assertEquals(MurmurHash.hash64(ebytes, ebytes.length), MurmurHash.hash64(abytes, abytes.length));
 
     }
