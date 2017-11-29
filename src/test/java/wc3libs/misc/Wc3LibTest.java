@@ -10,7 +10,7 @@ public abstract class Wc3LibTest {
     }
 
     public static File getFile(String name) {
-        return new File(Wc3LibTest.class.getResource(name.startsWith("/") ? name : "/" + name).getFile());
+        return new File(Wc3LibTest.class.getClassLoader().getResource(name.startsWith("/") ? name : "/" + name).getFile());
     }
 
 }
