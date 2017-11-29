@@ -1,26 +1,51 @@
 package wc3libs.bin.app;
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.app.W3I;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import wc3libs.misc.Wc3LibTest;
 import wc3libs.util.MurmurHash;
 
-import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
 public class W3ITest extends Wc3LibTest {
-    @Test()
+
+
+
+    @Test
     public void testRebuild() throws Exception {
-        File w3iFile = getFile("war3map.w3i");
-        W3I w3I = new W3I(w3iFile);
+        List<Path> w3iFile = getFiles("wc3data/Infos/");
 
-        File temp = new File("out.w3i");
-        w3I.write(temp);
+        w3iFile.forEach((Path p) -> {
+            try {
+                Log.info("Testing: " + p.getFileName());
+                byte[] input = Files.readAllBytes(p);
+                W3I w3I = new W3I(input);
 
-        W3I w3I2 = new W3I(temp);
+                Path outPath = Paths.get("out.w3i");
+                Files.deleteIfExists(outPath);
+                Path temp = Files.createFile(outPath);
+                w3I.write(temp.toFile());
+                byte[] output = Files.readAllBytes(temp);
 
+                W3I w3I2 = new W3I(output);
+
+                assertEqualsW3I(w3I, w3I2);
+
+                Assert.assertEquals(MurmurHash.hash64(input, input.length), MurmurHash.hash64(output, output.length));
+                Files.delete(temp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    private static void assertEqualsW3I(W3I w3I, W3I w3I2) {
         Assert.assertEquals(w3I2.getHeight(), w3I.getHeight());
         Assert.assertEquals(w3I2.getWidth(), w3I.getWidth());
         Assert.assertEquals(w3I2.getMargins(), w3I.getMargins());
@@ -46,11 +71,6 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(w3I2.getCameraBounds4(), w3I.getCameraBounds4());
         Assert.assertEquals(w3I2.getTerrainFog(), w3I.getTerrainFog());
         Assert.assertEquals(w3I2.getGlobalWeatherId(), w3I.getGlobalWeatherId());
-
-        byte[] ebytes = Files.readAllBytes(temp.toPath());
-        byte[] abytes = Files.readAllBytes(w3iFile.toPath());
-        temp.delete();
-        Assert.assertEquals(MurmurHash.hash64(ebytes, ebytes.length), MurmurHash.hash64(abytes, abytes.length));
-
     }
+
 }
