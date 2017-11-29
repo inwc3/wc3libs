@@ -2143,6 +2143,10 @@ public class W3I {
 
     }
 
+    public W3I(@Nonnull byte[] bytes) throws Exception {
+        read(new Wc3BinInputStream(new ByteArrayInputStream(bytes)));
+    }
+
     public W3I(@Nonnull File file) throws Exception {
         read(new Wc3BinInputStream(file));
     }
