@@ -1488,7 +1488,7 @@ Tip=|cffffcc00B|rerserker-Wut
 Ubertip="Erhöht <ACbr,Dur1> Sekunden lang die Angriffsrate um <ACbr,DataA1,%>%."
 Hotkey=B
 
-// Creep Bloodlust (B hotkey version)
+// Creep Bloodlust (B hotkey versionChunk)
 [ACbb]
 Name=Kampfrausch
 EditorSuffix= (Neutral feindlich 2)
@@ -2480,7 +2480,7 @@ Ubertip="Schickt eine gigantische Welle aus, die <ACc2,DataA1> Punkte Schaden (b
 Hotkey=C
 EditorSuffix=(Gering)
 
-// Crushing Wave (lesser version)
+// Crushing Wave (lesser versionChunk)
 [ACc3]
 Name=Schmetterwelle
 Tip=S|cffffcc00c|rhmetterwelle
@@ -2508,14 +2508,14 @@ Tip=Phönixfeuer
 EditorSuffix=(Flieger)
 Ubertip="Verbrennt fliegende in der Nähe befindliche feindliche Einheiten und richtet dabei <Apmf,DataA1> Trefferpunkte Schaden pro Sekunde an."
 
-// neutral version of resistant skin
+// neutral versionChunk of resistant skin
 [ACrk]
 Name=Festhaut
 EditorSuffix= (Neutral feindlich 1)
 Tip=Festhaut
 Ubertip="Reduziert die Dauer negativer Zauber und macht die Einheit immun gegen bestimmte Zauber."
 
-// neutral version of resistant skin (altered button pos)
+// neutral versionChunk of resistant skin (altered button pos)
 [ACsk]
 Name=Festhaut
 EditorSuffix= (Neutral feindlich 2)

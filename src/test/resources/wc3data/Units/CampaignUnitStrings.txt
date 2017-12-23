@@ -192,7 +192,7 @@ Revivetip=|cffffcc00T|rauren-Häuptling wiederbeleben
 Awakentip=|cffffcc00T|rauren-Häuptling wiederbeleben
 Ubertip="Krieger-Held mit außergewöhnlichen Nahkampfeigenschaften und hoher Schadensabsorption. Kann 'Schockwelle', 'Kriegsdonner', 'Ausdauer-Aura' und 'Reinkarnation' erlernen. |n|n|cffffcc00Angriffsziele sind Land-Einheiten.|r"
 
-//expansion version of cairne bloodhoof
+//expansion versionChunk of cairne bloodhoof
 [Ocb2]
 Name=Tauren-Häuptling
 Hotkey=T

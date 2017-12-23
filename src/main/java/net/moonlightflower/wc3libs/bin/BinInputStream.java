@@ -29,7 +29,7 @@ public class BinInputStream extends BinStream {
 			throw new StreamException(this);
 		}
 	}
-	
+
 	public void setPos(int pos) {
 		_pos = pos;
 	}
@@ -44,7 +44,11 @@ public class BinInputStream extends BinStream {
 		
 		_pos -= delta;
 	}
-	
+
+	public void skip(long delta) {
+		_pos += delta;
+	}
+
 	public void read(@Nonnull InputStream inStream) throws IOException {
 		byte[] buf = new byte[1024];
 		int len;

@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,7 +34,7 @@ public class WCT {
 		}
 
 		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			int size = stream.readInt();
+			int size = stream.readInt32();
 			
 			if (size > 0) {
 				setText(stream.readString());
@@ -139,11 +138,11 @@ public class WCT {
 	}
 	
 	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int format = stream.readInt();
+		int format = stream.readInt32();
 		
 		Wc3BinInputStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x0.getVersion(), format);
 
-		int trigsCount = stream.readInt();
+		int trigsCount = stream.readInt32();
 
 		for (int i = 1; i <= trigsCount; i++) {
 			addTrig(new Trig(stream, EncodingFormat.WCT_0x0));
@@ -159,7 +158,7 @@ public class WCT {
 	}
 
 	public void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		Wc3BinInputStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x1.getVersion(), version);
 		
@@ -167,7 +166,7 @@ public class WCT {
 		
 		_headTrig = new Trig(stream, EncodingFormat.WCT_0x1);
 
-		int trigsCount = stream.readInt();
+		int trigsCount = stream.readInt32();
 
 		for (int i = 1; i <= trigsCount; i++) {
 			addTrig(new Trig(stream, EncodingFormat.WCT_0x1));
@@ -187,7 +186,7 @@ public class WCT {
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

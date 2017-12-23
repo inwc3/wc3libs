@@ -94,64 +94,64 @@ public class Packed {
 	public static Wc3BinInputStream decompress(Wc3BinInputStream inStream) throws BinStream.StreamException {
 		byte[] startToken = inStream.readBytes(28);
 		
-		long headerSize = inStream.readUInt();
+		long headerSize = inStream.readUInt32();
 		/*
 		 * 0x40 up to 1.06
 		 * 0x44 else
 		 */
 		
-		long compressedFileSize = inStream.readUInt();
+		long compressedFileSize = inStream.readUInt32();
 		
-		long headerVersion = inStream.readUInt();
+		long headerVersion = inStream.readUInt32();
 		/*
 		 * 0x00 up to 1.06
 		 * 0x01 else
 		 */
 		
-		long uncompressedFileSize = inStream.readUInt();
+		long uncompressedFileSize = inStream.readUInt32();
 		
-		long blocksCount = inStream.readUInt();
+		long blocksCount = inStream.readUInt32();
 		
 		long version;
 		
 		switch ((int) headerVersion) {
 		case 0x00: {
-			int unknown = inStream.readUShort();
-			version = inStream.readUInt();
+			int unknown = inStream.readUInt16();
+			version = inStream.readUInt32();
 			
 			break;
 		}
 		default: {
 			Id id = inStream.readId(); //WAR3 or W3XP
-			version = inStream.readUInt();
+			version = inStream.readUInt32();
 		}
 		}
 		
-		int buildNum = inStream.readUShort();
-		int flags = inStream.readUShort();
+		int buildNum = inStream.readUInt16();
+		int flags = inStream.readUInt16();
 		/*
 		 * 0x0000 - singleplayer
 		 * 0x8000 - multiplayer
 		 */
 		
-		long len = inStream.readUInt();
+		long len = inStream.readUInt32();
 		/*
 		 * milli seconds of replays, otherwise 0
 		 */
 		
-		long crc32 = inStream.readUInt();
+		long crc32 = inStream.readUInt32();
 
 		Vector<byte[]> blocks = new Vector<>();
 		Vector<byte[]> uncompressedBlocks = new Vector<>();
 		
 		for (int i = 0; i < blocksCount; i++) {
-			int compressedSize = inStream.readUShort();
-			int uncompressedSize = inStream.readUShort();
+			int compressedSize = inStream.readUInt16();
+			int uncompressedSize = inStream.readUInt16();
 			/*
 			 * multiple of 2048, rest padded with 0x00
 			 */
 			
-			long hash = inStream.readUInt();
+			long hash = inStream.readUInt32();
 
 			blocks.add(inStream.readBytes(compressedSize));
 			uncompressedBlocks.add(new byte[uncompressedSize]);

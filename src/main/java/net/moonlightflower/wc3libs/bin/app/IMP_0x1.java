@@ -30,11 +30,11 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	
 	@Override
 	public void read(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 
 		Wc3BinInputStream.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
 		
-		int impsCount = stream.readInt();
+		int impsCount = stream.readInt32();
 		
 		for (int i = 0; i < impsCount; i++) {
 			addObj(new Obj(stream));

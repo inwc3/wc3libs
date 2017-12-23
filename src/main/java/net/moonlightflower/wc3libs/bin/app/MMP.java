@@ -96,9 +96,9 @@ public class MMP {
 		}
 
 		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setType(IconType.valueOf(stream.readInt()));
+			setType(IconType.valueOf(stream.readInt32()));
 			
-			setCoords(new Coords2DI(stream.readInt(), stream.readInt()));
+			setCoords(new Coords2DI(stream.readInt32(), stream.readInt32()));
 			
 			int blue = stream.readUByte();
 			int green = stream.readUByte();
@@ -310,9 +310,9 @@ public class MMP {
 	}
 
 	private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int unknown = stream.readInt(); //most probably format
+		int unknown = stream.readInt32(); //most probably format
 		
-		int iconsCount = stream.readInt();
+		int iconsCount = stream.readInt32();
 		
 		for (int i = 0; i < iconsCount; i++) {
 			Icon icon = addIcon();
@@ -332,7 +332,7 @@ public class MMP {
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

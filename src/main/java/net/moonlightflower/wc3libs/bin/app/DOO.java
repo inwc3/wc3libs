@@ -142,12 +142,12 @@ public class DOO {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				int itemsCount = stream.readInt();
+				int itemsCount = stream.readInt32();
 
 				for (int i = 0; i < itemsCount; i++) {
 					ObjId typeId = ObjId.valueOf(stream.readId());
 					
-					int chance = stream.readInt();
+					int chance = stream.readInt32();
 					
 					Item item = addItem(typeId, chance);
 				}
@@ -219,27 +219,27 @@ public class DOO {
 		public void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId()));
 			
-			setVariation(stream.readInt());
+			setVariation(stream.readInt32());
 			
-			setPos(new Coords3DF(stream.readFloat(), stream.readFloat(), stream.readFloat()));
+			setPos(new Coords3DF(stream.readFloat8(), stream.readFloat8(), stream.readFloat8()));
 			
-			setAngle(stream.readFloat());
+			setAngle(stream.readFloat8());
 			
-			setScale(new Coords3DF(stream.readFloat(), stream.readFloat(), stream.readFloat()));
+			setScale(new Coords3DF(stream.readFloat8(), stream.readFloat8(), stream.readFloat8()));
 			
 			setLifePerc(stream.readUByte());
 			
 			setFlags(stream.readUByte());
 			
-			setItemTablePtr(stream.readInt());
+			setItemTablePtr(stream.readInt32());
 
-			int itemsDroppedCount = stream.readInt();
+			int itemsDroppedCount = stream.readInt32();
 			
 			for (int i = 0; i < itemsDroppedCount; i++) {
 				addItemSet(new ItemSet(stream, EncodingFormat.DOO_0x8));
 			}
 
-			setEditorId(stream.readInt());
+			setEditorId(stream.readInt32());
 		}
 		
 		public void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -343,9 +343,9 @@ public class DOO {
 		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			ObjId typeId = ObjId.valueOf(stream.readId());
 			
-			int z = stream.readInt();
-			int x = stream.readInt();
-			int y = stream.readInt();
+			int z = stream.readInt32();
+			int x = stream.readInt32();
+			int y = stream.readInt32();
 			
 			setPos(new Coords3DI(x, y, z));
 		}
@@ -431,9 +431,9 @@ public class DOO {
 		}
 		
 		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			int specialVersion = stream.readInt();
+			int specialVersion = stream.readInt32();
 			
-			int specialDoodsCount = stream.readInt();
+			int specialDoodsCount = stream.readInt32();
 			
 			for (int i = 0; i < specialDoodsCount; i++) {
 				_parent.addSpecialDood(_parent.new SpecialDood(stream, EncodingFormat.DOO_SPECIAL_0x0));
@@ -451,7 +451,7 @@ public class DOO {
 		}
 		
 		private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			int specialVersion = stream.readInt();
+			int specialVersion = stream.readInt32();
 			
 			stream.rewind();
 
@@ -515,13 +515,13 @@ public class DOO {
 	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId();
 		
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		Wc3BinInputStream.checkFormatVer("dooMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
 		
-		int subVersion = stream.readInt(); //0xB
+		int subVersion = stream.readInt32(); //0xB
 		
-		int doodsCount = stream.readInt();
+		int doodsCount = stream.readInt32();
 		
 		for (int i = 0; i < doodsCount; i++) {
 			addDood(new Dood(stream, EncodingFormat.DOO_0x8));
@@ -545,7 +545,7 @@ public class DOO {
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
 		Id startToken = stream.readId();
 		
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

@@ -7,9 +7,7 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -174,7 +172,7 @@ public class IMP {
 	}
 	
 	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

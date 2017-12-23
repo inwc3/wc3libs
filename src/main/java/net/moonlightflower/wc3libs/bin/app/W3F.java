@@ -396,7 +396,7 @@ public class W3F {
 		}
 
 		private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setVisible((stream.readInt() > 0));
+			setVisible((stream.readInt32() > 0));
 			setChapterTitle(stream.readString());
 			setMapTitle(stream.readString());
 			setMapPath(stream.readString());
@@ -604,40 +604,40 @@ public class W3F {
 	}
 	
 	private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3F_0x1.getVersion(), version);
 		
-		setSavesAmount(stream.readInt("savesAmount"));
-		setEditorVersion(stream.readInt("editorVersion"));
+		setSavesAmount(stream.readInt32("savesAmount"));
+		setEditorVersion(stream.readInt32("editorVersion"));
 		
 		setCampaignName(stream.readString("campaignName"));
 		setDifficulty(stream.readString("difficulty"));
 		setCampaignAuthor(stream.readString("author"));
 		setCampaignDescription(stream.readString("description"));
 
-		setFlags(Flags.valueOf(stream.readInt()));
+		setFlags(Flags.valueOf(stream.readInt32()));
 		
-		setCampaignBackground(stream.readInt(), stream.readString());
+		setCampaignBackground(stream.readInt32(), stream.readString());
 		setMinimapPath(new File(stream.readString()));
-		setAmbientSound(stream.readInt(), stream.readString());
+		setAmbientSound(stream.readInt32(), stream.readString());
 		
 		setTerrainFog(new TerrainFog(
-				TerrainFogType.valueOf(stream.readInt()),
+				TerrainFogType.valueOf(stream.readInt32()),
 				stream.readReal(), stream.readReal(),
 				stream.readReal(),
 				Color.fromRGBA255(stream.readUByte(), stream.readUByte(), stream.readUByte(), stream.readUByte())
 		));
 		
-		setUIRace(UIRace.valueOf(stream.readInt()));
+		setUIRace(UIRace.valueOf(stream.readInt32()));
 		
-		int mapsCount = stream.readInt();
+		int mapsCount = stream.readInt32();
 		
 		for (int i = 0; i < mapsCount; i++) {
 			addMap(new MapEntry(stream, EncodingFormat.W3F_0x1));
 		}
 		
-		int listedMapsCount = stream.readInt();
+		int listedMapsCount = stream.readInt32();
 		
 		for (int i = 0; i < listedMapsCount; i++) {
 			addListedMap(new ListedMapEntry(stream, EncodingFormat.W3F_0x1));
@@ -703,7 +703,7 @@ public class W3F {
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 
 		stream.rewind();
 

@@ -126,10 +126,10 @@ public class W3R {
 		public WeatherId NULL_WEATHER_ID = WeatherId.valueOf("0000");
 
 		public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			float minX = stream.readFloat();
-			float minY = stream.readFloat();
-			float maxX = stream.readFloat();
-			float maxY = stream.readFloat();
+			float minX = stream.readFloat8();
+			float minY = stream.readFloat8();
+			float maxX = stream.readFloat8();
+			float maxY = stream.readFloat8();
 			
 			set(DATA_BOUNDS, Bounds.valueOf((int) minX, (int) minY, (int) maxX, (int) maxY));
 			set(TEXT_NAME, Wc3String.valueOf(stream.readString()));
@@ -255,11 +255,11 @@ public class W3R {
 	}
 
 	public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int format = stream.readInt();
+		int format = stream.readInt32();
 
 		Wc3BinInputStream.checkFormatVer("rectMaskFunc", EncodingFormat.W3R_0x5.getVersion(), format);
 
-		int rectsCount = stream.readInt();
+		int rectsCount = stream.readInt32();
 
 		for (int i = 0; i < rectsCount; i++) {					
 			addRect(new Rect(stream, EncodingFormat.W3R_0x5));
@@ -277,7 +277,7 @@ public class W3R {
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

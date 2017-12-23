@@ -180,7 +180,7 @@ public class W3C {
 		}
 
 		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setTarget(new Coords2DF(stream.readFloat("targetX"), stream.readFloat("targetY")));
+			setTarget(new Coords2DF(stream.readFloat8("targetX"), stream.readFloat8("targetY")));
 			setZOffset(stream.readReal("zOffset"));
 
 			setRotation(stream.readReal("rotation"));
@@ -269,11 +269,11 @@ public class W3C {
 	}
 	
 	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 
 		Wc3BinInputStream.checkFormatVer("camMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
 
-		int camsCount = stream.readInt("camsCount");
+		int camsCount = stream.readInt32("camsCount");
 
 		for (int i = 0; i < camsCount; i++) {
 			addCamera(new Camera(stream, EncodingFormat.WPM_0x0));
@@ -291,7 +291,7 @@ public class W3C {
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

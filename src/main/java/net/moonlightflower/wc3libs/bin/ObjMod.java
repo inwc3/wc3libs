@@ -1,10 +1,8 @@
 package net.moonlightflower.wc3libs.bin;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -294,12 +292,12 @@ public class ObjMod {
 		}
 		
 		private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
-			int modsAmount = stream.readInt("modsAmount");
+			int modsAmount = stream.readInt32("modsAmount");
 			
 			for (int i = 0; i < modsAmount; i++) {
 				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
 				
-				int varTypeI = stream.readInt("varType");
+				int varTypeI = stream.readInt32("varType");
 
 				Field.ValType varType = Field.ValType.valueOf(varTypeI);
 				
@@ -307,25 +305,25 @@ public class ObjMod {
 				int dataPt = 0;
 
 				if (extended) {
-					level = stream.readInt("level/variation");
-					dataPt = stream.readInt("dataPt");
+					level = stream.readInt32("level/variation");
+					dataPt = stream.readInt32("dataPt");
 				}
 
 				Field.Val val = null;
 
 				switch (varType) {
 				case INT: {
-					val = Field.Val.valueOf(stream.readInt("val (int)"));
+					val = Field.Val.valueOf(stream.readInt32("val (int)"));
 					
 					break;
 				}
 				case REAL: {
-					val = Field.Val.valueOf(stream.readFloat("val (real)"), false);
+					val = Field.Val.valueOf(stream.readFloat8("val (real)"), false);
 					
 					break;
 				}
 				case UNREAL: {
-					val = Field.Val.valueOf(stream.readFloat("val (unreal)"), true);
+					val = Field.Val.valueOf(stream.readFloat8("val (unreal)"), true);
 					
 					break;
 				}
@@ -346,36 +344,36 @@ public class ObjMod {
 		}
 
 		private void read_0x2(@Nullable Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
-			int modsAmount = stream.readInt("modsAmount");
+			int modsAmount = stream.readInt32("modsAmount");
 
 			for (int i = 0; i < modsAmount; i++) {				
 				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
 
-				Field.ValType varType = Field.ValType.valueOf(stream.readInt("varType"));
+				Field.ValType varType = Field.ValType.valueOf(stream.readInt32("varType"));
 				
 				int level = 0;
 				int dataPt = 0;
 
 				if (extended) {
-					level = stream.readInt("level/variation");
-					dataPt = stream.readInt("dataPt");
+					level = stream.readInt32("level/variation");
+					dataPt = stream.readInt32("dataPt");
 				}
 
 				Field.Val val = null;
 				
 				switch (varType) {
 				case INT: {
-					val = Field.Val.valueOf(stream.readInt("val (int)"));
+					val = Field.Val.valueOf(stream.readInt32("val (int)"));
 					
 					break;
 				}
 				case REAL: {
-					val = Field.Val.valueOf(stream.readFloat("val (real)"), false);
+					val = Field.Val.valueOf(stream.readFloat8("val (real)"), false);
 					
 					break;
 				}
 				case UNREAL: {
-					val = Field.Val.valueOf(stream.readFloat("val (unreal)"), true);
+					val = Field.Val.valueOf(stream.readFloat8("val (unreal)"), true);
 					
 					break;
 				}
@@ -977,11 +975,11 @@ public class ObjMod {
 	}
 
 	private void read_0x1(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 
 		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
 
-		int origObjsAmount = stream.readInt("origObjsAmount");
+		int origObjsAmount = stream.readInt32("origObjsAmount");
 		
 		for (int i = 0; i < origObjsAmount; i++) {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
@@ -994,7 +992,7 @@ public class ObjMod {
 			addObj(obj);
 		}
 		
-		int customObjsAmount = stream.readInt("customObjsAmount");
+		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
@@ -1009,11 +1007,11 @@ public class ObjMod {
 	}
 
 	private void read_0x2(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 
 		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x2.getVersion(), version);
 
-		int origObjsAmount = stream.readInt("origObjsAmount");
+		int origObjsAmount = stream.readInt32("origObjsAmount");
 
 		for (int i = 0; i < origObjsAmount; i++) {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
@@ -1026,7 +1024,7 @@ public class ObjMod {
 			addObj(obj);
 		}
 		
-		int customObjsAmount = stream.readInt("customObjsAmount");
+		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
@@ -1077,7 +1075,7 @@ public class ObjMod {
 	}
 	
 	private void read_auto(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		stream.rewind();
 

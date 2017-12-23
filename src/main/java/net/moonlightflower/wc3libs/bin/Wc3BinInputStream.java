@@ -1,7 +1,5 @@
 package net.moonlightflower.wc3libs.bin;
 
-import net.moonlightflower.wc3libs.dataTypes.Stringable;
-import net.moonlightflower.wc3libs.dataTypes.app.Char;
 import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
@@ -21,7 +19,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		return readByte() & 0xFF;
 	}
 	
-	public Integer readUByte(String label) throws StreamException {
+	public Integer readUByte(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -37,7 +35,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	private short readShort_priv() throws StreamException {
+	private short readInt16_priv() throws StreamException {
 		try {
 			short res = (short) (readByte() + readByte() * 256);
 			
@@ -47,11 +45,11 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public short readShort(String label) throws StreamException {
+	public short readInt16(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
-			Short val = readShort_priv();
+			Short val = readInt16_priv();
 			
 			log("short", label, val);
 			
@@ -63,15 +61,15 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public Short readShort() throws StreamException {
-		return readShort_priv();
+	public Short readInt16() throws StreamException {
+		return readInt16_priv();
 	}
 	
-	public int readUShort() throws StreamException {
-		return (readShort() & 0xFFFF);
+	public int readUInt16() throws StreamException {
+		return (readInt16() & 0xFFFF);
 	}
 	
-	public Integer readInt() throws StreamException {
+	public Integer readInt32() throws StreamException {
 		try {
 			byte[] sub = readBytes(4);
 
@@ -83,11 +81,11 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Integer readInt(String label) throws StreamException {
+	public Integer readInt32(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
-			Integer val = readInt();
+			Integer val = readInt32();
 			
 			log("int", label, val);
 			
@@ -99,16 +97,20 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public long readUInt() throws StreamException {
-		return (readInt() & 0xFFFFFFFF);
-	}
-	
-	public Int readWc3Int() throws StreamException {
-		return Int.valueOf(readInt());
+	public long readUInt32() throws StreamException {
+		return (readInt32() & 0xFFFFFFFF);
 	}
 
-	public Int readWc3Int(String label) throws StreamException {
-		return Int.valueOf(readInt(label));
+	public long readUInt32(@Nonnull String label) throws StreamException {
+		return (readInt32(label) & 0xFFFFFFFF);
+	}
+
+	public Int readWc3Int() throws StreamException {
+		return Int.valueOf(readInt32());
+	}
+
+	public Int readWc3Int(@Nonnull String label) throws StreamException {
+		return Int.valueOf(readInt32(label));
 	}
 	
 	private Character readChar_priv() throws StreamException {
@@ -121,7 +123,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Character readChar(String label) throws StreamException {
+	public Character readChar(@Nonnull String label) throws StreamException {
 		try {	
 			logBegin();
 			
@@ -171,7 +173,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public String readString(String label) throws StreamException {
+	public String readString(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -213,7 +215,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Id readId(String label) throws StreamException {
+	public Id readId(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -233,7 +235,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		return readId(null);
 	}
 
-	private Float readFloat_priv() throws StreamException {
+	private Float readFloat8_priv() throws StreamException {
 		try {
 			byte[] sub = readBytes(4);
 
@@ -247,11 +249,11 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Float readFloat(String label) throws StreamException {
+	public Float readFloat8(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
-			Float val = readFloat_priv();
+			Float val = readFloat8_priv();
 			
 			log("float", label, val);
 			
@@ -263,12 +265,12 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public Float readFloat() throws StreamException {
-		return readFloat(null);
+	public Float readFloat8() throws StreamException {
+		return readFloat8(null);
 	}
 
-	public Real readReal(String label) throws StreamException {
-		return Real.valueOf(readFloat(label));
+	public Real readReal(@Nonnull String label) throws StreamException {
+		return Real.valueOf(readFloat8(label));
 	}
 
 	public Real readReal() throws StreamException {
@@ -289,7 +291,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		super(file);
 	}
 
-	public static void checkFormatVer(String string, int targetVersion, int actualVersion) {
+	public static void checkFormatVer(@Nonnull String string, int targetVersion, int actualVersion) {
 		assert (actualVersion == targetVersion) : string;
 	}
 }

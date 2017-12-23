@@ -420,7 +420,7 @@ public class WTG {
 				}
 				
 				private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
-					SpecType specType = SpecType.valueOf(stream.readInt("specType"));
+					SpecType specType = SpecType.valueOf(stream.readInt32("specType"));
 					/*
 					 * 0 - preset
 					 * 1 - variable
@@ -430,14 +430,14 @@ public class WTG {
 					
 					String val = stream.readString("val");
 					
-					int beginFunc = stream.readInt("beginFunc");
+					int beginFunc = stream.readInt32("beginFunc");
 					
 					if (beginFunc > 0) {
-						int type2 = stream.readInt("specType2");
+						int type2 = stream.readInt32("specType2");
 						
 						String val2 = stream.readString("val2");
 						
-						int beginFunc2 = stream.readInt("beginFunc2");
+						int beginFunc2 = stream.readInt32("beginFunc2");
 						
 						if (beginFunc2 > 0) {
 							Func func = funcMap.get(val2);
@@ -457,13 +457,13 @@ public class WTG {
 							}
 							
 							if (!hasBranch) {
-								//stream.readInt("unknownB");  //unknown
+								//stream.readInt32("unknownB");  //unknown
 							}
 						}
 
-						stream.readInt("endToken");  //unknown
+						stream.readInt32("endToken");  //unknown
 					} else {
-						stream.readInt("unknownC");  //unknown
+						stream.readInt32("unknownC");  //unknown
 					}
 				}
 				
@@ -472,20 +472,20 @@ public class WTG {
 				}
 				
 				private void read_0x7(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
-					SpecType specType = SpecType.valueOf(stream.readInt("specType"));
+					SpecType specType = SpecType.valueOf(stream.readInt32("specType"));
 					String val = stream.readString("val");
 					
 					setSpecType(specType);
 					setVal(val);
 					
-					int beginFunc = stream.readInt("beginFunc");
+					int beginFunc = stream.readInt32("beginFunc");
 					
 					setBeginFunc(beginFunc);
 					
 					if (beginFunc == 1) {
 						stream.beginGroup("beginFunc2");
 						
-						setSpecType(SpecType.valueOf(stream.readInt("specType2"))); //beginFunc_type = 3
+						setSpecType(SpecType.valueOf(stream.readInt32("specType2"))); //beginFunc_type = 3
 						
 						int pos = stream.getPos();
 						
@@ -495,7 +495,7 @@ public class WTG {
 						
 						Func func = funcMap.get(funcName);
 						
-						setBeginFunc(stream.readInt()); //beginFunc_beginFunc = 1
+						setBeginFunc(stream.readInt32()); //beginFunc_beginFunc = 1
 
 						if (func != null) {
 							for (int i = 0; i < func.getParams().size(); i++) {
@@ -541,12 +541,12 @@ public class WTG {
 							throw new IOException(String.format("unknown func %s at %s", funcName, pos, String.format("%x", pos)));
 						}
 						
-						stream.readInt("endToken"); //beginFunc_endToken = 0
+						stream.readInt32("endToken"); //beginFunc_endToken = 0
 						
 						stream.endGroup();
 					}
 					
-					stream.readInt("endToken"); //endToken = 0
+					stream.readInt32("endToken"); //endToken = 0
 System.out.println(val);
 					if ((specType == SpecType.VARIABLE) && (varMap.containsKey(val) && varMap.get(val).isArray())) {
 						stream.beginGroup("arrayIndex");
@@ -653,15 +653,15 @@ System.out.println(val);
 				private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("boolexpr");
 					
-					setBoolexpr_Unknown1(stream.readInt("unknown1"));
-					setBoolexpr_Unknown2(stream.readInt("unknown2"));
+					setBoolexpr_Unknown1(stream.readInt32("unknown1"));
+					setBoolexpr_Unknown2(stream.readInt32("unknown2"));
 					setBoolexpr_Unknown3(stream.readChar("unknown3"));
 					
 					ECA eca = new ECA(stream, EncodingFormat.WTG_0x4, funcMap, varMap, false);
 					
 					setECA(eca);
 					
-					setEndToken(stream.readInt("endToken"));
+					setEndToken(stream.readInt32("endToken"));
 					
 					stream.endGroup();
 				}
@@ -673,15 +673,15 @@ System.out.println(val);
 				private void read_0x7(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("boolexpr");
 					
-					setBoolexpr_Unknown1(stream.readInt("unknown1"));
-					setBoolexpr_Unknown2(stream.readInt("unknown2"));
+					setBoolexpr_Unknown1(stream.readInt32("unknown1"));
+					setBoolexpr_Unknown2(stream.readInt32("unknown2"));
 					setBoolexpr_Unknown3(stream.readChar("unknown3"));
 					
 					ECA eca = new ECA(stream, EncodingFormat.WTG_0x4, funcMap, varMap, false);
 					
 					setECA(eca);
 					
-					setEndToken(stream.readInt("endToken"));
+					setEndToken(stream.readInt32("endToken"));
 					
 					stream.endGroup();
 				}
@@ -758,9 +758,9 @@ System.out.println(val);
 				private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("code");
 					
-					setCode_unknown1(stream.readInt("unknown1"));
+					setCode_unknown1(stream.readInt32("unknown1"));
 					
-					int dummyDoNothing = stream.readInt("dummyDoNothing");
+					int dummyDoNothing = stream.readInt32("dummyDoNothing");
 					
 					if (dummyDoNothing == 0x100) {
 						setCode_unknown2(stream.readChar("unknown2"));
@@ -774,7 +774,7 @@ System.out.println(val);
 					
 					setECA(eca);
 					
-					setEndToken(stream.readInt());
+					setEndToken(stream.readInt32());
 					
 					stream.endGroup();
 				}
@@ -786,9 +786,9 @@ System.out.println(val);
 				private void read_0x7(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("code");
 					
-					setCode_unknown1(stream.readInt("unknown1"));
+					setCode_unknown1(stream.readInt32("unknown1"));
 					
-					int dummyDoNothing = stream.readInt("dummyDoNothing");
+					int dummyDoNothing = stream.readInt32("dummyDoNothing");
 					
 					if (dummyDoNothing == 0x100) {
 						setCode_unknown2(stream.readChar("unknown2"));
@@ -802,7 +802,7 @@ System.out.println(val);
 					
 					setECA(eca);
 					
-					setEndToken(stream.readInt());
+					setEndToken(stream.readInt32());
 					
 					stream.endGroup();
 				}
@@ -874,10 +874,10 @@ System.out.println(val);
 			}
 			
 			private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
-				setType(ECAType.valueOf(stream.readInt("type")));
+				setType(ECAType.valueOf(stream.readInt32("type")));
 				
 				if (hasBranch) {
-					setBranch(stream.readInt("branch"));
+					setBranch(stream.readInt32("branch"));
 				}
 				
 				String funcName = stream.readString("funcName");
@@ -885,7 +885,7 @@ System.out.println(val);
 				Func func = funcMap.get(funcName);
 				
 				setFunc(func);
-				setEnabled(stream.readInt("enabled") != 0);
+				setEnabled(stream.readInt32("enabled") != 0);
 				System.out.println("func "+((func==null) ? "null" : func.getName()));
 				if (func != null) {
 					System.out.println("params " + func.getParams().size());
@@ -933,10 +933,10 @@ System.out.println(val);
 			}
 			
 			private void read_0x7(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
-				setType(ECAType.valueOf(stream.readInt("type")));
+				setType(ECAType.valueOf(stream.readInt32("type")));
 				
 				if (hasBranch) {
-					setBranch(stream.readInt("branch"));
+					setBranch(stream.readInt32("branch"));
 				}
 				
 				String funcName = stream.readString("funcName");
@@ -944,7 +944,7 @@ System.out.println(val);
 				Func func = funcMap.get(funcName);
 				
 				setFunc(func);
-				setEnabled(stream.readInt("enabled") != 0);
+				setEnabled(stream.readInt32("enabled") != 0);
 				stream.log("func "+((func==null) ? "null" : func.getName()));
 				if (func != null) {
 					stream.log("params " + func.getParams().size());
@@ -985,9 +985,9 @@ System.out.println(val);
 					throw new IOException(String.format("unknown func %s", funcName));
 				}
 				
-				//stream.readInt("unknown"); //unknown
+				//stream.readInt32("unknown"); //unknown
 				
-				int ECAsCount = stream.readInt("ECAsCount");
+				int ECAsCount = stream.readInt32("ECAsCount");
 				
 				for (int i = 0; i < ECAsCount; i++) {
 					ECA sub = new ECA(stream, EncodingFormat.WTG_0x7, funcMap, varMap, true);
@@ -1081,14 +1081,14 @@ System.out.println(val);
 		private void read_0x4(@Nonnull Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
 			setName(stream.readString("name"));
 			setDescription(stream.readString("description"));
-			//setType(TrigType.valueOf(stream.readInt("type")));
-			setEnabled(stream.readInt("enabled") != 0);
-			setCustomTxt(stream.readInt("customTxt") != 0);
-			setInitiallyOn(stream.readInt("initiallyOn") == 0);
-			stream.readInt("unknown");
-			setCatIndex(stream.readInt("catIndex"));
+			//setType(TrigType.valueOf(stream.readInt32("type")));
+			setEnabled(stream.readInt32("enabled") != 0);
+			setCustomTxt(stream.readInt32("customTxt") != 0);
+			setInitiallyOn(stream.readInt32("initiallyOn") == 0);
+			stream.readInt32("unknown");
+			setCatIndex(stream.readInt32("catIndex"));
 
-			int ECAsCount = stream.readInt("ECAsCount");
+			int ECAsCount = stream.readInt32("ECAsCount");
 			
 			for (int i = 0; i < ECAsCount; i++) {
 				stream.beginGroup(String.format("ECA%d", i));
@@ -1121,14 +1121,14 @@ System.out.println(val);
 		private void read_0x7(@Nonnull Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
 			setName(stream.readString("name"));
 			setDescription(stream.readString("description"));
-			setType(TrigType.valueOf(stream.readInt("type")));
-			setEnabled(stream.readInt("enabled") != 0);
-			setCustomTxt(stream.readInt("customTxt") != 0);
-			setInitiallyOn(stream.readInt("initiallyOn") == 0);
-			setRunOnMapInit(stream.readInt("runOnMapInit") != 0);
-			setCatIndex(stream.readInt("catIndex"));
+			setType(TrigType.valueOf(stream.readInt32("type")));
+			setEnabled(stream.readInt32("enabled") != 0);
+			setCustomTxt(stream.readInt32("customTxt") != 0);
+			setInitiallyOn(stream.readInt32("initiallyOn") == 0);
+			setRunOnMapInit(stream.readInt32("runOnMapInit") != 0);
+			setCatIndex(stream.readInt32("catIndex"));
 			
-			int ECAsCount = stream.readInt("ECAsCount");
+			int ECAsCount = stream.readInt32("ECAsCount");
 			
 			for (int i = 0; i < ECAsCount; i++) {
 				stream.beginGroup(String.format("ECA%d", i));
@@ -1256,7 +1256,7 @@ System.out.println(val);
 		}
 		
 		private void read_0x4(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setIndex(stream.readInt("index"));
+			setIndex(stream.readInt32("index"));
 			setName(stream.readString("name"));
 		}
 		
@@ -1266,9 +1266,9 @@ System.out.println(val);
 		}
 		
 		private void read_0x7(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setIndex(stream.readInt("index"));
+			setIndex(stream.readInt32("index"));
 			setName(stream.readString("name"));
-			setType(Type.valueOf(stream.readInt("type")));
+			setType(Type.valueOf(stream.readInt32("type")));
 		}
 		
 		private void write_0x7(Wc3BinOutputStream stream) {
@@ -1412,10 +1412,10 @@ System.out.println(val);
 		private void read_0x4(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setName(stream.readString("name"));
 			setType(stream.readString("type"));
-			setUnknownNumE(stream.readInt("unknownNumE"));
+			setUnknownNumE(stream.readInt32("unknownNumE"));
 			
-			setArray(stream.readInt("array") != 0);
-			setInited(stream.readInt("inited") != 0);
+			setArray(stream.readInt32("array") != 0);
+			setInited(stream.readInt32("inited") != 0);
 			setInitVal(stream.readString("initVal"));
 		}
 
@@ -1432,11 +1432,11 @@ System.out.println(val);
 		private void read_0x7(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setName(stream.readString("name"));
 			setType(stream.readString("type"));
-			setUnknownNumE(stream.readInt("unknownNumE"));
+			setUnknownNumE(stream.readInt32("unknownNumE"));
 			
-			setArray(stream.readInt("array") != 0);
-			setArraySize(stream.readInt("arraySize"));
-			setInited(stream.readInt("inited") != 0);
+			setArray(stream.readInt32("array") != 0);
+			setArraySize(stream.readInt32("arraySize"));
+			setInited(stream.readInt32("inited") != 0);
 			setInitVal(stream.readString("initVal"));
 		}
 
@@ -1609,11 +1609,11 @@ System.out.println(val);
 	private void read_0x4(@Nonnull Wc3BinInputStream stream) throws Exception {
 		Id startToken = stream.readId("startToken");
 		
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		Wc3BinInputStream.checkFormatVer("guiTrigMaskFunc", EncodingFormat.WTG_0x4.getVersion(), version);
 		
-		int trigCatsCount = stream.readInt("trigCatsCount");
+		int trigCatsCount = stream.readInt32("trigCatsCount");
 		
 		for (int i = 0; i < trigCatsCount; i++) {
 			TrigCat trigCat = new TrigCat(stream, EncodingFormat.WTG_0x4);
@@ -1625,9 +1625,9 @@ System.out.println(val);
 			stream.endGroup();
 		}
 		
-		int unknownNumB = stream.readInt("unknownNumB");
+		int unknownNumB = stream.readInt32("unknownNumB");
 		
-		int varsCount = stream.readInt("varsCount");
+		int varsCount = stream.readInt32("varsCount");
 		
 		for (int i = 0; i < varsCount; i++) {
 			stream.beginGroup(String.format("var%d", i));
@@ -1637,7 +1637,7 @@ System.out.println(val);
 			stream.endGroup();
 		}
 		
-		int trigsCount = stream.readInt("trigsCount");
+		int trigsCount = stream.readInt32("trigsCount");
 
 		for (int i = 0; i < trigsCount; i++) {
 			stream.beginGroup(String.format("trig%d", i));
@@ -1677,11 +1677,11 @@ System.out.println(val);
 	private void read_0x7(@Nonnull Wc3BinInputStream stream) throws Exception {
 		Id startToken = stream.readId("startToken");
 		
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		Wc3BinInputStream.checkFormatVer("guiTrigMaskFunc", EncodingFormat.WTG_0x7.getVersion(), version);
 		
-		int trigCatsCount = stream.readInt("trigCatsCount");
+		int trigCatsCount = stream.readInt32("trigCatsCount");
 		
 		for (int i = 0; i < trigCatsCount; i++) {
 			stream.beginGroup(String.format("trigCat%d", i));
@@ -1693,9 +1693,9 @@ System.out.println(val);
 			addTrigCat(trigCat);
 		}
 		
-		int unknownNumB = stream.readInt("unknownNumB");
+		int unknownNumB = stream.readInt32("unknownNumB");
 		
-		int varsCount = stream.readInt("varsCount");
+		int varsCount = stream.readInt32("varsCount");
 		
 		for (int i = 0; i < varsCount; i++) {
 			stream.beginGroup(String.format("var%d", i));
@@ -1705,7 +1705,7 @@ System.out.println(val);
 			stream.endGroup();
 		}
 		
-		int trigsCount = stream.readInt("trigsCount");
+		int trigsCount = stream.readInt32("trigsCount");
 
 		for (int i = 0; i < trigsCount; i++) {
 			stream.beginGroup(String.format("trig%d", i));
@@ -1746,7 +1746,7 @@ System.out.println(val);
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
 		Id startToken = stream.readId("startToken");
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		stream.rewind();
 

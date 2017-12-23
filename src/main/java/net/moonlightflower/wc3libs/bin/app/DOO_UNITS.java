@@ -168,7 +168,7 @@ public class DOO_UNITS {
 				
 				private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 					setTypeId(ObjId.valueOf(stream.readId()));
-					setChance(stream.readInt());
+					setChance(stream.readInt32());
 				}
 				
 				private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -220,7 +220,7 @@ public class DOO_UNITS {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				int itemsCount = stream.readInt();
+				int itemsCount = stream.readInt32();
 				
 				for (int i = 1; i <= itemsCount; i++) {
 					addItem(new Item(stream, EncodingFormat.DOO_0x8));
@@ -360,7 +360,7 @@ public class DOO_UNITS {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				setSlot(stream.readInt());
+				setSlot(stream.readInt32());
 				setTypeId(ObjId.valueOf(stream.readId()));
 			}
 			
@@ -448,8 +448,8 @@ public class DOO_UNITS {
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 				setTypeId(ObjId.valueOf(stream.readId()));
-				setAutoCast(stream.readInt());
-				setLevel(stream.readInt());
+				setAutoCast(stream.readInt32());
+				setLevel(stream.readInt32());
 			}
 
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -581,7 +581,7 @@ public class DOO_UNITS {
 
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 				setTypeId(ObjId.valueOf(stream.readId()));
-				setChance(stream.readInt());
+				setChance(stream.readInt32());
 			}
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -665,51 +665,51 @@ public class DOO_UNITS {
 		private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId()));
 			
-			setVariation(stream.readInt());
+			setVariation(stream.readInt32());
 			
-			setPos(new Coords3DF(stream.readFloat(), stream.readFloat(), stream.readFloat()));
+			setPos(new Coords3DF(stream.readFloat8(), stream.readFloat8(), stream.readFloat8()));
 			
-			setAngle(stream.readFloat());
+			setAngle(stream.readFloat8());
 			
-			setScale(new Coords3DF(stream.readFloat(), stream.readFloat(), stream.readFloat()));
+			setScale(new Coords3DF(stream.readFloat8(), stream.readFloat8(), stream.readFloat8()));
 			
 			setFlags(stream.readByte());
-			setOwnerIndex(stream.readInt());
+			setOwnerIndex(stream.readInt32());
 			setUnknown(stream.readByte());
 			setUnknownB(stream.readByte());
 			
-			setLifePerc(stream.readInt());
-			setManaPerc(stream.readInt());
+			setLifePerc(stream.readInt32());
+			setManaPerc(stream.readInt32());
 			
-			setItemTablePtr(stream.readInt());
+			setItemTablePtr(stream.readInt32());
 
-			int lootsCount = stream.readInt();
+			int lootsCount = stream.readInt32();
 			
 			for (int i = 0; i < lootsCount; i++) {
 				addLootSet(new LootSet(stream, EncodingFormat.DOO_0x8));
 			}
 			
-			setResourcesAmount(stream.readInt());
+			setResourcesAmount(stream.readInt32());
 			
-			setTargetAcquisition(stream.readFloat());
+			setTargetAcquisition(stream.readFloat8());
 			
-			setHeroLevel(stream.readInt());
+			setHeroLevel(stream.readInt32());
 			
-			setHeroAttributes(stream.readInt(), stream.readInt(), stream.readInt());
+			setHeroAttributes(stream.readInt32(), stream.readInt32(), stream.readInt32());
 			
-			int invItemsCount = stream.readInt();
+			int invItemsCount = stream.readInt32();
 			
 			for (int i = 0; i < invItemsCount; i++) {
 				addInvItem(new InvItem(stream, EncodingFormat.DOO_0x8));
 			}
 			
-			int abilityModsCount = stream.readInt();
+			int abilityModsCount = stream.readInt32();
 			
 			for (int i = 0; i < abilityModsCount; i++) {
 				addAbilMod(new AbilMod(stream, EncodingFormat.DOO_0x8));
 			}
 			
-			int randFlag = stream.readInt();
+			int randFlag = stream.readInt32();
 			
 			setRandFlag(randFlag);
 			
@@ -728,13 +728,13 @@ public class DOO_UNITS {
 				break;
 			}
 			case randFlag_RAND_GROUP: {
-				setRandGroupIndex(stream.readInt());
-				setRandGroupPos(stream.readInt());
+				setRandGroupIndex(stream.readInt32());
+				setRandGroupPos(stream.readInt32());
 				
 				break;
 			}
 			case randFlag_RAND_CUSTOM: {
-				int randUnitsCount = stream.readInt();
+				int randUnitsCount = stream.readInt32();
 				
 				for (int i = 0; i < randUnitsCount; i++) {
 					addRandObj(new RandObj(stream, EncodingFormat.DOO_0x8));
@@ -744,9 +744,9 @@ public class DOO_UNITS {
 			}
 			}
 			
-			setCustomColor(stream.readInt());
-			setWaygateTargetRectIndex(stream.readInt());
-			setEditorId(stream.readInt());
+			setCustomColor(stream.readInt32());
+			setWaygateTargetRectIndex(stream.readInt32());
+			setEditorId(stream.readInt32());
 		}
 
 		private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -939,13 +939,13 @@ public class DOO_UNITS {
 	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId();
 		
-		int version = stream.readInt(); //0xB
+		int version = stream.readInt32(); //0xB
 		
 		Wc3BinInputStream.checkFormatVer("dooUnitsMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
 		
-		int subVersion = stream.readInt();
+		int subVersion = stream.readInt32();
 		
-		int objsCount = stream.readInt();
+		int objsCount = stream.readInt32();
 		
 		for (int i = 0; i < objsCount; i++) {
 			addObj(new Obj(stream, EncodingFormat.DOO_0x8));
@@ -955,7 +955,7 @@ public class DOO_UNITS {
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId();
 		
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 

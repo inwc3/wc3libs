@@ -134,12 +134,12 @@ public class WPM extends Raster<FlagsInt> {
 
 	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		Wc3BinInputStream.checkFormatVer("wpmMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
 		
-		int width = stream.readInt("width");
-		int height = stream.readInt("height");
+		int width = stream.readInt32("width");
+		int height = stream.readInt32("height");
 		
 		PathMap pathMap = getPathMap();
 		
@@ -157,7 +157,7 @@ public class WPM extends Raster<FlagsInt> {
 	
 	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
-		int version = stream.readInt("version");
+		int version = stream.readInt32("version");
 		
 		stream.rewind();
 

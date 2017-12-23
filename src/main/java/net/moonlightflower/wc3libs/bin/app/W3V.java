@@ -289,7 +289,7 @@ public class W3V {
 //
 //				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
-//					set(VAL, Bool.valueOf(((stream.readInt()) > 0)));
+//					set(VAL, Bool.valueOf(((stream.readInt32()) > 0)));
 //				}
 //
 //				public void write_0x0(Wc3BinInputStream stream) {
@@ -575,7 +575,7 @@ public class W3V {
 //					set(LABEL, stream.readWc3String());
 //					set(ID, UnitId.valueOf(stream.readId()));
 //
-//					int invSlots = stream.readInt();
+//					int invSlots = stream.readInt32();
 //
 //					for (int i = 0; i < invSlots; i++) {
 //						addInvSlot(new InvSlot(stream, EncodingFormat.W3V_0x0));
@@ -586,26 +586,26 @@ public class W3V {
 //					set(UNUSED_SKILL_PTS, stream.readWc3Int());
 //
 //					for (int i = 0; i < 9; i++) {
-//						stream.readInt();
+//						stream.readInt32();
 //					}
 //
-//					int heroSkills = stream.readInt();
+//					int heroSkills = stream.readInt32();
 //
 //					for (int i = 0; i < heroSkills; i++) {
 //						addHeroSkill(new HeroSkill(stream, EncodingFormat.W3V_0x0));
 //					}
 //
 //					for (int i = 0; i < 2; i++) {
-//						stream.readInt();
+//						stream.readInt32();
 //					}
 //
-//					stream.readFloat();
+//					stream.readFloat8();
 //
 //					for (int i = 0; i < 4; i++) {
-//						stream.readInt();
+//						stream.readInt32();
 //					}
 //
-//					stream.readShort();
+//					stream.readInt16();
 //				}
 //
 //				public void write_0x0(Wc3BinInputStream stream) {
@@ -780,31 +780,31 @@ public class W3V {
 //
 //				//set(RESERVED, stream.readWc3Int());
 //
-//				int intsCount = stream.readInt();
+//				int intsCount = stream.readInt32();
 //
 //				for (int i = 0; i < intsCount; i++) {
 //					addIntEntry(new IntEntry(stream, EncodingFormat.W3V_0x0));
 //				}
 //
-//				int realsCount = stream.readInt();
+//				int realsCount = stream.readInt32();
 //
 //				for (int i = 0; i < realsCount; i++) {
 //					addRealEntry(new RealEntry(stream, EncodingFormat.W3V_0x0));
 //				}
 //
-//				int boolsCount = stream.readInt();
+//				int boolsCount = stream.readInt32();
 //
 //				for (int i = 0; i < boolsCount; i++) {
 //					addBoolEntry(new BoolEntry(stream, EncodingFormat.W3V_0x0));
 //				}
 //
-//				int unitsCount = stream.readInt();
+//				int unitsCount = stream.readInt32();
 //
 //				for (int i = 0; i < unitsCount; i++) {
 //					addUnitEntry(new UnitEntry(stream, EncodingFormat.W3V_0x0));
 //				}
 //
-//				int stringsCount = stream.readInt();
+//				int stringsCount = stream.readInt32();
 //
 //				for (int i = 0; i < stringsCount; i++) {
 //					addStringEntry(new StringEntry(stream, EncodingFormat.W3V_0x0));
@@ -906,7 +906,7 @@ public class W3V {
 //			set(NAME, stream.readWc3String());
 //			set(RESERVED, stream.readWc3Int());
 //
-//			int catsCount = stream.readInt();
+//			int catsCount = stream.readInt32();
 //
 //			for (int i = 0; i < catsCount; i++) {
 //				addCat(new Cat(stream, EncodingFormat.W3V_0x0));
@@ -1000,11 +1000,11 @@ public class W3V {
 //	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //		stream = Packed.decompress(stream);
 //
-//		int version = stream.readInt();
+//		int version = stream.readInt32();
 //
 //		Wc3BinInputStream.checkFormatVer("gamecacheMaskFunc", EncodingFormat.W3V_0x0.getVersion(), version);
 //
-//		int cachesCount = stream.readInt();
+//		int cachesCount = stream.readInt32();
 //
 //		for (int i = 0; i < cachesCount; i++) {
 //			addCache(new Cache(stream, EncodingFormat.W3V_0x0));
@@ -1032,7 +1032,7 @@ public class W3V {
 //	}
 //
 //	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-//		int version = stream.readInt();
+//		int version = stream.readInt32();
 //
 //		stream.rewind();
 //

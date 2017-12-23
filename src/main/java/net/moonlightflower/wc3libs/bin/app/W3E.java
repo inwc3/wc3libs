@@ -13,9 +13,7 @@ import net.moonlightflower.wc3libs.misc.Size;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -231,9 +229,9 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		}
 		
 		public void read_0xB(Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setGroundHeight(stream.readShort());
+			setGroundHeight(stream.readInt16());
 			
-			short waterLevel = stream.readShort();
+			short waterLevel = stream.readInt16();
 			
 			setWaterLevel((short) (waterLevel & 0x7FFF));
 			setBoundary(waterLevel >> 15);
@@ -333,27 +331,27 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	private void read_0xB(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId();
 		
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		Wc3BinInputStream.checkFormatVer("envMaskFunc", EncodingFormat.W3E_0xB.getVersion(), version);
 		
 		setTileset(stream.readChar());
 		
-		setCustomTilesetFlag(stream.readInt());
+		setCustomTilesetFlag(stream.readInt32());
 		
-		int groundTilesUsedCount = stream.readInt();
+		int groundTilesUsedCount = stream.readInt32();
 		
 		for (int i = 0; i < groundTilesUsedCount; i++) {
 			setGroundTile(i, stream.readId());
 		}
 		
-		int cliffTilesUsedCount = stream.readInt();
+		int cliffTilesUsedCount = stream.readInt32();
 		
 		for (int i = 0; i < cliffTilesUsedCount; i++) {
 			setCliffTile(i, stream.readId());
 		}
 
-		setBounds(new Bounds(new Size(stream.readInt(), stream.readInt()), new Coords2DI(stream.readFloat().intValue(), stream.readFloat().intValue())), false, false);
+		setBounds(new Bounds(new Size(stream.readInt32(), stream.readInt32()), new Coords2DI(stream.readFloat8().intValue(), stream.readFloat8().intValue())), false, false);
 		
 		int width = getWidth();
 		int height = getHeight();
@@ -407,7 +405,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	private void read_auto(Wc3BinInputStream stream) throws IOException {
 		Id startToken = stream.readId();
 		
-		int version = stream.readInt();
+		int version = stream.readInt32();
 		
 		stream.rewind();
 		

@@ -41,11 +41,12 @@ public class BinStream {
             return sb.toString();
         }
 
+        @Nonnull
         public BinStream getStream() {
             return _stream;
         }
 
-        public StreamException(BinStream stream) {
+        public StreamException(@Nonnull BinStream stream) {
             _stream = stream;
         }
     }

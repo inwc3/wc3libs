@@ -183,7 +183,7 @@ Attachmentanimprops=medium
 Specialart=Objects\Spawnmodels\Orc\OrcLargeDeathExplode\OrcLargeDeathExplode.mdl
 ScoreScreenIcon=UI\Glues\ScoreScreen\scorescreen-hero-taurenchieftain.blp
 
-//expansion version of cairne bloodhoof
+//expansion versionChunk of cairne bloodhoof
 [Ocb2]
 Art=ReplaceableTextures\CommandButtons\BTNHeroTaurenChieftain.blp
 Attachmentanimprops=medium

@@ -358,7 +358,7 @@ Name=Frost-Angriff
 Tip=Frost-Angriff
 Ubertip="Fügt den Angriffen dieser Einheit einen Kälteschaden hinzu, der das Bewegungstempo feindlicher Einheiten verlangsamt."
 
-// Frost Attack (1,2 button pos version)
+// Frost Attack (1,2 button pos versionChunk)
 [Afr2]
 Name=Frost-Angriff
 Tip=Frost-Angriff

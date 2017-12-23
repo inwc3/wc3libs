@@ -1585,7 +1585,7 @@ Missilespeed=1000
 Order=creepthunderbolt
 Animnames=spell,throw
 
-// creep bloodlust (B hotkey version)
+// creep bloodlust (B hotkey versionChunk)
 [ACbb]
 Art=ReplaceableTextures\CommandButtons\BTNBloodLustOn.blp
 Unart=ReplaceableTextures\CommandButtons\BTNBloodLustOff.blp
@@ -1710,7 +1710,7 @@ Targetart=Abilities\Spells\NightElf\ManaBurn\ManaBurnTarget.mdl
 Order=manaburn
 LightningEffect=MBUR
 
-// version 2 mana burn
+// versionChunk 2 mana burn
 [Amnb]
 Art=ReplaceableTextures\CommandButtons\BTNManaBurn.blp
 Researchart=ReplaceableTextures\CommandButtons\BTNManaBurn.blp
@@ -1720,7 +1720,7 @@ Targetart=Abilities\Spells\NightElf\ManaBurn\ManaBurnTarget.mdl
 Order=manaburn
 LightningEffect=MBUR
 
-// version 2 mana burn
+// versionChunk 2 mana burn
 [Ambb]
 Art=ReplaceableTextures\CommandButtons\BTNManaBurn.blp
 Researchart=ReplaceableTextures\CommandButtons\BTNManaBurn.blp

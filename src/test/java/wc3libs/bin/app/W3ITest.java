@@ -13,9 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class W3ITest extends Wc3LibTest {
-
-
-
     @Test
     public void testRebuild() throws Exception {
         List<Path> w3iFile = getFiles("wc3data/Infos/");

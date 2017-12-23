@@ -160,14 +160,14 @@ public class BLP extends Wc3RasterImg {
 				}
 			}
 			
-			//int colorInfo = reader.readInt();
+			//int colorInfo = reader.readInt32();
 			/*
 			 * 3 - uncompressed index list + alpha list
 			 * 4 - uncompressed index list + alpha list
 			 * 5 - uncompressed index list
 			 */
 			
-			//int messy = reader.readInt();  //1 - ?
+			//int messy = reader.readInt32();  //1 - ?
 
 			switch (type) {
 			case 0: {
