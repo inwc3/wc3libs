@@ -67,29 +67,40 @@ public class StdBinInputStream extends BinInputStream {
 	
 	public String readString() throws StreamException {
 		try {
-			int cutPos = getPos();
+			long cutPos = getPos();
 
 			while ((cutPos < size()) && (get(cutPos) != 0)) {				
 				cutPos += 1;
 			}
 
-			int size = cutPos - getPos();
+			long size = cutPos - getPos();
 
 			if (size == 0) {				
 				setPos(Math.min(cutPos + 1, size() - 1));
 				
 				return "";
 			}
-			
-			byte[] retBytes = new byte[size];
 
-			for (int i = 0; i < size; i++) {
-				retBytes[i] = get(getPos() + i);
+			StringBuilder sb = new StringBuilder();
+
+			while (size > 0) {
+				int sizeI = (int) size;
+
+				byte[] retBytes = new byte[sizeI];
+
+				for (int i = 0; i < size; i++) {
+					retBytes[i] = get(getPos() + i);
+				}
+
+				setPos(Math.min(cutPos + 1, size() - 1));
+
+				//TODO: split bytes so that utf8 is sure to yield valid strings
+				sb.append(new String(retBytes, StandardCharsets.UTF_8));
+
+				size -= sizeI;
 			}
 
-			setPos(Math.min(cutPos + 1, size() - 1));
-
-			return new String(retBytes, StandardCharsets.UTF_8);
+			return sb.toString();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}

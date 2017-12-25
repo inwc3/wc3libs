@@ -7,10 +7,10 @@ import java.io.*;
 import java.util.List;
 
 public class BinOutputStream extends BinStream {
-    private void ensureCap(int size) {
-        int toAdd = size - _bytes.size();
+    private void ensureCap(long size) {
+        long toAdd = size - _bytes.size();
 
-        for (int i = 1; i <= toAdd; i++) {
+        for (long i = 1; i <= toAdd; i++) {
             _bytes.add(null);
         }
     }
@@ -30,20 +30,28 @@ public class BinOutputStream extends BinStream {
     }
 
     private void write(@Nonnull OutputStream outStream) throws IOException {
-        List<Byte> bytes = _bytes;
+        ByteList bytes = _bytes;
 
-        byte[] buf = new byte[bytes.size()];
+        long size = size();
 
-        for (int i = 0; i < bytes.size(); i++) {
-            buf[i] = bytes.get(i);
+        while (size > 0) {
+            int sizeI = (int) size;
+
+            byte[] buf = new byte[sizeI];
+
+            for (int i = 0; i < bytes.size(); i++) {
+                buf[i] = bytes.get(i);
+            }
+
+            outStream.write(buf);
+
+            size -= sizeI;
         }
-
-        outStream.write(buf);
 
         outStream.flush();
     }
 
-    private OutputStream _outStream = null;
+    private final OutputStream _outStream;
 
     public void close() throws IOException {
         write(_outStream);

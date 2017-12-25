@@ -8,27 +8,26 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SequenceChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("SEQS");
+public class TextureChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("TEXS");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Sequence> _sequencces = new ArrayList<>();
+    private List<Texture> _textures = new ArrayList<>();
 
-    public List<Sequence> getSequences() {
-        return new ArrayList<>(_sequencces);
+    public List<Texture> getTextures() {
+        return new ArrayList<>(_textures);
     }
 
-    public void addSequence(@Nonnull Sequence val) {
-        if (!_sequencces.contains(val)) {
-            _sequencces.add(val);
+    public void addTexture(@Nonnull Texture val) {
+        if (!_textures.contains(val)) {
+            _textures.add(val);
         }
     }
 
@@ -38,7 +37,7 @@ public class SequenceChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addSequence(new Sequence(stream));
+            addTexture(new Texture(stream));
         }
     }
 
@@ -51,8 +50,8 @@ public class SequenceChunk extends Chunk {
 
         long startPos = stream.getPos();
 
-        for (Sequence sequence : getSequences()) {
-            sequence.write(stream);
+        for (Texture texture : getTextures()) {
+            texture.write(stream);
         }
 
         long endPos = stream.getPos();
@@ -83,13 +82,13 @@ public class SequenceChunk extends Chunk {
         }
     }
 
-    public SequenceChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public TextureChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public SequenceChunk() {
+    public TextureChunk() {
 
     }
 }

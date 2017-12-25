@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.bin;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -9,15 +10,15 @@ import java.util.List;
 import java.util.Stack;
 
 public class BinStream {
-    public int getPos() {
+    public long getPos() {
         return _pos;
     }
 
-    public byte get(int index) {
+    public byte get(long index) {
         return _bytes.get(index);
     }
 
-    public int size() {
+    public long size() {
         return _bytes.size();
     }
 
@@ -51,17 +52,63 @@ public class BinStream {
         }
     }
 
-    public void log(String type, String label, Object val, String valFormat) {
-        int startPos = _logStartPos;
-        int endPos = _pos;
+    protected long _pos = 0;
 
-        int len = endPos - startPos;
+    public void setPos(long pos) {
+        _pos = pos;
+    }
+
+    protected class ByteList {
+        protected List<Byte> _bytes = new ArrayList<>();
+
+        public long size() {
+            return _bytes.size();
+        }
+
+        public Byte get(long index) {
+            if (index > Integer.MAX_VALUE) throw new UnsupportedOperationException("index out of bounds " + index);
+
+            return _bytes.get((int) index);
+        }
+
+        public void set(long index, Byte val) {
+            if (index > Integer.MAX_VALUE) throw new UnsupportedOperationException("index out of bounds " + index);
+
+            _bytes.set((int) index, val);
+        }
+
+        public void add(Byte val) {
+            _bytes.add(val);
+        }
+
+        public ByteList() {
+
+        }
+    }
+
+    protected ByteList _bytes = new ByteList();
+    protected List<String> _logLines = new ArrayList<>();
+
+    @Nonnull
+    public List<String> getLogLines() {
+        return _logLines;
+    }
+
+    public void log(@Nullable String s) {
+        _logLines.add(s);
+    }
+
+    public void log(String type, String label, Object val, String valFormat) {
+        long startPos = _logStartPos;
+        long endPos = _pos;
+
+        long len = endPos - startPos;
 
         if (label == null) label = "?";
 
         StringBuilder bytesPart = new StringBuilder("");
 
-        for (int i = startPos; i < startPos + len; i++) {
+        for (long i = startPos; i < startPos + len; i++) {
             if (bytesPart.length() > 0) bytesPart.append(" ");
 
             if (i < _bytes.size()) {
@@ -85,21 +132,7 @@ public class BinStream {
         _logLines.add(sb.toString());
     }
 
-    protected int _pos = 0;
-    protected List<Byte> _bytes = new ArrayList<>();
-
-    protected List<String> _logLines = new ArrayList<>();
-
-    @Nonnull
-    public List<String> getLogLines() {
-        return _logLines;
-    }
-
-    public void log(String s) {
-        _logLines.add(s);
-    }
-
-    private int _logStartPos = 0;
+    private long _logStartPos = 0;
 
     public void logBegin() {
         _logStartPos = _pos;

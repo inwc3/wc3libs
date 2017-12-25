@@ -12,23 +12,23 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SequenceChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("SEQS");
+public class GlobalSequenceChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("GLBS");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Sequence> _sequencces = new ArrayList<>();
+    private List<GlobalSequence> _globalSequences = new ArrayList<>();
 
-    public List<Sequence> getSequences() {
-        return new ArrayList<>(_sequencces);
+    public List<GlobalSequence> getGlobalSequences() {
+        return new ArrayList<>(_globalSequences);
     }
 
-    public void addSequence(@Nonnull Sequence val) {
-        if (!_sequencces.contains(val)) {
-            _sequencces.add(val);
+    public void addGlobalSequence(@Nonnull GlobalSequence val) {
+        if (!_globalSequences.contains(val)) {
+            _globalSequences.add(val);
         }
     }
 
@@ -38,7 +38,7 @@ public class SequenceChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addSequence(new Sequence(stream));
+            addGlobalSequence(new GlobalSequence(stream));
         }
     }
 
@@ -51,7 +51,7 @@ public class SequenceChunk extends Chunk {
 
         long startPos = stream.getPos();
 
-        for (Sequence sequence : getSequences()) {
+        for (GlobalSequence sequence : getGlobalSequences()) {
             sequence.write(stream);
         }
 
@@ -83,13 +83,13 @@ public class SequenceChunk extends Chunk {
         }
     }
 
-    public SequenceChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public GlobalSequenceChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public SequenceChunk() {
+    public GlobalSequenceChunk() {
 
     }
 }

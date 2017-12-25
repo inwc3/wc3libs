@@ -8,23 +8,27 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 
-public class VersionChunk {
+public class VersionChunk extends Chunk {
     public static Id TOKEN = Id.valueOf("VERS");
+
+    @Override
+    public Id getToken() {
+        return TOKEN;
+    }
 
     private long _version;
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-        Id token = stream.readId("header_token");
-        long size = stream.readUInt32("header_size");
+        Header header = new Header(stream);
 
         _version = stream.readUInt32("version");
     }
 
     private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
         stream.writeId(TOKEN);
-        stream.writeUInt(4);
+        stream.writeUInt32(4);
 
-        stream.writeUInt(_version);
+        stream.writeUInt32(_version);
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

@@ -15,7 +15,7 @@ public class BinInputStream extends BinStream {
 			throw new StreamException(this);
 		}
 	}
-	
+
 	public byte[] readBytes(int size) throws StreamException {
 		try {
 			byte[] vals = new byte[size];
@@ -30,16 +30,30 @@ public class BinInputStream extends BinStream {
 		}
 	}
 
-	public void setPos(int pos) {
-		_pos = pos;
+	public byte[] readBytes(int size, String label) throws StreamException {
+		try {
+			byte[] vals = new byte[size];
+
+			logBegin();
+
+			for (int i = 0; i < vals.length; i++) {
+				vals[i] = _bytes.get(_pos++);
+			}
+
+			log("bytes", label, vals);
+
+			return vals;
+		} catch (IndexOutOfBoundsException e) {
+			throw new StreamException(this);
+		}
 	}
-	
+
 	public void rewind() {
 		_logLines.clear();
 		_pos = 0;
 	}
 	
-	public void rewind(int delta) {
+	public void rewind(long delta) {
 		delta = Math.min(_pos, delta);
 		
 		_pos -= delta;
@@ -70,9 +84,11 @@ public class BinInputStream extends BinStream {
 
 	@Nonnull
 	public byte[] writeToByteArray() throws IOException {
-		List<Byte> bytes = _bytes;
+		ByteList bytes = _bytes;
 
-		byte[] buf = new byte[bytes.size()];
+		if (bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + bytes.size());
+
+		byte[] buf = new byte[(int) bytes.size()];
 
 		for (int i = 0; i < bytes.size(); i++) {
 			buf[i] = bytes.get(i);

@@ -49,25 +49,25 @@ public class Packed {
 		
 		outStream.writeBytes(startTokenS.getBytes(StandardCharsets.US_ASCII));
 		
-		outStream.writeUInt(0x44);  //headerSize
+		outStream.writeUInt32(0x44);  //headerSize
 		
-		outStream.writeUInt(compressedSize);  //compressedSize
+		outStream.writeUInt32(compressedSize);  //compressedSize
 		
-		outStream.writeUInt(0x01);  //headerVersion
+		outStream.writeUInt32(0x01);  //headerVersion
 		
-		outStream.writeUInt(uncompressedSize);  //uncompressedSize
+		outStream.writeUInt32(uncompressedSize);  //uncompressedSize
 		
-		outStream.writeUInt(blocks.size());
+		outStream.writeUInt32(blocks.size());
 		
 		outStream.writeId(Id.valueOf("W3XP"));
 		
-		outStream.writeUInt(0);  //version
+		outStream.writeUInt32(0);  //version
 		
-		outStream.writeUShort(0);  //buildNum
+		outStream.writeUInt16(0);  //buildNum
 		
-		outStream.writeUShort(0);  //flags
+		outStream.writeUInt16(0);  //flags
 		
-		outStream.writeUInt(0);  //len in milliseconds
+		outStream.writeUInt32(0);  //len in milliseconds
 		
 		CRC32 crc = new CRC32();
 		
@@ -75,13 +75,13 @@ public class Packed {
 			crc.update(outStream.get(i));
 		}
 		
-		outStream.writeUInt(crc.getValue());  //crc32
+		outStream.writeUInt32(crc.getValue());  //crc32
 		
 		int c = 0;
 		
 		for (byte[] block : blocks) {
-			outStream.writeUShort(block.length);
-			outStream.writeUShort(uncompressedBlocks.get(c).length);
+			outStream.writeUInt16(block.length);
+			outStream.writeUInt16(uncompressedBlocks.get(c).length);
 			
 			outStream.writeBytes(block);
 			

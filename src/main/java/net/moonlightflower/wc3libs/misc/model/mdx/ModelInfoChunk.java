@@ -8,9 +8,15 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
-public class ModelInfoChunk {
+public class ModelInfoChunk extends Chunk {
     public static Id TOKEN = Id.valueOf("MODL");
+
+    @Override
+    public Id getToken() {
+        return TOKEN;
+    }
 
     private String _name;
     private String _animFileName;
@@ -19,6 +25,8 @@ public class ModelInfoChunk {
     private long _blendTime;
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+        Header header = new Header(stream);
+
         _name = new String(stream.readBytes(80), StandardCharsets.US_ASCII);
         _animFileName = new String(stream.readBytes(260), StandardCharsets.US_ASCII);
 
@@ -28,10 +36,10 @@ public class ModelInfoChunk {
     }
 
     private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-        stream.writeBytes(_name.getBytes(StandardCharsets.US_ASCII));
-        stream.writeBytes(_animFileName.getBytes(StandardCharsets.US_ASCII));
+        stream.writeBytes(Arrays.copyOf(_name.getBytes(StandardCharsets.US_ASCII), 80));
+        stream.writeBytes(Arrays.copyOf(_animFileName.getBytes(StandardCharsets.US_ASCII), 260));
         _extent.write(stream);
-        stream.writeUInt(_blendTime);
+        stream.writeUInt32(_blendTime);
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

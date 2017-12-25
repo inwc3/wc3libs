@@ -34,7 +34,57 @@ public class Wc3BinInputStream extends BinInputStream {
 			throw e;
 		}
 	}
-	
+
+	private short readInt8_priv() throws StreamException {
+		try {
+			short res = readByte();
+
+			return res;
+		} catch (IndexOutOfBoundsException e) {
+			throw new StreamException(this);
+		}
+	}
+
+	public short readInt8(@Nonnull String label) throws StreamException {
+		try {
+			logBegin();
+
+			Short val = readInt8_priv();
+
+			log("int8", label, val);
+
+			return val;
+		} catch (StreamException e) {
+			log("int8", label, null);
+
+			throw e;
+		}
+	}
+
+	public Short readInt8() throws StreamException {
+		return readInt8_priv();
+	}
+
+	public short readUInt8() throws StreamException {
+		return (short) (readInt8() & 0xFF);
+	}
+
+	public short readUInt8(@Nonnull String label) throws StreamException {
+		try {
+			logBegin();
+
+			Short val = readUInt8();
+
+			log("uint8", label, val);
+
+			return val;
+		} catch (StreamException e) {
+			log("uint8", label, null);
+
+			throw e;
+		}
+	}
+
 	private short readInt16_priv() throws StreamException {
 		try {
 			short res = (short) (readByte() + readByte() * 256);
@@ -64,11 +114,27 @@ public class Wc3BinInputStream extends BinInputStream {
 	public Short readInt16() throws StreamException {
 		return readInt16_priv();
 	}
-	
+
 	public int readUInt16() throws StreamException {
 		return (readInt16() & 0xFFFF);
 	}
-	
+
+	public int readUInt16(@Nonnull String label) throws StreamException {
+		try {
+			logBegin();
+
+			Integer val = readUInt16();
+
+			log("int", label, val);
+
+			return val;
+		} catch (StreamException e) {
+			log("int", label, null);
+
+			throw e;
+		}
+	}
+
 	public Integer readInt32() throws StreamException {
 		try {
 			byte[] sub = readBytes(4);
@@ -145,29 +211,40 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	private String readString_priv() throws StreamException {
 		try {
-			int cutPos = getPos();
+			long cutPos = getPos();
 
 			while ((cutPos < size()) && (get(cutPos) != 0)) {				
 				cutPos += 1;
 			}
 
-			int size = cutPos - getPos();
+			long size = cutPos - getPos();
 
 			if (size == 0) {				
 				setPos(Math.min(cutPos + 1, size() - 1));
 				
 				return "";
 			}
-			
-			byte[] retBytes = new byte[size];
 
-			for (int i = 0; i < size; i++) {
-				retBytes[i] = get(getPos() + i);
+			StringBuilder sb = new StringBuilder();
+
+			while (size > 0) {
+				int sizeI = (int) size;
+
+				byte[] retBytes = new byte[sizeI];
+
+				for (int i = 0; i < size; i++) {
+					retBytes[i] = get(getPos() + i);
+				}
+
+				setPos(Math.min(cutPos + 1, size() - 1));
+
+				//TODO: split bytes so that utf8 is sure to yield valid strings
+				sb.append(new String(retBytes, StandardCharsets.UTF_8));
+
+				size -= sizeI;
 			}
 
-			setPos(Math.min(cutPos + 1, size() - 1));
-
-			return new String(retBytes, StandardCharsets.UTF_8);
+			return sb.toString();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}

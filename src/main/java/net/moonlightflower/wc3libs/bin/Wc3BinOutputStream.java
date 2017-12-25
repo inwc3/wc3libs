@@ -7,6 +7,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,7 +24,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
 
     private final static ByteBuffer _shortBuf = ByteBuffer.wrap(_shortBytes);
 
-    public void writeShort(short val) {
+    public void writeInt8(short val) {
         _shortBuf.rewind();
         _shortBuf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -32,15 +33,28 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(_shortBytes);
     }
 
-    public void writeUShort(int val) {
-        writeShort((short) val);
+    public void writeUInt8(int val) {
+        writeInt8((short) val);
+    }
+
+    public void writeInt16(short val) {
+        _shortBuf.rewind();
+        _shortBuf.order(ByteOrder.LITTLE_ENDIAN);
+
+        _shortBuf.putShort(val);
+
+        writeBytes(_shortBytes);
+    }
+
+    public void writeUInt16(int val) {
+        writeInt16((short) val);
     }
 
     private final static byte[] _intBytes = new byte[4];
 
     private final static ByteBuffer _intBuf = ByteBuffer.wrap(_intBytes);
 
-    public void writeInt(int val) {
+    public void writeInt32(int val) {
         _intBuf.rewind();
         _intBuf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -49,15 +63,15 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(_intBytes);
     }
 
-    public void writeInt(Int val) {
-        writeInt(val.getVal());
+    public void writeInt32(@Nonnull Int val) {
+        writeInt32(val.getVal());
     }
 
-    public void writeUInt(long val) {
-        writeInt((int) val);
+    public void writeUInt32(long val) {
+        writeInt32((int) val);
     }
 
-    public void writeFloat(float val) {
+    public void writeFloat8(float val) {
         ByteBuffer buf = ByteBuffer.allocate(4);
 
         buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -67,27 +81,27 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(buf.array());
     }
 
-    public void writeFloat(Real val) {
-        writeFloat(val.toFloat());
+    public void writeFloat8(@Nullable Real val) {
+        writeFloat8(val != null ? val.toFloat() : 0F);
     }
 
-    public void writeReal(Real val) {
-        writeFloat(val);
+    public void writeReal(@Nullable Real val) {
+        writeFloat8(val);
     }
 
     public void writeChar(char val) {
         writeByte((byte) val);
     }
 
-    public void writeChar(Char val) {
+    public void writeChar(@Nullable Char val) {
         writeChar(val != null ? val.getVal() : '\0');
     }
 
-    public byte[] stringToByteArray(String val) {
+    public byte[] stringToByteArray(@Nonnull String val) {
         return val.getBytes(StandardCharsets.UTF_8);
     }
 
-    public void writeString(String val) {
+    public void writeString(@Nullable String val) {
         if (val == null) val = "";
 
         byte[] valBytes = stringToByteArray(val);
@@ -97,14 +111,14 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeByte((byte) 0);
     }
 
-    public void writeString(Stringable val) {
+    public void writeString(@Nullable Stringable val) {
         if (val == null)
             writeString((String) null);
         else
             writeString(val.toString());
     }
 
-    public void writeId(Id val) {
+    public void writeId(@Nullable Id val) {
         if (val == null) val = Id.valueOf("\0\0\0\0");
 
         byte[] sub = val.toString().getBytes(StandardCharsets.US_ASCII);

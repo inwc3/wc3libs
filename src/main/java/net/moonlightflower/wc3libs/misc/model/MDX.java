@@ -59,7 +59,7 @@ public class MDX {
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
         Id startToken = stream.readId("startToken");
 
-        if (!startToken.equals(TOKEN)) throw new RuntimeException("invalid " + TOKEN + " startToken (" + startToken + ")");
+        if (!startToken.equals(TOKEN)) throw new BinStream.StreamException("invalid " + TOKEN + " startToken (" + startToken + ")");
 
         while (!stream.eof()) {
             Id chunkToken = stream.readId("chunkToken");

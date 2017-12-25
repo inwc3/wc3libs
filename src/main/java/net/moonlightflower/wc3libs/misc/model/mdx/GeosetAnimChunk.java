@@ -8,27 +8,26 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SequenceChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("SEQS");
+public class GeosetAnimChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("GEOA");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Sequence> _sequencces = new ArrayList<>();
+    private List<GeosetAnim> _geosetAnims = new ArrayList<>();
 
-    public List<Sequence> getSequences() {
-        return new ArrayList<>(_sequencces);
+    public List<GeosetAnim> getGeosetAnims() {
+        return new ArrayList<>(_geosetAnims);
     }
 
-    public void addSequence(@Nonnull Sequence val) {
-        if (!_sequencces.contains(val)) {
-            _sequencces.add(val);
+    public void addGeosetAnim(@Nonnull GeosetAnim val) {
+        if (!_geosetAnims.contains(val)) {
+            _geosetAnims.add(val);
         }
     }
 
@@ -38,7 +37,7 @@ public class SequenceChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addSequence(new Sequence(stream));
+            addGeosetAnim(new GeosetAnim(stream));
         }
     }
 
@@ -51,8 +50,8 @@ public class SequenceChunk extends Chunk {
 
         long startPos = stream.getPos();
 
-        for (Sequence sequence : getSequences()) {
-            sequence.write(stream);
+        for (GeosetAnim geosetAnim : getGeosetAnims()) {
+            geosetAnim.write(stream);
         }
 
         long endPos = stream.getPos();
@@ -83,13 +82,13 @@ public class SequenceChunk extends Chunk {
         }
     }
 
-    public SequenceChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public GeosetAnimChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public SequenceChunk() {
+    public GeosetAnimChunk() {
 
     }
 }
