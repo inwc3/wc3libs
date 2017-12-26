@@ -11,23 +11,23 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttachmentChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("ATCH");
+public class CameraChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("CAMS");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Attachment> _attachments = new ArrayList<>();
+    private List<Camera> _cameras = new ArrayList<>();
 
-    public List<Attachment> getAttachments() {
-        return new ArrayList<>(_attachments);
+    public List<Camera> getCameras() {
+        return new ArrayList<>(_cameras);
     }
 
-    public void addAttachment(@Nonnull Attachment val) {
-        if (!_attachments.contains(val)) {
-            _attachments.add(val);
+    public void addCamera(@Nonnull Camera val) {
+        if (!_cameras.contains(val)) {
+            _cameras.add(val);
         }
     }
 
@@ -37,7 +37,7 @@ public class AttachmentChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addAttachment(new Attachment(stream));
+            addCamera(new Camera(stream));
         }
     }
 
@@ -50,8 +50,8 @@ public class AttachmentChunk extends Chunk {
 
         long startPos = stream.getPos();
 
-        for (Attachment attachment : getAttachments()) {
-            attachment.write(stream);
+        for (Camera camera : getCameras()) {
+            camera.write(stream);
         }
 
         long endPos = stream.getPos();
@@ -82,13 +82,13 @@ public class AttachmentChunk extends Chunk {
         }
     }
 
-    public AttachmentChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public CameraChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public AttachmentChunk() {
+    public CameraChunk() {
 
     }
 }

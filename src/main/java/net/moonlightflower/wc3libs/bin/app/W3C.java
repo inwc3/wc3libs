@@ -162,19 +162,19 @@ public class W3C {
 		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 			Coords2DF target = getTarget();
 			
-			stream.writeFloat(target.getX());
-			stream.writeFloat(target.getY());
-			stream.writeFloat(getZOffset());
+			stream.writeFloat32(target.getX());
+			stream.writeFloat32(target.getY());
+			stream.writeFloat32(getZOffset());
 			
-			stream.writeFloat(getRotation());
-			stream.writeFloat(getAngleOfAttack());
-			stream.writeFloat(getDist());
+			stream.writeFloat32(getRotation());
+			stream.writeFloat32(getAngleOfAttack());
+			stream.writeFloat32(getDist());
 			
-			stream.writeFloat(getRoll());
-			stream.writeFloat(getFieldOfView());
-			stream.writeFloat(getFarZ());
+			stream.writeFloat32(getRoll());
+			stream.writeFloat32(getFieldOfView());
+			stream.writeFloat32(getFarZ());
 			
-			stream.writeFloat(getUnknown());
+			stream.writeFloat32(getUnknown());
 			
 			stream.writeString(getCineName());
 		}
@@ -281,9 +281,9 @@ public class W3C {
 	}
 	
 	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt(EncodingFormat.WPM_0x0.getVersion());
+		stream.writeInt32(EncodingFormat.WPM_0x0.getVersion());
 		
-		stream.writeInt(getCameras().size());
+		stream.writeInt32(getCameras().size());
 		
 		for (Camera camera : getCameras()) {
 			camera.write(stream, EncodingFormat.WPM_0x0);

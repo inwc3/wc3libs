@@ -7,8 +7,6 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GeosetAnim {
     private long _inclusiveSize;
@@ -43,12 +41,12 @@ public class GeosetAnim {
 
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
         stream.writeUInt32(_inclusiveSize);
-        stream.writeFloat8(_alpha);
+        stream.writeFloat32(_alpha);
         stream.writeUInt32(_flags);
 
-        stream.writeFloat8(_color.getBlue());
-        stream.writeFloat8(_color.getGreen());
-        stream.writeFloat8(_color.getRed());
+        stream.writeFloat32(_color.getBlue());
+        stream.writeFloat32(_color.getGreen());
+        stream.writeFloat32(_color.getRed());
 
         stream.writeUInt32(_geosetId);
 

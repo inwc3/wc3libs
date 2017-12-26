@@ -66,13 +66,13 @@ public class ParticleEmitter {
     public void write(@Nonnull Wc3BinOutputStream stream) {
         stream.writeUInt32(_inclusiveSize);
         _node.write(stream);
-        stream.writeFloat8(_emissionRate);
-        stream.writeFloat8(_gravity);
-        stream.writeFloat8(_longitude);
-        stream.writeFloat8(_latitude);
+        stream.writeFloat32(_emissionRate);
+        stream.writeFloat32(_gravity);
+        stream.writeFloat32(_longitude);
+        stream.writeFloat32(_latitude);
         stream.writeBytes(Arrays.copyOf(_fileName.getBytes(), 260));
-        stream.writeFloat8(_lifespan);
-        stream.writeFloat8(_initialSpeed);
+        stream.writeFloat32(_lifespan);
+        stream.writeFloat32(_initialSpeed);
 
         //TODO: KPEE, KPEG, KPLN, KPLT, KPEL, KPES, KPEV
     }

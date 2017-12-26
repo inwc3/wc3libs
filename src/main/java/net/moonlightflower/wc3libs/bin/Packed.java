@@ -13,8 +13,10 @@ import java.util.zip.Inflater;
 
 import net.moonlightflower.wc3libs.misc.Id;
 
+import javax.annotation.Nonnull;
+
 public class Packed {
-	public static Wc3BinOutputStream compress(Wc3BinInputStream inStream) throws BinStream.StreamException {
+	public static Wc3BinOutputStream compress(@Nonnull Wc3BinInputStream inStream) throws BinStream.StreamException {
 		//deflate
 		Vector<byte[]> blocks = new Vector<>();
 		Vector<byte[]> uncompressedBlocks = new Vector<>();
@@ -24,8 +26,9 @@ public class Packed {
 		
 		while (!inStream.eof()) {
 			Deflater deflater = new Deflater();
-			
-			byte[] uncompressedBlock = new byte[Math.min(1024, inStream.size() - inStream.getPos())];
+
+			//TODO: long?
+			byte[] uncompressedBlock = new byte[(int) Math.min(1024, inStream.size() - inStream.getPos())];
 			
 			uncompressedBlocks.add(uncompressedBlock);
 			uncompressedSize += uncompressedBlock.length;
@@ -91,7 +94,7 @@ public class Packed {
 		return outStream;
 	}
 	
-	public static Wc3BinInputStream decompress(Wc3BinInputStream inStream) throws BinStream.StreamException {
+	public static Wc3BinInputStream decompress(@Nonnull Wc3BinInputStream inStream) throws BinStream.StreamException {
 		byte[] startToken = inStream.readBytes(28);
 		
 		long headerSize = inStream.readUInt32();

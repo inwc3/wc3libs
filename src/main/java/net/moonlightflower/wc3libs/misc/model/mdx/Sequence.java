@@ -35,9 +35,9 @@ public class Sequence {
         stream.writeBytes(Arrays.copyOf(_name.getBytes(StandardCharsets.US_ASCII), 80));
         stream.writeUInt32(_intervalStart);
         stream.writeUInt32(_intervalEnd);
-        stream.writeFloat8(_moveSpeed);
+        stream.writeFloat32(_moveSpeed);
         stream.writeUInt32(_flags);
-        stream.writeFloat8(_rarity);
+        stream.writeFloat32(_rarity);
         stream.writeUInt32(_syncPt);
 
         _extent.write(stream);

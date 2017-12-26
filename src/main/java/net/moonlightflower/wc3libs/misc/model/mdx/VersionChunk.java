@@ -18,6 +18,10 @@ public class VersionChunk extends Chunk {
 
     private long _version;
 
+    public long getVersion() {
+        return _version;
+    }
+
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
         Header header = new Header(stream);
 

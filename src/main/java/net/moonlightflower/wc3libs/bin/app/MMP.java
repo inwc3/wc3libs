@@ -113,12 +113,12 @@ public class MMP {
 		}
 		
 		private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-			stream.writeInt(getType().getVal());
+			stream.writeInt32(getType().getVal());
 			
 			Coords2DI coords = getCoords();
 			
-			stream.writeInt(coords.getX());
-			stream.writeInt(coords.getY());
+			stream.writeInt32(coords.getX());
+			stream.writeInt32(coords.getY());
 			
 			Color color = getColor();
 			
@@ -322,9 +322,9 @@ public class MMP {
 	}
 	
 	private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt(0x0);
+		stream.writeInt32(0x0);
 		
-		stream.writeInt(_icons.size());
+		stream.writeInt32(_icons.size());
 
 		for (Icon icon : _icons) {
 			icon.write(stream, EncodingFormat.MMP_0x0);

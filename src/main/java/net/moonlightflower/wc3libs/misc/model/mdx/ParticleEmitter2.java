@@ -6,8 +6,6 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class ParticleEmitter2 {
     private long _inclusiveSize;
@@ -255,14 +253,14 @@ public class ParticleEmitter2 {
     public void write(@Nonnull Wc3BinOutputStream stream) {
         stream.writeUInt32(_inclusiveSize);
         _node.write(stream);
-        stream.writeFloat8(_speed);
-        stream.writeFloat8(_variation);
-        stream.writeFloat8(_latitude);
-        stream.writeFloat8(_gravity);
-        stream.writeFloat8(_lifespan);
-        stream.writeFloat8(_emissionRate);
-        stream.writeFloat8(_width);
-        stream.writeFloat8(_length);
+        stream.writeFloat32(_speed);
+        stream.writeFloat32(_variation);
+        stream.writeFloat32(_latitude);
+        stream.writeFloat32(_gravity);
+        stream.writeFloat32(_lifespan);
+        stream.writeFloat32(_emissionRate);
+        stream.writeFloat32(_width);
+        stream.writeFloat32(_length);
 
         stream.writeUInt32(_filterMode.ordinal());
 
@@ -271,44 +269,44 @@ public class ParticleEmitter2 {
 
         stream.writeUInt32(_headTailFlag.ordinal());
 
-        stream.writeFloat8(_tailLength);
-        stream.writeFloat8(_time);
+        stream.writeFloat32(_tailLength);
+        stream.writeFloat32(_time);
 
-        stream.writeFloat8(_startColor.getBlue() / 255F);
-        stream.writeFloat8(_startColor.getGreen() / 255F);
-        stream.writeFloat8(_startColor.getRed() / 255F);
+        stream.writeFloat32(_startColor.getBlue() / 255F);
+        stream.writeFloat32(_startColor.getGreen() / 255F);
+        stream.writeFloat32(_startColor.getRed() / 255F);
 
-        stream.writeFloat8(_midColor.getBlue() / 255F);
-        stream.writeFloat8(_midColor.getGreen() / 255F);
-        stream.writeFloat8(_midColor.getRed() / 255F);
+        stream.writeFloat32(_midColor.getBlue() / 255F);
+        stream.writeFloat32(_midColor.getGreen() / 255F);
+        stream.writeFloat32(_midColor.getRed() / 255F);
 
-        stream.writeFloat8(_endColor.getBlue() / 255F);
-        stream.writeFloat8(_endColor.getGreen() / 255F);
-        stream.writeFloat8(_endColor.getRed() / 255F);
+        stream.writeFloat32(_endColor.getBlue() / 255F);
+        stream.writeFloat32(_endColor.getGreen() / 255F);
+        stream.writeFloat32(_endColor.getRed() / 255F);
 
-        stream.writeFloat8(_startColor.getAlpha() / 255F);
-        stream.writeFloat8(_midColor.getAlpha() / 255F);
-        stream.writeFloat8(_endColor.getAlpha() / 255F);
+        stream.writeFloat32(_startColor.getAlpha() / 255F);
+        stream.writeFloat32(_midColor.getAlpha() / 255F);
+        stream.writeFloat32(_endColor.getAlpha() / 255F);
 
-        stream.writeFloat8(_startScaling);
-        stream.writeFloat8(_midScaling);
-        stream.writeFloat8(_endScaling);
+        stream.writeFloat32(_startScaling);
+        stream.writeFloat32(_midScaling);
+        stream.writeFloat32(_endScaling);
 
-        stream.writeFloat8(_startHeadInterval);
-        stream.writeFloat8(_midHeadInterval);
-        stream.writeFloat8(_endHeadInterval);
+        stream.writeFloat32(_startHeadInterval);
+        stream.writeFloat32(_midHeadInterval);
+        stream.writeFloat32(_endHeadInterval);
 
-        stream.writeFloat8(_startHeadDecayInterval);
-        stream.writeFloat8(_midHeadDecayInterval);
-        stream.writeFloat8(_endHeadDecayInterval);
+        stream.writeFloat32(_startHeadDecayInterval);
+        stream.writeFloat32(_midHeadDecayInterval);
+        stream.writeFloat32(_endHeadDecayInterval);
 
-        stream.writeFloat8(_startTailInterval);
-        stream.writeFloat8(_midTailInterval);
-        stream.writeFloat8(_endTailInterval);
+        stream.writeFloat32(_startTailInterval);
+        stream.writeFloat32(_midTailInterval);
+        stream.writeFloat32(_endTailInterval);
 
-        stream.writeFloat8(_startTailDecayInterval);
-        stream.writeFloat8(_midTailDecayInterval);
-        stream.writeFloat8(_endTailDecayInterval);
+        stream.writeFloat32(_startTailDecayInterval);
+        stream.writeFloat32(_midTailDecayInterval);
+        stream.writeFloat32(_endTailDecayInterval);
 
         stream.writeUInt32(_textureId);
         stream.writeUInt32(_squirt);

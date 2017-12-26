@@ -3,10 +3,15 @@ package net.moonlightflower.wc3libs.misc.model.mdx;
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
+import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Node {
     private long _inclusiveSize;
@@ -72,6 +77,111 @@ public class Node {
 
     public long getFlags() {
         return _flags;
+    }
+
+    public static class TranslationTrackChunk extends TrackChunk {
+        public final static Id TOKEN = Id.valueOf("KMTA");
+
+        @Override
+        public Id getToken() {
+            return TOKEN;
+        }
+
+        @Override
+        public List<? extends Track> getTracks() {
+            return _translationTracks;
+        }
+
+        public static class TranslationTrack extends Track {
+            private Coords3DF _translation;
+
+            public Coords3DF getTranslation() {
+                return _translation;
+            }
+
+            private Coords3DF _inTan_translation;
+
+            public Coords3DF getInTanTranslation() {
+                return _inTan_translation;
+            }
+
+            private Coords3DF _outTan_translation;
+
+            public Coords3DF getOutTanTranslation() {
+                return _outTan_translation;
+            }
+
+            @Override
+            protected void readSpec(@Nonnull Wc3BinInputStream stream, @Nonnull InterpolationType interpolationType) throws BinStream.StreamException {
+                _translation = new Coords3DF(stream.readFloat8("translationX"), stream.readFloat8("translationY"), stream.readFloat8("translationZ"));
+
+                if (interpolationType.equals(InterpolationType.HERMITE) || interpolationType.equals(InterpolationType.BEZIER)) {
+                    _inTan_translation = new Coords3DF(stream.readFloat8("inTan_translationX"), stream.readFloat8("inTan_translationY"), stream.readFloat8("inTan_translationZ"));
+                    _outTan_translation = new Coords3DF(stream.readFloat8("outTan_translationX"), stream.readFloat8("outTan_translationY"), stream.readFloat8("outTan_translationZ"));
+                }
+            }
+
+            @Override
+            protected void writeSpec(@Nonnull Wc3BinOutputStream stream, @Nonnull InterpolationType interpolationType) throws BinStream.StreamException {
+                stream.writeFloat32(_translation.getX());
+                stream.writeFloat32(_translation.getY());
+                stream.writeFloat32(_translation.getZ());
+
+                if (interpolationType.equals(InterpolationType.HERMITE) || interpolationType.equals(InterpolationType.BEZIER)) {
+                    stream.writeFloat32(_inTan_translation.getX());
+                    stream.writeFloat32(_inTan_translation.getY());
+                    stream.writeFloat32(_inTan_translation.getZ());
+
+                    stream.writeFloat32(_outTan_translation.getX());
+                    stream.writeFloat32(_outTan_translation.getY());
+                    stream.writeFloat32(_outTan_translation.getZ());
+                }
+            }
+
+            public TranslationTrack(@Nonnull Wc3BinInputStream stream, @Nonnull InterpolationType interpolationType, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+                super(stream, interpolationType, format);
+            }
+        }
+
+        private List<TranslationTrack> _translationTracks = new ArrayList<>();
+
+        public List<TranslationTrack> getTranslationTracks() {
+            return new ArrayList<>(_translationTracks);
+        }
+
+        public void addTranslationTrack(@Nonnull TranslationTrack val) {
+            if (!_translationTracks.contains(val)) {
+                _translationTracks.add(val);
+            }
+        }
+
+        public TranslationTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+            super(stream, format);
+
+            long tracksCount = getTracksCount();
+
+            while (tracksCount > 0) {
+                addTranslationTrack(new TranslationTrack(stream, getInterpolationType(), format));
+
+                tracksCount--;
+            }
+        }
+
+        public TranslationTrackChunk(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
+            this(stream, MDX.EncodingFormat.AUTO);
+        }
+    }
+
+    private List<TranslationTrackChunk> _translationTrackChunks = new ArrayList<>();
+
+    public List<TranslationTrackChunk> getTranslationTrackChunks() {
+        return new ArrayList<>(_translationTrackChunks);
+    }
+
+    public void addTranslationTrackChunk(@Nonnull TranslationTrackChunk val) {
+        if (!_translationTrackChunks.contains(val)) {
+            _translationTrackChunks.add(val);
+        }
     }
 
     public void write(@Nonnull Wc3BinOutputStream stream) {

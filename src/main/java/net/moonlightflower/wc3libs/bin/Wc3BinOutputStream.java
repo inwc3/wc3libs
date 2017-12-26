@@ -71,7 +71,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeInt32((int) val);
     }
 
-    public void writeFloat8(float val) {
+    public void writeFloat32(float val) {
         ByteBuffer buf = ByteBuffer.allocate(4);
 
         buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -81,12 +81,12 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(buf.array());
     }
 
-    public void writeFloat8(@Nullable Real val) {
-        writeFloat8(val != null ? val.toFloat() : 0F);
+    public void writeFloat32(@Nullable Real val) {
+        writeFloat32(val != null ? val.toFloat() : 0F);
     }
 
     public void writeReal(@Nullable Real val) {
-        writeFloat8(val);
+        writeFloat32(val);
     }
 
     public void writeChar(char val) {

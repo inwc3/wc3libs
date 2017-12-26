@@ -7,6 +7,7 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -64,7 +65,7 @@ public class Material {
 
         Id layersToken = stream.readId("layersToken");
 
-        if (!layersToken.equals(LAYERS_TOKEN)) throw new IllegalArgumentException("invalid " + LAYERS_TOKEN + " token (" + LAYERS_TOKEN + ")");
+        if (!layersToken.equals(LAYERS_TOKEN)) throw new IllegalArgumentException("invalid " + LAYERS_TOKEN + " token (" + layersToken + ")");
 
         long layersCount = stream.readUInt32("layersCount");
 

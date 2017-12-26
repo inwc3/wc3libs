@@ -360,12 +360,12 @@ public class W3I {
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             LoadingScreenBackground background = getBackground();
 
-            stream.writeInt(background instanceof LoadingScreenBackground.PresetBackground ? ((LoadingScreenBackground.PresetBackground) background).getIndex
+            stream.writeInt32(background instanceof LoadingScreenBackground.PresetBackground ? ((LoadingScreenBackground.PresetBackground) background).getIndex
                     () : -1);
             stream.writeString(getText());
             stream.writeString(getTitle());
             stream.writeString(getSubtitle());
-            stream.writeInt(getIndex());
+            stream.writeInt32(getIndex());
         }
 
         private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
@@ -383,12 +383,12 @@ public class W3I {
             LoadingScreenBackground background = getBackground();
 
             if (background != null) {
-                stream.writeInt(background instanceof LoadingScreenBackground.PresetBackground ? ((LoadingScreenBackground.PresetBackground) background)
+                stream.writeInt32(background instanceof LoadingScreenBackground.PresetBackground ? ((LoadingScreenBackground.PresetBackground) background)
                         .getIndex() : -1);
                 stream.writeString(background instanceof LoadingScreenBackground.CustomBackground ? ((LoadingScreenBackground.CustomBackground) background)
                         .getCustomPath().toString() : null);
             } else {
-                stream.writeInt(-1);
+                stream.writeInt32(-1);
                 stream.writeString((String) null);
             }
 
@@ -820,22 +820,22 @@ public class W3I {
         }
 
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
-            stream.writeInt(getNum());
+            stream.writeInt32(getNum());
 
-            stream.writeInt(getType().getVal());
-            stream.writeInt(getRace().getVal());
+            stream.writeInt32(getType().getVal());
+            stream.writeInt32(getRace().getVal());
 
-            stream.writeInt(getStartPosFixed());
+            stream.writeInt32(getStartPosFixed());
 
             stream.writeString(getName());
 
             Coords2DF startPos = getStartPos();
 
-            stream.writeFloat(startPos.getX());
-            stream.writeFloat(startPos.getY());
+            stream.writeFloat32(startPos.getX());
+            stream.writeFloat32(startPos.getY());
 
-            stream.writeInt(getAllyLowPrioFlags());
-            stream.writeInt(getAllyHighPrioFlags());
+            stream.writeInt32(getAllyLowPrioFlags());
+            stream.writeInt32(getAllyHighPrioFlags());
         }
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -998,9 +998,9 @@ public class W3I {
         }
 
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
-            stream.writeInt(getFlags().toInt());
+            stream.writeInt32(getFlags().toInt());
 
-            stream.writeInt(getPlayers());
+            stream.writeInt32(getPlayers());
 
             stream.writeString(getName());
         }
@@ -1108,13 +1108,13 @@ public class W3I {
         }
 
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
-            stream.writeInt(getPlayers());
+            stream.writeInt32(getPlayers());
 
             stream.writeId(getId());
 
-            stream.writeInt(getLevel());
+            stream.writeInt32(getLevel());
 
-            stream.writeInt(getAvail());
+            stream.writeInt32(getAvail());
         }
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -1196,8 +1196,8 @@ public class W3I {
             setId(stream.readId("techId"));
         }
 
-        private void write_0x12(Wc3BinOutputStream stream) {
-            stream.writeInt(getPlayers());
+        private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
+            stream.writeInt32(getPlayers());
 
             stream.writeId(getId());
         }
@@ -1347,7 +1347,7 @@ public class W3I {
             }
 
             private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
-                stream.writeInt(getChance());
+                stream.writeInt32(getChance());
 
                 for (int i = 0; i < _parent._positionTypes.size(); i++) {
                     stream.writeId(getTypeId(i));
@@ -1429,10 +1429,10 @@ public class W3I {
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             int positionsCount = _positionTypes.size();
 
-            stream.writeInt(positionsCount);
+            stream.writeInt32(positionsCount);
 
             for (int i = 0; i < positionsCount; i++) {
-                stream.writeInt(getPositionType(i).getVal());
+                stream.writeInt32(getPositionType(i).getVal());
             }
 
             for (Set set : _sets) {
@@ -1541,7 +1541,7 @@ public class W3I {
             }
 
             private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
-                stream.writeInt(getChance());
+                stream.writeInt32(getChance());
 
                 stream.writeId(getTypeId());
             }
@@ -1603,7 +1603,7 @@ public class W3I {
         }
 
         private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
-            stream.writeInt(getIndex());
+            stream.writeInt32(getIndex());
 
             stream.writeString(getName());
 
@@ -1780,10 +1780,10 @@ public class W3I {
     }
 
     private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
-        stream.writeInt(EncodingFormat.W3I_0x12.getVersion());
+        stream.writeInt32(EncodingFormat.W3I_0x12.getVersion());
 
-        stream.writeInt(getSavesAmount());
-        stream.writeInt(getEditorVersion());
+        stream.writeInt32(getSavesAmount());
+        stream.writeInt32(getEditorVersion());
         stream.writeString(getMapName());
         stream.writeString(getMapDescription());
         stream.writeString(getPlayersRecommendedAmount());
@@ -1793,24 +1793,24 @@ public class W3I {
         Coords2DF camBounds3 = getCameraBounds3();
         Coords2DF camBounds4 = getCameraBounds4();
 
-        stream.writeFloat(camBounds1.getX());
-        stream.writeFloat(camBounds1.getY());
-        stream.writeFloat(camBounds2.getX());
-        stream.writeFloat(camBounds2.getY());
-        stream.writeFloat(camBounds3.getX());
-        stream.writeFloat(camBounds3.getY());
-        stream.writeFloat(camBounds4.getX());
-        stream.writeFloat(camBounds4.getY());
+        stream.writeFloat32(camBounds1.getX());
+        stream.writeFloat32(camBounds1.getY());
+        stream.writeFloat32(camBounds2.getX());
+        stream.writeFloat32(camBounds2.getY());
+        stream.writeFloat32(camBounds3.getX());
+        stream.writeFloat32(camBounds3.getY());
+        stream.writeFloat32(camBounds4.getX());
+        stream.writeFloat32(camBounds4.getY());
 
-        stream.writeInt(-getMargins().getMinX());
-        stream.writeInt(getMargins().getMaxX());
-        stream.writeInt(-getMargins().getMinY());
-        stream.writeInt(getMargins().getMaxY());
+        stream.writeInt32(-getMargins().getMinX());
+        stream.writeInt32(getMargins().getMaxX());
+        stream.writeInt32(-getMargins().getMinY());
+        stream.writeInt32(getMargins().getMaxY());
 
-        stream.writeInt(getWidth());
-        stream.writeInt(getHeight());
+        stream.writeInt32(getWidth());
+        stream.writeInt32(getHeight());
 
-        stream.writeInt(getFlags().toInt());
+        stream.writeInt32(getFlags().toInt());
 
         stream.writeChar(getTileset().getChar());
 
@@ -1822,37 +1822,37 @@ public class W3I {
         stream.writeString(prologueScreen != null ? prologueScreen.getTitle() : null);
         stream.writeString(prologueScreen != null ? prologueScreen.getSubtitle() : null);
 
-        stream.writeInt(_players.size());
+        stream.writeInt32(_players.size());
 
         for (Player player : _players) {
             player.write(stream, EncodingFormat.W3I_0x12);
         }
 
-        stream.writeInt(_forces.size());
+        stream.writeInt32(_forces.size());
 
         for (Force force : _forces) {
             force.write(stream, EncodingFormat.W3I_0x12);
         }
 
-        stream.writeInt(_upgradeMods.size());
+        stream.writeInt32(_upgradeMods.size());
 
         for (UpgradeMod upgradeMod : _upgradeMods) {
             upgradeMod.write(stream, EncodingFormat.W3I_0x12);
         }
 
-        stream.writeInt(_techMods.size());
+        stream.writeInt32(_techMods.size());
 
         for (TechMod techMod : _techMods) {
             techMod.write(stream, EncodingFormat.W3I_0x12);
         }
 
-        stream.writeInt(_unitTables.size());
+        stream.writeInt32(_unitTables.size());
 
         for (UnitTable unitTable : _unitTables) {
             unitTable.write(stream, EncodingFormat.W3I_0x12);
         }
 
-        stream.writeInt(_itemTables.size());
+        stream.writeInt32(_itemTables.size());
 
         for (ItemTable itemTable : _itemTables) {
             itemTable.write(stream, EncodingFormat.W3I_0x12);
@@ -1976,11 +1976,11 @@ public class W3I {
         }
     }
 
-    private void write_0x19(Wc3BinOutputStream stream) {
-        stream.writeInt(EncodingFormat.W3I_0x19.getVersion());
+    private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
+        stream.writeInt32(EncodingFormat.W3I_0x19.getVersion());
 
-        stream.writeInt(getSavesAmount());
-        stream.writeInt(getEditorVersion());
+        stream.writeInt32(getSavesAmount());
+        stream.writeInt32(getEditorVersion());
         stream.writeString(getMapName());
         stream.writeString(getMapAuthor());
         stream.writeString(getMapDescription());
@@ -1991,30 +1991,30 @@ public class W3I {
         Coords2DF camBounds3 = getCameraBounds3();
         Coords2DF camBounds4 = getCameraBounds4();
 
-        stream.writeFloat(camBounds1.getX());
-        stream.writeFloat(camBounds1.getY());
-        stream.writeFloat(camBounds2.getX());
-        stream.writeFloat(camBounds2.getY());
-        stream.writeFloat(camBounds3.getX());
-        stream.writeFloat(camBounds3.getY());
-        stream.writeFloat(camBounds4.getX());
-        stream.writeFloat(camBounds4.getY());
+        stream.writeFloat32(camBounds1.getX());
+        stream.writeFloat32(camBounds1.getY());
+        stream.writeFloat32(camBounds2.getX());
+        stream.writeFloat32(camBounds2.getY());
+        stream.writeFloat32(camBounds3.getX());
+        stream.writeFloat32(camBounds3.getY());
+        stream.writeFloat32(camBounds4.getX());
+        stream.writeFloat32(camBounds4.getY());
 
-        stream.writeInt(-getMargins().getMinX());
-        stream.writeInt(getMargins().getMaxX());
-        stream.writeInt(-getMargins().getMinY());
-        stream.writeInt(getMargins().getMaxY());
+        stream.writeInt32(-getMargins().getMinX());
+        stream.writeInt32(getMargins().getMaxX());
+        stream.writeInt32(-getMargins().getMinY());
+        stream.writeInt32(getMargins().getMaxY());
 
-        stream.writeInt(getWidth());
-        stream.writeInt(getHeight());
+        stream.writeInt32(getWidth());
+        stream.writeInt32(getHeight());
 
-        stream.writeInt(getFlags().toInt());
+        stream.writeInt32(getFlags().toInt());
 
         stream.writeChar(getTileset().getChar());
 
         getLoadingScreen().write(stream, EncodingFormat.W3I_0x19);
 
-        stream.writeInt(getGameDataSet().getIndex());
+        stream.writeInt32(getGameDataSet().getIndex());
 
         PrologueScreen prologueScreen = getPrologueScreen();
 
@@ -2025,7 +2025,7 @@ public class W3I {
 
         TerrainFog terrainFog = getTerrainFog();
 
-        stream.writeInt(terrainFog != null ? terrainFog.getType() : null);
+        stream.writeInt32(terrainFog != null ? terrainFog.getType() : null);
         stream.writeReal(terrainFog != null ? terrainFog.getZStart() : null);
         stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : null);
         stream.writeReal(terrainFog != null ? terrainFog.getDensity() : null);
@@ -2048,37 +2048,37 @@ public class W3I {
         stream.writeUByte(waterColor.getBlue());
         stream.writeUByte(waterColor.getAlpha());
 
-        stream.writeInt(_players.size());
+        stream.writeInt32(_players.size());
 
         for (Player player : _players) {
             player.write(stream, EncodingFormat.W3I_0x19);
         }
 
-        stream.writeInt(_forces.size());
+        stream.writeInt32(_forces.size());
 
         for (Force force : _forces) {
             force.write(stream, EncodingFormat.W3I_0x19);
         }
 
-        stream.writeInt(_upgradeMods.size());
+        stream.writeInt32(_upgradeMods.size());
 
         for (UpgradeMod upgradeMod : _upgradeMods) {
             upgradeMod.write(stream, EncodingFormat.W3I_0x19);
         }
 
-        stream.writeInt(_techMods.size());
+        stream.writeInt32(_techMods.size());
 
         for (TechMod techMod : _techMods) {
             techMod.write(stream, EncodingFormat.W3I_0x19);
         }
 
-        stream.writeInt(_unitTables.size());
+        stream.writeInt32(_unitTables.size());
 
         for (UnitTable unitTable : _unitTables) {
             unitTable.write(stream, EncodingFormat.W3I_0x19);
         }
 
-        stream.writeInt(0);
+        stream.writeInt32(0);
     }
 
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {

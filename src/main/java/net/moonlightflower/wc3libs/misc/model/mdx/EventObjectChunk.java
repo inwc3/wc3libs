@@ -11,23 +11,23 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttachmentChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("ATCH");
+public class EventObjectChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("EVTS");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Attachment> _attachments = new ArrayList<>();
+    private List<EventObject> _eventObjects = new ArrayList<>();
 
-    public List<Attachment> getAttachments() {
-        return new ArrayList<>(_attachments);
+    public List<EventObject> getEventObjects() {
+        return new ArrayList<>(_eventObjects);
     }
 
-    public void addAttachment(@Nonnull Attachment val) {
-        if (!_attachments.contains(val)) {
-            _attachments.add(val);
+    public void addEventObject(@Nonnull EventObject val) {
+        if (!_eventObjects.contains(val)) {
+            _eventObjects.add(val);
         }
     }
 
@@ -37,7 +37,7 @@ public class AttachmentChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addAttachment(new Attachment(stream));
+            addEventObject(new EventObject(stream));
         }
     }
 
@@ -50,8 +50,8 @@ public class AttachmentChunk extends Chunk {
 
         long startPos = stream.getPos();
 
-        for (Attachment attachment : getAttachments()) {
-            attachment.write(stream);
+        for (EventObject eventObject : getEventObjects()) {
+            eventObject.write(stream);
         }
 
         long endPos = stream.getPos();
@@ -82,13 +82,13 @@ public class AttachmentChunk extends Chunk {
         }
     }
 
-    public AttachmentChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public EventObjectChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public AttachmentChunk() {
+    public EventObjectChunk() {
 
     }
 }

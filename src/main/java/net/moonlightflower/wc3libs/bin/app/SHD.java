@@ -70,11 +70,12 @@ public class SHD {
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-        int size = stream.size();
+        //TODO: long?
+        int sizeI = (int) stream.size();
 
-        _shadowMap.setBounds(new Bounds(new Size(1, size), new Coords2DI(0, 0)), false, false);
+        _shadowMap.setBounds(new Bounds(new Size(1, sizeI), new Coords2DI(0, 0)), false, false);
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < sizeI; i++) {
             Boolean val = ((stream.readByte() & 0xFF) == 0xFF);
 
             _shadowMap.set(i, val);

@@ -403,7 +403,7 @@ public class W3F {
 		}
 		
 		private void write_0x1(@Nonnull Wc3BinOutputStream stream) {
-			stream.writeInt(isVisible() ? 1 : 0);
+			stream.writeInt32(isVisible() ? 1 : 0);
 			stream.writeString(getChapterTitle());
 			stream.writeString(getMapTitle());
 			stream.writeString(getMapPath());
@@ -645,37 +645,37 @@ public class W3F {
 	}
 
 	private void write_0x1(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt(EncodingFormat.W3F_0x1.getVersion());
+		stream.writeInt32(EncodingFormat.W3F_0x1.getVersion());
 		
-		stream.writeInt(getSavesAmount());
-		stream.writeInt(getEditorVersion());
+		stream.writeInt32(getSavesAmount());
+		stream.writeInt32(getEditorVersion());
 		
 		stream.writeString(getCampaignName());
 		stream.writeString(getDifficulty());
 		stream.writeString(getCampaignAuthor());
 		stream.writeString(getCampaignDescription());
 		
-		stream.writeInt(getFlags().toInt());
+		stream.writeInt32(getFlags().toInt());
 
 		LoadingScreenBackground background = getCampaignBackground();
 
-		stream.writeInt((background instanceof LoadingScreenBackground.PresetBackground) ? ((LoadingScreenBackground.PresetBackground) background).getIndex() : -1);
+		stream.writeInt32((background instanceof LoadingScreenBackground.PresetBackground) ? ((LoadingScreenBackground.PresetBackground) background).getIndex() : -1);
 		stream.writeString((background instanceof LoadingScreenBackground.CustomBackground) ? ((LoadingScreenBackground.CustomBackground) background).getCustomPath().toString() : null);
 		stream.writeString(getMinimapPath() != null ? getMinimapPath().toString() : null);
 		
 		AmbientSound ambientSound = getAmbientSound();
 
 		if (ambientSound != null) {
-			stream.writeInt((ambientSound instanceof PresetAmbientSound) ? ((PresetAmbientSound) ambientSound).getIndex() : -1);
+			stream.writeInt32((ambientSound instanceof PresetAmbientSound) ? ((PresetAmbientSound) ambientSound).getIndex() : -1);
 			stream.writeString((ambientSound instanceof CustomAmbientSound) ? ((CustomAmbientSound) ambientSound).getCustomPath().toString() : null);
 		} else {
-			stream.writeInt(0);
+			stream.writeInt32(0);
 			stream.writeString((String) null);
 		}
 		
 		TerrainFog terrainFog = getTerrainFog();
 		
-		stream.writeInt(terrainFog != null ? terrainFog.getType() : Int.valueOf(0));
+		stream.writeInt32(terrainFog != null ? terrainFog.getType() : Int.valueOf(0));
 		stream.writeReal(terrainFog != null ? terrainFog.getZStart() : Real.valueOf(0F));
 		stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : Real.valueOf(0F));
 		stream.writeReal(terrainFog != null ? terrainFog.getDensity() : Real.valueOf(0F));
@@ -687,15 +687,15 @@ public class W3F {
 		stream.writeUByte(terrainFogColor.getBlue());
 		stream.writeUByte(terrainFogColor.getAlpha());
 
-		stream.writeInt(getUIRace().getVal());
+		stream.writeInt32(getUIRace().getVal());
 		
-		stream.writeInt(getMaps().size());
+		stream.writeInt32(getMaps().size());
 		
 		for (int i = 0; i < getMaps().size(); i++) {
 			getMaps().get(i).write(stream, EncodingFormat.W3F_0x1);
 		}
 		
-		stream.writeInt(getListedMaps().size());
+		stream.writeInt32(getListedMaps().size());
 		
 		for (int i = 0; i < getListedMaps().size(); i++) {
 			getListedMaps().get(i).write(stream, EncodingFormat.W3F_0x1);

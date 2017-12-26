@@ -6,8 +6,6 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class RibbonEmitter {
     private long _inclusiveSize;
@@ -85,15 +83,15 @@ public class RibbonEmitter {
     public void write(@Nonnull Wc3BinOutputStream stream) {
         stream.writeUInt32(_inclusiveSize);
         _node.write(stream);
-        stream.writeFloat8(_heightAbove);
-        stream.writeFloat8(_heightBelow);
+        stream.writeFloat32(_heightAbove);
+        stream.writeFloat32(_heightBelow);
 
-        stream.writeFloat8(_color.getAlpha() / 255F);
-        stream.writeFloat8(_color.getBlue() / 255F);
-        stream.writeFloat8(_color.getGreen() / 255F);
-        stream.writeFloat8(_color.getRed() / 255F);
+        stream.writeFloat32(_color.getAlpha() / 255F);
+        stream.writeFloat32(_color.getBlue() / 255F);
+        stream.writeFloat32(_color.getGreen() / 255F);
+        stream.writeFloat32(_color.getRed() / 255F);
 
-        stream.writeFloat8(_lifespan);
+        stream.writeFloat32(_lifespan);
 
         stream.writeUInt32(_textureSlot);
         stream.writeUInt32(_emissionRate);
@@ -102,7 +100,7 @@ public class RibbonEmitter {
         stream.writeUInt32(_columns);
 
         stream.writeUInt32(_materialId);
-        stream.writeFloat8(_gravity);
+        stream.writeFloat32(_gravity);
 
         //TODO: KRHA, KRHB, KRAL, KRCO, KRTX, KRVS
     }

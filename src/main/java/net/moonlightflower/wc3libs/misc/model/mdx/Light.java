@@ -74,20 +74,20 @@ public class Light {
 
         stream.writeUInt32(_type.ordinal());
 
-        stream.writeFloat8(_attenuationStart);
-        stream.writeFloat8(_attenuationEnd);
+        stream.writeFloat32(_attenuationStart);
+        stream.writeFloat32(_attenuationEnd);
 
-        stream.writeFloat8(_color.getBlue());
-        stream.writeFloat8(_color.getGreen());
-        stream.writeFloat8(_color.getRed());
+        stream.writeFloat32(_color.getBlue());
+        stream.writeFloat32(_color.getGreen());
+        stream.writeFloat32(_color.getRed());
 
-        stream.writeFloat8(_intensity);
+        stream.writeFloat32(_intensity);
 
-        stream.writeFloat8(_ambientColor.getBlue());
-        stream.writeFloat8(_ambientColor.getGreen());
-        stream.writeFloat8(_ambientColor.getRed());
+        stream.writeFloat32(_ambientColor.getBlue());
+        stream.writeFloat32(_ambientColor.getGreen());
+        stream.writeFloat32(_ambientColor.getRed());
 
-        stream.writeFloat8(_ambientIntensity);
+        stream.writeFloat32(_ambientIntensity);
 
         //TODO: KLAS, KLAE, KLAC, KLAI, KLBI, KLBC, KLAV
     }

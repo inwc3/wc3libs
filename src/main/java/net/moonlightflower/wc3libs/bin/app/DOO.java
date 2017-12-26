@@ -154,12 +154,12 @@ public class DOO {
 			}
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
-				stream.writeInt(_items.size());
+				stream.writeInt32(_items.size());
 				
 				for (Item item : _items) {
 					stream.writeId(item.getTypeId());
 					
-					stream.writeInt(item.getChance());
+					stream.writeInt32(item.getChance());
 				}
 			}
 			
@@ -245,29 +245,29 @@ public class DOO {
 		public void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeId(getTypeId());
 			
-			stream.writeInt(getVariation());
+			stream.writeInt32(getVariation());
 			
 			Coords3DF pos = getPos();
 			
-			stream.writeFloat(pos.getX());
-			stream.writeFloat(pos.getY());
-			stream.writeFloat(pos.getZ());
+			stream.writeFloat32(pos.getX());
+			stream.writeFloat32(pos.getY());
+			stream.writeFloat32(pos.getZ());
 			
-			stream.writeFloat(getAngle());
+			stream.writeFloat32(getAngle());
 			
 			Coords3DF scale = getScale();
 			
-			stream.writeFloat(scale.getX());
-			stream.writeFloat(scale.getY());
-			stream.writeFloat(scale.getZ());
+			stream.writeFloat32(scale.getX());
+			stream.writeFloat32(scale.getY());
+			stream.writeFloat32(scale.getZ());
 			
 			stream.writeUByte(getLifePerc());
 			
 			stream.writeUByte(getFlags());
 			
-			stream.writeInt(getItemTablePtr());
+			stream.writeInt32(getItemTablePtr());
 			
-			stream.writeInt(_itemSets.size());
+			stream.writeInt32(_itemSets.size());
 			
 			for (ItemSet set : _itemSets) {
 				set.write(stream, EncodingFormat.DOO_0x8);
@@ -355,9 +355,9 @@ public class DOO {
 			
 			Coords3DI pos = getPos();
 			
-			stream.writeInt(pos.getZ());
-			stream.writeInt(pos.getX());
-			stream.writeInt(pos.getY());
+			stream.writeInt32(pos.getZ());
+			stream.writeInt32(pos.getX());
+			stream.writeInt32(pos.getY());
 		}
 		
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull Special.EncodingFormat format) throws BinInputStream.StreamException {
@@ -441,9 +441,9 @@ public class DOO {
 		}
 		
 		private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-			stream.writeInt(EncodingFormat.DOO_SPECIAL_0x0.getVersion());
+			stream.writeInt32(EncodingFormat.DOO_SPECIAL_0x0.getVersion());
 			
-			stream.writeInt(_parent._specialDoods.size());
+			stream.writeInt32(_parent._specialDoods.size());
 			
 			for (SpecialDood dood : _parent._specialDoods) {
 				dood.write(stream, EncodingFormat.DOO_SPECIAL_0x0);
@@ -531,11 +531,11 @@ public class DOO {
 	private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("W3do"));
 		
-		stream.writeInt(EncodingFormat.DOO_0x8.getVersion());
+		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
 		
-		stream.writeInt(0xB);
+		stream.writeInt32(0xB);
 		
-		stream.writeInt(_doods.size());
+		stream.writeInt32(_doods.size());
 		
 		for (Dood dood : _doods) {
 			dood.write(stream, EncodingFormat.DOO_0x8);

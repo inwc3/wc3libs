@@ -36,8 +36,8 @@ public class Sound {
 
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
         stream.writeBytes(Arrays.copyOf(_fileName.getBytes(StandardCharsets.US_ASCII), 260));
-        stream.writeFloat8(_volume);
-        stream.writeFloat8(_pitch);
+        stream.writeFloat32(_volume);
+        stream.writeFloat32(_pitch);
         stream.writeUInt32(_flags);
     }
 

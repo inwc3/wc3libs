@@ -16,9 +16,9 @@ public class PivotPoint {
     }
 
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
-        stream.writeFloat8(_pos.getX());
-        stream.writeFloat8(_pos.getY());
-        stream.writeFloat8(_pos.getZ());
+        stream.writeFloat32(_pos.getX());
+        stream.writeFloat32(_pos.getY());
+        stream.writeFloat32(_pos.getZ());
     }
 
     public PivotPoint(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

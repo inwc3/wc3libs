@@ -20,7 +20,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 			stream.writeString(getPath());
 		}
 		
-		public Obj(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		public Obj(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			read(stream);
 		}
 		
@@ -29,7 +29,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	}
 	
 	@Override
-	public void read(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	public void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32();
 
 		Wc3BinInputStream.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
@@ -42,17 +42,17 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	}
 	
 	@Override
-	public void write(Wc3BinOutputStream stream) {
-		stream.writeInt(EncodingFormat.IMP_0x1.getVersion());
+	public void write(@Nonnull Wc3BinOutputStream stream) {
+		stream.writeInt32(EncodingFormat.IMP_0x1.getVersion());
 		
-		stream.writeInt(_objs.size());
+		stream.writeInt32(_objs.size());
 		
 		for (IMP.Obj obj : _objs) {
 			obj.write(stream);
 		}
 	}
 	
-	public IMP_0x1(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	public IMP_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream);
 	}
 	

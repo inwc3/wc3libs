@@ -45,11 +45,11 @@ public class WCT {
 			int textLen = stream.stringToByteArray(getText()).length;
 
 			if (textLen > 0) {
-				stream.writeInt(textLen + 1);
+				stream.writeInt32(textLen + 1);
 				
 				stream.writeString(getText());
 			} else {
-				stream.writeInt(0);
+				stream.writeInt32(0);
 			}
 		}
 		
@@ -150,7 +150,7 @@ public class WCT {
 	}
 	
 	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt(EncodingFormat.WCT_0x0.getVersion());
+		stream.writeInt32(EncodingFormat.WCT_0x0.getVersion());
 		
 		for (Trig trig : _trigs) {
 			trig.write(stream, EncodingFormat.WCT_0x0);
@@ -174,7 +174,7 @@ public class WCT {
 	}
 
 	public void write_0x1(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt(EncodingFormat.WCT_0x1.getVersion());
+		stream.writeInt32(EncodingFormat.WCT_0x1.getVersion());
 		
 		stream.writeString(_headComment);
 		

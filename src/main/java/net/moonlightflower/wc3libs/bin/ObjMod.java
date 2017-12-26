@@ -403,7 +403,7 @@ public class ObjMod {
 				modsAmount += field.getVals().size();
 			}
 
-			stream.writeInt(modsAmount);
+			stream.writeInt32(modsAmount);
 			
 			for (int i = 0; i < getFieldsList().size(); i++) {
 				Field field = getFieldsList().get(i);
@@ -419,32 +419,32 @@ public class ObjMod {
 					
 					Field.ValType valType = val.getType();
 					
-					stream.writeInt(valType.getVal());
+					stream.writeInt32(valType.getVal());
 
 					if (extended) {
-						stream.writeInt(level);
-						stream.writeInt(dataPt);
+						stream.writeInt32(level);
+						stream.writeInt32(dataPt);
 					}
 
 					switch (valType) {
 					case INT: {
 						Int valSpec = (Int) val.getVal();
 						
-						stream.writeInt(valSpec.toInt());
+						stream.writeInt32(valSpec.toInt());
 						
 						break;
 					}
 					case REAL: {
 						Real valSpec = (Real) val.getVal();
 						
-						stream.writeFloat(valSpec.toFloat());
+						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
 					case UNREAL: {
 						Real valSpec = (Real) val.getVal();
 						
-						stream.writeFloat(valSpec.toFloat());
+						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
@@ -475,7 +475,7 @@ public class ObjMod {
 				modsAmount += field.getVals().size();
 			}
 
-			stream.writeInt(modsAmount);
+			stream.writeInt32(modsAmount);
 			
 			for (int i = 0; i < getFieldsList().size(); i++) {
 				Field field = getFieldsList().get(i);
@@ -491,32 +491,32 @@ public class ObjMod {
 					
 					Field.ValType valType = val.getType();
 					
-					stream.writeInt(valType.getVal());
+					stream.writeInt32(valType.getVal());
 
 					if (extended) {
-						stream.writeInt(level);
-						stream.writeInt(dataPt);
+						stream.writeInt32(level);
+						stream.writeInt32(dataPt);
 					}
 
 					switch (valType) {
 					case INT: {
 						Int valSpec = (Int) val.getVal();
 						
-						stream.writeInt(valSpec.toInt());
+						stream.writeInt32(valSpec.toInt());
 						
 						break;
 					}
 					case REAL: {						
 						Real valSpec = (Real) val.getVal();
 
-						stream.writeFloat(valSpec.toFloat());
+						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
 					case UNREAL: {
 						Real valSpec = (Real) val.getVal();
 						
-						stream.writeFloat(valSpec.toFloat());
+						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
@@ -974,7 +974,7 @@ public class ObjMod {
 		}
 	}
 
-	private void read_0x1(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+	private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
 		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
@@ -1006,7 +1006,7 @@ public class ObjMod {
 		}
 	}
 
-	private void read_0x2(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+	private void read_0x2(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
 		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x2.getVersion(), version);
@@ -1038,26 +1038,26 @@ public class ObjMod {
 		}
 	}
 	
-	private void write_0x1(Wc3BinOutputStream stream, boolean extended) {
-		stream.writeInt(EncodingFormat.OBJ_0x1.getVersion());
+	private void write_0x1(@Nonnull Wc3BinOutputStream stream, boolean extended) {
+		stream.writeInt32(EncodingFormat.OBJ_0x1.getVersion());
 		
-		stream.writeInt(getOrigObjs().size());
+		stream.writeInt32(getOrigObjs().size());
 		
 		for (Obj obj : getOrigObjs()) {
 			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
 		}
 		
-		stream.writeInt(getCustomObjs().size());
+		stream.writeInt32(getCustomObjs().size());
 		
 		for (Obj obj : getCustomObjs()) {
 			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
 		}
 	}
 	
-	private void write_0x2(Wc3BinOutputStream stream, boolean extended) {
-		stream.writeInt(EncodingFormat.OBJ_0x2.getVersion());
+	private void write_0x2(@Nonnull Wc3BinOutputStream stream, boolean extended) {
+		stream.writeInt32(EncodingFormat.OBJ_0x2.getVersion());
 
-		stream.writeInt(getOrigObjs().size());
+		stream.writeInt32(getOrigObjs().size());
 		
 		for (int i = 0; i < getOrigObjs().size(); i++) {
 			Obj obj = getOrigObjs().get(i);
@@ -1065,7 +1065,7 @@ public class ObjMod {
 			obj.write(stream, EncodingFormat.OBJ_0x2, extended);
 		}
 		
-		stream.writeInt(getCustomObjs().size());
+		stream.writeInt32(getCustomObjs().size());
 		
 		for (int i = 0; i < getCustomObjs().size(); i++) {
 			Obj obj = getCustomObjs().get(i);
@@ -1074,7 +1074,7 @@ public class ObjMod {
 		}
 	}
 	
-	private void read_auto(Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 		
 		stream.rewind();
@@ -1082,7 +1082,7 @@ public class ObjMod {
 		read(stream, EncodingFormat.valueOf(version), extended);
 	}
 	
-	public void read(Wc3BinInputStream stream, EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
+	public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream, extended);

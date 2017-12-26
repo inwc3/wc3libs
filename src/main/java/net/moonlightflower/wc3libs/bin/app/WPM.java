@@ -115,15 +115,15 @@ public class WPM extends Raster<FlagsInt> {
 
 	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("MP3W"));
-		stream.writeInt(EncodingFormat.WPM_0x0.getVersion());
+		stream.writeInt32(EncodingFormat.WPM_0x0.getVersion());
 		
 		PathMap pathMap = getPathMap();
 		
 		int width = pathMap.getWidth();
 		int height = pathMap.getHeight();
 		
-		stream.writeInt(height);
-		stream.writeInt(height);
+		stream.writeInt32(width);
+		stream.writeInt32(height);
 		
 		int cellsCount = width * height * 16;
 		

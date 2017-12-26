@@ -16,13 +16,13 @@ public class Extent {
     private float _maxZ;
 
     public void write(@Nonnull Wc3BinOutputStream stream) {
-        stream.writeFloat8(_boundsRadius);
-        stream.writeFloat8(_minX);
-        stream.writeFloat8(_minY);
-        stream.writeFloat8(_minZ);
-        stream.writeFloat8(_maxX);
-        stream.writeFloat8(_maxY);
-        stream.writeFloat8(_maxZ);
+        stream.writeFloat32(_boundsRadius);
+        stream.writeFloat32(_minX);
+        stream.writeFloat32(_minY);
+        stream.writeFloat32(_minZ);
+        stream.writeFloat32(_maxX);
+        stream.writeFloat32(_maxY);
+        stream.writeFloat32(_maxZ);
     }
 
     public Extent(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

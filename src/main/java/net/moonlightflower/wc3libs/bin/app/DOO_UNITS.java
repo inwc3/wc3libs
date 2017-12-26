@@ -173,7 +173,7 @@ public class DOO_UNITS {
 				
 				private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 					stream.writeId(getTypeId());
-					stream.writeInt(getChance());
+					stream.writeInt32(getChance());
 				}
 
 				private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -228,7 +228,7 @@ public class DOO_UNITS {
 			}
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
-				stream.writeInt(_items.size());
+				stream.writeInt32(_items.size());
 				
 				for (Item item : _items) {
 					item.write(stream, EncodingFormat.DOO_0x8);
@@ -365,7 +365,7 @@ public class DOO_UNITS {
 			}
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
-				stream.writeInt(getSlot());
+				stream.writeInt32(getSlot());
 				stream.writeId(getTypeId());
 			}
 
@@ -454,8 +454,8 @@ public class DOO_UNITS {
 
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 				stream.writeId(getTypeId());
-				stream.writeInt(getAutoCast());
-				stream.writeInt(getLevel());
+				stream.writeInt32(getAutoCast());
+				stream.writeInt32(getLevel());
 			}
 			
 			private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -586,7 +586,7 @@ public class DOO_UNITS {
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 				stream.writeId(getTypeId());
-				stream.writeInt(getChance());
+				stream.writeInt32(getChance());
 			}
 			
 			private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -752,55 +752,55 @@ public class DOO_UNITS {
 		private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeId(getTypeId());
 			
-			stream.writeInt(getVariation());
+			stream.writeInt32(getVariation());
 			
 			Coords3DF pos = getPos();
 			
-			stream.writeFloat(pos.getX());
-			stream.writeFloat(pos.getY());
-			stream.writeFloat(pos.getZ());
+			stream.writeFloat32(pos.getX());
+			stream.writeFloat32(pos.getY());
+			stream.writeFloat32(pos.getZ());
 			
-			stream.writeFloat(getAngle());
+			stream.writeFloat32(getAngle());
 			
 			Coords3DF scale = getScale();
 			
-			stream.writeFloat(scale.getX());
-			stream.writeFloat(scale.getY());
-			stream.writeFloat(scale.getZ());
+			stream.writeFloat32(scale.getX());
+			stream.writeFloat32(scale.getY());
+			stream.writeFloat32(scale.getZ());
 			
 			stream.writeUByte(getFlags());
-			stream.writeInt(getOwnerIndex());
+			stream.writeInt32(getOwnerIndex());
 			stream.writeUByte(getUnknown());
 			stream.writeUByte(getUnknownB());
 			
-			stream.writeInt(getLifePerc());
-			stream.writeInt(getManaPerc());
+			stream.writeInt32(getLifePerc());
+			stream.writeInt32(getManaPerc());
 			
-			stream.writeInt(getItemTablePtr());
+			stream.writeInt32(getItemTablePtr());
 			
-			stream.writeInt(_lootSets.size());
+			stream.writeInt32(_lootSets.size());
 
 			for (LootSet set : _lootSets) {
 				set.write(stream, EncodingFormat.DOO_0x8);
 			}
 			
-			stream.writeInt(getResourcesAmount());
+			stream.writeInt32(getResourcesAmount());
 			
-			stream.writeFloat(getTargetAcquisition());
+			stream.writeFloat32(getTargetAcquisition());
 			
-			stream.writeInt(getHeroLevel());
+			stream.writeInt32(getHeroLevel());
 			
-			stream.writeInt(getHeroStr());
-			stream.writeInt(getHeroAgi());
-			stream.writeInt(getHeroInt());
+			stream.writeInt32(getHeroStr());
+			stream.writeInt32(getHeroAgi());
+			stream.writeInt32(getHeroInt());
 			
-			stream.writeInt(_invItems.size());
+			stream.writeInt32(_invItems.size());
 			
 			for (InvItem item : _invItems) {
 				item.write(stream, EncodingFormat.DOO_0x8);
 			}
 			
-			stream.writeInt(_abilMods.size());
+			stream.writeInt32(_abilMods.size());
 			
 			for (AbilMod abilMod : _abilMods) {
 				abilMod.write(stream, EncodingFormat.DOO_0x8);
@@ -808,7 +808,7 @@ public class DOO_UNITS {
 			
 			int randFlag = getRandFlag();
 			
-			stream.writeInt(randFlag);
+			stream.writeInt32(randFlag);
 			
 			switch (randFlag) {
 			case randFlag_ANY: {
@@ -822,20 +822,20 @@ public class DOO_UNITS {
 				stream.writeByte(rand2);
 				stream.writeByte(rand3);
 				
-				stream.writeInt(getRandLevel());
+				stream.writeInt32(getRandLevel());
 				
 				stream.writeUByte(getRandClass());
 				
 				break;
 			}
 			case randFlag_RAND_GROUP: {
-				stream.writeInt(getRandGroupIndex());
-				stream.writeInt(getRandGroupPos());
+				stream.writeInt32(getRandGroupIndex());
+				stream.writeInt32(getRandGroupPos());
 				
 				break;
 			}
 			case randFlag_RAND_CUSTOM: {
-				stream.writeInt(_randObjs.size());
+				stream.writeInt32(_randObjs.size());
 				
 				for (RandObj randObj : _randObjs) {
 					randObj.write(stream, EncodingFormat.DOO_0x8);
@@ -845,9 +845,9 @@ public class DOO_UNITS {
 			}
 			}
 			
-			stream.writeInt(getCustomColor());
-			stream.writeInt(getWaygateTargetRectIndex());
-			stream.writeInt(getEditorId());
+			stream.writeInt32(getCustomColor());
+			stream.writeInt32(getWaygateTargetRectIndex());
+			stream.writeInt32(getEditorId());
 		}
 		
 		private void read(@Nonnull Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
@@ -925,11 +925,11 @@ public class DOO_UNITS {
 	private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("W3do"));
 		
-		stream.writeInt(EncodingFormat.DOO_0x8.getVersion());
+		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
 		
-		stream.writeInt(0xB);
+		stream.writeInt32(0xB);
 		
-		stream.writeInt(_objs.size());
+		stream.writeInt32(_objs.size());
 		
 		for (Obj obj : _objs) {
 			obj.write(stream, EncodingFormat.DOO_0x8);

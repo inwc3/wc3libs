@@ -11,56 +11,58 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttachmentChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("ATCH");
+public class EventObjectTrackChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("KEVT");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Attachment> _attachments = new ArrayList<>();
+    private long _globalSequenceId;
 
-    public List<Attachment> getAttachments() {
-        return new ArrayList<>(_attachments);
+    public long getGlobalSequenceId() {
+        return _globalSequenceId;
     }
 
-    public void addAttachment(@Nonnull Attachment val) {
-        if (!_attachments.contains(val)) {
-            _attachments.add(val);
+    private List<EventObjectTrack> _tracks = new ArrayList<>();
+
+    public List<EventObjectTrack> getTracks() {
+        return new ArrayList<>(_tracks);
+    }
+
+    public void addTrack(@Nonnull EventObjectTrack val) {
+        if (!_tracks.contains(val)) {
+            _tracks.add(val);
         }
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-        Header header = new Header(stream);
+        Id token = stream.readId("token");
 
-        long endPos = stream.getPos() + header.getSize();
+        if (!token.equals(getToken())) throw new IllegalArgumentException("invalid " + getToken() + " startToken (" + token + ")");
 
-        while (stream.getPos() < endPos) {
-            addAttachment(new Attachment(stream));
+        long tracksCount = stream.readUInt32("tracksCount");
+
+        _globalSequenceId = stream.readUInt32("globalSequenceId");
+
+        while (tracksCount > 0) {
+            addTrack(new EventObjectTrack(stream));
+
+            tracksCount--;
         }
     }
 
     private void write_0x0(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         stream.writeId(TOKEN);
 
-        long sizePos = stream.getPos();
+        stream.writeUInt32(getTracks().size());
 
-        stream.writeUInt32(0L);
+        stream.writeUInt32(_globalSequenceId);
 
-        long startPos = stream.getPos();
-
-        for (Attachment attachment : getAttachments()) {
-            attachment.write(stream);
+        for (EventObjectTrack track : getTracks()) {
+            track.write(stream);
         }
-
-        long endPos = stream.getPos();
-
-        stream.setPos(sizePos);
-
-        stream.writeUInt32(endPos - startPos);
-
-        stream.setPos(endPos);
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -82,13 +84,13 @@ public class AttachmentChunk extends Chunk {
         }
     }
 
-    public AttachmentChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public EventObjectTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public AttachmentChunk() {
+    public EventObjectTrackChunk() {
 
     }
 }

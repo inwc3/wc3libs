@@ -7,8 +7,6 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class Vertex {
     private Coords3DF _pos;
@@ -18,9 +16,9 @@ public class Vertex {
     }
 
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
-        stream.writeFloat8(_pos.getX());
-        stream.writeFloat8(_pos.getY());
-        stream.writeFloat8(_pos.getZ());
+        stream.writeFloat32(_pos.getX());
+        stream.writeFloat32(_pos.getY());
+        stream.writeFloat32(_pos.getZ());
     }
 
     public Vertex(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

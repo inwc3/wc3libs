@@ -487,7 +487,7 @@ public class WTG {
 						
 						setSpecType(SpecType.valueOf(stream.readInt32("specType2"))); //beginFunc_type = 3
 						
-						int pos = stream.getPos();
+						long pos = stream.getPos();
 						
 						String funcName = stream.readString("funcName2");
 						
@@ -538,7 +538,7 @@ public class WTG {
 							
 							stream.printLog(System.err);
 							
-							throw new IOException(String.format("unknown func %s at %s", funcName, pos, String.format("%x", pos)));
+							throw new IOException(String.format("unknown func %s at %s (%s)", funcName, pos, String.format("%x", pos)));
 						}
 						
 						stream.readInt32("endToken"); //beginFunc_endToken = 0
@@ -559,11 +559,11 @@ System.out.println(val);
 					}
 				}
 				
-				private void write_0x7(Wc3BinInputStream stream) {
+				private void write_0x7(@Nonnull Wc3BinInputStream stream) {
 					
 				}
 				
-				private void read(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
+				private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap, boolean hasBranch) throws Exception {
 					switch (format.toEnum()) {
 					case WTG_0x7:
 						read_0x7(stream, funcMap, varMap, hasBranch);
@@ -577,7 +577,7 @@ System.out.println(val);
 					}
 				}
 				
-				private void write(Wc3BinInputStream stream, EncodingFormat format) {
+				private void write(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) {
 					switch (format.toEnum()) {
 					case AUTO:
 					case WTG_0x7:
@@ -592,7 +592,7 @@ System.out.println(val);
 					}
 				}
 				
-				public NormalParam(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
+				public NormalParam(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap, boolean hasBranch) throws Exception {
 					read(stream, format, funcMap, varMap, hasBranch);
 				}
 			}
@@ -650,7 +650,7 @@ System.out.println(val);
 					_boolexpr_unknown3 = val;
 				}
 				
-				private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				private void read_0x4(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("boolexpr");
 					
 					setBoolexpr_Unknown1(stream.readInt32("unknown1"));
@@ -666,11 +666,11 @@ System.out.println(val);
 					stream.endGroup();
 				}
 				
-				private void write_0x4(Wc3BinInputStream stream) {
+				private void write_0x4(@Nonnull Wc3BinInputStream stream) {
 					
 				}
 				
-				private void read_0x7(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				private void read_0x7(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("boolexpr");
 					
 					setBoolexpr_Unknown1(stream.readInt32("unknown1"));
@@ -686,11 +686,11 @@ System.out.println(val);
 					stream.endGroup();
 				}
 				
-				private void write_0x7(Wc3BinInputStream stream) {
+				private void write_0x7(@Nonnull Wc3BinInputStream stream) {
 					
 				}
 				
-				private void read(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					switch (format.toEnum()) {
 					case WTG_0x7:
 						read_0x7(stream, funcMap, varMap);
@@ -704,7 +704,7 @@ System.out.println(val);
 					}
 				}
 				
-				private void write(Wc3BinInputStream stream, EncodingFormat format) {
+				private void write(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) {
 					switch (format.toEnum()) {
 					case AUTO:
 					case WTG_0x7:
@@ -719,7 +719,7 @@ System.out.println(val);
 					}
 				}
 				
-				public BoolCodeParam(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				public BoolCodeParam(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					read(stream, format, funcMap, varMap);
 				}
 			}
@@ -755,7 +755,7 @@ System.out.println(val);
 					_code_unknown[index] = val;
 				}
 				
-				private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				private void read_0x4(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("code");
 					
 					setCode_unknown1(stream.readInt32("unknown1"));
@@ -779,11 +779,11 @@ System.out.println(val);
 					stream.endGroup();
 				}
 				
-				private void write_0x4(Wc3BinInputStream stream) {
+				private void write_0x4(@Nonnull Wc3BinInputStream stream) {
 					
 				}
 				
-				private void read_0x7(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				private void read_0x7(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					stream.beginGroup("code");
 					
 					setCode_unknown1(stream.readInt32("unknown1"));
@@ -807,11 +807,11 @@ System.out.println(val);
 					stream.endGroup();
 				}
 				
-				private void write_0x7(Wc3BinInputStream stream) {
+				private void write_0x7(@Nonnull Wc3BinInputStream stream) {
 					
 				}
 
-				private void read(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					switch (format.toEnum()) {
 					case WTG_0x7:
 						read_0x7(stream, funcMap, varMap);
@@ -825,7 +825,7 @@ System.out.println(val);
 					}
 				}
 				
-				private void write(Wc3BinInputStream stream, EncodingFormat format) {
+				private void write(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) {
 					switch (format.toEnum()) {
 					case AUTO:
 					case WTG_0x7:
@@ -840,7 +840,7 @@ System.out.println(val);
 					}
 				}
 				
-				public CodeParam(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+				public CodeParam(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 					read(stream, format, funcMap, varMap);
 				}
 			}
@@ -848,7 +848,7 @@ System.out.println(val);
 			private List<Param> _params = new ArrayList<>();
 			
 			public List<Param> getParams() {
-				return _params;
+				return new ArrayList<>(_params);
 			}
 			
 			public void addParam(Param val) {
@@ -858,10 +858,10 @@ System.out.println(val);
 			private List<ECA> _ecas = new ArrayList<>();
 			
 			public List<ECA> getECAs() {
-				return _ecas;
+				return new ArrayList<>(_ecas);
 			}
 			
-			public void addECA(ECA val) {
+			public void addECA(@Nonnull ECA val) {
 				_ecas.add(val);
 			}
 			
@@ -873,7 +873,7 @@ System.out.println(val);
 				return sub;
 			}
 			
-			private void read_0x4(Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
+			private void read_0x4(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap, boolean hasBranch) throws Exception {
 				setType(ECAType.valueOf(stream.readInt32("type")));
 				
 				if (hasBranch) {
@@ -932,7 +932,7 @@ System.out.println(val);
 				
 			}
 			
-			private void read_0x7(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
+			private void read_0x7(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap, boolean hasBranch) throws Exception {
 				setType(ECAType.valueOf(stream.readInt32("type")));
 				
 				if (hasBranch) {
@@ -1001,7 +1001,7 @@ System.out.println(val);
 				
 			}
 			
-			private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
+			private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap, boolean hasBranch) throws Exception {
 				switch (format.toEnum()) {
 				case WTG_0x7:
 					read_0x7(stream, funcMap, varMap, hasBranch);
@@ -1015,7 +1015,7 @@ System.out.println(val);
 				}
 			}
 			
-			private void write(@Nonnull Wc3BinOutputStream stream, EncodingFormat format) {
+			private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 				switch (format.toEnum()) {
 				case AUTO:
 				case WTG_0x7:
@@ -1030,7 +1030,7 @@ System.out.println(val);
 				}
 			}
 			
-			public ECA(@Nonnull Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap, boolean hasBranch) throws Exception {
+			public ECA(@Nonnull Wc3BinInputStream stream, EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap, boolean hasBranch) throws Exception {
 				read(stream, format, funcMap, varMap, hasBranch);
 			}
 			
@@ -1041,10 +1041,10 @@ System.out.println(val);
 		private List<ECA> _ecas = new ArrayList<>();
 		
 		public List<ECA> getECAs() {
-			return _ecas;
+			return new ArrayList<>(_ecas);
 		}
 		
-		public void addECA(ECA eca) {
+		public void addECA(@Nonnull ECA eca) {
 			_ecas.add(eca);
 		}
 		
@@ -1064,21 +1064,21 @@ System.out.println(val);
 		private void write_0x4(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeString(getName());
 			stream.writeString(getDescription());
-			stream.writeInt(getType().getVal());
-			stream.writeInt(isEnabled() ? 1 : 0);
-			stream.writeInt(isCustomTxt() ? 1 : 0);
-			stream.writeInt(isInitiallyOn() ? 1 : 0);
-			stream.writeInt(0);  //unknown
-			stream.writeInt(getCatIndex());
+			stream.writeInt32(getType().getVal());
+			stream.writeInt32(isEnabled() ? 1 : 0);
+			stream.writeInt32(isCustomTxt() ? 1 : 0);
+			stream.writeInt32(isInitiallyOn() ? 1 : 0);
+			stream.writeInt32(0);  //unknown
+			stream.writeInt32(getCatIndex());
 			
-			stream.writeInt(_ecas.size());
+			stream.writeInt32(_ecas.size());
 			
 			for (ECA eca : _ecas) {
 				eca.write(stream, EncodingFormat.WTG_0x4);
 			}
 		}
 
-		private void read_0x4(@Nonnull Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+		private void read_0x4(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 			setName(stream.readString("name"));
 			setDescription(stream.readString("description"));
 			//setType(TrigType.valueOf(stream.readInt32("type")));
@@ -1104,21 +1104,21 @@ System.out.println(val);
 		private void write_0x7(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeString(getName());
 			stream.writeString(getDescription());
-			stream.writeInt(getType().getVal());
-			stream.writeInt(isEnabled() ? 1 : 0);
-			stream.writeInt(isCustomTxt() ? 1 : 0);
-			stream.writeInt(isInitiallyOn() ? 1 : 0);
-			stream.writeInt(isRunOnMapInit() ? 1 : 0);
-			stream.writeInt(getCatIndex());
+			stream.writeInt32(getType().getVal());
+			stream.writeInt32(isEnabled() ? 1 : 0);
+			stream.writeInt32(isCustomTxt() ? 1 : 0);
+			stream.writeInt32(isInitiallyOn() ? 1 : 0);
+			stream.writeInt32(isRunOnMapInit() ? 1 : 0);
+			stream.writeInt32(getCatIndex());
 			
-			stream.writeInt(_ecas.size());
+			stream.writeInt32(_ecas.size());
 			
 			for (ECA eca : _ecas) {
 				eca.write(stream, EncodingFormat.WTG_0x7);
 			}
 		}
 
-		private void read_0x7(@Nonnull Wc3BinInputStream stream, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+		private void read_0x7(@Nonnull Wc3BinInputStream stream, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 			setName(stream.readString("name"));
 			setDescription(stream.readString("description"));
 			setType(TrigType.valueOf(stream.readInt32("type")));
@@ -1141,7 +1141,7 @@ System.out.println(val);
 			}
 		}
 		
-		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 			switch (format.toEnum()) {
 			case WTG_0x7:
 				read_0x7(stream, funcMap, varMap);
@@ -1170,7 +1170,7 @@ System.out.println(val);
 			}
 		}
 		
-		public Trig(Wc3BinInputStream stream, EncodingFormat format, Map<String, Func> funcMap, Map<String, Var> varMap) throws Exception {
+		public Trig(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nonnull Map<String, Func> funcMap, @Nonnull Map<String, Var> varMap) throws Exception {
 			read(stream, format, funcMap, varMap);
 		}
 		
@@ -1181,10 +1181,10 @@ System.out.println(val);
 	private List<Trig> _trigs = new ArrayList<>();
 	
 	public List<Trig> getTrigs() {
-		return _trigs;
+		return new ArrayList<>(_trigs);
 	}
 	
-	private void addTrig(Trig val) {
+	private void addTrig(@Nonnull Trig val) {
 		_trigs.add(val);
 	}
 	
@@ -1213,7 +1213,7 @@ System.out.println(val);
 			return _name;
 		}
 		
-		public void setName(String val) {
+		public void setName(@Nullable String val) {
 			_name = val;
 		}
 		
@@ -1255,29 +1255,29 @@ System.out.println(val);
 			return getName();
 		}
 		
-		private void read_0x4(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		private void read_0x4(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setIndex(stream.readInt32("index"));
 			setName(stream.readString("name"));
 		}
 		
-		private void write_0x4(Wc3BinOutputStream stream) {
-			stream.writeInt(getIndex());
+		private void write_0x4(@Nonnull Wc3BinOutputStream stream) {
+			stream.writeInt32(getIndex());
 			stream.writeString(getName());
 		}
 		
-		private void read_0x7(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		private void read_0x7(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setIndex(stream.readInt32("index"));
 			setName(stream.readString("name"));
 			setType(Type.valueOf(stream.readInt32("type")));
 		}
 		
-		private void write_0x7(Wc3BinOutputStream stream) {
-			stream.writeInt(getIndex());
+		private void write_0x7(@Nonnull Wc3BinOutputStream stream) {
+			stream.writeInt32(getIndex());
 			stream.writeString(getName());
-			stream.writeInt(getType().getVal());
+			stream.writeInt32(getType().getVal());
 		}
 		
-		private void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case WTG_0x7:
 				read_0x7(stream);
@@ -1291,7 +1291,7 @@ System.out.println(val);
 			}
 		}
 		
-		private void write(Wc3BinOutputStream stream, EncodingFormat format) {
+		private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case WTG_0x7:
@@ -1306,7 +1306,7 @@ System.out.println(val);
 			}
 		}
 
-		public TrigCat(Wc3BinInputStream stream, EncodingFormat format) throws BinStream.StreamException {
+		public TrigCat(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 			read(stream, format);
 		}
 
@@ -1318,10 +1318,10 @@ System.out.println(val);
 	private List<TrigCat> _trigCats = new ArrayList<>();
 	
 	public List<TrigCat> getTrigCats() {
-		return _trigCats;
+		return new ArrayList<>(_trigCats);
 	}
 	
-	public void addTrigCat(TrigCat val) {
+	public void addTrigCat(@Nonnull TrigCat val) {
 		_trigCats.add(val);
 	}
 	
@@ -1340,7 +1340,7 @@ System.out.println(val);
 			return _name;
 		}
 		
-		public void setName(String val) {
+		public void setName(@Nullable String val) {
 			_name = val;
 		}
 		
@@ -1350,7 +1350,7 @@ System.out.println(val);
 			return _type;
 		}
 		
-		public void setType(String val) {
+		public void setType(@Nullable String val) {
 			_type = val;
 		}
 		
@@ -1400,7 +1400,7 @@ System.out.println(val);
 			return _initVal;
 		}
 		
-		public void setInitVal(String val) {
+		public void setInitVal(@Nullable String val) {
 			_initVal = val;
 		}
 
@@ -1422,10 +1422,10 @@ System.out.println(val);
 		private void write_0x4(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeString(getName());
 			stream.writeString(getType());
-			stream.writeInt(getUnknownNumE());
+			stream.writeInt32(getUnknownNumE());
 			
-			stream.writeInt(isArray() ? 1 : 0);
-			stream.writeInt(isInited() ? 1 : 0);
+			stream.writeInt32(isArray() ? 1 : 0);
+			stream.writeInt32(isInited() ? 1 : 0);
 			stream.writeString(getInitVal());
 		}
 		
@@ -1443,11 +1443,11 @@ System.out.println(val);
 		private void write_0x7(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeString(getName());
 			stream.writeString(getType());
-			stream.writeInt(getUnknownNumE());
+			stream.writeInt32(getUnknownNumE());
 			
-			stream.writeInt(isArray() ? 1 : 0);
-			stream.writeInt(getArraySize());
-			stream.writeInt(isInited() ? 1 : 0);
+			stream.writeInt32(isArray() ? 1 : 0);
+			stream.writeInt32(getArraySize());
+			stream.writeInt32(isInited() ? 1 : 0);
 			stream.writeString(getInitVal());
 		}
 		
@@ -1483,7 +1483,7 @@ System.out.println(val);
 			read(stream, format);
 		}
 		
-		public Var(String name) {
+		public Var(@Nullable String name) {
 			_name = name;
 		}
 	}
@@ -1491,18 +1491,18 @@ System.out.println(val);
 	private Map<String, Var> _vars = new LinkedHashMap<>();
 	
 	public Map<String, Var> getVars() {
-		return _vars;
+		return new LinkedHashMap<>(_vars);
 	}
 	
-	public Var getVar(String name) {
+	public Var getVar(@Nullable String name) {
 		return _vars.get(name);
 	}
 	
-	private void addVar(Var val) {
+	private void addVar(@Nonnull Var val) {
 		_vars.put(val.getName(), val);
 	}
 	
-	public Var addVar(String name) {
+	public Var addVar(@Nullable String name) {
 		Var var = new Var(name);
 		
 		addVar(var);
@@ -1510,7 +1510,7 @@ System.out.println(val);
 		return var;
 	}
 
-	public void addTriggerData(TXT txt) {
+	public void addTriggerData(@Nonnull TXT txt) {
 		for (Map.Entry<FieldId, ? extends TXT.Section.Field> fieldEntry : txt.getSection(TXTSectionId.valueOf("TriggerCategories")).getFields().entrySet()) {
 			FieldId fieldId = fieldEntry.getKey();
 			TXT.Section.Field field = fieldEntry.getValue();
@@ -1573,7 +1573,7 @@ System.out.println(val);
 		}
 	}
 	
-	public void print(PrintStream outStream) {
+	public void print(@Nonnull PrintStream outStream) {
 		
 	}
 	
@@ -1582,7 +1582,7 @@ System.out.println(val);
 	}
 	
 	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+		public enum Enum {
 			AUTO,
 			WTG_0x4,
 			WTG_0x7
@@ -1599,7 +1599,7 @@ System.out.println(val);
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
@@ -1651,23 +1651,23 @@ System.out.println(val);
 	private void write_0x4(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("WTG!"));
 		
-		stream.writeInt(EncodingFormat.WTG_0x4.getVersion());
+		stream.writeInt32(EncodingFormat.WTG_0x4.getVersion());
 		
-		stream.writeInt(_trigCats.size());
+		stream.writeInt32(_trigCats.size());
 		
 		for (TrigCat trigCat : _trigCats) {
 			trigCat.write(stream, EncodingFormat.WTG_0x4);
 		}
 		
-		stream.writeInt(getUnknownNumB());
+		stream.writeInt32(getUnknownNumB());
 		
-		stream.writeInt(_vars.size());
+		stream.writeInt32(_vars.size());
 		
 		for (Var var : _vars.values()) {
 			var.write(stream, EncodingFormat.WTG_0x4);
 		}
 		
-		stream.writeInt(_trigs.size());
+		stream.writeInt32(_trigs.size());
 		
 		for (Trig trig : _trigs) {
 			trig.write(stream, EncodingFormat.WTG_0x4);
@@ -1721,23 +1721,23 @@ System.out.println(val);
 	private void write_0x7(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("WTG!"));
 		
-		stream.writeInt(EncodingFormat.WTG_0x7.getVersion());
+		stream.writeInt32(EncodingFormat.WTG_0x7.getVersion());
 		
-		stream.writeInt(_trigCats.size());
+		stream.writeInt32(_trigCats.size());
 		
 		for (TrigCat trigCat : _trigCats) {
 			trigCat.write(stream, EncodingFormat.WTG_0x7);
 		}
 		
-		stream.writeInt(getUnknownNumB());
+		stream.writeInt32(getUnknownNumB());
 		
-		stream.writeInt(_vars.size());
+		stream.writeInt32(_vars.size());
 		
 		for (Var var : _vars.values()) {
 			var.write(stream, EncodingFormat.WTG_0x7);
 		}
 		
-		stream.writeInt(_trigs.size());
+		stream.writeInt32(_trigs.size());
 		
 		for (Trig trig : _trigs) {
 			trig.write(stream, EncodingFormat.WTG_0x7);
@@ -1750,7 +1750,11 @@ System.out.println(val);
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
 	}
 	
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
@@ -1817,7 +1821,7 @@ System.out.println(val);
 		outStream.close();
 	}
 	
-	public WTG(InputStream inStream) throws Exception {
+	public WTG(@Nonnull InputStream inStream) throws Exception {
 		TXT txt = new TXT(MpqPort.getDefaultImpl().getGameFiles(new File("UI\\TriggerData.txt")).getInputStream(new File("UI\\TriggerData.txt")));
 		
 		addTriggerData(txt);
@@ -1834,7 +1838,7 @@ System.out.println(val);
 	public WTG() {
 	}
 
-	public static WTG ofMapFile(File mapFile) throws Exception {
+	public static WTG ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

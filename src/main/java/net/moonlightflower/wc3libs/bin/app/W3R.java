@@ -154,7 +154,7 @@ public class W3R {
 
 			stream.writeString(get(TEXT_NAME));
 
-			stream.writeInt(get(DATA_INDEX));
+			stream.writeInt32(get(DATA_INDEX));
 
 			stream.writeId(get(ART_WEATHER) != null ? get(ART_WEATHER) : NULL_WEATHER_ID);
 
@@ -267,9 +267,9 @@ public class W3R {
 	}
 
 	public void write_0x5(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt(EncodingFormat.W3R_0x5.getVersion());
+		stream.writeInt32(EncodingFormat.W3R_0x5.getVersion());
 		
-		stream.writeInt(_rects.size());
+		stream.writeInt32(_rects.size());
 		
 		for (Rect rect : _rects) {
 			rect.write(stream, EncodingFormat.W3R_0x5);

@@ -11,23 +11,23 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttachmentChunk extends Chunk {
-    public static Id TOKEN = Id.valueOf("ATCH");
+public class CollisionShapeChunk extends Chunk {
+    public static Id TOKEN = Id.valueOf("CLID");
 
     @Override
     public Id getToken() {
         return TOKEN;
     }
 
-    private List<Attachment> _attachments = new ArrayList<>();
+    private List<CollisionShape> _collisionShapes = new ArrayList<>();
 
-    public List<Attachment> getAttachments() {
-        return new ArrayList<>(_attachments);
+    public List<CollisionShape> getCollisionShapes() {
+        return new ArrayList<>(_collisionShapes);
     }
 
-    public void addAttachment(@Nonnull Attachment val) {
-        if (!_attachments.contains(val)) {
-            _attachments.add(val);
+    public void addCollisionShape(@Nonnull CollisionShape val) {
+        if (!_collisionShapes.contains(val)) {
+            _collisionShapes.add(val);
         }
     }
 
@@ -37,7 +37,7 @@ public class AttachmentChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addAttachment(new Attachment(stream));
+            addCollisionShape(new CollisionShape(stream));
         }
     }
 
@@ -50,8 +50,8 @@ public class AttachmentChunk extends Chunk {
 
         long startPos = stream.getPos();
 
-        for (Attachment attachment : getAttachments()) {
-            attachment.write(stream);
+        for (CollisionShape collisionShape : getCollisionShapes()) {
+            collisionShape.write(stream);
         }
 
         long endPos = stream.getPos();
@@ -82,13 +82,13 @@ public class AttachmentChunk extends Chunk {
         }
     }
 
-    public AttachmentChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+    public CollisionShapeChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         this();
 
         read(stream, format);
     }
 
-    public AttachmentChunk() {
+    public CollisionShapeChunk() {
 
     }
 }
