@@ -351,7 +351,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			setCliffTile(i, stream.readId());
 		}
 
-		setBounds(new Bounds(new Size(stream.readInt32(), stream.readInt32()), new Coords2DI(stream.readFloat8().intValue(), stream.readFloat8().intValue())), false, false);
+		setBounds(new Bounds(new Size(stream.readInt32(), stream.readInt32()), new Coords2DI(stream.readFloat32().intValue(), stream.readFloat32().intValue())), false, false);
 		
 		int width = getWidth();
 		int height = getHeight();

@@ -79,6 +79,7 @@ public abstract class TrackChunk<Type> extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:

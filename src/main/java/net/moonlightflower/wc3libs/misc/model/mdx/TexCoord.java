@@ -17,8 +17,8 @@ public class TexCoord {
     }
 
     public TexCoord(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
-        float x = stream.readFloat8("x");
-        float y = stream.readFloat8("y");
+        float x = stream.readFloat32("x");
+        float y = stream.readFloat32("y");
 
         _pos = new Coords2DF(x, y);
     }

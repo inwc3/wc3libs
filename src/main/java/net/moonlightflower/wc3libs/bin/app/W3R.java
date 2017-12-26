@@ -126,10 +126,10 @@ public class W3R {
 		public WeatherId NULL_WEATHER_ID = WeatherId.valueOf("0000");
 
 		public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			float minX = stream.readFloat8();
-			float minY = stream.readFloat8();
-			float maxX = stream.readFloat8();
-			float maxY = stream.readFloat8();
+			float minX = stream.readFloat32();
+			float minY = stream.readFloat32();
+			float maxX = stream.readFloat32();
+			float maxY = stream.readFloat32();
 			
 			set(DATA_BOUNDS, Bounds.valueOf((int) minX, (int) minY, (int) maxX, (int) maxY));
 			set(TEXT_NAME, Wc3String.valueOf(stream.readString()));

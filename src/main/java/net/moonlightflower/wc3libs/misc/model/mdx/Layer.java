@@ -89,6 +89,16 @@ public class Layer {
         return _alpha;
     }
 
+    private List<Chunk> _chunks = new ArrayList<>();
+
+    public List<Chunk> getChunks() {
+        return _chunks;
+    }
+
+    private void addChunk(@Nonnull Chunk val) {
+        _chunks.add(val);
+    }
+
     public static class TextureTrackChunk extends TrackChunk {
         public final static Id TOKEN = Id.valueOf("KMTF");
 
@@ -182,6 +192,8 @@ public class Layer {
     }
 
     public void addTextureTrackChunk(@Nonnull TextureTrackChunk val) {
+        addChunk(val);
+
         if (!_textureTrackChunks.contains(val)) {
             _textureTrackChunks.add(val);
         }
@@ -221,11 +233,11 @@ public class Layer {
 
             @Override
             protected void readSpec(@Nonnull Wc3BinInputStream stream, @Nonnull InterpolationType interpolationType) throws BinStream.StreamException {
-                _alpha = stream.readFloat8("alpha");
+                _alpha = stream.readFloat32("alpha");
 
                 if (interpolationType.equals(InterpolationType.HERMITE) || interpolationType.equals(InterpolationType.BEZIER)) {
-                    _inTan_alpha = stream.readFloat8("inTan_alpha");
-                    _outTan_alpha = stream.readFloat8("outTan_alpha");
+                    _inTan_alpha = stream.readFloat32("inTan_alpha");
+                    _outTan_alpha = stream.readFloat32("outTan_alpha");
                 }
             }
 
@@ -280,6 +292,8 @@ public class Layer {
     }
 
     public void addAlphaTrackChunk(@Nonnull AlphaTrackChunk val) {
+        addChunk(val);
+
         if (!_alphaTrackChunks.contains(val)) {
             _alphaTrackChunks.add(val);
         }
@@ -309,7 +323,7 @@ public class Layer {
         _textureId = stream.readUInt32("texId");
         _textureAnimId = stream.readUInt32("texAnimId");
         _coordId = stream.readUInt32("coordId");
-        _alpha = stream.readFloat8("alpha");
+        _alpha = stream.readFloat32("alpha");
 
         Map<Id, MDX.TokenHandler> _tokenMap = new LinkedHashMap<>();
 
@@ -319,15 +333,13 @@ public class Layer {
         while (!stream.eof()) {
             Id trackToken = stream.readId("trackToken");
 
+            stream.rewind(4);
+
             if (_tokenMap.containsKey(trackToken)) {
                 MDX.TokenHandler handler = _tokenMap.get(trackToken);
-                System.out.println("token " + trackToken);
-                stream.rewind(4);
 
                 handler.run();
             } else {
-                stream.rewind(4);
-
                 break;
             }
         }

@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -30,17 +31,26 @@ public class VertexGroupChunk extends Chunk {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         stream.writeId(TOKEN);
 
-        stream.writeUInt32(_vertexGroups.size());
+        stream.writeUInt32(getVertexGroups().size());
 
-        for (VertexGroup vertexGroup : _vertexGroups) {
+        for (VertexGroup vertexGroup : getVertexGroups()) {
             vertexGroup.write(stream);
         }
     }
 
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
+    }
+
     public VertexGroupChunk(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
+        Id token = stream.readId("token");
+
+        if (!token.equals(getToken())) throw new IllegalArgumentException("invalid " + getToken() + " startToken (" + token + ")");
+
         long vertexGroupsCount = stream.readUInt32("vertexGroupsCount");
 
         while (vertexGroupsCount > 0) {

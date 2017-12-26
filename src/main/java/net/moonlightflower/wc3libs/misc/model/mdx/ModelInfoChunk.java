@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.misc.model.mdx;
 
 import net.moonlightflower.wc3libs.bin.BinInputStream;
+import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
@@ -35,11 +36,19 @@ public class ModelInfoChunk extends Chunk {
         _blendTime = stream.readUInt32();
     }
 
-    private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
+    private void write_0x0(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        Header header = new Header();
+
+        header.write(stream);
+
         stream.writeBytes(Arrays.copyOf(_name.getBytes(StandardCharsets.US_ASCII), 80));
         stream.writeBytes(Arrays.copyOf(_animFileName.getBytes(StandardCharsets.US_ASCII), 260));
+
         _extent.write(stream);
+
         stream.writeUInt32(_blendTime);
+
+        header.rewrite();
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -51,7 +60,8 @@ public class ModelInfoChunk extends Chunk {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:
             case MDX_0x0:
@@ -59,6 +69,11 @@ public class ModelInfoChunk extends Chunk {
 
                 break;
         }
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream);
     }
 
     public ModelInfoChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

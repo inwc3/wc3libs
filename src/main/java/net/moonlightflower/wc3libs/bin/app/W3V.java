@@ -599,7 +599,7 @@ public class W3V {
 //						stream.readInt32();
 //					}
 //
-//					stream.readFloat8();
+//					stream.readFloat32();
 //
 //					for (int i = 0; i < 4; i++) {
 //						stream.readInt32();

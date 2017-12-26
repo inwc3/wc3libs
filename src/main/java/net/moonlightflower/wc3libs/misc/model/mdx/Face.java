@@ -15,7 +15,7 @@ public class Face {
     }
 
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
-        stream.writeUInt32(_val);
+        stream.writeUInt16(_val);
     }
 
     public Face(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

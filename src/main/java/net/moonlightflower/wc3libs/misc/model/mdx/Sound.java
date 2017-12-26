@@ -43,8 +43,8 @@ public class Sound {
 
     public Sound(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _fileName = new String(stream.readBytes(260, "fileName"), StandardCharsets.US_ASCII);
-        _volume = stream.readFloat8("volume");
-        _pitch = stream.readFloat8("pitch");
+        _volume = stream.readFloat32("volume");
+        _pitch = stream.readFloat32("pitch");
         _flags = stream.readUInt32("flags");
     }
 }

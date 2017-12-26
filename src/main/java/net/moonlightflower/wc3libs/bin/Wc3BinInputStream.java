@@ -87,7 +87,9 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	private short readInt16_priv() throws StreamException {
 		try {
-			short res = (short) (readByte() + readByte() * 256);
+			byte[] sub = readBytes(2);
+
+			Short res = ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getShort();
 			
 			return res;
 		} catch (IndexOutOfBoundsException e) {
@@ -326,7 +328,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Float readFloat8(@Nonnull String label) throws StreamException {
+	public Float readFloat32(@Nonnull String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -342,12 +344,12 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public Float readFloat8() throws StreamException {
-		return readFloat8(null);
+	public Float readFloat32() throws StreamException {
+		return readFloat32(null);
 	}
 
 	public Real readReal(@Nonnull String label) throws StreamException {
-		return Real.valueOf(readFloat8(label));
+		return Real.valueOf(readFloat32(label));
 	}
 
 	public Real readReal() throws StreamException {

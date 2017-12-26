@@ -42,25 +42,15 @@ public class MaterialChunk extends Chunk {
     }
 
     private void write_0x0(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeId(TOKEN);
+        Header header = new Header();
 
-        long sizePos = stream.getPos();
-
-        stream.writeUInt32(0L);
-
-        long startPos = stream.getPos();
+        header.write(stream);
 
         for (Material material : getMaterials()) {
             material.write(stream);
         }
 
-        long endPos = stream.getPos();
-
-        stream.setPos(sizePos);
-
-        stream.writeUInt32(endPos - startPos);
-
-        stream.setPos(endPos);
+        header.rewrite();
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -72,6 +62,7 @@ public class MaterialChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:
@@ -80,6 +71,11 @@ public class MaterialChunk extends Chunk {
 
                 break;
         }
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream);
     }
 
     public MaterialChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

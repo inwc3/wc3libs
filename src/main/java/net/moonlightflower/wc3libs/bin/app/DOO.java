@@ -221,11 +221,11 @@ public class DOO {
 			
 			setVariation(stream.readInt32());
 			
-			setPos(new Coords3DF(stream.readFloat8(), stream.readFloat8(), stream.readFloat8()));
+			setPos(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
 			
-			setAngle(stream.readFloat8());
+			setAngle(stream.readFloat32());
 			
-			setScale(new Coords3DF(stream.readFloat8(), stream.readFloat8(), stream.readFloat8()));
+			setScale(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
 			
 			setLifePerc(stream.readUByte());
 			

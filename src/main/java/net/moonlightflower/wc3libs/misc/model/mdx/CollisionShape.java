@@ -101,7 +101,7 @@ public class CollisionShape {
         }
 
         if (hasRadius) {
-            _radius = stream.readFloat8("radius");
+            _radius = stream.readFloat32("radius");
         }
     }
 }

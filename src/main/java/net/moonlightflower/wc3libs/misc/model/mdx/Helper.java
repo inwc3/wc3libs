@@ -13,7 +13,7 @@ public class Helper {
         return _node;
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) {
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         _node.write(stream);
     }
 

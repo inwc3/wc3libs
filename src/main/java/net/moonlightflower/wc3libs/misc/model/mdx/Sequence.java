@@ -47,9 +47,9 @@ public class Sequence {
         _name = new String(stream.readBytes(80, "name"), StandardCharsets.US_ASCII);
         _intervalStart = stream.readUInt32("intervalStart");
         _intervalEnd = stream.readUInt32("intervalEnd");
-        _moveSpeed = stream.readFloat8("moveSpeed");
+        _moveSpeed = stream.readFloat32("moveSpeed");
         _flags = stream.readUInt32("flags");
-        _rarity = stream.readFloat8("rarity");
+        _rarity = stream.readFloat32("rarity");
         _syncPt = stream.readUInt32("syncPoint");
 
         _extent = new Extent(stream);

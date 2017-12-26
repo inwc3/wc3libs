@@ -22,9 +22,9 @@ public class Vertex {
     }
 
     public Vertex(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
-        float x = stream.readFloat8("x");
-        float y = stream.readFloat8("y");
-        float z = stream.readFloat8("z");
+        float x = stream.readFloat32("x");
+        float y = stream.readFloat32("y");
+        float z = stream.readFloat32("z");
 
         _pos = new Coords3DF(x, y, z);
     }

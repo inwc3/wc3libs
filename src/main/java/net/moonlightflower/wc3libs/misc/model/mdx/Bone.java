@@ -25,7 +25,7 @@ public class Bone {
         return _geosetAnimId;
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) {
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         _node.write(stream);
         stream.writeUInt32(_geosetId);
         stream.writeUInt32(_geosetAnimId);

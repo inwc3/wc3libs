@@ -21,11 +21,11 @@ public class ParticleEmitter2Chunk extends Chunk {
 
     private List<ParticleEmitter2> _particleEmitters = new ArrayList<>();
 
-    public List<ParticleEmitter2> getParticleEmitters() {
+    public List<ParticleEmitter2> getParticleEmitter2s() {
         return new ArrayList<>(_particleEmitters);
     }
 
-    public void addParticleEmitter(@Nonnull ParticleEmitter2 val) {
+    public void addParticleEmitter2(@Nonnull ParticleEmitter2 val) {
         if (!_particleEmitters.contains(val)) {
             _particleEmitters.add(val);
         }
@@ -37,30 +37,20 @@ public class ParticleEmitter2Chunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addParticleEmitter(new ParticleEmitter2(stream));
+            addParticleEmitter2(new ParticleEmitter2(stream));
         }
     }
 
     private void write_0x0(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeId(TOKEN);
+        Header header = new Header();
 
-        long sizePos = stream.getPos();
+        header.write(stream);
 
-        stream.writeUInt32(0L);
-
-        long startPos = stream.getPos();
-
-        for (ParticleEmitter2 particleEmitter : getParticleEmitters()) {
-            particleEmitter.write(stream);
+        for (ParticleEmitter2 particleEmitter2 : getParticleEmitter2s()) {
+            particleEmitter2.write(stream);
         }
 
-        long endPos = stream.getPos();
-
-        stream.setPos(sizePos);
-
-        stream.writeUInt32(endPos - startPos);
-
-        stream.setPos(endPos);
+        header.rewrite();
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -72,6 +62,7 @@ public class ParticleEmitter2Chunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:
@@ -80,6 +71,11 @@ public class ParticleEmitter2Chunk extends Chunk {
 
                 break;
         }
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream);
     }
 
     public ParticleEmitter2Chunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

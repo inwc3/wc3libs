@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +77,8 @@ public class Geoset {
         _matrixIndexChunk.write(stream);
 
         stream.writeUInt32(_materialId);
+        stream.writeUInt32(_selectionGroup);
+        stream.writeUInt32(_selectionFlags);
 
         _extent.write(stream);
 

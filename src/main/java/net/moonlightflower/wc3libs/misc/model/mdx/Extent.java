@@ -26,12 +26,12 @@ public class Extent {
     }
 
     public Extent(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
-        _boundsRadius = stream.readFloat8("boundsRadius");
-        _minX = stream.readFloat8("minX");
-        _minY = stream.readFloat8("minY");
-        _minZ = stream.readFloat8("minZ");
-        _maxX = stream.readFloat8("maxX");
-        _maxY = stream.readFloat8("maxY");
-        _maxZ = stream.readFloat8("maxZ");
+        _boundsRadius = stream.readFloat32("boundsRadius");
+        _minX = stream.readFloat32("minX");
+        _minY = stream.readFloat32("minY");
+        _minZ = stream.readFloat32("minZ");
+        _maxX = stream.readFloat32("maxX");
+        _maxY = stream.readFloat32("maxY");
+        _maxZ = stream.readFloat32("maxZ");
     }
 }

@@ -27,6 +27,12 @@ public class TexCoordSet {
 
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
         stream.writeId(TOKEN);
+
+        stream.writeUInt32(getTexCoords().size());
+
+        for (TexCoord texCoord : getTexCoords()) {
+            texCoord.write(stream);
+        }
     }
 
     public TexCoordSet(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

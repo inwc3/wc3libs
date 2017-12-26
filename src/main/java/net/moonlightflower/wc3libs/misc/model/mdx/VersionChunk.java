@@ -1,8 +1,6 @@
 package net.moonlightflower.wc3libs.misc.model.mdx;
 
-import net.moonlightflower.wc3libs.bin.BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
@@ -28,11 +26,14 @@ public class VersionChunk extends Chunk {
         _version = stream.readUInt32("version");
     }
 
-    private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-        stream.writeId(TOKEN);
-        stream.writeUInt32(4);
+    private void write_0x0(@Nonnull Wc3BinOutputStream stream) throws BinOutputStream.StreamException {
+        Header header = new Header();
+
+        header.write(stream);
 
         stream.writeUInt32(_version);
+
+        header.rewrite();
     }
 
     public void read(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -44,7 +45,8 @@ public class VersionChunk extends Chunk {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:
             case MDX_0x0:
@@ -52,6 +54,11 @@ public class VersionChunk extends Chunk {
 
                 break;
         }
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream);
     }
 
     public VersionChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

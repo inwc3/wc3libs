@@ -318,12 +318,12 @@ public class ObjMod {
 					break;
 				}
 				case REAL: {
-					val = Field.Val.valueOf(stream.readFloat8("val (real)"), false);
+					val = Field.Val.valueOf(stream.readFloat32("val (real)"), false);
 					
 					break;
 				}
 				case UNREAL: {
-					val = Field.Val.valueOf(stream.readFloat8("val (unreal)"), true);
+					val = Field.Val.valueOf(stream.readFloat32("val (unreal)"), true);
 					
 					break;
 				}
@@ -368,12 +368,12 @@ public class ObjMod {
 					break;
 				}
 				case REAL: {
-					val = Field.Val.valueOf(stream.readFloat8("val (real)"), false);
+					val = Field.Val.valueOf(stream.readFloat32("val (real)"), false);
 					
 					break;
 				}
 				case UNREAL: {
-					val = Field.Val.valueOf(stream.readFloat8("val (unreal)"), true);
+					val = Field.Val.valueOf(stream.readFloat32("val (unreal)"), true);
 					
 					break;
 				}

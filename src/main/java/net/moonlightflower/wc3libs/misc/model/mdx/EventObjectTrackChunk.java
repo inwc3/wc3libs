@@ -74,6 +74,7 @@ public class EventObjectTrackChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:
@@ -82,6 +83,11 @@ public class EventObjectTrackChunk extends Chunk {
 
                 break;
         }
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream);
     }
 
     public EventObjectTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

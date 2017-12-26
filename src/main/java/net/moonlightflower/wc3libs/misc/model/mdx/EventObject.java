@@ -29,6 +29,6 @@ public class EventObject {
     public EventObject(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _node = new Node(stream);
 
-        _trackChunk = new EventObjectTrackChunk(stream, MDX.EncodingFormat.AUTO);
+        _trackChunk = new EventObjectTrackChunk(stream, MDX.EncodingFormat.MDX_0x0);
     }
 }

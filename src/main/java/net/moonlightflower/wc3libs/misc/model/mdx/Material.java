@@ -47,9 +47,9 @@ public class Material {
         stream.writeUInt32(_priorityPlane);
         stream.writeUInt32(_flags);
 
-        stream.writeUInt32(getLayers().size());
-
         stream.writeId(LAYERS_TOKEN);
+
+        stream.writeUInt32(getLayers().size());
 
         for (Layer layer : getLayers()) {
             layer.write(stream);

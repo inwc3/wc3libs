@@ -180,7 +180,7 @@ public class W3C {
 		}
 
 		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setTarget(new Coords2DF(stream.readFloat8("targetX"), stream.readFloat8("targetY")));
+			setTarget(new Coords2DF(stream.readFloat32("targetX"), stream.readFloat32("targetY")));
 			setZOffset(stream.readReal("zOffset"));
 
 			setRotation(stream.readReal("rotation"));

@@ -25,12 +25,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     private final static ByteBuffer _shortBuf = ByteBuffer.wrap(_shortBytes);
 
     public void writeInt8(short val) {
-        _shortBuf.rewind();
-        _shortBuf.order(ByteOrder.LITTLE_ENDIAN);
-
-        _shortBuf.putShort(val);
-
-        writeBytes(_shortBytes);
+        writeByte((byte) (val & 0xFF));
     }
 
     public void writeUInt8(int val) {

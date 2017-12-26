@@ -813,7 +813,7 @@ public class W3I {
 
             setName(stream.readString("playerName"));
 
-            setStartPos(new Coords2DF(stream.readFloat8("startPosX"), stream.readFloat8("startPosY")));
+            setStartPos(new Coords2DF(stream.readFloat32("startPosX"), stream.readFloat32("startPosY")));
 
             setAllyLowPrioFlags(stream.readInt32("allyLowPrioFlags"));
             setAllyHighPrioFlags(stream.readInt32("allyHighPrioFlags"));
@@ -1733,8 +1733,8 @@ public class W3I {
         setMapDescription(stream.readString("mapDescription"));
         setPlayersRecommendedAmount(stream.readString("playersRecommendedAmount"));
 
-        setCameraBounds(new Coords2DF(stream.readFloat8("camA"), stream.readFloat8("camB")), new Coords2DF(stream.readFloat8("camC"), stream.readFloat8("camD")),
-                new Coords2DF(stream.readFloat8("camE"), stream.readFloat8("camF")), new Coords2DF(stream.readFloat8("camG"), stream.readFloat8("camH")));
+        setCameraBounds(new Coords2DF(stream.readFloat32("camA"), stream.readFloat32("camB")), new Coords2DF(stream.readFloat32("camC"), stream.readFloat32("camD")),
+                new Coords2DF(stream.readFloat32("camE"), stream.readFloat32("camF")), new Coords2DF(stream.readFloat32("camG"), stream.readFloat32("camH")));
         setMargins(new Bounds(-stream.readInt32("marginA"), stream.readInt32("marginB"), -stream.readInt32("marginC"), stream.readInt32("marginD")));
 
         setDimensions(stream.readInt32("width"), stream.readInt32("height"));
@@ -1872,16 +1872,16 @@ public class W3I {
         setPlayersRecommendedAmount(stream.readString("playersRecommendedAmount"));
 
         setCameraBounds(new Coords2DF(
-                        stream.readFloat8("camA"),
-                        stream.readFloat8("camB")),
+                        stream.readFloat32("camA"),
+                        stream.readFloat32("camB")),
                 new Coords2DF(
-                        stream.readFloat8("camC"),
-                        stream.readFloat8("camD")),
+                        stream.readFloat32("camC"),
+                        stream.readFloat32("camD")),
                 new Coords2DF(
-                        stream.readFloat8("camE"),
-                        stream.readFloat8("camF")),
-                new Coords2DF(stream.readFloat8("camG"),
-                        stream.readFloat8("camH")
+                        stream.readFloat32("camE"),
+                        stream.readFloat32("camF")),
+                new Coords2DF(stream.readFloat32("camG"),
+                        stream.readFloat32("camH")
                 ));
         setMargins(new Bounds(-stream.readInt32("marginA"), stream.readInt32("marginB"), -stream.readInt32("marginC"), stream.readInt32("marginD")));
 
