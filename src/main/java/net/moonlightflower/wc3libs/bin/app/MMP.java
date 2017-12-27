@@ -51,7 +51,7 @@ public class MMP {
 				return _map.get(val);
 			}
 			
-			IconType(int val, File imgPath) {
+			IconType(int val, @Nonnull File imgPath) {
 				_val = val;
 				_imgPath = imgPath;
 			}
@@ -128,10 +128,10 @@ public class MMP {
 				stream.writeUByte(0xFF);
 				stream.writeUByte(0xFF);
 			} else {		
-				stream.writeUByte(color.getBlue());
-				stream.writeUByte(color.getGreen());
-				stream.writeUByte(color.getRed());
-				stream.writeUByte(color.getAlpha());
+				stream.writeUByte(color.getBlue255());
+				stream.writeUByte(color.getGreen255());
+				stream.writeUByte(color.getRed255());
+				stream.writeUByte(color.getAlpha255());
 			}
 		}
 		
@@ -239,10 +239,10 @@ public class MMP {
 			if (icon.getColor() != null) {
 				pxBuf = Arrays.copyOf(pxBuf, pxBuf.length);
 				
-				double alphaFactor = ((double) icon.getColor().getAlpha()) / 0xFF;
-				double redFactor = ((double) icon.getColor().getRed()) / 0xFF;
-				double greenFactor = ((double) icon.getColor().getGreen()) / 0xFF;
-				double blueFactor = ((double) icon.getColor().getBlue()) / 0xFF;
+				double alphaFactor = ((double) icon.getColor().getAlpha255()) / 0xFF;
+				double redFactor = ((double) icon.getColor().getRed255()) / 0xFF;
+				double greenFactor = ((double) icon.getColor().getGreen255()) / 0xFF;
+				double blueFactor = ((double) icon.getColor().getBlue255()) / 0xFF;
 				
 				//System.out.println(alphaFactor+";"+redFactor+";"+greenFactor+";"+blueFactor);
 				//System.out.println("A " + pxBuf[0] +";"+ pxBuf[1] +";"+ pxBuf[2] +";"+ pxBuf[3]);
@@ -292,7 +292,7 @@ public class MMP {
 			MMP_0x0,
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat MMP_0x0 = new EncodingFormat(Enum.MMP_0x0, 0x0);
@@ -388,6 +388,7 @@ public class MMP {
 		inStream.close();
 	}
 
+	@Nonnull
 	public static MMP ofMapFile(@Nonnull File mapFile) throws Exception {
 		MpqPort.Out port = new JMpqPort.Out();
 		

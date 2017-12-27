@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -145,10 +144,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setMinimapColor(Color val) {
-			set(States.MINIMAP_COLOR_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.MINIMAP_COLOR_BLUE, Int.valueOf(val.getBlue()));
-			set(States.MINIMAP_COLOR_GREEN, Int.valueOf(val.getGreen()));
-			set(States.MINIMAP_COLOR_RED, Int.valueOf(val.getRed()));
+			set(States.MINIMAP_COLOR_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.MINIMAP_COLOR_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.MINIMAP_COLOR_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.MINIMAP_COLOR_RED, Int.valueOf(val.getRed255()));
 		}
 		
 		public Int getNumTex() {
@@ -307,10 +306,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setSMinColor(Color val) {
-			set(States.S_MIN_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.S_MIN_BLUE, Int.valueOf(val.getBlue()));
-			set(States.S_MIN_GREEN, Int.valueOf(val.getGreen()));
-			set(States.S_MIN_RED, Int.valueOf(val.getRed()));
+			set(States.S_MIN_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.S_MIN_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.S_MIN_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.S_MIN_RED, Int.valueOf(val.getRed255()));
 		}
 
 		public Color getSMaxColor() {
@@ -318,10 +317,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 
 		public void setSMaxColor(Color val) {
-			set(States.S_MAX_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.S_MAX_BLUE, Int.valueOf(val.getBlue()));
-			set(States.S_MAX_GREEN, Int.valueOf(val.getGreen()));
-			set(States.S_MAX_RED, Int.valueOf(val.getRed()));
+			set(States.S_MAX_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.S_MAX_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.S_MAX_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.S_MAX_RED, Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getDMinColor() {
@@ -329,10 +328,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setDMinColor(Color val) {
-			set(States.D_MIN_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.D_MIN_BLUE, Int.valueOf(val.getBlue()));
-			set(States.D_MIN_GREEN, Int.valueOf(val.getGreen()));
-			set(States.D_MIN_RED, Int.valueOf(val.getRed()));
+			set(States.D_MIN_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.D_MIN_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.D_MIN_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.D_MIN_RED, Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getDMaxColor() {
@@ -340,10 +339,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setDMaxColor(Color val) {
-			set(States.D_MAX_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.D_MAX_BLUE, Int.valueOf(val.getBlue()));
-			set(States.D_MAX_GREEN, Int.valueOf(val.getGreen()));
-			set(States.D_MAX_RED, Int.valueOf(val.getRed()));
+			set(States.D_MAX_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.D_MAX_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.D_MAX_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.D_MAX_RED, Int.valueOf(val.getRed255()));
 		}
 
 		public <T extends DataType> T get(States.State<T> state) {

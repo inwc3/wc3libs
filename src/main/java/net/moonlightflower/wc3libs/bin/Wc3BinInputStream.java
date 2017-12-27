@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,9 +38,7 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	private short readInt8_priv() throws StreamException {
 		try {
-			short res = readByte();
-
-			return res;
+			return (short) readByte();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
@@ -191,7 +190,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Character readChar(@Nonnull String label) throws StreamException {
+	public Character readChar(@Nullable String label) throws StreamException {
 		try {	
 			logBegin();
 			
@@ -252,7 +251,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 	
-	public String readString(@Nonnull String label) throws StreamException {
+	public String readString(@Nullable String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -294,7 +293,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public Id readId(@Nonnull String label) throws StreamException {
+	public Id readId(@Nullable String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -318,17 +317,15 @@ public class Wc3BinInputStream extends BinInputStream {
 		try {
 			byte[] sub = readBytes(4);
 
-			float res = ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-
 			//float res = Float.intBitsToFloat((int) (((_bytes.get(_pos) & 0xFFL) << 24) | ((_bytes.get(_pos) & 0xFFL) << 16) | ((_bytes.get(_pos) & 0xFFL) << 8) | ((_bytes.get(_pos) & 0xFFL) << 0)));
 			
-			return res;
+			return ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
 	}
 
-	public Float readFloat32(@Nonnull String label) throws StreamException {
+	public Float readFloat32(@Nullable String label) throws StreamException {
 		try {
 			logBegin();
 			
@@ -348,7 +345,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		return readFloat32(null);
 	}
 
-	public Real readReal(@Nonnull String label) throws StreamException {
+	public Real readReal(@Nullable String label) throws StreamException {
 		return Real.valueOf(readFloat32(label));
 	}
 

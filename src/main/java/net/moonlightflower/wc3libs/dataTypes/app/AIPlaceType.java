@@ -14,9 +14,7 @@ public class AIPlaceType extends Wc3String {
 	public final static AIPlaceType GENERAL = new AIPlaceType(4, "buffer");
 	public final static AIPlaceType NONE = new AIPlaceType(0, "_");
 	public final static AIPlaceType RESOURCE = new AIPlaceType(2, "resource");
-	public final static AIPlaceType TOWNHALL = new AIPlaceType(1, "townhall");	
-	
-	private Map<String, AIPlaceType> _map = new LinkedHashMap<>();
+	public final static AIPlaceType TOWNHALL = new AIPlaceType(1, "townhall");
 	
 	public AIPlaceType(int index, @Nonnull String name) {
 		super(name);
@@ -37,6 +35,10 @@ public class AIPlaceType extends Wc3String {
 
 	@Override
 	public AIPlaceType decode(Object val) {
-		return _map.get(val);
+		AIPlaceType ret = _nameMap.get(val);
+
+		if (ret == null) ret = _indexMap.get(val);
+
+		return ret;
 	}
 }

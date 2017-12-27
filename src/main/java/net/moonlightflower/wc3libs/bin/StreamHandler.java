@@ -1,11 +1,14 @@
 package net.moonlightflower.wc3libs.bin;
 
+import javax.annotation.Nonnull;
+
 public abstract class StreamHandler {
-	protected abstract void read(Wc3BinInputStream stream);
-	protected abstract void write(Wc3BinInputStream stream);
+	protected abstract void read(@Nonnull Wc3BinInputStream stream);
+	protected abstract void write(@Nonnull Wc3BinInputStream stream);
 	
 	private Wc3BinInputStream _stream;
-	
+
+	@Nonnull
 	public Wc3BinInputStream getStream() {
 		return _stream;
 	}
@@ -18,7 +21,7 @@ public abstract class StreamHandler {
 		write(getStream());
 	}
 	
-	public StreamHandler(Wc3BinInputStream stream) {
+	public StreamHandler(@Nonnull Wc3BinInputStream stream) {
 		_stream = stream;
 	}
 }

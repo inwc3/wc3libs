@@ -70,19 +70,9 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 				return ((DataType) c.invoke(null, val));
 				//return type.newInstance().decode(val);
 			}
-		} catch (IllegalAccessException e) {
-			System.out.println("illegal");
-		} catch (IllegalArgumentException e) {
-			System.out.println("illegalArg");
-		} catch (InvocationTargetException e) {
-			System.out.println("invoc");
-		} catch (NoSuchMethodException e) {
-			System.out.println("noSuchMethod");
-		} catch (SecurityException e) {
-			System.out.println("secu");
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			throw new RuntimeException(e);
 		}
-		
-		return null;
 	}
 	
 	public DataTypeInfo(@Nonnull Class<? extends DataType> type, Class<? extends DataType> generics) {

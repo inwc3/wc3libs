@@ -1,11 +1,13 @@
 package wc3libs.bin.app;
 import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.app.W3I;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 import wc3libs.util.MurmurHash;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,4 +72,16 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(w3I2.getGlobalWeatherId(), w3I.getGlobalWeatherId());
     }
 
+    @Test()
+    public void readWriteCycle() throws IOException {
+        List<Path> w3iFile = getFiles("wc3data/Infos/");
+
+        w3iFile.forEach((Path p) -> {
+            try {
+                readWriteCycle(W3I.class, p.toFile());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }

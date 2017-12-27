@@ -70,7 +70,7 @@ public class WTG {
 	}
 	
 	public static class Func {
-		public static enum SpecialType {
+		public enum SpecialType {
 			NORMAL,
 			BOOLCALL,
 			BOOLEXPR,

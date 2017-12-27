@@ -42,7 +42,7 @@ public class SHD {
             SHD_0x0,
         }
 
-        private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+        private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
         public final static EncodingFormat SHD_0x0 = new EncodingFormat(Enum.SHD_0x0, 0x0);
@@ -178,6 +178,7 @@ public class SHD {
         _shadowMap = new ShadowMap(new Bounds(new Size(0, 0), new Coords2DI(0, 0)));
     }
 
+    @Nonnull
     public static SHD ofMap(@Nonnull File mapFile) throws IOException {
         MpqPort.Out portOut = new JMpqPort.Out();
 

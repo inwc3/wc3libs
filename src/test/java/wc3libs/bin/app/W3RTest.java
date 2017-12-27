@@ -8,12 +8,13 @@ import org.testng.annotations.Test;
 
 import net.moonlightflower.wc3libs.bin.BinState;
 import net.moonlightflower.wc3libs.bin.app.W3R;
+import wc3libs.misc.Wc3LibTest;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class W3RTest {
+public class W3RTest extends Wc3LibTest {
 	@Test()
 	public void writeTest() throws IOException {
 		W3R w3r = new W3R();
@@ -43,5 +44,10 @@ public class W3RTest {
 				Assert.assertEquals(newRect.get(state), rect.get(state), state.toString());
 			}
 		}
+	}
+
+	@Test()
+	public void readWriteCycle() throws IOException {
+		readWriteCycle(W3R.class, getFile("wc3data/W3R/war3map.w3r"));
 	}
 }

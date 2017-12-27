@@ -256,7 +256,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			public LootSet(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+			public LootSet(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 				read(stream, format);
 			}
 			
@@ -390,7 +390,7 @@ public class DOO_UNITS {
 				}
 			}
 			
-			public InvItem(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+			public InvItem(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 				read(stream, format);
 			}
 			
@@ -850,7 +850,7 @@ public class DOO_UNITS {
 			stream.writeInt32(getEditorId());
 		}
 		
-		private void read(@Nonnull Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case DOO_0x8: {
 				read_0x8(stream);
@@ -860,7 +860,7 @@ public class DOO_UNITS {
 			}
 		}
 		
-		private void write(@Nonnull Wc3BinOutputStream stream, EncodingFormat format) {
+		private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case DOO_0x8: {
@@ -908,7 +908,7 @@ public class DOO_UNITS {
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
 
-		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 		@Nullable
 		public static EncodingFormat valueOf(int version) {
@@ -959,7 +959,11 @@ public class DOO_UNITS {
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

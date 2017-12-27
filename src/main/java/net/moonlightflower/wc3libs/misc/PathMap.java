@@ -216,7 +216,7 @@ public class PathMap extends Raster<Integer> {
 		return new Wc3RasterImg(fxImg);
 	}
 	
-	public PathMap(Bounds bounds) {
+	public PathMap(@Nonnull Bounds bounds) {
 		setBounds(bounds, false, false);
 	}
 }

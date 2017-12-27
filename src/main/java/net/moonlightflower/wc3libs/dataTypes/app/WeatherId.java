@@ -21,4 +21,10 @@ public class WeatherId extends ObjId {
 	public WeatherId decode(Object val) {
 		return valueOf(val.toString());
 	}
+
+	public static WeatherId decodeStatic(Object val) {
+		if (val == null) return null;
+
+		return valueOf(val.toString());
+	}
 }

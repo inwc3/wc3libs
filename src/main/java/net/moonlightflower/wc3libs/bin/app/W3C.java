@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +66,7 @@ public class W3C {
 			return state.tryCastVal(super.get(state));
 		}
 
-		public <T extends DataType> void set(@Nonnull W3C.Camera.State<T> state, T val) {
+		public <T extends DataType> void set(@Nonnull W3C.Camera.State<T> state, @Nullable T val) {
 			super.set(state, val);
 		}
 
@@ -256,7 +257,8 @@ public class W3C {
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WPM_0x0 = new EncodingFormat(Enum.W3C_0x0, 0x0);
-		
+
+		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
@@ -295,7 +297,11 @@ public class W3C {
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

@@ -317,7 +317,8 @@ public class W3F {
 		public String toString() {
 			return getLabel();
 		}
-		
+
+		@Nullable
 		public static UIRace valueOf(int val) {
 			return _map.get(val);
 		}
@@ -586,7 +587,7 @@ public class W3F {
 			W3F_0x1
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3F_0x1 = new EncodingFormat(Enum.W3F_0x1, 0x1);
@@ -682,10 +683,10 @@ public class W3F {
 		
 		Color terrainFogColor = terrainFog.getColor();
 		
-		stream.writeUByte(terrainFogColor.getRed());
-		stream.writeUByte(terrainFogColor.getGreen());
-		stream.writeUByte(terrainFogColor.getBlue());
-		stream.writeUByte(terrainFogColor.getAlpha());
+		stream.writeUByte(terrainFogColor.getRed255());
+		stream.writeUByte(terrainFogColor.getGreen255());
+		stream.writeUByte(terrainFogColor.getBlue255());
+		stream.writeUByte(terrainFogColor.getAlpha255());
 
 		stream.writeInt32(getUIRace().getVal());
 		
@@ -767,7 +768,8 @@ public class W3F {
 
 		inStream.close();
 	}
-	
+
+	@Nonnull
 	public static W3F ofCampaignFile(@Nonnull File mapFile) throws Exception {
 		MpqPort.Out port = new JMpqPort.Out();
 		

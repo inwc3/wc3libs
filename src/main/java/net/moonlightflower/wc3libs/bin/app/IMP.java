@@ -17,8 +17,8 @@ import java.util.Map;
  * imports file for wrapping war3map.imp
  */
 interface IMP_Streamable {
-	public void read(Wc3BinInputStream stream) throws BinInputStream.StreamException;
-	public void write(Wc3BinOutputStream stream);
+	void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException;
+	void write(@Nonnull Wc3BinOutputStream stream);
 }
 
 public class IMP {
@@ -71,12 +71,12 @@ public class IMP {
 			_stdFlag = val;
 		}
 		
-		private void merge(Obj other) {
+		private void merge(@Nonnull Obj other) {
 			_path = other.getPath();
 			_stdFlag = other.getStdFlag();
 		}
 		
-		public void read(@Nonnull Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			Obj other = null;
 			
 			switch (format.toEnum()) {
@@ -90,7 +90,7 @@ public class IMP {
 			if (other != null) merge(other);
 		}
 		
-		public void write(@Nonnull Wc3BinOutputStream stream, EncodingFormat format) {
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			Obj other = null;
 			
 			switch (format.toEnum()) {
@@ -117,7 +117,7 @@ public class IMP {
 			write(stream, EncodingFormat.AUTO);
 		}
 		
-		public Obj(@Nonnull Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			read(stream, format);
 		}
 		
@@ -131,10 +131,11 @@ public class IMP {
 		return _objs;
 	}
 	
-	public void addObj(Obj val) {
+	public void addObj(@Nonnull Obj val) {
 		_objs.add(val);
 	}
-	
+
+	@Nonnull
 	public Obj addObj() {
 		Obj obj = new Obj();
 		
@@ -143,35 +144,35 @@ public class IMP {
 		return obj;
 	}
 	
-	public void merge(IMP other) {
+	public void merge(@Nonnull IMP other) {
 		for (Obj obj : other.getObjs()) {
 			addObj(obj);
 		}
 	}
 	
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+		public enum Enum {
 			AUTO,
 			IMP_0x1,
 		}
 
-		static final Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat IMP_0x1 = new EncodingFormat(Enum.IMP_0x1, 0x1);
-		
+
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
 		}
 	}
 	
-	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32();
 		
 		stream.rewind();
@@ -179,7 +180,7 @@ public class IMP {
 		read(stream, EncodingFormat.valueOf(version));
 	}
 
-	private void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		IMP other = null;
 		
 		switch (format.toEnum()) {
@@ -198,7 +199,7 @@ public class IMP {
 		if (other != null) merge(other);
 	}
 	
-	private void write(Wc3BinInputStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) {
 		IMP other = null;
 		
 		switch (format.toEnum()) {
@@ -218,7 +219,7 @@ public class IMP {
 	private void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
-	
+
 	public void write(@Nonnull Wc3BinInputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}

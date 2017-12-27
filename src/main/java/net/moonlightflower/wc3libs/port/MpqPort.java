@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.NoSuchFileException;
 import java.util.LinkedHashMap;
@@ -32,11 +34,12 @@ public abstract class MpqPort {
 			// TODO Auto-generated constructor stub
 		}
 	}
-	
-	public abstract List<File> listFiles(File mpqFile) throws IOException; 
+
+	@Nonnull
+	public abstract List<File> listFiles(@Nonnull File mpqFile) throws IOException;
 	
 	public static abstract class In {
-		class FileImport {
+		public class FileImport {
 			private File _outFile;
 			private File _inFile;
 
@@ -48,23 +51,24 @@ public abstract class MpqPort {
 				return _inFile;
 			}
 
-			FileImport(File outPath, File inPath) {
+			public FileImport(@Nullable File outPath, @Nonnull File inPath) {
 				_outFile = outPath;
 				_inFile = inPath;
 			}
 		}
 	
 		private Vector<FileImport> _fileImports = new Vector<>();
-		
+
+		@Nonnull
 		public Vector<FileImport> getFiles() {
-			return _fileImports;
+			return new Vector<>(_fileImports);
 		}
 	
-		public void add(File outPath, File inPath) {
+		public void add(@Nullable File outPath, @Nonnull File inPath) {
 			_fileImports.add(new FileImport(outPath, inPath));
 		}
 		
-		public void addDel(File inPath) {
+		public void addDel(@Nonnull File inPath) {
 			add(null, inPath);
 		}
 		
@@ -72,9 +76,9 @@ public abstract class MpqPort {
 			_fileImports.clear();
 		}
 	
-		public abstract void commit(Vector<File> mpqFiles) throws Exception;
+		public abstract void commit(@Nonnull Vector<File> mpqFiles) throws Exception;
 	
-		public void commit(File mpqFile) throws Exception {
+		public void commit(@Nonnull File mpqFile) throws Exception {
 			Vector<File> mpqFiles = new Vector<>();
 	
 			mpqFiles.add(mpqFile);
@@ -340,15 +344,12 @@ public abstract class MpqPort {
 	
 	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
 	
-	public static MpqPort getDefaultImpl() {
+	public static MpqPort getDefaultImpl() throws PortException {
 		try {
 			return _defaultImpl.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PortException("could not instantiate mpqPort defaultImpl " + _defaultImpl);
 		}
-		
-		return null;
 	}
 	
 	public static void setDefaultImpl(Class<? extends MpqPort> type) {

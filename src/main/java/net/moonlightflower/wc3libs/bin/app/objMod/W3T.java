@@ -13,6 +13,7 @@ import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,27 +31,28 @@ public class W3T extends ObjMod {
 	
 	public static class States {
 		public static class State<T extends DataType> extends MetaState<T> {
-			private static List<State> _values = new ArrayList<>();
-			
+			private final static List<State> _values = new ArrayList<>();
+
+			@Nonnull
 			public static List<State> values() {
-				return _values;
+				return new ArrayList<>(_values);
 			}
 			
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
 				super(idString, typeInfo, defVal);
 				
 				_values.add(this);
 			}
 			
-			public State(String idString, Class<T> type, T defVal) {
+			public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
 				this(idString, new DataTypeInfo(type), defVal);
 			}
 			
-			public State(String idString, DataTypeInfo typeInfo) {
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
 				this(idString, typeInfo, null);
 			}
 			
-			public State(String idString, Class<T> type) {
+			public State(@Nonnull String idString, @Nonnull Class<T> type) {
 				this(idString, new DataTypeInfo(type), null);
 			}
 		}
@@ -130,7 +132,7 @@ public class W3T extends ObjMod {
 		super();
 	}
 
-	public static W3T ofMapFile(File mapFile) throws Exception {
+	public static W3T ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

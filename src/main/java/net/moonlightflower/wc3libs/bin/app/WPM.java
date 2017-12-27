@@ -69,7 +69,7 @@ public class WPM extends Raster<FlagsInt> {
 	}
 
 	@Override
-	public FlagsInt mergeCellVal(FlagsInt oldVal, FlagsInt other) {
+	public FlagsInt mergeCellVal(@Nonnull FlagsInt oldVal, @Nonnull FlagsInt other) {
 		return (Flags.valueOf(oldVal.toInt() | other.toInt()));
 	}
 	
@@ -132,7 +132,7 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 
-	public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
 		int version = stream.readInt32("version");
 		
@@ -155,16 +155,20 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 	
-	private void read_auto(Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
 		int version = stream.readInt32("version");
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
 	}
 	
-	private void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -179,7 +183,7 @@ public class WPM extends Raster<FlagsInt> {
 		}
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream, EncodingFormat format) {
+	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
 		case AUTO:
 		case WPM_0x0: {
@@ -206,17 +210,17 @@ public class WPM extends Raster<FlagsInt> {
 		inStream.close();
 	}
 	
-	public WPM(PathMap pathMap) {
+	public WPM(@Nonnull PathMap pathMap) {
 		this();
 		
 		_pathMap = pathMap.clone();
 	}
 	
-	public WPM(Bounds bounds) {
+	public WPM(@Nonnull Bounds bounds) {
 		this(new PathMap(bounds));
 	}
 
-	public WPM(Wc3BinInputStream stream) throws IOException {
+	public WPM(@Nonnull Wc3BinInputStream stream) throws IOException {
 		this();
 		
 		read(stream);
@@ -225,8 +229,9 @@ public class WPM extends Raster<FlagsInt> {
 	public WPM() {
 		_pathMap = new PathMap(new Bounds(new Size(0, 0), new Coords2DI(0, 0)));
 	}
-	
-	public static WPM ofMap(File mapFile) throws IOException {
+
+	@Nonnull
+	public static WPM ofMap(@Nonnull File mapFile) throws IOException {
 		MpqPort.Out portOut = new JMpqPort.Out();
 		
 		portOut.add(GAME_PATH);
@@ -272,7 +277,7 @@ public class WPM extends Raster<FlagsInt> {
 		return getPathMap().getHeight();
 	}
 	
-	public void setBounds(Bounds val, boolean retainContents) {
+	public void setBounds(@Nonnull Bounds val, boolean retainContents) {
 		getPathMap().setBounds(val, retainContents);
 	}*/
 }

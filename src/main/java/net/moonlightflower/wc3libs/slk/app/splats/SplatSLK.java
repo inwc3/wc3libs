@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -193,10 +192,10 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public void setColorStart(Color val) {
-			set(States.ART_COLOR_START_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.ART_COLOR_START_BLUE, Int.valueOf(val.getBlue()));
-			set(States.ART_COLOR_START_GREEN, Int.valueOf(val.getGreen()));
-			set(States.ART_COLOR_START_RED, Int.valueOf(val.getRed()));
+			set(States.ART_COLOR_START_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_START_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_START_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_START_RED, Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getColorMid() {
@@ -204,10 +203,10 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public void setColorMid(Color val) {
-			set(States.ART_COLOR_MID_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.ART_COLOR_MID_BLUE, Int.valueOf(val.getBlue()));
-			set(States.ART_COLOR_MID_GREEN, Int.valueOf(val.getGreen()));
-			set(States.ART_COLOR_MID_RED, Int.valueOf(val.getRed()));
+			set(States.ART_COLOR_MID_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_MID_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_MID_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_MID_RED, Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getColorEnd() {
@@ -215,10 +214,10 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public void setColorEnd(Color val) {
-			set(States.ART_COLOR_END_ALPHA, Int.valueOf(val.getAlpha()));
-			set(States.ART_COLOR_END_BLUE, Int.valueOf(val.getBlue()));
-			set(States.ART_COLOR_END_GREEN, Int.valueOf(val.getGreen()));
-			set(States.ART_COLOR_END_RED, Int.valueOf(val.getRed()));
+			set(States.ART_COLOR_END_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_END_BLUE, Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_END_GREEN, Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_END_RED, Int.valueOf(val.getRed255()));
 		}
 		
 		public WaterCode getWater() {

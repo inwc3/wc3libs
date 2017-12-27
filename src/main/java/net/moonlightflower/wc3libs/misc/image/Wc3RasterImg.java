@@ -126,7 +126,7 @@ public class Wc3RasterImg extends Wc3Img {
 				
 				newColor = new Color(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), oldColor.getAlpha());
 				//System.out.println(oldColor + "->" + newColor);
-				//Color newColor = new Color(ColorSpace.getInstance(ColorSpace.HSV), hsv, ((float) (((double) oldColor.getAlpha()) / 0xFF)));
+				//Color newColor = new Color(ColorSpace.getInstance(ColorSpace.HSV), hsv, ((float) (((double) oldColor.getAlpha255()) / 0xFF)));
 				
 				_bufImg.setRGB(x, y, newColor.getRGB());
 			}

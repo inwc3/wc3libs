@@ -29,7 +29,7 @@ public class WCT {
 			return _text;
 		}
 		
-		public void setText(String val) {
+		public void setText(@Nullable String val) {
 			_text = val;
 		}
 
@@ -102,7 +102,7 @@ public class WCT {
 	
 	private String _headComment;
 	
-	public void setHeadComment(String val) {
+	public void setHeadComment(@Nullable String val) {
 		_headComment = val;
 	}
 	
@@ -260,7 +260,7 @@ public class WCT {
 	public WCT() {
 	}
 
-	public static WCT ofMapFile(File mapFile) throws Exception {
+	public static WCT ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

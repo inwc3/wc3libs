@@ -1,8 +1,15 @@
 package wc3libs.misc;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.misc.model.MDX;
+import org.testng.Assert;
+
+import javax.annotation.Nonnull;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -40,5 +47,42 @@ public abstract class Wc3LibTest {
         return paths;
     }
 
+    public void readWriteCycle(@Nonnull Class<?> testClass, @Nonnull File file) throws IOException {
+        Wc3BinInputStream inStream = new Wc3BinInputStream(file);
+
+        byte[] bytes = inStream.readBytes((int) inStream.size());
+
+        inStream.rewind();
+
+        try {
+            Constructor constructor = testClass.getConstructor(Wc3BinInputStream.class);
+
+            Object testObj = constructor.newInstance(inStream);
+
+            ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+
+            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream);
+
+            try {
+                Method method = testClass.getMethod("write", Wc3BinOutputStream.class);
+
+                method.invoke(testObj, outStream);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } finally {
+                outStream.close();
+            }
+
+            FileOutputStream fp = new FileOutputStream("E:\\work\\bla.mdx");
+
+            fp.write(outByteStream.toByteArray());
+
+            fp.close();
+
+            Assert.assertEquals(outByteStream.toByteArray(), bytes);
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

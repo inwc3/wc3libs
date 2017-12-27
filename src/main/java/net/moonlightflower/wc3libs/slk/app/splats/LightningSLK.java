@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -105,10 +104,10 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		}
 		
 		public void setColor(Color val) {
-			set(States.ART_COLOR_ALPHA, Real.valueOf(((float) val.getAlpha()) / 255));
-			set(States.ART_COLOR_BLUE, Real.valueOf(((float) val.getBlue()) / 255));
-			set(States.ART_COLOR_GREEN, Real.valueOf(((float) val.getGreen()) / 255));
-			set(States.ART_COLOR_RED, Real.valueOf(((float) val.getRed()) / 255));
+			set(States.ART_COLOR_ALPHA, Real.valueOf(((float) val.getAlpha255()) / 255));
+			set(States.ART_COLOR_BLUE, Real.valueOf(((float) val.getBlue255()) / 255));
+			set(States.ART_COLOR_GREEN, Real.valueOf(((float) val.getGreen255()) / 255));
+			set(States.ART_COLOR_RED, Real.valueOf(((float) val.getRed255()) / 255));
 		}
 		
 		public Real getNoiseScale() {

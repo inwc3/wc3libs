@@ -199,18 +199,18 @@ public class GeosetAnim extends MDXObject {
 
             @Override
             protected void writeSpec(@Nonnull Wc3BinOutputStream stream, @Nonnull InterpolationType interpolationType) throws BinStream.StreamException {
-                stream.writeFloat32(_color.getBlue() / 255F);
-                stream.writeFloat32(_color.getGreen() / 255F);
-                stream.writeFloat32(_color.getRed() / 255F);
+                stream.writeFloat32(_color.getBlue255() / 255F);
+                stream.writeFloat32(_color.getGreen255() / 255F);
+                stream.writeFloat32(_color.getRed255() / 255F);
 
                 if (interpolationType.equals(InterpolationType.HERMITE) || interpolationType.equals(InterpolationType.BEZIER)) {
-                    stream.writeFloat32(_inTan_color.getBlue() / 255F);
-                    stream.writeFloat32(_inTan_color.getGreen() / 255F);
-                    stream.writeFloat32(_inTan_color.getRed() / 255F);
+                    stream.writeFloat32(_inTan_color.getBlue255() / 255F);
+                    stream.writeFloat32(_inTan_color.getGreen255() / 255F);
+                    stream.writeFloat32(_inTan_color.getRed255() / 255F);
 
-                    stream.writeFloat32(_outTan_color.getBlue() / 255F);
-                    stream.writeFloat32(_outTan_color.getGreen() / 255F);
-                    stream.writeFloat32(_outTan_color.getRed() / 255F);
+                    stream.writeFloat32(_outTan_color.getBlue255() / 255F);
+                    stream.writeFloat32(_outTan_color.getGreen255() / 255F);
+                    stream.writeFloat32(_outTan_color.getRed255() / 255F);
                 }
             }
 
@@ -272,9 +272,9 @@ public class GeosetAnim extends MDXObject {
         stream.writeFloat32(_alpha);
         stream.writeUInt32(_flags);
 
-        stream.writeFloat32(_color.getBlue() / 255F);
-        stream.writeFloat32(_color.getGreen() / 255F);
-        stream.writeFloat32(_color.getRed() / 255F);
+        stream.writeFloat32(_color.getBlue255() / 255F);
+        stream.writeFloat32(_color.getGreen255() / 255F);
+        stream.writeFloat32(_color.getRed255() / 255F);
 
         stream.writeUInt32(_geosetId);
 

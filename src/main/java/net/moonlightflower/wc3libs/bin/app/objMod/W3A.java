@@ -31,27 +31,28 @@ public class W3A extends ObjMod {
 	
 	public static class States {
 		public static class State<T extends DataType> extends MetaState<T> {
-			private static List<State> _values = new ArrayList<>();
-			
-			public static List<State> values() {
-				return _values;
+			private final static List<State> _values = new ArrayList<>();
+
+			@Nonnull
+			private static List<State> values() {
+				return new ArrayList<>(_values);
 			}
 			
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
 				super(idString, typeInfo, defVal);
 				
 				_values.add(this);
 			}
 			
-			public State(String idString, Class<T> type, T defVal) {
+			public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
 				this(idString, new DataTypeInfo(type), defVal);
 			}
 			
-			public State(String idString, DataTypeInfo typeInfo) {
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
 				this(idString, typeInfo, null);
 			}
 			
-			public State(String idString, Class<T> type) {
+			public State(@Nonnull String idString, @Nonnull Class<T> type) {
 				this(idString, new DataTypeInfo(type), null);
 			}
 		}

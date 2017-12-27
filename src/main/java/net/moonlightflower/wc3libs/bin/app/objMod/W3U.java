@@ -12,6 +12,8 @@ import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,31 +31,33 @@ public class W3U extends ObjMod {
 	
 	public static class States {
 		static public class State<T extends DataType> extends MetaState<T> {
-			private static List<State> _values = new ArrayList<>();
-			
+			private final static List<State> _values = new ArrayList<>();
+
+			@Nonnull
 			public static List<State> values() {
 				return _values;
 			}
 			
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
 				super(idString, typeInfo, defVal);
 				
 				_values.add(this);
 			}
 			
-			public State(String idString, Class<T> type, T defVal) {
+			public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
 				this(idString, new DataTypeInfo(type), defVal);
 			}
 			
-			public State(String idString, DataTypeInfo typeInfo) {
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
 				this(idString, typeInfo, null);
 			}
 			
-			public State(String idString, Class<T> type) {
+			public State(@Nonnull String idString, @Nonnull Class<T> type) {
 				this(idString, new DataTypeInfo(type), null);
 			}
 		}
-		
+
+		@Nonnull
 		public static List<State> values() {
 			return State.values();
 		}
@@ -349,7 +353,7 @@ public class W3U extends ObjMod {
 		return Arrays.asList(UnitAbilsSLK.GAME_USE_PATH, UnitBalanceSLK.GAME_USE_PATH, UnitDataSLK.GAME_USE_PATH, UnitUISLK.GAME_USE_PATH, UnitWeaponsSLK.GAME_USE_PATH);
 	}
 	
-	public void read(InputStream inStream) throws IOException {
+	public void read(@Nonnull InputStream inStream) throws IOException {
 		ObjMod other = new ObjMod();
 		
 		other.read(inStream, false);
@@ -357,7 +361,7 @@ public class W3U extends ObjMod {
 		merge(other);
 	}
 	
-	public W3U(File file) throws Exception {
+	public W3U(@Nonnull File file) throws Exception {
 		super(file, false);
 	}
 	
@@ -365,7 +369,7 @@ public class W3U extends ObjMod {
 		super();
 	}
 
-	public static W3U ofMapFile(File mapFile) throws Exception {
+	public static W3U ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

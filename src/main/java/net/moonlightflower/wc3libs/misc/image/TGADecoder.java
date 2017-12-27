@@ -403,7 +403,7 @@ public class TGADecoder {
 					
 					Color pxColor = pxColors[x2][y2];
 
-					//pxColor = new Color(pxColor.getRed(), pxColor.getGreen(), pxColor.getBlue(), 1D);
+					//pxColor = new Color(pxColor.getRed255(), pxColor.getGreen255(), pxColor.getBlue255(), 1D);
 			
 					pxWriter.setColor(x, y, pxColor);
 					bufImg.setRGB(x, y, new java.awt.Color((float) pxColor.getRed(), (float) pxColor.getGreen(), (float) pxColor.getBlue(), (float) pxColor.getOpacity()).getRGB());

@@ -68,7 +68,7 @@ public class ObjMod {
 					return _map.get(val);
 				}
 				
-				private ValType(int val) {
+				ValType(int val) {
 					_val = val;
 				}
 				
@@ -135,15 +135,15 @@ public class ObjMod {
 				setDataPt(dataPt);
 			}
 			
-			public void setVal(Val val, int level) {
+			public void setVal(@Nullable Val val, int level) {
 				setVal(val, level, 0);
 			}
 			
-			public void setVal(Val val) {
+			public void setVal(@Nullable Val val) {
 				setVal(val, 0);
 			}
 			
-			public void addVal(Val val) {
+			public void addVal(@Nullable Val val) {
 				int level = 1;
 
 				while (getVal(level) == null) {
@@ -167,7 +167,7 @@ public class ObjMod {
 				_dataPt = val;
 			}
 			
-			public void merge(Field otherField) {
+			public void merge(@Nonnull Field otherField) {
 				setDataPt(otherField.getDataPt());
 				
 				for (Entry<Integer, Val> valEntry : otherField.getVals().entrySet()) {
@@ -185,7 +185,7 @@ public class ObjMod {
 					int level = valEntry.getKey();
 					Val val = valEntry.getValue();
 					
-					System.out.println(String.format("\t\t%i -> %s %s %s", level, getVal(level), val.getType().getVal(), getDataPt()));
+					System.out.println(String.format("\t\t%d -> %s %s %s", level, getVal(level), val.getType().getVal(), getDataPt()));
 				}
 			}
 			
@@ -200,7 +200,7 @@ public class ObjMod {
 				return getId().toString();
 			}
 			
-			public Field(MetaFieldId id) {
+			public Field(@Nonnull MetaFieldId id) {
 				_id = id;
 			}
 		}
@@ -209,18 +209,18 @@ public class ObjMod {
 		private List<Field> _fieldsList = new ArrayList<>();
 		
 		public Map<MetaFieldId, Field> getFields() {
-			return _fieldsMap;
+			return new LinkedHashMap<>(_fieldsMap);
 		}
 		
 		public List<Field> getFieldsList() {
-			return _fieldsList;
+			return new ArrayList<>(_fieldsList);
 		}
 		
-		public Field getField(MetaFieldId id) {
+		public Field getField(@Nonnull MetaFieldId id) {
 			return _fieldsMap.get(id);
 		}
 		
-		public Field addField(MetaFieldId id) {
+		public Field addField(@Nonnull MetaFieldId id) {
 			if (getFields().containsKey(id)) return getFields().get(id);
 			
 			Field field = new Field(id);
@@ -231,7 +231,7 @@ public class ObjMod {
 			return field;
 		}
 		
-		public void removeField(MetaFieldId id) {
+		public void removeField(@Nonnull MetaFieldId id) {
 			if (!_fieldsMap.containsKey(id)) return;
 			
 			Field field = _fieldsMap.get(id);
@@ -252,7 +252,7 @@ public class ObjMod {
 			end*/
 		}
 		
-		public void merge(Obj otherObj) {
+		public void merge(@Nonnull Obj otherObj) {
 			for (Field otherField : otherObj.getFields().values()) {
 				MetaFieldId fieldId = otherField.getId();
 				
@@ -576,7 +576,7 @@ public class ObjMod {
 			read(stream, format, extended);
 		}
 		
-		public Obj(@Nonnull ObjId id, ObjId baseId) {
+		public Obj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 			_id = id;
 			_baseId = baseId;
 		}
@@ -653,7 +653,7 @@ public class ObjMod {
 		_objsList.clear();
 	}
 	
-	public Obj addObj(@Nullable ObjId id, ObjId baseId) {
+	public Obj addObj(@Nullable ObjId id, @Nullable ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
 		Obj obj = new Obj(id, baseId);
@@ -663,7 +663,7 @@ public class ObjMod {
 		return obj;
 	}
 	
-	public void merge(ObjMod other) {
+	public void merge(@Nonnull ObjMod other) {
 		for (Obj otherObj : other.getObjs().values()) {
 			ObjId objId = otherObj.getId();
 			
@@ -672,7 +672,8 @@ public class ObjMod {
 			obj.merge(otherObj);
 		}
 	}
-	
+
+	@Nonnull
 	public ObjMod copy() {
 		ObjMod other = new ObjMod();
 		
@@ -712,7 +713,7 @@ public class ObjMod {
 			return _objMod;
 		}
 		
-		private ObjPack(ObjMod orig) {
+		private ObjPack(@Nonnull ObjMod orig) {
 			_objMod = orig.copy();
 			
 			for (Obj obj : _objMod.getCustomObjs()) {
@@ -721,7 +722,7 @@ public class ObjMod {
 		}
 	}
 	
-	private File convertSLKName(String slkName) {
+	private File convertSLKName(@Nonnull String slkName) {
 		//convert slk names
 		switch (slkName) {
 		case "AbilityData":
@@ -764,7 +765,7 @@ public class ObjMod {
 	public final int DATA_PT_MIN = 1;
 	public final int DATA_PT_MAX = 9;
 	
-	public ObjPack reduce(MetaSLK reduceMetaSlk) throws Exception {
+	public ObjPack reduce(@Nonnull MetaSLK reduceMetaSlk) throws Exception {
 		ObjPack pack = new ObjPack(this);
 		
 		Map<File, SLK> outSlks = pack.getSlks();
@@ -951,13 +952,13 @@ public class ObjMod {
 	}
 	
 	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+		public enum Enum {
 			AUTO,
 			OBJ_0x1,
 			OBJ_0x2
 		}
 
-		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat OBJ_0x1 = new EncodingFormat(Enum.OBJ_0x1, 0x1);

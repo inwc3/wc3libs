@@ -1093,21 +1093,21 @@ public class ParticleEmitter2 extends MDXObject {
         stream.writeFloat32(_tailLength);
         stream.writeFloat32(_time);
 
-        stream.writeFloat32(_startColor.getBlue() / 255F);
-        stream.writeFloat32(_startColor.getGreen() / 255F);
-        stream.writeFloat32(_startColor.getRed() / 255F);
+        stream.writeFloat32(_startColor.getBlue255() / 255F);
+        stream.writeFloat32(_startColor.getGreen255() / 255F);
+        stream.writeFloat32(_startColor.getRed255() / 255F);
 
-        stream.writeFloat32(_midColor.getBlue() / 255F);
-        stream.writeFloat32(_midColor.getGreen() / 255F);
-        stream.writeFloat32(_midColor.getRed() / 255F);
+        stream.writeFloat32(_midColor.getBlue255() / 255F);
+        stream.writeFloat32(_midColor.getGreen255() / 255F);
+        stream.writeFloat32(_midColor.getRed255() / 255F);
 
-        stream.writeFloat32(_endColor.getBlue() / 255F);
-        stream.writeFloat32(_endColor.getGreen() / 255F);
-        stream.writeFloat32(_endColor.getRed() / 255F);
+        stream.writeFloat32(_endColor.getBlue255() / 255F);
+        stream.writeFloat32(_endColor.getGreen255() / 255F);
+        stream.writeFloat32(_endColor.getRed255() / 255F);
 
-        stream.writeUInt8(_startColor.getAlpha());
-        stream.writeUInt8(_midColor.getAlpha());
-        stream.writeUInt8(_endColor.getAlpha());
+        stream.writeUInt8(_startColor.getAlpha255());
+        stream.writeUInt8(_midColor.getAlpha255());
+        stream.writeUInt8(_endColor.getAlpha255());
 
         stream.writeFloat32(_startScaling);
         stream.writeFloat32(_midScaling);
@@ -1204,10 +1204,10 @@ public class ParticleEmitter2 extends MDXObject {
         _midColor = Color.fromBGR255((int) (stream.readFloat32("midColorBlue") * 255), (int) (stream.readFloat32("midColorGreen") * 255), (int) (stream.readFloat32("midColorRed") * 255));
         _endColor = Color.fromBGR255((int) (stream.readFloat32("endColorBlue") * 255), (int) (stream.readFloat32("endColorGreen") * 255), (int) (stream.readFloat32("endColorRed") * 255));
 
-        _startColor = Color.fromBGRA255(_startColor.getBlue(), _startColor.getGreen(), _startColor.getRed(), stream.readUInt8("startColorAlpha"));
-        _midColor = Color.fromBGRA255(_midColor.getBlue(), _midColor.getGreen(), _midColor.getRed(), stream.readUInt8("midColorAlpha"));
+        _startColor = Color.fromBGRA255(_startColor.getBlue255(), _startColor.getGreen255(), _startColor.getRed255(), stream.readUInt8("startColorAlpha"));
+        _midColor = Color.fromBGRA255(_midColor.getBlue255(), _midColor.getGreen255(), _midColor.getRed255(), stream.readUInt8("midColorAlpha"));
 
-        _endColor = Color.fromBGRA255(_endColor.getBlue(), _endColor.getGreen(), _endColor.getRed(), stream.readUInt8("endColorAlpha"));
+        _endColor = Color.fromBGRA255(_endColor.getBlue255(), _endColor.getGreen255(), _endColor.getRed255(), stream.readUInt8("endColorAlpha"));
 
         _startScaling = stream.readFloat32("startScaling");
         _midScaling = stream.readFloat32("midScaling");

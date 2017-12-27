@@ -41,8 +41,8 @@ public class Bounds extends DataType {
 	}
 	
 	public boolean equals(Bounds other) {
-		return getCenter().equals(((Bounds) other).getCenter()) &&
-				getSize().equals(((Bounds) other).getSize());
+		return getCenter().equals((other).getCenter()) &&
+				getSize().equals((other).getSize());
 	}
 	
 	@Override

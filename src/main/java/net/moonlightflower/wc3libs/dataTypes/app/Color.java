@@ -2,25 +2,27 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+
 public class Color extends DataType {
 	private int _red;
 	private int _green;
 	private int _blue;
 	private int _alpha;
 	
-	public int getRed() {
+	public int getRed255() {
 		return _red;
 	}
 
-	public int getGreen() {
+	public int getGreen255() {
 		return _green;
 	}
 
-	public int getBlue() {
+	public int getBlue255() {
 		return _blue;
 	}
 	
-	public int getAlpha() {
+	public int getAlpha255() {
 		return _alpha;
 	}
 	
@@ -33,10 +35,10 @@ public class Color extends DataType {
 	}
 
 	public boolean equals(Color other) {
-		return getRed() == other.getRed() &&
-				getGreen() == other.getGreen() &&
-				getBlue() == other.getBlue() &&
-				getAlpha() == other.getAlpha();
+		return getRed255() == other.getRed255() &&
+				getGreen255() == other.getGreen255() &&
+				getBlue255() == other.getBlue255() &&
+				getAlpha255() == other.getAlpha255();
 	}
 
 	@Override
@@ -60,18 +62,22 @@ public class Color extends DataType {
 	/**
 	 * Gets a color from red, green and blue values in the range 0-255.
 	 */
+	@Nonnull
 	public static Color fromRGB255(int red, int green, int blue) {
 		return new Color(red, green, blue);
 	}
 
+	@Nonnull
 	public static Color fromRGBA255(int red, int green, int blue, int alpha) {
 		return new Color(red, green, blue, alpha);
 	}
-	
+
+	@Nonnull
 	public static Color fromBGR255(int blue, int green, int red) {
 		return new Color(red, green, blue);
 	}
 
+	@Nonnull
 	public static Color fromBGRA255(int blue, int green, int red, int alpha) {
 		return new Color(red, green, blue, alpha);
 	}
@@ -83,7 +89,7 @@ public class Color extends DataType {
 
 	public static DataType decodeStatic(Object val) {
 		if (val instanceof Color)
-			return Color.fromBGRA255(((Color) val).getBlue(), ((Color) val).getGreen(), ((Color) val).getRed(), ((Color) val).getAlpha());
+			return Color.fromBGRA255(((Color) val).getBlue255(), ((Color) val).getGreen255(), ((Color) val).getRed255(), ((Color) val).getAlpha255());
 		
 		return null;
 	}

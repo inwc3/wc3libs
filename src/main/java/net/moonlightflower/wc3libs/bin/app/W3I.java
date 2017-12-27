@@ -183,7 +183,7 @@ public class W3I {
         }
 
         public static class Flag extends FlagsInt.Flag {
-            private static List<Flag> _all = new ArrayList<>();
+            private final static List<Flag> _all = new ArrayList<>();
 
             public final static Flag HIDE_MINIMAP = new Flag(0, "hideMinimap");
             public final static Flag MODIFY_ALLY_PRIORITIES = new Flag(1, "modifyAllyPriorities");
@@ -528,7 +528,7 @@ public class W3I {
     }
 
     public static class GameDataSet {
-        private static Map<Integer, GameDataSet> _map = new LinkedHashMap<>();
+        private final static Map<Integer, GameDataSet> _map = new LinkedHashMap<>();
 
         public final static GameDataSet STANDARD = new GameDataSet(0, "DEFAULT");
         public final static GameDataSet CUSTOM_V1 = new GameDataSet(1, "CUSTOM_V1");
@@ -652,7 +652,7 @@ public class W3I {
         }
 
         public static class UnitRace extends Int {
-            private static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
+            private final static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
 
             public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF");
             public final static UnitRace HUMAN = new UnitRace(1, "HUMAN");
@@ -679,7 +679,8 @@ public class W3I {
                 _label = label;
             }
 
-            public static UnitRace valueOf(Integer val) {
+            @Nullable
+            public static UnitRace valueOf(@Nonnull Integer val) {
                 return _map.get(val);
             }
 
@@ -1152,7 +1153,7 @@ public class W3I {
 
     @Nonnull
     public List<UpgradeMod> getUpgradeMods() {
-        return _upgradeMods;
+        return new ArrayList<>(_upgradeMods);
     }
 
     private void addUpgradeMod(@Nonnull UpgradeMod val) {
@@ -1390,7 +1391,11 @@ public class W3I {
 
         private List<Set> _sets = new ArrayList<>();
 
-        private void addSet(Set val) {
+        public List<Set> getSets() {
+            return new ArrayList<>(_sets);
+        }
+
+        private void addSet(@Nonnull Set val) {
             _sets.add(val);
         }
 
@@ -1475,7 +1480,7 @@ public class W3I {
 
     @Nonnull
     public List<UnitTable> getUnitTables() {
-        return _unitTables;
+        return new ArrayList<>(_unitTables);
     }
 
     private void addUnitTable(@Nonnull UnitTable val) {
@@ -1703,7 +1708,7 @@ public class W3I {
             W3I_0x12,
         }
 
-        private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+        private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
         public final static EncodingFormat W3I_0x19 = new EncodingFormat(Enum.W3I_0x19, 0x19);
@@ -2032,10 +2037,10 @@ public class W3I {
 
         Color terrainFogColor = (terrainFog != null) ? terrainFog.getColor() : null;
 
-        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed() : 0x00);
-        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen() : 0x00);
-        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue() : 0x00);
-        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha255() : 0x00);
 
         stream.writeId(getGlobalWeatherId());
         stream.writeString(getSoundEnv());
@@ -2043,10 +2048,10 @@ public class W3I {
 
         Color waterColor = getWaterColor();
 
-        stream.writeUByte(waterColor.getRed());
-        stream.writeUByte(waterColor.getGreen());
-        stream.writeUByte(waterColor.getBlue());
-        stream.writeUByte(waterColor.getAlpha());
+        stream.writeUByte(waterColor.getRed255());
+        stream.writeUByte(waterColor.getGreen255());
+        stream.writeUByte(waterColor.getBlue255());
+        stream.writeUByte(waterColor.getAlpha255());
 
         stream.writeInt32(_players.size());
 
@@ -2127,7 +2132,7 @@ public class W3I {
         read(stream, EncodingFormat.AUTO);
     }
 
-    private void write(@Nonnull Wc3BinOutputStream stream) {
+    public void write(@Nonnull Wc3BinOutputStream stream) {
         write(stream, EncodingFormat.AUTO);
     }
 
@@ -2143,6 +2148,10 @@ public class W3I {
 
     }
 
+    public W3I(@Nonnull Wc3BinInputStream stream) throws Exception {
+        read(stream);
+    }
+
     public W3I(@Nonnull byte[] bytes) throws Exception {
         read(new Wc3BinInputStream(new ByteArrayInputStream(bytes)));
     }
@@ -2151,6 +2160,7 @@ public class W3I {
         read(new Wc3BinInputStream(file));
     }
 
+    @Nonnull
     public static W3I ofMapFile(@Nonnull File mapFile) throws Exception {
         Orient.checkFileExists(mapFile);
 

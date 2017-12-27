@@ -108,12 +108,13 @@ public class DOO {
 		private class ItemSet {
 			private class Item {
 				private ObjId _typeId;
-				
+
+				@Nonnull
 				public ObjId getTypeId() {
 					return _typeId;
 				}
 				
-				public void setTypeId(ObjId val) {
+				public void setTypeId(@Nonnull ObjId val) {
 					_typeId = val;
 				}
 				
@@ -128,8 +129,9 @@ public class DOO {
 				}
 			}
 			
-			private List<Item> _items = new ArrayList<>();
-			
+			private final List<Item> _items = new ArrayList<>();
+
+			@Nonnull
 			public Item addItem(ObjId typeId, int chance) {
 				Item item = new Item();
 				
@@ -455,7 +457,11 @@ public class DOO {
 			
 			stream.rewind();
 
-			read(stream, EncodingFormat.valueOf(specialVersion));
+			EncodingFormat format = EncodingFormat.valueOf(specialVersion);
+
+			if (format == null) throw new IllegalArgumentException("unknown format " + specialVersion);
+
+			read(stream, format);
 		}
 		
 		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -495,7 +501,7 @@ public class DOO {
 			DOO_0x8,
 		}
 
-		static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
@@ -505,7 +511,7 @@ public class DOO {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);

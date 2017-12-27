@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -136,10 +135,10 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 		
 		public void setColorStart(Color val) {
-			set(States.ART_COLOR_ALPHA_START, Int.valueOf(val.getAlpha()));
-			set(States.ART_COLOR_BLUE_START, Int.valueOf(val.getBlue()));
-			set(States.ART_COLOR_GREEN_START, Int.valueOf(val.getGreen()));
-			set(States.ART_COLOR_RED_START, Int.valueOf(val.getRed()));
+			set(States.ART_COLOR_ALPHA_START, Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_BLUE_START, Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_GREEN_START, Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_RED_START, Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getColorMid() {
@@ -147,10 +146,10 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 		
 		public void setColorMid(Color val) {
-			set(States.ART_COLOR_ALPHA_MID, Int.valueOf(val.getAlpha()));
-			set(States.ART_COLOR_BLUE_MID, Int.valueOf(val.getBlue()));
-			set(States.ART_COLOR_GREEN_MID, Int.valueOf(val.getGreen()));
-			set(States.ART_COLOR_RED_MID, Int.valueOf(val.getRed()));
+			set(States.ART_COLOR_ALPHA_MID, Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_BLUE_MID, Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_GREEN_MID, Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_RED_MID, Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getColorEnd() {
@@ -158,10 +157,10 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 		
 		public void setColorEnd(Color val) {
-			set(States.ART_COLOR_ALPHA_END, Int.valueOf(val.getAlpha()));
-			set(States.ART_COLOR_BLUE_END, Int.valueOf(val.getBlue()));
-			set(States.ART_COLOR_GREEN_END, Int.valueOf(val.getGreen()));
-			set(States.ART_COLOR_RED_END, Int.valueOf(val.getRed()));
+			set(States.ART_COLOR_ALPHA_END, Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_BLUE_END, Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_GREEN_END, Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_RED_END, Int.valueOf(val.getRed255()));
 		}
 		
 		public Bool getDecay() {

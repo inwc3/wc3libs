@@ -1,0 +1,1549 @@
+//+-----------------------------------------------------------------------------
+//| Info
+//+-----------------------------------------------------------------------------
+The MDX file format!
+Compiled by Magnus Ostberg (aka Magos)
+MagosX@GMail.com
+
+
+//+-----------------------------------------------------------------------------
+//| Data types
+//+-----------------------------------------------------------------------------
+CHAR   - 8bit character
+BYTE   - 8bit unsigned integer
+WORD   - 16bit unsigned integer
+DWORD  - 32bit unsigned integer
+FLOAT  - 32bit floating point number
+FLOAT2 - 2-dimensional floating point vector (elements ordered as x, y)
+FLOAT3 - 3-dimensional floating point vector (elements ordered as x, y, z or b, g, r)
+FLOAT4 - 4-dimensional floating point vector (elements ordered as x, y, z, w)
+X[n]   - An n-dimensional vector of type X
+
+
+//+-----------------------------------------------------------------------------
+//| Descriptions
+//+-----------------------------------------------------------------------------
+ChunkSize     - ChunkSize is the size of the whole structure *NOT*
+                including the tag and size itself. As an example,
+                the chunksize of the Version structure is 4.
+
+InclusiveSize - InclusiveSize is the size of the structure including
+                the size of the InclusiveSize variable.
+
+ExclusiveSize - ExclusiveSize is the size of the structure *NOT*
+                including the size of the ExclusiveSize variable.
+
+{X};          - A structure that may or may not be present. They
+                may also be in a different order than specified.
+
+X;            - A structure that must be present and in the
+                specified order.
+
+#X            - A flag value, more than one can be combined.
+
+
+//+-----------------------------------------------------------------------------
+//| Notes
+//+-----------------------------------------------------------------------------
+- All ID's (ObjectId, ParentId, GlobalSequenceId, TextureAnimationId, etc...)
+  can use the special value 0xFFFFFFFF to represent 'no ID'.
+
+- Some ID's (GeosetId, etc...) can use the special value 0xFFFFFFFF to
+  represent 'multiple IDs'.
+
+- All colors are stored as BGR, not RGB!
+
+
+//+-----------------------------------------------------------------------------
+//| MDX Model structure
+//+-----------------------------------------------------------------------------
+struct MdxModel
+{
+  DWORD 'MDLX';
+
+  {VersionChunk};
+  {ModelChunk};
+  {SequenceChunk};
+  {GlobalSequenceChunk};
+  {TextureChunk};
+  {TextureAnimationChunk};
+  {GeosetChunk};
+  {GeosetAnimationChunk};
+  {BoneChunk};
+  {LightChunk};
+  {HelperChunk};
+  {AttachmentChunk};
+  {PivotPointChunk};
+  {ParticleEmitterChunk};
+  {ParticleEmitter2Chunk};
+  {RibbonEmitterChunk};
+  {EventObjectChunk};
+  {CameraChunk};
+  {CollisionShapeChunk};
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated geoset translation
+//+-----------------------------------------------------------------------------
+struct GeosetTranslation
+{
+  DWORD 'KGTR';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Translation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated geoset rotation
+//+-----------------------------------------------------------------------------
+struct GeosetRotation
+{
+  DWORD 'KGRT';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct RotationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT4 Rotation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT4 InTan;
+      FLOAT4 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated geoset scaling
+//+-----------------------------------------------------------------------------
+struct GeosetScaling
+{
+  DWORD 'KGSC';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Scaling;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated geoset alpha
+//+-----------------------------------------------------------------------------
+struct GeosetAlpha
+{
+  DWORD 'KGAO';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Alpha;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated geoset color
+//+-----------------------------------------------------------------------------
+struct GeosetColor
+{
+  DWORD 'KGAC';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Color;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated texture translation
+//+-----------------------------------------------------------------------------
+struct TextureTranslation
+{
+  DWORD 'KTAT';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Translation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated texture rotation
+//+-----------------------------------------------------------------------------
+struct TextureRotation
+{
+  DWORD 'KTAR';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT4 Rotation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT4 InTan;
+      FLOAT4 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated texture scaling
+//+-----------------------------------------------------------------------------
+struct TextureScaling
+{
+  DWORD 'KTAS';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Scaling;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated camera position translation
+//+-----------------------------------------------------------------------------
+struct CameraPositionTranslation
+{
+  DWORD 'KCTR';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Translation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated camera target translation
+//+-----------------------------------------------------------------------------
+struct CameraTargetTranslation
+{
+  DWORD 'KTTR';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Translation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated camera rotation
+//+-----------------------------------------------------------------------------
+struct CameraRotation
+{
+  DWORD 'KCRL';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct TranslationTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Rotation;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated material texture ID
+//+-----------------------------------------------------------------------------
+struct MaterialTextureId
+{
+  DWORD 'KMTF';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    DWORD TextureId;
+
+    if(InterpolationType > 1)
+    {
+      DWORD InTan;
+      DWORD OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated material alpha
+//+-----------------------------------------------------------------------------
+struct MaterialAlpha
+{
+  DWORD 'KMTA';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Alpha;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated attachment visibility
+//+-----------------------------------------------------------------------------
+struct AttachmentVisibility
+{
+  DWORD 'KATV';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Visibility;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated light visibility
+//+-----------------------------------------------------------------------------
+struct LightVisibility
+{
+  DWORD 'KLAV';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Visibility;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated light color
+//+-----------------------------------------------------------------------------
+struct LightColor
+{
+  DWORD 'KLAC';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 Color;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated light intensity
+//+-----------------------------------------------------------------------------
+struct LightIntensity
+{
+  DWORD 'KLAI';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Intensity;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated light ambient color
+//+-----------------------------------------------------------------------------
+struct LightAmbientColor
+{
+  DWORD 'KLBC';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT3 AmbientColor;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT3 InTan;
+      FLOAT3 OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated light ambient intensity
+//+-----------------------------------------------------------------------------
+struct LightAmbientIntensity
+{
+  DWORD 'KLBI';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT AmbientIntensity;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated particle emitter visibility
+//+-----------------------------------------------------------------------------
+struct ParticleEmitterVisibility
+{
+  DWORD 'KPEV';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Visibility;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated particle emitter 2 visibility
+//+-----------------------------------------------------------------------------
+struct ParticleEmitter2Visibility
+{
+  DWORD 'KP2V';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Visibility;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated particle emitter 2 emission rate
+//+-----------------------------------------------------------------------------
+struct ParticleEmitter2EmissionRate
+{
+  DWORD 'KP2E';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT EmissionRate;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated particle emitter 2 width
+//+-----------------------------------------------------------------------------
+struct ParticleEmitter2Width
+{
+  DWORD 'KP2W';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Width;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated particle emitter 2 length
+//+-----------------------------------------------------------------------------
+struct ParticleEmitter2Length
+{
+  DWORD 'KP2N';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Length;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated particle emitter 2 speed
+//+-----------------------------------------------------------------------------
+struct ParticleEmitter2Speed
+{
+  DWORD 'KP2S';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Speed;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated ribbon emitter visibility
+//+-----------------------------------------------------------------------------
+struct RibbonEmitterVisibility
+{
+  DWORD 'KRVS';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT Visibility;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated ribbon emitter height above
+//+-----------------------------------------------------------------------------
+struct RibbonEmitterHeightAbove
+{
+  DWORD 'KRHA';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT HeightAbove;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Animated ribbon emitter height below
+//+-----------------------------------------------------------------------------
+struct RibbonEmitterHeightBelow
+{
+  DWORD 'KRHB';
+
+  DWORD NrOfTracks;
+  DWORD InterpolationType;             //0 - None
+                                       //1 - Linear
+                                       //2 - Hermite
+                                       //3 - Bezier
+  DWORD GlobalSequenceId;
+
+  struct ScalingTrack[NrOfTracks]
+  {
+    DWORD Time;
+    FLOAT HeightBelow;
+
+    if(InterpolationType > 1)
+    {
+      FLOAT InTan;
+      FLOAT OutTan;
+    }
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Node (the base for some of the objects)
+//+-----------------------------------------------------------------------------
+struct Node
+{
+  DWORD InclusiveSize;
+
+  CHAR[80] Name;
+
+  DWORD ObjectId;
+  DWORD ParentId;
+  DWORD Flags;                         //0        - Helper
+                                       //#1       - DontInheritTranslation
+                                       //#2       - DontInheritRotation
+                                       //#4       - DontInheritScaling
+                                       //#8       - Billboarded
+                                       //#16      - BillboardedLockX
+                                       //#32      - BillboardedLockY
+                                       //#64      - BillboardedLockZ
+                                       //#128     - CameraAnchored
+                                       //#256     - Bone
+                                       //#512     - Light
+                                       //#1024    - EventObject
+                                       //#2048    - Attachment
+                                       //#4096    - ParticleEmitter
+                                       //#8192    - CollisionShape
+                                       //#16384   - RibbonEmitter
+                                       //#32768   - Unshaded / EmitterUsesMdl
+                                       //#65536   - SortPrimitivesFarZ / EmitterUsesTga
+                                       //#131072  - LineEmitter
+                                       //#262144  - Unfogged
+                                       //#524288  - ModelSpace
+                                       //#1048576 - XYQuad
+
+  {GeosetTranslation}
+  {GeosetRotation}
+  {GeosetScaling}
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Version information
+//+-----------------------------------------------------------------------------
+struct VersionChunk
+{
+  DWORD 'VERS';
+  DWORD ChunkSize;
+
+  DWORD Version;                       //Currently 800
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Model information
+//+-----------------------------------------------------------------------------
+struct ModelChunk
+{
+  DWORD 'MODL';
+  DWORD ChunkSize;
+
+  CHAR[80] Name;
+  CHAR[260] AnimationFileName;
+
+  FLOAT BoundsRadius;
+  FLOAT3 MinimumExtent;
+  FLOAT3 MaximumExtent;
+  DWORD BlendTime;
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Sequences
+//+-----------------------------------------------------------------------------
+struct SequenceChunk
+{
+  DWORD 'SEQS';
+  DWORD ChunkSize;
+
+  struct Sequence[NrOfSequences]       //NrOfSequences = ChunkSize / 132
+  {
+    CHAR[80] Name;
+
+    DWORD IntervalStart;
+    DWORD IntervalEnd;
+    FLOAT MoveSpeed;
+    DWORD Flags;                       //0 - Looping
+                                       //1 - NonLooping
+    FLOAT Rarity;
+    DWORD SyncPoint;
+
+    FLOAT BoundsRadius;
+    FLOAT3 MinimumExtent;
+    FLOAT3 MaximumExtent;
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Global sequences
+//+-----------------------------------------------------------------------------
+struct GlobalSequenceChunk
+{
+  DWORD 'GLBS';
+  DWORD ChunkSize;
+
+  struct GlobalSequence[NrOfGlobalSequences]  //NrOfGlobalSequences = ChunkSize / 4
+  {
+    DWORD Duration;
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Textures
+//+-----------------------------------------------------------------------------
+struct TextureChunk
+{
+  DWORD 'TEXS';
+  DWORD ChunkSize;
+
+  struct Texture[NrOfTextures]         //NrOfTextures = ChunkSize / 268
+  {
+    DWORD ReplaceableId;
+
+    CHAR[260] FileName;
+    DWORD Flags;                       //#1 - WrapWidth
+                                       //#2 - WrapHeight
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Layers
+//+-----------------------------------------------------------------------------
+struct LayerChunk
+{
+  DWORD 'LAYS';
+  DWORD NrOfLayers;
+
+  struct Layer[NrOfLayers]
+  {
+    DWORD InclusiveSize;
+
+    DWORD FilterMode;                  //0 - None
+                                       //1 - Transparent
+                                       //2 - Blend
+                                       //3 - Additive
+                                       //4 - AddAlpha
+                                       //5 - Modulate
+                                       //6 - Modulate2x
+
+    DWORD ShadingFlags;                //#1   - Unshaded
+                                       //#2   - SphereEnvironmentMap
+                                       //#4   - ???
+                                       //#8   - ???
+                                       //#16  - TwoSided
+                                       //#32  - Unfogged
+                                       //#64  - NoDepthTest
+                                       //#128 - NoDepthSet
+
+    DWORD TextureId;
+    DWORD TextureAnimationId;
+    DWORD CoordId;
+    FLOAT Alpha;
+
+    {MaterialAlpha}
+    {MaterialTextureId}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Materials
+//+-----------------------------------------------------------------------------
+struct MaterialChunk
+{
+  DWORD 'MTLS';
+  DWORD ChunkSize;
+
+  struct Material[NrOfMaterials]
+  {
+    DWORD InclusiveSize;
+
+    DWORD PriorityPlane;
+    DWORD Flags;                       //#1  - ConstantColor
+                                       //#2  - ???
+                                       //#4  - ???
+                                       //#8  - SortPrimitivesNearZ
+                                       //#16 - SortPrimitivesFarZ
+                                       //#32 - FullResolution
+
+    {LayerChunk}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Texture animations
+//+-----------------------------------------------------------------------------
+struct TextureAnimationChunk
+{
+  DWORD 'TXAN';
+  DWORD ChunkSize;
+
+  struct TextureAnimation[NrOfTextureAnimations]
+  {
+    DWORD InclusiveSize;
+
+    {TextureTranslation}
+    {TextureRotation}
+    {TextureScaling}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Geosets
+//+-----------------------------------------------------------------------------
+struct GeosetChunk
+{
+  DWORD 'GEOS';
+  DWORD ChunkSize;
+
+  struct Geoset[NrOfGeosets]
+  {
+    DWORD InclusiveSize;
+
+    DWORD 'VRTX';
+    DWORD NrOfVertexPositions;
+
+    struct VertexPosition[NrOfVertexPositions]
+    {
+      FLOAT3 Position;
+    };
+
+    DWORD 'NRMS';
+    DWORD NrOfVertexNormals;
+
+    struct VertexNormal[NrOfVertexNormals]
+    {
+      FLOAT3 Normal;
+    };
+
+    DWORD 'PTYP';
+    DWORD NrOfFaceTypeGroups;
+
+    struct FaceTypeGroup[NrOfFaceTypeGroups]
+    {
+      DWORD FaceType;                  //4   - Triangles
+                                       //??? - Triangle fan
+                                       //??? - Triangle strip
+                                       //??? - Quads
+                                       //??? - Quad strip
+    };
+
+    DWORD 'PCNT';
+    DWORD NrOfFaceGroups;
+
+    struct FaceGroup[NrOfFaceGroups]
+    {
+      DWORD NrOfIndexes;
+    };
+
+    DWORD 'PVTX';
+    DWORD TotalNrOfIndexes;
+
+    struct Face[TotalNrOfFaces]        //TotalNrOfFaces = TotalNrOfIndexes / 3
+    {
+      WORD Index1;
+      WORD Index2;
+      WORD Index3;
+    };
+
+    DWORD 'GNDX';
+    DWORD NrOfVertexGroups;
+
+    struct VertexGroup[NrOfVertexGroups]
+    {
+      BYTE MatrixGroup;
+    };
+
+    DWORD 'MTGC';
+    DWORD NrOfMatrixGroups;
+
+    struct MatrixGroup[NrOfMatrixGroups]
+    {
+      DWORD MatrixGroupSize;
+    };
+
+    DWORD 'MATS';
+    DWORD NrOfMatrixIndexes;
+
+    struct MatrixIndex[NrOfMatrixIndexes]
+    {
+      DWORD MatrixIndex;
+    };
+
+    DWORD MaterialId;
+    DWORD SelectionGroup;
+    DWORD SelectionFlags;              //0  - None
+                                       //#1 - ???
+                                       //#2 - ???
+                                       //#4 - Unselectable
+
+    FLOAT BoundsRadius;
+    FLOAT3 MinimumExtent;
+    FLOAT3 MaximumExtent;
+
+    DWORD NrOfExtents;
+
+    struct Extent[NrOfExtents]
+    {
+      FLOAT3 MinimumExtent;
+      FLOAT3 MaximumExtent;
+    };
+
+    DWORD 'UVAS';
+    DWORD NrOfTextureVertexGroups;
+
+    DWORD 'UVBS';
+    DWORD NrOfVertexTexturePositions;
+
+    struct VertexTexturePosition[NrOfVertexTexturePositions]
+    {
+      FLOAT2 TexturePosition;
+    };
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Geoset animations
+//+-----------------------------------------------------------------------------
+struct GeosetAnimationChunk
+{
+  DWORD 'GEOA';
+  DWORD ChunkSize;
+
+  struct GeosetAnimation[NrOfGeosetAnimations]
+  {
+    DWORD InclusiveSize;
+
+    FLOAT Alpha;
+    DWORD Flags;                       //#1 - DropShadow
+                                       //#2 - Color
+    FLOAT3 Color;
+
+    DWORD GeosetId;
+
+    {GeosetAlpha}
+    {GeosetColor}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Bones
+//+-----------------------------------------------------------------------------
+struct BoneChunk
+{
+  DWORD 'BONE';
+  DWORD ChunkSize;
+
+  struct Bone[NrOfBones]
+  {
+    Node;
+
+    DWORD GeosetId;
+    DWORD GeosetAnimationId;
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Lights
+//+-----------------------------------------------------------------------------
+struct LightChunk
+{
+  DWORD 'LITE';
+  DWORD ChunkSize;
+
+  struct Light[NrOfLights]
+  {
+    DWORD InclusiveSize;
+
+    Node;
+
+    DWORD Type;                        //0 - Omnidirectional
+                                       //1 - Directional
+                                       //2 - Ambient
+    DWORD AttenuationStart;
+    DWORD AttenuationEnd;
+    FLOAT3 Color;
+    FLOAT Intensity;
+    FLOAT3 AmbientColor;
+    FLOAT AmbientIntensity;
+
+    {LightVisibility}
+    {LightColor}
+    {LightIntensity}
+    {LightAmbientColor}
+    {LightAmbientIntensity}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Helpers
+//+-----------------------------------------------------------------------------
+struct HelperChunk
+{
+  DWORD 'HELP';
+  DWORD ChunkSize;
+
+  struct Helper[NrOfHelpers]
+  {
+    Node;
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Attachments
+//+-----------------------------------------------------------------------------
+struct AttachmentChunk
+{
+  DWORD 'ATCH';
+  DWORD ChunkSize;
+
+  struct Attachment[NrOfAttachments]
+  {
+    DWORD InclusiveSize;
+
+    Node;
+
+    CHAR[260] Path;
+    DWORD AttachmentId;                //First attachment - 0, second - 1 etc...
+
+    {AttachmentVisibility}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Pivot points
+//+-----------------------------------------------------------------------------
+struct PivotPointChunk
+{
+  DWORD 'PIVT';
+  DWORD ChunkSize;
+
+  struct PivotPoint[NrOfPivotPoints]   //NrOfPivotPoints = ChunkSize / 12
+  {
+    FLOAT3 Position;
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Particle emitters
+//+-----------------------------------------------------------------------------
+struct ParticleEmitterChunk
+{
+  DWORD 'PREM';
+  DWORD ChunkSize;
+
+  struct ParticleEmitter[NrOfParticleEmitters]
+  {
+    DWORD InclusiveSize;
+
+    Node;
+
+    FLOAT EmissionRate;
+    FLOAT Gravity;
+    FLOAT Longitude;
+    FLOAT Latitude;
+
+    CHAR[260] SpawnModelFileName;
+
+    FLOAT LifeSpan;
+    FLOAT InitialVelocity;
+
+    {ParticleEmitterVisibility}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Particle emitters 2
+//+-----------------------------------------------------------------------------
+struct ParticleEmitter2Chunk
+{
+  DWORD 'PRE2';
+  DWORD ChunkSize;
+
+  struct ParticleEmitter2[NrOfParticleEmitters2]
+  {
+    DWORD InclusiveSize;
+
+    Node;
+
+    FLOAT Speed;
+    FLOAT Variation;
+    FLOAT Latitude;
+    FLOAT Gravity;
+    FLOAT Lifespan;
+    FLOAT EmissionRate;
+    FLOAT Length;
+    FLOAT Width;
+
+    DWORD FilterMode;                  //0 - Blend
+                                       //1 - Additive
+                                       //2 - Modulate
+                                       //3 - Modulate2x
+                                       //4 - AlphaKey
+
+    DWORD Rows;
+    DWORD Columns;
+    DWORD HeadOrTail;                  //0 - Head
+                                       //1 - Tail
+                                       //2 - Both
+
+    FLOAT TailLength;
+    FLOAT Time;
+
+    FLOAT3[3] SegmentColor;
+    BYTE[3] SegmentAlpha;
+    FLOAT[3] SegmentScaling;
+
+    DWORD HeadIntervalStart
+    DWORD HeadIntervalEnd
+    DWORD HeadIntervalRepeat
+    DWORD HeadDecayIntervalStart
+    DWORD HeadDecayIntervalEnd
+    DWORD HeadDecayIntervalRepeat
+    DWORD TailIntervalStart
+    DWORD TailIntervalEnd
+    DWORD TailIntervalRepeat
+    DWORD TailDecayIntervalStart
+    DWORD TailDecayIntervalEnd
+    DWORD TailDecayIntervalRepeat
+
+    DWORD TextureId;
+    DWORD Squirt;                      //0 - No Squirt
+                                       //1 - Squirt
+    DWORD PriorityPlane;
+    DWORD ReplaceableId;
+
+    {ParticleEmitter2Visibility}
+    {ParticleEmitter2EmissionRate}
+    {ParticleEmitter2Width}
+    {ParticleEmitter2Length}
+    {ParticleEmitter2Speed}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Ribbon emitters
+//+-----------------------------------------------------------------------------
+struct RibbonEmitterChunk
+{
+  DWORD 'RIBB';
+  DWORD ChunkSize;
+
+  struct RibbonEmitter[NrOfRibbonEmitters]
+  {
+    DWORD InclusiveSize;
+
+    Node;
+
+    FLOAT HeightAbove;
+    FLOAT HeightBelow;
+    FLOAT Alpha;
+    FLOAT3 Color;
+    FLOAT LifeSpan;
+
+    DWORD TextureSlot;
+
+    DWORD EmissionRate;
+    DWORD Rows;
+    DWORD Columns;
+    DWORD MaterialId;
+    FLOAT Gravity;
+
+    {RibbonEmitterVisibility}
+    {RibbonEmitterHeightAbove}
+    {RibbonEmitterHeightBelow}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Tracks
+//+-----------------------------------------------------------------------------
+struct Tracks
+{
+  DWORD 'KEVT';
+  DWORD NrOfTracks;
+
+  DWORD GlobalSequenceId;
+
+  struct Track[NrOfTracks]
+  {
+    DWORD Time;
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Event objects
+//+-----------------------------------------------------------------------------
+struct EventObjectChunk
+{
+  DWORD 'EVTS';
+  DWORD ChunkSize;
+
+  struct EventObject[NrOfEventObjects]
+  {
+    Node;
+
+    {Tracks}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Cameras
+//+-----------------------------------------------------------------------------
+struct CameraChunk
+{
+  DWORD 'CAMS';
+  DWORD ChunkSize;
+
+  struct Camera[NrOfCameras]
+  {
+    DWORD InclusiveSize;
+
+    CHAR[80] Name;
+
+    FLOAT3 Position;
+    DWORD FieldOfView;
+    DWORD FarClippingPlane;
+    DWORD NearClippingPlane;
+    FLOAT3 TargetPosition;
+
+    {CameraPositionTranslation}
+    {CameraTargetTranslation}
+  };
+};
+
+
+//+-----------------------------------------------------------------------------
+//| Collision shapes
+//+-----------------------------------------------------------------------------
+struct CollisionShapeChunk
+{
+  DWORD 'CLID';
+  DWORD ChunkSize;
+
+  struct CollisionShape[NrOfCollisionShapes]
+  {
+    Node;
+
+    DWORD Type;                        //0 - Box
+                                       //1 - ???
+                                       //2 - Sphere
+
+                                       //NrOfVertices = 2 (if Type == 0)
+    struct Vertex[NrOfVertices]        //NrOfVertices = 1 (if Type == 2)
+    {
+      FLOAT3 Position;
+    };
+
+    if(Type == 2)
+    {
+      FLOAT BoundsRadius;
+    }
+  };
+};
