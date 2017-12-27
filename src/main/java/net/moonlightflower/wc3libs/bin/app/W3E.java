@@ -12,6 +12,7 @@ import net.moonlightflower.wc3libs.misc.Raster;
 import net.moonlightflower.wc3libs.misc.Size;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -46,7 +47,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		return _tileset;
 	}
 	
-	int _customTilesetFlag = 0;
+	private int _customTilesetFlag = 0;
 	
 	public int getCustomTilesetUsedFlag() {
 		return _customTilesetFlag;
@@ -248,8 +249,8 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			
 			byte cliff = stream.readByte();
 			
-			setCliffTex(cliff & 0xF);
-			setCliffLayer((cliff >> 4) & 0xF);
+			setCliffTex((cliff >> 4) & 0xF);
+			setCliffLayer(cliff & 0xF);
 		}
 		
 		private void write_0xB(@Nonnull Wc3BinOutputStream stream) {
@@ -307,21 +308,22 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 	
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
-		enum Enum {
+		public enum Enum {
 			AUTO,
 			W3E_0xB,
 		}
 
-		static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3E_0xB = new EncodingFormat(Enum.W3E_0xB, 0xB);
-		
+
+		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
 		
-		private EncodingFormat(Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 			
 			_map.put(version, this);
@@ -408,13 +410,15 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		int version = stream.readInt32();
 		
 		stream.rewind();
-		
-		read(stream, EncodingFormat.valueOf(version));
+
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
 	}
 	
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws IOException {
-		if (format == null) throw new IOException("no format");
-		
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -444,7 +448,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 
@@ -468,7 +472,11 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	public W3E(@Nonnull Bounds bounds) {
 		setBounds(bounds, false, false);
 	}
-	
+
+	public W3E(@Nonnull Wc3BinInputStream stream) throws IOException {
+		read(stream);
+	}
+
 	public W3E(@Nonnull File file) throws IOException {
 		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 		

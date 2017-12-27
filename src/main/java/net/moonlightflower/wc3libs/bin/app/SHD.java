@@ -21,10 +21,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * shadow map file file for wrapping war3map.shd
+ * shadow map file file for wrapping war3map.SHD
  */
 public class SHD {
-    public final static File GAME_PATH = new File("war3map.shd");
+    public final static File GAME_PATH = new File("war3map.SHD");
 
     private ShadowMap _shadowMap;
 
@@ -116,7 +116,7 @@ public class SHD {
         read(stream, EncodingFormat.AUTO);
     }
 
-    private void write(@Nonnull Wc3BinOutputStream stream) {
+    public void write(@Nonnull Wc3BinOutputStream stream) {
         write(stream, EncodingFormat.AUTO);
     }
 
@@ -128,7 +128,7 @@ public class SHD {
         inStream.close();
     }
 
-    private void write(@Nonnull File file) throws IOException {
+    public void write(@Nonnull File file) throws IOException {
         Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 
         write(outStream);

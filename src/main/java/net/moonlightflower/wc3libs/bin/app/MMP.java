@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.*;
 
 public class MMP {
-	public final static File GAME_PATH = new File("war3map.mmp");
+	public final static File GAME_PATH = new File("war3map.MMP");
 	
 	public static class Icon {
 		public enum IconType {
@@ -373,10 +373,14 @@ public class MMP {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
-	
+
+	public MMP(@Nonnull Wc3BinInputStream stream) throws Exception {
+		read(stream);
+	}
+
 	public MMP() {
 	}
 	

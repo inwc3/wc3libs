@@ -125,8 +125,8 @@ public class WPM extends Raster<FlagsInt> {
 		stream.writeInt32(width);
 		stream.writeInt32(height);
 		
-		int cellsCount = width * height * 16;
-		
+		int cellsCount = width * height;
+
 		for (int i = 0; i < cellsCount; i++) {
 			stream.writeUByte(pathMap.get(i));
 		}
@@ -146,7 +146,7 @@ public class WPM extends Raster<FlagsInt> {
 		pathMap.setBounds(new Bounds(new Size(width, height), new Coords2DI(0, 0)), false, false);
 
 		int cellsCount = width * height;
-		
+
 		for (int i = 0; i < cellsCount; i++) {
 			Coords2DI coords = pathMap.indexToCoords(i);
 
@@ -197,12 +197,12 @@ public class WPM extends Raster<FlagsInt> {
 	private void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		read(stream, EncodingFormat.AUTO);
 	}
-	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 
-	private void write(@Nonnull File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		Wc3BinOutputStream inStream = new Wc3BinOutputStream(file);
 
 		write(inStream);
