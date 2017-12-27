@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class Camera {
+public class Camera extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -380,8 +380,13 @@ public class Camera {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         stream.writeBytes(Arrays.copyOf(_name.getBytes(), 60));
 
         stream.writeFloat32(_pos.getX());
@@ -408,6 +413,13 @@ public class Camera {
         for (TargetTranslationTrackChunk targetTranslationTrackChunk : getTargetTranslationTrackChunks()) {
             targetTranslationTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public Camera(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

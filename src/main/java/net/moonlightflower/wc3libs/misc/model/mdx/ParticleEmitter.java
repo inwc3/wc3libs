@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class ParticleEmitter {
+public class ParticleEmitter extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -775,8 +775,13 @@ public class ParticleEmitter {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         _node.write(stream);
         stream.writeFloat32(_emissionRate);
         stream.writeFloat32(_gravity);
@@ -810,6 +815,13 @@ public class ParticleEmitter {
         for (VisibilityTrackChunk visibilityTrackChunk : getVisibilityTrackChunks()) {
             visibilityTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public ParticleEmitter(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

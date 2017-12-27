@@ -7,7 +7,7 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class Layer {
+public class Layer extends MDXObject {
     private long _inclusiveSive;
 
     public long getInclusiveSize() {
@@ -299,8 +299,13 @@ public class Layer {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinOutputStream.StreamException {
-        stream.writeUInt32(_inclusiveSive);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSive);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         stream.writeUInt32(_filterMode);
         stream.writeUInt32(_shadingFlags);
         stream.writeUInt32(_textureId);
@@ -314,6 +319,13 @@ public class Layer {
         for (AlphaTrackChunk alphaTrackChunk : getAlphaTrackChunks()) {
             alphaTrackChunk.write(stream);
         }
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinOutputStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public Layer(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

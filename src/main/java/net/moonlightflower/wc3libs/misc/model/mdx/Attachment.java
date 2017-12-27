@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class Attachment {
+public class Attachment extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -133,8 +133,13 @@ public class Attachment {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         _node.write(stream);
         stream.writeBytes(Arrays.copyOf(_path.getBytes(), 260));
         stream.writeUInt32(_attachmentId);
@@ -142,6 +147,13 @@ public class Attachment {
         for (VisibilityTrackChunk visibilityTrackChunk : getVisibilityTrackChunks()) {
             visibilityTrackChunk.write(stream);
         }
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public Attachment(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

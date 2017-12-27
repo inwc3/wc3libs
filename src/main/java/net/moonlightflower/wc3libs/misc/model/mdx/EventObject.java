@@ -7,7 +7,7 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 
-public class EventObject {
+public class EventObject extends MDXObject {
     private Node _node;
 
     public Node getNode() {
@@ -20,10 +20,16 @@ public class EventObject {
         return _trackChunk;
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         _node.write(stream);
 
         _trackChunk.write(stream, MDX.EncodingFormat.AUTO);
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public EventObject(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

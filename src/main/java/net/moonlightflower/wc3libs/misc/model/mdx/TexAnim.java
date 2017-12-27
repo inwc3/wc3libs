@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class TexAnim {
+public class TexAnim extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -354,8 +354,12 @@ public class TexAnim {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
 
         for (Chunk chunk : getChunks()) {
             chunk.write(stream);
@@ -369,6 +373,13 @@ public class TexAnim {
         for (ScalingTrackChunk scalingTrackChunk : getScalingTrackChunks()) {
             scalingTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public TexAnim(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

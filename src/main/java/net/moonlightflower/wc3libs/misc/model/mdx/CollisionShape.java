@@ -3,12 +3,13 @@ package net.moonlightflower.wc3libs.misc.model.mdx;
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollisionShape {
+public class CollisionShape extends MDXObject {
     private Node _node;
 
     public Node getNode() {
@@ -46,13 +47,19 @@ public class CollisionShape {
         return _radius;
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         _node.write(stream);
         stream.writeUInt32(_type.ordinal());
 
         for (Vertex vertex : getVertices()) {
             vertex.write(stream);
         }
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public CollisionShape(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

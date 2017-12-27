@@ -8,7 +8,7 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 
-public abstract class Chunk {
+public abstract class Chunk extends MDXObject {
     public abstract Id getToken();
 
     public class Header {
@@ -67,6 +67,6 @@ public abstract class Chunk {
         }
     }
 
-    public abstract void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException;
-    public abstract void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException;
+    //public abstract void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException;
+    //public abstract void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException;
 }

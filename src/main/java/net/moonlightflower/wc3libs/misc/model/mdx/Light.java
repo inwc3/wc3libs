@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Light {
+public class Light extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -798,8 +798,13 @@ public class Light {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         _node.write(stream);
 
         stream.writeUInt32(_type.ordinal());
@@ -843,6 +848,13 @@ public class Light {
         for (VisibilityTrackChunk visibilityTrackChunk : getVisibilityTrackChunks()) {
             visibilityTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public Light(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

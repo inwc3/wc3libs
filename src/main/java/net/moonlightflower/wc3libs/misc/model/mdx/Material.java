@@ -5,13 +5,14 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class Material {
+public class Material extends MDXObject {
     private long _inclusiveSive;
 
     public long getInclusiveSize() {
@@ -42,8 +43,13 @@ public class Material {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
-        stream.writeUInt32(_inclusiveSive);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSive);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         stream.writeUInt32(_priorityPlane);
         stream.writeUInt32(_flags);
 
@@ -54,6 +60,13 @@ public class Material {
         for (Layer layer : getLayers()) {
             layer.write(stream);
         }
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public final Id LAYERS_TOKEN = Id.valueOf("LAYS");

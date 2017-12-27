@@ -4,12 +4,13 @@ import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class Sound {
+public class Sound extends MDXObject {
     private String _fileName;
 
     public String getFileName() {
@@ -34,11 +35,17 @@ public class Sound {
         return _flags;
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         stream.writeBytes(Arrays.copyOf(_fileName.getBytes(StandardCharsets.US_ASCII), 260));
         stream.writeFloat32(_volume);
         stream.writeFloat32(_pitch);
         stream.writeUInt32(_flags);
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public Sound(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

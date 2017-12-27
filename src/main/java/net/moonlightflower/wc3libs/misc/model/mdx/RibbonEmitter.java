@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RibbonEmitter {
+public class RibbonEmitter extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -703,8 +703,13 @@ public class RibbonEmitter {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         _node.write(stream);
         stream.writeFloat32(_heightAbove);
         stream.writeFloat32(_heightBelow);
@@ -746,6 +751,13 @@ public class RibbonEmitter {
         for (TextureSlotTrackChunk textureSlotTrackChunk : getTextureSlotTrackChunks()) {
             textureSlotTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public RibbonEmitter(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

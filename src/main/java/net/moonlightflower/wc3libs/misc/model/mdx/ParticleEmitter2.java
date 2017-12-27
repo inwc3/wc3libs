@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParticleEmitter2 {
+public class ParticleEmitter2 extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -1066,8 +1066,13 @@ public class ParticleEmitter2 {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         _node.write(stream);
         stream.writeFloat32(_speed);
         stream.writeFloat32(_variation);
@@ -1156,6 +1161,13 @@ public class ParticleEmitter2 {
         for (WidthTrackChunk widthTrackChunk : getWidthTrackChunks()) {
             widthTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public ParticleEmitter2(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

@@ -4,18 +4,25 @@ import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 
-public class MatrixIndex {
+public class MatrixIndex extends MDXObject {
     private long _index;
 
     public long getIndex() {
         return _index;
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         stream.writeUInt32(_index);
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinInputStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public MatrixIndex(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

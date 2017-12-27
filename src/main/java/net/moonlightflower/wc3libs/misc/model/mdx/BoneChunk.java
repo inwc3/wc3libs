@@ -45,7 +45,6 @@ public class BoneChunk extends Chunk {
         Header header = new Header();
 
         header.write(stream);
-
         for (Bone bone : getBones()) {
             bone.write(stream);
         }
@@ -75,7 +74,7 @@ public class BoneChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public BoneChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

@@ -7,17 +7,11 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 
-public abstract class Track<Type> {
+public abstract class Track {
     private int _frame;
 
     public int getFrame() {
         return _frame;
-    }
-
-    protected Type _data;
-
-    public Type getData() {
-        return _data;
     }
 
     protected abstract void readSpec(@Nonnull Wc3BinInputStream stream, @Nonnull TrackChunk.InterpolationType interpolationType) throws BinStream.StreamException;

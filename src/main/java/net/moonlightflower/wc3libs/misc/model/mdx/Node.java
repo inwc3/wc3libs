@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class Node {
+public class Node extends MDXObject {
     private long _inclusiveSize;
 
     public long getInclusiveSize() {
@@ -412,8 +412,13 @@ public class Node {
         }
     }
 
-    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        stream.writeUInt32(_inclusiveSize);
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
+        //stream.writeUInt32(_inclusiveSize);
+        SizeWriter sizeWriter = new SizeWriter();
+
+        sizeWriter.write(stream);
+
         stream.writeBytes(Arrays.copyOf(_name.getBytes(), 80));
         stream.writeUInt32(_objectId);
         stream.writeUInt32(_parentId);
@@ -431,6 +436,13 @@ public class Node {
         for (ScalingTrackChunk scalingTrackChunk : getScalingTrackChunks()) {
             scalingTrackChunk.write(stream);
         }*/
+
+        sizeWriter.rewrite();
+    }
+
+    @Override
+    public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public Node(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
