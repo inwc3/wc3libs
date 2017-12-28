@@ -47,6 +47,44 @@ public abstract class Wc3LibTest {
         return paths;
     }
 
+    public void readWriteCycle(@Nonnull Object testObj, @Nonnull File file) throws IOException {
+        Wc3BinInputStream inStream = new Wc3BinInputStream(file);
+
+        byte[] bytes = inStream.readBytes((int) inStream.size());
+
+        inStream.rewind();
+
+        try {
+            Method readMethod = testObj.getClass().getMethod("read", Wc3BinInputStream.class);
+
+            readMethod.invoke(testObj, inStream);
+
+            ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+
+            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream);
+
+            try {
+                Method writeMethod = testObj.getClass().getMethod("write", Wc3BinOutputStream.class);
+
+                writeMethod.invoke(testObj, outStream);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } finally {
+                outStream.close();
+            }
+
+            /*FileOutputStream fp = new FileOutputStream("E:\\work\\bla.mdx");
+
+            fp.write(outByteStream.toByteArray());
+
+            fp.close();*/
+
+            Assert.assertEquals(outByteStream.toByteArray(), bytes);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void readWriteCycle(@Nonnull Class<?> testClass, @Nonnull File file) throws IOException {
         Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 
@@ -64,9 +102,9 @@ public abstract class Wc3LibTest {
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream);
 
             try {
-                Method method = testClass.getMethod("write", Wc3BinOutputStream.class);
+                Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class);
 
-                method.invoke(testObj, outStream);
+                writeMethod.invoke(testObj, outStream);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             } finally {

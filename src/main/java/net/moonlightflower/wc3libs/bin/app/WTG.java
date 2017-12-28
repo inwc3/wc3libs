@@ -1710,7 +1710,7 @@ public class WTG {
 					}
 				} else {
 					Func func = addFunc(key.toString());
-					
+
 					for (int i = argsOffset; i < vals.length; i++) {
 						if (vals[i].equals("nothing")) continue;
 						
@@ -1719,6 +1719,12 @@ public class WTG {
 				}
 			}
 		}
+	}
+
+	public void addGameTriggerData() throws Exception {
+		TXT txt = new TXT(MpqPort.getDefaultImpl().getGameFiles(new File("UI\\TriggerData.txt")).getInputStream(new File("UI\\TriggerData.txt")));
+
+		addTriggerData(txt);
 	}
 	
 	public void print(@Nonnull PrintStream outStream) {
@@ -1923,17 +1929,7 @@ public class WTG {
 		read(reader);
 	}
 
-	private boolean _hasTriggerData = false;
-
 	private void read(@Nonnull Reader reader) throws Exception {
-		if (!_hasTriggerData) {
-			TXT txt = new TXT(MpqPort.getDefaultImpl().getGameFiles(new File("UI\\TriggerData.txt")).getInputStream(new File("UI\\TriggerData.txt")));
-
-			addTriggerData(txt);
-
-			_hasTriggerData = true;
-		}
-
 		switch (reader.getFormat().toEnum()) {
 		case WTG_0x4: {
 			read_0x4(reader);
@@ -1953,7 +1949,7 @@ public class WTG {
 		}
 	}
 
-	public class Reader {
+	public static class Reader {
 		private final Wc3BinInputStream _stream;
 
 		@Nonnull
@@ -1990,7 +1986,7 @@ public class WTG {
 		}
 	}
 
-	public class Writer {
+	public static class Writer {
 		private final Wc3BinOutputStream _stream;
 
 		@Nonnull
@@ -2051,7 +2047,7 @@ public class WTG {
 		write(new Writer(stream));
 	}
 
-	private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
+	public void read(@Nonnull Wc3BinInputStream stream) throws Exception {
 		read(new Reader(stream));
 	}
 
