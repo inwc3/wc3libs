@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class Wc3BinOutputStream extends BinOutputStream {
     public void writeUByte(int val) {
@@ -92,7 +93,10 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeChar(val != null ? val.getVal() : '\0');
     }
 
-    public byte[] stringToByteArray(@Nonnull String val) {
+    @Nullable
+    public byte[] stringToByteArray(@Nullable String val) {
+        if (val == null) return null;
+
         return val.getBytes(StandardCharsets.UTF_8);
     }
 

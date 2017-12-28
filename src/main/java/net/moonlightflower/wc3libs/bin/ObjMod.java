@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -23,6 +24,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
+import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
@@ -47,7 +49,7 @@ import javax.annotation.Nullable;
 /**
  * base class for object modification files
  */
-public class ObjMod {
+public abstract class ObjMod {
 	public static class Obj {
 		public static class Field {
 			public enum ValType {
@@ -275,6 +277,13 @@ public class ObjMod {
 		public ObjId getBaseId() {
 			return _baseId;
 		}
+
+		private ObjId _newId;
+
+		@Nullable
+		public ObjId getNewId() {
+			return _newId;
+		}
 		
 		@Override
 		public String toString() {
@@ -292,6 +301,15 @@ public class ObjMod {
 		}
 		
 		private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+			_baseId = ObjId.valueOf(stream.readId("baseId"));
+			_newId = ((Function<Id, ObjId>) id -> {
+				if (id.equals(Id.valueOf("\0\0\0\0"))) return null;
+
+				return ObjId.valueOf(id);
+			}).apply(stream.readId("newId"));
+
+			_id = (_newId == null) ? _baseId : _newId;
+
 			int modsAmount = stream.readInt32("modsAmount");
 			
 			for (int i = 0; i < modsAmount; i++) {
@@ -343,7 +361,16 @@ public class ObjMod {
 			}
 		}
 
-		private void read_0x2(@Nullable Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+		private void read_0x2(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+			_baseId = ObjId.valueOf(stream.readId("baseId"));
+			_newId = ((Function<Id, ObjId>) id -> {
+				if (id.equals(Id.valueOf("\0\0\0\0"))) return null;
+
+				return ObjId.valueOf(id);
+			}).apply(stream.readId("newId"));
+
+			_id = (_newId == null) ? _baseId : _newId;
+
 			int modsAmount = stream.readInt32("modsAmount");
 
 			for (int i = 0; i < modsAmount; i++) {				
@@ -395,7 +422,7 @@ public class ObjMod {
 		
 		private void write_0x1(@Nonnull Wc3BinOutputStream stream, boolean extended) {
 			stream.writeId(getBaseId());
-			stream.writeId(getId());
+			stream.writeId(getNewId());
 			
 			int modsAmount = 0;
 			
@@ -467,7 +494,7 @@ public class ObjMod {
 		
 		private void write_0x2(@Nonnull Wc3BinOutputStream stream, boolean extended) {
 			stream.writeId(getBaseId());
-			stream.writeId(getId());
+			stream.writeId(getNewId());
 
 			int modsAmount = 0;
 
@@ -582,8 +609,8 @@ public class ObjMod {
 		}
 	}
 	
-	protected Map<ObjId, Obj> _objs = new LinkedHashMap<>();
-	private List<Obj> _objsList = new ArrayList<>();
+	protected final Map<ObjId, Obj> _objs = new LinkedHashMap<>();
+	private final List<Obj> _objsList = new ArrayList<>();
 
 	@Nonnull
 	public Map<ObjId, ? extends Obj> getObjs() {
@@ -602,7 +629,7 @@ public class ObjMod {
 		for (int i = 0; i < getObjsList().size(); i++) {
 			Obj obj = getObjsList().get(i);
 			
-			if (obj.getBaseId() == null) {
+			if (obj.getNewId() == null) {
 				ret.add(obj);
 			}
 		}
@@ -617,7 +644,7 @@ public class ObjMod {
 		for (int i = 0; i < getObjsList().size(); i++) {
 			Obj obj = getObjsList().get(i);
 			
-			if (obj.getBaseId() != null) {
+			if (obj.getNewId() != null) {
 				ret.add(obj);
 			}
 		}
@@ -674,13 +701,7 @@ public class ObjMod {
 	}
 
 	@Nonnull
-	public ObjMod copy() {
-		ObjMod other = new ObjMod();
-		
-		other.merge(this);
-		
-		return other;
-	}
+	public abstract ObjMod copy();
 	
 	public void print() {
 		for (Obj obj : getObjs().values()) {
@@ -951,7 +972,7 @@ public class ObjMod {
 		return pack;
 	}
 	
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
 			OBJ_0x1,
@@ -963,12 +984,13 @@ public class ObjMod {
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat OBJ_0x1 = new EncodingFormat(Enum.OBJ_0x1, 0x1);
 		public final static EncodingFormat OBJ_0x2 = new EncodingFormat(Enum.OBJ_0x2, 0x2);
-		
+
+		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
-		
-		private EncodingFormat(Enum enumVal, int version) {
+
+		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 
 			_map.put(version, this);
@@ -1015,12 +1037,7 @@ public class ObjMod {
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 
 		for (int i = 0; i < origObjsAmount; i++) {
-			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
-			ObjId id = ObjId.valueOf(stream.readId("objId (0)")); //not used
-			
-			Obj obj = new Obj(baseId, null);
-			
-			obj.read(stream, EncodingFormat.OBJ_0x2, extended);
+			Obj obj = new Obj(stream, EncodingFormat.OBJ_0x2, extended);
 			
 			addObj(obj);
 		}
@@ -1028,12 +1045,7 @@ public class ObjMod {
 		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
-			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
-			ObjId id = ObjId.valueOf(stream.readId("objId"));
-			
-			Obj obj = new Obj(id, baseId);
-			
-			obj.read(stream, EncodingFormat.OBJ_0x2, extended);
+			Obj obj = new Obj(stream, EncodingFormat.OBJ_0x2, extended);
 		
 			addObj(obj);
 		}
@@ -1043,7 +1055,7 @@ public class ObjMod {
 		stream.writeInt32(EncodingFormat.OBJ_0x1.getVersion());
 		
 		stream.writeInt32(getOrigObjs().size());
-		
+
 		for (Obj obj : getOrigObjs()) {
 			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
 		}
@@ -1080,7 +1092,11 @@ public class ObjMod {
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version), extended);
+		EncodingFormat format = EncodingFormat.valueOf(version);
+
+		if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format, extended);
 	}
 	
 	public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
@@ -1129,6 +1145,10 @@ public class ObjMod {
 
 	public void write(@Nonnull Wc3BinOutputStream stream, boolean extended) {
 		write(stream, EncodingFormat.AUTO, extended);
+	}
+
+	public ObjMod(@Nonnull Wc3BinInputStream stream, boolean extended) throws IOException {
+		read(stream, extended);
 	}
 
 	public ObjMod(@Nonnull File file, boolean extended) throws IOException {

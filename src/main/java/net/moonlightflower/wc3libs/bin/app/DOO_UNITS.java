@@ -1,9 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinInputStream;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -94,14 +91,14 @@ public class DOO_UNITS {
 			_ownerIndex = val;
 		}
 		
-		private int _unknown = 0;
+		private int _unknownA = 0;
 		
-		public int getUnknown() {
-			return _unknown;
+		public int getUnknownA() {
+			return _unknownA;
 		}
 		
-		public void setUnknown(int val) {
-			_unknown = val;
+		public void setUnknownA(int val) {
+			_unknownA = val;
 		}
 		
 		private int _unknownB = 0;
@@ -167,8 +164,8 @@ public class DOO_UNITS {
 				}
 				
 				private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-					setTypeId(ObjId.valueOf(stream.readId()));
-					setChance(stream.readInt32());
+					setTypeId(ObjId.valueOf(stream.readId("typeId")));
+					setChance(stream.readInt32("chance"));
 				}
 				
 				private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -197,7 +194,7 @@ public class DOO_UNITS {
 					}
 				}
 				
-				public Item(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
+				public Item(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 					read(stream, format);
 				}
 				
@@ -207,10 +204,11 @@ public class DOO_UNITS {
 			
 			private List<Item> _items = new ArrayList<>();
 			
-			private void addItem(Item val) {
+			private void addItem(@Nonnull Item val) {
 				_items.add(val);
 			}
-			
+
+			@Nonnull
 			public Item addItem() {
 				Item item = new Item();
 				
@@ -220,7 +218,7 @@ public class DOO_UNITS {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				int itemsCount = stream.readInt32();
+				int itemsCount = stream.readInt32("itemsCount");
 				
 				for (int i = 1; i <= itemsCount; i++) {
 					addItem(new Item(stream, EncodingFormat.DOO_0x8));
@@ -266,10 +264,11 @@ public class DOO_UNITS {
 		
 		private List<LootSet> _lootSets = new ArrayList<>();
 		
-		private void addLootSet(LootSet val) {
+		private void addLootSet(@Nonnull LootSet val) {
 			_lootSets.add(val);
 		}
-		
+
+		@Nonnull
 		public LootSet addLootSet() {
 			LootSet set = new LootSet();
 			
@@ -360,8 +359,8 @@ public class DOO_UNITS {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				setSlot(stream.readInt32());
-				setTypeId(ObjId.valueOf(stream.readId()));
+				setSlot(stream.readInt32("slot"));
+				setTypeId(ObjId.valueOf(stream.readId("typeId")));
 			}
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -400,10 +399,11 @@ public class DOO_UNITS {
 		
 		private List<InvItem> _invItems = new ArrayList<>();
 		
-		private void addInvItem(InvItem val) {
+		private void addInvItem(@Nonnull InvItem val) {
 			_invItems.add(val);
 		}
-		
+
+		@Nonnull
 		public InvItem addInvItem() {
 			InvItem item = new InvItem();
 			
@@ -447,9 +447,9 @@ public class DOO_UNITS {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				setTypeId(ObjId.valueOf(stream.readId()));
-				setAutoCast(stream.readInt32());
-				setLevel(stream.readInt32());
+				setTypeId(ObjId.valueOf(stream.readId("typeId")));
+				setAutoCast(stream.readInt32("autoCast"));
+				setLevel(stream.readInt32("level"));
 			}
 
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -489,10 +489,11 @@ public class DOO_UNITS {
 		
 		private List<AbilMod> _abilMods = new ArrayList<>();
 		
-		private void addAbilMod(AbilMod val) {
+		private void addAbilMod(@Nonnull AbilMod val) {
 			_abilMods.add(val);
 		}
-		
+
+		@Nonnull
 		public AbilMod addAbilMod() {
 			AbilMod abil = new AbilMod();
 			
@@ -580,8 +581,8 @@ public class DOO_UNITS {
 			}
 
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				setTypeId(ObjId.valueOf(stream.readId()));
-				setChance(stream.readInt32());
+				setTypeId(ObjId.valueOf(stream.readId("typeId")));
+				setChance(stream.readInt32("chance"));
 			}
 			
 			private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -663,53 +664,53 @@ public class DOO_UNITS {
 		}
 
 		private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setTypeId(ObjId.valueOf(stream.readId()));
+			setTypeId(ObjId.valueOf(stream.readId("typeId")));
 			
-			setVariation(stream.readInt32());
+			setVariation(stream.readInt32("variation"));
 			
-			setPos(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
+			setPos(new Coords3DF(stream.readFloat32("posX"), stream.readFloat32("posY"), stream.readFloat32("posZ")));
 			
-			setAngle(stream.readFloat32());
+			setAngle(stream.readFloat32("angle"));
 			
-			setScale(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
+			setScale(new Coords3DF(stream.readFloat32("scaleX"), stream.readFloat32("scaleY"), stream.readFloat32("scaleZ")));
 			
-			setFlags(stream.readByte());
-			setOwnerIndex(stream.readInt32());
-			setUnknown(stream.readByte());
-			setUnknownB(stream.readByte());
+			setFlags(stream.readByte("flags"));
+			setOwnerIndex(stream.readInt32("ownerIndex"));
+			setUnknownA(stream.readByte("unknownA"));
+			setUnknownB(stream.readByte("unknownB"));
 			
-			setLifePerc(stream.readInt32());
-			setManaPerc(stream.readInt32());
+			setLifePerc(stream.readInt32("lifePerc"));
+			setManaPerc(stream.readInt32("manaPerc"));
 			
-			setItemTablePtr(stream.readInt32());
+			setItemTablePtr(stream.readInt32("itemTablePtr"));
 
-			int lootsCount = stream.readInt32();
+			int lootsCount = stream.readInt32("lootsCount");
 			
 			for (int i = 0; i < lootsCount; i++) {
 				addLootSet(new LootSet(stream, EncodingFormat.DOO_0x8));
 			}
 			
-			setResourcesAmount(stream.readInt32());
+			setResourcesAmount(stream.readInt32("resourcesAmount"));
 			
-			setTargetAcquisition(stream.readFloat32());
+			setTargetAcquisition(stream.readFloat32("targetAcquisition"));
 			
-			setHeroLevel(stream.readInt32());
+			setHeroLevel(stream.readInt32("heroLevel"));
 			
-			setHeroAttributes(stream.readInt32(), stream.readInt32(), stream.readInt32());
+			setHeroAttributes(stream.readInt32("heroStr"), stream.readInt32("heroAgi"), stream.readInt32("heroInt"));
 			
-			int invItemsCount = stream.readInt32();
+			int invItemsCount = stream.readInt32("invItemsCount");
 			
 			for (int i = 0; i < invItemsCount; i++) {
 				addInvItem(new InvItem(stream, EncodingFormat.DOO_0x8));
 			}
 			
-			int abilityModsCount = stream.readInt32();
+			int abilModsCount = stream.readInt32("abilModsCount");
 			
-			for (int i = 0; i < abilityModsCount; i++) {
+			for (int i = 0; i < abilModsCount; i++) {
 				addAbilMod(new AbilMod(stream, EncodingFormat.DOO_0x8));
 			}
 			
-			int randFlag = stream.readInt32();
+			int randFlag = stream.readInt32("randFlag");
 			
 			setRandFlag(randFlag);
 			
@@ -744,9 +745,9 @@ public class DOO_UNITS {
 			}
 			}
 			
-			setCustomColor(stream.readInt32());
-			setWaygateTargetRectIndex(stream.readInt32());
-			setEditorId(stream.readInt32());
+			setCustomColor(stream.readInt32("customColor"));
+			setWaygateTargetRectIndex(stream.readInt32("waygateTargetRectIndex"));
+			setEditorId(stream.readInt32("editorId"));
 		}
 
 		private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -770,7 +771,7 @@ public class DOO_UNITS {
 			
 			stream.writeUByte(getFlags());
 			stream.writeInt32(getOwnerIndex());
-			stream.writeUByte(getUnknown());
+			stream.writeUByte(getUnknownA());
 			stream.writeUByte(getUnknownB());
 			
 			stream.writeInt32(getLifePerc());
@@ -821,8 +822,6 @@ public class DOO_UNITS {
 				stream.writeByte(rand1);
 				stream.writeByte(rand2);
 				stream.writeByte(rand3);
-				
-				stream.writeInt32(getRandLevel());
 				
 				stream.writeUByte(getRandClass());
 				
@@ -905,10 +904,10 @@ public class DOO_UNITS {
 			DOO_0x8,
 		}
 
+		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
-
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 		@Nullable
 		public static EncodingFormat valueOf(int version) {
@@ -927,35 +926,35 @@ public class DOO_UNITS {
 		
 		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
 		
-		stream.writeInt32(0xB);
+		stream.writeInt32(0xB); //subVersion
 		
 		stream.writeInt32(_objs.size());
-		
+
 		for (Obj obj : _objs) {
 			obj.write(stream, EncodingFormat.DOO_0x8);
 		}
 	}
 
 	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		Id startToken = stream.readId();
+		Id startToken = stream.readId("startToken");
 		
-		int version = stream.readInt32(); //0xB
+		int version = stream.readInt32("version"); //0xB
 		
 		Wc3BinInputStream.checkFormatVer("dooUnitsMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
 		
-		int subVersion = stream.readInt32();
+		int subVersion = stream.readInt32("subVersion"); //usually 0xB
 		
-		int objsCount = stream.readInt32();
-		
+		int objsCount = stream.readInt32("objsCount");
+
 		for (int i = 0; i < objsCount; i++) {
 			addObj(new Obj(stream, EncodingFormat.DOO_0x8));
 		}
 	}
 
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		Id startToken = stream.readId();
+		Id startToken = stream.readId("startToken");
 		
-		int version = stream.readInt32();
+		int version = stream.readInt32("version");
 		
 		stream.rewind();
 
@@ -996,7 +995,7 @@ public class DOO_UNITS {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
@@ -1008,14 +1007,18 @@ public class DOO_UNITS {
 		inStream.close();
 	}
 
-	private void write(@Nonnull File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 
 		write(outStream);
 
 		outStream.close();
 	}
-	
+
+	public DOO_UNITS(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
+		read(stream);
+	}
+
 	public DOO_UNITS() {
 		
 	}

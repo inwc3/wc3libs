@@ -142,7 +142,7 @@ public class ObjMerger {
 
             addProfile(pack.getProfile());
 
-            ObjMod objMod = _objMods.computeIfAbsent(inFile, k -> new ObjMod());
+            ObjMod objMod = _objMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
 
             objMod.merge(pack.getObjMod());
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package wc3libs.bin.app;
 import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.app.W3I;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -74,6 +75,8 @@ public class W3ITest extends Wc3LibTest {
 
     @Test()
     public void readWriteCycle() throws IOException {
+        readWriteCycle(W3I.class, getFile("wc3data/W3I/war3map.w3i"));
+
         List<Path> w3iFile = getFiles("wc3data/Infos/");
 
         w3iFile.forEach((Path p) -> {

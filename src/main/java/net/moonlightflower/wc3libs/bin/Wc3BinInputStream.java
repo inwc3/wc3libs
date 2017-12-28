@@ -16,6 +16,22 @@ import java.nio.charset.StandardCharsets;
  * deals with wc3's binary encoding
  */
 public class Wc3BinInputStream extends BinInputStream {
+	public byte readByte(@Nonnull String label) throws StreamException {
+		try {
+			logBegin();
+
+			Byte val = readByte();
+
+			log("byte", label, val);
+
+			return val;
+		} catch (StreamException e) {
+			log("byte", label, null);
+
+			throw e;
+		}
+	}
+
 	public Integer readUByte() throws StreamException {
 		return readByte() & 0xFF;
 	}
@@ -293,6 +309,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
+	@Nonnull
 	public Id readId(@Nullable String label) throws StreamException {
 		try {
 			logBegin();
@@ -368,6 +385,6 @@ public class Wc3BinInputStream extends BinInputStream {
 	}
 
 	public static void checkFormatVer(@Nonnull String string, int targetVersion, int actualVersion) {
-		assert (actualVersion == targetVersion) : string;
+		assert (actualVersion == targetVersion) : string + "(expected: " + targetVersion + " actual: " + actualVersion + ")";
 	}
 }

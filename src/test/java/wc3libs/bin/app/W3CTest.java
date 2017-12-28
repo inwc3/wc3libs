@@ -5,14 +5,16 @@ import net.moonlightflower.wc3libs.bin.BinState;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.W3C;
+import net.moonlightflower.wc3libs.bin.app.W3E;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import wc3libs.misc.Wc3LibTest;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class W3CTest {
+public class W3CTest extends Wc3LibTest {
     @Test()
     public void writeTest() throws IOException {
         W3C w3c = new W3C();
@@ -42,5 +44,10 @@ public class W3CTest {
                 Assert.assertEquals(newCamera.get(state), camera.get(state), state.toString());
             }
         }
+    }
+
+    @Test()
+    public void readWriteCycle() throws IOException {
+        readWriteCycle(W3C.class, getFile("wc3data/W3C/war3map.w3c"));
     }
 }

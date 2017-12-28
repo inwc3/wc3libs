@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.bin.app.objMod;
 import net.moonlightflower.wc3libs.bin.MetaState;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -127,7 +128,17 @@ public class W3B extends ObjMod {
 			super(id, baseId);
 		}
 	}
-	
+
+	@Nonnull
+	@Override
+	public ObjMod copy() {
+		ObjMod other = new W3B();
+
+		other.merge(this);
+
+		return other;
+	}
+
 	@Override
 	public Collection<File> getSLKs() {
 		return Collections.singletonList(DestructableSLK.GAME_USE_PATH);
@@ -137,7 +148,20 @@ public class W3B extends ObjMod {
 	public Collection<File> getNecessarySLKs() {
 		return Collections.singletonList(DestructableSLK.GAME_USE_PATH);
 	}
-	
+
+	@Override
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
+		super.write(stream, format, false);
+	}
+
+	public void write(@Nonnull Wc3BinOutputStream stream) {
+		super.write(stream, false);
+	}
+
+	public W3B(@Nonnull Wc3BinInputStream stream) throws IOException {
+		super(stream, false);
+	}
+
 	public W3B(@Nonnull File file) throws Exception {
 		super(file, false);
 	}
@@ -146,7 +170,7 @@ public class W3B extends ObjMod {
 		super();
 	}
 
-	public static W3B ofMapFile(File mapFile) throws Exception {
+	public static W3B ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

@@ -11,10 +11,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * custom text triggers file for wrapping war3map.wct
@@ -34,22 +32,23 @@ public class WCT {
 		}
 
 		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			int size = stream.readInt32();
-			
+			int size = stream.readInt32("length");
+
 			if (size > 0) {
-				setText(stream.readString());
+				setText(new String(stream.readBytes(size, "text"), StandardCharsets.UTF_8));
 			}
 		}
 		
 		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-			int textLen = stream.stringToByteArray(getText()).length;
+			byte[] textBytes = stream.stringToByteArray(_text);
 
-			if (textLen > 0) {
-				stream.writeInt32(textLen + 1);
-				
-				stream.writeString(getText());
-			} else {
+			if (textBytes == null) {
 				stream.writeInt32(0);
+			} else {
+				textBytes = Arrays.copyOf(textBytes, textBytes.length);
+
+				stream.writeInt32(textBytes.length);
+				stream.writeBytes(textBytes);
 			}
 		}
 		
@@ -151,22 +150,24 @@ public class WCT {
 	
 	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeInt32(EncodingFormat.WCT_0x0.getVersion());
-		
+
+		stream.writeInt32(_trigs.size());
+
 		for (Trig trig : _trigs) {
 			trig.write(stream, EncodingFormat.WCT_0x0);
 		}
 	}
 
 	public void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt32();
+		int version = stream.readInt32("version");
 		
 		Wc3BinInputStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x1.getVersion(), version);
 		
-		_headComment = stream.readString();
+		_headComment = stream.readString("headComment");
 		
 		_headTrig = new Trig(stream, EncodingFormat.WCT_0x1);
 
-		int trigsCount = stream.readInt32();
+		int trigsCount = stream.readInt32("trigsCount");
 
 		for (int i = 1; i <= trigsCount; i++) {
 			addTrig(new Trig(stream, EncodingFormat.WCT_0x1));
@@ -179,7 +180,9 @@ public class WCT {
 		stream.writeString(_headComment);
 		
 		_headTrig.write(stream, EncodingFormat.WCT_0x1);
-		
+
+		stream.writeInt32(_trigs.size());
+
 		for (Trig trig : _trigs) {
 			trig.write(stream, EncodingFormat.WCT_0x1);
 		}
@@ -236,19 +239,23 @@ public class WCT {
 	private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
 		read(stream, EncodingFormat.AUTO);
 	}
-	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 
-	private void write(@Nonnull File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 
 		write(outStream);
 
 		outStream.close();
 	}
-	
+
+	public WCT(@Nonnull Wc3BinInputStream stream) throws Exception {
+		read(stream);
+	}
+
 	public WCT(@Nonnull File file) throws Exception {
 		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 
@@ -260,6 +267,7 @@ public class WCT {
 	public WCT() {
 	}
 
+	@Nonnull
 	public static WCT ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		

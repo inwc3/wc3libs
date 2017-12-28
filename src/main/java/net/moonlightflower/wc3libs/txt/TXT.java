@@ -197,17 +197,18 @@ public class TXT {
 		}
 		
 		protected final Map<FieldId, Field> _fields = new LinkedHashMap<>();
+		protected final Map<FieldId, Field> _fieldsLower = new LinkedHashMap<>();
 		
 		public Map<FieldId, ? extends Field> getFields() {
-			return _fields;
+			return new LinkedHashMap<>(_fields);
 		}
 		
 		public Field getField(FieldId fieldId) {
-			return getFields().get(fieldId.lower());
+			return _fieldsLower.get(fieldId.lower());
 		}
 		
 		public boolean containsField(FieldId fieldId) {
-			return getFields().containsKey(fieldId.lower());
+			return _fieldsLower.containsKey(fieldId.lower());
 		}
 		
 		public DataType get(FieldId fieldId, int index) throws Exception {
@@ -223,7 +224,8 @@ public class TXT {
 		}
 		
 		protected void addField(Field field) {
-			_fields.put(field.getId().lower(), field);
+			_fields.put(field.getId(), field);
+			_fieldsLower.put(field.getId().lower(), field);
 		}
 		
 		public Field addField(FieldId fieldId) {

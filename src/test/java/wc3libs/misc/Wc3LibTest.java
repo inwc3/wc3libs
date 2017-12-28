@@ -73,11 +73,11 @@ public abstract class Wc3LibTest {
                 outStream.close();
             }
 
-            FileOutputStream fp = new FileOutputStream("E:\\work\\bla.mdx");
+            /*FileOutputStream fp = new FileOutputStream("E:\\work\\bla.mdx");
 
             fp.write(outByteStream.toByteArray());
 
-            fp.close();
+            fp.close();*/
 
             Assert.assertEquals(outByteStream.toByteArray(), bytes);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {

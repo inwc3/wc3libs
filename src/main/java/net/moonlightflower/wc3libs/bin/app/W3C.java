@@ -334,7 +334,7 @@ public class W3C {
 		read(stream, EncodingFormat.AUTO);
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO);
 	}
 	
@@ -342,7 +342,7 @@ public class W3C {
 		read(new Wc3BinInputStream(inStream), format);
 	}
 
-	private void write(@Nonnull File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 
 		write(outStream);

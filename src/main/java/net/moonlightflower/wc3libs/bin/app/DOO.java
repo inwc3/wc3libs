@@ -132,7 +132,7 @@ public class DOO {
 			private final List<Item> _items = new ArrayList<>();
 
 			@Nonnull
-			public Item addItem(ObjId typeId, int chance) {
+			public Item addItem(@Nonnull ObjId typeId, int chance) {
 				Item item = new Item();
 				
 				_items.add(item);
@@ -147,9 +147,9 @@ public class DOO {
 				int itemsCount = stream.readInt32();
 
 				for (int i = 0; i < itemsCount; i++) {
-					ObjId typeId = ObjId.valueOf(stream.readId());
+					ObjId typeId = ObjId.valueOf(stream.readId("typeId"));
 					
-					int chance = stream.readInt32();
+					int chance = stream.readInt32("chance");
 					
 					Item item = addItem(typeId, chance);
 				}
@@ -228,10 +228,10 @@ public class DOO {
 			setAngle(stream.readFloat32());
 			
 			setScale(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
-			
-			setLifePerc(stream.readUByte());
-			
+
 			setFlags(stream.readUByte());
+
+			setLifePerc(stream.readUByte());
 			
 			setItemTablePtr(stream.readInt32());
 
@@ -263,9 +263,9 @@ public class DOO {
 			stream.writeFloat32(scale.getY());
 			stream.writeFloat32(scale.getZ());
 			
-			stream.writeUByte(getLifePerc());
-			
 			stream.writeUByte(getFlags());
+
+			stream.writeUByte(getLifePerc());
 			
 			stream.writeInt32(getItemTablePtr());
 			
@@ -274,6 +274,8 @@ public class DOO {
 			for (ItemSet set : _itemSets) {
 				set.write(stream, EncodingFormat.DOO_0x8);
 			}
+
+			stream.writeInt32(_editorId);
 		}
 		
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -307,10 +309,11 @@ public class DOO {
 	
 	private List<Dood> _doods = new ArrayList<>();
 	
-	private void addDood(Dood val) {
+	private void addDood(@Nonnull Dood val) {
 		_doods.add(val);
 	}
-	
+
+	@Nonnull
 	public Dood addDood() {
 		Dood dood = new Dood();
 		
@@ -319,7 +322,7 @@ public class DOO {
 		return dood;
 	}
 	
-	private class SpecialDood {
+	private static class SpecialDood {
 		private ObjId _typeId;
 
 		@Nonnull
@@ -343,13 +346,13 @@ public class DOO {
 		}
 		
 		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			ObjId typeId = ObjId.valueOf(stream.readId());
+			_typeId = ObjId.valueOf(stream.readId());
 			
 			int z = stream.readInt32();
 			int x = stream.readInt32();
 			int y = stream.readInt32();
 			
-			setPos(new Coords3DI(x, y, z));
+			_pos = new Coords3DI(x, y, z);
 		}
 		
 		private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
@@ -365,7 +368,7 @@ public class DOO {
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull Special.EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case DOO_SPECIAL_0x0: {
-				read_0x8(stream);
+				read_0x0(stream);
 				
 				break;
 			}
@@ -376,7 +379,7 @@ public class DOO {
 			switch (format.toEnum()) {
 			case AUTO:
 			case DOO_SPECIAL_0x0: {
-				write_0x8(stream);
+				write_0x0(stream);
 				
 				break;
 			}
@@ -391,7 +394,7 @@ public class DOO {
 		}
 	}
 	
-	private List<SpecialDood> _specialDoods = new ArrayList<>();
+	private final List<SpecialDood> _specialDoods = new ArrayList<>();
 	
 	private void addSpecialDood(@Nonnull SpecialDood val) {
 		_specialDoods.add(val);
@@ -415,7 +418,7 @@ public class DOO {
 				DOO_SPECIAL_0x0,
 			}
 
-			static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+			private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 			public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 			public final static EncodingFormat DOO_SPECIAL_0x0 = new EncodingFormat(Enum.DOO_SPECIAL_0x0, 0x0);
@@ -433,18 +436,20 @@ public class DOO {
 		}
 		
 		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			int specialVersion = stream.readInt32();
-			
-			int specialDoodsCount = stream.readInt32();
-			
+			int specialVersion = stream.readInt32("specialVersion");
+
+			if (specialVersion != 0) throw new IllegalArgumentException("unknown special format " + specialVersion + " (should be 0)");
+
+			int specialDoodsCount = stream.readInt32("specialDoodsCount");
+
 			for (int i = 0; i < specialDoodsCount; i++) {
-				_parent.addSpecialDood(_parent.new SpecialDood(stream, EncodingFormat.DOO_SPECIAL_0x0));
+				_parent.addSpecialDood(new SpecialDood(stream, EncodingFormat.DOO_SPECIAL_0x0));
 			}
 		}
 		
 		private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
 			stream.writeInt32(EncodingFormat.DOO_SPECIAL_0x0.getVersion());
-			
+
 			stream.writeInt32(_parent._specialDoods.size());
 			
 			for (SpecialDood dood : _parent._specialDoods) {
@@ -453,9 +458,9 @@ public class DOO {
 		}
 		
 		private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			int specialVersion = stream.readInt32();
-			
-			stream.rewind();
+			int specialVersion = stream.readInt32("specialVersion");
+
+			stream.rewind(4);
 
 			EncodingFormat format = EncodingFormat.valueOf(specialVersion);
 
@@ -519,15 +524,15 @@ public class DOO {
 	}
 	
 	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		Id startToken = stream.readId();
-		
-		int version = stream.readInt32();
-		
+		Id startToken = stream.readId("token");
+
+		int version = stream.readInt32("version");
+
 		Wc3BinInputStream.checkFormatVer("dooMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
 		
-		int subVersion = stream.readInt32(); //0xB
+		int subVersion = stream.readInt32("subVersion"); //0xB
 		
-		int doodsCount = stream.readInt32();
+		int doodsCount = stream.readInt32("doodsCount");
 		
 		for (int i = 0; i < doodsCount; i++) {
 			addDood(new Dood(stream, EncodingFormat.DOO_0x8));
@@ -539,7 +544,7 @@ public class DOO {
 		
 		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
 		
-		stream.writeInt32(0xB);
+		stream.writeInt32(0xB); //subVersion
 		
 		stream.writeInt32(_doods.size());
 		
@@ -600,16 +605,20 @@ public class DOO {
 		read(stream, EncodingFormat.AUTO, Special.EncodingFormat.AUTO);
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream) {
+	public void write(@Nonnull Wc3BinOutputStream stream) {
 		write(stream, EncodingFormat.AUTO, Special.EncodingFormat.AUTO);
 	}
 
-	private void write(@Nonnull File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
 
 		write(outStream);
 
 		outStream.close();
+	}
+
+	public DOO(@Nonnull Wc3BinInputStream stream) throws Exception {
+		read(stream);
 	}
 
 	public DOO(@Nonnull File file) throws Exception {
