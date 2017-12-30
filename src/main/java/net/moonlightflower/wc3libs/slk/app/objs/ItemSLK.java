@@ -9,6 +9,7 @@ import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -146,7 +147,7 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
     }*/
 
     @Override
-    protected void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
+    protected void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
         for (Entry<? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slkEntry : slk.getObjs().entrySet()) {
             ObjId id = slkEntry.getKey();
             SLK.Obj<? extends ObjId> slkObj = slkEntry.getValue();
@@ -187,13 +188,14 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
         read(file);
     }
 
+    @Nonnull
     @Override
-    public Obj createObj(ObjId id) {
+    public Obj createObj(@Nonnull ObjId id) {
         return new Obj(ItemId.valueOf(id));
     }
 
     @Override
-    public void merge(ItemSLK other, boolean overwrite) {
+    public void merge(@Nonnull ItemSLK other, boolean overwrite) {
         for (Map.Entry<ItemId, Obj> objEntry : other.getObjs().entrySet()) {
             ItemId objId = objEntry.getKey();
             Obj otherObj = objEntry.getValue();

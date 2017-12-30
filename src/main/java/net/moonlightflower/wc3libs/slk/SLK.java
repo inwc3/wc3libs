@@ -150,7 +150,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 	
-	protected Map<ObjIdType, ObjType> _objs = new LinkedHashMap<>();
+	protected final Map<ObjIdType, ObjType> _objs = new LinkedHashMap<>();
 	
 	public boolean containsObj(@Nonnull ObjIdType objId) {
 		return _objs.containsKey(objId);
@@ -161,7 +161,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		return _objs;
 	}
 
-	@Nonnull
+	@Nullable
 	public ObjType getObj(@Nonnull ObjIdType id) {
 		return getObjs().get(id);
 	}

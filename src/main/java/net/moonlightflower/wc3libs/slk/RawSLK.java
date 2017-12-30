@@ -20,7 +20,8 @@ public class RawSLK extends SLK<RawSLK, ObjId, RawSLK.Obj> {
 		}
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(id);
 	}

@@ -20,7 +20,8 @@ public class RawMetaSLK extends MetaSLK<RawMetaSLK, ObjId, RawMetaSLK.Obj> {
 		}
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(id);
 	}

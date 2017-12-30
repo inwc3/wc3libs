@@ -1734,7 +1734,7 @@ public class WTG {
 		print(System.out);
 	}
 	
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
 			WTG_0x4,

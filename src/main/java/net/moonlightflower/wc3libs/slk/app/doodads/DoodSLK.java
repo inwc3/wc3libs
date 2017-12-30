@@ -17,6 +17,8 @@ import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
+import javax.annotation.Nonnull;
+
 public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Doodads\\Doodads.slk");
 	
@@ -157,18 +159,20 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 	
 	//private Map<DoodId, Camera> _objs = new LinkedHashMap<>();
 	
+	@Nonnull
 	@Override
 	public Map<DoodId, Obj> getObjs() {
 		return _objs;
 	}
 	
 	@Override
-	public void addObj(Obj val) {
+	public void addObj(@Nonnull Obj val) {
 		_objs.put(val.getId(), val);
 	}
 	
+	@Nonnull
 	@Override
-	public Obj addObj(DoodId id) {
+	public Obj addObj(@Nonnull DoodId id) {
 		if (_objs.containsKey(id)) return _objs.get(id);
 		
 		Obj obj = new Obj(id);
@@ -179,7 +183,7 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 	}
 	
 	@Override
-	protected void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
+	protected void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
 		for (Entry<? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slkEntry : slk.getObjs().entrySet()) {
 			ObjId id = slkEntry.getKey();
 			SLK.Obj<? extends ObjId> slkObj = slkEntry.getValue();
@@ -220,13 +224,14 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 		read(file);
 	}
 	
+	@Nonnull
 	@Override
-	public Obj createObj(ObjId id) {
+	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(DoodId.valueOf(id));
 	}
 
 	@Override
-	public void merge(DoodSLK other, boolean overwrite) {
+	public void merge(@Nonnull DoodSLK other, boolean overwrite) {
 		for (Map.Entry<DoodId, Obj> objEntry : other.getObjs().entrySet()) {
 			DoodId objId = objEntry.getKey();
 			Obj otherObj = objEntry.getValue();

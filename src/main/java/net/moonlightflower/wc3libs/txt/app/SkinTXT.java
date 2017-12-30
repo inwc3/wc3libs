@@ -16,6 +16,8 @@ import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.TXTState;
 
+import javax.annotation.Nonnull;
+
 public class SkinTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapSkin.txt");
 	
@@ -401,12 +403,12 @@ public class SkinTXT extends TXT {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 	
 	@Override
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		super.write(file);
 	}
 	

@@ -9,6 +9,7 @@ import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -189,18 +190,20 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 	
 	//private Map<AbilId, Camera> _objs = new LinkedHashMap<>();
 	
+	@Nonnull
 	@Override
 	public Map<AbilId, Obj> getObjs() {
 		return _objs;
 	}
 	
 	@Override
-	public void addObj(Obj val) {
+	public void addObj(@Nonnull Obj val) {
 		_objs.put(val.getId(), val);
 	}
 	
+	@Nonnull
 	@Override
-	public Obj addObj(AbilId id) {
+	public Obj addObj(@Nonnull AbilId id) {
 		if (_objs.containsKey(id)) return _objs.get(id);
 		
 		Obj obj = new Obj(id);
@@ -211,7 +214,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 	}
 	
 	@Override
-	protected void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
+	protected void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
 		for (Entry<? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slkEntry : slk.getObjs().entrySet()) {
 			ObjId id = slkEntry.getKey();
 			SLK.Obj<? extends ObjId> slkObj = slkEntry.getValue();
@@ -252,13 +255,14 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		read(file);
 	}
 	
+	@Nonnull
 	@Override
-	public Obj createObj(ObjId id) {
+	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(AbilId.valueOf(id));
 	}
 
 	@Override
-	public void merge(AbilSLK other, boolean overwrite) {
+	public void merge(@Nonnull AbilSLK other, boolean overwrite) {
 		for (Map.Entry<AbilId, Obj> objEntry : other.getObjs().entrySet()) {
 			AbilId objId = objEntry.getKey();
 			Obj otherObj = objEntry.getValue();

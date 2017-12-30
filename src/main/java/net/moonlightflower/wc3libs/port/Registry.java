@@ -22,10 +22,10 @@ public class Registry {
 		result = result.replaceAll("\\p{Cntrl}", "");
 		
 		String[] splits = result.split("    ");
-		
-		String val = splits[3];
 
-		return val;
+		if (splits.length < 4) throw new IOException("entry " + dir + ";" + key + " not found");
+
+		return splits[3];
 	}
 	
 	public static String get(@Nonnull String dirS, @Nonnull String key) throws IOException {

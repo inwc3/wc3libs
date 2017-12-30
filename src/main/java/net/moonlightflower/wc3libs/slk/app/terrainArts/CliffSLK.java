@@ -23,6 +23,8 @@ import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
+import javax.annotation.Nonnull;
+
 public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("TerrainArt\\CliffTypes.slk");
 	
@@ -179,18 +181,20 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 	
 	//private Map<CliffId, Camera> _objs = new LinkedHashMap<>();
 	
+	@Nonnull
 	@Override
 	public Map<CliffId, Obj> getObjs() {
 		return _objs;
 	}
 	
 	@Override
-	public void addObj(Obj val) {
+	public void addObj(@Nonnull Obj val) {
 		_objs.put(val.getId(), val);
 	}
 	
+	@Nonnull
 	@Override
-	public Obj addObj(CliffId id) {
+	public Obj addObj(@Nonnull CliffId id) {
 		if (_objs.containsKey(id)) return _objs.get(id);
 		
 		Obj obj = new Obj(id);
@@ -215,7 +219,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 	}
 	
 	@Override
-	protected void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
+	protected void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
 		for (Entry<? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slkEntry : slk.getObjs().entrySet()) {
 			ObjId id = slkEntry.getKey();
 			SLK.Obj<? extends ObjId> slkObj = slkEntry.getValue();
@@ -244,13 +248,14 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 		}
 	}
 
+	@Nonnull
 	@Override
-	public Obj createObj(ObjId id) {
+	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(CliffId.valueOf(id));
 	}
 
 	@Override
-	public void merge(CliffSLK other, boolean overwrite) {
+	public void merge(@Nonnull CliffSLK other, boolean overwrite) {
 		// TODO Auto-generated method stub
 		
 	}

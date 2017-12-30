@@ -2,16 +2,7 @@ package net.moonlightflower.wc3libs.misc.image;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -92,7 +83,7 @@ public class BLP extends Wc3RasterImg {
 	private void read(@Nonnull InputStream inStream) throws UnsupportedFormatException {
 		try {
 			Reader reader = new Reader(inStream);
-			
+			BufferedInputStream in;
 			String startToken = reader.readChar4();
 
 			int version = (int) startToken.charAt(3) - '0';

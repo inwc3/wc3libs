@@ -88,7 +88,7 @@ public class WPM extends Raster<FlagsInt> {
 		return other;
 	}
 	
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
 			WPM_0x0,

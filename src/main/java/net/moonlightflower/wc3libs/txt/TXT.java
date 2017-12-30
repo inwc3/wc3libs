@@ -223,7 +223,7 @@ public class TXT {
 			
 			if (field == null) throw new Exception();
 			
-			return getField(fieldId).get(index);
+			return field.get(index);
 		}
 		
 		public DataType get(@Nonnull FieldId fieldId) throws Exception {
@@ -309,7 +309,7 @@ public class TXT {
 		
 		private final TXTSectionId _id;
 
-		@Nonnull
+		@Nullable
 		public TXTSectionId getId() {
 			return _id;
 		}
@@ -333,7 +333,7 @@ public class TXT {
 			}
 		}
 		
-		public Section(@Nonnull TXTSectionId id) {
+		public Section(@Nullable TXTSectionId id) {
 			_id = id;
 		}
 		
@@ -489,8 +489,6 @@ public class TXT {
 	}
 	
 	public void read(@Nonnull File file) throws IOException {
-		if (file == null) throw new IOException("file is null");
-		
 		InputStream inStream = new FileInputStream(file);
 
 		read(inStream);

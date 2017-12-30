@@ -10,6 +10,7 @@ import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -396,23 +397,26 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	
 	//private Map<WeatherId, Camera> _objs = new LinkedHashMap<>();
 	
+	@Nonnull
 	@Override
 	public Map<WeatherId, Obj> getObjs() {
 		return _objs;
 	}
 	
 	@Override
-	public void addObj(Obj val) {
+	public void addObj(@Nonnull Obj val) {
 		_objs.put(val.getId(), val);
 	}
 	
+	@Nonnull
 	@Override
-	public Obj createObj(ObjId id) {
+	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(WeatherId.valueOf(id));
 	}
 	
+	@Nonnull
 	@Override
-	public Obj addObj(WeatherId id) {
+	public Obj addObj(@Nonnull WeatherId id) {
 		if (_objs.containsKey(id)) return _objs.get(id);
 		
 		Obj obj = new Obj(id);
@@ -423,7 +427,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	}
 	
 	@Override
-	public void merge(WeatherSLK other, boolean overwrite) {
+	public void merge(@Nonnull WeatherSLK other, boolean overwrite) {
 		for (Obj otherObj : other.getObjs().values()) {
 			WeatherId objId = otherObj.getId();
 			
@@ -440,7 +444,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	}
 	
 	@Override
-	protected void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
+	protected void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
 		WeatherSLK other = new WeatherSLK();
 		
 		System.out.println("read " + slk.getObjs().size());
