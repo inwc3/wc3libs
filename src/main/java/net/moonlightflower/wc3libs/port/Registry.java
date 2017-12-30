@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 public class Registry {	
 	public static String get(@Nonnull File dir, @Nonnull String key) throws IOException {
-		if (!System.getProperty("os.name").toLowerCase().startsWith("win")) throw new IllegalArgumentException("not a windows system");
+		//if (!System.getProperty("os.name").toLowerCase().startsWith("win")) throw new IllegalArgumentException("not a windows system");
 
 		ProcCaller proc = new ProcCaller("REG", "QUERY", dir.toString(), "/v", key);
 		
