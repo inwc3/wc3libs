@@ -20,7 +20,7 @@ public class SkinTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapSkin.txt");
 	
 	public static class States {
-		private static class Section {
+		public static class Section {
 			public final static Section CUSTOM_SKIN = new Section("CustomSkin");
 			
 			private TXTSectionId _id;

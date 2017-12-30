@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class StdBinInputStream extends BinInputStream {
-	public byte readByte(String label) throws IOException {
+	public byte readByte(@Nonnull String label) throws IOException {
 		logBegin();
 		
 		byte ret = readByte();
@@ -19,15 +19,13 @@ public class StdBinInputStream extends BinInputStream {
 	
 	public int readWord() throws IOException {
 		try {
-			int ret = (readByte() & 0xFF) + ((readByte() & 0xFF) << 8);
-			
-			return ret;
+			return (readByte() & 0xFF) + ((readByte() & 0xFF) << 8);
 		} catch (IndexOutOfBoundsException e) {
 			throw new IOException();
 		}
 	}
 
-	public int readWord(String label) throws IOException {
+	public int readWord(@Nonnull String label) throws IOException {
 		logBegin();
 		
 		int ret = readWord();
@@ -47,15 +45,13 @@ public class StdBinInputStream extends BinInputStream {
 	
 	public int readDoubleWord() throws IOException {
 		try {
-			int ret = readByte() + (readByte() << 8) + (readByte() << 16) + (readByte() << 24);
-			
-			return ret;
+			return readByte() + (readByte() << 8) + (readByte() << 16) + (readByte() << 24);
 		} catch (IndexOutOfBoundsException e) {
 			throw new IOException();
 		}
 	}
 	
-	public int readDoubleWord(String label) throws IOException {
+	public int readDoubleWord(@Nonnull String label) throws IOException {
 		logBegin();
 		
 		int ret = readDoubleWord();
@@ -106,7 +102,7 @@ public class StdBinInputStream extends BinInputStream {
 		}
 	}
 
-	public String readString(String label) throws IOException {
+	public String readString(@Nonnull String label) throws IOException {
 		logBegin();
 		
 		String ret = readString();

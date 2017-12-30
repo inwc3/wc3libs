@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -63,8 +62,8 @@ public class W3Q extends ObjMod {
 			return State.values();
 		}
 		
-		public final static State<Int> ART_BUTTON_POS_X = new State<>("gbpx", Int.class);
-		public final static State<Int> ART_BUTTON_POS_Y = new State<>("gbpy", Int.class);
+		public final static State<Wc3Int> ART_BUTTON_POS_X = new State<>("gbpx", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_POS_Y = new State<>("gbpy", Wc3Int.class);
 		public final static State<Icon> ART_ICON = new State<>("gar1", Icon.class);
 		
 		public final static State<UpgradeClass> DATA_CLASS = new State<>("gcls", UpgradeClass.class);
@@ -84,19 +83,19 @@ public class W3Q extends ObjMod {
 		public final static State<Real> DATA_EFFECT4_BASE = new State<>("gba4", Real.class);
 		public final static State<Real> DATA_EFFECT4_INC = new State<>("gmo4", Real.class);
 		public final static State<Wc3String> DATA_EFFECT4_CODE = new State<>("gco4", Wc3String.class);
-		public final static State<Int> DATA_COSTS_GOLD = new State<>("gglb", Int.class);
-		public final static State<Int> DATA_COSTS_GOLD_INC = new State<>("gglm", Int.class);
-		public final static State<Int> DATA_COSTS_LUMBER = new State<>("glmb", Int.class);
-		public final static State<Int> DATA_COSTS_LUMBER_INC = new State<>("glmm", Int.class);
-		public final static State<Int> DATA_COSTS_TIME = new State<>("gtib", Int.class);
-		public final static State<Int> DATA_COSTS_TIME_ADD = new State<>("gtim", Int.class);
+		public final static State<Wc3Int> DATA_COSTS_GOLD = new State<>("gglb", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_GOLD_INC = new State<>("gglm", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_LUMBER = new State<>("glmb", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_LUMBER_INC = new State<>("glmm", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_TIME = new State<>("gtib", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_TIME_ADD = new State<>("gtim", Wc3Int.class);
 		public final static State<Bool> DATA_IS_GLOBAL = new State<>("glob", Bool.class);
 		public final static State<Bool> DATA_IS_INHERITED = new State<>("ginh", Bool.class);
-		public final static State<Int> DATA_LEVEL_COUNT = new State<>("glvl", Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_COUNT = new State<>("glvl", Wc3Int.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("grac", UnitRace.class);
 		
 		public final static State<DataList<TechId>> TECH_REQUIRES = new State<>("greq", new DataTypeInfo(DataList.class, TechId.class));
-		public final static State<DataList<Int>> TECH_REQUIRES_LEVELS = new State<>("grqc", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> TECH_REQUIRES_LEVELS = new State<>("grqc", new DataTypeInfo(DataList.class, Wc3Int.class));
 		
 		public final static State<Wc3String> TEXT_EDITOR_SUFFIX = new State<>("gnsf", Wc3String.class);
 		public final static State<Char> TEXT_HOTKEY = new State<>("ghk1", Char.class);

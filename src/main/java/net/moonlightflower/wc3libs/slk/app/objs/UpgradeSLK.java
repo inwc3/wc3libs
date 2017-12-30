@@ -3,27 +3,18 @@ package net.moonlightflower.wc3libs.slk.app.objs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.ItemId;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitRace;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeClass;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeEffect;
-import net.moonlightflower.wc3libs.dataTypes.app.UpgradeId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
-import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK.Obj;
 
 public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UpgradeData.slk");
@@ -62,12 +53,12 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 		public final static State<UpgradeId> OBJ_ID = new State<>("upgradeid", UpgradeId.class, null);
 
 		public final static State<UpgradeClass> DATA_CLASS = new State<>("class", UpgradeClass.class);
-		public final static State<Int> DATA_COSTS_GOLD = new State<>("goldbase", Int.class);
-		public final static State<Int> DATA_COSTS_GOLD_INC = new State<>("goldmod", Int.class);
-		public final static State<Int> DATA_COSTS_LUMBER = new State<>("lumberbase", Int.class);
-		public final static State<Int> DATA_COSTS_LUMBER_INC = new State<>("lumbermod", Int.class);
-		public final static State<Int> DATA_COSTS_TIME = new State<>("timebase", Int.class);
-		public final static State<Int> DATA_COSTS_TIME_ADD = new State<>("timemod", Int.class);
+		public final static State<Wc3Int> DATA_COSTS_GOLD = new State<>("goldbase", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_GOLD_INC = new State<>("goldmod", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_LUMBER = new State<>("lumberbase", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_LUMBER_INC = new State<>("lumbermod", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_TIME = new State<>("timebase", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COSTS_TIME_ADD = new State<>("timemod", Wc3Int.class);
 		public final static State<UpgradeEffect> DATA_EFFECT1 = new State<>("effect1", UpgradeEffect.class);
 		public final static State<Real> DATA_EFFECT1_BASE = new State<>("base1", Real.class);
 		public final static State<Real> DATA_EFFECT1_INC = new State<>("mod1", Real.class);
@@ -86,14 +77,14 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 		public final static State<Wc3String> DATA_EFFECT4_CODE = new State<>("code4", Wc3String.class);
 		public final static State<Bool> DATA_IS_GLOBAL = new State<>("global", Bool.class);
 		public final static State<Bool> DATA_IS_INHERITED = new State<>("inherit", Bool.class);
-		public final static State<Int> DATA_LEVEL_COUNT = new State<>("maxlevel", Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_COUNT = new State<>("maxlevel", Wc3Int.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("race", UnitRace.class);
 		
 		public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comments", Wc3String.class);
 		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
 		public final static State<Wc3String> EDITOR_SORT = new State<>("sort", Wc3String.class);
 		public final static State<Bool> EDITOR_USED = new State<>("used", Bool.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 	}
 	
 	public static class Obj extends SLK.Obj<UpgradeId> {

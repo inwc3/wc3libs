@@ -117,29 +117,25 @@ public class WCT {
 			WCT_0x0,
 			WCT_0x1,
 		}
-
-		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WCT_0x0 = new EncodingFormat(Enum.WCT_0x0, 0x0);
 		public final static EncodingFormat WCT_0x1 = new EncodingFormat(Enum.WCT_0x1, 0x1);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
 		
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 	
 	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int format = stream.readInt32();
+		int version = stream.readInt32();
 		
-		Wc3BinInputStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x0.getVersion(), format);
+		stream.checkFormatVersion(EncodingFormat.WCT_0x0.getVersion(), version);
 
 		int trigsCount = stream.readInt32();
 
@@ -161,7 +157,7 @@ public class WCT {
 	public void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 		
-		Wc3BinInputStream.checkFormatVer("wctMaskFunc", EncodingFormat.WCT_0x1.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.WCT_0x1.getVersion(), version);
 		
 		_headComment = stream.readString("headComment");
 		
@@ -193,11 +189,7 @@ public class WCT {
 		
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new Exception(String.format("unknown format %x", version));
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 	
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {

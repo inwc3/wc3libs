@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Controller extends Int {
+public class Controller extends Wc3Int {
 	private static Map<Integer, Controller> _map = new LinkedHashMap<>();
 	
 	public final static Controller CPU = new Controller(2, "COMPUTER");

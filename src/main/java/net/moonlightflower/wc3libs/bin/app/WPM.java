@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * terrain pathing map file for wrapping war3map.wpm
@@ -83,7 +81,7 @@ public class WPM extends Raster<FlagsInt> {
 	public WPM clone() {
 		PathMap pathMap = _pathMap;
 		
-		WPM other = new WPM(pathMap.getBounds());
+		WPM other = pathMap.getBounds() != null ? new WPM(pathMap.getBounds()) : new WPM();
 		
 		other.getPathMap().mergeCells(pathMap);
 		
@@ -95,21 +93,17 @@ public class WPM extends Raster<FlagsInt> {
 			AUTO,
 			WPM_0x0,
 		}
-
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WPM_0x0 = new EncodingFormat(Enum.WPM_0x0, 0x0);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
 		
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 
@@ -136,7 +130,7 @@ public class WPM extends Raster<FlagsInt> {
 		Id startToken = stream.readId("startToken");
 		int version = stream.readInt32("version");
 		
-		Wc3BinInputStream.checkFormatVer("wpmMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.WPM_0x0.getVersion(), version);
 		
 		int width = stream.readInt32("width");
 		int height = stream.readInt32("height");
@@ -161,11 +155,7 @@ public class WPM extends Raster<FlagsInt> {
 		
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new IllegalArgumentException("unknown format " + version);
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 	
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

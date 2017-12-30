@@ -175,8 +175,7 @@ public class W3F {
 		return _campaignBackground;
 	}
 
-	@Nullable
-	public void setCampaignBackground(LoadingScreenBackground val) {
+	public void setCampaignBackground(@Nullable LoadingScreenBackground val) {
 		_campaignBackground = val;
 	}
 
@@ -201,7 +200,7 @@ public class W3F {
 		_minimapPath = val;
 	}
 
-	public static class AmbientSound {};
+	public static class AmbientSound {}
 
 	public static class PresetAmbientSound extends AmbientSound {
 		private static Map<Integer, AmbientSound> _map = new LinkedHashMap<>();
@@ -586,28 +585,24 @@ public class W3F {
 			AUTO,
 			W3F_0x1
 		}
-
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3F_0x1 = new EncodingFormat(Enum.W3F_0x1, 0x1);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
 		
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 	
 	private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 		
-		Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3F_0x1.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.W3F_0x1.getVersion(), version);
 		
 		setSavesAmount(stream.readInt32("savesAmount"));
 		setEditorVersion(stream.readInt32("editorVersion"));
@@ -617,28 +612,29 @@ public class W3F {
 		setCampaignAuthor(stream.readString("author"));
 		setCampaignDescription(stream.readString("description"));
 
-		setFlags(Flags.valueOf(stream.readInt32()));
+		setFlags(Flags.valueOf(stream.readInt32("flags")));
 		
-		setCampaignBackground(stream.readInt32(), stream.readString());
-		setMinimapPath(new File(stream.readString()));
-		setAmbientSound(stream.readInt32(), stream.readString());
+		setCampaignBackground(stream.readInt32("backgroundIndex"), stream.readString("backgroundCustomPath"));
+		setMinimapPath(new File(stream.readString("minimapPath")));
+		setAmbientSound(stream.readInt32("ambientSoundVal"), stream.readString("ambientSoundPath"));
+
+		TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("type"));
+		Real terrainFogZStart = stream.readReal("zStart");
+		Real terrainFogZEnd = stream.readReal("zEnd");
+		Real terrainFogDensity = stream.readReal("density");
+		Color terrainFogColor = Color.fromRGBA255(stream.readUByte("red"), stream.readUByte("green"), stream.readUByte("blue"), stream.readUByte("alpha"));
+
+		if (terrainFogType != null) setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
 		
-		setTerrainFog(new TerrainFog(
-				TerrainFogType.valueOf(stream.readInt32()),
-				stream.readReal(), stream.readReal(),
-				stream.readReal(),
-				Color.fromRGBA255(stream.readUByte(), stream.readUByte(), stream.readUByte(), stream.readUByte())
-		));
+		setUIRace(UIRace.valueOf(stream.readInt32("uiRace")));
 		
-		setUIRace(UIRace.valueOf(stream.readInt32()));
-		
-		int mapsCount = stream.readInt32();
+		int mapsCount = stream.readInt32("mapsCount");
 		
 		for (int i = 0; i < mapsCount; i++) {
 			addMap(new MapEntry(stream, EncodingFormat.W3F_0x1));
 		}
 		
-		int listedMapsCount = stream.readInt32();
+		int listedMapsCount = stream.readInt32("listedMapsCount");
 		
 		for (int i = 0; i < listedMapsCount; i++) {
 			addListedMap(new ListedMapEntry(stream, EncodingFormat.W3F_0x1));
@@ -676,17 +672,17 @@ public class W3F {
 		
 		TerrainFog terrainFog = getTerrainFog();
 		
-		stream.writeInt32(terrainFog != null ? terrainFog.getType() : Int.valueOf(0));
+		stream.writeInt32(terrainFog != null ? terrainFog.getType() : Wc3Int.valueOf(0));
 		stream.writeReal(terrainFog != null ? terrainFog.getZStart() : Real.valueOf(0F));
 		stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : Real.valueOf(0F));
 		stream.writeReal(terrainFog != null ? terrainFog.getDensity() : Real.valueOf(0F));
 		
-		Color terrainFogColor = terrainFog.getColor();
+		Color terrainFogColor = (terrainFog != null) ? terrainFog.getColor() : null;
 		
-		stream.writeUByte(terrainFogColor.getRed255());
-		stream.writeUByte(terrainFogColor.getGreen255());
-		stream.writeUByte(terrainFogColor.getBlue255());
-		stream.writeUByte(terrainFogColor.getAlpha255());
+		stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed255() : 0);
+		stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen255() : 0);
+		stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue255() : 0);
+		stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha255() : 0);
 
 		stream.writeInt32(getUIRace().getVal());
 		
@@ -708,11 +704,7 @@ public class W3F {
 
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new Exception(String.format("unknown format %x", version));
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {

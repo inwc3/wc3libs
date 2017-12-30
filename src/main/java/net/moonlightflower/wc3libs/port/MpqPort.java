@@ -4,10 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.NoSuchFileException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 public abstract class MpqPort {
 	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
@@ -25,11 +22,11 @@ public abstract class MpqPort {
 	private final static File exportFilesDir = new File(exportDir, "files");
 
 	public static class ResourceFile extends File {
-		public ResourceFile(String pathname) {
+		public ResourceFile(@Nonnull String pathname) {
 			super(pathname);
 		}
 
-		public ResourceFile(File parent, String child) {
+		public ResourceFile(@Nonnull File parent, @Nonnull String child) {
 			super(parent, child);
 			// TODO Auto-generated constructor stub
 		}
@@ -88,18 +85,18 @@ public abstract class MpqPort {
 	}
 	
 	public static class PortException extends IOException {
-		public PortException(String msg) {
+		public PortException(@Nonnull String msg) {
 			super(msg);
 		}
 
-		public PortException(IOException e) {
+		public PortException(@Nonnull IOException e) {
 			super(e);
 		}
 	}
 	
 	public static abstract class Out {
 		class DummyOutputStream extends OutputStream {
-			private ByteArrayOutputStream _outBytes = new ByteArrayOutputStream();
+			private final ByteArrayOutputStream _outBytes = new ByteArrayOutputStream();
 			
 			public byte[] getBytes() {
 				return _outBytes.toByteArray();
@@ -115,7 +112,7 @@ public abstract class MpqPort {
 				super.close();
 			}
 			
-			public void close(OutputStream outStream) throws IOException {
+			public void close(@Nonnull OutputStream outStream) throws IOException {
 				for (byte val : getBytes()) {
 					outStream.write(val);
 				}
@@ -129,13 +126,15 @@ public abstract class MpqPort {
 
 		public static class Result {
 			public class Segment {
-				private FileExport _fileExport;
-				private File _mpqFile;
-				
+				private final FileExport _fileExport;
+				private final File _mpqFile;
+
+				@Nonnull
 				public FileExport getExport() {
 					return _fileExport;
 				}
-				
+
+				@Nonnull
 				public File getMpqFile() {
 					return _mpqFile;
 				}
@@ -143,28 +142,30 @@ public abstract class MpqPort {
 				private byte[] _outBytes = null;
 				
 				public byte[] getOutBytes() {
-					return _outBytes;
+					return Arrays.copyOf(_outBytes, _outBytes.length);
 				}
 				
-				private Segment(File mpqFile, FileExport fileExport, byte[] outBytes) {
+				private Segment(@Nonnull File mpqFile, @Nonnull FileExport fileExport, byte[] outBytes) {
 					_fileExport = fileExport;
 					_mpqFile = mpqFile;
 					_outBytes = outBytes;
 				}
 				
-				private Segment(File mpqFile, FileExport fileExport) {
+				private Segment(@Nonnull File mpqFile, @Nonnull FileExport fileExport) {
 					_fileExport = fileExport;
 					_mpqFile = mpqFile;
 				}
 			}
 			
 			private Map<File, Segment> _exports = new LinkedHashMap<>();
-			
+
+			@Nonnull
 			public Map<File, Segment> getExports() {
 				return _exports;
 			}
-			
-			public File getFile(File inFile) throws IOException {
+
+			@Nullable
+			public File getFile(@Nonnull File inFile) throws IOException {
 				Segment segment = getExports().get(inFile);
 				
 				if (segment == null) throw new NoSuchFileException(String.format("noSuchFile: %s", inFile.toString()));
@@ -189,8 +190,9 @@ public abstract class MpqPort {
 				
 				return outFile;
 			}
-			
-			public InputStream getInputStream(File inFile) throws IOException {
+
+			@Nullable
+			public InputStream getInputStream(@Nonnull File inFile) throws IOException {
 				Segment segment = getExports().get(inFile);
 				
 				if (segment == null) throw new IOException(String.format("noSuchFile: %s", inFile.toString()));
@@ -210,11 +212,11 @@ public abstract class MpqPort {
 				return null;
 			}
 			
-			public void addExport(File mpqFile, FileExport fileExport, byte[] outBytes) {
+			public void addExport(@Nonnull File mpqFile, @Nonnull FileExport fileExport, byte[] outBytes) {
 				_exports.put(fileExport.getInFile(), new Segment(mpqFile, fileExport, outBytes));
 			}
 			
-			public void addExport(File mpqFile, FileExport fileExport) {
+			public void addExport(@Nonnull File mpqFile, @Nonnull FileExport fileExport) {
 				_exports.put(fileExport.getInFile(), new Segment(mpqFile, fileExport));
 			}
 		}
@@ -225,32 +227,36 @@ public abstract class MpqPort {
 			private File _outFile = null;
 			private OutputStream _outStream = null;
 
+			@Nonnull
 			public File getInFile() {
 				return _inFile;
 			}
 
+			@Nullable
 			public File getOutDir() {
 				return _outDir;
 			}
-			
+
+			@Nullable
 			public File getOutFile() {
 				return _outFile;
 			}
-			
+
+			@Nullable
 			public OutputStream getOutStream() {
 				return _outStream;
 			}
 			
-			public FileExport(File inFile) {
+			public FileExport(@Nonnull File inFile) {
 				_inFile = inFile;
 			}
 			
-			public FileExport(File inFile, OutputStream outStream) {
+			public FileExport(@Nonnull File inFile, @Nullable OutputStream outStream) {
 				_inFile = inFile;
 				_outStream = outStream;
 			}
 			
-			public FileExport(File inFile, File outFile, boolean outFileIsDir) {
+			public FileExport(@Nonnull File inFile, @Nonnull File outFile, boolean outFileIsDir) {
 				_inFile = inFile;
 				_outFile = outFile;
 				
@@ -261,20 +267,21 @@ public abstract class MpqPort {
 		}
 	
 		private Vector<FileExport> _fileExports = new Vector<>();
-	
+
+		@Nonnull
 		public Vector<FileExport> getFiles() {
 			return _fileExports;
 		}
 		
-		public void add(File inFile) {
+		public void add(@Nonnull File inFile) {
 			_fileExports.add(new FileExport(inFile));
 		}
 		
-		public void add(File inFile, OutputStream outStream) {
+		public void add(@Nonnull File inFile, @Nonnull OutputStream outStream) {
 			_fileExports.add(new FileExport(inFile, outStream));
 		}
 		
-		public void add(File inFile, File outFile, boolean outFileIsDir) {
+		public void add(@Nonnull File inFile, @Nonnull File outFile, boolean outFileIsDir) {
 			_fileExports.add(new FileExport(inFile, outFile, outFileIsDir));
 		}
 		
@@ -293,10 +300,12 @@ public abstract class MpqPort {
 	
 			volExports.removeAll(toRemove);
 		}*/
-	
-		public abstract Result commit(Vector<File> mpqFiles) throws Exception;
-	
-		public Result commit(File mpqFile) throws Exception {
+
+		@Nonnull
+		public abstract Result commit(@Nonnull Vector<File> mpqFiles) throws Exception;
+
+		@Nonnull
+		public Result commit(@Nonnull File mpqFile) throws Exception {
 			Vector<File> mpqFiles = new Vector<>();
 	
 			mpqFiles.add(mpqFile);
@@ -304,8 +313,9 @@ public abstract class MpqPort {
 			return commit(mpqFiles);
 		}
 	}
-	
-	public static Vector<File> getWc3Mpqs(File wc3dir) {
+
+	@Nonnull
+	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
 		Vector<File> files = new Vector<>();
 
 		files.add(new File(wc3dir, "War3Patch.mpq"));
@@ -322,7 +332,7 @@ public abstract class MpqPort {
 		return _wc3Dir;
 	}
 	
-	public static void setWc3Dir(File val) {
+	public static void setWc3Dir(@Nullable File val) {
 		if (val != null) {
 			for (File mpqFile : getWc3Mpqs(val)) {
 				if (!mpqFile.exists()) {
@@ -333,17 +343,20 @@ public abstract class MpqPort {
 		
 		_wc3Dir = val;
 	}
-	
+
+	@Nonnull
 	public static Vector<File> getWc3Mpqs() throws IOException {
 		if (_wc3Dir == null) throw new IOException("no wc3Dir set");
 		
 		return getWc3Mpqs(_wc3Dir);
 	}
-	
-	public abstract Out.Result getGameFiles(File... files) throws Exception;
+
+	@Nonnull
+	public abstract Out.Result getGameFiles(@Nonnull File... files) throws Exception;
 	
 	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
-	
+
+	@Nonnull
 	public static MpqPort getDefaultImpl() throws PortException {
 		try {
 			return _defaultImpl.newInstance();
@@ -359,7 +372,7 @@ public abstract class MpqPort {
 	private static String getRegEntry(String dirS, String key) {
 		try {
 			return Registry.get(dirS, key);
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
 		
 		return null;

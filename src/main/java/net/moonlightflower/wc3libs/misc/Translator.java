@@ -12,8 +12,9 @@ import java.util.Map;
  * Translates strings based on previously registered vocabulary, you can add txt game files like UI\WorldEditStrings.txt
  */
 public class Translator {
-	private TXT _txt = new TXT();
-	
+	private final TXT _txt = new TXT();
+
+	@Nonnull
 	public TXT getTXT() {
 		return _txt;
 	}
@@ -34,7 +35,7 @@ public class Translator {
 			return _txt.get(FieldId.valueOf(key)).toString();
 		} catch (Exception e) {
 		}
-		
+
 		return null;
 	}
 	

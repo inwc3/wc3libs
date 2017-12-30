@@ -2,7 +2,7 @@ package net.moonlightflower.wc3libs.txt.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class ExtraTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapExtra.txt");
 	
-	public static class SkyModel extends Int {
+	public static class SkyModel extends Wc3Int {
 		private static Map<Integer, SkyModel> _map = new LinkedHashMap<>();
 		
 		public final static SkyModel BLIZZARD = new SkyModel(0, "SKY08");
@@ -57,7 +57,7 @@ public class ExtraTXT extends TXT {
 		}
 	}
 
-	public static class TimeOfDay extends Int {
+	public static class TimeOfDay extends Wc3Int {
 		private static Map<Integer, TimeOfDay> _map = new LinkedHashMap<>();
 		
 		public final static TimeOfDay UNFIXED = new TimeOfDay(0, "MAPPREFS_TIMEOFDAY_UNFIXED", null);

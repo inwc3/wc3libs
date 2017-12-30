@@ -53,24 +53,24 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<AbilId> OBJ_ID = new State<>("alias", AbilId.class);
 		public final static State<AbilCode> DATA_CODE = new State<>("code", AbilCode.class);
 		public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comments", Wc3String.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 		public final static State<Bool> EDITOR_IN_EDITOR = new State<>("useInEditor", Bool.class);
 		public final static State<Bool> DATA_IS_HERO = new State<>("hero", Bool.class);
 		public final static State<Bool> DATA_IS_ITEM = new State<>("item", Bool.class);
 		public final static State<Wc3String> EDITOR_SORT = new State<>("sort", Wc3String.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("race", UnitRace.class);
 		public final static State<Bool> DATA_CHECK_DEPENDENCY = new State<>("checkDep", Bool.class);
-		public final static State<Int> DATA_LEVEL_COUNT = new State<>("levels", Int.class);
-		public final static State<Int> DATA_LEVEL_REQ = new State<>("reqLevel", Int.class);
-		public final static State<Int> DATA_LEVEL_SKIP = new State<>("levelSkip", Int.class);
-		public final static State<Int> DATA_PRIO = new State<>("priority", Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_COUNT = new State<>("levels", Wc3Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_REQ = new State<>("reqLevel", Wc3Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_SKIP = new State<>("levelSkip", Wc3Int.class);
+		public final static State<Wc3Int> DATA_PRIO = new State<>("priority", Wc3Int.class);
 
 		public final static State<DataList<CombatTarget>> DATA_TARGS1 = new State<>("targs1", new DataTypeInfo(DataList.class, CombatTarget.class));
 		public final static State<DataList<Real>> DATA_CAST_TIME1 = new State<>("Cast1", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_DURATION1 = new State<>("Dur1", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_DURATION_HERO1 = new State<>("HeroDur1", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_COOLDOWN1 = new State<>("Cool1", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Int>> DATA_MANA_COST1 = new State<>("Cost1", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> DATA_MANA_COST1 = new State<>("Cost1", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<DataList<Real>> DATA_AREA1 = new State<>("Area1", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_RANGE1 = new State<>("Rng1", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<DataType>> DATA_A1 = new State<>("DataA1", new DataTypeInfo(DataList.class, DataType.class));
@@ -91,7 +91,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<Real>> DATA_DURATION2 = new State<>("Dur2", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_DURATION_HERO2 = new State<>("HeroDur2", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_COOLDOWN2 = new State<>("Cool2", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Int>> DATA_MANA_COST2 = new State<>("Cost2", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> DATA_MANA_COST2 = new State<>("Cost2", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<DataList<Real>> DATA_AREA2 = new State<>("Area2", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_RANGE2 = new State<>("Rng2", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<DataType>> DATA_A2 = new State<>("DataA2", new DataTypeInfo(DataList.class, DataType.class));
@@ -112,7 +112,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<Real>> DATA_DURATION3 = new State<>("Dur3", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_DURATION_HERO3 = new State<>("HeroDur3", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_COOLDOWN3 = new State<>("Cool3", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Int>> DATA_MANA_COST3 = new State<>("Cost3", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> DATA_MANA_COST3 = new State<>("Cost3", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<DataList<Real>> DATA_AREA3 = new State<>("Area3", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_RANGE3 = new State<>("Rng3", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<DataType>> DATA_A3 = new State<>("DataA3", new DataTypeInfo(DataList.class, DataType.class));
@@ -133,7 +133,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<Real>> DATA_DURATION4 = new State<>("Dur4", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_DURATION_HERO4 = new State<>("HeroDur4", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_COOLDOWN4 = new State<>("Cool4", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Int>> DATA_MANA_COST4 = new State<>("Cost4", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> DATA_MANA_COST4 = new State<>("Cost4", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<DataList<Real>> DATA_AREA4 = new State<>("Area4", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> DATA_RANGE4 = new State<>("Rng4", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<DataType>> DATA_A4 = new State<>("DataA4", new DataTypeInfo(DataList.class, DataType.class));

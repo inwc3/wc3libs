@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -63,18 +62,18 @@ public class W3A extends ObjMod {
 		}
 
 		public final static State<DataList<Wc3String>> ART_ANIMS = new State<>("aani", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<Int> ART_BUTTON_POS_X = new State<>("abpx", Int.class);
-		public final static State<Int> ART_BUTTON_POS_Y = new State<>("abpy", Int.class);
-		public final static State<Int> ART_BUTTON_OFF_POS_X = new State<>("aubx", Int.class);
-		public final static State<Int> ART_BUTTON_OFF_POS_Y = new State<>("auby", Int.class);
-		public final static State<Int> ART_BUTTON_RESEARCH_POS_X = new State<>("arpx", Int.class);
-		public final static State<Int> ART_BUTTON_RESEARCH_POS_Y = new State<>("arpy", Int.class);
+		public final static State<Wc3Int> ART_BUTTON_POS_X = new State<>("abpx", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_POS_Y = new State<>("abpy", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_OFF_POS_X = new State<>("aubx", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_OFF_POS_Y = new State<>("auby", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_RESEARCH_POS_X = new State<>("arpx", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_RESEARCH_POS_Y = new State<>("arpy", Wc3Int.class);
 		public final static State<DataList<Model>> ART_EFFECT = new State<>("aeat", new DataTypeInfo(DataList.class, Model.class));
 		public final static State<DataList<Model>> ART_EFFECT_AREA = new State<>("aaea", new DataTypeInfo(DataList.class, Model.class));
 		public final static State<DataList<Model>> ART_EFFECT_CASTER = new State<>("acat", new DataTypeInfo(DataList.class, Model.class));
 		public final static State<DataList<Wc3String>> ART_EFFECT_CASTER_ATTACH = new State<>("acap", new DataTypeInfo(DataList.class, Wc3String.class));
 		public final static State<DataList<Wc3String>> ART_EFFECT_CASTER_ATTACH1 = new State<>("aca1", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<Int> ART_EFFECT_CASTER_ATTACH_COUNT = new State<>("acac", Int.class);
+		public final static State<Wc3Int> ART_EFFECT_CASTER_ATTACH_COUNT = new State<>("acac", Wc3Int.class);
 		public final static State<DataList<Model>> ART_EFFECT_SPECIAL = new State<>("asat", new DataTypeInfo(DataList.class, Model.class));
 		public final static State<DataList<Wc3String>> ART_EFFECT_SPECIAL_ATTACH = new State<>("aspt", new DataTypeInfo(DataList.class, Wc3String.class));
 		public final static State<DataList<Model>> ART_EFFECT_TARGET = new State<>("atat", new DataTypeInfo(DataList.class, Model.class));
@@ -84,7 +83,7 @@ public class W3A extends ObjMod {
 		public final static State<DataList<Wc3String>> ART_EFFECT_TARGET_ATTACH3 = new State<>("ata3", new DataTypeInfo(DataList.class, Wc3String.class));
 		public final static State<DataList<Wc3String>> ART_EFFECT_TARGET_ATTACH4 = new State<>("ata4", new DataTypeInfo(DataList.class, Wc3String.class));
 		public final static State<DataList<Wc3String>> ART_EFFECT_TARGET_ATTACH5 = new State<>("ata5", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<Int> ART_EFFECT_TARGET_ATTACH_COUNT = new State<>("atac", Int.class);
+		public final static State<Wc3Int> ART_EFFECT_TARGET_ATTACH_COUNT = new State<>("atac", Wc3Int.class);
 		public final static State<Icon> ART_ICON = new State<>("aart", Icon.class);
 		public final static State<Icon> ART_ICON_OFF = new State<>("auar", Icon.class);
 		public final static State<Icon> ART_ICON_RESEARCH = new State<>("arar", Icon.class);
@@ -92,7 +91,7 @@ public class W3A extends ObjMod {
 		public final static State<Real> ART_MISSILE_ARC = new State<>("amac", Real.class);
 		public final static State<DataList<Model>> ART_MISSILE_ART = new State<>("amat", new DataTypeInfo(DataList.class, Model.class));
 		public final static State<Bool> ART_MISSILE_HOMING = new State<>("amho", Bool.class);
-		public final static State<Int> ART_MISSILE_SPEED = new State<>("amsp", Int.class);
+		public final static State<Wc3Int> ART_MISSILE_SPEED = new State<>("amsp", Wc3Int.class);
 		
 		public final static State<Real> DATA_AREA = new State<>("aare", Real.class); //multi
 		public final static State<Wc3String> DATA_BUFFS = new State<>("abuf", Wc3String.class);
@@ -103,11 +102,11 @@ public class W3A extends ObjMod {
 		public final static State<DataList<Effect>> DATA_EFFECTS = new State<>("aeff", new DataTypeInfo(DataList.class, Effect.class));
 		public final static State<Bool> DATA_HERO = new State<>("aher", Bool.class);
 		public final static State<Bool> DATA_ITEM = new State<>("aite", Bool.class);
-		public final static State<Int> DATA_LEVELS_COUNT = new State<>("alev", Int.class);
-		public final static State<Int> DATA_LEVEL_REQ = new State<>("arlv", Int.class);
-		public final static State<Int> DATA_LEVEL_SKIP = new State<>("alsk", Int.class);
-		public final static State<Int> DATA_MANA_COST = new State<>("amcs", Int.class); //multi
-		public final static State<Int> DATA_PRIO = new State<>("apri", Int.class);
+		public final static State<Wc3Int> DATA_LEVELS_COUNT = new State<>("alev", Wc3Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_REQ = new State<>("arlv", Wc3Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_SKIP = new State<>("alsk", Wc3Int.class);
+		public final static State<Wc3Int> DATA_MANA_COST = new State<>("amcs", Wc3Int.class); //multi
+		public final static State<Wc3Int> DATA_PRIO = new State<>("apri", Wc3Int.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("arac", UnitRace.class);
 		public final static State<Real> DATA_RANGE = new State<>("aran", Real.class); //multi
 		public final static State<DataList<CombatTarget>> DATA_TARGETS = new State<>("atar", new DataTypeInfo(DataList.class, CombatTarget.class)); //multi
@@ -117,7 +116,7 @@ public class W3A extends ObjMod {
 		
 		public final static State<Bool> TECH_CHECK_DEPENDENCY = new State<>("achd", Bool.class);
 		public final static State<DataList<TechId>> TECH_REQUIRES = new State<>("areq", new DataTypeInfo(DataList.class, TechId.class));
-		public final static State<DataList<Int>> TECH_REQUIRES_COUNT = new State<>("arqa", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> TECH_REQUIRES_COUNT = new State<>("arqa", new DataTypeInfo(DataList.class, Wc3Int.class));
 		
 		public final static State<Wc3String> TEXT_EDITOR_SUFFIX = new State<>("ansf", Wc3String.class);
 		public final static State<Char> TEXT_HOTKEY = new State<>("ahky", Char.class);

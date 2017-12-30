@@ -2,7 +2,7 @@ package net.moonlightflower.wc3libs.slk;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -11,6 +11,8 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 
@@ -18,11 +20,12 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	public static class FieldData {
 		private final DataType _defVal;
 
+		@Nullable
 		public DataType getDefVal() {
 			return _defVal;
 		}
 
-		public FieldData(DataType defVal) {
+		public FieldData(@Nullable DataType defVal) {
 			_defVal = defVal;
 		}
 	}
@@ -31,23 +34,21 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	
 	private FieldId _pivotField = null;
 
+	@Nonnull
 	public Map<FieldId, FieldData> getFields() {
 		return _fields;
 	}
 	
-	public boolean containsField(FieldId field) {
-		if (field == null) throw new RuntimeException("field is null");
-
+	public boolean containsField(@Nonnull FieldId field) {
 		return _fields.containsKey(field);
 	}
-	
+
+	@Nullable
 	public FieldId getPivotField() {
 		return _pivotField;
 	}
 	
-	public void addField(FieldId field, DataType defVal) {
-		if (field == null) throw new RuntimeException("field is null");
-
+	public void addField(@Nonnull FieldId field, @Nullable DataType defVal) {
 		FieldData fieldData = new FieldData(defVal);
 
 		_fields.put(field, fieldData);
@@ -57,54 +58,55 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 	
-	public void addField(SLKState state, DataType defVal) {
+	public void addField(@Nonnull SLKState state, @Nullable DataType defVal) {
 		addField(state.getFieldId(), defVal);
 	}
 	
-	public void addField(FieldId field) {
+	public void addField(@Nonnull FieldId field) {
 		addField(field, null);
 	}
 	
-	public void addField(SLKState state) {
+	public void addField(@Nonnull SLKState state) {
 		addField(state.getFieldId());
 	}
 	
 	public abstract static class Obj<T extends ObjId> {		
 		private Map<FieldId, DataType> _vals = new LinkedHashMap<>();
-		
+
+		@Nonnull
 		public Map<FieldId, DataType> getVals() {
 			return _vals;
 		}
 		
-		public DataType get(FieldId field) {
+		public DataType get(@Nonnull FieldId field) {
 			return getVals().get(field);
 		}
 
-		public DataType get(SLKState state) {
+		public DataType get(@Nonnull SLKState state) {
 			return getVals().get(state.getFieldId());
 		}
 		
-		public DataType get(String fieldS) {
+		public DataType get(@Nonnull String fieldS) {
 			return get(FieldId.valueOf(fieldS));
 		}
 		
-		public String getS(FieldId field) {
+		public String getS(@Nonnull FieldId field) {
 			return get(field).toString();
 		}
 		
-		public void set(FieldId field, DataType val) {
+		public void set(@Nonnull FieldId field, DataType val) {
 			_vals.put(field, val);
 		}
 		
-		public void set(SLKState state, DataType val) {
+		public void set(@Nonnull SLKState state, DataType val) {
 			set(state.getFieldId(), val);
 		}
 		
-		public void setRaw(FieldId field, String val) {
+		public void setRaw(@Nonnull FieldId field, String val) {
 			set(field, Wc3String.valueOf(val));
 		}
 		
-		public void merge(Obj<? extends ObjId> otherObj, boolean overwrite) {
+		public void merge(@Nonnull Obj<? extends ObjId> otherObj, boolean overwrite) {
 			for (Map.Entry<FieldId, DataType> entry : otherObj.getVals().entrySet()) {
 				FieldId field = entry.getKey();
 				DataType val = entry.getValue();
@@ -117,11 +119,11 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 			}
 		}
 		
-		public void merge(Obj<? extends ObjId> otherObj) {
+		public void merge(@Nonnull Obj<? extends ObjId> otherObj) {
 			merge(otherObj, true);
 		}
 		
-		public void print(PrintStream stream) {
+		public void print(@Nonnull PrintStream stream) {
 			for (Map.Entry<FieldId, DataType> valEntry : getVals().entrySet()) {
 				FieldId fieldId = valEntry.getKey();
 				DataType val = valEntry.getValue();
@@ -137,49 +139,54 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		public abstract void reduce();
 		
 		private T _id;
-		
+
+		@Nonnull
 		public T getId() {
 			return _id;
 		}
 		
-		public Obj(T id) {
+		public Obj(@Nonnull T id) {
 			_id = id;
 		}
 	}
 	
 	protected Map<ObjIdType, ObjType> _objs = new LinkedHashMap<>();
 	
-	public boolean containsObj(ObjIdType objId) {
+	public boolean containsObj(@Nonnull ObjIdType objId) {
 		return _objs.containsKey(objId);
 	}
-	
+
+	@Nonnull
 	public Map<ObjIdType, ObjType> getObjs() {
 		return _objs;
 	}
-	
-	public ObjType getObj(ObjIdType id) {
+
+	@Nonnull
+	public ObjType getObj(@Nonnull ObjIdType id) {
 		return getObjs().get(id);
 	}
 
-	public void addObj(ObjType val) {
+	public void addObj(@Nonnull ObjType val) {
 		_objs.put(val.getId(), val);
 	}
 
-	public void removeObj(ObjType val) {
+	public void removeObj(@Nonnull ObjType val) {
 		_objs.remove(val.getId());
 	}
 	
-	public void removeObj(ObjIdType id) {
+	public void removeObj(@Nonnull ObjIdType id) {
 		if (_objs.containsKey(id)) removeObj(_objs.get(id));
 	}
 	
 	public void clearObjs() {
 		_objs.clear();
 	}
-	
-	protected abstract ObjType createObj(ObjId id);
-	
-	public ObjType addObj(ObjIdType id) {
+
+	@Nonnull
+	protected abstract ObjType createObj(@Nonnull ObjId id);
+
+	@Nonnull
+	public ObjType addObj(@Nonnull ObjIdType id) {
 		if (getObjs().containsKey(id)) return getObj(id);
 		
 		ObjType obj = createObj(id);
@@ -189,7 +196,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		return obj;
 	}
 	
-	public void merge(Self other, boolean overwrite) {
+	public void merge(@Nonnull Self other, boolean overwrite) {
 		if (overwrite) {
 			_pivotField = other.getPivotField();
 		}
@@ -211,15 +218,15 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	}
 	
 	@Override
-	public void merge(Self other) {
+	public void merge(@Nonnull Self other) {
 		merge(other, true);
 	}
-	
+
 	//protected abstract ObjIdType readObj(ObjId id);
 	
-	protected abstract void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk);
+	protected abstract void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk);
 
-	public void read(File file, boolean onlyHeader) throws IOException {
+	public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 
 		String line;
@@ -260,11 +267,11 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 							val = Wc3String.valueOf(valS);
 						} else {
 							try {
-								val = Int.valueOf(Integer.parseInt(valS));
+								val = Wc3Int.valueOf(Integer.parseInt(valS));
 							} catch (NumberFormatException e) {
 								try {
 									val = Real.valueOf(Float.parseFloat(valS));
-								} catch (NumberFormatException e2) {
+								} catch (NumberFormatException ignored) {
 								}
 							}
 
@@ -340,7 +347,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 	}
 	
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(file, false);
 	}
 	
@@ -351,20 +358,21 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		private int _slkCurX;
 		private int _slkCurY;
 
-		private Object formatVal(Object val) {
+		@Nullable
+		private Object formatVal(@Nullable Object val) {
 			if (val == null) return null;
 			
 			try {
 				return Integer.parseInt(val.toString());
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException ignored) {
 			}
 			try {
 				return Float.parseFloat(val.toString());
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException ignored) {
 			}
 			try {
 				return Double.parseDouble(val.toString());
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException ignored) {
 			}
 			
 			if (val instanceof Boolean) {
@@ -389,7 +397,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 			return null;
 		}
 		
-		private void writeCell(int x, int y, DataType slkVal) throws IOException {			
+		private void writeCell(int x, int y, @Nullable DataType slkVal) throws IOException {
 			if (slkVal == null) return;
 
 			Object val = slkVal.toSLKVal();
@@ -492,7 +500,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 			_writer.close();
 		}
 
-		public Writer(File file) {
+		public Writer(@Nonnull File file) {
 			_file = file;
 		}
 	}
@@ -501,11 +509,11 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		
 	}*/
 	
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		new Writer(file).exec();
 	}
 	
-	public SLK(File file) throws IOException {
+	public SLK(@Nonnull File file) throws IOException {
 		this();
 		
 		read(file);
@@ -513,8 +521,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	
 	public SLK() {
 	}
-	
-	public static SLK createFromInFile(File inFile, File outFile) throws IOException {
+
+	@Nullable
+	public static SLK createFromInFile(@Nonnull File inFile, @Nonnull File outFile) throws IOException {
 		SLK slk = null;
 		
 		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
@@ -555,8 +564,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		
 		return slk;
 	}
-	
-	public static SLK createFromInFile(File inFile, SLK sourceSlk) {
+
+	@Nullable
+	public static SLK createFromInFile(@Nonnull File inFile, @Nonnull SLK sourceSlk) {
 		SLK slk = null;
 
 		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
@@ -598,7 +608,8 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		return slk;
 	}
 
-	public static SLK createFromInFile(File inFile) {
+	@Nullable
+	public static SLK createFromInFile(@Nonnull File inFile) {
 		SLK slk = null;
 
 		if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
@@ -640,4 +651,3 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		return slk;
 	}
 }
-

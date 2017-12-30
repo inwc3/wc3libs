@@ -17,7 +17,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +30,7 @@ public class SHD {
 
     private ShadowMap _shadowMap;
 
+    @Nonnull
     public ShadowMap getShadowMap() {
         return _shadowMap;
     }
@@ -42,20 +45,16 @@ public class SHD {
             SHD_0x0,
         }
 
-        private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
         public final static EncodingFormat SHD_0x0 = new EncodingFormat(Enum.SHD_0x0, 0x0);
 
         @Nullable
-        public static EncodingFormat valueOf(int version) {
-            return _map.get(version);
+        public static EncodingFormat valueOf(@Nonnull Integer version) {
+            return get(EncodingFormat.class, version);
         }
 
-        private EncodingFormat(Enum enumVal, int version) {
+        private EncodingFormat(@Nonnull Enum enumVal, int version) {
             super(enumVal, version);
-
-            _map.put(version, this);
         }
     }
 

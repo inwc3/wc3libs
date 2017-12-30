@@ -7,8 +7,12 @@ import java.io.StringWriter;
 
 import net.moonlightflower.wc3libs.misc.ProcCaller;
 
+import javax.annotation.Nonnull;
+
 public class Registry {	
-	public static String get(File dir, String key) throws IOException {
+	public static String get(@Nonnull File dir, @Nonnull String key) throws IOException {
+		if (!System.getProperty("os.name").toLowerCase().startsWith("win")) throw new IllegalArgumentException("not a windows system");
+
 		ProcCaller proc = new ProcCaller("REG", "QUERY", dir.toString(), "/v", key);
 		
 		proc.exec();
@@ -24,7 +28,7 @@ public class Registry {
 		return val;
 	}
 	
-	public static String get(String dirS, String key) throws IOException {
+	public static String get(@Nonnull String dirS, @Nonnull String key) throws IOException {
 		return get(new File(dirS), key);
 	}
 }

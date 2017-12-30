@@ -5,18 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.moonlightflower.wc3libs.bin.app.objMod.W3T.States.State;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.AttackTable;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.DefenseTable;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitList;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.TXTState;
@@ -25,7 +18,7 @@ public class MiscTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapMisc.txt");
 	
 	public static class States {
-		private static class Section {
+		public static class Section {
 			public final static Section HERO = new Section("HERO");
 			public final static Section MISC = new Section("Misc");
 			public final static Section TALT = new Section("TALT");
@@ -99,7 +92,7 @@ public class MiscTXT extends TXT {
 		public final static State<Bool> ABIL_DRAIN_TRANFERS_MANA = new State<>(Section.MISC, "DrainTransfersMana", Bool.class);
 		public final static State<Bool> ABIL_DIVINE_SHIELD_CAN_DEACTIVATE = new State<>(Section.MISC, "CanDeactivateDivineShield", Bool.class);
 		public final static State<Bool> ABIL_ENSNARE_IS_MAGIC = new State<>(Section.MISC, "EnsnareIsMagic", Bool.class);
-		public final static State<Int> ABIL_HERO_LEVEL_SKIP = new State<>(Section.MISC, "HeroAbilityLevelSkip", Int.class);
+		public final static State<Wc3Int> ABIL_HERO_LEVEL_SKIP = new State<>(Section.MISC, "HeroAbilityLevelSkip", Wc3Int.class);
 		public final static State<Bool> ABIL_IMMOLATION_CAN_DEACTIVATE = new State<>(Section.MISC, "CanDeactivateImmolation", Bool.class);
 		public final static State<Bool> ABIL_MANA_FLARE_CAN_DEACTIVATE = new State<>(Section.MISC, "CanDeactivateManaFlare", Bool.class);
 		public final static State<Bool> ABIL_MANA_SHIELD_CAN_DEACTIVATE = new State<>(Section.MISC, "CanDeactivateManaShield", Bool.class);
@@ -115,26 +108,26 @@ public class MiscTXT extends TXT {
 		
 		public final static State<Bool> EXP_GLOBAL = new State<>(Section.MISC, "GlobalExperience", Bool.class);
 		public final static State<Bool> EXP_STRUCTURE_KILLS_GIVE = new State<>(Section.MISC, "BuildingKillsGiveExp", Bool.class);
-		public final static State<Int> EXP_HERO_MAX_LEVEL = new State<>(Section.MISC, "MaxHeroLevel", Int.class);
+		public final static State<Wc3Int> EXP_HERO_MAX_LEVEL = new State<>(Section.MISC, "MaxHeroLevel", Wc3Int.class);
 		public final static State<Bool> EXP_HERO_MAX_LEVEL_DRAIN = new State<>(Section.MISC, "MaxLevelHeroesDrainExp", Bool.class);
-		public final static State<DataList<Int>> EXP_HERO_NEEDED = new State<>(Section.MISC, "NeedHeroXP", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> EXP_HERO_NEEDED = new State<>(Section.MISC, "NeedHeroXP", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<Real> EXP_HERO_NEEDED_PREV_VAL_FACTOR = new State<>(Section.MISC, "NeedHeroXPFormulaA", Real.class);
 		public final static State<Real> EXP_HERO_NEEDED_LEVEL_FACTOR = new State<>(Section.MISC, "NeedHeroXPFormulaB", Real.class);
 		public final static State<Real> EXP_HERO_NEEDED_CONST_FACTOR = new State<>(Section.MISC, "NeedHeroXPFormulaC", Real.class);
 		public final static State<Real> EXP_HERO_RANGE = new State<>(Section.MISC, "HeroExpRange", Real.class);
-		public final static State<Int> EXP_UNIT_MAX_LEVEL = new State<>(Section.MISC, "MaxUnitLevel", Int.class);
+		public final static State<Wc3Int> EXP_UNIT_MAX_LEVEL = new State<>(Section.MISC, "MaxUnitLevel", Wc3Int.class);
 
-		public final static State<DataList<Int>> EXP_GRANTED_HERO = new State<>(Section.MISC, "GrantHeroXP", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> EXP_GRANTED_HERO = new State<>(Section.MISC, "GrantHeroXP", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<Real> EXP_GRANTED_HERO_PREV_VAL_FACTOR = new State<>(Section.MISC, "GrantHeroXPFormulaA", Real.class);
 		public final static State<Real> EXP_GRANTED_HERO_CONST_FACTOR = new State<>(Section.MISC, "GrantHeroXPFormulaC", Real.class);
 		public final static State<Real> EXP_GRANTED_HERO_LEVEL_FACTOR = new State<>(Section.MISC, "GrantHeroXPFormulaB", Real.class);
-		public final static State<DataList<Int>> EXP_GRANTED_NORMAL = new State<>(Section.MISC, "GrantNormalXP", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> EXP_GRANTED_NORMAL = new State<>(Section.MISC, "GrantNormalXP", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<Real> EXP_GRANTED_NORMAL_PREV_VAL_FACTOR = new State<>(Section.MISC, "GrantNormalXPFormulaA", Real.class);
 		public final static State<Real> EXP_GRANTED_NORMAL_CONST_FACTOR = new State<>(Section.MISC, "GrantNormalXPFormulaC", Real.class);
 		public final static State<Real> EXP_GRANTED_NORMAL_LEVEL_FACTOR = new State<>(Section.MISC, "GrantNormalXPFormulaB", Real.class);
 		public final static State<Real> EXP_GRANTED_SUMMON_FACTOR = new State<>(Section.MISC, "SummonedKillFactor", Real.class);
 		
-		public final static State<DataList<Int>> EXP_GRANTED_CREEP_REDUCTION = new State<>(Section.MISC, "HeroFactorXP", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> EXP_GRANTED_CREEP_REDUCTION = new State<>(Section.MISC, "HeroFactorXP", new DataTypeInfo(DataList.class, Wc3Int.class));
 		public final static State<DataList<Real>> EXP_GRANTED_TOWNHALL1_FACTOR = new State<>(Section.TWN1, "XPFactor", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> EXP_GRANTED_TOWNHALL2_FACTOR = new State<>(Section.TWN2, "XPFactor", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> EXP_GRANTED_TOWNHALL3_FACTOR = new State<>(Section.TWN3, "XPFactor", new DataTypeInfo(DataList.class, Real.class));
@@ -206,20 +199,20 @@ public class MiscTXT extends TXT {
 		public final static State<Real> HERO_AWAKEN_COSTS_GOLD_CONST_FACTOR = new State<>(Section.MISC, "AwakenBaseFactor", Real.class);
 		public final static State<Real> HERO_AWAKEN_COSTS_GOLD_LEVEL_FACTOR = new State<>(Section.MISC, "AwakenLevelFactor", Real.class);
 		public final static State<Real> HERO_AWAKEN_COSTS_GOLD_LUMBER_FACTOR_MAX = new State<>(Section.MISC, "AwakenMaxFactor", Real.class);
-		public final static State<Int> HERO_AWAKEN_COSTS_GOLD_MAX = new State<>(Section.MISC, "HeroMaxAwakenCostGold", Int.class);
+		public final static State<Wc3Int> HERO_AWAKEN_COSTS_GOLD_MAX = new State<>(Section.MISC, "HeroMaxAwakenCostGold", Wc3Int.class);
 		public final static State<Real> HERO_AWAKEN_COSTS_LUMBER_CONST_FACTOR = new State<>(Section.MISC, "AwakenBaseLumberFactor", Real.class);
 		public final static State<Real> HERO_AWAKEN_COSTS_LUMBER_LEVEL_FACTOR = new State<>(Section.MISC, "AwakenLumberLevelFactor", Real.class);
-		public final static State<Int> HERO_AWAKEN_COSTS_LUMBER_MAX = new State<>(Section.MISC, "HeroMaxAwakenCostLumber", Int.class);
+		public final static State<Wc3Int> HERO_AWAKEN_COSTS_LUMBER_MAX = new State<>(Section.MISC, "HeroMaxAwakenCostLumber", Wc3Int.class);
 		public final static State<Real> HERO_AWAKEN_LIFE_FACTOR = new State<>(Section.MISC, "HeroAwakenLifeFactor", Real.class);
 		public final static State<Real> HERO_AWAKEN_MANA_FACTOR = new State<>(Section.MISC, "HeroAwakenManaFactor", Real.class);
 		public final static State<Bool> HERO_AWAKEN_USE_INITIAL_MANA = new State<>(Section.MISC, "HeroAwakenManaStart", Bool.class);
 		public final static State<Real> HERO_REVIVE_COSTS_GOLD_CONST_FACTOR = new State<>(Section.MISC, "ReviveBaseFactor", Real.class);
 		public final static State<Real> HERO_REVIVE_COSTS_GOLD_LEVEL_FACTOR = new State<>(Section.MISC, "ReviveLevelFactor", Real.class);
 		public final static State<Real> HERO_REVIVE_COSTS_GOLD_LUMBER_FACTOR_MAX = new State<>(Section.MISC, "ReviveMaxFactor", Real.class);
-		public final static State<Int> HERO_REVIVE_COSTS_GOLD_MAX = new State<>(Section.MISC, "HeroMaxReviveCostGold", Int.class);
+		public final static State<Wc3Int> HERO_REVIVE_COSTS_GOLD_MAX = new State<>(Section.MISC, "HeroMaxReviveCostGold", Wc3Int.class);
 		public final static State<Real> HERO_REVIVE_COSTS_LUMBER_CONST_FACTOR = new State<>(Section.MISC, "ReviveBaseLumberFactor", Real.class);
 		public final static State<Real> HERO_REVIVE_COSTS_LUMBER_LEVEL_FACTOR = new State<>(Section.MISC, "ReviveLumberLevelFactor", Real.class);
-		public final static State<Int> HERO_REVIVE_COSTS_LUMBER_MAX = new State<>(Section.MISC, "HeroMaxReviveCostLumber", Int.class);
+		public final static State<Wc3Int> HERO_REVIVE_COSTS_LUMBER_MAX = new State<>(Section.MISC, "HeroMaxReviveCostLumber", Wc3Int.class);
 		public final static State<Real> HERO_REVIVE_COSTS_TIME_FACTOR = new State<>(Section.MISC, "ReviveTimeFactor", Real.class);
 		public final static State<Real> HERO_REVIVE_COSTS_TIME_FACTOR_MAX = new State<>(Section.MISC, "ReviveMaxTimeFactor", Real.class);
 		public final static State<Real> HERO_REVIVE_COSTS_TIME_MAX = new State<>(Section.MISC, "HeroMaxReviveTime", Real.class);
@@ -251,13 +244,13 @@ public class MiscTXT extends TXT {
 		public final static State<Real> MOVE_SPEED_STRUCTURE_MAX = new State<>(Section.MISC, "MaxBldgSpeed", Real.class);
 		public final static State<Real> MOVE_SPEED_STRUCTURE_MIN = new State<>(Section.MISC, "MinBldgSpeed", Real.class);
 
-		public final static State<Int> RESOURCES_GOLD_MINE_GOLD_LOW = new State<>(Section.MISC, "LowGoldAmount", Int.class);
-		public final static State<Int> RESOURCES_GOLD_MINE_GOLD_MAX = new State<>(Section.MISC, "GoldMineMaxGold", Int.class);
-		public final static State<Int> RESOURCES_GOLD_MINE_OWN_DURATION = new State<>(Section.MISC, "GoldMineOwnDuration", Int.class);
-		public final static State<Int> RESOURCES_SUPPLY_MAX = new State<>(Section.MISC, "FoodCeiling", Int.class);
+		public final static State<Wc3Int> RESOURCES_GOLD_MINE_GOLD_LOW = new State<>(Section.MISC, "LowGoldAmount", Wc3Int.class);
+		public final static State<Wc3Int> RESOURCES_GOLD_MINE_GOLD_MAX = new State<>(Section.MISC, "GoldMineMaxGold", Wc3Int.class);
+		public final static State<Wc3Int> RESOURCES_GOLD_MINE_OWN_DURATION = new State<>(Section.MISC, "GoldMineOwnDuration", Wc3Int.class);
+		public final static State<Wc3Int> RESOURCES_SUPPLY_MAX = new State<>(Section.MISC, "FoodCeiling", Wc3Int.class);
 		public final static State<DataList<Real>> RESOURCES_SUPPLY_UPKEEP_COSTS_GOLD = new State<>(Section.MISC, "UpkeepGoldTax", new DataTypeInfo(DataList.class, Real.class));
 		public final static State<DataList<Real>> RESOURCES_SUPPLY_UPKEEP_COSTS_LUMBER = new State<>(Section.MISC, "UpkeepLumberTax", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Int>> RESOURCES_SUPPLY_UPKEEP_LEVELS = new State<>(Section.MISC, "UpkeepUsage", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> RESOURCES_SUPPLY_UPKEEP_LEVELS = new State<>(Section.MISC, "UpkeepUsage", new DataTypeInfo(DataList.class, Wc3Int.class));
 		
 		public final static State<Real> STRUCTURE_ANGLE = new State<>(Section.MISC, "BuildingAngle", Real.class);
 		public final static State<Real> STRUCTURE_ANGLE_ROOTED = new State<>(Section.MISC, "RootAngle", Real.class);
@@ -303,11 +296,11 @@ public class MiscTXT extends TXT {
 		public final static State<Real> TIME_DAY_HOURS = new State<>(Section.MISC, "DayHours", Real.class);
 		public final static State<Real> TIME_DUSK = new State<>(Section.MISC, "Dusk", Real.class);
 		
-		public final static State<Int> TRADING_INC_SMALL = new State<>(Section.MISC, "TradingIncSmall", Int.class);
-		public final static State<Int> TRADING_INC_LARGE = new State<>(Section.MISC, "TradingIncLarge", Int.class);
+		public final static State<Wc3Int> TRADING_INC_SMALL = new State<>(Section.MISC, "TradingIncSmall", Wc3Int.class);
+		public final static State<Wc3Int> TRADING_INC_LARGE = new State<>(Section.MISC, "TradingIncLarge", Wc3Int.class);
 
 		public final static State<Real> COLLISION_SIZE_MAX = new State<>(Section.MISC, "MaxCollisionRadius", Real.class);
-		public final static State<Int> CREEP_CAMP_RADIUS_CELLS = new State<>(Section.MISC, "CreepCampPathingCellDistance", Int.class);
+		public final static State<Wc3Int> CREEP_CAMP_RADIUS_CELLS = new State<>(Section.MISC, "CreepCampPathingCellDistance", Wc3Int.class);
 		public final static State<Real> FROST_ATTACK_SPEED_DEC = new State<>(Section.MISC, "FrostAttackSpeedDecrease", Real.class);
 		public final static State<Real> FROST_MOVE_SPEED_DEC = new State<>(Section.MISC, "FrostMoveSpeedDecrease", Real.class);
 		public final static State<Real> INVIS_SPEED = new State<>(Section.MISC, "InvisSpeed", Real.class);

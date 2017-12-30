@@ -29,6 +29,11 @@ public class BinStream {
     public static class StreamException extends IOException {
         private BinStream _stream;
 
+        @Nonnull
+        public BinStream getStream() {
+            return _stream;
+        }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -42,9 +47,10 @@ public class BinStream {
             return sb.toString();
         }
 
-        @Nonnull
-        public BinStream getStream() {
-            return _stream;
+        public StreamException(@Nonnull BinStream stream, @Nonnull String msg) {
+            this(stream);
+
+            _stream.log(msg);
         }
 
         public StreamException(@Nonnull BinStream stream) {
@@ -98,7 +104,7 @@ public class BinStream {
         _logLines.add(s);
     }
 
-    public void log(String type, String label, Object val, String valFormat) {
+    public void log(@Nonnull String type, @Nullable String label, Object val, String valFormat) {
         long startPos = _logStartPos;
         long endPos = _pos;
 
@@ -138,7 +144,7 @@ public class BinStream {
         _logStartPos = _pos;
     }
 
-    public void log(String type, String label, Object val) {
+    public void log(@Nonnull String type, @Nullable String label, Object val) {
         log(type, label, val, "%s");
     }
 

@@ -7,13 +7,8 @@ import net.moonlightflower.wc3libs.bin.app.DOO;
 import net.moonlightflower.wc3libs.bin.app.DOO_UNITS;
 import net.moonlightflower.wc3libs.bin.app.W3C;
 import net.moonlightflower.wc3libs.bin.app.W3R;
-import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
-import net.moonlightflower.wc3libs.dataTypes.app.Color;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.dataTypes.app.WeatherId;
-import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 
 interface IRemovalListener {
 	void exec();
@@ -27,13 +22,13 @@ public class Placements {
 	private W3R _w3r;
 	
 	public static class Rect {
-		private Int _index;
+		private Wc3Int _index;
 		
-		public Int getIndex() {
+		public Wc3Int getIndex() {
 			return _index;
 		}
 		
-		public void setIndex(Int val) {
+		public void setIndex(Wc3Int val) {
 			_index = val;
 		}
 		

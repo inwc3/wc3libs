@@ -13,10 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * doodad placements file for wrapping war3map.doo
@@ -427,7 +424,7 @@ public class DOO {
 			public static EncodingFormat valueOf(int version) {
 				return _map.get(version);
 			}
-			
+
 			private EncodingFormat(@Nonnull Enum enumVal, int version) {
 				super(enumVal, version);
 				
@@ -506,20 +503,16 @@ public class DOO {
 			DOO_0x8,
 		}
 
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
-		
+
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 	
@@ -528,7 +521,7 @@ public class DOO {
 
 		int version = stream.readInt32("version");
 
-		Wc3BinInputStream.checkFormatVer("dooMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.DOO_0x8.getVersion(), version);
 		
 		int subVersion = stream.readInt32("subVersion"); //0xB
 		

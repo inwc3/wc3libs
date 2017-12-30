@@ -54,15 +54,15 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
 
         public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment", Wc3String.class);
         public final static State<Wc3String> DATA_SCRIPT_NAME = new State<>("scriptname", Wc3String.class);
-        public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+        public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
         public final static State<ItemClass> DATA_CLASS = new State<>("class", ItemClass.class);
-        public final static State<Int> DATA_LEVEL = new State<>("Level", Int.class);
-        public final static State<Int> DATA_LEVEL_OLD = new State<>("oldLevel", Int.class);
+        public final static State<Wc3Int> DATA_LEVEL = new State<>("Level", Wc3Int.class);
+        public final static State<Wc3Int> DATA_LEVEL_OLD = new State<>("oldLevel", Wc3Int.class);
         public final static State<DataList<AbilId>> DATA_ABILS = new State<>("abilList", new DataTypeInfo(DataList.class, AbilId.class));
         public final static State<AbilId> DATA_COOLDOWN_ID = new State<>("cooldownID", AbilId.class);
         public final static State<Bool> DATA_IGNORE_COOLDOWN = new State<>("ignoreCD", Bool.class);
-        public final static State<Int> DATA_CHARGES = new State<>("uses", Int.class);
-        public final static State<Int> DATA_PRIO = new State<>("prio", Int.class);
+        public final static State<Wc3Int> DATA_CHARGES = new State<>("uses", Wc3Int.class);
+        public final static State<Wc3Int> DATA_PRIO = new State<>("prio", Wc3Int.class);
         public final static State<Bool> DATA_USABLE = new State<>("usable", Bool.class);
         public final static State<Bool> DATA_PERISHABLE = new State<>("perishable", Bool.class);
         public final static State<Bool> DATA_DROPPABLE = new State<>("droppable", Bool.class);
@@ -71,20 +71,20 @@ public class ItemSLK extends ObjSLK<ItemSLK, ItemId, ItemSLK.Obj> {
         public final static State<Bool> DATA_USE_IN_RANDOM = new State<>("pickRandom", Bool.class);
         public final static State<Bool> DATA_POWERUP = new State<>("powerup", Bool.class);
         public final static State<Bool> DATA_DROPPED = new State<>("drop", Bool.class);
-        public final static State<Int> DATA_STOCK_REGEN = new State<>("stockMax", Int.class);
-        public final static State<Int> DATA_STOCK_MAX = new State<>("stockRegen", Int.class);
-        public final static State<Int> DATA_STOCK_INITIAL = new State<>("stockStart", Int.class);
-        public final static State<Int> DATA_COSTS_GOLD = new State<>("goldcost", Int.class);
-        public final static State<Int> DATA_COSTS_LUMBER = new State<>("lumbercost", Int.class);
-        public final static State<Int> DATA_LIFE = new State<>("HP", Int.class);
+        public final static State<Wc3Int> DATA_STOCK_REGEN = new State<>("stockMax", Wc3Int.class);
+        public final static State<Wc3Int> DATA_STOCK_MAX = new State<>("stockRegen", Wc3Int.class);
+        public final static State<Wc3Int> DATA_STOCK_INITIAL = new State<>("stockStart", Wc3Int.class);
+        public final static State<Wc3Int> DATA_COSTS_GOLD = new State<>("goldcost", Wc3Int.class);
+        public final static State<Wc3Int> DATA_COSTS_LUMBER = new State<>("lumbercost", Wc3Int.class);
+        public final static State<Wc3Int> DATA_LIFE = new State<>("HP", Wc3Int.class);
         public final static State<Bool> DATA_MORPHABLE = new State<>("morph", Bool.class);
         public final static State<ArmorSound> SOUND_ARMOR = new State<>("armor", ArmorSound.class);
         public final static State<Model> ART_MODEL = new State<>("file", Model.class);
         public final static State<Real> ART_SCALE = new State<>("scale", Real.class);
         public final static State<Real> ART_SELECTION_SCALE = new State<>("selSize", Real.class);
-        public final static State<Int> ART_COLOR_RED = new State<>("colorB", Int.class);
-        public final static State<Int> ART_COLOR_BLUE = new State<>("colorR", Int.class);
-        public final static State<Int> ART_COLOR_GREEN = new State<>("colorG", Int.class);
+        public final static State<Wc3Int> ART_COLOR_RED = new State<>("colorB", Wc3Int.class);
+        public final static State<Wc3Int> ART_COLOR_BLUE = new State<>("colorR", Wc3Int.class);
+        public final static State<Wc3Int> ART_COLOR_GREEN = new State<>("colorG", Wc3Int.class);
         public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
     }
 

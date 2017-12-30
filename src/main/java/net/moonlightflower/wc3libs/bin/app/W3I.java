@@ -651,7 +651,7 @@ public class W3I {
             _type = val;
         }
 
-        public static class UnitRace extends Int {
+        public static class UnitRace extends Wc3Int {
             private final static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
 
             public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF");
@@ -807,8 +807,13 @@ public class W3I {
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setNum(stream.readInt32("playerNum"));
 
-            setType(Controller.valueOf(stream.readInt32("controller")));
-            setRace(UnitRace.valueOf(stream.readInt32("race")));
+            Controller controller = Controller.valueOf(stream.readInt32("controller"));
+
+            if (controller != null) setType(controller);
+
+            UnitRace race = UnitRace.valueOf(stream.readInt32("race"));
+
+            if (race != null) setRace(race);
 
             setStartPosFixed(stream.readInt32("startPosFixed"));
 
@@ -1708,28 +1713,24 @@ public class W3I {
             W3I_0x12,
         }
 
-        private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
         public final static EncodingFormat W3I_0x19 = new EncodingFormat(Enum.W3I_0x19, 0x19);
         public final static EncodingFormat W3I_0x12 = new EncodingFormat(Enum.W3I_0x12, 0x12);
 
         @Nullable
-        public static EncodingFormat valueOf(int version) {
-            return _map.get(version);
+        public static EncodingFormat valueOf(@Nonnull Integer version) {
+            return get(EncodingFormat.class, version);
         }
 
         private EncodingFormat(@Nonnull Enum enumVal, int version) {
             super(enumVal, version);
-
-            _map.put(version, this);
         }
     }
 
     private void read_0x12(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt32("version");
 
-        Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3I_0x12.getVersion(), version);
+        stream.checkFormatVersion(EncodingFormat.W3I_0x12.getVersion(), version);
 
         setSavesAmount(stream.readInt32("savesAmount"));
         setEditorVersion(stream.readInt32("editorVersion"));
@@ -1867,7 +1868,7 @@ public class W3I {
     private void read_0x19(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt32("version");
 
-        Wc3BinInputStream.checkFormatVer("infoFileMaskFunc", EncodingFormat.W3I_0x19.getVersion(), version);
+        stream.checkFormatVersion(EncodingFormat.W3I_0x19.getVersion(), version);
 
         setSavesAmount(stream.readInt32("savesAmount"));
         setEditorVersion(stream.readInt32("editorVersion"));
@@ -1907,17 +1908,13 @@ public class W3I {
                 stream.readString("prologueScreenSubtitle")
         ));
 
-        setTerrainFog(new TerrainFog(
-                TerrainFogType.valueOf(stream.readInt32("terrainFogType")),
-                stream.readReal("terrainFogZHeightStart"),
-                stream.readReal("terrainFogZHeightEnd"),
-                stream.readReal("terrainFogDensity"),
-                Color.fromRGBA255(
-                        stream.readUByte("terrainFogRed"),
-                        stream.readUByte("terrainFogGreen"),
-                        stream.readUByte("terrainFogBlue"),
-                        stream.readUByte("terrainFogAlpha"))
-        ));
+        TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
+        Real terrainFogZStart = stream.readReal("terrainFogZStart");
+        Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
+        Real terrainFogDensity = stream.readReal("terrainFogDensity");
+        Color terrainFogColor = Color.fromRGBA255(stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"), stream.readUByte("terrainFogBlue"), stream.readUByte("terrainFogAlpha"));
+
+        if (terrainFogType != null) setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
 
         setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
         setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
@@ -2030,7 +2027,9 @@ public class W3I {
 
         TerrainFog terrainFog = getTerrainFog();
 
-        stream.writeInt32(terrainFog != null ? terrainFog.getType() : null);
+        TerrainFogType terrainFogType = terrainFog != null ? terrainFog.getType() : null;
+
+        stream.writeInt32(terrainFogType != null ? terrainFogType.getVal() : 0);
         stream.writeReal(terrainFog != null ? terrainFog.getZStart() : null);
         stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : null);
         stream.writeReal(terrainFog != null ? terrainFog.getDensity() : null);
@@ -2088,14 +2087,10 @@ public class W3I {
 
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt32("version");
-        System.out.println("Detected version: " + version);
+
         stream.rewind();
 
-        EncodingFormat format = EncodingFormat.valueOf(version);
-
-        if (format == null) throw new Exception(String.format("unknown format %x", version));
-
-        read(stream, format);
+        read(stream, stream.getFormat(EncodingFormat.class, version));
     }
 
     private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {

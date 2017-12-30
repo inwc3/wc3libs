@@ -11,11 +11,8 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Color;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.LightningId;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
@@ -70,7 +67,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		public final static State<Real> ART_TEX_COORD_SCALE = new State<>("TexCoordScale", Real.class);
 		public final static State<Real> ART_WIDTH = new State<>("Width", Real.class, Real.valueOf(10F));
 		
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 	}
 	
 	public static class Obj extends SLK.Obj<LightningId> {

@@ -6,9 +6,12 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.misc.ObjId;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class RawSLK extends SLK<RawSLK, ObjId, RawSLK.Obj> {
 	public class Obj extends SLK.Obj<ObjId> {
-		public Obj(ObjId id) {
+		public Obj(@Nonnull ObjId id) {
 			super(id);
 		}
 
@@ -18,22 +21,22 @@ public class RawSLK extends SLK<RawSLK, ObjId, RawSLK.Obj> {
 	}
 
 	@Override
-	public Obj createObj(ObjId id) {
+	public Obj createObj(@Nonnull ObjId id) {
 		return new Obj(id);
 	}
 
 	@Override
-	public void merge(RawSLK other, boolean overwrite) {
+	public void merge(@Nonnull RawSLK other, boolean overwrite) {
 		super.merge(other, overwrite);
 	}
 
 	@Override
-	protected void read(SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
+	protected void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk) {
 		for (Entry<? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slkEntry : slk.getObjs().entrySet()) {
 		}
 	}
 	
-	public RawSLK(File file) throws IOException {
+	public RawSLK(@Nonnull File file) throws IOException {
 		super(file);
 	}
 

@@ -216,7 +216,7 @@ public class MMP {
 			
 			if (imgPath == null) continue;
 			
-			IconImg iconImg = null;
+			IconImg iconImg;
 			
 			if (!iconImgMap.containsKey(imgPath)) {			
 				MpqPort.Out.Result portResult = new JMpqPort().getGameFiles(imgPath);
@@ -276,7 +276,7 @@ public class MMP {
 			int yOff = Math.max(-minY, 0);
 			
 			pxWriter.setPixels(minX, minY, width - xOff, height - yOff, PixelFormat.getIntArgbInstance(), pxBuf, iconImg._width * yOff + xOff, iconImg._width);
-		};
+		}
 		
 		return img;
 	}
@@ -291,21 +291,17 @@ public class MMP {
 			AUTO,
 			MMP_0x0,
 		}
-
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat MMP_0x0 = new EncodingFormat(Enum.MMP_0x0, 0x0);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
-		
+
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 
@@ -322,7 +318,7 @@ public class MMP {
 	}
 	
 	private void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt32(0x0);
+		stream.writeInt32(0x0); //most probably format
 		
 		stream.writeInt32(_icons.size());
 

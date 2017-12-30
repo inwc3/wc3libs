@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class ProcCaller {
 	private static class StreamReader extends Thread {
-		private InputStream _inStream;
-		private StringWriter _stringWriter = new StringWriter();
+		private final InputStream _inStream;
+		private final StringWriter _stringWriter = new StringWriter();
 		
 		@Override
 		public String toString() {
@@ -31,12 +32,12 @@ public class ProcCaller {
 			}
 		}
 		
-		public StreamReader(InputStream inStream) {
+		public StreamReader(@Nonnull InputStream inStream) {
 			_inStream = inStream;
 		}
 	}
 	
-	private ProcessBuilder _builder;
+	private final ProcessBuilder _builder;
 	private Process _proc;
 	private String _outString;
 	
@@ -77,8 +78,7 @@ public class ProcCaller {
 			
 			reader.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		_outString = reader.toString();
@@ -90,9 +90,9 @@ public class ProcCaller {
 		_minimized = val;
 	}
 	
-	private List<String> _cmds = new ArrayList<>();
+	private final List<String> _cmds = new ArrayList<>();
 	
-	public ProcCaller(String... command) {
+	public ProcCaller(@Nonnull String... command) {
         Collections.addAll(_cmds, command);
 		
 		_builder = new ProcessBuilder(_cmds);

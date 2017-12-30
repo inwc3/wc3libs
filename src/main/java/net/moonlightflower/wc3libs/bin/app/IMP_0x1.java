@@ -10,14 +10,14 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	public static class Obj extends IMP.Obj {
 		@Override
 		public void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setStdFlag(StdFlag.fromVal(stream.readUByte()));
-			setPath(stream.readString());
+			_stdFlag = StdFlag.fromVal(stream.readUByte("stdFlag"));
+			_path = stream.readString("path");
 		}
 		
 		@Override
 		public void write(@Nonnull Wc3BinOutputStream stream) {
-			stream.writeUByte(getStdFlag().getVal());
-			stream.writeString(getPath());
+			stream.writeUByte(_stdFlag.getVal());
+			stream.writeString(_path);
 		}
 		
 		public Obj(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -32,7 +32,7 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	public void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32();
 
-		Wc3BinInputStream.checkFormatVer("impMaskFunc", EncodingFormat.IMP_0x1.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.IMP_0x1.getVersion(), version);
 		
 		int impsCount = stream.readInt32();
 		

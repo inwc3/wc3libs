@@ -12,6 +12,7 @@ import net.moonlightflower.wc3libs.port.MpqPort.Out.Result;
 import net.moonlightflower.wc3libs.port.MpqPort.Out.Result.Segment;
 import net.moonlightflower.wc3libs.port.Orient;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -36,7 +37,7 @@ public class GamePrefetch {
 		private int _prio = PRIO_HIGH;
 		
 		@Override
-		public int compareTo(Obj other) {
+		public int compareTo(@Nonnull Obj other) {
 			if (_prio < other._prio) return -1;
 			if (_prio > other._prio) return 1;
 			
@@ -213,7 +214,7 @@ removeObjs.addAll(_objs);
 		return _instance;
 	}
 	
-	private GamePrefetch() {};
+	private GamePrefetch() {}
 	
 	public static void preload(File inFile) {
 		getInstance().add(new Obj(inFile) {

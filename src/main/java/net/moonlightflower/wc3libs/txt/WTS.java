@@ -3,6 +3,8 @@ package net.moonlightflower.wc3libs.txt;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -15,7 +17,8 @@ public class WTS {
 	public final static File CAMPAIGN_PATH = new File("war3campaign.wts");
 	
 	private final Map<Integer, String> _vals = new LinkedHashMap<>();
-	
+
+	@Nonnull
 	public Map<String, String> getNamedEntries() {
 		Map<String, String> res = new LinkedHashMap<>();
 		
@@ -28,7 +31,8 @@ public class WTS {
 		
 		return res;
 	}
-	
+
+	@Nonnull
 	public TXT toTXT() {
 		TXT txt = new TXT();
 		
@@ -41,12 +45,13 @@ public class WTS {
 		
 		return txt;
 	}
-	
+
+	@Nullable
 	public String getEntry(int key) {
 		return _vals.get(key);
 	}
 	
-	public void addEntry(int key, String val) {
+	public void addEntry(int key, @Nullable String val) {
 		_vals.put(key, val);
 	}
 	
@@ -87,7 +92,7 @@ public class WTS {
 	return s
 end*/
 	
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 		
 		for (Map.Entry<Integer, String> entry : _vals.entrySet()) {
@@ -100,7 +105,7 @@ end*/
 		writer.close();
 	}
 	
-	private void read(InputStream inStream) throws IOException {
+	private void read(@Nonnull InputStream inStream) throws IOException {
 		UTF8 reader = new UTF8(inStream);
 		
 		String input = reader.readAll();
@@ -123,32 +128,33 @@ end*/
 			
 			Matcher entryMatcher = Pattern.compile("^(.*)").matcher(val);
 			
-			entryMatcher.find();
-			
-			val = entryMatcher.group(1);
-			
-			if (val == null) val = "";
-			
-			addEntry(key, val);
+			if (entryMatcher.find()) {
+				val = entryMatcher.group(1);
+
+				if (val == null) val = "";
+
+				addEntry(key, val);
+			}
 		}
 	}
 	
 	public WTS() {
 	}
 	
-	public WTS(InputStream inStream) throws IOException {
+	public WTS(@Nonnull InputStream inStream) throws IOException {
 		read(inStream);
 	}
 	
-	public WTS(File file) throws IOException {
+	public WTS(@Nonnull File file) throws IOException {
 		InputStream inStream = new FileInputStream(file);
 		
 		read(inStream);
 		
 		inStream.close();
 	}
-	
-	public static WTS ofMapFile(File mapFile) throws Exception {
+
+	@Nonnull
+	public static WTS ofMapFile(@Nonnull File mapFile) throws Exception {
 		MpqPort.Out portOut = new JMpqPort.Out();
 		
 		portOut.add(WTS.GAME_PATH);

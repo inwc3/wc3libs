@@ -10,9 +10,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * rects file for wrapping war3map.w3r
@@ -51,7 +49,7 @@ public class W3R {
 		public final static State<WeatherId> ART_WEATHER = new State<>(WeatherId.class, "weather", null);
 		
 		public final static State<Bounds> DATA_BOUNDS = new State<>(Bounds.class, "bounds", new Bounds(0, 0, 0, 0));
-		public final static State<Int> DATA_INDEX = new State<>(Int.class, "index", Int.valueOf(0));
+		public final static State<Wc3Int> DATA_INDEX = new State<>(Wc3Int.class, "index", Wc3Int.valueOf(0));
 		
 		public final static State<SoundLabel> SOUND_LABEL = new State<>(SoundLabel.class, "sound", SoundLabel.valueOf("sound"));
 		
@@ -92,11 +90,11 @@ public class W3R {
 			set(ART_COLOR, val);
 		}
 
-		public Int getIndex() {
+		public Wc3Int getIndex() {
 			return get(DATA_INDEX);
 		}
 
-		public void setIndex(Int val) {
+		public void setIndex(Wc3Int val) {
 			set(DATA_INDEX, val);
 		}
 
@@ -235,30 +233,26 @@ public class W3R {
 			AUTO,
 			W3R_0x5
 		}
-
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3R_0x5 = new EncodingFormat(Enum.W3R_0x5, 0x5);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
 		
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 
 	public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int format = stream.readInt32();
+		int version = stream.readInt32("version");
 
-		Wc3BinInputStream.checkFormatVer("rectMaskFunc", EncodingFormat.W3R_0x5.getVersion(), format);
+		stream.checkFormatVersion(EncodingFormat.W3R_0x5.getVersion(), version);
 
-		int rectsCount = stream.readInt32();
+		int rectsCount = stream.readInt32("rectsCount");
 
 		for (int i = 0; i < rectsCount; i++) {					
 			addRect(new Rect(stream, EncodingFormat.W3R_0x5));
@@ -280,11 +274,7 @@ public class W3R {
 		
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new IllegalArgumentException("unknown format " + version);
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

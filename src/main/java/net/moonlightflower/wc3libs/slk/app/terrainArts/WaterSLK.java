@@ -11,15 +11,8 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.AlphaMode;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Color;
-import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
-import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.WaterId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
@@ -63,15 +56,15 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		public final static State<WaterId> OBJ_ID = new State<>("waterID", WaterId.class);
 		
 		public final static State<AlphaMode> ALPHA_MODE = new State<>("alphaMode", AlphaMode.class);
-		public final static State<Int> CELLS = new State<>("cells", Int.class);
-		public final static State<Int> D_MAX_ALPHA = new State<>("DmaxA", Int.class);
-		public final static State<Int> D_MAX_BLUE = new State<>("DmaxB", Int.class);
-		public final static State<Int> D_MAX_GREEN = new State<>("DmaxG", Int.class);
-		public final static State<Int> D_MAX_RED = new State<>("DmaxR", Int.class);
-		public final static State<Int> D_MIN_ALPHA = new State<>("DminA", Int.class);
-		public final static State<Int> D_MIN_BLUE = new State<>("DminB", Int.class);
-		public final static State<Int> D_MIN_GREEN = new State<>("DminG", Int.class);
-		public final static State<Int> D_MIN_RED = new State<>("DminR", Int.class);
+		public final static State<Wc3Int> CELLS = new State<>("cells", Wc3Int.class);
+		public final static State<Wc3Int> D_MAX_ALPHA = new State<>("DmaxA", Wc3Int.class);
+		public final static State<Wc3Int> D_MAX_BLUE = new State<>("DmaxB", Wc3Int.class);
+		public final static State<Wc3Int> D_MAX_GREEN = new State<>("DmaxG", Wc3Int.class);
+		public final static State<Wc3Int> D_MAX_RED = new State<>("DmaxR", Wc3Int.class);
+		public final static State<Wc3Int> D_MIN_ALPHA = new State<>("DminA", Wc3Int.class);
+		public final static State<Wc3Int> D_MIN_BLUE = new State<>("DminB", Wc3Int.class);
+		public final static State<Wc3Int> D_MIN_GREEN = new State<>("DminG", Wc3Int.class);
+		public final static State<Wc3Int> D_MIN_RED = new State<>("DminR", Wc3Int.class);
 		public final static State<Real> HEIGHT = new State<>("height", Real.class);
 		public final static State<Bool> IMPASSABLE = new State<>("impassable", Bool.class);
 		public final static State<Bool> LIGHTING = new State<>("lighting", Bool.class);
@@ -81,23 +74,23 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		public final static State<Real> MIN_X = new State<>("minX", Real.class);
 		public final static State<Real> MIN_Y = new State<>("minX", Real.class);
 		public final static State<Real> MIN_Z = new State<>("minX", Real.class);
-		public final static State<Int> MINIMAP_COLOR_ALPHA = new State<>("mmAlpha", Int.class);
-		public final static State<Int> MINIMAP_COLOR_BLUE = new State<>("mmBlue", Int.class);
-		public final static State<Int> MINIMAP_COLOR_GREEN = new State<>("mmGreen", Int.class);
-		public final static State<Int> MINIMAP_COLOR_RED = new State<>("mmRed", Int.class);
+		public final static State<Wc3Int> MINIMAP_COLOR_ALPHA = new State<>("mmAlpha", Wc3Int.class);
+		public final static State<Wc3Int> MINIMAP_COLOR_BLUE = new State<>("mmBlue", Wc3Int.class);
+		public final static State<Wc3Int> MINIMAP_COLOR_GREEN = new State<>("mmGreen", Wc3Int.class);
+		public final static State<Wc3Int> MINIMAP_COLOR_RED = new State<>("mmRed", Wc3Int.class);
 		public final static State<Real> RATE_X = new State<>("rateX", Real.class);
 		public final static State<Real> RATE_Y = new State<>("rateY", Real.class);
 		public final static State<Real> RATE_Z = new State<>("rateZ", Real.class);
 		public final static State<Real> REV_X = new State<>("revX", Real.class);
 		public final static State<Real> REV_Y = new State<>("revY", Real.class);
-		public final static State<Int> S_MAX_ALPHA = new State<>("SmaxA", Int.class);
-		public final static State<Int> S_MAX_BLUE = new State<>("SmaxB", Int.class);
-		public final static State<Int> S_MAX_GREEN = new State<>("SmaxG", Int.class);
-		public final static State<Int> S_MAX_RED = new State<>("SmaxR", Int.class);
-		public final static State<Int> S_MIN_ALPHA = new State<>("SminA", Int.class);
-		public final static State<Int> S_MIN_BLUE = new State<>("SminB", Int.class);
-		public final static State<Int> S_MIN_GREEN = new State<>("SminG", Int.class);
-		public final static State<Int> S_MIN_RED = new State<>("SminR", Int.class);
+		public final static State<Wc3Int> S_MAX_ALPHA = new State<>("SmaxA", Wc3Int.class);
+		public final static State<Wc3Int> S_MAX_BLUE = new State<>("SmaxB", Wc3Int.class);
+		public final static State<Wc3Int> S_MAX_GREEN = new State<>("SmaxG", Wc3Int.class);
+		public final static State<Wc3Int> S_MAX_RED = new State<>("SmaxR", Wc3Int.class);
+		public final static State<Wc3Int> S_MIN_ALPHA = new State<>("SminA", Wc3Int.class);
+		public final static State<Wc3Int> S_MIN_BLUE = new State<>("SminB", Wc3Int.class);
+		public final static State<Wc3Int> S_MIN_GREEN = new State<>("SminG", Wc3Int.class);
+		public final static State<Wc3Int> S_MIN_RED = new State<>("SminR", Wc3Int.class);
 		public final static State<Bool> SHORE_IN_FOG = new State<>("shoreInFog", Bool.class);
 		public final static State<Wc3String> SHORE_DIR = new State<>("shoreDir", Wc3String.class);
 		public final static State<Wc3String> SHORE_IC_FILE = new State<>("shoreICFile", Wc3String.class);
@@ -107,7 +100,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		public final static State<Wc3String> SHORE_S_FILE = new State<>("shoreSFile", Wc3String.class);
 		public final static State<Real> SHORE_S_VAR = new State<>("shoreSVar", Real.class);
 		public final static State<Wc3String> TEX_FILE = new State<>("texFile", Wc3String.class);
-		public final static State<Int> TEX_NUM = new State<>("numTex", Int.class);
+		public final static State<Wc3Int> TEX_NUM = new State<>("numTex", Wc3Int.class);
 		public final static State<Real> TEX_RATE = new State<>("texRate", Real.class);
 		public final static State<Real> TEX_OFFSET = new State<>("texOffset", Real.class);
 	}
@@ -144,17 +137,17 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setMinimapColor(Color val) {
-			set(States.MINIMAP_COLOR_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.MINIMAP_COLOR_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.MINIMAP_COLOR_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.MINIMAP_COLOR_RED, Int.valueOf(val.getRed255()));
+			set(States.MINIMAP_COLOR_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.MINIMAP_COLOR_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.MINIMAP_COLOR_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.MINIMAP_COLOR_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 		
-		public Int getNumTex() {
+		public Wc3Int getNumTex() {
 			return get(States.TEX_NUM);
 		}
 		
-		public void setNumTex(Int val) {
+		public void setNumTex(Wc3Int val) {
 			set(States.TEX_NUM, val);
 		}
 		
@@ -190,11 +183,11 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 			set(States.LIGHTING, val);
 		}
 		
-		public Int getCells() {
+		public Wc3Int getCells() {
 			return get(States.CELLS);
 		}
 		
-		public void setCells(Int val) {
+		public void setCells(Wc3Int val) {
 			set(States.CELLS, val);
 		}
 		
@@ -306,10 +299,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setSMinColor(Color val) {
-			set(States.S_MIN_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.S_MIN_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.S_MIN_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.S_MIN_RED, Int.valueOf(val.getRed255()));
+			set(States.S_MIN_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.S_MIN_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.S_MIN_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.S_MIN_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 
 		public Color getSMaxColor() {
@@ -317,10 +310,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 
 		public void setSMaxColor(Color val) {
-			set(States.S_MAX_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.S_MAX_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.S_MAX_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.S_MAX_RED, Int.valueOf(val.getRed255()));
+			set(States.S_MAX_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.S_MAX_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.S_MAX_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.S_MAX_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getDMinColor() {
@@ -328,10 +321,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setDMinColor(Color val) {
-			set(States.D_MIN_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.D_MIN_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.D_MIN_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.D_MIN_RED, Int.valueOf(val.getRed255()));
+			set(States.D_MIN_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.D_MIN_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.D_MIN_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.D_MIN_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getDMaxColor() {
@@ -339,10 +332,10 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public void setDMaxColor(Color val) {
-			set(States.D_MAX_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.D_MAX_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.D_MAX_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.D_MAX_RED, Int.valueOf(val.getRed255()));
+			set(States.D_MAX_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.D_MAX_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.D_MAX_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.D_MAX_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 
 		public <T extends DataType> T get(States.State<T> state) {

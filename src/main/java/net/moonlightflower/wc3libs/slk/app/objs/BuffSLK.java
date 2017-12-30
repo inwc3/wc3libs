@@ -53,7 +53,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		public final static State<BuffCode> DATA_CODE = new State<>("code", BuffCode.class);
 		public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comments", Wc3String.class);
 		public final static State<Bool> DATA_IS_EFFECT = new State<>("isEffect", Bool.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 		public final static State<Bool> EDITOR_IN_EDITOR = new State<>("useInEditor", Bool.class);
 		public final static State<Wc3String> EDITOR_SORT = new State<>("sort", Wc3String.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("race", UnitRace.class);

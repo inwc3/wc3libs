@@ -1,13 +1,14 @@
 package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,12 +25,14 @@ public class TXT {
 	public static class Section {
 		public static class Field {
 			private final List<DataType> _vals = new ArrayList<>();
-			
+
+			@Nonnull
 			public List<DataType> getVals() {
 				return _vals;
 			}
-			
-			public String getValLine(Translator translator) {
+
+			@Nonnull
+			public String getValLine(@Nullable Translator translator) {
 				StringBuilder s = new StringBuilder();
 				
 				int c = 0;
@@ -54,16 +57,13 @@ public class TXT {
 				
 				return s.toString();
 			}
-			
+
+			@Nullable
 			public DataType get(int index) {
-				try {
-					return _vals.get(index);
-				} catch (Exception e) {
-				}
-				
-				return null;
+				return _vals.get(index);
 			}
-			
+
+			@Nullable
 			public DataType get() {
 				return get(0);
 			}
@@ -77,20 +77,23 @@ public class TXT {
 					_vals.add(null);
 				}
 			}
-			
-			public void set(DataType val, int index) {
+
+			public void set(@Nullable DataType val, int index) {
 				ensureSize(index + 1);
 				
 				_vals.set(index, val);
 			}
 			
-			public void set(DataType val) {
+			public void set(@Nullable DataType val) {
 				clear();
 				
 				set(val, 0);
 			}
-			
-			private static String dequote(String s) {
+
+			@Nullable
+			private static String dequote(@Nullable String s) {
+				if (s == null) return null;
+
 				Pattern pattern = Pattern.compile("^\"(.*)\"$");
 				
 				Matcher matcher = pattern.matcher(s);
@@ -101,9 +104,10 @@ public class TXT {
 				
 				return s;
 			}
-			
-			public static List<String> tokenize(String line) {
-				if (line.length() == 0) return null;
+
+			@Nonnull
+			public static List<String> tokenize(@Nonnull String line) {
+				if (line.length() == 0) return new ArrayList<>();
 				
 				List<String> ret = new ArrayList<>();
 				
@@ -116,7 +120,7 @@ public class TXT {
 						if (endPos == -1) {
 							endPos = line.length() - 1;
 						}
-						
+
 						String val = line.substring(startPos, endPos + 1);
 						
 						val = dequote(val);
@@ -144,7 +148,7 @@ public class TXT {
 				return ret;
 			}
 			
-			public void setLine(String line) {
+			public void setLine(@Nonnull String line) {
 				clear();
 
 				for (String val : tokenize(line)) {
@@ -152,11 +156,11 @@ public class TXT {
 				}
 			}
 			
-			public void add(DataType val) {
+			public void add(@Nullable DataType val) {
 				_vals.add(val);
 			}
 			
-			public void merge(Field otherField, boolean overwrite) {
+			public void merge(@Nonnull Field otherField, boolean overwrite) {
 				if (overwrite) {
 					//TODO: buttonpos field uses index and objmod reductions should only per-index overwrite one another
 					if (getId().lower().equals(FieldId.valueOf("buttonpos"))) {
@@ -181,37 +185,40 @@ public class TXT {
 				}
 			}
 			
-			public void merge(Field otherField) {
+			public void merge(@Nonnull Field otherField) {
 				merge(otherField, true);
 			}
 			
-			private FieldId _id;
-			
+			private final FieldId _id;
+
+			@Nonnull
 			public FieldId getId() {
 				return _id;
 			}
 			
-			public Field(FieldId id) {
+			public Field(@Nonnull FieldId id) {
 				_id = id;
 			}
 		}
 		
 		protected final Map<FieldId, Field> _fields = new LinkedHashMap<>();
 		protected final Map<FieldId, Field> _fieldsLower = new LinkedHashMap<>();
-		
+
+		@Nonnull
 		public Map<FieldId, ? extends Field> getFields() {
 			return new LinkedHashMap<>(_fields);
 		}
-		
-		public Field getField(FieldId fieldId) {
+
+		@Nullable
+		public Field getField(@Nonnull FieldId fieldId) {
 			return _fieldsLower.get(fieldId.lower());
 		}
 		
-		public boolean containsField(FieldId fieldId) {
+		public boolean containsField(@Nonnull FieldId fieldId) {
 			return _fieldsLower.containsKey(fieldId.lower());
 		}
 		
-		public DataType get(FieldId fieldId, int index) throws Exception {
+		public DataType get(@Nonnull FieldId fieldId, int index) throws Exception {
 			Field field = getField(fieldId);
 			
 			if (field == null) throw new Exception();
@@ -219,16 +226,16 @@ public class TXT {
 			return getField(fieldId).get(index);
 		}
 		
-		public DataType get(FieldId fieldId) throws Exception {			
+		public DataType get(@Nonnull FieldId fieldId) throws Exception {
 			return get(fieldId, 0);
 		}
 		
-		protected void addField(Field field) {
+		protected void addField(@Nonnull Field field) {
 			_fields.put(field.getId(), field);
 			_fieldsLower.put(field.getId().lower(), field);
 		}
 		
-		public Field addField(FieldId fieldId) {
+		public Field addField(@Nonnull FieldId fieldId) {
 			if (containsField(fieldId)) return getField(fieldId);
 			
 			Field field = new Field(fieldId);
@@ -238,7 +245,7 @@ public class TXT {
 			return field;
 		}
 		
-		public void set(FieldId fieldId, DataType val) {
+		public void set(@Nonnull FieldId fieldId, @Nullable DataType val) {
 			String fieldIdString = fieldId.toString();
 			
 			if (fieldIdString.startsWith("//")) return;
@@ -246,15 +253,15 @@ public class TXT {
 			addField(fieldId).set(val);
 		}
 		
-		public void set(String key, String val) {
+		public void set(@Nonnull String key, @Nullable String val) {
 			set(FieldId.valueOf(key), Wc3String.valueOf(val));
 		}
 		
-		public <T extends DataType> void set(TXTState<T> state, T val) {
+		public <T extends DataType> void set(@Nonnull TXTState<T> state, T val) {
 			set(state.getFieldId(), val);
 		}
 		
-		public void setLine(FieldId fieldId, String val) {
+		public void setLine(@Nonnull FieldId fieldId, @Nonnull String val) {
 			String fieldIdString = fieldId.toString();
 			
 			if (fieldIdString.startsWith("//")) return;
@@ -262,7 +269,7 @@ public class TXT {
 			addField(fieldId).setLine(val);
 		}
 		
-		public void merge(Section otherSection, boolean overwrite) {
+		public void merge(@Nonnull Section otherSection, boolean overwrite) {
 			for (Map.Entry<FieldId, ? extends Field> entry : otherSection.getFields().entrySet()) {
 				FieldId fieldId = entry.getKey();
 				Field otherField = entry.getValue();
@@ -273,7 +280,7 @@ public class TXT {
 			}
 		}
 		
-		public void print(PrintStream outStream) {
+		public void print(@Nonnull PrintStream outStream) {
 			for (Map.Entry<FieldId, ? extends TXT.Section.Field> fieldEntry : getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				TXT.Section.Field field = fieldEntry.getValue();
@@ -301,12 +308,13 @@ public class TXT {
 		}
 		
 		private final TXTSectionId _id;
-		
+
+		@Nonnull
 		public TXTSectionId getId() {
 			return _id;
 		}
 		
-		public void write(BufferedWriter writer, Translator translator) throws IOException {
+		public void write(@Nonnull BufferedWriter writer, @Nullable Translator translator) throws IOException {
 			if (getId() != null) {
 				writer.write(String.format("[%s]", getId().toString()));
 				
@@ -325,31 +333,32 @@ public class TXT {
 			}
 		}
 		
-		public Section(TXTSectionId id) {
+		public Section(@Nonnull TXTSectionId id) {
 			_id = id;
 		}
 		
-		public Section(String name) {
+		public Section(@Nonnull String name) {
 			this(TXTSectionId.valueOf(name));
 		}
 	}
 
 	private final Section _defaultSection = new Section((TXTSectionId) null);
 	private final Map<TXTSectionId, Section> _sections = new LinkedHashMap<>();
-	
+
+	@Nonnull
 	public Map<TXTSectionId, Section> getSections() {
 		return _sections;
 	}
 	
-	public Section getSection(TXTSectionId id) {
+	public Section getSection(@Nonnull TXTSectionId id) {
 		return getSections().get(id);
 	}
 
-	protected void addSection(Section val) {
+	protected void addSection(@Nonnull Section val) {
 		_sections.put(val.getId(), val);
 	}
 	
-	public Section addSection(TXTSectionId id) {
+	public Section addSection(@Nonnull TXTSectionId id) {
 		if (_sections.containsKey(id)) return getSection(id);
 		
 		Section section = new Section(id);
@@ -359,7 +368,7 @@ public class TXT {
 		return section;
 	}
 
-	public boolean containsKey(FieldId key) {
+	public boolean containsKey(@Nonnull FieldId key) {
 		if (_defaultSection.containsField(key)) return true;
 		
 		for (Section section : getSections().values()) {
@@ -369,7 +378,7 @@ public class TXT {
 		return false;
 	}
 	
-	public DataType get(FieldId key) throws Exception {
+	public DataType get(@Nonnull FieldId key) throws Exception {
 		if (_defaultSection.containsField(key)) return _defaultSection.get(key);
 		
 		for (Section section : getSections().values()) {
@@ -379,11 +388,11 @@ public class TXT {
 		return null;
 	}
 	
-	public void set(FieldId key, DataType val) {
+	public void set(@Nonnull FieldId key, @Nullable DataType val) {
 		_defaultSection.addField(key).set(val);
 	}
 	
-	public void merge(TXT other, boolean overwrite) {
+	public void merge(@Nonnull TXT other, boolean overwrite) {
 		_defaultSection.merge(other._defaultSection, overwrite);
 		
 		for (Map.Entry<TXTSectionId, Section> entry : other.getSections().entrySet()) {
@@ -396,37 +405,39 @@ public class TXT {
 		}
 	}
 	
-	public void merge(TXT other) {
+	public void merge(@Nonnull TXT other) {
 		merge(other, true);
 	}
-	
-	public DataType get(TXTState state, int index) throws Exception {
+
+	@Nullable
+	public DataType get(@Nonnull TXTState state, int index) throws Exception {
 		return getSection(state.getSectionId()).get(state.getFieldId(), index);
 	}
-	
-	public DataType get(TXTState state) throws Exception {
+
+	@Nullable
+	public DataType get(@Nonnull TXTState state) throws Exception {
 		return get(state, 0);
 	}
 	
-	public void set(TXT.Section section, FieldId field, DataType val) {
+	public void set(@Nonnull TXT.Section section, @Nonnull FieldId field, @Nullable DataType val) {
 		addSection(section);
 		
 		section.set(field, val);
 	}
 	
-	public void set(TXTState state, DataType val) {
+	public void set(@Nonnull TXTState state, @Nullable DataType val) {
 		set(getSection(state.getSectionId()), state.getFieldId(), val);
 	}
 	
-	public void set(String section, String field, String val) {
+	public void set(@Nonnull String section, @Nonnull String field, @Nullable String val) {
 		set(addSection(TXTSectionId.valueOf(section)), FieldId.valueOf(field), Wc3String.valueOf(val));
 	}
 	
-	public void set(String field, String val) {
+	public void set(@Nonnull String field, @Nullable String val) {
 		_defaultSection.set(field, val);
 	}
 	
-	public void print(PrintStream outStream) {
+	public void print(@Nonnull PrintStream outStream) {
 		_defaultSection.print(outStream);
 		
 		for (Map.Entry<TXTSectionId, TXT.Section> sectionEntry : getSections().entrySet()) {
@@ -443,7 +454,7 @@ public class TXT {
 		print(System.out);
 	}
 	
-	public void read(InputStream inStream) throws IOException {
+	public void read(@Nonnull InputStream inStream) throws IOException {
 		Section curSection = _defaultSection;
 		String line;
 
@@ -477,7 +488,7 @@ public class TXT {
 		}
 	}
 	
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		if (file == null) throw new IOException("file is null");
 		
 		InputStream inStream = new FileInputStream(file);
@@ -487,7 +498,7 @@ public class TXT {
 		inStream.close();
 	}
 	
-	public void write(BufferedWriter writer, Translator translator) throws IOException {
+	public void write(@Nonnull BufferedWriter writer, @Nullable Translator translator) throws IOException {
 		_defaultSection.write(writer, translator);
 		
 		for (Section section : getSections().values()) {
@@ -495,7 +506,7 @@ public class TXT {
 		}
 	}
 	
-	public void write(OutputStream outStream) throws IOException {
+	public void write(@Nonnull OutputStream outStream) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
 		
 		write(writer, null);
@@ -503,7 +514,7 @@ public class TXT {
 		writer.close();
 	}
 	
-	public void write(File file, Translator translator) throws IOException {
+	public void write(@Nonnull File file, @Nullable Translator translator) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(Orient.createFileOutputStream(file), StandardCharsets.UTF_8));
 		
 		write(writer, translator);
@@ -511,22 +522,23 @@ public class TXT {
 		writer.close();
 	}
 	
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		write(file, null);
 	}
 	
-	public TXT(File file) throws IOException {
+	public TXT(@Nonnull File file) throws IOException {
 		read(file);
 	}
 	
 	public TXT() {
 	}
 	
-	public TXT(InputStream inStream) throws IOException {
+	public TXT(@Nonnull InputStream inStream) throws IOException {
 		read(inStream);
 	}
-	
-	public static TXT ofGameFile(File inFile) throws Exception {
+
+	@Nonnull
+	public static TXT ofGameFile(@Nonnull File inFile) throws Exception {
 		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
 		
 		if (!portResult.getExports().containsKey(inFile)) throw new IOException(String.format("could not extract %s file", inFile.toString()));

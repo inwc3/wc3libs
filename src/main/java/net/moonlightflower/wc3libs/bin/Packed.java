@@ -37,9 +37,7 @@ public class Packed {
 			
 			int len = deflater.deflate(uncompressedBlock);
 			
-			byte[] block = new byte[len];
-			
-			block = Arrays.copyOf(uncompressedBlock, len);
+			byte[] block = Arrays.copyOf(uncompressedBlock, len);
 			
 			blocks.add(block);
 			compressedSize += block.length;

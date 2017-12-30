@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SpellDetail extends Int {
+public class SpellDetail extends Wc3Int {
 	private static Map<Integer, SpellDetail> _map = new LinkedHashMap<>();
 
 	public final static SpellDetail LOW = new SpellDetail(0);

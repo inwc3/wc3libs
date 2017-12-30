@@ -4,6 +4,8 @@ import systems.crigges.jmpq3.JMpqEditor;
 import systems.crigges.jmpq3.JMpqException;
 import systems.crigges.jmpq3.MPQOpenOption;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,13 @@ public class JMpqPort extends MpqPort {
 
 	private final static File exportDir = new File(tempDir, "exported");
 	
-	public static String enquote(String s) {
+	public static String enquote(@Nonnull String s) {
 		return "\"" + s + "\"";
 	}
 	
+	@Nonnull
 	@Override
-	public List<File> listFiles(File mpqFile) throws IOException {
+	public List<File> listFiles(@Nonnull File mpqFile) throws IOException {
 		try {
 			JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.READ_ONLY);
 			List<File> ret = new ArrayList<>();
@@ -41,7 +44,7 @@ public class JMpqPort extends MpqPort {
 	}
 	
 	public static class In extends MpqPort.In {
-		private void commitJ(Vector<File> mpqFiles) throws IOException {
+		private void commitJ(@Nonnull Vector<File> mpqFiles) throws IOException {
 			Vector<String> lines = new Vector<>();
 			
 			for (File mpqFile : mpqFiles) {
@@ -61,7 +64,7 @@ public class JMpqPort extends MpqPort {
 		}
 		
 		@Override
-		public void commit(Vector<File> mpqFiles) throws PortException {
+		public void commit(@Nonnull Vector<File> mpqFiles) throws PortException {
 			try {
 				commitJ(mpqFiles);
 			} catch (IOException e) {
@@ -71,8 +74,9 @@ public class JMpqPort extends MpqPort {
 	}
 	
 	public static class Out extends MpqPort.Out {
+		@Nonnull
 		@Override
-		public Result commit(Vector<File> mpqFiles) throws IOException {
+		public Result commit(@Nonnull Vector<File> mpqFiles) throws IOException {
 			Orient.removeDir(exportDir);
 			Orient.createDir(exportDir);
 	
@@ -285,8 +289,9 @@ public class JMpqPort extends MpqPort {
 			return result;
 		}
 	}
-	
-	public static Vector<File> getWc3Mpqs(File wc3dir) {
+
+	@Nonnull
+	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
 		Vector<File> files = new Vector<>();
 
 		files.add(new File(wc3dir, "War3Patch.mpq"));
@@ -296,15 +301,15 @@ public class JMpqPort extends MpqPort {
 		return files;
 	}
 	
-	public static void importFile(Vector<File> mpqFiles, File outFile, File inFile) throws IOException {
+	public static void importFile(@Nonnull Vector<File> mpqFiles, @Nonnull File outFile, @Nonnull File inFile) throws IOException {
 		In port = new In();
 	
 		port.add(outFile, inFile);
 	
 		port.commit(mpqFiles);
 	}
-	
-	public static void importFile(File mpqFile, File outFile, File inFile) throws IOException {
+
+	public static void importFile(@Nonnull File mpqFile, @Nonnull File outFile, @Nonnull File inFile) throws IOException {
 		Vector<File> mpqFiles = new Vector<>();
 
 		mpqFiles.add(mpqFile);
@@ -312,7 +317,7 @@ public class JMpqPort extends MpqPort {
 		importFile(mpqFiles, outFile, inFile);
 	}
 	
-	public static void extractFile(Vector<File> mpqFiles, File inFile, File outFile, boolean outFileIsDir) throws Exception {
+	public static void extractFile(@Nonnull Vector<File> mpqFiles, @Nonnull File inFile, @Nonnull File outFile, boolean outFileIsDir) throws Exception {
 		Out port = new Out();
 	
 		port.add(inFile, outFile, outFileIsDir);
@@ -320,7 +325,7 @@ public class JMpqPort extends MpqPort {
 		port.commit(mpqFiles);
 	}
 	
-	public static void extractFile(File mpqFile, File inFile, File outFile, boolean outFileIsDir) throws Exception {
+	public static void extractFile(@Nonnull File mpqFile, @Nonnull File inFile, @Nonnull File outFile, boolean outFileIsDir) throws Exception {
 		Vector<File> mpqFiles = new Vector<>();
 
 		mpqFiles.add(mpqFile);
@@ -328,8 +333,9 @@ public class JMpqPort extends MpqPort {
 		extractFile(mpqFiles, outFile, inFile, outFileIsDir);
 	}
 	
+	@Nonnull
 	@Override
-	public Out.Result getGameFiles(File... files) throws Exception {
+	public Out.Result getGameFiles(@Nonnull File... files) throws Exception {
 		MpqPort.Out portOut = new Out();
 		
 		for (File file : files) {

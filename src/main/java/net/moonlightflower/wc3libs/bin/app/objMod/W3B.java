@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -63,18 +62,18 @@ public class W3B extends ObjMod {
 			return State.values();
 		}
 		
-		public final static State<Int> ART_COLOR_RED = new State<>("bvcr", Int.class);
-		public final static State<Int> ART_COLOR_GREEN = new State<>("bvcg", Int.class);
-		public final static State<Int> ART_COLOR_BLUE = new State<>("bvcb", Int.class);
+		public final static State<Wc3Int> ART_COLOR_RED = new State<>("bvcr", Wc3Int.class);
+		public final static State<Wc3Int> ART_COLOR_GREEN = new State<>("bvcg", Wc3Int.class);
+		public final static State<Wc3Int> ART_COLOR_BLUE = new State<>("bvcb", Wc3Int.class);
 		public final static State<Real> ART_ELEV_RAD = new State<>("brad", Real.class);
 		public final static State<Bool> ART_FAT_LINE_OF_SIGHT = new State<>("bflo", Bool.class);
 		public final static State<Real> ART_FIXED_ROTATION = new State<>("bfxr", Real.class);
 		public final static State<Real> ART_FLY_HEIGHT = new State<>("bflh", Real.class);
 		public final static State<Real> ART_FOG_RAD = new State<>("bfra", Real.class);
 		public final static State<Bool> ART_LIGHTWEIGHT = new State<>("blit", Bool.class);
-		public final static State<Int> ART_MINIMAP_COLOR_BLUE = new State<>("bmmb", Int.class);
-		public final static State<Int> ART_MINIMAP_COLOR_GREEN = new State<>("bmmg", Int.class);
-		public final static State<Int> ART_MINIMAP_COLOR_RED = new State<>("bmmr", Int.class);
+		public final static State<Wc3Int> ART_MINIMAP_COLOR_BLUE = new State<>("bmmb", Wc3Int.class);
+		public final static State<Wc3Int> ART_MINIMAP_COLOR_GREEN = new State<>("bmmg", Wc3Int.class);
+		public final static State<Wc3Int> ART_MINIMAP_COLOR_RED = new State<>("bmmr", Wc3Int.class);
 		public final static State<Bool> ART_MINIMAP_USE_COLOR = new State<>("bumm", Bool.class);
 		public final static State<Model> ART_MODEL = new State<>("bfil", Model.class);
 		public final static State<Model> ART_MODEL_PORTRAIT = new State<>("bgpm", Model.class);
@@ -88,17 +87,17 @@ public class W3B extends ObjMod {
 		public final static State<Bool> ART_SHOW_IN_FOG = new State<>("bfvi", Bool.class);
 		public final static State<Bool> ART_SHOW_ON_MINIMAP = new State<>("bsmm", Bool.class);
 		public final static State<Tex> ART_TEX = new State<>("btxf", Tex.class);
-		public final static State<Int> ART_TEX_ID = new State<>("btxi", Int.class);
-		public final static State<Int> ART_VARIATIONS = new State<>("bvar", Int.class);
+		public final static State<Wc3Int> ART_TEX_ID = new State<>("btxi", Wc3Int.class);
+		public final static State<Wc3Int> ART_VARIATIONS = new State<>("bvar", Wc3Int.class);
 		
 		public final static State<DefType> COMBAT_ARMOR_TYPE = new State<>("barm", DefType.class);
 		public final static State<DataList<CombatTarget>> COMBAT_TARGETS = new State<>("btar", new DataTypeInfo(DataList.class, CombatTarget.class));
 		
-		public final static State<Int> DATA_BUILD_TIME = new State<>("bbut", Int.class);
-		public final static State<Int> DATA_COST_GOLD_REPAIR = new State<>("breg", Int.class);
-		public final static State<Int> DATA_COST_LUMBER_REPAIR = new State<>("brel", Int.class);
+		public final static State<Wc3Int> DATA_BUILD_TIME = new State<>("bbut", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COST_GOLD_REPAIR = new State<>("breg", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COST_LUMBER_REPAIR = new State<>("brel", Wc3Int.class);
 		public final static State<Real> DATA_LIFE = new State<>("bhps", Real.class);
-		public final static State<Int> DATA_REPAIR_TIME = new State<>("bret", Int.class);
+		public final static State<Wc3Int> DATA_REPAIR_TIME = new State<>("bret", Wc3Int.class);
 		
 		public final static State<Bool> EDITOR_CAN_PLACE_DEAD = new State<>("bcpd", Bool.class);
 		public final static State<Bool> EDITOR_CAN_PLACE_RANDOM_SCALE = new State<>("bcpr", Bool.class);
@@ -112,7 +111,7 @@ public class W3B extends ObjMod {
 		public final static State<DataList<Tileset>> EDITOR_TILESETS = new State<>("btil", new DataTypeInfo(DataList.class, Tileset.class));
 		public final static State<Bool> EDITOR_USE_CLICK_HELPER = new State<>("buch", Bool.class);
 
-		public final static State<Int> PATH_CLIFF_LEVEL = new State<>("bclh", Int.class);
+		public final static State<Wc3Int> PATH_CLIFF_LEVEL = new State<>("bclh", Wc3Int.class);
 		public final static State<PathingTex> PATH_TEX = new State<>("bptx", PathingTex.class);
 		public final static State<PathingTex> PATH_TEX_DEAD = new State<>("bptd", PathingTex.class);
 		public final static State<Bool> PATH_WALKABLE = new State<>("bwal", Bool.class);

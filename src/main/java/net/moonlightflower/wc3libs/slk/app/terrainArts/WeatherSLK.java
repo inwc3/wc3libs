@@ -59,10 +59,10 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		public final static State<Real> ART_ANGLE_X = new State<>("angx", Real.class, Real.valueOf(-50F));
 		public final static State<Real> ART_ANGLE_Y = new State<>("angy", Real.class, Real.valueOf(50F));
 		public final static State<Real> ART_EMISSION_RATE = new State<>("emrate", Real.class, Real.valueOf(10F));
-		public final static State<Int> ART_END_ALPHA = new State<>("alphaEnd", Int.class, Int.valueOf(0));
-		public final static State<Int> ART_END_BLUE = new State<>("blueEnd", Int.class, Int.valueOf(0));
-		public final static State<Int> ART_END_GREEN = new State<>("greenEnd", Int.class, Int.valueOf(0));
-		public final static State<Int> ART_END_RED = new State<>("redEnd", Int.class, Int.valueOf(0));
+		public final static State<Wc3Int> ART_END_ALPHA = new State<>("alphaEnd", Wc3Int.class, Wc3Int.valueOf(0));
+		public final static State<Wc3Int> ART_END_BLUE = new State<>("blueEnd", Wc3Int.class, Wc3Int.valueOf(0));
+		public final static State<Wc3Int> ART_END_GREEN = new State<>("greenEnd", Wc3Int.class, Wc3Int.valueOf(0));
+		public final static State<Wc3Int> ART_END_RED = new State<>("redEnd", Wc3Int.class, Wc3Int.valueOf(0));
 		public final static State<Real> ART_END_SCALE = new State<>("scaleEnd", Real.class, Real.valueOf(100F));
 		public final static State<Real> ART_END_UV_H = new State<>("hUVEnd", Real.class, Real.valueOf(0F));
 		public final static State<Real> ART_END_UV_T = new State<>("tUVEnd", Real.class, Real.valueOf(0F));
@@ -70,21 +70,21 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		public final static State<Real> ART_LATITUDE = new State<>("lati", Real.class, Real.valueOf(2.5F));
 		public final static State<Real> ART_LIFESPAN = new State<>("lifespan", Real.class, Real.valueOf(5F));
 		public final static State<Real> ART_LONGITUDE = new State<>("long", Real.class, Real.valueOf(180F));
-		public final static State<Int> ART_MID_ALPHA = new State<>("alphaMid", Int.class, Int.valueOf(127));
-		public final static State<Int> ART_MID_BLUE = new State<>("blueMid", Int.class, Int.valueOf(127));
-		public final static State<Int> ART_MID_GREEN = new State<>("greenMid", Int.class, Int.valueOf(127));
-		public final static State<Int> ART_MID_RED = new State<>("redMid", Int.class, Int.valueOf(127));
+		public final static State<Wc3Int> ART_MID_ALPHA = new State<>("alphaMid", Wc3Int.class, Wc3Int.valueOf(127));
+		public final static State<Wc3Int> ART_MID_BLUE = new State<>("blueMid", Wc3Int.class, Wc3Int.valueOf(127));
+		public final static State<Wc3Int> ART_MID_GREEN = new State<>("greenMid", Wc3Int.class, Wc3Int.valueOf(127));
+		public final static State<Wc3Int> ART_MID_RED = new State<>("redMid", Wc3Int.class, Wc3Int.valueOf(127));
 		public final static State<Real> ART_MID_SCALE = new State<>("scaleMid", Real.class, Real.valueOf(100F));
 		public final static State<Real> ART_MID_TIME = new State<>("midTime", Real.class, Real.valueOf(0.5F));
 		public final static State<Real> ART_MID_UV_H = new State<>("hUVMid", Real.class, Real.valueOf(0F));
 		public final static State<Real> ART_MID_UV_T = new State<>("tUVMid", Real.class, Real.valueOf(0F));
-		public final static State<Int> ART_PARTICLES = new State<>("particles", Int.class, Int.valueOf(1000));
+		public final static State<Wc3Int> ART_PARTICLES = new State<>("particles", Wc3Int.class, Wc3Int.valueOf(1000));
 		public final static State<Real> ART_SPEED = new State<>("veloc", Real.class, Real.valueOf(-100F));
 		public final static State<Real> ART_SPEED_ACCEL = new State<>("accel", Real.class, Real.valueOf(0F));
-		public final static State<Int> ART_START_ALPHA = new State<>("alphaStart", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_START_BLUE = new State<>("blueStart", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_START_GREEN = new State<>("greenStart", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_START_RED = new State<>("redStart", Int.class, Int.valueOf(255));
+		public final static State<Wc3Int> ART_START_ALPHA = new State<>("alphaStart", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_START_BLUE = new State<>("blueStart", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_START_GREEN = new State<>("greenStart", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_START_RED = new State<>("redStart", Wc3Int.class, Wc3Int.valueOf(255));
 		public final static State<Real> ART_START_SCALE = new State<>("scaleStart", Real.class, Real.valueOf(100F));
 		public final static State<Real> ART_START_UV_H = new State<>("hUVStart", Real.class, Real.valueOf(0F));
 		public final static State<Real> ART_START_UV_T = new State<>("tUVStart", Real.class, Real.valueOf(0F));
@@ -98,7 +98,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		public final static State<Bool> ART_USE_TAIL = new State<>("tail", Bool.class, Bool.valueOf(true));
 		public final static State<Real> ART_VARIANCE = new State<>("var", Real.class, Real.valueOf(0.05F));
 		
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class, Int.valueOf(0));
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class, Wc3Int.valueOf(0));
 		
 		public final static State<SoundLabel> SOUND_AMBIENT = new State<>("AmbientSound", SoundLabel.class);
 	}
@@ -166,11 +166,11 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 			set(States.ART_LIFESPAN, val);
 		}
 		
-		public Int getParticles() {
+		public Wc3Int getParticles() {
 			return get(States.ART_PARTICLES);
 		}
 		
-		public void setParticles(Int val) {
+		public void setParticles(Wc3Int val) {
 			set(States.ART_PARTICLES, val);
 		}
 		
@@ -258,10 +258,10 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		public void setColorStart(Color val) {
-			set(States.ART_START_RED, Int.valueOf(val.getRed255()));
-			set(States.ART_START_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.ART_START_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.ART_START_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.ART_START_RED, Wc3Int.valueOf(val.getRed255()));
+			set(States.ART_START_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.ART_START_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.ART_START_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
 		}
 		
 		public Color getColorMid() {
@@ -269,10 +269,10 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		public void setColorMid(Color val) {
-			set(States.ART_MID_RED, Int.valueOf(val.getRed255()));
-			set(States.ART_MID_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.ART_MID_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.ART_MID_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.ART_MID_RED, Wc3Int.valueOf(val.getRed255()));
+			set(States.ART_MID_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.ART_MID_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.ART_MID_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
 		}
 		
 		public Color getColorEnd() {
@@ -280,10 +280,10 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		public void setColorEnd(Color val) {
-			set(States.ART_END_RED, Int.valueOf(val.getRed255()));
-			set(States.ART_END_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.ART_END_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.ART_END_ALPHA, Int.valueOf(val.getAlpha255()));
+			set(States.ART_END_RED, Wc3Int.valueOf(val.getRed255()));
+			set(States.ART_END_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.ART_END_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.ART_END_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
 		}
 		
 		public Real getScaleStart() {

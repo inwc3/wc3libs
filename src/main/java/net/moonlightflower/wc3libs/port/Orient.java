@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +20,8 @@ import java.util.Vector;
 public class Orient {
 	public static String separator = java.io.File.separator;
 
-	public static File getExecPath(Class<?> c) {
+	@Nonnull
+	public static File getExecPath(@Nullable Class<?> c) {
 		if (c == null) c = Orient.class;
 		
 		try {			
@@ -27,29 +29,32 @@ public class Orient {
 			
 			return new File(uri);
 		} catch (URISyntaxException | IllegalArgumentException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-
-        return null;
 	}
-	
+
+	@Nonnull
 	public static File getExecPath() {
 		return getExecPath(null);
 	}
-	
-	public static File getExecDir(Class<?> c) {
+
+	@Nonnull
+	public static File getExecDir(@Nullable Class<?> c) {
 		return getExecPath(c).getParentFile();
 	}
-	
+
+	@Nonnull
 	public static File getExecDir() {
 		return getExecDir(null);
 	}
-	
+
+	@Nonnull
 	public static String getWorkingDir() {
 		return new File("").getAbsolutePath();
 	}
-	
-	public static String getFileName(File file, boolean ignoreExtension) {
+
+	@Nonnull
+	public static String getFileName(@Nonnull File file, boolean ignoreExtension) {
 		String fileName = getFileName(file);
 		
 		if (ignoreExtension) {
@@ -61,32 +66,34 @@ public class Orient {
 		return fileName;
 	}
 
-	public static String getFileName(File file) {
+	@Nonnull
+	public static String getFileName(@Nonnull File file) {
 		return file.toPath().getFileName().toString();
 	}
 
-	public static String getFileExt(File file) {
+	@Nonnull
+	public static String getFileExt(@Nonnull File file) {
 		int index = file.getName().lastIndexOf('.');
 		
 		if (index < 0) return null;
 		
 		return file.getName().substring(index + 1);
 	}
-	
-	public static File getDir(File file) {
+
+	@Nonnull
+	public static File getDir(@Nonnull File file) {
 		return file.getParentFile();
 	}
 	
-	public static void checkFileExists(File file) throws IOException {
-		if (file == null) throw new IOException("no file");
+	public static void checkFileExists(@Nonnull File file) throws IOException {
 		if (!file.exists()) throw new IOException(String.format("file %s does not exist", file));
 	}
 	
-	public static void log(String s) {
+	public static void log(@Nullable String s) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Orient.getExecDir(), "log.txt"), true));
 			
-			writer.write(s);
+			writer.write(s != null ? s : "null");
 			
 			writer.newLine();
 			
@@ -95,22 +102,25 @@ public class Orient {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Nonnull
 	private static File localClassPath(int offset) {
 		StackTraceElement[] traces = Thread.currentThread().getStackTrace();
 		
 		return new File(traces[2 + offset].getClassName().replace(".", java.io.File.separator));
 	}
-	
+
+	@Nonnull
 	public static File localClassPath() {
 		return localClassPath(1);
 	}
-	
+
+	@Nonnull
 	public static File localClassDir() {
 		return localClassPath(1).getParentFile();
 	}
 
-	public static boolean fileIsLocked(File file) {
+	public static boolean fileIsLocked(@Nonnull File file) {
 		FileChannel fileChannel = null;
 
 		try {
@@ -138,7 +148,7 @@ public class Orient {
 		return false;
 	}
 
-	public static void moveFile(File inFile, File outFile, boolean replace) throws IOException {
+	public static void moveFile(@Nonnull File inFile, @Nonnull File outFile, boolean replace) throws IOException {
 		if (replace) {
 			Files.move(inFile.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} else {
@@ -146,7 +156,7 @@ public class Orient {
 		}
 	}
 
-	public static void copyFile(File inFile, File outFile, boolean replace) throws IOException {
+	public static void copyFile(@Nonnull File inFile, @Nonnull File outFile, boolean replace) throws IOException {
 		File outDir = outFile.getParentFile();
 		
 		if (outDir != null) outDir.mkdirs();
@@ -158,11 +168,11 @@ public class Orient {
 		}
 	}
 
-	public static void copyFile(File inFile, File outFile) throws IOException {
+	public static void copyFile(@Nonnull File inFile, @Nonnull File outFile) throws IOException {
 		copyFile(inFile, outFile, false);
 	}
 
-	public static void copyFileIfNewer(File inFile, File outFile) throws IOException {
+	public static void copyFileIfNewer(@Nonnull File inFile, @Nonnull File outFile) throws IOException {
 		long targetMod = outFile.lastModified();
 
 		long sourceMod = inFile.lastModified();
@@ -174,7 +184,7 @@ public class Orient {
 		copyFile(inFile, outFile, true);
 	}
 
-	public static void removeDir(File f) {
+	public static void removeDir(@Nonnull File f) {
 		File[] sub = f.listFiles();
 
 		if (sub != null) {
@@ -186,15 +196,15 @@ public class Orient {
 		f.delete();
 	}
 	
-	public static void removeDir(String path) {
+	public static void removeDir(@Nonnull String path) {
 		removeDir(new File(path)); 
 	}
 
-	public static void createDir(File f) {
+	public static void createDir(@Nonnull File f) {
 		f.mkdirs();
 	}
 
-	public static void createDir(String path) {
+	public static void createDir(@Nonnull String path) {
 		if (path.endsWith(separator)) {
 			path = path.substring(0, path.length() - 1);
 		}
@@ -202,7 +212,8 @@ public class Orient {
 		createDir(new File(path));
 	}
 
-	public static Vector<File> getFiles(File dir) {
+	@Nonnull
+	public static Vector<File> getFiles(@Nonnull File dir) {
 		Vector<File> res = new Vector<>();
 
 		File[] sub = dir.listFiles();
@@ -218,20 +229,21 @@ public class Orient {
 		return res;
 	}
 
-	public static Vector<File> getFiles(File dir, String match) {
-		Vector<File> res = new Vector<>();
+	@Nonnull
+	public static Vector<File> getFiles(@Nonnull File dir, @Nonnull String match) {
+		Vector<File> ret = new Vector<>();
 
 		File[] sub = dir.listFiles();
 
 		if (sub != null) {
 			for (File f : sub) {
-				res.addAll(getFiles(f));
+				ret.addAll(getFiles(f));
 			}
 		}
 
 		Vector<File> toRemove = new Vector<>();
 
-		for (File f : res) {
+		for (File f : ret) {
 			String shortPath = f.getAbsolutePath().substring(dir.getAbsolutePath().length() + 1);
 
 			if (!shortPath.matches(match)) {
@@ -239,9 +251,9 @@ public class Orient {
 			}
 		}
 
-		res.removeAll(toRemove);
+		ret.removeAll(toRemove);
 
-		return res;
+		return ret;
 	};
 	
 	public static boolean createFile(@Nonnull File file) throws IOException {

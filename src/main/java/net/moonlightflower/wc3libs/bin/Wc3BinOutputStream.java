@@ -2,7 +2,7 @@ package net.moonlightflower.wc3libs.bin;
 
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
 import net.moonlightflower.wc3libs.dataTypes.app.Char;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.misc.Id;
 
@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class Wc3BinOutputStream extends BinOutputStream {
     public void writeUByte(int val) {
@@ -59,7 +58,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(_intBytes);
     }
 
-    public void writeInt32(@Nonnull Int val) {
+    public void writeInt32(@Nonnull Wc3Int val) {
         writeInt32(val.getVal());
     }
 

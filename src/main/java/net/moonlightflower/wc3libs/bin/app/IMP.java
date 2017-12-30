@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class IMP {
 	}
 	
 	public static class Obj implements IMP_Streamable {		
-		private String _path;
+		protected String _path;
 		
 		public String getPath() {
 			return _path;
@@ -61,7 +62,7 @@ public class IMP {
 			_path = val;
 		}
 		
-		private StdFlag _stdFlag = StdFlag.CUSTOM;
+		protected StdFlag _stdFlag = StdFlag.CUSTOM;
 		
 		public StdFlag getStdFlag() {
 			return _stdFlag;
@@ -156,28 +157,25 @@ public class IMP {
 			IMP_0x1,
 		}
 
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat IMP_0x1 = new EncodingFormat(Enum.IMP_0x1, 0x1);
 
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		@Nullable
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
-		
+
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int version = stream.readInt32();
+		int version = stream.readInt32("version");
 		
 		stream.rewind();
 
-		read(stream, EncodingFormat.valueOf(version));
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

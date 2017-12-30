@@ -10,9 +10,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * unit and item placements file for wrapping war3mapUnits.doo
@@ -904,20 +902,16 @@ public class DOO_UNITS {
 			DOO_0x8,
 		}
 
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
-		
+
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 	
@@ -940,7 +934,7 @@ public class DOO_UNITS {
 		
 		int version = stream.readInt32("version"); //0xB
 		
-		Wc3BinInputStream.checkFormatVer("dooUnitsMaskFunc", EncodingFormat.DOO_0x8.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.DOO_0x8.getVersion(), version);
 		
 		int subVersion = stream.readInt32("subVersion"); //usually 0xB
 		
@@ -958,11 +952,7 @@ public class DOO_UNITS {
 		
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new IllegalArgumentException("unknown format " + version);
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

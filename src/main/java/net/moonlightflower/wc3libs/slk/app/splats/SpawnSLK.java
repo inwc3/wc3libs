@@ -3,7 +3,6 @@ package net.moonlightflower.wc3libs.slk.app.splats;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,7 +10,7 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Model;
 import net.moonlightflower.wc3libs.dataTypes.app.SpawnId;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -59,7 +58,7 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 		public final static State<Model> ART_MODEL = new State<>("Model", Model.class);
 		
 		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 	}
 	
 	public static class Obj extends SLK.Obj<SpawnId> {

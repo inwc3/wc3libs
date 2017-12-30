@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -125,20 +123,20 @@ public class W3S {
 
 		public final static State<Wc3String> DATA_FILE_PATH = new State<>(Wc3String.class, "filePath");
 		public final static State<Wc3String> DATA_EAX = new State<>(Wc3String.class, "eax");
-		public final static State<Int> DATA_FLAGS = new State<>(Int.class, "flags");
-		public final static State<Int> DATA_FADE_IN = new State<>(Int.class, "fadeIn");
-		public final static State<Int> DATA_FADE_OUT = new State<>(Int.class, "fadeOut");
-		public final static State<Int> DATA_VOLUME = new State<>(Int.class, "volume");
+		public final static State<Wc3Int> DATA_FLAGS = new State<>(Wc3Int.class, "flags");
+		public final static State<Wc3Int> DATA_FADE_IN = new State<>(Wc3Int.class, "fadeIn");
+		public final static State<Wc3Int> DATA_FADE_OUT = new State<>(Wc3Int.class, "fadeOut");
+		public final static State<Wc3Int> DATA_VOLUME = new State<>(Wc3Int.class, "volume");
 		public final static State<Real> DATA_PITCH = new State<>(Real.class, "pitch");
 		public final static State<Real> DATA_UNKNOWN_A = new State<>(Real.class, "unknownA");
-		public final static State<Int> DATA_UNKNOWN_B = new State<>(Int.class, "unknownB");
-		public final static State<Int> DATA_CHANNEL = new State<>(Int.class, "channel");
+		public final static State<Wc3Int> DATA_UNKNOWN_B = new State<>(Wc3Int.class, "unknownB");
+		public final static State<Wc3Int> DATA_CHANNEL = new State<>(Wc3Int.class, "channel");
 		public final static State<Real> DATA_DIST_MIN = new State<>(Real.class, "distMin");
 		public final static State<Real> DATA_DIST_MAX = new State<>(Real.class, "distMax");
 		public final static State<Real> DATA_DIST_CUTOFF = new State<>(Real.class, "cutoff");
 		public final static State<Real> DATA_UNKNOWN_C = new State<>(Real.class, "unknownC");
 		public final static State<Real> DATA_UNKNOWN_D = new State<>(Real.class, "unknownD");
-		public final static State<Int> DATA_UNKNOWN_E = new State<>(Int.class, "unknownE");
+		public final static State<Wc3Int> DATA_UNKNOWN_E = new State<>(Wc3Int.class, "unknownE");
 		public final static State<Real> DATA_UNKNOWN_F = new State<>(Real.class, "unknownF");
 		public final static State<Real> DATA_UNKNOWN_G = new State<>(Real.class, "unknownG");
         public final static State<Real> DATA_UNKNOWN_H = new State<>(Real.class, "unknownH");
@@ -178,12 +176,12 @@ public class W3S {
 
 		public final static Integer VOLUME_DEFAULT = -1;
 
-		private Function<Integer, Int> VOLUME_READ_FUNC = val -> {
+		private Function<Integer, Wc3Int> VOLUME_READ_FUNC = val -> {
 			if (val.equals(VOLUME_DEFAULT)) return null;
 
-			return Int.valueOf(val);
+			return Wc3Int.valueOf(val);
 		};
-		private Function<Int, Integer> VOLUME_WRITE_FUNC = val -> {
+		private Function<Wc3Int, Integer> VOLUME_WRITE_FUNC = val -> {
 			if (val == null) return VOLUME_DEFAULT;
 
 			return val.getVal();
@@ -193,20 +191,20 @@ public class W3S {
 			set(TEXT_VAR_NAME, Wc3String.valueOf(stream.readString("varName")));
 			set(DATA_FILE_PATH, Wc3String.valueOf(stream.readString("filePath")));
 			set(DATA_EAX, Wc3String.valueOf(stream.readString("eax")));
-			set(DATA_FLAGS, Int.valueOf(stream.readInt32("flags")));
-			set(DATA_FADE_IN, Int.valueOf(stream.readInt32("fadeIn")));
-			set(DATA_FADE_OUT, Int.valueOf(stream.readInt32("fadeOut")));
+			set(DATA_FLAGS, Wc3Int.valueOf(stream.readInt32("flags")));
+			set(DATA_FADE_IN, Wc3Int.valueOf(stream.readInt32("fadeIn")));
+			set(DATA_FADE_OUT, Wc3Int.valueOf(stream.readInt32("fadeOut")));
 			set(DATA_VOLUME, VOLUME_READ_FUNC.apply(stream.readInt32("volume")));
 			set(DATA_PITCH, FLOAT_READ_FUNC.apply(stream.readFloat32("pitch")));
 			set(DATA_UNKNOWN_A, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownA")));
-			set(DATA_UNKNOWN_B, Int.valueOf(stream.readInt32("unknownB")));
-			set(DATA_CHANNEL, Int.valueOf(stream.readInt32("channel")));
+			set(DATA_UNKNOWN_B, Wc3Int.valueOf(stream.readInt32("unknownB")));
+			set(DATA_CHANNEL, Wc3Int.valueOf(stream.readInt32("channel")));
 			set(DATA_DIST_MIN, FLOAT_READ_FUNC.apply(stream.readFloat32("distMin")));
 			set(DATA_DIST_MAX, FLOAT_READ_FUNC.apply(stream.readFloat32("distMax")));
 			set(DATA_DIST_CUTOFF, FLOAT_READ_FUNC.apply(stream.readFloat32("distCutoff")));
 			set(DATA_UNKNOWN_C, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownC")));
 			set(DATA_UNKNOWN_D, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownD")));
-			set(DATA_UNKNOWN_E, Int.valueOf(stream.readInt32("unknownE")));
+			set(DATA_UNKNOWN_E, Wc3Int.valueOf(stream.readInt32("unknownE")));
 			set(DATA_UNKNOWN_F, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownF")));
 			set(DATA_UNKNOWN_G, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownG")));
             set(DATA_UNKNOWN_H, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownH")));
@@ -290,29 +288,25 @@ public class W3S {
 			W3S_0x1
 		}
 
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
-
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3S_0x1 = new EncodingFormat(Enum.W3S_0x1, 0x1);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
 
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-
-			_map.put(version, this);
 		}
 	}
 
 	public void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		int format = stream.readInt32();
+		int version = stream.readInt32("version");
 
-		Wc3BinInputStream.checkFormatVer("soundMaskFunc", EncodingFormat.W3S_0x1.getVersion(), format);
+		stream.checkFormatVersion(EncodingFormat.W3S_0x1.getVersion(), version);
 
-		int soundsCount = stream.readInt32();
+		int soundsCount = stream.readInt32("soundsCount");
 
 		for (int i = 0; i < soundsCount; i++) {
 			addSound(new Sound(stream, EncodingFormat.W3S_0x1));
@@ -334,11 +328,7 @@ public class W3S {
 
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new IllegalArgumentException("unknown format " + version);
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

@@ -74,7 +74,7 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		public final static State<Real> ART_SELECTION_SCALE = new State<>("scaleBull", Real.class);
 		public final static State<Real> ART_PITCH_MAX = new State<>("maxPitch", Real.class);
 		public final static State<Real> ART_ROLL_MAX = new State<>("maxRoll", Real.class);
-		public final static State<Int> ART_ELEV_PTS = new State<>("elevPts", Int.class);
+		public final static State<Wc3Int> ART_ELEV_PTS = new State<>("elevPts", Wc3Int.class);
 		public final static State<Real> ART_ELEV_RAD = new State<>("elevRad", Real.class);
 		public final static State<Real> ART_FOG_RAD = new State<>("fogRad", Real.class);
 		public final static State<Real> ART_ANIM_WALK = new State<>("walk", Real.class);

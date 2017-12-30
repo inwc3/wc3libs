@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DeathType extends Int {
+public class DeathType extends Wc3Int {
 	public static String getTranslatorSection() {
 		return "deathType";
 	}

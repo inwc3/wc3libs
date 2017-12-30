@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +19,7 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -104,7 +103,7 @@ public abstract class ObjMod {
 				}
 				
 				public static Val valueOf(int val) {
-					return new Val(Int.valueOf(val), ValType.INT);
+					return new Val(Wc3Int.valueOf(val), ValType.INT);
 				}
 				
 				public static Val valueOf(float val, boolean unreal) {
@@ -327,7 +326,7 @@ public abstract class ObjMod {
 					dataPt = stream.readInt32("dataPt");
 				}
 
-				Field.Val val = null;
+				Field.Val val;
 
 				switch (varType) {
 				case INT: {
@@ -386,7 +385,7 @@ public abstract class ObjMod {
 					dataPt = stream.readInt32("dataPt");
 				}
 
-				Field.Val val = null;
+				Field.Val val;
 				
 				switch (varType) {
 				case INT: {
@@ -455,7 +454,7 @@ public abstract class ObjMod {
 
 					switch (valType) {
 					case INT: {
-						Int valSpec = (Int) val.getVal();
+						Wc3Int valSpec = (Wc3Int) val.getVal();
 						
 						stream.writeInt32(valSpec.toInt());
 						
@@ -527,7 +526,7 @@ public abstract class ObjMod {
 
 					switch (valType) {
 					case INT: {
-						Int valSpec = (Int) val.getVal();
+						Wc3Int valSpec = (Wc3Int) val.getVal();
 						
 						stream.writeInt32(valSpec.toInt());
 						
@@ -662,7 +661,7 @@ public abstract class ObjMod {
 		_objsList.add(val);
 	}
 	
-	public void removeObj(@Nullable Obj val) {
+	public void removeObj(@Nonnull Obj val) {
 		_objs.remove(val.getId());
 		_objsList.remove(val);
 	}
@@ -680,7 +679,7 @@ public abstract class ObjMod {
 		_objsList.clear();
 	}
 	
-	public Obj addObj(@Nullable ObjId id, @Nullable ObjId baseId) {
+	public Obj addObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
 		Obj obj = new Obj(id, baseId);
@@ -773,19 +772,15 @@ public abstract class ObjMod {
 		return null;
 	}
 
-	public Collection<File> getSLKs() {
-		return Arrays.asList();
-	}
+	public abstract Collection<File> getSLKs();
+	public abstract Collection<File> getNecessarySLKs();
 
-	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList();
-	}
-	
 	//data pts are used by abilities, a value of 1 maps to DataA, 2 to DataB, 3 to DataC and so on
 	//the ability slk defines up to DataI, hence 9 is the max
 	public final int DATA_PT_MIN = 1;
 	public final int DATA_PT_MAX = 9;
-	
+
+	@Nonnull
 	public ObjPack reduce(@Nonnull MetaSLK reduceMetaSlk) throws Exception {
 		ObjPack pack = new ObjPack(this);
 		
@@ -820,7 +815,7 @@ public abstract class ObjMod {
 							Obj.Field.Val val = valEntry.getValue();
 
 							int index = (level == 0) ? 0 : (level - 1);
-							int metaIndex = Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
+							int metaIndex = Wc3Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
 
 							if (metaIndex > 0) {
 								index += metaIndex;
@@ -852,7 +847,7 @@ public abstract class ObjMod {
 								}
 							} else {
 								if (val.getType().equals(Obj.Field.ValType.INT)) {
-									profileVal = Int.valueOf(val.getVal());
+									profileVal = Wc3Int.valueOf(val.getVal());
 								} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
 									profileVal = Real.valueOf(val.getVal());
 								} else if (val.getType().equals(Obj.Field.ValType.UNREAL)) {
@@ -889,9 +884,10 @@ public abstract class ObjMod {
 							Integer repeat = null;
 
 							try {
-								repeat = Int.valueOf(metaObj.get(FieldId.valueOf("repeat"))).toInt();
-							} catch (Exception e) {
+								Wc3Int repeatVal = Wc3Int.valueOf(metaObj.get(FieldId.valueOf("repeat")));
 
+								if (repeatVal != null) repeat = repeatVal.toInt();
+							} catch (Exception ignored) {
 							}
 
 							if ((repeat != null) && (repeat > 0)) {
@@ -954,12 +950,14 @@ public abstract class ObjMod {
 
 			Obj outObj = outObjMod.getObj(objId);
 
-			if (outObj.getFields().isEmpty()) {
-				outObjMod.removeObj(objId);
-			} else {
-				outObjMod.removeObj(objId);
+			if (outObj != null) {
+				if (outObj.getFields().isEmpty()) {
+					outObjMod.removeObj(objId);
+				} else {
+					outObjMod.removeObj(objId);
 
-				outObjMod.addObj(objId, null).merge(outObj);
+					outObjMod.addObj(objId, null).merge(outObj);
+				}
 			}
 		}
 
@@ -1000,7 +998,7 @@ public abstract class ObjMod {
 	private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
-		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x1.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.OBJ_0x1.getVersion(), version);
 
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 		
@@ -1032,7 +1030,7 @@ public abstract class ObjMod {
 	private void read_0x2(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
-		Wc3BinInputStream.checkFormatVer("objMaskFunc", EncodingFormat.OBJ_0x2.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.OBJ_0x2.getVersion(), version);
 
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 

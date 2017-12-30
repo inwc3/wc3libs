@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 //import bin.Wc3bin;
 
@@ -238,7 +236,8 @@ public class W3C {
 	private void addCamera(@Nonnull Camera val) {
 		_cameras.add(val);
 	}
-	
+
+	@Nonnull
 	public Camera addCamera() {
 		Camera camera = new Camera();
 
@@ -252,28 +251,24 @@ public class W3C {
 			AUTO,
 			W3C_0x0,
 		}
-
-		private static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WPM_0x0 = new EncodingFormat(Enum.W3C_0x0, 0x0);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
-		
+
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 	
 	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
-		Wc3BinInputStream.checkFormatVer("camMaskFunc", EncodingFormat.WPM_0x0.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.WPM_0x0.getVersion(), version);
 
 		int camsCount = stream.readInt32("camsCount");
 
@@ -297,11 +292,7 @@ public class W3C {
 		
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new IllegalArgumentException("unknown format " + version);
-
-		read(stream, format);
+		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
 	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

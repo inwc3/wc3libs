@@ -3,13 +3,15 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.Wc3Num;
 
-public class Int extends DataType implements Wc3Num {
+import javax.annotation.Nonnull;
+
+public class Wc3Int extends DataType implements Wc3Num {
 	public static String name() {
-		return "Int";
+		return "Wc3Int";
 	}
 	
-	public static Int getDefVal() {
-		return new Int(0);
+	public static Wc3Int getDefVal() {
+		return new Wc3Int(0);
 	}
 	
 	private int _val;
@@ -20,13 +22,13 @@ public class Int extends DataType implements Wc3Num {
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Int)
-			return equals((Int) other);
+		if (other instanceof Wc3Int)
+			return equals((Wc3Int) other);
 		
 		return super.equals(other);
 	}
 	
-	public boolean equals(Int other) {
+	public boolean equals(Wc3Int other) {
 		return getVal().equals(other.getVal());
 	}
 	
@@ -54,21 +56,22 @@ public class Int extends DataType implements Wc3Num {
 		return getVal();
 	}
 	
-	protected Int(int val) {
+	protected Wc3Int(int val) {
 		super();
 		
 		_val = val;
 	}
 	
-	public Int() {
+	public Wc3Int() {
 		
 	}
-	
-	public static Int valueOf(int val) {
-		return new Int(val);
+
+	@Nonnull
+	public static Wc3Int valueOf(int val) {
+		return new Wc3Int(val);
 	}
 
-	public static Int valueOf(Object val) {
+	public static Wc3Int valueOf(Object val) {
 		try {
 			return valueOf(Integer.parseInt(val.toString()));
 		} catch (NumberFormatException e) {
@@ -78,11 +81,11 @@ public class Int extends DataType implements Wc3Num {
 	}
 	
 	@Override
-	public Int decode(Object val) {
+	public Wc3Int decode(Object val) {
 		return valueOf(val);
 	}
 	
-	public static Int decodeStatic(Object val) {
+	public static Wc3Int decodeStatic(Object val) {
 		return valueOf(val);
 	}
 }

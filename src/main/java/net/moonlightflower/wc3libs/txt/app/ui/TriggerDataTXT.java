@@ -5,14 +5,16 @@ import java.util.List;
 
 import net.moonlightflower.wc3libs.txt.TXT;
 
+import javax.annotation.Nonnull;
+
 public class TriggerDataTXT extends TXT {
 	public static class TrigCat {
 		
 	}
 	
-	private List<TrigCat> _trigCats = new ArrayList<>();
+	private final List<TrigCat> _trigCats = new ArrayList<>();
 	
-	private void addTrigCat(TrigCat val) {
+	private void addTrigCat(@Nonnull TrigCat val) {
 		_trigCats.add(val);
 	}
 	
@@ -20,9 +22,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<TrigType> _trigTypes = new ArrayList<>();
+	private final List<TrigType> _trigTypes = new ArrayList<>();
 	
-	private void addTrigType(TrigType val) {
+	private void addTrigType(@Nonnull TrigType val) {
 		_trigTypes.add(val);
 	}
 	
@@ -30,9 +32,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<TrigParam> _trigParams = new ArrayList<>();
+	private final List<TrigParam> _trigParams = new ArrayList<>();
 	
-	private void addTrigParam(TrigParam val) {
+	private void addTrigParam(@Nonnull TrigParam val) {
 		_trigParams.add(val);
 	}
 	
@@ -40,9 +42,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<TrigEvent> _trigEvents = new ArrayList<>();
+	private final List<TrigEvent> _trigEvents = new ArrayList<>();
 	
-	private void addTrigEvent(TrigEvent val) {
+	private void addTrigEvent(@Nonnull TrigEvent val) {
 		_trigEvents.add(val);
 	}
 	
@@ -50,9 +52,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<TrigCond> _trigConds = new ArrayList<>();
+	private final List<TrigCond> _trigConds = new ArrayList<>();
 	
-	private void addTrigCond(TrigCond val) {
+	private void addTrigCond(@Nonnull TrigCond val) {
 		_trigConds.add(val);
 	}
 	
@@ -60,9 +62,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<TrigAction> _trigActions = new ArrayList<>();
+	private final List<TrigAction> _trigActions = new ArrayList<>();
 	
-	private void addTrigAction(TrigAction val) {
+	private void addTrigAction(@Nonnull TrigAction val) {
 		_trigActions.add(val);
 	}
 	
@@ -70,9 +72,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<TrigCall> _trigCalls = new ArrayList<>();
+	private final List<TrigCall> _trigCalls = new ArrayList<>();
 	
-	private void addTrigCall(TrigCall val) {
+	private void addTrigCall(@Nonnull TrigCall val) {
 		_trigCalls.add(val);
 	}
 	
@@ -80,9 +82,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<DefaultTrigCat> _defaultTrigCats = new ArrayList<>();
+	private final List<DefaultTrigCat> _defaultTrigCats = new ArrayList<>();
 	
-	private void addDefaultTrigCat(DefaultTrigCat val) {
+	private void addDefaultTrigCat(@Nonnull DefaultTrigCat val) {
 		_defaultTrigCats.add(val);
 	}
 	
@@ -90,9 +92,9 @@ public class TriggerDataTXT extends TXT {
 		
 	}
 	
-	private List<DefaultTrig> _defaultTrigs = new ArrayList<>();
+	private final List<DefaultTrig> _defaultTrigs = new ArrayList<>();
 	
-	private void addDefaultTrig(DefaultTrig val) {
+	private void addDefaultTrig(@Nonnull DefaultTrig val) {
 		_defaultTrigs.add(val);
 	}
 }

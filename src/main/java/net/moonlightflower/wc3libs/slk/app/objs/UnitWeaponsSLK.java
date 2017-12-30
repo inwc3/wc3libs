@@ -97,12 +97,12 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
         public final static State<Real> COMBAT_ATTACK1_AREA_SMALL_DMG_FACTOR = new State<>("Qfact1", Real.class);
         public final static State<DataList<CombatTarget>> COMBAT_ATTACK1_AREA_TARGS = new State<>("splashTargs1", new DataTypeInfo(DataList.class,
                 CombatTarget.class));
-        public final static State<Int> COMBAT_ATTACK1_TARGS_MAX = new State<>("targCount1", Int.class);
+        public final static State<Wc3Int> COMBAT_ATTACK1_TARGS_MAX = new State<>("targCount1", Wc3Int.class);
         public final static State<Real> COMBAT_ATTACK1_DMG_LOSS_FACTOR = new State<>("damageLoss1", Real.class);
         public final static State<Real> COMBAT_ATTACK1_DMG_SPILL_DIST = new State<>("spillDist1", Real.class);
         public final static State<Real> COMBAT_ATTACK1_DMG_SPILL_RAD = new State<>("spillRadius1", Real.class);
         public final static State<Wc3String> COMBAT_DMG_UPG = new State<>("DmgUpg", Wc3String.class);
-        public final static State<Int> COMBAT_DMG_MOD = new State<>("dmod1", Int.class);
+        public final static State<Wc3Int> COMBAT_DMG_MOD = new State<>("dmod1", Wc3Int.class);
         public final static State<Real> COMBAT_DMG_PER_SEC = new State<>("DPS", Real.class);
 
         public final static State<CombatSound> COMBAT_ATTACK2_WEAPON_SOUND = new State<>("weapType2", CombatSound.class);
@@ -131,7 +131,7 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
         public final static State<Real> COMBAT_ATTACK2_AREA_SMALL_DMG_FACTOR = new State<>("Qfact2", Real.class);
         public final static State<DataList<CombatTarget>> COMBAT_ATTACK2_AREA_TARGS = new State<>("splashTargs2", new DataTypeInfo(DataList.class,
 				CombatTarget.class));
-        public final static State<Int> COMBAT_ATTACK2_TARGS_MAX = new State<>("targCount2", Int.class);
+        public final static State<Wc3Int> COMBAT_ATTACK2_TARGS_MAX = new State<>("targCount2", Wc3Int.class);
         public final static State<Real> COMBAT_ATTACK2_DMG_LOSS_FACTOR = new State<>("damageLoss2", Real.class);
         public final static State<Real> COMBAT_ATTACK2_DMG_SPILL_DIST = new State<>("spillDist2", Real.class);
         public final static State<Real> COMBAT_ATTACK2_DMG_SPILL_RAD = new State<>("spillRadius2", Real.class);

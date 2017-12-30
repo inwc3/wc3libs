@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,7 +13,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.TileId;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -63,16 +62,16 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 		public final static State<Wc3String> ART_TEX_DIR = new State<>("dir", Wc3String.class);
 		public final static State<Wc3String> ART_TEX_FILE = new State<>("file", Wc3String.class);
 		
-		public final static State<Int> DATA_BLIGHT_PRIO = new State<>("blightPri", Int.class);
+		public final static State<Wc3Int> DATA_BLIGHT_PRIO = new State<>("blightPri", Wc3Int.class);
 		public final static State<Bool> DATA_BUILDABLE = new State<>("buildable", Bool.class);
-		public final static State<Int> DATA_CLIFF_SET = new State<>("cliffSet", Int.class);
+		public final static State<Wc3Int> DATA_CLIFF_SET = new State<>("cliffSet", Wc3Int.class);
 		public final static State<DataList<TileId>> DATA_CONVERT_TO = new State<>("convertTo", new DataTypeInfo(DataList.class, TileId.class));
 		public final static State<Bool> DATA_FLYABLE = new State<>("flyable", Bool.class);
 		public final static State<Bool> DATA_WALKABLE = new State<>("walkable", Bool.class);
 		
 		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment", Wc3String.class);
 		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 	}
 	
 	public static class Obj extends SLK.Obj<TileId> {
@@ -85,11 +84,11 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 			set(States.ART_TEX_FILE, Wc3String.valueOf(val.getFileName().toString()));
 		}
 		
-		public Int getCliffSet() {
+		public Wc3Int getCliffSet() {
 			return get(States.DATA_CLIFF_SET);
 		}
 		
-		public void setCliffSet(Int val) {
+		public void setCliffSet(Wc3Int val) {
 			set(States.DATA_CLIFF_SET, val);
 		}
 		
@@ -125,11 +124,11 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 			set(States.ART_FOOTPRINTS, val);
 		}
 		
-		public Int getBlightPrio() {
+		public Wc3Int getBlightPrio() {
 			return get(States.DATA_BLIGHT_PRIO);
 		}
 		
-		public void setBlightPrio(Int val) {
+		public void setBlightPrio(Wc3Int val) {
 			set(States.DATA_BLIGHT_PRIO, val);
 		}
 		

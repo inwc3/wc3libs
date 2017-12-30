@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,7 +14,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.CliffClass;
 import net.moonlightflower.wc3libs.dataTypes.app.CliffId;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.TileId;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -72,7 +71,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 
 		public final static State<Bool> EDITOR_IN_BETA = new State<>("inBeta", Bool.class);
 		public final static State<Wc3String> EDITOR_NAME = new State<>("name", Wc3String.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 	}
 	
 	public static class Obj extends SLK.Obj<CliffId> {

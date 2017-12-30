@@ -11,6 +11,8 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,7 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FDF extends UTF8 {
-	private static String stripComments(String val) {
+	private static String stripComments(@Nullable String val) {
+		if (val == null) return null;
+
 		val = val.replaceAll("//.*", "");
 		
 		Pattern pattern = Pattern.compile(String.format("%s.*%s", Pattern.quote("/*"), Pattern.quote("*/")), Pattern.DOTALL);
@@ -32,7 +36,9 @@ public class FDF extends UTF8 {
 		return val;
 	}
 	
-	private static String dequote(String s) {
+	private static String dequote(@Nullable String s) {
+		if (s == null) return null;
+
 		if ((s.charAt(0) == '\"') && (s.charAt(s.length() - 1) == '\"')) {
 			s = s.substring(1, s.length() - 1);
 		}
@@ -40,15 +46,16 @@ public class FDF extends UTF8 {
 		return s;
 	}
 	
-	public static int indexOfRegex(String input, String regex, int startPos) {
+	public static int indexOfRegex(@Nonnull String input, @Nonnull String regex, int startPos) {
 		Matcher matcher = Pattern.compile(regex).matcher(input);
 		
 		if (!matcher.find(startPos)) return -1;
 		
 		return matcher.start(1);
 	}
-	
-	public static List<String> tokenize(String line) {
+
+	@Nullable
+	public static List<String> tokenize(@Nonnull String line) {
 		if (line.length() == 0) return null;
 		
 		List<String> ret = new ArrayList<>();
@@ -95,7 +102,8 @@ public class FDF extends UTF8 {
 	}
 	
 	private final Map<String, String> _map = new LinkedHashMap<>();
-	
+
+	@Nonnull
 	public TXT toTXT() {
 		TXT txt = new TXT();
 		
@@ -106,7 +114,7 @@ public class FDF extends UTF8 {
 		return txt;
 	}
 	
-	private void read(InputStream inStream) throws IOException {
+	private void read(@Nonnull InputStream inStream) throws IOException {
 		UTF8 reader = new UTF8(inStream);
 		
 		String input = stripComments(reader.readAll());
@@ -156,7 +164,7 @@ public class FDF extends UTF8 {
 		_map.putAll(newEntries);
 	}
 	
-	private void read2(InputStream inStream) throws IOException {
+	private void read2(@Nonnull InputStream inStream) throws IOException {
 		UTF8 reader = new UTF8(inStream);
 		
 		String input = stripComments(reader.readAll());
@@ -220,13 +228,14 @@ public class FDF extends UTF8 {
 		}
 	}
 	
-	public FDF(InputStream inStream) throws IOException {
+	public FDF(@Nonnull InputStream inStream) throws IOException {
 		super();
 		
 		read(inStream);
 	}
-	
-	public static FDF ofGameFile(File inFile) throws Exception {
+
+	@Nonnull
+	public static FDF ofGameFile(@Nonnull File inFile) throws Exception {
 		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
 		
 		if (!portResult.getExports().containsKey(inFile)) throw new IOException(String.format("could not extract %s file", inFile.toString()));

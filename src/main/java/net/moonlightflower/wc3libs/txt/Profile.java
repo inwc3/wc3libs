@@ -4,6 +4,8 @@ import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,7 +15,7 @@ import java.util.Map.Entry;
  * handles profile files like Units\CommandFunc.txt
  */
 public class Profile extends TXT {
-	public final static File[] getNativePaths() {
+	public static File[] getNativePaths() {
 		return new File[]{
 			new File("Units\\CampaignUnitStrings.txt"),
 
@@ -73,16 +75,16 @@ public class Profile extends TXT {
 	public static class Obj extends TXT.Section {		
 		public class Field extends TXT.Section.Field {
 			@Override
-			public void merge(TXT.Section.Field otherField, boolean overwrite) {
+			public void merge(@Nonnull TXT.Section.Field otherField, boolean overwrite) {
 				super.merge(otherField, overwrite);
 			}
 			
 			@Override
-			public void merge(TXT.Section.Field otherField) {
+			public void merge(@Nonnull TXT.Section.Field otherField) {
 				merge(otherField, true);
 			}
 			
-			public Field(FieldId id) {
+			public Field(@Nonnull FieldId id) {
 				super(id);
 			}
 		}
@@ -90,6 +92,7 @@ public class Profile extends TXT {
 		/*private Map<FieldId, Field> _fields = new LinkedHashMap<>();*/
 		
 		@Override
+		@Nonnull
 		public Map<FieldId, Field> getFields() {
 			Map<FieldId, Field> ret = new LinkedHashMap<>();
 			
@@ -102,14 +105,15 @@ public class Profile extends TXT {
 		public boolean containsField(FieldId id) {
 			return _fields.containsKey(id);
 		}*/
-		
+
 		@Override
-		public Field getField(FieldId id) {
+		@Nullable
+		public Field getField(@Nonnull FieldId id) {
 			return (Field) _fields.get(id.lower());
 		}
 		
 		@Override
-		public Field addField(FieldId id) {
+		public Field addField(@Nonnull FieldId id) {
 			if (containsField(id)) return getField(id);
 			//super.addField(id);
 
@@ -120,7 +124,7 @@ public class Profile extends TXT {
 			return field;
 		}
 		
-		public void merge(Obj otherObj, boolean overwrite) {
+		public void merge(@Nonnull Obj otherObj, boolean overwrite) {
 			for (Entry<FieldId, Field> fieldEntry : otherObj.getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				Field otherField = fieldEntry.getValue();
@@ -131,12 +135,12 @@ public class Profile extends TXT {
 			}
 		}
 		
-		public void merge(Obj otherObj) {
+		public void merge(@Nonnull Obj otherObj) {
 			merge(otherObj, true);
 		}
 		
 		@Override
-		public void print(PrintStream outStream) {
+		public void print(@Nonnull PrintStream outStream) {
 			for (Entry<FieldId, Obj.Field> fieldEntry : getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				Obj.Field field = fieldEntry.getValue();
@@ -159,7 +163,7 @@ public class Profile extends TXT {
 		}
 		
 		@Override
-		public void write(BufferedWriter writer, Translator translator) throws IOException {
+		public void write(@Nonnull BufferedWriter writer, @Nullable Translator translator) throws IOException {
 			if (getId() != null) {
 				writer.write(String.format("[%s]", getId().toString()));
 				
@@ -181,7 +185,7 @@ public class Profile extends TXT {
 		}
 		
 		@Override
-		public void merge(TXT.Section otherSection, boolean overwrite) {			
+		public void merge(@Nonnull TXT.Section otherSection, boolean overwrite) {
 			for (Map.Entry<FieldId, ? extends TXT.Section.Field> fieldEntry : otherSection.getFields().entrySet()) {
 				FieldId fieldId = fieldEntry.getKey();
 				TXT.Section.Field otherField = fieldEntry.getValue();
@@ -192,41 +196,43 @@ public class Profile extends TXT {
 			}
 		}
 		
-		private void read(TXT.Section txtSection) {
+		private void read(@Nonnull TXT.Section txtSection) {
 			merge(txtSection, true);
 		}
 		
-		public Obj(TXT.Section txtSection) {
+		public Obj(@Nonnull TXT.Section txtSection) {
 			this(txtSection.getId());
 			
 			read(txtSection);
 		}
 		
-		public Obj(TXTSectionId id) {
+		public Obj(@Nonnull TXTSectionId id) {
 			super(id);
 		}
 	}
 	
 	private final Map<TXTSectionId, Obj> _objs = new LinkedHashMap<>();
-	
+
+	@Nonnull
 	public Map<TXTSectionId, Obj> getObjs() {
 		return _objs;
 	}
 	
-	public boolean containsObj(TXTSectionId id) {
+	public boolean containsObj(@Nonnull TXTSectionId id) {
 		return _objs.containsKey(id);
 	}
 	
-	public Obj getObj(TXTSectionId id) {
+	public Obj getObj(@Nonnull TXTSectionId id) {
 		return _objs.get(id);
 	}
 	
-	private void addObj(Obj obj) {
+	private void addObj(@Nonnull Obj obj) {
 		_objs.put(obj.getId(), obj);
 		addSection(TXTSectionId.valueOf(obj.getId().toString()));
 	}
-	
-	public Obj addObj(TXTSectionId id) {
+
+	@Nonnull
+	public Obj addObj(@Nonnull TXTSectionId id) {
 		if (containsObj(id)) return getObj(id);
 		
 		Obj obj = new Obj(id);
@@ -236,13 +242,13 @@ public class Profile extends TXT {
 		return obj;
 	}
 
-	public void removeObj(Obj obj) {
+	public void removeObj(@Nonnull Obj obj) {
 		if (!containsObj(obj.getId())) return;
 		
 		_objs.remove(obj.getId());
 	}
 	
-	public void removeObj(TXTSectionId id) {
+	public void removeObj(@Nonnull TXTSectionId id) {
 		if (containsObj(id)) removeObj(getObj(id));
 	}
 	
@@ -250,7 +256,7 @@ public class Profile extends TXT {
 		_objs.clear();
 	}
 	
-	public void merge(Profile otherProfile, boolean overwrite) {
+	public void merge(@Nonnull Profile otherProfile, boolean overwrite) {
 		for (Entry<TXTSectionId, Obj> objEntry : otherProfile.getObjs().entrySet()) {
 			TXTSectionId id = objEntry.getKey();
 			Obj otherObj = objEntry.getValue();
@@ -261,22 +267,23 @@ public class Profile extends TXT {
 		}
 	}
 	
-	public void merge(Profile otherProfile) {
+	public void merge(@Nonnull Profile otherProfile) {
 		merge(otherProfile, true);
 	}
 	
 	private Translator _translator;
-	
+
+	@Nullable
 	public Translator getTranslator() {
 		return _translator;
 	}
 	
-	public void setTranslator(Translator val) {
+	public void setTranslator(@Nullable Translator val) {
 		_translator = val;
 	}
 	
 	@Override
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		super.write(file, _translator);
 	}
 	
@@ -293,7 +300,7 @@ public class Profile extends TXT {
 	}
 	
 	@Override
-	public void write(BufferedWriter writer, Translator translator) throws IOException {		
+	public void write(@Nonnull BufferedWriter writer, @Nullable Translator translator) throws IOException {
 		for (Entry<TXTSectionId, Obj> objEntry : getObjs().entrySet()) {
 			TXTSectionId objId = objEntry.getKey();
 			Obj obj = objEntry.getValue();
@@ -303,11 +310,11 @@ public class Profile extends TXT {
 	}
 	
 	@Override
-	public void read(InputStream inStream) throws IOException {
+	public void read(@Nonnull InputStream inStream) throws IOException {
 		super.read(inStream);
 	}
 
-	protected void read(TXT txt) {
+	protected void read(@Nonnull TXT txt) {
 		Profile other = new Profile();
 		
 		for (Entry<? extends TXTSectionId, ? extends TXT.Section> slkEntry : txt.getSections().entrySet()) {
@@ -322,7 +329,7 @@ public class Profile extends TXT {
 		merge(other, true);
 	}
 	
-	public Profile(File file) throws IOException {
+	public Profile(@Nonnull File file) throws IOException {
 		read(new TXT(file));
 	}
 	

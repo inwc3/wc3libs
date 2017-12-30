@@ -1,15 +1,17 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
+
 public class FieldId extends Id {
-	protected FieldId(String idString) {
+	protected FieldId(@Nonnull String idString) {
 		super(idString);
 	}
 
-	public static FieldId valueOf(String idString) {
+	public static FieldId valueOf(@Nonnull String idString) {
 		return new FieldId(idString);
 	}
 
-	public static FieldId valueOf(Id id) {
+	public static FieldId valueOf(@Nonnull Id id) {
 		return valueOf(id.toString());
 	}
 	

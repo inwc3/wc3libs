@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.txt;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,7 @@ public class UTF8 {
 		return sb.toString();
 	}
 	
-	public UTF8(InputStream inStream) throws IOException {
+	public UTF8(@Nonnull InputStream inStream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
 		
 		String line = reader.readLine();
@@ -47,7 +48,7 @@ public class UTF8 {
 		
 		while ((line = reader.readLine()) != null) {
 			_lines.add(line);
-		};
+		}
 		
 		reader.close();
 		

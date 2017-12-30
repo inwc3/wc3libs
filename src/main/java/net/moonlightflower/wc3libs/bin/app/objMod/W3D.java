@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,9 +64,9 @@ public class W3D extends ObjMod {
 		
 		public final static State<Bool> ART_ANIM_IN_FOG = new State<>("danf", Bool.class);
 		public final static State<Bool> ART_CASTS_SHADOW = new State<>("dshd", Bool.class);
-		public final static State<DataList<Int>> ART_COLOR_RED = new State<>("dvr1", new DataTypeInfo(DataList.class, Int.class)); //mult
-		public final static State<DataList<Int>> ART_COLOR_GREEN = new State<>("dvg1", new DataTypeInfo(DataList.class, Int.class)); //mult
-		public final static State<DataList<Int>> ART_COLOR_BLUE = new State<>("dvb1", new DataTypeInfo(DataList.class, Int.class)); //mult
+		public final static State<DataList<Wc3Int>> ART_COLOR_RED = new State<>("dvr1", new DataTypeInfo(DataList.class, Wc3Int.class)); //mult
+		public final static State<DataList<Wc3Int>> ART_COLOR_GREEN = new State<>("dvg1", new DataTypeInfo(DataList.class, Wc3Int.class)); //mult
+		public final static State<DataList<Wc3Int>> ART_COLOR_BLUE = new State<>("dvb1", new DataTypeInfo(DataList.class, Wc3Int.class)); //mult
 		public final static State<Real> ART_FIXED_ROTATION = new State<>("dfxr", Real.class);
 		public final static State<Bool> ART_FLOATS = new State<>("dflt", Bool.class);
 		public final static State<Real> ART_PITCH_MAX = new State<>("dmap", Real.class);
@@ -76,12 +75,12 @@ public class W3D extends ObjMod {
 		public final static State<Real> ART_SELECTION_SCALE = new State<>("dsel", Real.class);
 		public final static State<Bool> ART_SHOW_IN_FOG = new State<>("dshf", Bool.class);
 		public final static State<Bool> ART_SHOW_ON_MINIMAP = new State<>("dsmm", Bool.class);
-		public final static State<Int> ART_MINIMAP_COLOR_BLUE = new State<>("dmmb", Int.class);
-		public final static State<Int> ART_MINIMAP_COLOR_GREEN = new State<>("dmmg", Int.class);
-		public final static State<Int> ART_MINIMAP_COLOR_RED = new State<>("dmmr", Int.class);
+		public final static State<Wc3Int> ART_MINIMAP_COLOR_BLUE = new State<>("dmmb", Wc3Int.class);
+		public final static State<Wc3Int> ART_MINIMAP_COLOR_GREEN = new State<>("dmmg", Wc3Int.class);
+		public final static State<Wc3Int> ART_MINIMAP_COLOR_RED = new State<>("dmmr", Wc3Int.class);
 		public final static State<Bool> ART_MINIMAP_USE_COLOR = new State<>("dumc", Bool.class);
 		public final static State<Model> ART_MODEL = new State<>("dfil", Model.class);
-		public final static State<Int> ART_VARIATIONS = new State<>("dvar", Int.class);
+		public final static State<Wc3Int> ART_VARIATIONS = new State<>("dvar", Wc3Int.class);
 		public final static State<Real> ART_VISIBILITY_RAD = new State<>("dvis", Real.class);
 		
 		public final static State<Bool> EDITOR_CAN_PLACE_RANDOM_SCALE = new State<>("dcpr", Bool.class);

@@ -84,8 +84,8 @@ public abstract class DataType implements Serializable, TypeInfoed {
 		regClass("effectList", new DataTypeInfo(DataList.class, Effect.class));
 		regClass("heroAbilityList", new DataTypeInfo(DataList.class, AbilId.class));
 		regClass("icon", Icon.class);
-		regClass("int", Int.class);
-		regClass("intList", new DataTypeInfo(DataList.class, Int.class));
+		regClass("int", Wc3Int.class);
+		regClass("intList", new DataTypeInfo(DataList.class, Wc3Int.class));
 		regClass("itemClass", ItemClass.class);
 		regClass("itemList", new DataTypeInfo(DataList.class, ItemId.class));
 		regClass("lightning", LightningId.class);

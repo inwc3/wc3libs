@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,11 +63,11 @@ public class W3T extends ObjMod {
 		
 		public final static State<DataList<AbilId>> ABIL_ABILS = new State<>("iabi", new DataTypeInfo(DataList.class, AbilId.class));
 		
-		public final static State<Int> ART_BUTTON_POS_X = new State<>("ubpx", Int.class);
-		public final static State<Int> ART_BUTTON_POS_Y = new State<>("ubpy", Int.class);
-		public final static State<Int> ART_COLOR_BLUE = new State<>("iclb", Int.class);
-		public final static State<Int> ART_COLOR_GREEN = new State<>("iclg", Int.class);
-		public final static State<Int> ART_COLOR_RED = new State<>("iclr", Int.class);
+		public final static State<Wc3Int> ART_BUTTON_POS_X = new State<>("ubpx", Wc3Int.class);
+		public final static State<Wc3Int> ART_BUTTON_POS_Y = new State<>("ubpy", Wc3Int.class);
+		public final static State<Wc3Int> ART_COLOR_BLUE = new State<>("iclb", Wc3Int.class);
+		public final static State<Wc3Int> ART_COLOR_GREEN = new State<>("iclg", Wc3Int.class);
+		public final static State<Wc3Int> ART_COLOR_RED = new State<>("iclr", Wc3Int.class);
 		public final static State<Icon> ART_ICON = new State<>("iico", Icon.class);
 		public final static State<Model> ART_MODEL = new State<>("ifil", Model.class);
 		public final static State<Real> ART_SCALE = new State<>("isca", Real.class);
@@ -76,31 +75,31 @@ public class W3T extends ObjMod {
 		
 		public final static State<DefType> COMBAT_ARMOR_TYPE = new State<>("iarm", DefType.class);
 		
-		public final static State<Int> DATA_CHARGES = new State<>("iuse", Int.class);
+		public final static State<Wc3Int> DATA_CHARGES = new State<>("iuse", Wc3Int.class);
 		public final static State<ItemClass> DATA_CLASS = new State<>("icla", ItemClass.class);
 		public final static State<AbilCode> DATA_COOLDOWN_ID = new State<>("icid", AbilCode.class);
-		public final static State<Int> DATA_COST_GOLD = new State<>("igol", Int.class);
-		public final static State<Int> DATA_COST_LUMBER = new State<>("ilum", Int.class);
+		public final static State<Wc3Int> DATA_COST_GOLD = new State<>("igol", Wc3Int.class);
+		public final static State<Wc3Int> DATA_COST_LUMBER = new State<>("ilum", Wc3Int.class);
 		public final static State<Bool> DATA_DROPPABLE = new State<>("idro", Bool.class);
 		public final static State<Bool> DATA_DROPPED = new State<>("idrp", Bool.class);
 		public final static State<Bool> DATA_IGNORE_COOLDOWN = new State<>("iicd", Bool.class);
-		public final static State<Int> DATA_LEVEL = new State<>("ilev", Int.class);
-		public final static State<Int> DATA_LEVEL_OLD = new State<>("ilvo", Int.class);
-		public final static State<Int> DATA_LIFE = new State<>("ihtp", Int.class);
+		public final static State<Wc3Int> DATA_LEVEL = new State<>("ilev", Wc3Int.class);
+		public final static State<Wc3Int> DATA_LEVEL_OLD = new State<>("ilvo", Wc3Int.class);
+		public final static State<Wc3Int> DATA_LIFE = new State<>("ihtp", Wc3Int.class);
 		public final static State<Bool> DATA_MORPHABLE = new State<>("imor", Bool.class);
 		public final static State<Bool> DATA_PAWNABLE = new State<>("ipaw", Bool.class);
 		public final static State<Bool> DATA_PERISHABLE = new State<>("iper", Bool.class);
 		public final static State<Bool> DATA_POWERUP = new State<>("ipow", Bool.class);
-		public final static State<Int> DATA_PRIO = new State<>("ipri", Int.class);
+		public final static State<Wc3Int> DATA_PRIO = new State<>("ipri", Wc3Int.class);
 		public final static State<Bool> DATA_RANDOMED = new State<>("iprn", Bool.class);
 		public final static State<Bool> DATA_SELLABLE = new State<>("isel", Bool.class);
-		public final static State<Int> DATA_STOCK_MAX = new State<>("isto", Int.class);
-		public final static State<Int> DATA_STOCK_REGEN = new State<>("istr", Int.class);
-		public final static State<Int> DATA_STOCK_INITIAL = new State<>("isst", Int.class);
+		public final static State<Wc3Int> DATA_STOCK_MAX = new State<>("isto", Wc3Int.class);
+		public final static State<Wc3Int> DATA_STOCK_REGEN = new State<>("istr", Wc3Int.class);
+		public final static State<Wc3Int> DATA_STOCK_INITIAL = new State<>("isst", Wc3Int.class);
 		public final static State<Bool> DATA_USABLE = new State<>("iusa", Bool.class);
 		
 		public final static State<DataList<PathingRequire>> TECH_REQUIRES = new State<>("ureq", new DataTypeInfo(DataList.class, PathingRequire.class));
-		public final static State<DataList<Int>> TECH_REQUIRES_COUNT = new State<>("urqa", new DataTypeInfo(DataList.class, Int.class));
+		public final static State<DataList<Wc3Int>> TECH_REQUIRES_COUNT = new State<>("urqa", new DataTypeInfo(DataList.class, Wc3Int.class));
 
 		public final static State<Wc3String> TEXT_DESCRIPTION = new State<>("ides", Wc3String.class);
 		public final static State<Char> TEXT_HOTKEY = new State<>("uhot", Char.class);

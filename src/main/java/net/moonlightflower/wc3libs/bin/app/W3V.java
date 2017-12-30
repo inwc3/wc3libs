@@ -40,7 +40,7 @@ public class W3V {
 //		}
 //
 //		public final static State<Wc3String> NAME = new State<>(Wc3String.class, "name");
-//		public final static State<Int> RESERVED = new State<>(Int.class, "reserved");
+//		public final static State<Wc3Int> RESERVED = new State<>(Wc3Int.class, "reserved");
 //
 //		public <T extends DataType> T get(State<T> state) {
 //			return state.tryCastVal(super.get(state));
@@ -90,7 +90,7 @@ public class W3V {
 //			}
 //
 //			public final static State<Wc3String> NAME = new State<>(Wc3String.class, "name");
-//			public final static State<Int> CUSTOM_VAR_TYPES = new State<>(Int.class, "customVarTypes");
+//			public final static State<Wc3Int> CUSTOM_VAR_TYPES = new State<>(Wc3Int.class, "customVarTypes");
 //
 //			public <T extends DataType> T get(State<T> state) {
 //				return state.tryCastVal(super.get(state));
@@ -159,11 +159,11 @@ public class W3V {
 //			}
 //
 //			public static class IntEntry extends Entry {
-//				public final static State<Int> VAL = new State<>(Int.class, "val");
+//				public final static State<Wc3Int> VAL = new State<>(Wc3Int.class, "val");
 //
 //				@Override
 //				public String toString() {
-//					return Integer.toString(((Int) get(VAL)).toInt());
+//					return Integer.toString(((Wc3Int) get(VAL)).toInt());
 //				}
 //
 //				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -349,9 +349,9 @@ public class W3V {
 //
 //			public static class UnitEntry extends Entry {
 //				public final static State<UnitId> ID = new State<>(UnitId.class, "id");
-//				public final static State<Int> EXP = new State<>(Int.class, "exp");
-//				public final static State<Int> LEVEL = new State<>(Int.class, "level");
-//				public final static State<Int> UNUSED_SKILL_PTS = new State<>(Int.class, "unusedSkillPts");
+//				public final static State<Wc3Int> EXP = new State<>(Wc3Int.class, "exp");
+//				public final static State<Wc3Int> LEVEL = new State<>(Wc3Int.class, "level");
+//				public final static State<Wc3Int> UNUSED_SKILL_PTS = new State<>(Wc3Int.class, "unusedSkillPts");
 //
 //				public static class InvSlot extends Bin {
 //					private static class State<T extends DataType> extends BinState<T> {
@@ -401,8 +401,8 @@ public class W3V {
 //					}
 //
 //					public final static State<ItemId> ID = new State<>(ItemId.class, "id");
-//					public final static State<Int> CHARGES = new State<>(Int.class, "charges");
-//					public final static State<Int> UNKNOWN = new State<>(Int.class, "unknown");
+//					public final static State<Wc3Int> CHARGES = new State<>(Wc3Int.class, "charges");
+//					public final static State<Wc3Int> UNKNOWN = new State<>(Wc3Int.class, "unknown");
 //
 //					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //						set(LABEL, ItemId.valueOf(stream.readId()));
@@ -509,7 +509,7 @@ public class W3V {
 //					}
 //
 //					public final static State<AbilId> ID = new State<>(AbilId.class, "id");
-//					public final static State<Int> LEVEL = new State<>(Int.class, "level");
+//					public final static State<Wc3Int> LEVEL = new State<>(Wc3Int.class, "level");
 //
 //					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //						set(ID, AbilId.valueOf(stream.readId()));
@@ -1002,7 +1002,7 @@ public class W3V {
 //
 //		int version = stream.readInt32();
 //
-//		Wc3BinInputStream.checkFormatVer("gamecacheMaskFunc", EncodingFormat.W3V_0x0.getVersion(), version);
+//		Wc3BinInputStream.checkFormatVersion("gamecacheMaskFunc", EncodingFormat.W3V_0x0.getVersion(), version);
 //
 //		int cachesCount = stream.readInt32();
 //

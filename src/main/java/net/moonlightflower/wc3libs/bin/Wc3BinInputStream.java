@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.bin;
 
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
+import net.moonlightflower.wc3libs.bin.app.W3E;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.Id;
@@ -8,51 +9,67 @@ import net.moonlightflower.wc3libs.misc.Id;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * deals with wc3's binary encoding
  */
 public class Wc3BinInputStream extends BinInputStream {
-	public byte readByte(@Nonnull String label) throws StreamException {
+	@Nonnull
+	public Byte readByte(@Nonnull String label) throws StreamException {
+		Byte val = null;
+
 		try {
 			logBegin();
 
-			Byte val = readByte();
-
-			log("byte", label, val);
+			val = readByte();
 
 			return val;
-		} catch (StreamException e) {
-			log("byte", label, null);
-
-			throw e;
+		} finally {
+			log("byte", label, val);
 		}
 	}
 
-	public Integer readUByte() throws StreamException {
-		return readByte() & 0xFF;
+	@Nonnull
+	public byte[] readBytes(int size, @Nonnull String label) throws StreamException {
+		byte[] val = null;
+
+		try {
+			logBegin();
+
+			val = readBytes(size);
+
+			return val;
+		} finally {
+			log("bytes", label, val);
+		}
 	}
-	
-	public Integer readUByte(@Nonnull String label) throws StreamException {
+
+	public short readUByte() throws StreamException {
+		return (short) (readByte() & 0xFF);
+	}
+
+	@Nonnull
+	public Short readUByte(@Nonnull String label) throws StreamException {
+		Short val = null;
+
 		try {
 			logBegin();
 			
-			Integer val = readUByte();
-			
-			log("byte", label, val);
+			val = readUByte();
 			
 			return val;
-		} catch (StreamException e) {
-			log("byte", label, null);
-			
-			throw e;
+		} finally {
+			log("byte", label, val);
 		}
 	}
 
-	private short readInt8_priv() throws StreamException {
+	public short readInt8() throws StreamException {
 		try {
 			return (short) readByte();
 		} catch (IndexOutOfBoundsException e) {
@@ -60,173 +77,174 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-	public short readInt8(@Nonnull String label) throws StreamException {
+	@Nonnull
+	public Short readInt8(@Nonnull String label) throws StreamException {
+		Short val = null;
+
 		try {
 			logBegin();
 
-			Short val = readInt8_priv();
-
-			log("int8", label, val);
+			val = readInt8();
 
 			return val;
-		} catch (StreamException e) {
-			log("int8", label, null);
-
-			throw e;
+		} finally {
+			log("int8", label, val);
 		}
-	}
-
-	public Short readInt8() throws StreamException {
-		return readInt8_priv();
 	}
 
 	public short readUInt8() throws StreamException {
 		return (short) (readInt8() & 0xFF);
 	}
 
-	public short readUInt8(@Nonnull String label) throws StreamException {
+	@Nonnull
+	public Short readUInt8(@Nonnull String label) throws StreamException {
+		Short val = null;
+
 		try {
 			logBegin();
 
-			Short val = readUInt8();
-
-			log("uint8", label, val);
+			val = readUInt8();
 
 			return val;
-		} catch (StreamException e) {
-			log("uint8", label, null);
-
-			throw e;
+		} finally {
+			log("uint8", label, val);
 		}
 	}
 
-	private short readInt16_priv() throws StreamException {
+	public short readInt16() throws StreamException {
 		try {
 			byte[] sub = readBytes(2);
-
-			Short res = ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getShort();
 			
-			return res;
+			return ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getShort();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
 	}
-	
-	public short readInt16(@Nonnull String label) throws StreamException {
+
+	@Nonnull
+	public Short readInt16(@Nonnull String label) throws StreamException {
+		Short val = null;
+
 		try {
 			logBegin();
 			
-			Short val = readInt16_priv();
-			
-			log("short", label, val);
+			val = readInt16();
 			
 			return val;
-		} catch (StreamException e) {
-			log("short", label, null);
-			
-			throw e;
+		} finally {
+			log("short", label, val);
 		}
-	}
-	
-	public Short readInt16() throws StreamException {
-		return readInt16_priv();
 	}
 
 	public int readUInt16() throws StreamException {
 		return (readInt16() & 0xFFFF);
 	}
 
-	public int readUInt16(@Nonnull String label) throws StreamException {
+	@Nonnull
+	public Integer readUInt16(@Nonnull String label) throws StreamException {
+		Integer val = null;
+
 		try {
 			logBegin();
 
-			Integer val = readUInt16();
-
-			log("int", label, val);
+			val = readUInt16();
 
 			return val;
-		} catch (StreamException e) {
-			log("int", label, null);
-
-			throw e;
+		} finally {
+			log("uint16", label, val);
 		}
 	}
 
-	public Integer readInt32() throws StreamException {
+	public int readInt32() throws StreamException {
 		try {
 			byte[] sub = readBytes(4);
 
-			Integer res = ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getInt();
-
-			return res;
+			return ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getInt();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
 	}
 
+	@Nonnull
 	public Integer readInt32(@Nonnull String label) throws StreamException {
+		Integer val = null;
+
 		try {
 			logBegin();
 			
-			Integer val = readInt32();
-			
-			log("int", label, val);
+			val = readInt32();
 			
 			return val;
-		} catch (StreamException e) {
-			log("int", label, null);
-			
-			throw e;
+		} finally {
+			log("int32", label, val);
 		}
 	}
-	
+
 	public long readUInt32() throws StreamException {
+		//noinspection PointlessBitwiseExpression
 		return (readInt32() & 0xFFFFFFFF);
 	}
 
-	public long readUInt32(@Nonnull String label) throws StreamException {
-		return (readInt32(label) & 0xFFFFFFFF);
+	@Nonnull
+	public Long readUInt32(@Nonnull String label) throws StreamException {
+		Long val = null;
+
+		try {
+			logBegin();
+
+			val = readUInt32();
+
+			return val;
+		} finally {
+			log("uint32", label, val);
+		}
 	}
 
-	public Int readWc3Int() throws StreamException {
-		return Int.valueOf(readInt32());
+	@Nonnull
+	public Wc3Int readWc3Int() throws StreamException {
+		return Wc3Int.valueOf(readInt32());
 	}
 
-	public Int readWc3Int(@Nonnull String label) throws StreamException {
-		return Int.valueOf(readInt32(label));
+	@Nonnull
+	public Wc3Int readWc3Int(@Nonnull String label) throws StreamException {
+		Wc3Int val = null;
+
+		try {
+			logBegin();
+
+			val = readWc3Int();
+
+			return val;
+		} finally {
+			log("wc3int", label, val);
+		}
 	}
 	
-	private Character readChar_priv() throws StreamException {
+	public char readChar() throws StreamException {
 		try {
-			char res = (char) readByte();
-
-			return res;
+			return (char) readByte();
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
 	}
 
+	@Nonnull
 	public Character readChar(@Nullable String label) throws StreamException {
+		Character val = null;
+
 		try {	
 			logBegin();
 			
-			Character val = readChar_priv();
-			
-			log("char", label, val);
+			val = readChar();
 			
 			return val;
-		} catch (StreamException e) {
-			log("char", label, null);
-			
-			throw e;
+		} finally {
+			log("char", label, val);
 		}
 	}
-	
-	public Character readChar() throws StreamException {
-		return readChar(null);
-	}
 
-	private String readString_priv() throws StreamException {
+	@Nonnull
+	public String readString() throws StreamException {
 		try {
 			long cutPos = getPos();
 
@@ -266,44 +284,50 @@ public class Wc3BinInputStream extends BinInputStream {
 			throw new StreamException(this);
 		}
 	}
-	
+
+	@Nonnull
 	public String readString(@Nullable String label) throws StreamException {
+		String val = null;
+
 		try {
 			logBegin();
 			
-			String val = readString_priv();
-			
-			log("string", label, val);
+			val = readString();
 			
 			return val;
-		} catch (StreamException e) {
-			log("string", label, null);
-			
-			throw e;
+		} finally {
+			log("string", label, val);
 		}
 	}
-	
-	public String readString() throws StreamException {
-		return readString(null);
-	}
-	
+
+	@Nonnull
 	public Wc3String readWc3String() throws StreamException {
 		return Wc3String.valueOf(readString());
 	}
-	
-	private Id readId_priv() throws StreamException {
+
+	@Nonnull
+	public Wc3String readWc3String(@Nullable String label) throws StreamException {
+		Wc3String val = null;
+
+		try {
+			logBegin();
+
+			val = readWc3String();
+
+			return val;
+		} finally {
+			log("wc3string", label, val);
+		}
+	}
+
+	@Nonnull
+	public Id readId() throws StreamException {
+		Id val = null;
+
 		try {
 			byte[] sub = readBytes(4);
 
-			String res = null;
-
-			try {
-				res = new String(sub, "ascii");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-
-			return Id.valueOf(res);
+			return Id.valueOf(new String(sub, StandardCharsets.US_ASCII));
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
@@ -311,26 +335,20 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	@Nonnull
 	public Id readId(@Nullable String label) throws StreamException {
+		Id val = null;
+
 		try {
 			logBegin();
 			
-			Id val = readId_priv();
-			
-			log("id", label, val);
+			val = readId();
 			
 			return val;
-		} catch (StreamException e) {
-			log("id", label, null);
-			
-			throw e;
+		} finally {
+			log("id", label, val);
 		}
 	}
-	
-	public Id readId() throws StreamException {
-		return readId(null);
-	}
 
-	private Float readFloat8_priv() throws StreamException {
+	public float readFloat32() throws StreamException {
 		try {
 			byte[] sub = readBytes(4);
 
@@ -342,32 +360,39 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
+	@Nonnull
 	public Float readFloat32(@Nullable String label) throws StreamException {
+		Float val = null;
+
 		try {
 			logBegin();
 			
-			Float val = readFloat8_priv();
-			
-			log("float", label, val);
+			val = readFloat32();
 			
 			return val;
-		} catch (StreamException e) {
-			log("float", label, null);
-			
-			throw e;
+		} finally {
+			log("float32", label, val);
 		}
 	}
-	
-	public Float readFloat32() throws StreamException {
-		return readFloat32(null);
-	}
 
-	public Real readReal(@Nullable String label) throws StreamException {
-		return Real.valueOf(readFloat32(label));
-	}
-
+	@Nonnull
 	public Real readReal() throws StreamException {
-		return readReal(null);
+		return Real.valueOf(readFloat32());
+	}
+
+	@Nonnull
+	public Real readReal(@Nullable String label) throws StreamException {
+		Real val = null;
+
+		try {
+			logBegin();
+
+			val = Real.valueOf(readFloat32());
+
+			return val;
+		} finally {
+			log("real", label, val);
+		}
 	}
 
 	public void pack() throws StreamException {
@@ -384,7 +409,31 @@ public class Wc3BinInputStream extends BinInputStream {
 		super(file);
 	}
 
-	public static void checkFormatVer(@Nonnull String string, int targetVersion, int actualVersion) {
-		assert (actualVersion == targetVersion) : string + "(expected: " + targetVersion + " actual: " + actualVersion + ")";
+	public void checkFormatVersion(int expectedVersion, int actualVersion) throws StreamException {
+		if (actualVersion != expectedVersion) throw new StreamException(this, "version mismatch" + System.lineSeparator() + "expected: " + expectedVersion + System.lineSeparator() + "actual: " + actualVersion);
+	}
+
+	@Nonnull
+	public <EncodingFormat extends Format> EncodingFormat getFormat(@Nonnull Class<EncodingFormat> formatClass, int actualVersion) throws StreamException {
+		Map<Integer, Format> all = Format.getAll(formatClass);
+
+		if (!all.containsKey(actualVersion)) {
+			StringBuilder sb = new StringBuilder();
+
+			for (Format<?> format : all.values()) {
+				if (sb.length() > 0) sb.append(System.lineSeparator());
+
+				sb.append(format.getVersion());
+			}
+
+			throw new StreamException(this, "unknown format " + actualVersion + System.lineSeparator() + "supported formats:" + System.lineSeparator() + sb.toString());
+		}
+
+		try {
+			//noinspection unchecked
+			return (EncodingFormat) formatClass.getMethod("valueOf", Integer.class).invoke(null, actualVersion);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

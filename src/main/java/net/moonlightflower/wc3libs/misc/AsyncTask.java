@@ -29,9 +29,7 @@ public abstract class AsyncTask extends Thread {
 				exception.printStackTrace();
 			}
 
-			if (_finishedHandler != null) {
-				_finishedHandler.finished();
-			}
+			_finishedHandler.finished();
 		}));
 		
 		super.start();

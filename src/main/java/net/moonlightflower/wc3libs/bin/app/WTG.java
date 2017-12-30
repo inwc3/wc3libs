@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -1741,22 +1740,18 @@ public class WTG {
 			WTG_0x4,
 			WTG_0x7
 		}
-
-		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WTG_0x4 = new EncodingFormat(Enum.WTG_0x4, 0x4);
 		public final static EncodingFormat WTG_0x7 = new EncodingFormat(Enum.WTG_0x7, 0x7);
 
 		@Nullable
-		public static EncodingFormat valueOf(int version) {
-			return _map.get(version);
+		public static EncodingFormat valueOf(@Nonnull Integer version) {
+			return get(EncodingFormat.class, version);
 		}
 		
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
-			
-			_map.put(version, this);
 		}
 	}
 
@@ -1767,7 +1762,7 @@ public class WTG {
 		
 		int version = stream.readInt32("version");
 		
-		Wc3BinInputStream.checkFormatVer("guiTrigMaskFunc", EncodingFormat.WTG_0x4.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.WTG_0x4.getVersion(), version);
 		
 		int trigCatsCount = stream.readInt32("trigCatsCount");
 		
@@ -1842,7 +1837,7 @@ public class WTG {
 		
 		int version = stream.readInt32("version");
 		
-		Wc3BinInputStream.checkFormatVer("guiTrigMaskFunc", EncodingFormat.WTG_0x7.getVersion(), version);
+		stream.checkFormatVersion(EncodingFormat.WTG_0x7.getVersion(), version);
 		
 		int trigCatsCount = stream.readInt32("trigCatsCount");
 		
@@ -1920,11 +1915,7 @@ public class WTG {
 		
 		stream.rewind();
 
-		EncodingFormat format = EncodingFormat.valueOf(version);
-
-		if (format == null) throw new IllegalArgumentException("unknown format " + version);
-
-		reader.setFormat(format);
+		reader.setFormat(stream.getFormat(EncodingFormat.class, version));
 
 		read(reader);
 	}

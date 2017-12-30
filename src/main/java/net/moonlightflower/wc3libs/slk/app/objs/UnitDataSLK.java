@@ -55,33 +55,33 @@ public class UnitDataSLK extends ObjSLK<UnitDataSLK, UnitId, UnitDataSLK.Obj> {
 		public final static State<Wc3String> EDITOR_SORT = new State<>("sort", Wc3String.class);
 		public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comment(s)", Wc3String.class);
 		public final static State<UnitRace> EDITOR_RACE = new State<>("race", UnitRace.class);
-		public final static State<Int> DATA_PRIO = new State<>("prio", Int.class);
+		public final static State<Wc3Int> DATA_PRIO = new State<>("prio", Wc3Int.class);
 		public final static State<Bool> DATA_THREAT = new State<>("threat", Bool.class);
 		public final static State<Bool> DATA_VALID = new State<>("valid", Bool.class);
 		public final static State<DeathType> DATA_DEATH_TYPE = new State<>("deathType", DeathType.class);
 		public final static State<Real> DATA_DEATH_TIME = new State<>("death", Real.class);
 		public final static State<Bool> DATA_CAN_SLEEP = new State<>("canSleep", Bool.class);
-		public final static State<Int> DATA_CARGO_USED = new State<>("cargoSize", Int.class);
+		public final static State<Wc3Int> DATA_CARGO_USED = new State<>("cargoSize", Wc3Int.class);
 		public final static State<MoveType> MOVEMENT_TYPE = new State<>("movetp", MoveType.class);
-		public final static State<Int> MOVEMENT_HEIGHT = new State<>("moveHeight", Int.class);
-		public final static State<Int> MOVEMENT_HEIGHT_MIN = new State<>("moveFloor", Int.class);
+		public final static State<Wc3Int> MOVEMENT_HEIGHT = new State<>("moveHeight", Wc3Int.class);
+		public final static State<Wc3Int> MOVEMENT_HEIGHT_MIN = new State<>("moveFloor", Wc3Int.class);
 		public final static State<Real> MOVEMENT_TURN_RATE = new State<>("turnRate", Real.class);
 		public final static State<Real> MOVEMENT_PROP_WINDOW = new State<>("propWin", Real.class);
-		public final static State<Int> ART_ORIENT_INTERPOLATION = new State<>("orientInterp", Int.class);
-		public final static State<Int> DATA_FORMATION = new State<>("formation", Int.class);
+		public final static State<Wc3Int> ART_ORIENT_INTERPOLATION = new State<>("orientInterp", Wc3Int.class);
+		public final static State<Wc3Int> DATA_FORMATION = new State<>("formation", Wc3Int.class);
 		public final static State<DataList<CombatTarget>> COMBAT_TARGS = new State<>("targType", new DataTypeInfo(DataList.class, CombatTarget.class));
 		public final static State<PathingTex> PATH_TEX = new State<>("pathTex", PathingTex.class);
 		public final static State<Bool> ART_FAT_LINE_OF_SIGHT = new State<>("fatLOS", Bool.class);
-		public final static State<Int> DATA_POINT_VALUE = new State<>("points", Int.class);
+		public final static State<Wc3Int> DATA_POINT_VALUE = new State<>("points", Wc3Int.class);
 		static final public State<AIPlaceType> PATH_STRUCTURE_AI_PLACE_TYPE = new State<>("buffType", AIPlaceType.class);
 		static final public State<Real> PATH_STRUCTURE_AI_PLACE_RAD = new State<>("buffRadius", Real.class);
-		public final static State<Int> TEXT_HERO_NAMES_COUNT = new State<>("nameCount", Int.class);
+		public final static State<Wc3Int> TEXT_HERO_NAMES_COUNT = new State<>("nameCount", Wc3Int.class);
 		public final static State<Bool> DATA_CAN_FLEE = new State<>("canFlee", Bool.class);
 		static final public State<Real> PATH_STRUCTURE_REQUIRE_WATER_RAD = new State<>("requireWaterRadius", Real.class);
 		static final public State<Bool> DATA_STRUCTURE_IS_BUILD_ON = new State<>("isBuildOn", Bool.class);
 		static final public State<Bool> DATA_STRUCTURE_CAN_BUILD_ON = new State<>("canBuildOn", Bool.class);
 		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
-		public final static State<Int> EDITOR_VERSION = new State<>("version", Int.class);
+		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
 	}
 	
 	public static class Obj extends SLK.Obj<UnitId> {

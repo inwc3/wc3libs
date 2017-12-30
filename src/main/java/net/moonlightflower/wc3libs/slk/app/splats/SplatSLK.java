@@ -11,14 +11,8 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.BlendMode;
-import net.moonlightflower.wc3libs.dataTypes.app.Color;
-import net.moonlightflower.wc3libs.dataTypes.app.Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.SoundLabel;
-import net.moonlightflower.wc3libs.dataTypes.app.SplatId;
-import net.moonlightflower.wc3libs.dataTypes.app.WaterCode;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
@@ -61,24 +55,24 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		public final static State<SplatId> OBJ_ID = new State<>("Name", SplatId.class);
 		
 		public final static State<BlendMode> ART_BLEND_MODE = new State<>("BlendMode", BlendMode.class);
-		public final static State<Int> ART_COLOR_END_ALPHA = new State<>("EndA", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_END_BLUE = new State<>("EndB", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_END_GREEN = new State<>("EndG", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_END_RED = new State<>("EndR", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_MID_ALPHA = new State<>("MiddleA", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_MID_BLUE = new State<>("MiddleB", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_MID_GREEN = new State<>("MiddleG", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_MID_RED = new State<>("MiddleR", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_START_ALPHA = new State<>("StartA", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_START_BLUE = new State<>("StartB", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_START_GREEN = new State<>("StartG", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLOR_START_RED = new State<>("StartR", Int.class, Int.valueOf(255));
-		public final static State<Int> ART_COLS = new State<>("Columns", Int.class);
+		public final static State<Wc3Int> ART_COLOR_END_ALPHA = new State<>("EndA", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_END_BLUE = new State<>("EndB", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_END_GREEN = new State<>("EndG", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_END_RED = new State<>("EndR", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_MID_ALPHA = new State<>("MiddleA", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_MID_BLUE = new State<>("MiddleB", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_MID_GREEN = new State<>("MiddleG", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_MID_RED = new State<>("MiddleR", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_START_ALPHA = new State<>("StartA", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_START_BLUE = new State<>("StartB", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_START_GREEN = new State<>("StartG", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLOR_START_RED = new State<>("StartR", Wc3Int.class, Wc3Int.valueOf(255));
+		public final static State<Wc3Int> ART_COLS = new State<>("Columns", Wc3Int.class);
 		public final static State<Real> ART_DECAY = new State<>("Decay", Real.class);
 		public final static State<Real> ART_DECAY_REPEAT = new State<>("DecayRepeat", Real.class);
 		public final static State<Real> ART_DECAY_UV_END = new State<>("UVDecayEnd", Real.class);
 		public final static State<Real> ART_DECAY_UV_START = new State<>("UVDecayStart", Real.class);
-		public final static State<Int> ART_ROWS = new State<>("Rows", Int.class);
+		public final static State<Wc3Int> ART_ROWS = new State<>("Rows", Wc3Int.class);
 		public final static State<Real> ART_LIFESPAN = new State<>("Lifespan", Real.class);
 		public final static State<Real> ART_LIFESPAN_REPEAT = new State<>("LifespanRepeat", Real.class);
 		public final static State<Real> ART_LIFESPAN_UV_END = new State<>("UVLifespanEnd", Real.class);
@@ -103,19 +97,19 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 			set(States.ART_TEX_FILE, Wc3String.valueOf(val.getFileName().toString()));
 		}
 		
-		public Int getRows() {
+		public Wc3Int getRows() {
 			return get(States.ART_ROWS);
 		}
 		
-		public void setRows(Int val) {
+		public void setRows(Wc3Int val) {
 			set(States.ART_ROWS, val);
 		}
 		
-		public Int getCols() {
+		public Wc3Int getCols() {
 			return get(States.ART_COLS);
 		}
 		
-		public void setCols(Int val) {
+		public void setCols(Wc3Int val) {
 			set(States.ART_COLS, val);
 		}
 		
@@ -192,10 +186,10 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public void setColorStart(Color val) {
-			set(States.ART_COLOR_START_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.ART_COLOR_START_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.ART_COLOR_START_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.ART_COLOR_START_RED, Int.valueOf(val.getRed255()));
+			set(States.ART_COLOR_START_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_START_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_START_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_START_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getColorMid() {
@@ -203,10 +197,10 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public void setColorMid(Color val) {
-			set(States.ART_COLOR_MID_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.ART_COLOR_MID_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.ART_COLOR_MID_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.ART_COLOR_MID_RED, Int.valueOf(val.getRed255()));
+			set(States.ART_COLOR_MID_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_MID_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_MID_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_MID_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getColorEnd() {
@@ -214,10 +208,10 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public void setColorEnd(Color val) {
-			set(States.ART_COLOR_END_ALPHA, Int.valueOf(val.getAlpha255()));
-			set(States.ART_COLOR_END_BLUE, Int.valueOf(val.getBlue255()));
-			set(States.ART_COLOR_END_GREEN, Int.valueOf(val.getGreen255()));
-			set(States.ART_COLOR_END_RED, Int.valueOf(val.getRed255()));
+			set(States.ART_COLOR_END_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(States.ART_COLOR_END_BLUE, Wc3Int.valueOf(val.getBlue255()));
+			set(States.ART_COLOR_END_GREEN, Wc3Int.valueOf(val.getGreen255()));
+			set(States.ART_COLOR_END_RED, Wc3Int.valueOf(val.getRed255()));
 		}
 		
 		public WaterCode getWater() {
