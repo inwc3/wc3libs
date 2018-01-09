@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,43 +55,6 @@ public class WTS {
 	public void addEntry(int key, @Nullable String val) {
 		_vals.put(key, val);
 	}
-	
-	/*function this:translate(s)
-	local pos, posEnd, cap = s:find('TRIGSTR_0*(%d+)[^%_]')
-
-	while (pos ~= nil) do
-		local key = tonumber(cap)
-
-		local val = this:getString(key)
-
-		if (val ~= nil) then
-			s = s:sub(1, pos - 1)..val..s:sub(posEnd + 1, s:len())
-		else
-		print('rep')
-			s = s:sub(1, pos - 1)..'$'..'TRIGSTR_'..cap..'_NOT_FOUND'..'$'..s:sub(posEnd + 1, s:len())
-		end
-
-		pos, posEnd, cap = s:find('TRIGSTR_0*(%d+)[^%_]')
-	end
-
-	local pos, posEnd, key = s:find('([^%s]+)', 1)
-
-	while (pos ~= nil) do
-		local val = this:getString(key) or this.stringsLower[key:lower()]
-
-		if (val ~= nil) then
-			s = s:sub(1, pos - 1)..val..s:sub(posEnd + 1, s:len())
-
-			pos = pos + val:len()
-		else
-			pos = posEnd + 1
-		end
-
-		pos, posEnd, key = s:find('([^%s]+)', pos)
-	end
-
-	return s
-end*/
 	
 	public void write(@Nonnull File file) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
@@ -173,4 +137,17 @@ end*/
 		
 		return wts;
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WTS wts = (WTS) o;
+        return Objects.equals(_vals, wts._vals);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_vals);
+    }
 }
