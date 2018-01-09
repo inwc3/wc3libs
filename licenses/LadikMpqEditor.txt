@@ -1,7 +1,0 @@
-~MPQEditor by Ladislav Zezula~
-
-website: http://www.zezula.net/en/mpq/download.html
-
-----------------------------------------------------------------------------------------
-
-Copyright (c) Ladislav Zezula 2003 - 2012
