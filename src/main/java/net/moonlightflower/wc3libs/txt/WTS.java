@@ -19,6 +19,11 @@ public class WTS {
 	
 	private final Map<Integer, String> _vals = new LinkedHashMap<>();
 
+    @Nonnull
+    public Map<Integer, String> getKeyedEntries() {
+        return _vals;
+    }
+
 	@Nonnull
 	public Map<String, String> getNamedEntries() {
 		Map<String, String> res = new LinkedHashMap<>();
@@ -47,9 +52,9 @@ public class WTS {
 		return txt;
 	}
 
-	@Nullable
+	@Nonnull
 	public String getEntry(int key) {
-		return _vals.get(key);
+		return _vals.getOrDefault(key, "");
 	}
 	
 	public void addEntry(int key, @Nullable String val) {
