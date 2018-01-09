@@ -1,19 +1,32 @@
-[![Build Status](https://travis-ci.org/inwc3/wc3libs.svg?branch=master)](https://travis-ci.org/inwc3/wc3libs)
+[![Build Status](https://travis-ci.org/inwc3/wc3libs.svg?branch=master)](https://travis-ci.org/inwc3/wc3libs)[![Jit](https://jitpack.io/v/inwc3/wc3libs.svg)](https://jitpack.io/#inwc3/wc3libs``)
 # wc3libs
 Java library for general wc3 modding.
+Use this library in your maven/gradle project using [JitPack](https://jitpack.io/#inwc3/wc3libs).
 
-Supports parsing and generating various wc3 formats including:
+Gradle Example:
+```gradle
+compile 'com.github.inwc3:wc3libs:ee8410301c'
+```
 
-map formats:
-  .w3c, .w3i, .shd, .mmp, ...
-  objMods: .w3a, .w3u, ...
-  slk, profile files, .wts, .fdf, ...
+If you want to know how to read a certain kind of file, refer to the related test for a quick start.
 
-campaign formats: 
-  .w3f
+## about
 
-mpq extracting/inserting (uses Ladik or https://github.com/inwc3/JMPQ3)
+wc3libs aims to be a feature-complete, easy, plug & play solution for jvm programs to access, modify and output arbitrary warcraft 3 data.
 
-lots of interfaces/abstract classes for the data types etc.
+This mainly includes support for reading and writing various wc3 formats such as:
 
-Basically the idea is that you can modify the single files or on a higher layer see it from a map's or campaign's perspective.
+_example map formats:_
+* .w3c, .w3i, .shd, .mmp,
+* objMods: .w3a, .w3u,
+* slk, profile files, .wts, .fdf
+
+_campaign formats:_ 
+* .w3f
+
+_mpq editing_ via [JMPQ](https://github.com/inwc3/JMPQ3)
+
+## contributing
+
+Feel free to contribute fixed or additions or make tickets on the issue tracker to inform us. Any kind of documentation is also welcome.
+
