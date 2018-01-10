@@ -109,50 +109,6 @@ public class RibbonEmitter extends MDXObject {
             return _visibilityTracks;
         }
 
-        public static class VisibilityTrack extends Track {
-            private float _visibility;
-
-            public float getVisibility() {
-                return _visibility;
-            }
-
-            private float _inTan_visibility;
-
-            public float getInTanVisibility() {
-                return _inTan_visibility;
-            }
-
-            private float _outTan_visibility;
-
-            public float getOutTanVisibility() {
-                return _outTan_visibility;
-            }
-
-            @Override
-            protected void readSpec(@Nonnull Wc3BinInputStream stream, @Nonnull InterpolationType interpolationType) throws BinStream.StreamException {
-                _visibility = stream.readFloat32("visibility");
-
-                if (interpolationType.equals(InterpolationType.HERMITE) || interpolationType.equals(InterpolationType.BEZIER)) {
-                    _inTan_visibility = stream.readFloat32("inTan_visibility");
-                    _outTan_visibility = stream.readFloat32("outTan_visibility");
-                }
-            }
-
-            @Override
-            protected void writeSpec(@Nonnull Wc3BinOutputStream stream, @Nonnull InterpolationType interpolationType) throws BinStream.StreamException {
-                stream.writeFloat32(_visibility);
-
-                if (interpolationType.equals(InterpolationType.HERMITE) || interpolationType.equals(InterpolationType.BEZIER)) {
-                    stream.writeFloat32(_inTan_visibility);
-                    stream.writeFloat32(_outTan_visibility);
-                }
-            }
-
-            public VisibilityTrack(@Nonnull Wc3BinInputStream stream, @Nonnull InterpolationType interpolationType, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
-                super(stream, interpolationType, format);
-            }
-        }
-
         private List<VisibilityTrack> _visibilityTracks = new ArrayList<>();
 
         public List<VisibilityTrack> getVisibilityTracks() {
