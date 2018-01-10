@@ -8,7 +8,7 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 
-public class FaceGroup extends MDXObject {
+public class IndexReference extends MDXObject {
     private long _index;
 
     public long getIndex() {
@@ -25,7 +25,7 @@ public class FaceGroup extends MDXObject {
         write(stream, MDX.EncodingFormat.AUTO);
     }
 
-    public FaceGroup(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
+    public IndexReference(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _index = stream.readUInt32("index");
     }
 }

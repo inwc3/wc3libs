@@ -8,7 +8,6 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +19,13 @@ public class FaceGroupChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<FaceGroup> _faceGroups = new ArrayList<>();
+    private List<IndexReference> _faceGroups = new ArrayList<>();
 
-    public List<FaceGroup> getFaceTypeGroups() {
+    public List<IndexReference> getFaceTypeGroups() {
         return new ArrayList<>(_faceGroups);
     }
 
-    public void addFaceGroup(@Nonnull FaceGroup val) {
+    public void addFaceGroup(@Nonnull IndexReference val) {
         if (!_faceGroups.contains(val)) {
             _faceGroups.add(val);
         }
@@ -38,7 +37,7 @@ public class FaceGroupChunk extends Chunk {
 
         stream.writeUInt32(_faceGroups.size());
 
-        for (FaceGroup faceGroup : _faceGroups) {
+        for (IndexReference faceGroup : _faceGroups) {
             faceGroup.write(stream);
         }
     }
@@ -55,7 +54,7 @@ public class FaceGroupChunk extends Chunk {
         long faceGroupsCount = stream.readUInt32("faceGroupsCount");
 
         while (faceGroupsCount > 0) {
-            addFaceGroup(new FaceGroup(stream));
+            addFaceGroup(new IndexReference(stream));
 
             faceGroupsCount--;
         }

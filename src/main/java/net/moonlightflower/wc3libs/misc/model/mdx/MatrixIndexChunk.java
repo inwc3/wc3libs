@@ -19,15 +19,15 @@ public class MatrixIndexChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<MatrixIndex> _matrixIndexes = new ArrayList<>();
+    private List<IndexReference> _IndexReferences = new ArrayList<>();
 
-    public List<MatrixIndex> getMatrixIndexGroups() {
-        return new ArrayList<>(_matrixIndexes);
+    public List<IndexReference> getMatrixIndexGroups() {
+        return new ArrayList<>(_IndexReferences);
     }
 
-    public void addMatrixIndexGroup(@Nonnull MatrixIndex val) {
-        if (!_matrixIndexes.contains(val)) {
-            _matrixIndexes.add(val);
+    public void addMatrixIndexGroup(@Nonnull IndexReference val) {
+        if (!_IndexReferences.contains(val)) {
+            _IndexReferences.add(val);
         }
     }
 
@@ -35,10 +35,10 @@ public class MatrixIndexChunk extends Chunk {
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         stream.writeId(TOKEN);
 
-        stream.writeUInt32(_matrixIndexes.size());
+        stream.writeUInt32(_IndexReferences.size());
 
-        for (MatrixIndex matrixIndex : _matrixIndexes) {
-            matrixIndex.write(stream);
+        for (IndexReference indexReference : _IndexReferences) {
+            indexReference.write(stream);
         }
     }
 
@@ -54,7 +54,7 @@ public class MatrixIndexChunk extends Chunk {
         long matrixGroupsCount = stream.readUInt32("matrixIndexCount");
 
         while (matrixGroupsCount > 0) {
-            addMatrixIndexGroup(new MatrixIndex(stream));
+            addMatrixIndexGroup(new IndexReference(stream));
 
             matrixGroupsCount--;
         }

@@ -19,13 +19,13 @@ public class MatrixGroupChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<MatrixGroup> _matrixGroups = new ArrayList<>();
+    private List<IndexReference> _matrixGroups = new ArrayList<>();
 
-    public List<MatrixGroup> getMatrixGroups() {
+    public List<IndexReference> getMatrixGroups() {
         return new ArrayList<>(_matrixGroups);
     }
 
-    public void addMatrixGroup(@Nonnull MatrixGroup val) {
+    public void addMatrixGroup(@Nonnull IndexReference val) {
         if (!_matrixGroups.contains(val)) {
             _matrixGroups.add(val);
         }
@@ -37,7 +37,7 @@ public class MatrixGroupChunk extends Chunk {
 
         stream.writeUInt32(_matrixGroups.size());
 
-        for (MatrixGroup vertexGroup : _matrixGroups) {
+        for (IndexReference vertexGroup : _matrixGroups) {
             vertexGroup.write(stream);
         }
     }
@@ -54,7 +54,7 @@ public class MatrixGroupChunk extends Chunk {
         long matrixGroupsCount = stream.readUInt32("matrixGroupsCount");
 
         while (matrixGroupsCount > 0) {
-            addMatrixGroup(new MatrixGroup(stream));
+            addMatrixGroup(new IndexReference(stream));
 
             matrixGroupsCount--;
         }
