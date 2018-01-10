@@ -33,8 +33,8 @@ public class Jass {
 		String input = stripComments(reader.readAll());
 		
 		input = input.replaceAll("\r\n", "\n");
-		
-		ANTLRInputStream antlrStream = new ANTLRInputStream(input);
+
+		CharStream antlrStream = CharStreams.fromString(input);
 		
 		Lexer lexer = new JassLexer(antlrStream);
 		
@@ -115,7 +115,7 @@ public class Jass {
 			
 			if (token.getType() == -1) continue;
 			
-			String tokenS = token.getLine()+";"+token.getCharPositionInLine() + "->" + lexer.getTokenNames()[token.getType()];
+			String tokenS = token.getLine()+";"+token.getCharPositionInLine() + "->" + lexer.getVocabulary().getDisplayName(token.getType());
 
 			tokenOut.write(tokenS + ";");
 			tokenOut.newLine();

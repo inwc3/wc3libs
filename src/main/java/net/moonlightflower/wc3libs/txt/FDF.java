@@ -3,10 +3,7 @@ package net.moonlightflower.wc3libs.txt;
 import net.moonlightflower.wc3libs.antlr.FDFLexer;
 import net.moonlightflower.wc3libs.antlr.FDFParser;
 import net.moonlightflower.wc3libs.port.MpqPort;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -119,7 +116,7 @@ public class FDF extends UTF8 {
 		
 		String input = stripComments(reader.readAll());
 		
-		ANTLRInputStream antlrStream = new ANTLRInputStream(input);
+		CharStream antlrStream = CharStreams.fromString(input);
 		
 		Lexer lexer = new FDFLexer(antlrStream);
 		
