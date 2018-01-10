@@ -21,31 +21,6 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
     public final static File GAME_USE_PATH = new File("Units\\DestructableData.slk");
 
     public static class States {
-        static public class State<T extends DataType> extends SLKState<T> {
-            private static List<State> _values = new ArrayList<>();
-
-            public static List<State> values() {
-                return _values;
-            }
-
-            public State(String idString, DataTypeInfo typeInfo, T defVal) {
-                super(idString, typeInfo, defVal);
-                _values.add(this);
-            }
-
-            public State(String idString, DataTypeInfo typeInfo) {
-                this(idString, typeInfo, null);
-            }
-
-            public State(String idString, Class<T> type) {
-                this(idString, new DataTypeInfo(type));
-            }
-
-            public State(String idString, Class<T> type, T defVal) {
-                this(idString, new DataTypeInfo(type), defVal);
-            }
-        }
-
         public static List<State> values() {
             return State.values();
         }
@@ -112,11 +87,11 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
     }
 
     public static class Obj extends SLK.Obj<DestructableId> {
-        public <T extends DataType> T get(States.State<T> state) {
+        public <T extends DataType> T get(State<T> state) {
             return state.tryCastVal(super.get(state.getFieldId()));
         }
 
-        public <T extends DataType> void set(States.State<T> state, T val) {
+        public <T extends DataType> void set(State<T> state, T val) {
             super.set(state.getFieldId(), val);
         }
 
@@ -133,7 +108,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
         public Obj(DestructableId id) {
             super(id);
 
-            for (States.State state : States.values()) {
+            for (State state : States.values()) {
                 set(state, state.getDefVal());
             }
         }
@@ -199,7 +174,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
     public DestructableSLK() {
         super();
 
-        for (States.State state : States.values()) {
+        for (State state : States.values()) {
             addField(state);
         }
     }

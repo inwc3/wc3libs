@@ -7,12 +7,10 @@ import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,32 +19,6 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 	public final static File GAME_USE_PATH = new File("Units\\UnitBalance.slk");
 
 	public static class States {
-		static public class State<T extends DataType> extends SLKState<T> {
-			private static List<State> _values = new ArrayList<>();
-
-			public static List<State> values() {
-				return _values;
-			}
-
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-
-				_values.add(this);
-			}
-
-			public State(String idString, DataTypeInfo typeInfo) {
-				this(idString, typeInfo, null);
-			}
-
-			public State(String idString, Class<T> type) {
-				this(idString, new DataTypeInfo(type));
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				this(idString, new DataTypeInfo(type), defVal);
-			}
-		}
-
 		public static List<State> values() {
 			return State.values();
 		}
@@ -115,11 +87,11 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 	}
 
 	public static class Obj extends SLK.Obj<UnitId> {
-		public <T extends DataType> T get(States.State<T> state) {
+		public <T extends DataType> T get(State<T> state) {
 			return state.tryCastVal(super.get(state.getFieldId()));
 		}
 
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			super.set(state.getFieldId(), val);
 		}
 
@@ -136,7 +108,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		public Obj(UnitId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State state : States.values()) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -204,7 +176,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 
 		addField(States.OBJ_ID);
 
-		for (States.State state : States.values()) {
+		for (State state : States.values()) {
 			addField(state);
 		}
 	}
