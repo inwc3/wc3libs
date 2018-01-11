@@ -15,7 +15,7 @@ public class WTSTest extends Wc3LibTest {
 
     @Test
     public void testRebuild() throws Exception {
-        List<Path> w3iFile = getFiles("wc3data/wts/");
+        List<Path> w3iFile = getFiles("wc3data/WTS/");
 
         w3iFile.forEach((Path p) -> {
             try {
@@ -24,7 +24,7 @@ public class WTSTest extends Wc3LibTest {
 
                 Assert.assertEquals(wts.getEntry(1), "Player 1");
 
-                Path outPath = Paths.get("out.wts");
+                Path outPath = Paths.get("out.WTS");
                 Files.deleteIfExists(outPath);
                 Path temp = Files.createFile(outPath);
                 wts.write(temp.toFile());
