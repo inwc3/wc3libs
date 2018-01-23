@@ -7,16 +7,11 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Geoset extends MDXObject {
     private long _inclusiveSize;
-
-    public long getInclusiveSize() {
-        return _inclusiveSize;
-    }
 
     private VertexChunk _vertexChunk;
     private VertexNormalChunk _vertexNormalChunk;
@@ -55,6 +50,46 @@ public class Geoset extends MDXObject {
 
     public List<Extent> getExtents() {
         return new ArrayList<>(_extents);
+    }
+
+    public long getInclusiveSize() {
+        return _inclusiveSize;
+    }
+
+    public VertexChunk getVertexChunk() {
+        return _vertexChunk;
+    }
+
+    public VertexNormalChunk getVertexNormalChunk() {
+        return _vertexNormalChunk;
+    }
+
+    public FaceTypeGroupChunk getFaceTypeGroupChunk() {
+        return _faceTypeGroupChunk;
+    }
+
+    public FaceGroupChunk getFaceGroupChunk() {
+        return _faceGroupChunk;
+    }
+
+    public FaceChunk getFaceChunk() {
+        return _faceChunk;
+    }
+
+    public VertexGroupChunk getVertexGroupChunk() {
+        return _vertexGroupChunk;
+    }
+
+    public MatrixGroupChunk getMatrixGroupChunk() {
+        return _matrixGroupChunk;
+    }
+
+    public MatrixIndexChunk getMatrixIndexChunk() {
+        return _matrixIndexChunk;
+    }
+
+    public TexCoordSetChunk getTexCoordSetChunk() {
+        return _texCoordSetChunk;
     }
 
     public void addExtent(@Nonnull Extent val) {
