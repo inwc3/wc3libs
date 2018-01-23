@@ -29,4 +29,12 @@ public class TexCoord extends MDXObject {
 
         _pos = new Coords2DF(x, y);
     }
+
+    public Coords2DF getPos() {
+        return _pos;
+    }
+
+    public void setPos(Coords2DF _pos) {
+        this._pos = _pos;
+    }
 }
