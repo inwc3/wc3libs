@@ -32,6 +32,21 @@ public class Texture extends MDXObject {
         _fileName = fileName;
     }
 
+    public enum Flag {
+        WRAP_WIDTH(0x1),
+        WRAP_HEIGHT(0x2);
+
+        private int _index;
+
+        public int getIndex() {
+            return _index;
+        }
+
+        Flag(int index) {
+            _index = index;
+        }
+    }
+
     private long _flags = 0;
 
     public long getFlags() {

@@ -29,6 +29,21 @@ public class GeosetAnim extends MDXObject {
         _alpha = alpha;
     }
 
+    public enum Flag {
+        DROP_SHADOW(0x1),
+        COLOR(0x2);
+
+        private int _index;
+
+        public int getIndex() {
+            return _index;
+        }
+
+        Flag(int index) {
+            _index = index;
+        }
+    }
+
     private long _flags;
 
     public long getFlags() {

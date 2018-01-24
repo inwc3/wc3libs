@@ -25,22 +25,35 @@ public class Material extends MDXObject {
         return _priorityPlane;
     }
 
+    public enum Flag {
+        CONST_COLOR(0x1),
+        UNKNOWN_A(0x2),
+        UNKNOWN_B(0x4),
+        UNKNOWN_C(0x8),
+        SORT_PRIMITIVES_FAR_Z(0x10),
+        FULL_RESOLUTION(0x20);
+
+        private int _index;
+
+        public int getIndex() {
+            return _index;
+        }
+
+        Flag(int index) {
+            _index = index;
+        }
+    }
+
     private long _flags;
 
     public long getFlags() {
         return _flags;
     }
 
-    private Set<Layer> _layers = new LinkedHashSet<>();
+    private final LinkedHashSet<Layer> _layers = new LinkedHashSet<>();
 
-    public Set<Layer> getLayers() {
+    public LinkedHashSet<Layer> getLayers() {
         return new LinkedHashSet<>(_layers);
-    }
-
-    public void addLayer(@Nonnull Layer val) {
-        if (!_layers.contains(val)) {
-            _layers.add(val);
-        }
     }
 
     @Override
@@ -83,7 +96,7 @@ public class Material extends MDXObject {
         long layersCount = stream.readUInt32("layersCount");
 
         while (layersCount > 0) {
-            addLayer(new Layer(stream));
+            _layers.add(new Layer(stream));
 
             layersCount--;
         }

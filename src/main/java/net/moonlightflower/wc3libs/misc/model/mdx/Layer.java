@@ -58,14 +58,24 @@ public class Layer extends MDXObject {
     }
 
     public enum ShadingFlag {
-        UNSHADED,
-        SPHERE_ENV_MAP,
-        UNKNOWN_A,
-        UNKNOWN_B,
-        TWO_SIDED,
-        UNFOGGED,
-        NO_DEPTH_TEST,
-        NO_DEPTH_SET
+        UNSHADED(0x1),
+        SPHERE_ENV_MAP(0x2),
+        UNKNOWN_A(0x4),
+        UNKNOWN_B(0x8),
+        TWO_SIDED(0x10),
+        UNFOGGED(0x20),
+        NO_DEPTH_TEST(0x40),
+        NO_DEPTH_SET(0x80);
+
+        private int _index;
+
+        public int getIndex() {
+            return _index;
+        }
+
+        ShadingFlag(int index) {
+            _index = index;
+        }
     }
 
     public void setShadingFlags(long val) {
