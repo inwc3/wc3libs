@@ -327,10 +327,11 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 						read_0xB();
 
 						break;
-					}
-				}
 
-				throw new EncodingFormat.InvalidFormatException(format);
+					}
+					default:
+						throw new EncodingFormat.InvalidFormatException(format);
+				}
 			}
 
 			private void read_0xB() throws BinInputStream.StreamException {
@@ -463,21 +464,52 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		writer.exec();
 	}
 
-	private void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		write(new Writer(stream));
 	}
 
 	public static class Reader extends net.moonlightflower.wc3libs.bin.Reader<EncodingFormat> {
+		public Reader(@Nonnull Wc3BinInputStream stream) {
+			super(stream);
+		}
+
 		@Override
 		public EncodingFormat getAutoFormat() {
 			return EncodingFormat.AUTO;
 		}
 
 		@Nonnull
+		public W3E exec() throws IOException {
+			return exec(new W3E(new Bounds(0, 0, 0, 0)));
+		}
+
+		private W3E _w3e;
+
+		private W3E exec(@Nonnull W3E w3e) throws IOException {
+			_w3e = w3e;
+
+			read(getFormat());
+
+			return _w3e;
+		}
+
+		@Nonnull
+		private W3E read(@Nonnull EncodingFormat format) throws IOException {
+			switch (format.toEnum()) {
+				case AUTO: {
+					return read_auto();
+				}
+				case W3E_0xB: {
+					return read_0xB();
+				}
+				default:
+					throw new EncodingFormat.InvalidFormatException(format);
+			}
+		}
+
+		@Nonnull
 		private W3E read_0xB() throws BinInputStream.StreamException {
 			Wc3BinInputStream stream = getStream();
-
-			W3E w3e = new W3E(new Bounds(0, 0, 0, 0));
 
 			Id startToken = stream.readId();
 
@@ -485,34 +517,34 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 			stream.checkFormatVersion(EncodingFormat.W3E_0xB.getVersion(), version);
 
-			w3e.setTileset(stream.readChar("tileset"));
+			_w3e.setTileset(stream.readChar("tileset"));
 
-			w3e.setCustomTilesetFlag(stream.readInt32("customTilesetFlag"));
+			_w3e.setCustomTilesetFlag(stream.readInt32("customTilesetFlag"));
 
 			int groundTilesUsedCount = stream.readInt32("groundTilesUsedCount");
 
 			for (int i = 0; i < groundTilesUsedCount; i++) {
-				w3e.setGroundTile(i, stream.readId("groundTilesUsed" + i));
+				_w3e.setGroundTile(i, stream.readId("groundTilesUsed" + i));
 			}
 
 			int cliffTilesUsedCount = stream.readInt32("cliffTileUsedCount");
 
 			for (int i = 0; i < cliffTilesUsedCount; i++) {
-				w3e.setCliffTile(i, stream.readId("cliffTilesUsed" + i));
+				_w3e.setCliffTile(i, stream.readId("cliffTilesUsed" + i));
 			}
 
-			w3e.setBounds(new Bounds(new Size(stream.readInt32("width"), stream.readInt32("height")), new Coords2DI(stream.readFloat32("x").intValue(), stream.readFloat32("y").intValue())), false, false);
+			_w3e.setBounds(new Bounds(new Size(stream.readInt32("width"), stream.readInt32("height")), new Coords2DI(stream.readFloat32("x").intValue(), stream.readFloat32("y").intValue())), false, false);
 
-			int width = w3e.getWidth();
-			int height = w3e.getHeight();
+			int width = _w3e.getWidth();
+			int height = _w3e.getHeight();
 
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					w3e.set(new Coords2DI(x, y), new Tile(new Tile.Reader(stream, EncodingFormat.W3E_0xB)));
+					_w3e.set(new Coords2DI(x, y), new Tile(new Tile.Reader(stream, EncodingFormat.W3E_0xB)));
 				}
 			}
 
-			return w3e;
+			return _w3e;
 		}
 
 		@Nonnull
@@ -531,34 +563,10 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 			return read(format);
 		}
-
-		@Nonnull
-		private W3E read(@Nonnull EncodingFormat format) throws IOException {
-			switch (format.toEnum()) {
-				case AUTO: {
-					return read_auto();
-				}
-				case W3E_0xB: {
-					return read_0xB();
-				}
-			}
-
-			throw new EncodingFormat.InvalidFormatException(format);
-		}
-
-		@Nonnull
-		public W3E exec() throws IOException {
-			return read(getFormat());
-		}
-
-		public Reader(@Nonnull Wc3BinInputStream stream) {
-			super(stream);
-
-		}
 	}
 
 	public W3E read(@Nonnull Reader reader) throws IOException {
-		return reader.exec();
+		return reader.exec(this);
 	}
 
 	private W3E read(@Nonnull Wc3BinInputStream stream) throws IOException {
@@ -589,6 +597,10 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 	public W3E(@Nonnull Reader reader) throws IOException {
 		read(reader);
+	}
+
+	public W3E(@Nonnull Wc3BinInputStream stream) throws IOException {
+		this(new Reader(stream));
 	}
 
 	public W3E(@Nonnull File file) throws IOException {
