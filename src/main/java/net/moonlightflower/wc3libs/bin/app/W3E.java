@@ -1,9 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinInputStream;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.Boundable;
@@ -23,7 +20,8 @@ import java.util.Map;
  */
 public class W3E extends Raster<W3E.Tile> implements Boundable {
 	public final static File GAME_PATH = new File("war3map.w3e");
-	
+
+	public final Id START_TOKEN = Id.valueOf("W3E!");
 	public final static int CELL_SIZE = 128;
 
 	@Override
@@ -61,7 +59,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_tileset = val;
 	}
 	
-	private Map<Integer, Id> _groundTiles = new LinkedHashMap<>();
+	private final Map<Integer, Id> _groundTiles = new LinkedHashMap<>();
 	
 	public Id getGroundTile(int index) {
 		return _groundTiles.get(index);
@@ -71,7 +69,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_groundTiles.put(index, val);
 	}
 	
-	private Map<Integer, Id> _cliffTiles = new LinkedHashMap<>();
+	private final Map<Integer, Id> _cliffTiles = new LinkedHashMap<>();
 	
 	public Id getCliffTile(int index) {
 		return _cliffTiles.get(index);
@@ -81,7 +79,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_cliffTiles.put(index, val);
 	}
 	
-	public class Tile {
+	public static class Tile {
 		final int groundZero = 0x2000;
 		final float waterZero = 89.6F;
 		final int cliffHeight = 0x200;
@@ -228,79 +226,151 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			System.out.println(getBoundary());
 			System.out.println();
 		}
-		
-		public void read_0xB(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setGroundHeight(stream.readInt16("groundHeight"));
 
-			short waterLevel = stream.readInt16("waterLevelAndFlag");
-			
-			setWaterLevel((short) (waterLevel & 0x7FFF));
-			setBoundary(waterLevel >> 15);
-			
-			int flags = stream.readUByte("flags");
-			
-			setBoundary2(flags & 0x1);
-			setWater((flags >> 1) & 0x1);
-			setBlight((flags >> 2) & 0x1);
-			setRamp((flags >> 3) & 0x1);
-			setTex(flags >> 4);
-			
-			setTexDetails(stream.readUByte("texDetails"));
-			
-			byte cliff = stream.readByte("cliffTexAndLayer");
-			
-			setCliffTex((cliff >> 4) & 0xF);
-			setCliffLayer(cliff & 0xF);
-		}
-		
-		private void write_0xB(@Nonnull Wc3BinOutputStream stream) {
-			stream.writeInt16(getGroundHeight());
-			
-			short waterLevel = getWaterLevel();
-			
-			waterLevel |= getBoundary() << 15;
-			
-			stream.writeInt16(waterLevel);
-			
-			int flags = getBoundary2();
-			
-			flags |= (getWater() << 1);
-			flags |= (getBlight() << 2);
-			flags |= (getRamp() << 3);
-			flags |= (getTex() << 4);
-			
-			stream.writeUByte(flags);
-			
-			stream.writeUByte(getTexDetails());
-			
-			int cliff = getCliffTex() << 4;
-			
-			int layer = Math.min(getCliffLayer(), 14); //15 is bad
-			
-			cliff |= layer;
+		public static class Writer extends net.moonlightflower.wc3libs.bin.Writer<EncodingFormat> {
+			public Writer(@Nonnull Wc3BinOutputStream stream) {
+				super(stream);
+			}
 
-			stream.writeUByte(cliff);
+			public Writer(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+				super(stream, format);
+			}
+
+			@Override
+			public EncodingFormat getAutoFormat() {
+				return EncodingFormat.AUTO;
+			}
+
+			private Tile _tile;
+
+			public void exec(@Nonnull Tile tile) throws BinStream.StreamException {
+				_tile = tile;
+
+				write();
+			}
+
+			private void write() {
+				switch (getFormat().toEnum()) {
+					case AUTO:
+					case W3E_0xB: {
+						write_0xB();
+					}
+				}
+			}
+
+			private void write_0xB() {
+				Wc3BinOutputStream stream = getStream();
+
+				stream.writeInt16(_tile.getGroundHeight());
+
+				short waterLevel = _tile.getWaterLevel();
+
+				waterLevel |= _tile.getBoundary() << 15;
+
+				stream.writeInt16(waterLevel);
+
+				int flags = _tile.getBoundary2();
+
+				flags |= (_tile.getWater() << 1);
+				flags |= (_tile.getBlight() << 2);
+				flags |= (_tile.getRamp() << 3);
+				flags |= (_tile.getTex() << 4);
+
+				stream.writeUByte(flags);
+
+				stream.writeUByte(_tile.getTexDetails());
+
+				int cliff = _tile.getCliffTex() << 4;
+
+				int layer = Math.min(_tile.getCliffLayer(), 14); //15 is bad
+
+				cliff |= layer;
+
+				stream.writeUByte(cliff);
+			}
 		}
-		
-		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
-			switch (format.toEnum()) {
-			case W3E_0xB: {
-				read_0xB(stream);
+
+		private void write(@Nonnull Writer writer) throws BinStream.StreamException {
+			writer.exec(this);
+		}
+
+		public static class Reader extends net.moonlightflower.wc3libs.bin.Reader<EncodingFormat> {
+			public Reader(@Nonnull Wc3BinInputStream stream) {
+				super(stream);
 			}
+
+			public Reader(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) {
+				super(stream, format);
+			}
+
+			public Tile exec() throws BinStream.StreamException {
+				return exec(new Tile());
+			}
+
+			private Tile _tile;
+
+			private Tile exec(@Nonnull Tile tile) throws BinStream.StreamException {
+				_tile = tile;
+
+				read();
+
+				return _tile;
+			}
+
+			private void read() throws BinStream.StreamException {
+				read(getFormat());
+			}
+
+			private void read(@Nonnull EncodingFormat format) throws BinStream.StreamException {
+				switch (format.toEnum()) {
+					case W3E_0xB: {
+						read_0xB();
+
+						break;
+					}
+				}
+
+				throw new EncodingFormat.InvalidFormatException(format);
+			}
+
+			private void read_0xB() throws BinInputStream.StreamException {
+				Wc3BinInputStream stream = getStream();
+
+				_tile.setGroundHeight(stream.readInt16("groundHeight"));
+
+				short waterLevel = stream.readInt16("waterLevelAndFlag");
+
+				_tile.setWaterLevel((short) (waterLevel & 0x7FFF));
+				_tile.setBoundary(waterLevel >> 15);
+
+				int flags = stream.readUByte("flags");
+
+				_tile.setBoundary2(flags & 0x1);
+				_tile.setWater((flags >> 1) & 0x1);
+				_tile.setBlight((flags >> 2) & 0x1);
+				_tile.setRamp((flags >> 3) & 0x1);
+				_tile.setTex(flags >> 4);
+
+				_tile.setTexDetails(stream.readUByte("texDetails"));
+
+				byte cliff = stream.readByte("cliffTexAndLayer");
+
+				_tile.setCliffTex((cliff >> 4) & 0xF);
+				_tile.setCliffLayer(cliff & 0xF);
+			}
+
+			@Override
+			public EncodingFormat getAutoFormat() {
+				return EncodingFormat.AUTO;
 			}
 		}
-		
-		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
-			switch (format.toEnum()) {
-			case AUTO:
-			case W3E_0xB: {
-				write_0xB(stream);
-			}
-			}
+
+		public Tile(@Nonnull Reader reader) throws BinStream.StreamException {
+			reader.exec(this);
 		}
-		
-		public Tile(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
-			read(stream, format);
+
+		public Tile(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+			new Reader(stream).exec();
 		}
 		
 		public Tile() {
@@ -325,123 +395,174 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			super(enumVal, version);
 		}
 	}
-	
-	private void read_0xB(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		Id startToken = stream.readId();
-		
-		int version = stream.readInt32("version");
-		
-		stream.checkFormatVersion(EncodingFormat.W3E_0xB.getVersion(), version);
-		
-		setTileset(stream.readChar("tileset"));
-		
-		setCustomTilesetFlag(stream.readInt32("customTilesetFlag"));
-		
-		int groundTilesUsedCount = stream.readInt32("groundTilesUsedCount");
-		
-		for (int i = 0; i < groundTilesUsedCount; i++) {
-			setGroundTile(i, stream.readId("groundTilesUsed" + i));
-		}
-		
-		int cliffTilesUsedCount = stream.readInt32("cliffTileUsedCount");
-		
-		for (int i = 0; i < cliffTilesUsedCount; i++) {
-			setCliffTile(i, stream.readId("cliffTilesUsed" + i));
+
+	public class Writer extends net.moonlightflower.wc3libs.bin.Writer<EncodingFormat> {
+		@Override
+		public EncodingFormat getAutoFormat() {
+			return EncodingFormat.AUTO;
 		}
 
-		setBounds(new Bounds(new Size(stream.readInt32("width"), stream.readInt32("height")), new Coords2DI(stream.readFloat32("x").intValue(), stream.readFloat32("y").intValue())), false, false);
-		
-		int width = getWidth();
-		int height = getHeight();
-		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				set(new Coords2DI(x, y), new Tile(stream, EncodingFormat.W3E_0xB));
+		private void write_0xB(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+			stream.writeId(START_TOKEN);
+
+			stream.writeInt32(EncodingFormat.W3E_0xB.getVersion());
+
+			stream.writeChar(getTileset());
+
+			stream.writeInt32(getCustomTilesetUsedFlag());
+
+			stream.writeInt32(_groundTiles.size());
+
+			for (Id groundTile : _groundTiles.values()) {
+				stream.writeId(groundTile);
+			}
+
+			stream.writeInt32(_cliffTiles.size());
+
+			for (Id cliffTile : _cliffTiles.values()) {
+				stream.writeId(cliffTile);
+			}
+
+			int width = getWidth();
+			int height = getHeight();
+
+			stream.writeInt32(width);
+			stream.writeInt32(height);
+
+			Coords2DI center = getCenter();
+
+			stream.writeFloat32(center.getX());
+			stream.writeFloat32(center.getY());
+
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					Tile tile = get(new Coords2DI(x, y));
+
+					tile.write(new Tile.Writer(stream, EncodingFormat.W3E_0xB));
+				}
 			}
 		}
-	}
 
-	private void write_0xB(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeId(Id.valueOf("W3E!"));
-		
-		stream.writeInt32(EncodingFormat.W3E_0xB.getVersion());
-		
-		stream.writeChar(getTileset());
-		
-		stream.writeInt32(getCustomTilesetUsedFlag());
-		
-		stream.writeInt32(_groundTiles.size());
-		
-		for (Id groundTile : _groundTiles.values()) {
-			stream.writeId(groundTile);
-		}
-		
-		stream.writeInt32(_cliffTiles.size());
+		public void exec() throws BinStream.StreamException {
+			switch (getFormat().toEnum()) {
+				case AUTO:
+				case W3E_0xB: {
+					write_0xB(getStream());
 
-		for (Id cliffTile : _cliffTiles.values()) {
-			stream.writeId(cliffTile);
-		}
-
-		int width = getWidth();
-		int height = getHeight();
-		
-		stream.writeInt32(width);
-		stream.writeInt32(height);
-		
-		Coords2DI center = getCenter();
-		
-		stream.writeFloat32(center.getX());
-		stream.writeFloat32(center.getY());
-		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				get(new Coords2DI(x, y)).write(stream, EncodingFormat.W3E_0xB);
+					break;
+				}
 			}
 		}
-	}
-	
-	private void read_auto(@Nonnull Wc3BinInputStream stream) throws IOException {
-		Id startToken = stream.readId();
-		
-		int version = stream.readInt32();
-		
-		stream.rewind();
 
-		read(stream, stream.getFormat(EncodingFormat.class, version));
-	}
-	
-	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws IOException {
-		switch (format.toEnum()) {
-		case AUTO: {
-			read_auto(stream);
-			
-			break;
-		}
-		case W3E_0xB: {
-			read_0xB(stream);
-			
-			break;
-		}
+		public Writer(@Nonnull Wc3BinOutputStream stream) {
+			super(stream);
 		}
 	}
-	
-	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
-		switch (format.toEnum()) {
-		case AUTO:
-		case W3E_0xB: {
-			write_0xB(stream);
-			
-			break;
+
+	public void write(@Nonnull Writer writer) throws BinStream.StreamException {
+		writer.exec();
+	}
+
+	private void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		write(new Writer(stream));
+	}
+
+	public static class Reader extends net.moonlightflower.wc3libs.bin.Reader<EncodingFormat> {
+		@Override
+		public EncodingFormat getAutoFormat() {
+			return EncodingFormat.AUTO;
 		}
+
+		@Nonnull
+		private W3E read_0xB() throws BinInputStream.StreamException {
+			Wc3BinInputStream stream = getStream();
+
+			W3E w3e = new W3E(new Bounds(0, 0, 0, 0));
+
+			Id startToken = stream.readId();
+
+			int version = stream.readInt32("version");
+
+			stream.checkFormatVersion(EncodingFormat.W3E_0xB.getVersion(), version);
+
+			w3e.setTileset(stream.readChar("tileset"));
+
+			w3e.setCustomTilesetFlag(stream.readInt32("customTilesetFlag"));
+
+			int groundTilesUsedCount = stream.readInt32("groundTilesUsedCount");
+
+			for (int i = 0; i < groundTilesUsedCount; i++) {
+				w3e.setGroundTile(i, stream.readId("groundTilesUsed" + i));
+			}
+
+			int cliffTilesUsedCount = stream.readInt32("cliffTileUsedCount");
+
+			for (int i = 0; i < cliffTilesUsedCount; i++) {
+				w3e.setCliffTile(i, stream.readId("cliffTilesUsed" + i));
+			}
+
+			w3e.setBounds(new Bounds(new Size(stream.readInt32("width"), stream.readInt32("height")), new Coords2DI(stream.readFloat32("x").intValue(), stream.readFloat32("y").intValue())), false, false);
+
+			int width = w3e.getWidth();
+			int height = w3e.getHeight();
+
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					w3e.set(new Coords2DI(x, y), new Tile(new Tile.Reader(stream, EncodingFormat.W3E_0xB)));
+				}
+			}
+
+			return w3e;
+		}
+
+		@Nonnull
+		private W3E read_auto() throws IOException {
+			Wc3BinInputStream stream = getStream();
+
+			Id startToken = stream.readId();
+
+			int version = stream.readInt32();
+
+			stream.rewind();
+
+			EncodingFormat format = getStream().getFormat(EncodingFormat.class, version);
+
+			if (format == null) throw new EncodingFormat.InvalidFormatException(version);
+
+			return read(format);
+		}
+
+		@Nonnull
+		private W3E read(@Nonnull EncodingFormat format) throws IOException {
+			switch (format.toEnum()) {
+				case AUTO: {
+					return read_auto();
+				}
+				case W3E_0xB: {
+					return read_0xB();
+				}
+			}
+
+			throw new EncodingFormat.InvalidFormatException(format);
+		}
+
+		@Nonnull
+		public W3E exec() throws IOException {
+			return read(getFormat());
+		}
+
+		public Reader(@Nonnull Wc3BinInputStream stream) {
+			super(stream);
+
 		}
 	}
-	
-	private void read(@Nonnull Wc3BinInputStream stream) throws IOException {
-		read(stream, EncodingFormat.AUTO);
+
+	public W3E read(@Nonnull Reader reader) throws IOException {
+		return reader.exec();
 	}
-	
-	public void write(@Nonnull Wc3BinOutputStream stream) {
-		write(stream, EncodingFormat.AUTO);
+
+	private W3E read(@Nonnull Wc3BinInputStream stream) throws IOException {
+		return read(new Reader(stream));
 	}
 
 	public void write(@Nonnull File file) throws IOException {
@@ -451,7 +572,8 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		
 		outStream.close();
 	}
-	
+
+	@Nonnull
 	@Override
 	public W3E clone() {
 		W3E other = (getBounds() == null) ? new W3E(new Bounds(0, 0, 0, 0)) : new W3E(getBounds());
@@ -460,19 +582,19 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		
 		return other;
 	}
-	
+
 	public W3E(@Nonnull Bounds bounds) {
 		setBounds(bounds, false, false);
 	}
 
-	public W3E(@Nonnull Wc3BinInputStream stream) throws IOException {
-		read(stream);
+	public W3E(@Nonnull Reader reader) throws IOException {
+		read(reader);
 	}
 
 	public W3E(@Nonnull File file) throws IOException {
 		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 		
-		read(inStream, EncodingFormat.AUTO);
+		read(new Reader(inStream));
 		
 		inStream.close();
 	}

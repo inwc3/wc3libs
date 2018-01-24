@@ -62,10 +62,6 @@ public class GeosetAnim extends MDXObject {
         return _chunks;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
-    }
-
     public static class AlphaTrackChunk extends TrackChunk {
         public final static Id TOKEN = Id.valueOf("KGAO");
 
@@ -80,7 +76,7 @@ public class GeosetAnim extends MDXObject {
         }
 
         public static class AlphaTrack extends Track {
-            private float _alpha = 0F;
+            private float _alpha;
 
             public float getAlpha() {
                 return _alpha;

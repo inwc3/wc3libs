@@ -8,7 +8,7 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 
 public class VisibilityTrack extends Track {
-    private float _visibility = 0F;
+    private float _visibility;
 
     public float getVisibility() {
         return _visibility;
@@ -18,7 +18,7 @@ public class VisibilityTrack extends Track {
         _visibility = visibility;
     }
 
-    private float _inTan_visibility = 0F;
+    private float _inTan_visibility;
 
     public float getInTanVisibility() {
         return _inTan_visibility;
@@ -28,7 +28,7 @@ public class VisibilityTrack extends Track {
         _inTan_visibility = visibility;
     }
 
-    private float _outTan_visibility = 0F;
+    private float _outTan_visibility;
 
     public float getOutTanVisibility() {
         return _outTan_visibility;

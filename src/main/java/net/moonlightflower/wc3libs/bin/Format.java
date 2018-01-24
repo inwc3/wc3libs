@@ -5,6 +5,28 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class Format<T> {
+	public static class InvalidFormatException extends RuntimeException {
+		private final Integer _version;
+		private final Format _format;
+
+		@Nonnull
+		public String toString() {
+			if (_format != null) return _format.toString();
+
+			return Integer.valueOf(_version).toString();
+		}
+
+		public InvalidFormatException(int version) {
+			_version = version;
+			_format = null;
+		}
+
+		public InvalidFormatException(@Nonnull Format format) {
+			_version = null;
+			_format = format;
+		}
+	}
+
 	private final static Map<Class<? extends Format>, Map<Integer, Format>> _instanceMap = new LinkedHashMap<>();
 
 	@Nonnull
