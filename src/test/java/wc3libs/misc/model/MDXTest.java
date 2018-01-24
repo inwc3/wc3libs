@@ -15,7 +15,7 @@ public class MDXTest extends Wc3LibTest {
     public void MDXTest() throws IOException {
         MDX mdx = new MDX(getFile("wc3data/Models/PackHorse.mdx"));
 
-        System.out.println(mdx.getVersionChunks().get(0).getVersion());
+        System.out.println(mdx.getVersionChunks().iterator().next().getVersion());
     }
 
     @Test()

@@ -14,10 +14,14 @@ public class VersionChunk extends Chunk {
         return TOKEN;
     }
 
-    private long _version;
+    private long _version = 0;
 
     public long getVersion() {
         return _version;
+    }
+
+    public void setVersion(long version) {
+        _version = version;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -58,7 +62,7 @@ public class VersionChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public VersionChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -68,6 +72,5 @@ public class VersionChunk extends Chunk {
     }
 
     public VersionChunk() {
-
     }
 }

@@ -5,16 +5,14 @@ import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Light extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
@@ -22,8 +20,13 @@ public class Light extends MDXObject {
 
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
+    }
+
+    public void setNode(@Nonnull Node node) {
+        _node = node;
     }
 
     public enum Type {
@@ -32,40 +35,67 @@ public class Light extends MDXObject {
         AMBIENT
     }
 
-    private Type _type;
+    private Type _type = Type.OMNI;
 
+    @Nonnull
     public Type getType() {
         return _type;
     }
 
-    private float _attenuationStart;
+    public void setType(@Nonnull Type type) {
+        _type = type;
+    }
+
+    private float _attenuationStart = 0F;
 
     public float getAttenuationStart() {
         return _attenuationStart;
     }
 
-    private float _attenuationEnd;
+    public void setAttenuationStart(float attenuationStart) {
+        _attenuationStart = attenuationStart;
+    }
+
+    private float _attenuationEnd = 0F;
 
     public float getAttenuationEnd() {
         return _attenuationEnd;
     }
 
+    public void setAttenuationEnd(float attenuationEnd) {
+        _attenuationEnd = attenuationEnd;
+    }
+
     private Color _color;
 
+    @Nonnull
     public Color getColor() {
         return _color;
     }
 
-    private float _intensity;
+    public void setColor(@Nonnull Color color) {
+        _color = color;
+    }
+
+    private float _intensity = 0F;
 
     public float getIntensity() {
         return _intensity;
     }
 
+    public void setIntensity(float intensity) {
+        _intensity = intensity;
+    }
+
     private Color _ambientColor;
 
+    @Nonnull
     public Color getAmbientColor() {
         return _ambientColor;
+    }
+
+    public void setAmbientColor(@Nonnull Color ambientColor) {
+        _ambientColor = ambientColor;
     }
 
     private float _ambientIntensity;
@@ -74,14 +104,14 @@ public class Light extends MDXObject {
         return _ambientIntensity;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
-
-    public List<Chunk> getChunks() {
-        return _chunks;
+    public void setAmbientIntensity(float ambientIntensity) {
+        _ambientIntensity = ambientIntensity;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<Chunk> getChunks() {
+        return _chunks;
     }
 
     public static class AttenuationStartTrackChunk extends TrackChunk {
@@ -93,7 +123,7 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _attenuationStartTracks;
         }
 
@@ -104,16 +134,28 @@ public class Light extends MDXObject {
                 return _alpha;
             }
 
+            public void setAlpha(float alpha) {
+                _alpha = alpha;
+            }
+
             private float _inTan_alpha;
 
             public float getInTanAlpha() {
                 return _inTan_alpha;
             }
 
+            public void setInTanAlpha(float alpha) {
+                _inTan_alpha = alpha;
+            }
+
             private float _outTan_alpha;
 
             public float getOutTanAlpha() {
                 return _outTan_alpha;
+            }
+
+            public void setOutTanAlpha(float alpha) {
+                _outTan_alpha = alpha;
             }
 
             @Override
@@ -141,16 +183,10 @@ public class Light extends MDXObject {
             }
         }
 
-        private List<AttenuationStartTrack> _attenuationStartTracks = new ArrayList<>();
+        private final LinkedHashSet<AttenuationStartTrack> _attenuationStartTracks = new ObservableLinkedHashSet<>();
 
-        public List<AttenuationStartTrack> getAttenuationStartTracks() {
-            return new ArrayList<>(_attenuationStartTracks);
-        }
-
-        public void addAttenuationStartTrack(@Nonnull AttenuationStartTrack val) {
-            if (!_attenuationStartTracks.contains(val)) {
-                _attenuationStartTracks.add(val);
-            }
+        public LinkedHashSet<AttenuationStartTrack> getAttenuationStartTracks() {
+            return _attenuationStartTracks;
         }
 
         public AttenuationStartTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -159,7 +195,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAttenuationStartTrack(new AttenuationStartTrack(stream, getInterpolationType(), format));
+                _attenuationStartTracks.add(new AttenuationStartTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -170,18 +206,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<AttenuationStartTrackChunk> _attenuationStartTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<AttenuationStartTrackChunk> _attenuationStartTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<AttenuationStartTrackChunk> getAttenuationStartTrackChunks() {
-        return new ArrayList<>(_attenuationStartTrackChunks);
+    public LinkedHashSet<AttenuationStartTrackChunk> getAttenuationStartTrackChunks() {
+        return _attenuationStartTrackChunks;
     }
 
     public void addAttenuationStartTrackChunk(@Nonnull AttenuationStartTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_attenuationStartTrackChunks.contains(val)) {
-            _attenuationStartTrackChunks.add(val);
-        }
+        _attenuationStartTrackChunks.add(val);
     }
 
     public static class AttenuationEndTrackChunk extends TrackChunk {
@@ -193,7 +227,7 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _attenuationEndTracks;
         }
 
@@ -204,16 +238,28 @@ public class Light extends MDXObject {
                 return _alpha;
             }
 
+            public void setAlpha(float alpha) {
+                _alpha = alpha;
+            }
+
             private float _inTan_alpha;
 
             public float getInTanAlpha() {
                 return _inTan_alpha;
             }
 
+            public void setInTanAlpha(float alpha) {
+                _inTan_alpha = alpha;
+            }
+
             private float _outTan_alpha;
 
             public float getOutTanAlpha() {
                 return _outTan_alpha;
+            }
+
+            public void setOutTanAlpha(float alpha) {
+                _outTan_alpha = alpha;
             }
 
             @Override
@@ -241,16 +287,10 @@ public class Light extends MDXObject {
             }
         }
 
-        private List<AttenuationEndTrack> _attenuationEndTracks = new ArrayList<>();
+        private final LinkedHashSet<AttenuationEndTrack> _attenuationEndTracks = new ObservableLinkedHashSet<>();
 
-        public List<AttenuationEndTrack> getAttenuationEndTracks() {
-            return new ArrayList<>(_attenuationEndTracks);
-        }
-
-        public void addAttenuationEndTrack(@Nonnull AttenuationEndTrack val) {
-            if (!_attenuationEndTracks.contains(val)) {
-                _attenuationEndTracks.add(val);
-            }
+        public LinkedHashSet<AttenuationEndTrack> getAttenuationEndTracks() {
+            return _attenuationEndTracks;
         }
 
         public AttenuationEndTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -259,7 +299,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAttenuationEndTrack(new AttenuationEndTrack(stream, getInterpolationType(), format));
+                _attenuationEndTracks.add(new AttenuationEndTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -270,18 +310,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<AttenuationEndTrackChunk> _attenuationEndTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<AttenuationEndTrackChunk> _attenuationEndTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<AttenuationEndTrackChunk> getAttenuationEndTrackChunks() {
-        return new ArrayList<>(_attenuationEndTrackChunks);
+    public LinkedHashSet<AttenuationEndTrackChunk> getAttenuationEndTrackChunks() {
+        return _attenuationEndTrackChunks;
     }
 
     public void addAttenuationEndTrackChunk(@Nonnull AttenuationEndTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_attenuationEndTrackChunks.contains(val)) {
-            _attenuationEndTrackChunks.add(val);
-        }
+        _attenuationEndTrackChunks.add(val);
     }
 
     public static class ColorTrackChunk extends TrackChunk {
@@ -293,27 +331,42 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _colorTracks;
         }
 
         public static class ColorTrack extends Track {
             private Color _color;
 
+            @Nonnull
             public Color getColor() {
                 return _color;
             }
 
+            public void setColor(@Nonnull Color color) {
+                _color = color;
+            }
+
             private Color _inTan_color;
 
+            @Nonnull
             public Color getInTanColor() {
                 return _inTan_color;
             }
 
+            public void setInTanColor(@Nonnull Color color) {
+                _inTan_color = color;
+            }
+
             private Color _outTan_color;
 
+            @Nonnull
             public Color getOutTanColor() {
                 return _outTan_color;
+            }
+
+            public void setOutTanColor(@Nonnull Color color) {
+                _outTan_color = color;
             }
 
             @Override
@@ -348,16 +401,10 @@ public class Light extends MDXObject {
             }
         }
 
-        private List<ColorTrackChunk.ColorTrack> _colorTracks = new ArrayList<>();
+        private final LinkedHashSet<ColorTrack> _colorTracks = new ObservableLinkedHashSet<>();
 
-        public List<ColorTrackChunk.ColorTrack> getAlphaTracks() {
-            return new ArrayList<>(_colorTracks);
-        }
-
-        public void addColorTrack(@Nonnull ColorTrackChunk.ColorTrack val) {
-            if (!_colorTracks.contains(val)) {
-                _colorTracks.add(val);
-            }
+        public LinkedHashSet<ColorTrackChunk.ColorTrack> getAlphaTracks() {
+            return _colorTracks;
         }
 
         public ColorTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -366,7 +413,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addColorTrack(new ColorTrackChunk.ColorTrack(stream, getInterpolationType(), format));
+                _colorTracks.add(new ColorTrackChunk.ColorTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -377,18 +424,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<ColorTrackChunk> _colorTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<ColorTrackChunk> _colorTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<ColorTrackChunk> getColorTrackChunks() {
-        return new ArrayList<>(_colorTrackChunks);
+    public LinkedHashSet<ColorTrackChunk> getColorTrackChunks() {
+        return _colorTrackChunks;
     }
 
     public void addColorTrackChunk(@Nonnull ColorTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_colorTrackChunks.contains(val)) {
-            _colorTrackChunks.add(val);
-        }
+        _colorTrackChunks.add(val);
     }
 
     public static class IntensityTrackChunk extends TrackChunk {
@@ -400,7 +445,7 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _intensityTracks;
         }
 
@@ -411,16 +456,28 @@ public class Light extends MDXObject {
                 return _intensity;
             }
 
+            public void setIntensity(float intensity) {
+                _intensity = intensity;
+            }
+
             private float _inTan_intensity;
 
             public float getInTanIntensity() {
                 return _inTan_intensity;
             }
 
+            public void setInTanIntensity(float intensity) {
+                _inTan_intensity = intensity;
+            }
+
             private float _outTan_intensity;
 
             public float getOutTanIntensity() {
                 return _outTan_intensity;
+            }
+
+            public void setOutTanIntensity(float intensity) {
+                _outTan_intensity = intensity;
             }
 
             @Override
@@ -448,16 +505,10 @@ public class Light extends MDXObject {
             }
         }
 
-        private List<IntensityTrack> _intensityTracks = new ArrayList<>();
+        private final LinkedHashSet<IntensityTrack> _intensityTracks = new ObservableLinkedHashSet<>();
 
-        public List<IntensityTrack> getIntensityTracks() {
-            return new ArrayList<>(_intensityTracks);
-        }
-
-        public void addIntensityTrack(@Nonnull IntensityTrack val) {
-            if (!_intensityTracks.contains(val)) {
-                _intensityTracks.add(val);
-            }
+        public LinkedHashSet<IntensityTrack> getIntensityTracks() {
+            return _intensityTracks;
         }
 
         public IntensityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -466,7 +517,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addIntensityTrack(new IntensityTrack(stream, getInterpolationType(), format));
+                _intensityTracks.add(new IntensityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -477,18 +528,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<IntensityTrackChunk> _intensityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<IntensityTrackChunk> _intensityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<IntensityTrackChunk> getIntensityTrackChunks() {
-        return new ArrayList<>(_intensityTrackChunks);
+    public LinkedHashSet<IntensityTrackChunk> getIntensityTrackChunks() {
+        return _intensityTrackChunks;
     }
 
     public void addIntensityTrackChunk(@Nonnull IntensityTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_intensityTrackChunks.contains(val)) {
-            _intensityTrackChunks.add(val);
-        }
+        _intensityTrackChunks.add(val);
     }
 
     public static class AmbientIntensityTrackChunk extends TrackChunk {
@@ -500,7 +549,7 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _ambientIntensityTracks;
         }
 
@@ -511,16 +560,28 @@ public class Light extends MDXObject {
                 return _ambientIntensity;
             }
 
+            public void setAmbientIntensity(float ambientIntensity) {
+                _ambientIntensity = ambientIntensity;
+            }
+
             private float _inTan_ambientIntensity;
 
             public float getInTanAmbientIntensity() {
                 return _inTan_ambientIntensity;
             }
 
+            public void setInTanAmbientIntensity(float ambientIntensity) {
+                _inTan_ambientIntensity = ambientIntensity;
+            }
+
             private float _outTan_ambientIntensity;
 
             public float getOutTanAmbientIntensity() {
                 return _outTan_ambientIntensity;
+            }
+
+            public void setOutTanAmbientIntensity(float ambientIntensity) {
+                _outTan_ambientIntensity = ambientIntensity;
             }
 
             @Override
@@ -548,16 +609,10 @@ public class Light extends MDXObject {
             }
         }
 
-        private List<AmbientIntensityTrack> _ambientIntensityTracks = new ArrayList<>();
+        private final LinkedHashSet<AmbientIntensityTrack> _ambientIntensityTracks = new ObservableLinkedHashSet<>();
 
-        public List<AmbientIntensityTrack> getAmbientIntensityTracks() {
-            return new ArrayList<>(_ambientIntensityTracks);
-        }
-
-        public void addAmbientIntensityTrack(@Nonnull AmbientIntensityTrack val) {
-            if (!_ambientIntensityTracks.contains(val)) {
-                _ambientIntensityTracks.add(val);
-            }
+        public LinkedHashSet<AmbientIntensityTrack> getAmbientIntensityTracks() {
+            return _ambientIntensityTracks;
         }
 
         public AmbientIntensityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -566,7 +621,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAmbientIntensityTrack(new AmbientIntensityTrack(stream, getInterpolationType(), format));
+                _ambientIntensityTracks.add(new AmbientIntensityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -577,18 +632,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<AmbientIntensityTrackChunk> _ambientIntensityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<AmbientIntensityTrackChunk> _ambientIntensityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<AmbientIntensityTrackChunk> getAmbientIntensityTrackChunks() {
-        return new ArrayList<>(_ambientIntensityTrackChunks);
+    public LinkedHashSet<AmbientIntensityTrackChunk> getAmbientIntensityTrackChunks() {
+        return _ambientIntensityTrackChunks;
     }
 
     public void addAmbientIntensityTrackChunk(@Nonnull AmbientIntensityTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_ambientIntensityTrackChunks.contains(val)) {
-            _ambientIntensityTrackChunks.add(val);
-        }
+        _ambientIntensityTrackChunks.add(val);
     }
 
     public static class AmbientColorTrackChunk extends TrackChunk {
@@ -600,27 +653,42 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _ambientColorTracks;
         }
 
         public static class AmbientColorTrack extends Track {
             private Color _color;
 
+            @Nonnull
             public Color getColor() {
                 return _color;
             }
 
+            public void setColor(@Nonnull Color color) {
+                _color = color;
+            }
+
             private Color _inTan_color;
 
+            @Nonnull
             public Color getInTanColor() {
                 return _inTan_color;
             }
 
+            public void setInTanColor(@Nonnull Color color) {
+                _inTan_color = color;
+            }
+
             private Color _outTan_color;
 
+            @Nonnull
             public Color getOutTanColor() {
                 return _outTan_color;
+            }
+
+            public void setOutTanColor(@Nonnull Color color) {
+                _outTan_color = color;
             }
 
             @Override
@@ -655,16 +723,10 @@ public class Light extends MDXObject {
             }
         }
 
-        private List<AmbientColorTrack> _ambientColorTracks = new ArrayList<>();
+        private final LinkedHashSet<AmbientColorTrack> _ambientColorTracks = new ObservableLinkedHashSet<>();
 
-        public List<AmbientColorTrack> getAlphaTracks() {
-            return new ArrayList<>(_ambientColorTracks);
-        }
-
-        public void addAmbientColorTrack(@Nonnull AmbientColorTrack val) {
-            if (!_ambientColorTracks.contains(val)) {
-                _ambientColorTracks.add(val);
-            }
+        public LinkedHashSet<AmbientColorTrack> getAlphaTracks() {
+            return _ambientColorTracks;
         }
 
         public AmbientColorTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -673,7 +735,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAmbientColorTrack(new AmbientColorTrack(stream, getInterpolationType(), format));
+                _ambientColorTracks.add(new AmbientColorTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -684,18 +746,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<AmbientColorTrackChunk> _ambientColorTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<AmbientColorTrackChunk> _ambientColorTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<AmbientColorTrackChunk> getAmbientColorTrackChunks() {
-        return new ArrayList<>(_ambientColorTrackChunks);
+    public LinkedHashSet<AmbientColorTrackChunk> getAmbientColorTrackChunks() {
+        return _ambientColorTrackChunks;
     }
 
     public void addAmbientColorTrackChunk(@Nonnull AmbientColorTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_ambientColorTrackChunks.contains(val)) {
-            _ambientColorTrackChunks.add(val);
-        }
+        _ambientColorTrackChunks.add(val);
     }
 
     public static class VisibilityTrackChunk extends TrackChunk {
@@ -707,20 +767,14 @@ public class Light extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _visibilityTracks;
         }
 
-        private List<VisibilityTrack> _visibilityTracks = new ArrayList<>();
+        private final LinkedHashSet<VisibilityTrack> _visibilityTracks = new ObservableLinkedHashSet<>();
 
-        public List<VisibilityTrack> getVisibilityTracks() {
-            return new ArrayList<>(_visibilityTracks);
-        }
-
-        public void addVisibilityTrack(@Nonnull VisibilityTrack val) {
-            if (!_visibilityTracks.contains(val)) {
-                _visibilityTracks.add(val);
-            }
+        public LinkedHashSet<VisibilityTrack> getVisibilityTracks() {
+            return _visibilityTracks;
         }
 
         public VisibilityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -729,7 +783,7 @@ public class Light extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addVisibilityTrack(new VisibilityTrack(stream, getInterpolationType(), format));
+                _visibilityTracks.add(new VisibilityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -740,18 +794,16 @@ public class Light extends MDXObject {
         }
     }
 
-    private List<VisibilityTrackChunk> _visibilityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<VisibilityTrackChunk> _visibilityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<VisibilityTrackChunk> getVisibilityTrackChunks() {
-        return new ArrayList<>(_visibilityTrackChunks);
+    public LinkedHashSet<VisibilityTrackChunk> getVisibilityTrackChunks() {
+        return _visibilityTrackChunks;
     }
 
     public void addVisibilityTrackChunk(@Nonnull VisibilityTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_visibilityTrackChunks.contains(val)) {
-            _visibilityTrackChunks.add(val);
-        }
+        _visibilityTrackChunks.add(val);
     }
 
     @Override
@@ -857,5 +909,10 @@ public class Light extends MDXObject {
                 break;
             }
         }
+    }
+
+    public Light() {
+        _color = Color.fromBGRA255(0 ,0, 0, 0);
+        _ambientColor = Color.fromBGRA255(0 ,0, 0, 0);
     }
 }

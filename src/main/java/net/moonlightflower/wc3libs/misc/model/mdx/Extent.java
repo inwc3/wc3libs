@@ -8,13 +8,13 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 
 public class Extent extends MDXObject {
-    private float _boundsRadius;
-    private float _minX;
-    private float _minY;
-    private float _minZ;
-    private float _maxX;
-    private float _maxY;
-    private float _maxZ;
+    private float _boundsRadius = 0F;
+    private float _minX = 0F;
+    private float _minY = 0F;
+    private float _minZ = 0F;
+    private float _maxX = 0F;
+    private float _maxY = 0F;
+    private float _maxZ = 0F;
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -40,5 +40,8 @@ public class Extent extends MDXObject {
         _maxX = stream.readFloat32("maxX");
         _maxY = stream.readFloat32("maxY");
         _maxZ = stream.readFloat32("maxZ");
+    }
+
+    public Extent() {
     }
 }

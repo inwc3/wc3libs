@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 
 public class GlobalSequence extends MDXObject {
-    private long _duration;
+    private long _duration = 0;
 
     public long getDuration() {
         return _duration;
@@ -32,5 +32,8 @@ public class GlobalSequence extends MDXObject {
 
     public GlobalSequence(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _duration = stream.readUInt32("duration");
+    }
+
+    public GlobalSequence() {
     }
 }

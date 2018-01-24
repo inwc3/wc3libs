@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class MatrixGroupChunk extends Chunk {
@@ -19,16 +21,10 @@ public class MatrixGroupChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<IndexReference> _matrixGroups = new ArrayList<>();
+    private final LinkedHashSet<IndexReference> _matrixGroups = new ObservableLinkedHashSet<>();
 
-    public List<IndexReference> getMatrixGroups() {
-        return new ArrayList<>(_matrixGroups);
-    }
-
-    public void addMatrixGroup(@Nonnull IndexReference val) {
-        if (!_matrixGroups.contains(val)) {
-            _matrixGroups.add(val);
-        }
+    public LinkedHashSet<IndexReference> getMatrixGroups() {
+        return _matrixGroups;
     }
 
     @Override
@@ -42,6 +38,7 @@ public class MatrixGroupChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -54,9 +51,12 @@ public class MatrixGroupChunk extends Chunk {
         long matrixGroupsCount = stream.readUInt32("matrixGroupsCount");
 
         while (matrixGroupsCount > 0) {
-            addMatrixGroup(new IndexReference(stream));
+            _matrixGroups.add(new IndexReference(stream));
 
             matrixGroupsCount--;
         }
+    }
+
+    public MatrixGroupChunk() {
     }
 }

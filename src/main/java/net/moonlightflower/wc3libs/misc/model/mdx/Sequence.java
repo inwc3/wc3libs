@@ -11,11 +11,56 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class Sequence extends MDXObject {
-    private String _name;
-    private long _intervalStart;
-    private long _intervalEnd;
-    private float _moveSpeed;
-    private long _flags;
+    private String _name = "unset";
+
+    @Nonnull
+    public String getName() {
+        return _name;
+    }
+
+    public void setName(@Nonnull String name) {
+        _name = name;
+    }
+
+    private long _intervalStart = 0;
+
+    public long getIntervalStart() {
+        return _intervalStart;
+    }
+
+    public void setIntervalStart(long intervalStart) {
+        _intervalStart = intervalStart;
+    }
+
+    private long _intervalEnd = 0;
+
+    public long getIntervalEnd() {
+        return _intervalEnd;
+    }
+
+    public void setIntervalEnd(long intervalEnd) {
+        _intervalEnd = intervalEnd;
+    }
+
+    private float _moveSpeed = 0;
+
+    public float getMoveSpeed() {
+        return _moveSpeed;
+    }
+
+    public void setMoveSpeed(float moveSpeed) {
+        _moveSpeed = moveSpeed;
+    }
+
+    private long _flags = 0;
+
+    public long getFlags() {
+        return _flags;
+    }
+
+    public void setFlags(long flags) {
+        _flags = flags;
+    }
 
     public boolean isLooping() {
         return ((_flags & 0x1) > 0);
@@ -29,8 +74,34 @@ public class Sequence extends MDXObject {
     }
 
     private Extent _extent;
-    private float _rarity;
-    private long _syncPt;
+
+    public Extent getExtent() {
+        return _extent;
+    }
+
+    public void setExtent(@Nonnull Extent extent) {
+        _extent = extent;
+    }
+
+    private float _rarity = 0F;
+
+    public float getRarity() {
+        return _rarity;
+    }
+
+    public void setRarity(float rarity) {
+        _rarity = rarity;
+    }
+
+    private long _syncPt = 0;
+
+    public long getSyncPt() {
+        return _syncPt;
+    }
+
+    public void setSyncPt(long syncPt) {
+        _syncPt = syncPt;
+    }
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -60,5 +131,9 @@ public class Sequence extends MDXObject {
         _syncPt = stream.readUInt32("syncPoint");
 
         _extent = new Extent(stream);
+    }
+
+    public Sequence() {
+        _extent = new Extent();
     }
 }

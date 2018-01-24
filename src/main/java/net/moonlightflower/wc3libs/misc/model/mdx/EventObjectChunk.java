@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class EventObjectChunk extends Chunk {
@@ -19,16 +21,10 @@ public class EventObjectChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<EventObject> _eventObjects = new ArrayList<>();
+    private final LinkedHashSet<EventObject> _eventObjects = new ObservableLinkedHashSet<>();
 
-    public List<EventObject> getEventObjects() {
-        return new ArrayList<>(_eventObjects);
-    }
-
-    public void addEventObject(@Nonnull EventObject val) {
-        if (!_eventObjects.contains(val)) {
-            _eventObjects.add(val);
-        }
+    public LinkedHashSet<EventObject> getEventObjects() {
+        return _eventObjects;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class EventObjectChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addEventObject(new EventObject(stream));
+            _eventObjects.add(new EventObject(stream));
         }
     }
 
@@ -62,6 +58,7 @@ public class EventObjectChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         switch (format.toEnum()) {
             case AUTO:
@@ -74,7 +71,7 @@ public class EventObjectChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public EventObjectChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

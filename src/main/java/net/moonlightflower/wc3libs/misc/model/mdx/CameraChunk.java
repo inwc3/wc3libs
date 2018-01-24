@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class CameraChunk extends Chunk {
@@ -19,16 +21,10 @@ public class CameraChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Camera> _cameras = new ArrayList<>();
+    private final LinkedHashSet<Camera> _cameras = new ObservableLinkedHashSet<>();
 
-    public List<Camera> getCameras() {
-        return new ArrayList<>(_cameras);
-    }
-
-    public void addCamera(@Nonnull Camera val) {
-        if (!_cameras.contains(val)) {
-            _cameras.add(val);
-        }
+    public LinkedHashSet<Camera> getCameras() {
+        return _cameras;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class CameraChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addCamera(new Camera(stream));
+            _cameras.add(new Camera(stream));
         }
     }
 
@@ -75,7 +71,7 @@ public class CameraChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public CameraChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {

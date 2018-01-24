@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords4DF;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
@@ -13,40 +14,62 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Camera extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
     }
 
-    private String _name;
+    private String _name = "unset";
 
+    @Nonnull
     public String getName() {
         return _name;
     }
 
+    public void setName(@Nonnull String name) {
+        _name = name;
+    }
+
     private Coords3DF _pos;
 
+    @Nonnull
     public Coords3DF getPos() {
         return _pos;
     }
 
-    private float _fieldOfView;
+    public void setPos(@Nonnull Coords3DF pos) {
+        _pos = pos;
+    }
+
+    private float _fieldOfView = 0F;
 
     public float getFieldOfView() {
         return _fieldOfView;
     }
 
-    private float _farClippingPlane;
+    public void setFieldOfView(float fieldOfView) {
+        _fieldOfView = fieldOfView;
+    }
+
+    private float _farClippingPlane = 0F;
 
     public float getFarClippingPlane() {
         return _farClippingPlane;
     }
 
-    private float _nearClippingPlane;
+    public void setFarClippingPlane(float farClippingPlane) {
+        _farClippingPlane = farClippingPlane;
+    }
+
+    private float _nearClippingPlane = 0F;
 
     public float getNearClippingPlane() {
         return _nearClippingPlane;
+    }
+
+    public void setNearClippingPlane(float nearClippingPlane) {
+        _nearClippingPlane = nearClippingPlane;
     }
 
     private Coords3DF _targetPos;
@@ -55,14 +78,14 @@ public class Camera extends MDXObject {
         return _targetPos;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
-
-    public List<Chunk> getChunks() {
-        return _chunks;
+    public void setTargetPos(@Nonnull Coords3DF targetPos) {
+        _targetPos = targetPos;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<Chunk> getChunks() {
+        return _chunks;
     }
 
     public static class TranslationTrackChunk extends TrackChunk {
@@ -74,27 +97,42 @@ public class Camera extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _translationTracks;
         }
 
         public static class TranslationTrack extends Track {
             private Coords3DF _translation;
 
+            @Nonnull
             public Coords3DF getTranslation() {
                 return _translation;
             }
 
+            public void setTranslation(@Nonnull Coords3DF translation) {
+                _translation = translation;
+            }
+
             private Coords3DF _inTan_translation;
 
+            @Nonnull
             public Coords3DF getInTanTranslation() {
                 return _inTan_translation;
             }
 
+            public void setInTanTranslation(@Nonnull Coords3DF translation) {
+                _inTan_translation = translation;
+            }
+
             private Coords3DF _outTan_translation;
 
+            @Nonnull
             public Coords3DF getOutTanTranslation() {
                 return _outTan_translation;
+            }
+
+            public void setOutTanTranslation(@Nonnull Coords3DF translation) {
+                _outTan_translation = translation;
             }
 
             @Override
@@ -129,16 +167,10 @@ public class Camera extends MDXObject {
             }
         }
 
-        private List<TranslationTrack> _translationTracks = new ArrayList<>();
+        private LinkedHashSet<TranslationTrack> _translationTracks = new ObservableLinkedHashSet<>();
 
-        public List<TranslationTrack> getTranslationTracks() {
-            return new ArrayList<>(_translationTracks);
-        }
-
-        public void addTranslationTrack(@Nonnull TranslationTrack val) {
-            if (!_translationTracks.contains(val)) {
-                _translationTracks.add(val);
-            }
+        public LinkedHashSet<TranslationTrack> getTranslationTracks() {
+            return _translationTracks;
         }
 
         public TranslationTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -147,7 +179,7 @@ public class Camera extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTranslationTrack(new TranslationTrack(stream, getInterpolationType(), format));
+                _translationTracks.add(new TranslationTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -158,18 +190,16 @@ public class Camera extends MDXObject {
         }
     }
 
-    private List<TranslationTrackChunk> _translationTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<TranslationTrackChunk> _translationTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<TranslationTrackChunk> getTranslationTrackChunks() {
-        return new ArrayList<>(_translationTrackChunks);
+    public LinkedHashSet<TranslationTrackChunk> getTranslationTrackChunks() {
+        return _translationTrackChunks;
     }
 
     public void addTranslationTrackChunk(@Nonnull TranslationTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_translationTrackChunks.contains(val)) {
-            _translationTrackChunks.add(val);
-        }
+        _translationTrackChunks.add(val);
     }
 
     public static class RotationTrackChunk extends TrackChunk {
@@ -181,7 +211,7 @@ public class Camera extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _rotationTracks;
         }
 
@@ -192,16 +222,28 @@ public class Camera extends MDXObject {
                 return _rotation;
             }
 
+            public void setRotation(long rotation) {
+                _rotation = rotation;
+            }
+
             private long _inTan_rotation;
 
             public long getInTanRotation() {
                 return _inTan_rotation;
             }
 
+            public void setInTanRotation(long rotation) {
+                _rotation = rotation;
+            }
+
             private long _outTan_rotation;
 
             public long getOutTanRotation() {
                 return _outTan_rotation;
+            }
+
+            public void setOutTanRotation(long rotation) {
+                _outTan_rotation = rotation;
             }
 
             @Override
@@ -230,16 +272,10 @@ public class Camera extends MDXObject {
             }
         }
 
-        private List<RotationTrack> _rotationTracks = new ArrayList<>();
+        private final LinkedHashSet<RotationTrack> _rotationTracks = new ObservableLinkedHashSet<>();
 
-        public List<RotationTrack> getTranslationTracks() {
-            return new ArrayList<>(_rotationTracks);
-        }
-
-        public void addTranslationTrack(@Nonnull RotationTrack val) {
-            if (!_rotationTracks.contains(val)) {
-                _rotationTracks.add(val);
-            }
+        public LinkedHashSet<RotationTrack> getRotationTracks() {
+            return _rotationTracks;
         }
 
         public RotationTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -248,7 +284,7 @@ public class Camera extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTranslationTrack(new RotationTrack(stream, getInterpolationType(), format));
+                _rotationTracks.add(new RotationTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -259,18 +295,16 @@ public class Camera extends MDXObject {
         }
     }
 
-    private List<RotationTrackChunk> _rotationTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<RotationTrackChunk> _rotationTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<RotationTrackChunk> getRotationTrackChunks() {
-        return new ArrayList<>(_rotationTrackChunks);
+    public LinkedHashSet<RotationTrackChunk> getRotationTrackChunks() {
+        return _rotationTrackChunks;
     }
 
     public void addRotationTrackChunk(@Nonnull RotationTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_rotationTrackChunks.contains(val)) {
-            _rotationTrackChunks.add(val);
-        }
+        _rotationTrackChunks.add(val);
     }
 
     public static class TargetTranslationTrackChunk extends TrackChunk {
@@ -282,27 +316,42 @@ public class Camera extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _targetTranslationTracks;
         }
 
         public static class TargetTranslationTrack extends Track {
             private Coords3DF _targetTranslation;
 
+            @Nonnull
             public Coords3DF getTargetTranslation() {
                 return _targetTranslation;
             }
 
+            public void setTargetTranslation(@Nonnull Coords3DF targetTranslation) {
+                _targetTranslation = targetTranslation;
+            }
+
             private Coords3DF _inTan_targetTranslation;
 
+            @Nonnull
             public Coords3DF getInTanTargetTranslation() {
                 return _inTan_targetTranslation;
             }
 
+            public void setInTanTargetTranslation(@Nonnull Coords3DF targetTranslation) {
+                _targetTranslation = targetTranslation;
+            }
+
             private Coords3DF _outTan_targetTranslation;
 
+            @Nonnull
             public Coords3DF getOutTanTargetTranslation() {
                 return _outTan_targetTranslation;
+            }
+
+            public void setOutTanTargetTranslation(@Nonnull Coords3DF targetTranslation) {
+                _outTan_targetTranslation = targetTranslation;
             }
 
             @Override
@@ -337,16 +386,10 @@ public class Camera extends MDXObject {
             }
         }
 
-        private List<TargetTranslationTrack> _targetTranslationTracks = new ArrayList<>();
+        private final LinkedHashSet<TargetTranslationTrack> _targetTranslationTracks = new ObservableLinkedHashSet<>();
 
-        public List<TargetTranslationTrack> getTargetTranslationTracks() {
-            return new ArrayList<>(_targetTranslationTracks);
-        }
-
-        public void addTargetTranslationTrack(@Nonnull TargetTranslationTrack val) {
-            if (!_targetTranslationTracks.contains(val)) {
-                _targetTranslationTracks.add(val);
-            }
+        public LinkedHashSet<TargetTranslationTrack> getTargetTranslationTracks() {
+            return _targetTranslationTracks;
         }
 
         public TargetTranslationTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -355,7 +398,7 @@ public class Camera extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTargetTranslationTrack(new TargetTranslationTrack(stream, getInterpolationType(), format));
+                _targetTranslationTracks.add(new TargetTranslationTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -366,18 +409,16 @@ public class Camera extends MDXObject {
         }
     }
 
-    private List<TargetTranslationTrackChunk> _targetTranslationTrackChunks = new ArrayList<>();
+    private LinkedHashSet<TargetTranslationTrackChunk> _targetTranslationTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<TargetTranslationTrackChunk> getTargetTranslationTrackChunks() {
-        return new ArrayList<>(_targetTranslationTrackChunks);
+    public LinkedHashSet<TargetTranslationTrackChunk> getTargetTranslationTrackChunks() {
+        return _targetTranslationTrackChunks;
     }
 
     public void addTargetTranslationTrackChunk(@Nonnull TargetTranslationTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_targetTranslationTrackChunks.contains(val)) {
-            _targetTranslationTrackChunks.add(val);
-        }
+        _targetTranslationTrackChunks.add(val);
     }
 
     @Override
@@ -450,5 +491,10 @@ public class Camera extends MDXObject {
                 break;
             }
         }
+    }
+
+    public Camera() {
+        _pos = new Coords3DF(0F, 0F, 0F);
+        _targetPos = new Coords3DF(0F, 0F, 0F);
     }
 }

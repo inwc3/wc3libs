@@ -2,298 +2,168 @@ package net.moonlightflower.wc3libs.misc.model;
 
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSetView;
 import net.moonlightflower.wc3libs.misc.model.mdx.*;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class MDX {
-    private List<Chunk> _chunks = new ArrayList<>();
+    private final ObservableLinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
 
-    public List<Chunk> getChunks() {
+    public LinkedHashSet<Chunk> getChunks() {
         return _chunks;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
-    }
-
-    private List<VersionChunk> _versionChunks = new ArrayList<>();
+    private final LinkedHashSet<VersionChunk> _versionChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof VersionChunk);
 
     @Nonnull
-    public List<VersionChunk> getVersionChunks() {
-        return new ArrayList<>(_versionChunks);
+    public LinkedHashSet<VersionChunk> getVersionChunks() {
+        return _versionChunks;
     }
 
-    private void addVersionChunk(@Nonnull VersionChunk val) {
-        addChunk(val);
-
-        _versionChunks.add(val);
-    }
-
-    private List<ModelInfoChunk> _modelInfoChunks = new ArrayList<>();
+    private final LinkedHashSet<ModelInfoChunk> _modelInfoChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof ModelInfoChunk);
 
     @Nonnull
-    public List<ModelInfoChunk> getModelInfoChunks() {
-        return new ArrayList<>(_modelInfoChunks);
+    public final LinkedHashSet<ModelInfoChunk> getModelInfoChunks() {
+        return _modelInfoChunks;
     }
 
-    private void addModelInfoChunk(@Nonnull ModelInfoChunk val) {
-        addChunk(val);
-
-        _modelInfoChunks.add(val);
-    }
-
-    private List<SequenceChunk> _sequenceChunks = new ArrayList<>();
+    private final LinkedHashSet<SequenceChunk> _sequenceChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof SequenceChunk);
 
     @Nonnull
-    public List<SequenceChunk> getSequenceChunks() {
-        return new ArrayList<>(_sequenceChunks);
+    public LinkedHashSet<SequenceChunk> getSequenceChunks() {
+        return _sequenceChunks;
     }
 
-    private void addSequenceChunk(@Nonnull SequenceChunk val) {
-        addChunk(val);
-
-        _sequenceChunks.add(val);
-    }
-
-    private List<GlobalSequenceChunk> _globalSequenceChunks = new ArrayList<>();
+    private final LinkedHashSet<GlobalSequenceChunk> _globalSequenceChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof GlobalSequenceChunk);
 
     @Nonnull
-    public List<GlobalSequenceChunk> getGlobalSequenceChunks() {
-        return new ArrayList<>(_globalSequenceChunks);
+    public LinkedHashSet<GlobalSequenceChunk> getGlobalSequenceChunks() {
+        return _globalSequenceChunks;
     }
 
-    private void addGlobalSequenceChunk(@Nonnull GlobalSequenceChunk val) {
-        addChunk(val);
-
-        _globalSequenceChunks.add(val);
-    }
-
-    private List<TextureChunk> _textureChunks = new ArrayList<>();
+    private final LinkedHashSet<TextureChunk> _textureChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof TextureChunk);
 
     @Nonnull
-    public List<TextureChunk> getTextureChunks() {
-        return new ArrayList<>(_textureChunks);
+    public LinkedHashSet<TextureChunk> getTextureChunks() {
+        return _textureChunks;
     }
 
-    private void addTextureChunk(@Nonnull TextureChunk val) {
-        addChunk(val);
-
-        _textureChunks.add(val);
-    }
-
-    private List<SoundChunk> _soundChunks = new ArrayList<>();
+    private final LinkedHashSet<SoundChunk> _soundChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof SoundChunk);
 
     @Nonnull
-    public List<SoundChunk> getSoundChunks() {
-        return new ArrayList<>(_soundChunks);
+    public LinkedHashSet<SoundChunk> getSoundChunks() {
+        return _soundChunks;
     }
 
-    private void addSoundChunk(@Nonnull SoundChunk val) {
-        addChunk(val);
-
-        _soundChunks.add(val);
-    }
-
-    private List<MaterialChunk> _materialChunks = new ArrayList<>();
+    private final LinkedHashSet<MaterialChunk> _materialChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof MaterialChunk);
 
     @Nonnull
-    public List<MaterialChunk> getMaterialChunks() {
-        return new ArrayList<>(_materialChunks);
+    public LinkedHashSet<MaterialChunk> getMaterialChunks() {
+        return _materialChunks;
     }
 
-    private void addMaterialChunk(@Nonnull MaterialChunk val) {
-        addChunk(val);
-
-        _materialChunks.add(val);
-    }
-
-    private List<TexAnimChunk> _texAnimChunks = new ArrayList<>();
+    private final LinkedHashSet<TexAnimChunk> _texAnimChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof TexAnimChunk);
 
     @Nonnull
-    public List<TexAnimChunk> getTextureAnimChunks() {
-        return new ArrayList<>(_texAnimChunks);
+    public LinkedHashSet<TexAnimChunk> getTextureAnimChunks() {
+        return _texAnimChunks;
     }
 
-    private void addTextureAnimChunk(@Nonnull TexAnimChunk val) {
-        addChunk(val);
-
-        _texAnimChunks.add(val);
-    }
-
-    private List<GeosetChunk> _geosetChunks = new ArrayList<>();
+    private final LinkedHashSet<GeosetChunk> _geosetChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof GeosetChunk);
 
     @Nonnull
-    public List<GeosetChunk> getGeosetChunks() {
-        return new ArrayList<>(_geosetChunks);
+    public LinkedHashSet<GeosetChunk> getGeosetChunks() {
+        return _geosetChunks;
     }
 
-    private void addGeosetChunk(@Nonnull GeosetChunk val) {
-        addChunk(val);
-
-        _geosetChunks.add(val);
-    }
-
-    private List<GeosetAnimChunk> _geosetAnimChunks = new ArrayList<>();
+    private final LinkedHashSet<GeosetAnimChunk> _geosetAnimChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof GeosetAnimChunk);
 
     @Nonnull
-    public List<GeosetAnimChunk> getGeosetAnimChunks() {
-        return new ArrayList<>(_geosetAnimChunks);
+    public LinkedHashSet<GeosetAnimChunk> getGeosetAnimChunks() {
+        return _geosetAnimChunks;
     }
 
-    private void addGeosetAnimChunk(@Nonnull GeosetAnimChunk val) {
-        addChunk(val);
-
-        _geosetAnimChunks.add(val);
-    }
-
-    private List<BoneChunk> _boneChunks = new ArrayList<>();
+    private final LinkedHashSet<BoneChunk> _boneChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof BoneChunk);
 
     @Nonnull
-    public List<BoneChunk> getBoneChunks() {
-        return new ArrayList<>(_boneChunks);
+    public LinkedHashSet<BoneChunk> getBoneChunks() {
+        return _boneChunks;
     }
 
-    private void addBoneChunk(@Nonnull BoneChunk val) {
-        addChunk(val);
-
-        _boneChunks.add(val);
-    }
-
-    private List<LightChunk> _lightChunks = new ArrayList<>();
+    private final LinkedHashSet<LightChunk> _lightChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof LightChunk);
 
     @Nonnull
-    public List<LightChunk> getLightChunks() {
-        return new ArrayList<>(_lightChunks);
+    public LinkedHashSet<LightChunk> getLightChunks() {
+        return _lightChunks;
     }
 
-    private void addLightChunk(@Nonnull LightChunk val) {
-        addChunk(val);
-
-        _lightChunks.add(val);
-    }
-
-    private List<HelperChunk> _helperChunks = new ArrayList<>();
+    private final LinkedHashSet<HelperChunk> _helperChunks =new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof HelperChunk);
 
     @Nonnull
-    public List<HelperChunk> getHelperChunks() {
-        return new ArrayList<>(_helperChunks);
+    public LinkedHashSet<HelperChunk> getHelperChunks() {
+        return _helperChunks;
     }
 
-    private void addHelperChunk(@Nonnull HelperChunk val) {
-        addChunk(val);
-
-        _helperChunks.add(val);
-    }
-
-    private List<AttachmentChunk> _attachmentChunks = new ArrayList<>();
+    private final LinkedHashSet<AttachmentChunk> _attachmentChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof AttachmentChunk);
 
     @Nonnull
-    public List<AttachmentChunk> getAttachmentChunks() {
-        return new ArrayList<>(_attachmentChunks);
+    public LinkedHashSet<AttachmentChunk> getAttachmentChunks() {
+        return _attachmentChunks;
     }
 
-    private void addAttachmentChunk(@Nonnull AttachmentChunk val) {
-        addChunk(val);
-
-        _attachmentChunks.add(val);
-    }
-
-    private List<PivotPointChunk> _pivotPointChunks = new ArrayList<>();
+    private final LinkedHashSet<PivotPointChunk> _pivotPointChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof PivotPointChunk);
 
     @Nonnull
-    public List<PivotPointChunk> getPivotPointChunks() {
-        return new ArrayList<>(_pivotPointChunks);
+    public LinkedHashSet<PivotPointChunk> getPivotPointChunks() {
+        return _pivotPointChunks;
     }
 
-    private void addPivotPointChunk(@Nonnull PivotPointChunk val) {
-        addChunk(val);
-
-        _pivotPointChunks.add(val);
-    }
-
-    private List<ParticleEmitterChunk> _particleEmitterChunks = new ArrayList<>();
+    private final LinkedHashSet<ParticleEmitterChunk> _particleEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof ParticleEmitterChunk);
 
     @Nonnull
-    public List<ParticleEmitterChunk> getParticleEmitterChunks() {
-        return new ArrayList<>(_particleEmitterChunks);
+    public LinkedHashSet<ParticleEmitterChunk> getParticleEmitterChunks() {
+        return _particleEmitterChunks;
     }
 
-    private void addParticleEmitterChunk(@Nonnull ParticleEmitterChunk val) {
-        addChunk(val);
-
-        _particleEmitterChunks.add(val);
-    }
-
-    private List<ParticleEmitter2Chunk> _particleEmitter2Chunks = new ArrayList<>();
+    private final LinkedHashSet<ParticleEmitter2Chunk> _particleEmitter2Chunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof ParticleEmitter2Chunk);
 
     @Nonnull
-    public List<ParticleEmitter2Chunk> getParticleEmitter2Chunks() {
-        return new ArrayList<>(_particleEmitter2Chunks);
+    public LinkedHashSet<ParticleEmitter2Chunk> getParticleEmitter2Chunks() {
+        return _particleEmitter2Chunks;
     }
 
-    private void addParticleEmitter2Chunk(@Nonnull ParticleEmitter2Chunk val) {
-        addChunk(val);
-
-        _particleEmitter2Chunks.add(val);
-    }
-
-    private List<RibbonEmitterChunk> _ribbonEmitterChunks = new ArrayList<>();
+    private final LinkedHashSet<RibbonEmitterChunk> _ribbonEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof RibbonEmitterChunk);
 
     @Nonnull
-    public List<RibbonEmitterChunk> getRibbonEmitterChunks() {
-        return new ArrayList<>(_ribbonEmitterChunks);
+    public LinkedHashSet<RibbonEmitterChunk> getRibbonEmitterChunks() {
+        return _ribbonEmitterChunks;
     }
 
-    private void addRibbonEmitterChunk(@Nonnull RibbonEmitterChunk val) {
-        addChunk(val);
-
-        _ribbonEmitterChunks.add(val);
-    }
-
-    private List<EventObjectChunk> _eventObjectChunks = new ArrayList<>();
+    private final LinkedHashSet<EventObjectChunk> _eventObjectChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof EventObjectChunk);
 
     @Nonnull
-    public List<EventObjectChunk> getEventObjectChunks() {
-        return new ArrayList<>(_eventObjectChunks);
+    public LinkedHashSet<EventObjectChunk> getEventObjectChunks() {
+        return _eventObjectChunks;
     }
 
-    private void addEventObjectChunk(@Nonnull EventObjectChunk val) {
-        addChunk(val);
-
-        _eventObjectChunks.add(val);
-    }
-
-    private List<CameraChunk> _cameraChunks = new ArrayList<>();
+    private final LinkedHashSet<CameraChunk> _cameraChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof CameraChunk);
 
     @Nonnull
-    public List<CameraChunk> getCameraChunks() {
-        return new ArrayList<>(_cameraChunks);
+    public LinkedHashSet<CameraChunk> getCameraChunks() {
+        return _cameraChunks;
     }
 
-    private void addCameraChunk(@Nonnull CameraChunk val) {
-        addChunk(val);
-
-        _cameraChunks.add(val);
-    }
-
-    private List<CollisionShapeChunk> _collisionShapeChunks = new ArrayList<>();
+    private final LinkedHashSet<CollisionShapeChunk> _collisionShapeChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof CollisionShapeChunk);
 
     @Nonnull
-    public List<CollisionShapeChunk> getCollisionShapeChunks() {
-        return new ArrayList<>(_collisionShapeChunks);
-    }
-
-    private void addCollisionShapeChunk(@Nonnull CollisionShapeChunk val) {
-        addChunk(val);
-
-        _collisionShapeChunks.add(val);
+    public LinkedHashSet<CollisionShapeChunk> getCollisionShapeChunks() {
+        return _collisionShapeChunks;
     }
 
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
@@ -331,27 +201,27 @@ public class MDX {
 
         Map<Id, TokenHandler> _tokenMap = new LinkedHashMap<>();
 
-        _tokenMap.put(VersionChunk.TOKEN, () -> addVersionChunk(new VersionChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(ModelInfoChunk.TOKEN, () -> addModelInfoChunk(new ModelInfoChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(SequenceChunk.TOKEN, () -> addSequenceChunk(new SequenceChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(GlobalSequenceChunk.TOKEN, () -> addGlobalSequenceChunk(new GlobalSequenceChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(TextureChunk.TOKEN, () -> addTextureChunk(new TextureChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(SoundChunk.TOKEN, () -> addSoundChunk(new SoundChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(MaterialChunk.TOKEN, () -> addMaterialChunk(new MaterialChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(TexAnimChunk.TOKEN, () -> addTextureAnimChunk(new TexAnimChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(GeosetChunk.TOKEN, () -> addGeosetChunk(new GeosetChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(GeosetAnimChunk.TOKEN, () -> addGeosetAnimChunk(new GeosetAnimChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(BoneChunk.TOKEN, () -> addBoneChunk(new BoneChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(LightChunk.TOKEN, () -> addLightChunk(new LightChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(HelperChunk.TOKEN, () -> addHelperChunk(new HelperChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(AttachmentChunk.TOKEN, () -> addAttachmentChunk(new AttachmentChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(PivotPointChunk.TOKEN, () -> addPivotPointChunk(new PivotPointChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(ParticleEmitterChunk.TOKEN, () -> addParticleEmitterChunk(new ParticleEmitterChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(ParticleEmitter2Chunk.TOKEN, () -> addParticleEmitter2Chunk(new ParticleEmitter2Chunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(RibbonEmitterChunk.TOKEN, () -> addRibbonEmitterChunk(new RibbonEmitterChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(EventObjectChunk.TOKEN, () -> addEventObjectChunk(new EventObjectChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(CameraChunk.TOKEN, () -> addCameraChunk(new CameraChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(CollisionShapeChunk.TOKEN, () -> addCollisionShapeChunk(new CollisionShapeChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(VersionChunk.TOKEN, () -> _versionChunks.add(new VersionChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(ModelInfoChunk.TOKEN, () -> _modelInfoChunks.add(new ModelInfoChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(SequenceChunk.TOKEN, () -> _sequenceChunks.add(new SequenceChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(GlobalSequenceChunk.TOKEN, () -> _globalSequenceChunks.add(new GlobalSequenceChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(TextureChunk.TOKEN, () -> _textureChunks.add(new TextureChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(SoundChunk.TOKEN, () -> _soundChunks.add(new SoundChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(MaterialChunk.TOKEN, () -> _materialChunks.add(new MaterialChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(TexAnimChunk.TOKEN, () -> _texAnimChunks.add(new TexAnimChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(GeosetChunk.TOKEN, () -> _geosetChunks.add(new GeosetChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(GeosetAnimChunk.TOKEN, () -> _geosetAnimChunks.add(new GeosetAnimChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(BoneChunk.TOKEN, () -> _boneChunks.add(new BoneChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(LightChunk.TOKEN, () -> _lightChunks.add(new LightChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(HelperChunk.TOKEN, () -> _helperChunks.add(new HelperChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(AttachmentChunk.TOKEN, () -> _attachmentChunks.add(new AttachmentChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(PivotPointChunk.TOKEN, () -> _pivotPointChunks.add(new PivotPointChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(ParticleEmitterChunk.TOKEN, () -> _particleEmitterChunks.add(new ParticleEmitterChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(ParticleEmitter2Chunk.TOKEN, () -> _particleEmitter2Chunks.add(new ParticleEmitter2Chunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(RibbonEmitterChunk.TOKEN, () -> _ribbonEmitterChunks.add(new RibbonEmitterChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(EventObjectChunk.TOKEN, () -> _eventObjectChunks.add(new EventObjectChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(CameraChunk.TOKEN, () -> _cameraChunks.add(new CameraChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(CollisionShapeChunk.TOKEN, () -> _collisionShapeChunks.add(new CollisionShapeChunk(stream, EncodingFormat.MDX_0x0)));
 
         while (!stream.eof()) {
             Id chunkToken = stream.readId("chunkToken");

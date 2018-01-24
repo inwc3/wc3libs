@@ -5,25 +5,21 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TexCoordSet extends MDXObject {
     public final Id TOKEN = Id.valueOf("UVBS");
 
-    private List<TexCoord> _texCoords = new ArrayList<>();
+    private final LinkedHashSet<TexCoord> _texCoords = new ObservableLinkedHashSet<>();
 
-    public List<TexCoord> getTexCoords() {
-        return new ArrayList<>(_texCoords);
-    }
-
-    public void addTexCoord(@Nonnull TexCoord val) {
-        if (!_texCoords.contains(val)) {
-            _texCoords.add(val);
-        }
+    public LinkedHashSet<TexCoord> getTexCoords() {
+        return _texCoords;
     }
 
     @Override
@@ -48,9 +44,12 @@ public class TexCoordSet extends MDXObject {
         long texCoordsCount = stream.readUInt32("texCoordsCount");
 
         while (texCoordsCount > 0) {
-            addTexCoord(new TexCoord(stream));
+            _texCoords.add(new TexCoord(stream));
 
             texCoordsCount--;
         }
+    }
+
+    public TexCoordSet() {
     }
 }

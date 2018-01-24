@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SoundChunk extends Chunk {
@@ -19,16 +21,10 @@ public class SoundChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Sound> _sounds = new ArrayList<>();
+    private final LinkedHashSet<Sound> _sounds = new ObservableLinkedHashSet<>();
 
-    public List<Sound> getSounds() {
-        return new ArrayList<>(_sounds);
-    }
-
-    public void addSound(@Nonnull Sound val) {
-        if (!_sounds.contains(val)) {
-            _sounds.add(val);
-        }
+    public LinkedHashSet<Sound> getSounds() {
+        return _sounds;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class SoundChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addSound(new Sound(stream));
+            _sounds.add(new Sound(stream));
         }
     }
 
@@ -75,7 +71,7 @@ public class SoundChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public SoundChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -85,6 +81,5 @@ public class SoundChunk extends Chunk {
     }
 
     public SoundChunk() {
-
     }
 }

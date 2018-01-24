@@ -3,17 +3,24 @@ package net.moonlightflower.wc3libs.misc.model.mdx;
 import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class CollisionShape extends MDXObject {
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
+    }
+
+    public void setNode(@Nonnull Node node) {
+        _node = node;
     }
 
     public enum Type {
@@ -23,28 +30,31 @@ public class CollisionShape extends MDXObject {
         CYLINDER
     }
 
-    private Type _type;
+    private Type _type = Type.CUBE;
 
+    @Nonnull
     public Type getType() {
         return _type;
     }
 
-    private List<Vertex> _vertices = new ArrayList<>();
-
-    public List<Vertex> getVertices() {
-        return new ArrayList<>(_vertices);
+    public void setType(@Nonnull Type type) {
+        _type = type;
     }
 
-    public void addVertex(@Nonnull Vertex val) {
-        if (!_vertices.contains(val)) {
-            _vertices.add(val);
-        }
+    private final LinkedHashSet<Vertex> _vertices = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<Vertex> getVertices() {
+        return _vertices;
     }
 
-    private float _radius;
+    private float _radius = 0F;
 
     public float getRadius() {
         return _radius;
+    }
+
+    public void setRadius(float radius) {
+        _radius = radius;
     }
 
     @Override
@@ -87,7 +97,7 @@ public class CollisionShape extends MDXObject {
         }
 
         while (verticesCount > 0) {
-            addVertex(new Vertex(stream));
+            _vertices.add(new Vertex(stream));
 
             verticesCount--;
         }
@@ -110,5 +120,9 @@ public class CollisionShape extends MDXObject {
         if (hasRadius) {
             _radius = stream.readFloat32("radius");
         }
+    }
+
+    public CollisionShape() {
+        _node = new Node();
     }
 }

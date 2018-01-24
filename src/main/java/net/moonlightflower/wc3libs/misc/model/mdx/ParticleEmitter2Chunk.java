@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class ParticleEmitter2Chunk extends Chunk {
@@ -19,16 +21,10 @@ public class ParticleEmitter2Chunk extends Chunk {
         return TOKEN;
     }
 
-    private List<ParticleEmitter2> _particleEmitters = new ArrayList<>();
+    private final LinkedHashSet<ParticleEmitter2> _particleEmitters = new ObservableLinkedHashSet<>();
 
-    public List<ParticleEmitter2> getParticleEmitter2s() {
-        return new ArrayList<>(_particleEmitters);
-    }
-
-    public void addParticleEmitter2(@Nonnull ParticleEmitter2 val) {
-        if (!_particleEmitters.contains(val)) {
-            _particleEmitters.add(val);
-        }
+    public LinkedHashSet<ParticleEmitter2> getParticleEmitter2s() {
+        return _particleEmitters;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class ParticleEmitter2Chunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addParticleEmitter2(new ParticleEmitter2(stream));
+            _particleEmitters.add(new ParticleEmitter2(stream));
         }
     }
 
@@ -75,7 +71,7 @@ public class ParticleEmitter2Chunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public ParticleEmitter2Chunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -85,6 +81,5 @@ public class ParticleEmitter2Chunk extends Chunk {
     }
 
     public ParticleEmitter2Chunk() {
-
     }
 }

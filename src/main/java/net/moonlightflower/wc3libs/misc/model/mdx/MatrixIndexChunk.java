@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class MatrixIndexChunk extends Chunk {
@@ -19,29 +21,24 @@ public class MatrixIndexChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<IndexReference> _IndexReferences = new ArrayList<>();
+    private final LinkedHashSet<IndexReference> _matrixIndexGroups = new ObservableLinkedHashSet<>();
 
-    public List<IndexReference> getMatrixIndexGroups() {
-        return new ArrayList<>(_IndexReferences);
-    }
-
-    public void addMatrixIndexGroup(@Nonnull IndexReference val) {
-        if (!_IndexReferences.contains(val)) {
-            _IndexReferences.add(val);
-        }
+    public LinkedHashSet<IndexReference> getMatrixIndexGroups() {
+        return _matrixIndexGroups;
     }
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
         stream.writeId(TOKEN);
 
-        stream.writeUInt32(_IndexReferences.size());
+        stream.writeUInt32(_matrixIndexGroups.size());
 
-        for (IndexReference indexReference : _IndexReferences) {
+        for (IndexReference indexReference : _matrixIndexGroups) {
             indexReference.write(stream);
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -54,9 +51,12 @@ public class MatrixIndexChunk extends Chunk {
         long matrixGroupsCount = stream.readUInt32("matrixIndexCount");
 
         while (matrixGroupsCount > 0) {
-            addMatrixIndexGroup(new IndexReference(stream));
+            _matrixIndexGroups.add(new IndexReference(stream));
 
             matrixGroupsCount--;
         }
+    }
+
+    public MatrixIndexChunk() {
     }
 }

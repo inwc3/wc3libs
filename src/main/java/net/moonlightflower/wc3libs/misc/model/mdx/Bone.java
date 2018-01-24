@@ -10,20 +10,33 @@ import javax.annotation.Nonnull;
 public class Bone extends MDXObject {
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
     }
 
-    private long _geosetId;
+    public void setNode(@Nonnull Node node) {
+        _node = node;
+    }
+
+    private long _geosetId = 0;
 
     public long getGeosetId() {
         return _geosetId;
     }
 
-    private long _geosetAnimId;
+    public void setGeosetId(long geosetId) {
+        _geosetId = geosetId;
+    }
+
+    private long _geosetAnimId = 0;
 
     public long getGeosetAnimId() {
         return _geosetAnimId;
+    }
+
+    public void setGeosetAnimId(long geosetAnimId) {
+        _geosetAnimId = geosetAnimId;
     }
 
     @Override
@@ -42,5 +55,9 @@ public class Bone extends MDXObject {
         _node = new Node(stream);
         _geosetId = stream.readUInt32("geosetId");
         _geosetAnimId = stream.readUInt32("geosetAnimId");
+    }
+
+    public Bone() {
+        _node = new Node();
     }
 }

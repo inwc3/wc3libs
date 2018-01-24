@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class EventObjectTrackChunk extends Chunk {
@@ -19,22 +21,20 @@ public class EventObjectTrackChunk extends Chunk {
         return TOKEN;
     }
 
-    private long _globalSequenceId;
+    private long _globalSequenceId = 0;
 
     public long getGlobalSequenceId() {
         return _globalSequenceId;
     }
 
-    private List<EventObjectTrack> _tracks = new ArrayList<>();
-
-    public List<EventObjectTrack> getTracks() {
-        return new ArrayList<>(_tracks);
+    public void setGlobaLSequenceId(long globaLSequenceId) {
+        _globalSequenceId = globaLSequenceId;
     }
 
-    public void addTrack(@Nonnull EventObjectTrack val) {
-        if (!_tracks.contains(val)) {
-            _tracks.add(val);
-        }
+    private final LinkedHashSet<EventObjectTrack> _tracks = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<EventObjectTrack> getTracks() {
+        return _tracks;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -47,7 +47,7 @@ public class EventObjectTrackChunk extends Chunk {
         _globalSequenceId = stream.readUInt32("globalSequenceId");
 
         while (tracksCount > 0) {
-            addTrack(new EventObjectTrack(stream));
+            _tracks.add(new EventObjectTrack(stream));
 
             tracksCount--;
         }
@@ -87,7 +87,7 @@ public class EventObjectTrackChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public EventObjectTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -97,6 +97,5 @@ public class EventObjectTrackChunk extends Chunk {
     }
 
     public EventObjectTrackChunk() {
-
     }
 }

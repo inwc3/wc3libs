@@ -11,28 +11,45 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class Sound extends MDXObject {
-    private String _fileName;
+    private String _fileName = "unset";
 
+    @Nonnull
     public String getFileName() {
         return _fileName;
     }
 
-    private float _volume;
+    public void setFileName(@Nonnull String fileName) {
+        _fileName = fileName;
+    }
+
+    private float _volume = 0F;
 
     public float getVolume() {
         return _volume;
     }
 
-    private float _pitch;
+    public void setVolume(float volume) {
+        _volume = volume;
+    }
+
+    private float _pitch = 0F;
 
     public float getPitch() {
         return _pitch;
     }
 
-    private long _flags;
+    public void setPitch(float pitch) {
+        _pitch = pitch;
+    }
+
+    private long _flags = 0;
 
     public long getFlags() {
         return _flags;
+    }
+
+    public void setFlags(long flags) {
+        _flags = flags;
     }
 
     @Override
@@ -53,5 +70,8 @@ public class Sound extends MDXObject {
         _volume = stream.readFloat32("volume");
         _pitch = stream.readFloat32("pitch");
         _flags = stream.readUInt32("flags");
+    }
+
+    public Sound() {
     }
 }

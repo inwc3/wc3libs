@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class VertexNormalChunk extends Chunk {
@@ -19,16 +21,10 @@ public class VertexNormalChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Vertex> _vertices = new ArrayList<>();
+    private final LinkedHashSet<Vertex> _vertices = new ObservableLinkedHashSet<>();
 
-    public List<Vertex> getVertices() {
-        return new ArrayList<>(_vertices);
-    }
-
-    public void addVertex(@Nonnull Vertex val) {
-        if (!_vertices.contains(val)) {
-            _vertices.add(val);
-        }
+    public LinkedHashSet<Vertex> getVertices() {
+        return _vertices;
     }
 
     @Override
@@ -42,6 +38,7 @@ public class VertexNormalChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -54,9 +51,12 @@ public class VertexNormalChunk extends Chunk {
         long verticesCount = stream.readUInt32("verticesCount");
 
         while (verticesCount > 0) {
-            addVertex(new Vertex(stream));
+            _vertices.add(new Vertex(stream));
 
             verticesCount--;
         }
+    }
+
+    public VertexNormalChunk() {
     }
 }

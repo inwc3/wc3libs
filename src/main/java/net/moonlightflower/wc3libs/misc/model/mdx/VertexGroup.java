@@ -9,10 +9,14 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 
 public class VertexGroup extends MDXObject {
-    private int _index;
+    private int _index = 0;
 
     public int getIndex() {
         return _index;
+    }
+
+    public void setIndex(int index) {
+        _index = index;
     }
 
     @Override
@@ -27,5 +31,8 @@ public class VertexGroup extends MDXObject {
 
     public VertexGroup(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _index = stream.readUInt8("index");
+    }
+
+    public VertexGroup() {
     }
 }

@@ -12,8 +12,13 @@ import javax.annotation.Nonnull;
 public class Vertex extends MDXObject {
     private Coords3DF _pos;
 
+    @Nonnull
     public Coords3DF getPos() {
         return _pos;
+    }
+
+    public void setPos(@Nonnull Coords3DF pos) {
+        _pos = pos;
     }
 
     @Override
@@ -34,5 +39,8 @@ public class Vertex extends MDXObject {
         float z = stream.readFloat32("z");
 
         _pos = new Coords3DF(x, y, z);
+    }
+
+    public Vertex() {
     }
 }

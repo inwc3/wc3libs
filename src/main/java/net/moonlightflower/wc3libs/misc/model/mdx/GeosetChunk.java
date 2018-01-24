@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class GeosetChunk extends Chunk {
@@ -19,16 +21,10 @@ public class GeosetChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Geoset> _geosets = new ArrayList<>();
+    private final LinkedHashSet<Geoset> _geosets = new ObservableLinkedHashSet<>();
 
-    public List<Geoset> getGeosets() {
-        return new ArrayList<>(_geosets);
-    }
-
-    public void addGeoset(@Nonnull Geoset val) {
-        if (!_geosets.contains(val)) {
-            _geosets.add(val);
-        }
+    public LinkedHashSet<Geoset> getGeosets() {
+        return _geosets;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class GeosetChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addGeoset(new Geoset(stream));
+            _geosets.add(new Geoset(stream));
         }
     }
 
@@ -75,7 +71,7 @@ public class GeosetChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public GeosetChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -85,6 +81,5 @@ public class GeosetChunk extends Chunk {
     }
 
     public GeosetChunk() {
-
     }
 }

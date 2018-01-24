@@ -5,11 +5,13 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class FaceChunk extends Chunk {
@@ -20,16 +22,10 @@ public class FaceChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Face> _faces = new ArrayList<>();
+    private final LinkedHashSet<Face> _faces = new ObservableLinkedHashSet<>();
 
-    public List<Face> getFaces() {
-        return new ArrayList<>(_faces);
-    }
-
-    public void addFace(@Nonnull Face val) {
-        if (!_faces.contains(val)) {
-            _faces.add(val);
-        }
+    public LinkedHashSet<Face> getFaces() {
+        return _faces;
     }
 
     @Override
@@ -43,6 +39,7 @@ public class FaceChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -55,9 +52,12 @@ public class FaceChunk extends Chunk {
         long facesCount = stream.readUInt32("facesCount");
 
         while (facesCount > 0) {
-            addFace(new Face(stream));
+            _faces.add(new Face(stream));
 
             facesCount--;
         }
+    }
+
+    public FaceChunk() {
     }
 }

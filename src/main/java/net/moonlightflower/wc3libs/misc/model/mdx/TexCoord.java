@@ -12,6 +12,15 @@ import javax.annotation.Nonnull;
 public class TexCoord extends MDXObject {
     private Coords2DF _pos;
 
+    @Nonnull
+    public Coords2DF getPos() {
+        return _pos;
+    }
+
+    public void setPos(@Nonnull Coords2DF pos) {
+        _pos = pos;
+    }
+
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
         stream.writeFloat32(_pos.getX());
@@ -28,5 +37,9 @@ public class TexCoord extends MDXObject {
         float y = stream.readFloat32("y");
 
         _pos = new Coords2DF(x, y);
+    }
+
+    public TexCoord() {
+        _pos = new Coords2DF(0, 0);
     }
 }

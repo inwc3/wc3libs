@@ -7,6 +7,7 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords3DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords4DF;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
@@ -14,20 +15,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TexAnim extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
 
-    public List<Chunk> getChunks() {
+    public LinkedHashSet<Chunk> getChunks() {
         return _chunks;
-    }
-
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
     }
 
     public static class TranslationTrackChunk extends TrackChunk {
@@ -39,27 +36,42 @@ public class TexAnim extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _translationTracks;
         }
 
         public static class TranslationTrack extends Track {
             private Coords3DF _translation;
 
+            @Nonnull
             public Coords3DF getTranslation() {
                 return _translation;
             }
 
+            public void setTranslation(@Nonnull Coords3DF translation) {
+                _translation = translation;
+            }
+
             private Coords3DF _inTan_translation;
 
+            @Nonnull
             public Coords3DF getInTanTranslation() {
                 return _inTan_translation;
             }
 
+            public void setInTanTranslation(@Nonnull Coords3DF translation) {
+                _inTan_translation = translation;
+            }
+
             private Coords3DF _outTan_translation;
 
+            @Nonnull
             public Coords3DF getOutTanTranslation() {
                 return _outTan_translation;
+            }
+
+            public void setOutTanTranslation(@Nonnull Coords3DF translation) {
+                _outTan_translation = translation;
             }
 
             @Override
@@ -94,16 +106,10 @@ public class TexAnim extends MDXObject {
             }
         }
 
-        private List<TranslationTrackChunk.TranslationTrack> _translationTracks = new ArrayList<>();
+        private final LinkedHashSet<TranslationTrack> _translationTracks = new ObservableLinkedHashSet<>();
 
-        public List<TranslationTrackChunk.TranslationTrack> getTranslationTracks() {
-            return new ArrayList<>(_translationTracks);
-        }
-
-        public void addTranslationTrack(@Nonnull TranslationTrackChunk.TranslationTrack val) {
-            if (!_translationTracks.contains(val)) {
-                _translationTracks.add(val);
-            }
+        public LinkedHashSet<TranslationTrackChunk.TranslationTrack> getTranslationTracks() {
+            return _translationTracks;
         }
 
         public TranslationTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -112,7 +118,7 @@ public class TexAnim extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTranslationTrack(new TranslationTrackChunk.TranslationTrack(stream, getInterpolationType(), format));
+                _translationTracks.add(new TranslationTrackChunk.TranslationTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -123,18 +129,16 @@ public class TexAnim extends MDXObject {
         }
     }
 
-    private List<TranslationTrackChunk> _translationTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<TranslationTrackChunk> _translationTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<TranslationTrackChunk> getTranslationTrackChunks() {
-        return new ArrayList<>(_translationTrackChunks);
+    public LinkedHashSet<TranslationTrackChunk> getTranslationTrackChunks() {
+        return _translationTrackChunks;
     }
 
     public void addTranslationTrackChunk(@Nonnull TranslationTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_translationTrackChunks.contains(val)) {
-            _translationTrackChunks.add(val);
-        }
+        _translationTrackChunks.add(val);
     }
 
     public static class RotationTrackChunk extends TrackChunk {
@@ -146,27 +150,42 @@ public class TexAnim extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _rotationTracks;
         }
 
         public static class RotationTrack extends Track {
             private Coords4DF _rotation;
 
+            @Nonnull
             public Coords4DF getRotation() {
                 return _rotation;
             }
 
+            public void setRotation(@Nonnull Coords4DF rotation) {
+                _rotation = rotation;
+            }
+
             private Coords4DF _inTan_rotation;
 
+            @Nonnull
             public Coords4DF getInTanRotation() {
                 return _inTan_rotation;
             }
 
+            public void setInTanRotation(@Nonnull Coords4DF rotation) {
+                _inTan_rotation = rotation;
+            }
+
             private Coords4DF _outTan_rotation;
 
+            @Nonnull
             public Coords4DF getOutTanRotation() {
                 return _outTan_rotation;
+            }
+
+            public void setOutTanRotation(@Nonnull Coords4DF rotation) {
+                _outTan_rotation = rotation;
             }
 
             @Override
@@ -204,16 +223,10 @@ public class TexAnim extends MDXObject {
             }
         }
 
-        private List<RotationTrackChunk.RotationTrack> _rotationTracks = new ArrayList<>();
+        private final LinkedHashSet<RotationTrack> _rotationTracks = new ObservableLinkedHashSet<>();
 
-        public List<RotationTrackChunk.RotationTrack> getTranslationTracks() {
-            return new ArrayList<>(_rotationTracks);
-        }
-
-        public void addTranslationTrack(@Nonnull RotationTrackChunk.RotationTrack val) {
-            if (!_rotationTracks.contains(val)) {
-                _rotationTracks.add(val);
-            }
+        public LinkedHashSet<RotationTrackChunk.RotationTrack> getTranslationTracks() {
+            return _rotationTracks;
         }
 
         public RotationTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -222,7 +235,7 @@ public class TexAnim extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTranslationTrack(new RotationTrackChunk.RotationTrack(stream, getInterpolationType(), format));
+                _rotationTracks.add(new RotationTrackChunk.RotationTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -233,18 +246,16 @@ public class TexAnim extends MDXObject {
         }
     }
 
-    private List<RotationTrackChunk> _rotationTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<RotationTrackChunk> _rotationTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<RotationTrackChunk> getRotationTrackChunks() {
-        return new ArrayList<>(_rotationTrackChunks);
+    public LinkedHashSet<RotationTrackChunk> getRotationTrackChunks() {
+        return _rotationTrackChunks;
     }
 
     public void addRotationTrackChunk(@Nonnull RotationTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_rotationTrackChunks.contains(val)) {
-            _rotationTrackChunks.add(val);
-        }
+        _rotationTrackChunks.add(val);
     }
 
     public static class ScalingTrackChunk extends TrackChunk {
@@ -256,27 +267,42 @@ public class TexAnim extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _scalingTracks;
         }
 
         public static class ScalingTrack extends Track {
             private Coords3DF _scaling;
 
+            @Nonnull
             public Coords3DF getScaling() {
                 return _scaling;
             }
 
+            public void setScaling(@Nonnull Coords3DF scaling) {
+                _scaling = scaling;
+            }
+
             private Coords3DF _inTan_scaling;
 
+            @Nonnull
             public Coords3DF getInTanScaling() {
                 return _inTan_scaling;
             }
 
+            public void setInTanScaling(@Nonnull Coords3DF scaling) {
+                _inTan_scaling = scaling;
+            }
+
             private Coords3DF _outTan_scaling;
 
+            @Nonnull
             public Coords3DF getOutTanScaling() {
                 return _outTan_scaling;
+            }
+
+            public void setOutTanScaling(@Nonnull Coords3DF scaling) {
+                _outTan_scaling = scaling;
             }
 
             @Override
@@ -311,16 +337,10 @@ public class TexAnim extends MDXObject {
             }
         }
 
-        private List<ScalingTrackChunk.ScalingTrack> _scalingTracks = new ArrayList<>();
+        private final LinkedHashSet<ScalingTrack> _scalingTracks = new ObservableLinkedHashSet<>();
 
-        public List<ScalingTrackChunk.ScalingTrack> getScalingTracks() {
-            return new ArrayList<>(_scalingTracks);
-        }
-
-        public void addScalingTrack(@Nonnull ScalingTrackChunk.ScalingTrack val) {
-            if (!_scalingTracks.contains(val)) {
-                _scalingTracks.add(val);
-            }
+        public LinkedHashSet<ScalingTrackChunk.ScalingTrack> getScalingTracks() {
+            return _scalingTracks;
         }
 
         public ScalingTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -329,7 +349,7 @@ public class TexAnim extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addScalingTrack(new ScalingTrackChunk.ScalingTrack(stream, getInterpolationType(), format));
+                _scalingTracks.add(new ScalingTrackChunk.ScalingTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -340,18 +360,16 @@ public class TexAnim extends MDXObject {
         }
     }
 
-    private List<ScalingTrackChunk> _scalingTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<ScalingTrackChunk> _scalingTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<ScalingTrackChunk> getScalingTrackChunks() {
-        return new ArrayList<>(_scalingTrackChunks);
+    public LinkedHashSet<ScalingTrackChunk> getScalingTrackChunks() {
+        return _scalingTrackChunks;
     }
 
     public void addScalingTrackChunk(@Nonnull ScalingTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_scalingTrackChunks.contains(val)) {
-            _scalingTrackChunks.add(val);
-        }
+        _scalingTrackChunks.add(val);
     }
 
     @Override
@@ -404,5 +422,8 @@ public class TexAnim extends MDXObject {
                 break;
             }
         }
+    }
+
+    public TexAnim() {
     }
 }

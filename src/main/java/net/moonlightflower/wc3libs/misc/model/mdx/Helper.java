@@ -10,8 +10,13 @@ import javax.annotation.Nonnull;
 public class Helper extends MDXObject {
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
+    }
+
+    public void setNode(@Nonnull Node node) {
+        _node = node;
     }
 
     @Override
@@ -26,5 +31,9 @@ public class Helper extends MDXObject {
 
     public Helper(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _node = new Node(stream);
+    }
+
+    public Helper() {
+        _node = new Node();
     }
 }

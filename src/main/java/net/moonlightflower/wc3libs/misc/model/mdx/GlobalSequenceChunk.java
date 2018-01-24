@@ -5,11 +5,13 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class GlobalSequenceChunk extends Chunk {
@@ -20,16 +22,10 @@ public class GlobalSequenceChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<GlobalSequence> _globalSequences = new ArrayList<>();
+    private final LinkedHashSet<GlobalSequence> _globalSequences = new ObservableLinkedHashSet<>();
 
-    public List<GlobalSequence> getGlobalSequences() {
-        return new ArrayList<>(_globalSequences);
-    }
-
-    public void addGlobalSequence(@Nonnull GlobalSequence val) {
-        if (!_globalSequences.contains(val)) {
-            _globalSequences.add(val);
-        }
+    public LinkedHashSet<GlobalSequence> getGlobalSequences() {
+        return _globalSequences;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -38,7 +34,7 @@ public class GlobalSequenceChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addGlobalSequence(new GlobalSequence(stream));
+            _globalSequences.add(new GlobalSequence(stream));
         }
     }
 
@@ -76,7 +72,7 @@ public class GlobalSequenceChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public GlobalSequenceChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -86,6 +82,5 @@ public class GlobalSequenceChunk extends Chunk {
     }
 
     public GlobalSequenceChunk() {
-
     }
 }

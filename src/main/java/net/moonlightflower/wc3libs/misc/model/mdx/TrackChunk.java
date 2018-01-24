@@ -10,18 +10,19 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class TrackChunk<Type> extends Chunk {
     @Override
     public abstract Id getToken();
 
-    private long _tracksCount;
+    private long _tracksCount = 0;
 
     public long getTracksCount() {
         return _tracksCount;
     }
 
-    public abstract List<? extends Track> getTracks();
+    public abstract Set<? extends Track> getTracks();
 
     public enum InterpolationType {
         NONE,
@@ -30,16 +31,25 @@ public abstract class TrackChunk<Type> extends Chunk {
         BEZIER
     }
 
-    private InterpolationType _interpolationType;
+    private InterpolationType _interpolationType = InterpolationType.NONE;
 
+    @Nonnull
     public InterpolationType getInterpolationType() {
         return _interpolationType;
     }
 
-    private long _globalSequenceId;
+    public void setInterpolationType(@Nonnull InterpolationType interpolationType) {
+        _interpolationType = interpolationType;
+    }
+
+    private long _globalSequenceId = 0;
 
     public long getGlobalSequenceId() {
         return _globalSequenceId;
+    }
+
+    public void setGlobalSequenceId(long globalSequenceId) {
+        _globalSequenceId = globalSequenceId;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -90,6 +100,7 @@ public abstract class TrackChunk<Type> extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -107,6 +118,5 @@ public abstract class TrackChunk<Type> extends Chunk {
     }
 
     public TrackChunk() {
-
     }
 }

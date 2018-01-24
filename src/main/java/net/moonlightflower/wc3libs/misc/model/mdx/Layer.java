@@ -2,22 +2,28 @@ package net.moonlightflower.wc3libs.misc.model.mdx;
 
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class Layer extends MDXObject {
-    private long _inclusiveSive;
+    private long _inclusiveSive = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSive;
     }
 
-    private long _filterMode;
+    private long _filterMode = 0;
 
     public long getFilterModeL() {
         return _filterMode;
+    }
+
+    public void setFilterModeL(long filterModeL) {
+        _filterMode = filterModeL;
     }
 
     public enum FilterMode {
@@ -34,6 +40,7 @@ public class Layer extends MDXObject {
         }
     }
 
+    @Nullable
     public FilterMode getFilterMode() {
         if (_filterMode != (int) _filterMode) return null;
 
@@ -71,10 +78,18 @@ public class Layer extends MDXObject {
         return _textureId;
     }
 
+    public void setTextureId(long textureId) {
+        _textureId = textureId;
+    }
+
     private long _textureAnimId;
 
     public long getTextureAnimId() {
         return _textureAnimId;
+    }
+
+    public void setTextureAnimId() {
+        _textureAnimId = _textureAnimId;
     }
 
     private long _coordId;
@@ -83,20 +98,24 @@ public class Layer extends MDXObject {
         return _coordId;
     }
 
+    public void setCoordId(long coordId) {
+        _coordId = coordId;
+    }
+
     private float _alpha;
 
     public float getAlpha() {
         return _alpha;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
-
-    public List<Chunk> getChunks() {
-        return _chunks;
+    public void setAlpha(float alpha) {
+        _alpha = alpha;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<Chunk> getChunks() {
+        return _chunks;
     }
 
     public static class TextureTrackChunk extends TrackChunk {
@@ -108,7 +127,7 @@ public class Layer extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _textureTracks;
         }
 
@@ -119,16 +138,28 @@ public class Layer extends MDXObject {
                 return _textureId;
             }
 
+            public void setTextureId(long textureId) {
+                _textureId = textureId;
+            }
+
             private long _inTan_textureId;
 
             public long getInTanTextureId() {
                 return _inTan_textureId;
             }
 
+            public void setInTanTextureId(long textureId) {
+                _inTan_textureId = textureId;
+            }
+
             private long _outTan_textureId;
 
             public long getOutTanTextureId() {
                 return _outTan_textureId;
+            }
+
+            public void setOutTanTextureId(long textureId) {
+                _outTan_textureId = textureId;
             }
 
             @Override
@@ -156,16 +187,10 @@ public class Layer extends MDXObject {
             }
         }
 
-        private List<TextureTrack> _textureTracks = new ArrayList<>();
+        private final LinkedHashSet<TextureTrack> _textureTracks = new ObservableLinkedHashSet<>();
 
-        public List<TextureTrack> getTextureTracks() {
-            return new ArrayList<>(_textureTracks);
-        }
-
-        public void addTextureTrack(@Nonnull TextureTrack val) {
-            if (!_textureTracks.contains(val)) {
-                _textureTracks.add(val);
-            }
+        public LinkedHashSet<TextureTrack> getTextureTracks() {
+            return _textureTracks;
         }
 
         public TextureTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -174,7 +199,7 @@ public class Layer extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTextureTrack(new TextureTrack(stream, getInterpolationType(), format));
+                _textureTracks.add(new TextureTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -185,18 +210,16 @@ public class Layer extends MDXObject {
         }
     }
 
-    private List<TextureTrackChunk> _textureTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<TextureTrackChunk> _textureTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<TextureTrackChunk> getTextureTrackChunks() {
-        return new ArrayList<>(_textureTrackChunks);
+    public LinkedHashSet<TextureTrackChunk> getTextureTrackChunks() {
+        return _textureTrackChunks;
     }
 
     public void addTextureTrackChunk(@Nonnull TextureTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_textureTrackChunks.contains(val)) {
-            _textureTrackChunks.add(val);
-        }
+        _textureTrackChunks.add(val);
     }
 
     public static class AlphaTrackChunk extends TrackChunk {
@@ -208,7 +231,7 @@ public class Layer extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _alphaTracks;
         }
 
@@ -219,16 +242,28 @@ public class Layer extends MDXObject {
                 return _alpha;
             }
 
+            public void setAlpha(float alpha) {
+                _alpha = alpha;
+            }
+
             private float _inTan_alpha;
 
             public float getInTanAlpha() {
                 return _inTan_alpha;
             }
 
+            public void setInTanAlpha(float alpha) {
+                _inTan_alpha = alpha;
+            }
+
             private float _outTan_alpha;
 
             public float getOutTanAlpha() {
                 return _outTan_alpha;
+            }
+
+            public void setOutTanAlpha(float alpha) {
+                _outTan_alpha = alpha;
             }
 
             @Override
@@ -256,16 +291,10 @@ public class Layer extends MDXObject {
             }
         }
 
-        private List<AlphaTrack> _alphaTracks = new ArrayList<>();
+        private final LinkedHashSet<AlphaTrack> _alphaTracks = new ObservableLinkedHashSet<>();
 
-        public List<AlphaTrack> getAlphaTracks() {
-            return new ArrayList<>(_alphaTracks);
-        }
-
-        public void addAlphaTrack(@Nonnull AlphaTrack val) {
-            if (!_alphaTracks.contains(val)) {
-                _alphaTracks.add(val);
-            }
+        public LinkedHashSet<AlphaTrack> getAlphaTracks() {
+            return _alphaTracks;
         }
 
         public AlphaTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -274,7 +303,7 @@ public class Layer extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAlphaTrack(new AlphaTrack(stream, getInterpolationType(), format));
+                _alphaTracks.add(new AlphaTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -292,11 +321,9 @@ public class Layer extends MDXObject {
     }
 
     public void addAlphaTrackChunk(@Nonnull AlphaTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_alphaTrackChunks.contains(val)) {
-            _alphaTrackChunks.add(val);
-        }
+        _alphaTrackChunks.add(val);
     }
 
     @Override
@@ -355,5 +382,8 @@ public class Layer extends MDXObject {
                 break;
             }
         }
+    }
+
+    public Layer() {
     }
 }

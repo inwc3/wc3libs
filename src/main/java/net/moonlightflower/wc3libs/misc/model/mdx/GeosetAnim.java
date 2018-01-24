@@ -6,16 +6,14 @@ import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GeosetAnim extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
@@ -27,27 +25,40 @@ public class GeosetAnim extends MDXObject {
         return _alpha;
     }
 
+    public void setAlpha(float alpha) {
+        _alpha = alpha;
+    }
+
     private long _flags;
 
     public long getFlags() {
         return _flags;
     }
 
+    public void setFlags(long flags) {
+        _flags = flags;
+    }
+
     private Color _color;
 
+    @Nonnull
     public Color getColor() {
         return _color;
     }
 
-    private long _geosetId;
+    public void setColor(@Nonnull Color color) {
+        _color = color;
+    }
+
+    private long _geosetId = 0;
 
     public long getGeosetId() {
         return _geosetId;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
 
-    public List<Chunk> getChunks() {
+    public LinkedHashSet<Chunk> getChunks() {
         return _chunks;
     }
 
@@ -64,15 +75,19 @@ public class GeosetAnim extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _alphaTracks;
         }
 
         public static class AlphaTrack extends Track {
-            private float _alpha;
+            private float _alpha = 0F;
 
             public float getAlpha() {
                 return _alpha;
+            }
+
+            public void setAlpha(float alpha) {
+                _alpha = alpha;
             }
 
             private float _inTan_alpha;
@@ -81,7 +96,15 @@ public class GeosetAnim extends MDXObject {
                 return _inTan_alpha;
             }
 
+            public void setInTanAlpha(float alpha) {
+                _inTan_alpha = alpha;
+            }
+
             private float _outTan_alpha;
+
+            public void setOutTanAlpha(float alpha) {
+                _outTan_alpha = alpha;
+            }
 
             public float getOutTanAlpha() {
                 return _outTan_alpha;
@@ -112,16 +135,10 @@ public class GeosetAnim extends MDXObject {
             }
         }
 
-        private List<AlphaTrackChunk.AlphaTrack> _alphaTracks = new ArrayList<>();
+        private final LinkedHashSet<AlphaTrack> _alphaTracks = new ObservableLinkedHashSet<>();
 
-        public List<AlphaTrackChunk.AlphaTrack> getAlphaTracks() {
-            return new ArrayList<>(_alphaTracks);
-        }
-
-        public void addAlphaTrack(@Nonnull AlphaTrackChunk.AlphaTrack val) {
-            if (!_alphaTracks.contains(val)) {
-                _alphaTracks.add(val);
-            }
+        public LinkedHashSet<AlphaTrackChunk.AlphaTrack> getAlphaTracks() {
+            return _alphaTracks;
         }
 
         public AlphaTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -130,7 +147,7 @@ public class GeosetAnim extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAlphaTrack(new AlphaTrackChunk.AlphaTrack(stream, getInterpolationType(), format));
+                _alphaTracks.add(new AlphaTrackChunk.AlphaTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -141,18 +158,16 @@ public class GeosetAnim extends MDXObject {
         }
     }
 
-    private List<AlphaTrackChunk> _alphaTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<AlphaTrackChunk> _alphaTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<AlphaTrackChunk> getAlphaTrackChunks() {
-        return new ArrayList<>(_alphaTrackChunks);
+    public LinkedHashSet<AlphaTrackChunk> getAlphaTrackChunks() {
+        return _alphaTrackChunks;
     }
 
     public void addAlphaTrackChunk(@Nonnull AlphaTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_alphaTrackChunks.contains(val)) {
-            _alphaTrackChunks.add(val);
-        }
+        _alphaTrackChunks.add(val);
     }
 
     public static class ColorTrackChunk extends TrackChunk {
@@ -164,15 +179,20 @@ public class GeosetAnim extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _colorTracks;
         }
 
         public static class ColorTrack extends Track {
             private Color _color;
 
+            @Nonnull
             public Color getColor() {
                 return _color;
+            }
+
+            public void setColor(@Nonnull Color color) {
+                _color = color;
             }
 
             private Color _inTan_color;
@@ -181,10 +201,18 @@ public class GeosetAnim extends MDXObject {
                 return _inTan_color;
             }
 
+            public void setInTanColor(@Nonnull Color color) {
+                _inTan_color = color;
+            }
+
             private Color _outTan_color;
 
             public Color getOutTanColor() {
                 return _outTan_color;
+            }
+
+            public void setOutTanColor(@Nonnull Color color) {
+                _outTan_color = color;
             }
 
             @Override
@@ -219,16 +247,10 @@ public class GeosetAnim extends MDXObject {
             }
         }
 
-        private List<ColorTrack> _colorTracks = new ArrayList<>();
+        private final LinkedHashSet<ColorTrack> _colorTracks = new ObservableLinkedHashSet<>();
 
-        public List<ColorTrack> getAlphaTracks() {
-            return new ArrayList<>(_colorTracks);
-        }
-
-        public void addColorTrack(@Nonnull ColorTrack val) {
-            if (!_colorTracks.contains(val)) {
-                _colorTracks.add(val);
-            }
+        public LinkedHashSet<ColorTrack> getAlphaTracks() {
+            return _colorTracks;
         }
 
         public ColorTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -237,7 +259,7 @@ public class GeosetAnim extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addColorTrack(new ColorTrack(stream, getInterpolationType(), format));
+                _colorTracks.add(new ColorTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -248,18 +270,16 @@ public class GeosetAnim extends MDXObject {
         }
     }
 
-    private List<ColorTrackChunk> _colorTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<ColorTrackChunk> _colorTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<ColorTrackChunk> getColorTrackChunks() {
-        return new ArrayList<>(_colorTrackChunks);
+    public LinkedHashSet<ColorTrackChunk> getColorTrackChunks() {
+        return _colorTrackChunks;
     }
 
     public void addColorTrackChunk(@Nonnull ColorTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_colorTrackChunks.contains(val)) {
-            _colorTrackChunks.add(val);
-        }
+        _colorTrackChunks.add(val);
     }
 
     @Override
@@ -328,5 +348,9 @@ public class GeosetAnim extends MDXObject {
                 break;
             }
         }
+    }
+
+    public GeosetAnim() {
+        _color = Color.fromBGRA255(0, 0, 0, 0);
     }
 }

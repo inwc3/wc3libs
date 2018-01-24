@@ -4,6 +4,7 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Attachment extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
@@ -19,20 +20,34 @@ public class Attachment extends MDXObject {
 
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
     }
 
-    private String _path;
+    public void setNode(@Nonnull Node node) {
+        _node = node;
+    }
 
+    private String _path = "unset";
+
+    @Nonnull
     public String getPath() {
         return _path;
     }
 
-    private long _attachmentId;
+    public void setPath(@Nonnull String path) {
+        _path = path;
+    }
+
+    private long _attachmentId = 0;
 
     public long getAttachmentId() {
         return _attachmentId;
+    }
+
+    public void setAttachmentId(long attachmentId) {
+        _attachmentId = attachmentId;
     }
 
     public static class VisibilityTrackChunk extends TrackChunk {
@@ -44,20 +59,14 @@ public class Attachment extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _visibilityTracks;
         }
 
-        private List<VisibilityTrack> _visibilityTracks = new ArrayList<>();
+        private final LinkedHashSet<VisibilityTrack> _visibilityTracks = new ObservableLinkedHashSet<>();
 
-        public List<VisibilityTrack> getVisibilityTracks() {
-            return new ArrayList<>(_visibilityTracks);
-        }
-
-        public void addVisibilityTrack(@Nonnull VisibilityTrack val) {
-            if (!_visibilityTracks.contains(val)) {
-                _visibilityTracks.add(val);
-            }
+        public LinkedHashSet<VisibilityTrack> getVisibilityTracks() {
+            return _visibilityTracks;
         }
 
         public VisibilityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -66,7 +75,7 @@ public class Attachment extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addVisibilityTrack(new VisibilityTrack(stream, getInterpolationType(), format));
+                _visibilityTracks.add(new VisibilityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -77,16 +86,10 @@ public class Attachment extends MDXObject {
         }
     }
 
-    private List<VisibilityTrackChunk> _visibilityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<VisibilityTrackChunk> _visibilityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<VisibilityTrackChunk> getVisibilityTrackChunks() {
-        return new ArrayList<>(_visibilityTrackChunks);
-    }
-
-    public void addVisibilityTrackChunk(@Nonnull VisibilityTrackChunk val) {
-        if (!_visibilityTrackChunks.contains(val)) {
-            _visibilityTrackChunks.add(val);
-        }
+    public LinkedHashSet<VisibilityTrackChunk> getVisibilityTrackChunks() {
+        return _visibilityTrackChunks;
     }
 
     @Override
@@ -120,7 +123,7 @@ public class Attachment extends MDXObject {
 
         Map<Id, MDX.TokenHandler> _tokenMap = new LinkedHashMap<>();
 
-        _tokenMap.put(VisibilityTrackChunk.TOKEN, () -> addVisibilityTrackChunk(new VisibilityTrackChunk(stream, MDX.EncodingFormat.MDX_0x0)));
+        _tokenMap.put(VisibilityTrackChunk.TOKEN, () -> _visibilityTrackChunks.add(new VisibilityTrackChunk(stream, MDX.EncodingFormat.MDX_0x0)));
 
         while (!stream.eof()) {
             Id trackToken = stream.readId("trackToken");
@@ -135,5 +138,9 @@ public class Attachment extends MDXObject {
                 break;
             }
         }
+    }
+
+    public Attachment() {
+        _node = new Node();
     }
 }

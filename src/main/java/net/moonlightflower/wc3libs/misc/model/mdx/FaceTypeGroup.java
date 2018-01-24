@@ -23,7 +23,7 @@ public class FaceTypeGroup extends MDXObject {
         POLYGONS
     }
 
-    private Type _type;
+    private Type _type = Type.POINTS;
 
     public Type getType() {
         return _type;
@@ -45,5 +45,8 @@ public class FaceTypeGroup extends MDXObject {
         if (typeL >= Type.values().length) throw new IllegalArgumentException("out of bounds 0-" + Type.values().length + " (" + typeL + ")");
 
         _type = Type.values()[(int) typeL];
+    }
+
+    public FaceTypeGroup() {
     }
 }

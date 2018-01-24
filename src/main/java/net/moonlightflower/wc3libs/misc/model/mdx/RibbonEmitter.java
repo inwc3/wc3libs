@@ -5,16 +5,14 @@ import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Color;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RibbonEmitter extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
@@ -22,44 +20,74 @@ public class RibbonEmitter extends MDXObject {
 
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
     }
 
-    private float _heightAbove;
+    public void setNode(@Nonnull Node node) {
+        _node = node;
+    }
+
+    private float _heightAbove = 0F;
 
     public float getHeightAbove() {
         return _heightAbove;
     }
 
-    private float _heightBelow;
+    public void setHeightAbove(float heightAbove) {
+        _heightAbove = heightAbove;
+    }
+
+    private float _heightBelow = 0F;
 
     public float getHeightBelow() {
         return _heightBelow;
     }
 
+    public void setHeightBelow(float heightBelow) {
+        _heightBelow = heightBelow;
+    }
+
     private Color _color;
 
+    @Nonnull
     public Color getColor() {
         return _color;
     }
 
-    private float _lifespan;
+    public void setColor(@Nonnull Color color) {
+        _color = color;
+    }
+
+    private float _lifespan = 0F;
 
     public float getLifespan() {
         return _lifespan;
     }
 
-    private long _textureSlot;
+    public void setLifespan(float lifespan) {
+        _lifespan = lifespan;
+    }
+
+    private long _textureSlot = 0;
 
     public long getTextureSlot() {
         return _textureSlot;
     }
 
-    private long _emissionRate;
+    public void setTextureSlot(long textureSlot) {
+        _textureSlot = textureSlot;
+    }
+
+    private long _emissionRate = 0;
 
     public long getEmissionRate() {
         return _emissionRate;
+    }
+
+    public void setEmissionRate(long emissionRate) {
+        _emissionRate = emissionRate;
     }
 
     private long _rows;
@@ -68,10 +96,18 @@ public class RibbonEmitter extends MDXObject {
         return _rows;
     }
 
+    public void setRows(long rows) {
+        _rows = rows;
+    }
+
     private long _columns;
 
     public long getColumns() {
         return _columns;
+    }
+
+    public void setColumns(long columns) {
+        _columns = columns;
     }
 
     private long _materialId;
@@ -80,20 +116,24 @@ public class RibbonEmitter extends MDXObject {
         return _materialId;
     }
 
+    public void setMaterialId(long materialId) {
+        _materialId = materialId;
+    }
+
     private float _gravity;
 
     public float getGravity() {
         return _gravity;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
-
-    public List<Chunk> getChunks() {
-        return _chunks;
+    public void setGravity(float gravity) {
+        _gravity = gravity;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<Chunk> getChunks() {
+        return _chunks;
     }
 
     public static class VisibilityTrackChunk extends TrackChunk {
@@ -105,20 +145,14 @@ public class RibbonEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _visibilityTracks;
         }
 
-        private List<VisibilityTrack> _visibilityTracks = new ArrayList<>();
+        private final LinkedHashSet<VisibilityTrack> _visibilityTracks = new ObservableLinkedHashSet<>();
 
-        public List<VisibilityTrack> getVisibilityTracks() {
-            return new ArrayList<>(_visibilityTracks);
-        }
-
-        public void addVisibilityTrack(@Nonnull VisibilityTrack val) {
-            if (!_visibilityTracks.contains(val)) {
-                _visibilityTracks.add(val);
-            }
+        public LinkedHashSet<VisibilityTrack> getVisibilityTracks() {
+            return _visibilityTracks;
         }
 
         public VisibilityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -127,7 +161,7 @@ public class RibbonEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addVisibilityTrack(new VisibilityTrack(stream, getInterpolationType(), format));
+                _visibilityTracks.add(new VisibilityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -138,18 +172,16 @@ public class RibbonEmitter extends MDXObject {
         }
     }
 
-    private List<VisibilityTrackChunk> _visibilityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<VisibilityTrackChunk> _visibilityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<VisibilityTrackChunk> getVisibilityTrackChunks() {
-        return new ArrayList<>(_visibilityTrackChunks);
+    public LinkedHashSet<VisibilityTrackChunk> getVisibilityTrackChunks() {
+        return _visibilityTrackChunks;
     }
 
     public void addVisibilityTrackChunk(@Nonnull VisibilityTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_visibilityTrackChunks.contains(val)) {
-            _visibilityTrackChunks.add(val);
-        }
+        _visibilityTrackChunks.add(val);
     }
 
     public static class HeightAboveTrackChunk extends TrackChunk {
@@ -161,7 +193,7 @@ public class RibbonEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _heightAboveTracks;
         }
 
@@ -172,16 +204,28 @@ public class RibbonEmitter extends MDXObject {
                 return _heightAbove;
             }
 
+            public void setHeightAbove(float heightAbove) {
+                _heightAbove = heightAbove;
+            }
+
             private float _inTan_heightAbove;
 
             public float getInTanHeightAbove() {
                 return _inTan_heightAbove;
             }
 
+            public void setInTanHeightAbove(float heightAbove) {
+                _inTan_heightAbove = heightAbove;
+            }
+
             private float _outTan_heightAbove;
 
             public float getOutTanHeightAbove() {
                 return _outTan_heightAbove;
+            }
+
+            public void setOutTanHeightAbove(float heightAbove) {
+                _outTan_heightAbove = heightAbove;
             }
 
             @Override
@@ -209,16 +253,10 @@ public class RibbonEmitter extends MDXObject {
             }
         }
 
-        private List<HeightAboveTrack> _heightAboveTracks = new ArrayList<>();
+        private final LinkedHashSet<HeightAboveTrack> _heightAboveTracks = new ObservableLinkedHashSet<>();
 
-        public List<HeightAboveTrack> getHeightAboveTracks() {
-            return new ArrayList<>(_heightAboveTracks);
-        }
-
-        public void addHeightAboveTrack(@Nonnull HeightAboveTrack val) {
-            if (!_heightAboveTracks.contains(val)) {
-                _heightAboveTracks.add(val);
-            }
+        public LinkedHashSet<HeightAboveTrack> getHeightAboveTracks() {
+            return _heightAboveTracks;
         }
 
         public HeightAboveTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -227,7 +265,7 @@ public class RibbonEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addHeightAboveTrack(new HeightAboveTrack(stream, getInterpolationType(), format));
+                _heightAboveTracks.add(new HeightAboveTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -238,18 +276,16 @@ public class RibbonEmitter extends MDXObject {
         }
     }
 
-    private List<HeightAboveTrackChunk> _heightAboveTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<HeightAboveTrackChunk> _heightAboveTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<HeightAboveTrackChunk> getHeightAboveTrackChunks() {
-        return new ArrayList<>(_heightAboveTrackChunks);
+    public LinkedHashSet<HeightAboveTrackChunk> getHeightAboveTrackChunks() {
+        return _heightAboveTrackChunks;
     }
 
     public void addHeightAboveTrackChunk(@Nonnull HeightAboveTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_heightAboveTrackChunks.contains(val)) {
-            _heightAboveTrackChunks.add(val);
-        }
+        _heightAboveTrackChunks.add(val);
     }
 
     public static class HeightBelowTrackChunk extends TrackChunk {
@@ -261,7 +297,7 @@ public class RibbonEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _heightBelowTracks;
         }
 
@@ -272,16 +308,28 @@ public class RibbonEmitter extends MDXObject {
                 return _heightBelow;
             }
 
+            public void setHeightBelow(float heightBelow) {
+                _heightBelow = heightBelow;
+            }
+
             private float _inTan_heightBelow;
 
             public float getInTanHeightBelow() {
                 return _inTan_heightBelow;
             }
 
+            public void setInTanHeightBelow(float heightBelow) {
+                _inTan_heightBelow = heightBelow;
+            }
+
             private float _outTan_heightBelow;
 
             public float getOutTanHeightBelow() {
                 return _outTan_heightBelow;
+            }
+
+            public void setOutTanHeightBelow(float heightBelow) {
+                _outTan_heightBelow = heightBelow;
             }
 
             @Override
@@ -309,16 +357,10 @@ public class RibbonEmitter extends MDXObject {
             }
         }
 
-        private List<HeightBelowTrack> _heightBelowTracks = new ArrayList<>();
+        private final LinkedHashSet<HeightBelowTrack> _heightBelowTracks = new ObservableLinkedHashSet<>();
 
-        public List<HeightBelowTrack> getHeightBelowTracks() {
-            return new ArrayList<>(_heightBelowTracks);
-        }
-
-        public void addHeightBelowTrack(@Nonnull HeightBelowTrack val) {
-            if (!_heightBelowTracks.contains(val)) {
-                _heightBelowTracks.add(val);
-            }
+        public LinkedHashSet<HeightBelowTrack> getHeightBelowTracks() {
+            return _heightBelowTracks;
         }
 
         public HeightBelowTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -327,7 +369,7 @@ public class RibbonEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addHeightBelowTrack(new HeightBelowTrack(stream, getInterpolationType(), format));
+                _heightBelowTracks.add(new HeightBelowTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -338,18 +380,16 @@ public class RibbonEmitter extends MDXObject {
         }
     }
 
-    private List<HeightBelowTrackChunk> _heightBelowTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<HeightBelowTrackChunk> _heightBelowTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<HeightBelowTrackChunk> getHeightBelowTrackChunks() {
-        return new ArrayList<>(_heightBelowTrackChunks);
+    public LinkedHashSet<HeightBelowTrackChunk> getHeightBelowTrackChunks() {
+        return _heightBelowTrackChunks;
     }
 
     public void addHeightBelowTrackChunk(@Nonnull HeightBelowTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_heightBelowTrackChunks.contains(val)) {
-            _heightBelowTrackChunks.add(val);
-        }
+        _heightBelowTrackChunks.add(val);
     }
 
     public static class AlphaTrackChunk extends TrackChunk {
@@ -361,7 +401,7 @@ public class RibbonEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _alphaTracks;
         }
 
@@ -372,16 +412,28 @@ public class RibbonEmitter extends MDXObject {
                 return _alpha;
             }
 
+            public void setAlpha(float alpha) {
+                _alpha = alpha;
+            }
+
             private float _inTan_alpha;
 
             public float getInTanAlpha() {
                 return _inTan_alpha;
             }
 
+            public void setInTanAlpha(float alpha) {
+                _inTan_alpha = alpha;
+            }
+
             private float _outTan_alpha;
 
             public float getOutTanAlpha() {
                 return _outTan_alpha;
+            }
+
+            public void setOutTanAlpha(float alpha) {
+                _outTan_alpha = alpha;
             }
 
             @Override
@@ -409,16 +461,10 @@ public class RibbonEmitter extends MDXObject {
             }
         }
 
-        private List<AlphaTrack> _alphaTracks = new ArrayList<>();
+        private final LinkedHashSet<AlphaTrack> _alphaTracks = new ObservableLinkedHashSet<>();
 
-        public List<AlphaTrack> getAlphaTracks() {
-            return new ArrayList<>(_alphaTracks);
-        }
-
-        public void addAlphaTrack(@Nonnull AlphaTrack val) {
-            if (!_alphaTracks.contains(val)) {
-                _alphaTracks.add(val);
-            }
+        public LinkedHashSet<AlphaTrack> getAlphaTracks() {
+            return _alphaTracks;
         }
 
         public AlphaTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -427,7 +473,7 @@ public class RibbonEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addAlphaTrack(new AlphaTrack(stream, getInterpolationType(), format));
+                _alphaTracks.add(new AlphaTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -438,18 +484,16 @@ public class RibbonEmitter extends MDXObject {
         }
     }
 
-    private List<AlphaTrackChunk> _alphaTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<AlphaTrackChunk> _alphaTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<AlphaTrackChunk> getAlphaTrackChunks() {
-        return new ArrayList<>(_alphaTrackChunks);
+    public LinkedHashSet<AlphaTrackChunk> getAlphaTrackChunks() {
+        return _alphaTrackChunks;
     }
 
     public void addAlphaTrackChunk(@Nonnull AlphaTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_alphaTrackChunks.contains(val)) {
-            _alphaTrackChunks.add(val);
-        }
+        _alphaTrackChunks.add(val);
     }
 
     public static class ColorTrackChunk extends TrackChunk {
@@ -461,27 +505,41 @@ public class RibbonEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _colorTracks;
         }
 
         public static class ColorTrack extends Track {
             private Color _color;
 
+            @Nonnull
             public Color getColor() {
                 return _color;
             }
 
+            public void setColor(@Nonnull Color color) {
+                _color = color;
+            }
+
             private Color _inTan_color;
 
+            @Nonnull
             public Color getInTanColor() {
                 return _inTan_color;
+            }
+
+            public void setInTanColor(@Nonnull Color color) {
+                _inTan_color = color;
             }
 
             private Color _outTan_color;
 
             public Color getOutTanColor() {
                 return _outTan_color;
+            }
+
+            public void setOutTanColor(@Nonnull Color color) {
+                _outTan_color = color;
             }
 
             @Override
@@ -516,16 +574,14 @@ public class RibbonEmitter extends MDXObject {
             }
         }
 
-        private List<ColorTrack> _colorTracks = new ArrayList<>();
+        private final LinkedHashSet<ColorTrack> _colorTracks = new ObservableLinkedHashSet<>();
 
-        public List<ColorTrack> getAlphaTracks() {
-            return new ArrayList<>(_colorTracks);
+        public LinkedHashSet<ColorTrack> getAlphaTracks() {
+            return _colorTracks;
         }
 
         public void addColorTrack(@Nonnull ColorTrack val) {
-            if (!_colorTracks.contains(val)) {
-                _colorTracks.add(val);
-            }
+            _colorTracks.add(val);
         }
 
         public ColorTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -545,18 +601,16 @@ public class RibbonEmitter extends MDXObject {
         }
     }
 
-    private List<ColorTrackChunk> _colorTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<ColorTrackChunk> _colorTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<ColorTrackChunk> getColorTrackChunks() {
-        return new ArrayList<>(_colorTrackChunks);
+    public LinkedHashSet<ColorTrackChunk> getColorTrackChunks() {
+        return _colorTrackChunks;
     }
 
     public void addColorTrackChunk(@Nonnull ColorTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_colorTrackChunks.contains(val)) {
-            _colorTrackChunks.add(val);
-        }
+        _colorTrackChunks.add(val);
     }
 
     public static class TextureSlotTrackChunk extends TrackChunk {
@@ -568,7 +622,7 @@ public class RibbonEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _textureSlotTracks;
         }
 
@@ -579,16 +633,28 @@ public class RibbonEmitter extends MDXObject {
                 return _textureSlot;
             }
 
+            public void setTextureSlot(long textureSlot) {
+                _textureSlot = textureSlot;
+            }
+
             private long _inTan_textureSlot;
 
             public long getInTanTextureSlot() {
                 return _inTan_textureSlot;
             }
 
+            public void setInTanTextureSlot(long textureSlot) {
+                _inTan_textureSlot = textureSlot;
+            }
+
             private long _outTan_textureSlot;
 
             public long getOutTanTextureSlot() {
                 return _outTan_textureSlot;
+            }
+
+            public void setOutTanTextureSlot(long textureSlot) {
+                _outTan_textureSlot = textureSlot;
             }
 
             @Override
@@ -616,16 +682,10 @@ public class RibbonEmitter extends MDXObject {
             }
         }
 
-        private List<TextureSlotTrack> _textureSlotTracks = new ArrayList<>();
+        private final LinkedHashSet<TextureSlotTrack> _textureSlotTracks = new ObservableLinkedHashSet<>();
 
-        public List<TextureSlotTrack> getTextureSlotTracks() {
-            return new ArrayList<>(_textureSlotTracks);
-        }
-
-        public void addTextureSlotTrack(@Nonnull TextureSlotTrack val) {
-            if (!_textureSlotTracks.contains(val)) {
-                _textureSlotTracks.add(val);
-            }
+        public LinkedHashSet<TextureSlotTrack> getTextureSlotTracks() {
+            return _textureSlotTracks;
         }
 
         public TextureSlotTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -634,7 +694,7 @@ public class RibbonEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addTextureSlotTrack(new TextureSlotTrack(stream, getInterpolationType(), format));
+                _textureSlotTracks.add(new TextureSlotTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -652,11 +712,9 @@ public class RibbonEmitter extends MDXObject {
     }
 
     public void addTextureSlotTrackChunk(@Nonnull TextureSlotTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_textureSlotTrackChunks.contains(val)) {
-            _textureSlotTrackChunks.add(val);
-        }
+        _textureSlotTrackChunks.add(val);
     }
 
     @Override
@@ -759,5 +817,10 @@ public class RibbonEmitter extends MDXObject {
                 break;
             }
         }
+    }
+
+    public RibbonEmitter() {
+        _node = new Node();
+        _color = Color.fromBGRA255(0, 0, 0 , 0);
     }
 }

@@ -4,6 +4,7 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ParticleEmitter extends MDXObject {
-    private long _inclusiveSize;
+    private long _inclusiveSize = 0;
 
     public long getInclusiveSize() {
         return _inclusiveSize;
@@ -19,60 +20,85 @@ public class ParticleEmitter extends MDXObject {
 
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
     }
 
-    private float _emissionRate;
+    public void setNode(@Nonnull Node node) {
+        _node = node;
+    }
+
+    private float _emissionRate = 0F;
 
     public float getEmissionRate() {
         return _emissionRate;
     }
 
-    private float _gravity;
+    public void setEmissionRate(float emissionRate) {
+        _emissionRate = emissionRate;
+    }
+
+    private float _gravity = 0F;
 
     public float getGravity() {
         return _gravity;
     }
 
-    private float _longitude;
+    public void setGravity(float gravity) {
+        _gravity = gravity;
+    }
+
+    private float _longitude = 0F;
 
     public float getLongitude() {
         return _longitude;
     }
 
-    private float _latitude;
+    public void setLongitude(float longitude) {
+        _longitude = longitude;
+    }
+
+    private float _latitude = 0F;
 
     public float getLatitude() {
         return _latitude;
     }
 
-    private String _fileName;
+    public void setLatitude(float latitude) {
+        _latitude = latitude;
+    }
+
+    private String _fileName = "unset";
 
     public String getFileName() {
         return _fileName;
     }
 
-    private float _lifespan;
+    private float _lifespan = 0F;
 
     public float getLifespan() {
         return _lifespan;
     }
 
-    private float _initialSpeed;
+    public void setLifespan(float lifespan) {
+        _lifespan = lifespan;
+    }
+
+    private float _initialSpeed = 0F;
 
     public float getInitialSpeed() {
         return _initialSpeed;
     }
 
-    private List<Chunk> _chunks = new ArrayList<>();
-
-    public List<Chunk> getChunks() {
-        return _chunks;
+    public void setInitialSpeed(float initialSpeed) {
+        _initialSpeed = initialSpeed;
     }
 
-    private void addChunk(@Nonnull Chunk val) {
-        _chunks.add(val);
+    private final LinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
+
+    public LinkedHashSet<Chunk> getChunks() {
+        return _chunks;
     }
 
     public static class EmissionRateTrackChunk extends TrackChunk {
@@ -84,7 +110,7 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _emissionRateTracks;
         }
 
@@ -95,16 +121,28 @@ public class ParticleEmitter extends MDXObject {
                 return _emissionRate;
             }
 
+            public void setEmissionRate(float emissionRate) {
+                _emissionRate = emissionRate;
+            }
+
             private float _inTan_emissionRate;
 
             public float getInTanEmissionRate() {
                 return _inTan_emissionRate;
             }
 
+            public void setInTanEmissionRate(float emissionRate) {
+                _inTan_emissionRate = emissionRate;
+            }
+
             private float _outTan_emissionRate;
 
             public float getOutTanEmissionRate() {
                 return _outTan_emissionRate;
+            }
+
+            public void setOutTanEmissionRate(float emissionRate) {
+                _outTan_emissionRate = emissionRate;
             }
 
             @Override
@@ -132,16 +170,10 @@ public class ParticleEmitter extends MDXObject {
             }
         }
 
-        private List<EmissionRateTrack> _emissionRateTracks = new ArrayList<>();
+        private final LinkedHashSet<EmissionRateTrack> _emissionRateTracks = new ObservableLinkedHashSet<>();
 
-        public List<EmissionRateTrack> getEmissionRateTracks() {
-            return new ArrayList<>(_emissionRateTracks);
-        }
-
-        public void addEmissionRateTrack(@Nonnull EmissionRateTrack val) {
-            if (!_emissionRateTracks.contains(val)) {
-                _emissionRateTracks.add(val);
-            }
+        public LinkedHashSet<EmissionRateTrack> getEmissionRateTracks() {
+            return _emissionRateTracks;
         }
 
         public EmissionRateTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -150,7 +182,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addEmissionRateTrack(new EmissionRateTrack(stream, getInterpolationType(), format));
+                _emissionRateTracks.add(new EmissionRateTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -161,18 +193,16 @@ public class ParticleEmitter extends MDXObject {
         }
     }
 
-    private List<EmissionRateTrackChunk> _emissionRateTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<EmissionRateTrackChunk> _emissionRateTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<EmissionRateTrackChunk> getEmissionRateTrackChunks() {
-        return new ArrayList<>(_emissionRateTrackChunks);
+    public LinkedHashSet<EmissionRateTrackChunk> getEmissionRateTrackChunks() {
+        return _emissionRateTrackChunks;
     }
 
     public void addEmissionRateTrackChunk(@Nonnull EmissionRateTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_emissionRateTrackChunks.contains(val)) {
-            _emissionRateTrackChunks.add(val);
-        }
+        _emissionRateTrackChunks.add(val);
     }
 
     public static class GravityTrackChunk extends TrackChunk {
@@ -184,7 +214,7 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _gravityTracks;
         }
 
@@ -195,16 +225,28 @@ public class ParticleEmitter extends MDXObject {
                 return _gravity;
             }
 
+            public void setGravity(float gravity) {
+                _gravity = gravity;
+            }
+
             private float _inTan_gravity;
 
             public float getInTanGravity() {
                 return _inTan_gravity;
             }
 
+            public void setInTanGravity(float gravity) {
+                _inTan_gravity = gravity;
+            }
+
             private float _outTan_gravity;
 
             public float getOutTanGravity() {
                 return _outTan_gravity;
+            }
+
+            public void setOutTanGravity(float gravity) {
+                _outTan_gravity = gravity;
             }
 
             @Override
@@ -232,16 +274,10 @@ public class ParticleEmitter extends MDXObject {
             }
         }
 
-        private List<GravityTrack> _gravityTracks = new ArrayList<>();
+        private final LinkedHashSet<GravityTrack> _gravityTracks = new ObservableLinkedHashSet<>();
 
-        public List<GravityTrack> getGravityTracks() {
-            return new ArrayList<>(_gravityTracks);
-        }
-
-        public void addGravityTrack(@Nonnull GravityTrack val) {
-            if (!_gravityTracks.contains(val)) {
-                _gravityTracks.add(val);
-            }
+        public LinkedHashSet<GravityTrack> getGravityTracks() {
+            return _gravityTracks;
         }
 
         public GravityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -250,7 +286,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addGravityTrack(new GravityTrack(stream, getInterpolationType(), format));
+                _gravityTracks.add(new GravityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -261,18 +297,16 @@ public class ParticleEmitter extends MDXObject {
         }
     }
 
-    private List<GravityTrackChunk> _gravityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<GravityTrackChunk> _gravityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<GravityTrackChunk> getGravityTrackChunks() {
-        return new ArrayList<>(_gravityTrackChunks);
+    public LinkedHashSet<GravityTrackChunk> getGravityTrackChunks() {
+        return _gravityTrackChunks;
     }
 
     public void addGravityTrackChunk(@Nonnull GravityTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_gravityTrackChunks.contains(val)) {
-            _gravityTrackChunks.add(val);
-        }
+        _gravityTrackChunks.add(val);
     }
 
     public static class LongitudeTrackChunk extends TrackChunk {
@@ -284,7 +318,7 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _longitudeTracks;
         }
 
@@ -295,16 +329,28 @@ public class ParticleEmitter extends MDXObject {
                 return _longitude;
             }
 
+            public void setLongitude(float longitude) {
+                _longitude = longitude;
+            }
+
             private float _inTan_longitude;
 
             public float getInTanLongitude() {
                 return _inTan_longitude;
             }
 
+            public void setInTanLongitude(float longitude) {
+                _inTan_longitude = longitude;
+            }
+
             private float _outTan_longitude;
 
             public float getOutTanLongitude() {
                 return _outTan_longitude;
+            }
+
+            public void setOutTanLongitude(float longitude) {
+                _outTan_longitude = longitude;
             }
 
             @Override
@@ -332,16 +378,10 @@ public class ParticleEmitter extends MDXObject {
             }
         }
 
-        private List<LongitudeTrack> _longitudeTracks = new ArrayList<>();
+        private final LinkedHashSet<LongitudeTrack> _longitudeTracks = new ObservableLinkedHashSet<>();
 
-        public List<LongitudeTrack> getLongitudeTracks() {
-            return new ArrayList<>(_longitudeTracks);
-        }
-
-        public void addLongitudeTrack(@Nonnull LongitudeTrack val) {
-            if (!_longitudeTracks.contains(val)) {
-                _longitudeTracks.add(val);
-            }
+        public LinkedHashSet<LongitudeTrack> getLongitudeTracks() {
+            return _longitudeTracks;
         }
 
         public LongitudeTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -350,7 +390,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addLongitudeTrack(new LongitudeTrack(stream, getInterpolationType(), format));
+                _longitudeTracks.add(new LongitudeTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -368,11 +408,9 @@ public class ParticleEmitter extends MDXObject {
     }
 
     public void addLongitudeTrackChunk(@Nonnull LongitudeTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_longitudeTrackChunks.contains(val)) {
-            _longitudeTrackChunks.add(val);
-        }
+        _longitudeTrackChunks.add(val);
     }
 
     public static class LatitudeTrackChunk extends TrackChunk {
@@ -384,7 +422,7 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _latitudeTracks;
         }
 
@@ -395,16 +433,28 @@ public class ParticleEmitter extends MDXObject {
                 return _latitude;
             }
 
+            public void setLatitude(float latitude) {
+                _latitude = latitude;
+            }
+
             private float _inTan_latitude;
 
             public float getInTanLatitude() {
                 return _inTan_latitude;
             }
 
+            public void setInTanLatitude(float latitude) {
+                _inTan_latitude = latitude;
+            }
+
             private float _outTan_latitude;
 
             public float getOutTanLatitude() {
                 return _outTan_latitude;
+            }
+
+            public void setOutTanLatitude(float latitude) {
+                _outTan_latitude = latitude;
             }
 
             @Override
@@ -432,16 +482,10 @@ public class ParticleEmitter extends MDXObject {
             }
         }
 
-        private List<LatitudeTrack> _latitudeTracks = new ArrayList<>();
+        private final LinkedHashSet<LatitudeTrack> _latitudeTracks = new ObservableLinkedHashSet<>();
 
-        public List<LatitudeTrack> getLatitudeTracks() {
-            return new ArrayList<>(_latitudeTracks);
-        }
-
-        public void addLatitudeTrack(@Nonnull LatitudeTrack val) {
-            if (!_latitudeTracks.contains(val)) {
-                _latitudeTracks.add(val);
-            }
+        public LinkedHashSet<LatitudeTrack> getLatitudeTracks() {
+            return _latitudeTracks;
         }
 
         public LatitudeTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -450,7 +494,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addLatitudeTrack(new LatitudeTrack(stream, getInterpolationType(), format));
+                _latitudeTracks.add(new LatitudeTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -461,18 +505,16 @@ public class ParticleEmitter extends MDXObject {
         }
     }
 
-    private List<LatitudeTrackChunk> _latitudeTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<LatitudeTrackChunk> _latitudeTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<LatitudeTrackChunk> getLatitudeTrackChunks() {
-        return new ArrayList<>(_latitudeTrackChunks);
+    public LinkedHashSet<LatitudeTrackChunk> getLatitudeTrackChunks() {
+        return _latitudeTrackChunks;
     }
 
     public void addLatitudeTrackChunk(@Nonnull LatitudeTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_latitudeTrackChunks.contains(val)) {
-            _latitudeTrackChunks.add(val);
-        }
+        _latitudeTrackChunks.add(val);
     }
 
     public static class LifespanTrackChunk extends TrackChunk {
@@ -484,7 +526,7 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _lifespanTracks;
         }
 
@@ -495,16 +537,28 @@ public class ParticleEmitter extends MDXObject {
                 return _lifespan;
             }
 
+            public void setLifespan(float lifespan) {
+                _lifespan = lifespan;
+            }
+
             private float _inTan_lifespan;
 
             public float getInTanLifespan() {
                 return _inTan_lifespan;
             }
 
+            public void setInTanLifespan(float lifespan) {
+                _inTan_lifespan = lifespan;
+            }
+
             private float _outTan_lifespan;
 
             public float getOutTanLifespan() {
                 return _outTan_lifespan;
+            }
+
+            public void setOutTanLifespan(float lifespan) {
+                _outTan_lifespan = lifespan;
             }
 
             @Override
@@ -532,16 +586,10 @@ public class ParticleEmitter extends MDXObject {
             }
         }
 
-        private List<LifespanTrack> _lifespanTracks = new ArrayList<>();
+        private final LinkedHashSet<LifespanTrack> _lifespanTracks = new ObservableLinkedHashSet<>();
 
-        public List<LifespanTrack> getLifespanTracks() {
-            return new ArrayList<>(_lifespanTracks);
-        }
-
-        public void addLifespanTrack(@Nonnull LifespanTrack val) {
-            if (!_lifespanTracks.contains(val)) {
-                _lifespanTracks.add(val);
-            }
+        public LinkedHashSet<LifespanTrack> getLifespanTracks() {
+            return _lifespanTracks;
         }
 
         public LifespanTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -550,7 +598,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addLifespanTrack(new LifespanTrack(stream, getInterpolationType(), format));
+                _lifespanTracks.add(new LifespanTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -561,18 +609,16 @@ public class ParticleEmitter extends MDXObject {
         }
     }
 
-    private List<LifespanTrackChunk> _lifespanTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<LifespanTrackChunk> _lifespanTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<LifespanTrackChunk> getLifespanTrackChunks() {
-        return new ArrayList<>(_lifespanTrackChunks);
+    public LinkedHashSet<LifespanTrackChunk> getLifespanTrackChunks() {
+        return _lifespanTrackChunks;
     }
 
     public void addLifespanTrackChunk(@Nonnull LifespanTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_lifespanTrackChunks.contains(val)) {
-            _lifespanTrackChunks.add(val);
-        }
+        _lifespanTrackChunks.add(val);
     }
 
     public static class SpeedTrackChunk extends TrackChunk {
@@ -584,7 +630,7 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _speedTracks;
         }
 
@@ -595,16 +641,28 @@ public class ParticleEmitter extends MDXObject {
                 return _speed;
             }
 
+            public void setSpeed(float speed) {
+                _speed = speed;
+            }
+
             private float _inTan_speed;
 
             public float getInTanSpeed() {
                 return _inTan_speed;
             }
 
+            public void setInTanSpeed(float speed) {
+                _inTan_speed = speed;
+            }
+
             private float _outTan_speed;
 
             public float getOutTanSpeed() {
                 return _outTan_speed;
+            }
+
+            public void setOutTanSpeed(float speed) {
+                _outTan_speed = speed;
             }
 
             @Override
@@ -632,16 +690,10 @@ public class ParticleEmitter extends MDXObject {
             }
         }
 
-        private List<SpeedTrack> _speedTracks = new ArrayList<>();
+        private final LinkedHashSet<SpeedTrack> _speedTracks = new ObservableLinkedHashSet<>();
 
-        public List<SpeedTrack> getSpeedTracks() {
-            return new ArrayList<>(_speedTracks);
-        }
-
-        public void addSpeedTrack(@Nonnull SpeedTrack val) {
-            if (!_speedTracks.contains(val)) {
-                _speedTracks.add(val);
-            }
+        public LinkedHashSet<SpeedTrack> getSpeedTracks() {
+            return _speedTracks;
         }
 
         public SpeedTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -650,7 +702,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addSpeedTrack(new SpeedTrack(stream, getInterpolationType(), format));
+                _speedTracks.add(new SpeedTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -661,18 +713,16 @@ public class ParticleEmitter extends MDXObject {
         }
     }
 
-    private List<SpeedTrackChunk> _speedTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<SpeedTrackChunk> _speedTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<SpeedTrackChunk> getSpeedTrackChunks() {
-        return new ArrayList<>(_speedTrackChunks);
+    public LinkedHashSet<SpeedTrackChunk> getSpeedTrackChunks() {
+        return _speedTrackChunks;
     }
 
     public void addSpeedTrackChunk(@Nonnull SpeedTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_speedTrackChunks.contains(val)) {
-            _speedTrackChunks.add(val);
-        }
+        _speedTrackChunks.add(val);
     }
 
     public static class VisibilityTrackChunk extends TrackChunk {
@@ -684,20 +734,14 @@ public class ParticleEmitter extends MDXObject {
         }
 
         @Override
-        public List<? extends Track> getTracks() {
+        public Set<? extends Track> getTracks() {
             return _visibilityTracks;
         }
 
-        private List<VisibilityTrack> _visibilityTracks = new ArrayList<>();
+        private final LinkedHashSet<VisibilityTrack> _visibilityTracks = new ObservableLinkedHashSet<>();
 
-        public List<VisibilityTrack> getVisibilityTracks() {
-            return new ArrayList<>(_visibilityTracks);
-        }
-
-        public void addVisibilityTrack(@Nonnull VisibilityTrack val) {
-            if (!_visibilityTracks.contains(val)) {
-                _visibilityTracks.add(val);
-            }
+        public LinkedHashSet<VisibilityTrack> getVisibilityTracks() {
+            return _visibilityTracks;
         }
 
         public VisibilityTrackChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinStream.StreamException {
@@ -706,7 +750,7 @@ public class ParticleEmitter extends MDXObject {
             long tracksCount = getTracksCount();
 
             while (tracksCount > 0) {
-                addVisibilityTrack(new VisibilityTrack(stream, getInterpolationType(), format));
+                _visibilityTracks.add(new VisibilityTrack(stream, getInterpolationType(), format));
 
                 tracksCount--;
             }
@@ -717,18 +761,16 @@ public class ParticleEmitter extends MDXObject {
         }
     }
 
-    private List<VisibilityTrackChunk> _visibilityTrackChunks = new ArrayList<>();
+    private final LinkedHashSet<VisibilityTrackChunk> _visibilityTrackChunks = new ObservableLinkedHashSet<>();
 
-    public List<VisibilityTrackChunk> getVisibilityTrackChunks() {
-        return new ArrayList<>(_visibilityTrackChunks);
+    public LinkedHashSet<VisibilityTrackChunk> getVisibilityTrackChunks() {
+        return _visibilityTrackChunks;
     }
 
     public void addVisibilityTrackChunk(@Nonnull VisibilityTrackChunk val) {
-        addChunk(val);
+        _chunks.add(val);
 
-        if (!_visibilityTrackChunks.contains(val)) {
-            _visibilityTrackChunks.add(val);
-        }
+        _visibilityTrackChunks.add(val);
     }
 
     @Override
@@ -814,5 +856,9 @@ public class ParticleEmitter extends MDXObject {
                 break;
             }
         }
+    }
+
+    public ParticleEmitter() {
+        _node = new Node();
     }
 }

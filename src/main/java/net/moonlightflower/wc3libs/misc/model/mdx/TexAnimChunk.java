@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TexAnimChunk extends Chunk {
@@ -19,16 +21,10 @@ public class TexAnimChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<TexAnim> _texAnims = new ArrayList<>();
+    private final LinkedHashSet<TexAnim> _texAnims = new ObservableLinkedHashSet<>();
 
-    public List<TexAnim> getTexAnims() {
-        return new ArrayList<>(_texAnims);
-    }
-
-    public void addTexAnim(@Nonnull TexAnim val) {
-        if (!_texAnims.contains(val)) {
-            _texAnims.add(val);
-        }
+    public LinkedHashSet<TexAnim> getTexAnims() {
+        return _texAnims;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class TexAnimChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addTexAnim(new TexAnim(stream));
+            _texAnims.add(new TexAnim(stream));
         }
     }
 
@@ -75,7 +71,7 @@ public class TexAnimChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public TexAnimChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -85,6 +81,5 @@ public class TexAnimChunk extends Chunk {
     }
 
     public TexAnimChunk() {
-
     }
 }

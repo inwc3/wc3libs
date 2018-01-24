@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class FaceTypeGroupChunk extends Chunk {
@@ -19,16 +21,10 @@ public class FaceTypeGroupChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<FaceTypeGroup> _faceTypeGroups = new ArrayList<>();
+    private final LinkedHashSet<FaceTypeGroup> _faceTypeGroups = new ObservableLinkedHashSet<>();
 
-    public List<FaceTypeGroup> getFaceTypeGroups() {
-        return new ArrayList<>(_faceTypeGroups);
-    }
-
-    public void addVertex(@Nonnull FaceTypeGroup val) {
-        if (!_faceTypeGroups.contains(val)) {
-            _faceTypeGroups.add(val);
-        }
+    public LinkedHashSet<FaceTypeGroup> getFaceTypeGroups() {
+        return _faceTypeGroups;
     }
 
     @Override
@@ -42,6 +38,7 @@ public class FaceTypeGroupChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -54,9 +51,12 @@ public class FaceTypeGroupChunk extends Chunk {
         long faceTypeGroupsCount = stream.readUInt32("faceTypeGroupsCount");
 
         while (faceTypeGroupsCount > 0) {
-            addVertex(new FaceTypeGroup(stream));
+            _faceTypeGroups.add(new FaceTypeGroup(stream));
 
             faceTypeGroupsCount--;
         }
+    }
+
+    public FaceTypeGroupChunk() {
     }
 }

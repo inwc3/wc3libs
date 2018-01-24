@@ -8,10 +8,14 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 
 public abstract class Track {
-    private int _frame;
+    private int _frame = 0;
 
     public int getFrame() {
         return _frame;
+    }
+
+    public void setFrame(int frame) {
+        _frame = frame;
     }
 
     protected abstract void readSpec(@Nonnull Wc3BinInputStream stream, @Nonnull TrackChunk.InterpolationType interpolationType) throws BinStream.StreamException;
@@ -31,5 +35,8 @@ public abstract class Track {
 
     public Track(@Nonnull Wc3BinInputStream stream, @Nonnull TrackChunk.InterpolationType interpolationType) throws BinStream.StreamException {
         this(stream, interpolationType, MDX.EncodingFormat.AUTO);
+    }
+
+    public Track() {
     }
 }

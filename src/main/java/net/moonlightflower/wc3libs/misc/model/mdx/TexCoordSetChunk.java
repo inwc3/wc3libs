@@ -5,10 +5,13 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TexCoordSetChunk extends Chunk {
@@ -19,16 +22,10 @@ public class TexCoordSetChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<TexCoordSet> _texCoordSets = new ArrayList<>();
+    private final LinkedHashSet<TexCoordSet> _texCoordSets = new ObservableLinkedHashSet<>();
 
-    public List<TexCoordSet> getMatrixGroups() {
-        return new ArrayList<>(_texCoordSets);
-    }
-
-    public void addMatrixGroup(@Nonnull TexCoordSet val) {
-        if (!_texCoordSets.contains(val)) {
-            _texCoordSets.add(val);
-        }
+    public LinkedHashSet<TexCoordSet> getTexCoordSets() {
+        return _texCoordSets;
     }
 
     @Override
@@ -42,6 +39,7 @@ public class TexCoordSetChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -54,9 +52,12 @@ public class TexCoordSetChunk extends Chunk {
         long matrixGroupsCount = stream.readUInt32("texCoordSetCount");
 
         while (matrixGroupsCount > 0) {
-            addMatrixGroup(new TexCoordSet(stream));
+            _texCoordSets.add(new TexCoordSet(stream));
 
             matrixGroupsCount--;
         }
+    }
+
+    public TexCoordSetChunk() {
     }
 }

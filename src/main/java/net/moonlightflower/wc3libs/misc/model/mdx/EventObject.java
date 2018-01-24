@@ -10,14 +10,24 @@ import javax.annotation.Nonnull;
 public class EventObject extends MDXObject {
     private Node _node;
 
+    @Nonnull
     public Node getNode() {
         return _node;
     }
 
+    public void setNode(@Nonnull Node node) {
+        _node = node;
+    }
+
     private EventObjectTrackChunk _trackChunk;
 
+    @Nonnull
     public EventObjectTrackChunk getTrackChunk() {
         return _trackChunk;
+    }
+
+    public void setTrackChunk(@Nonnull EventObjectTrackChunk trackChunk) {
+        _trackChunk = trackChunk;
     }
 
     @Override
@@ -36,5 +46,10 @@ public class EventObject extends MDXObject {
         _node = new Node(stream);
 
         _trackChunk = new EventObjectTrackChunk(stream, MDX.EncodingFormat.MDX_0x0);
+    }
+
+    public EventObject() {
+        _node = new Node();
+        _trackChunk = new EventObjectTrackChunk();
     }
 }

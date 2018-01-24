@@ -8,6 +8,7 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -19,11 +20,48 @@ public class ModelInfoChunk extends Chunk {
         return TOKEN;
     }
 
-    private String _name;
-    private String _animFileName;
+    private String _name = "unset";
+
+    @Nonnull
+    public String getName() {
+        return _name;
+    }
+
+    public void setName(@Nonnull String name) {
+        _name = name;
+    }
+
+    private String _animFileName = "unset";
+
+    @Nonnull
+    public String getAnimFileName() {
+        return _animFileName;
+    }
+
+    public void setAnimFileName(@Nonnull String animFileName) {
+        _animFileName = animFileName;
+    }
 
     private Extent _extent;
-    private long _blendTime;
+
+    @Nonnull
+    public Extent getExtent() {
+        return _extent;
+    }
+
+    public void setExtent(@Nonnull Extent extent) {
+        _extent = extent;
+    }
+
+    private long _blendTime = 0;
+
+    public long getBlendTime() {
+        return _blendTime;
+    }
+
+    public void setBlendTime(long blendTime) {
+        _blendTime = blendTime;
+    }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
         Header header = new Header(stream);
@@ -73,7 +111,7 @@ public class ModelInfoChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public ModelInfoChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
@@ -83,6 +121,6 @@ public class ModelInfoChunk extends Chunk {
     }
 
     public ModelInfoChunk() {
-
+        _extent = new Extent();
     }
 }

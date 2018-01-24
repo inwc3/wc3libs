@@ -9,10 +9,14 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 
 public class IndexReference extends MDXObject {
-    private long _index;
+    private long _index = 0;
 
     public long getIndex() {
         return _index;
+    }
+
+    public void setIndex(long index) {
+        _index = index;
     }
 
     @Override
@@ -27,5 +31,8 @@ public class IndexReference extends MDXObject {
 
     public IndexReference(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _index = stream.readUInt32("index");
+    }
+
+    public IndexReference() {
     }
 }

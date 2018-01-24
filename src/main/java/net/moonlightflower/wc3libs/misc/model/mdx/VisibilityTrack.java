@@ -8,22 +8,34 @@ import net.moonlightflower.wc3libs.misc.model.MDX;
 import javax.annotation.Nonnull;
 
 public class VisibilityTrack extends Track {
-    private float _visibility;
+    private float _visibility = 0F;
 
     public float getVisibility() {
         return _visibility;
     }
 
-    private float _inTan_visibility;
+    public void setVisibility(float visibility) {
+        _visibility = visibility;
+    }
+
+    private float _inTan_visibility = 0F;
 
     public float getInTanVisibility() {
         return _inTan_visibility;
     }
 
-    private float _outTan_visibility;
+    public void setInTanVisibility(float visibility) {
+        _inTan_visibility = visibility;
+    }
+
+    private float _outTan_visibility = 0F;
 
     public float getOutTanVisibility() {
         return _outTan_visibility;
+    }
+
+    public void setOutTanVisibility(float visibility) {
+        _outTan_visibility = visibility;
     }
 
     @Override
@@ -49,5 +61,8 @@ public class VisibilityTrack extends Track {
     public VisibilityTrack(@Nonnull Wc3BinInputStream stream, @Nonnull TrackChunk.InterpolationType interpolationType, @Nonnull MDX.EncodingFormat format)
             throws BinStream.StreamException {
         super(stream, interpolationType, format);
+    }
+
+    public VisibilityTrack() {
     }
 }

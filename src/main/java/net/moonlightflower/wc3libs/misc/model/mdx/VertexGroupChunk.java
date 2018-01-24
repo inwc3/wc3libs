@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class VertexGroupChunk extends Chunk {
@@ -19,16 +21,10 @@ public class VertexGroupChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<VertexGroup> _vertexGroups = new ArrayList<>();
+    private final LinkedHashSet<VertexGroup> _vertexGroups = new ObservableLinkedHashSet<>();
 
-    public List<VertexGroup> getVertexGroups() {
-        return new ArrayList<>(_vertexGroups);
-    }
-
-    public void addVertexGroup(@Nonnull VertexGroup val) {
-        if (!_vertexGroups.contains(val)) {
-            _vertexGroups.add(val);
-        }
+    public LinkedHashSet<VertexGroup> getVertexGroups() {
+        return _vertexGroups;
     }
 
     @Override
@@ -42,6 +38,7 @@ public class VertexGroupChunk extends Chunk {
         }
     }
 
+    @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
         write(stream, MDX.EncodingFormat.AUTO);
     }
@@ -54,9 +51,12 @@ public class VertexGroupChunk extends Chunk {
         long vertexGroupsCount = stream.readUInt32("vertexGroupsCount");
 
         while (vertexGroupsCount > 0) {
-            addVertexGroup(new VertexGroup(stream));
+            _vertexGroups.add(new VertexGroup(stream));
 
             vertexGroupsCount--;
         }
+    }
+
+    public VertexGroupChunk() {
     }
 }

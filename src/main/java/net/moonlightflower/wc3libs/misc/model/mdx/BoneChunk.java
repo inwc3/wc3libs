@@ -5,10 +5,12 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class BoneChunk extends Chunk {
@@ -19,16 +21,10 @@ public class BoneChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Bone> _bones = new ArrayList<>();
+    private final LinkedHashSet<Bone> _bones = new ObservableLinkedHashSet<>();
 
-    public List<Bone> getBones() {
-        return new ArrayList<>(_bones);
-    }
-
-    public void addBone(@Nonnull Bone val) {
-        if (!_bones.contains(val)) {
-            _bones.add(val);
-        }
+    public LinkedHashSet<Bone> getBones() {
+        return _bones;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -37,7 +33,7 @@ public class BoneChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addBone(new Bone(stream));
+            _bones.add(new Bone(stream));
         }
     }
 

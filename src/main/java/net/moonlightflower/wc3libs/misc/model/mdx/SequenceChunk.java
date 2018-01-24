@@ -5,11 +5,13 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SequenceChunk extends Chunk {
@@ -20,16 +22,10 @@ public class SequenceChunk extends Chunk {
         return TOKEN;
     }
 
-    private List<Sequence> _sequencces = new ArrayList<>();
+    private final LinkedHashSet<Sequence> _sequencces = new ObservableLinkedHashSet<>();
 
-    public List<Sequence> getSequences() {
-        return new ArrayList<>(_sequencces);
-    }
-
-    public void addSequence(@Nonnull Sequence val) {
-        if (!_sequencces.contains(val)) {
-            _sequencces.add(val);
-        }
+    public LinkedHashSet<Sequence> getSequences() {
+        return _sequencces;
     }
 
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -38,7 +34,7 @@ public class SequenceChunk extends Chunk {
         long endPos = stream.getPos() + header.getSize();
 
         while (stream.getPos() < endPos) {
-            addSequence(new Sequence(stream));
+            _sequencces.add(new Sequence(stream));
         }
     }
 
@@ -76,7 +72,7 @@ public class SequenceChunk extends Chunk {
 
     @Override
     public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-        write(stream);
+        write(stream, MDX.EncodingFormat.AUTO);
     }
 
     public SequenceChunk(@Nonnull Wc3BinInputStream stream, @Nonnull MDX.EncodingFormat format) throws BinInputStream.StreamException {
