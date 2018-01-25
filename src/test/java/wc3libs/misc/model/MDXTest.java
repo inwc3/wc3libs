@@ -1,21 +1,19 @@
 package wc3libs.misc.model;
 
-import net.moonlightflower.wc3libs.bin.BinOutputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
-import java.io.*;
+import java.io.IOException;
 
 public class MDXTest extends Wc3LibTest {
     @Test()
     public void MDXTest() throws IOException {
         MDX mdx = new MDX(getFile("wc3data/Models/PackHorse.mdx"));
 
-        System.out.println(mdx.getVersionChunks().iterator().next().getVersion());
+        Assert.assertTrue(mdx.getVersionChunk().isPresent());
+        System.out.println(mdx.getVersionChunk().get().getVersion());
     }
 
     @Test()

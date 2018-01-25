@@ -5,20 +5,18 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
+import net.moonlightflower.wc3libs.misc.ObservableArrayList;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 
 public class TexCoordSet extends MDXObject {
     public final Id TOKEN = Id.valueOf("UVBS");
 
-    private final LinkedHashSet<TexCoord> _texCoords = new ObservableLinkedHashSet<>();
+    private final ArrayList<TexCoord> _texCoords = new ObservableArrayList<>();
 
-    public LinkedHashSet<TexCoord> getTexCoords() {
+    public ArrayList<TexCoord> getTexCoords() {
         return _texCoords;
     }
 
