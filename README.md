@@ -1,11 +1,12 @@
-[![Build Status](https://travis-ci.org/inwc3/wc3libs.svg?branch=master)](https://travis-ci.org/inwc3/wc3libs)[![Jit](https://jitpack.io/v/inwc3/wc3libs.svg)](https://jitpack.io/#inwc3/wc3libs``)
+[![Build Status](https://travis-ci.org/inwc3/wc3libs.svg?branch=master)](https://travis-ci.org/inwc3/wc3libs) [![Jit](https://jitpack.io/v/inwc3/wc3libs.svg)](https://jitpack.io/#inwc3/wc3libs)
+
 # wc3libs
 Java library for general wc3 modding.
 Use this library in your maven/gradle project using [JitPack](https://jitpack.io/#inwc3/wc3libs).
 
 Gradle Example:
 ```gradle
-compile 'com.github.inwc3:wc3libs:ee8410301c'
+compile 'com.github.inwc3:wc3libs:e5e471c59e'
 ```
 
 If you want to know how to read a certain kind of file, refer to the related test for a quick start.
