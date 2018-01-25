@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class MDX {
     private final ObservableLinkedHashSet<Chunk> _chunks = new ObservableLinkedHashSet<>();
@@ -19,18 +18,14 @@ public class MDX {
         return _chunks;
     }
 
-    private final LinkedHashSet<VersionChunk> _versionChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof VersionChunk);
-
     @Nonnull
-    public LinkedHashSet<VersionChunk> getVersionChunks() {
-        return _versionChunks;
+    public Optional<VersionChunk> getVersionChunk() {
+        return _chunks.stream().filter(chunk -> chunk instanceof VersionChunk).map(chunk -> (VersionChunk) chunk).findFirst();
     }
 
-    private final LinkedHashSet<ModelInfoChunk> _modelInfoChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof ModelInfoChunk);
-
     @Nonnull
-    public final LinkedHashSet<ModelInfoChunk> getModelInfoChunks() {
-        return _modelInfoChunks;
+    public final Optional<ModelInfoChunk> getModelInfoChunk() {
+        return _chunks.stream().filter(chunk -> chunk instanceof ModelInfoChunk).map(chunk -> (ModelInfoChunk) chunk).findFirst();
     }
 
     private final LinkedHashSet<SequenceChunk> _sequenceChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof SequenceChunk);
@@ -40,7 +35,8 @@ public class MDX {
         return _sequenceChunks;
     }
 
-    private final LinkedHashSet<GlobalSequenceChunk> _globalSequenceChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof GlobalSequenceChunk);
+    private final LinkedHashSet<GlobalSequenceChunk> _globalSequenceChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
+            GlobalSequenceChunk);
 
     @Nonnull
     public LinkedHashSet<GlobalSequenceChunk> getGlobalSequenceChunks() {
@@ -103,7 +99,7 @@ public class MDX {
         return _lightChunks;
     }
 
-    private final LinkedHashSet<HelperChunk> _helperChunks =new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof HelperChunk);
+    private final LinkedHashSet<HelperChunk> _helperChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof HelperChunk);
 
     @Nonnull
     public LinkedHashSet<HelperChunk> getHelperChunks() {
@@ -124,21 +120,24 @@ public class MDX {
         return _pivotPointChunks;
     }
 
-    private final LinkedHashSet<ParticleEmitterChunk> _particleEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof ParticleEmitterChunk);
+    private final LinkedHashSet<ParticleEmitterChunk> _particleEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
+            ParticleEmitterChunk);
 
     @Nonnull
     public LinkedHashSet<ParticleEmitterChunk> getParticleEmitterChunks() {
         return _particleEmitterChunks;
     }
 
-    private final LinkedHashSet<ParticleEmitter2Chunk> _particleEmitter2Chunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof ParticleEmitter2Chunk);
+    private final LinkedHashSet<ParticleEmitter2Chunk> _particleEmitter2Chunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
+            ParticleEmitter2Chunk);
 
     @Nonnull
     public LinkedHashSet<ParticleEmitter2Chunk> getParticleEmitter2Chunks() {
         return _particleEmitter2Chunks;
     }
 
-    private final LinkedHashSet<RibbonEmitterChunk> _ribbonEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof RibbonEmitterChunk);
+    private final LinkedHashSet<RibbonEmitterChunk> _ribbonEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
+            RibbonEmitterChunk);
 
     @Nonnull
     public LinkedHashSet<RibbonEmitterChunk> getRibbonEmitterChunks() {
@@ -159,7 +158,8 @@ public class MDX {
         return _cameraChunks;
     }
 
-    private final LinkedHashSet<CollisionShapeChunk> _collisionShapeChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof CollisionShapeChunk);
+    private final LinkedHashSet<CollisionShapeChunk> _collisionShapeChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
+            CollisionShapeChunk);
 
     @Nonnull
     public LinkedHashSet<CollisionShapeChunk> getCollisionShapeChunks() {
@@ -201,8 +201,8 @@ public class MDX {
 
         Map<Id, TokenHandler> _tokenMap = new LinkedHashMap<>();
 
-        _tokenMap.put(VersionChunk.TOKEN, () -> _versionChunks.add(new VersionChunk(stream, EncodingFormat.MDX_0x0)));
-        _tokenMap.put(ModelInfoChunk.TOKEN, () -> _modelInfoChunks.add(new ModelInfoChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(VersionChunk.TOKEN, () -> _chunks.add(new VersionChunk(stream, EncodingFormat.MDX_0x0)));
+        _tokenMap.put(ModelInfoChunk.TOKEN, () -> _chunks.add(new ModelInfoChunk(stream, EncodingFormat.MDX_0x0)));
         _tokenMap.put(SequenceChunk.TOKEN, () -> _sequenceChunks.add(new SequenceChunk(stream, EncodingFormat.MDX_0x0)));
         _tokenMap.put(GlobalSequenceChunk.TOKEN, () -> _globalSequenceChunks.add(new GlobalSequenceChunk(stream, EncodingFormat.MDX_0x0)));
         _tokenMap.put(TextureChunk.TOKEN, () -> _textureChunks.add(new TextureChunk(stream, EncodingFormat.MDX_0x0)));
@@ -233,7 +233,7 @@ public class MDX {
 
                 handler.run();
             } else {
-                System.err.println("unknown chunk " + chunkToken + ";" + chunkToken.toString().getBytes());
+                System.err.println("unknown chunk " + chunkToken + ";" + Arrays.toString(chunkToken.toString().getBytes()));
 
                 long size = stream.readUInt32("header_size");
 

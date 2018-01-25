@@ -5,13 +5,11 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
+import net.moonlightflower.wc3libs.misc.ObservableArrayList;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 
 public class VertexChunk extends Chunk {
     public static Id TOKEN = Id.valueOf("VRTX");
@@ -21,9 +19,9 @@ public class VertexChunk extends Chunk {
         return TOKEN;
     }
 
-    private final LinkedHashSet<Vertex> _vertices = new ObservableLinkedHashSet<>();
+    private final ArrayList<Vertex> _vertices = new ObservableArrayList<>();
 
-    public LinkedHashSet<Vertex> getVertices() {
+    public ArrayList<Vertex> getVertices() {
         return _vertices;
     }
 
@@ -57,6 +55,6 @@ public class VertexChunk extends Chunk {
         }
     }
 
-    public VertexChunk() {
+    VertexChunk() {
     }
 }

@@ -5,14 +5,11 @@ import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
+import net.moonlightflower.wc3libs.misc.ObservableArrayList;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
 
 public class TexCoordSetChunk extends Chunk {
     public static Id TOKEN = Id.valueOf("UVAS");
@@ -22,9 +19,9 @@ public class TexCoordSetChunk extends Chunk {
         return TOKEN;
     }
 
-    private final LinkedHashSet<TexCoordSet> _texCoordSets = new ObservableLinkedHashSet<>();
+    private final ArrayList<TexCoordSet> _texCoordSets = new ObservableArrayList<>();
 
-    public LinkedHashSet<TexCoordSet> getTexCoordSets() {
+    public ArrayList<TexCoordSet> getTexCoordSets() {
         return _texCoordSets;
     }
 
