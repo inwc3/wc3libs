@@ -1,4 +1,4 @@
-// Generated from FDF.g4 by ANTLR 4.5.3
+// Generated from FDF.g4 by ANTLR 4.7
 
 	package net.moonlightflower.wc3libs.antlr;
 

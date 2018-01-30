@@ -1,4 +1,4 @@
-// Generated from Jass.g4 by ANTLR 4.5.3
+// Generated from Jass.g4 by ANTLR 4.7
 
 	package net.moonlightflower.wc3libs.antlr;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class JassParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -183,7 +183,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -202,6 +205,7 @@ public class JassParser extends Parser {
 				setState(78);
 				typeDec();
 				setState(80);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -223,7 +227,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -250,7 +257,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -269,6 +279,7 @@ public class JassParser extends Parser {
 				setState(100);
 				nativeDec();
 				setState(102);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -290,7 +301,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -307,6 +321,7 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 			}
 			setState(117);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -318,6 +333,7 @@ public class JassParser extends Parser {
 			setState(119);
 			globalsBlock();
 			setState(121);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -339,7 +355,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -359,6 +378,7 @@ public class JassParser extends Parser {
 					setState(130);
 					nativeDec();
 					setState(132);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -371,7 +391,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==EOF || _la==NEW_LINE) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					setState(138);
@@ -385,7 +408,10 @@ public class JassParser extends Parser {
 							_la = _input.LA(1);
 							if ( !(_la==NEW_LINE || _la==WS) ) {
 							_errHandler.recoverInline(this);
-							} else {
+							}
+							else {
+								if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+								_errHandler.reportMatch(this);
 								consume();
 							}
 							}
@@ -413,7 +439,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -432,6 +461,7 @@ public class JassParser extends Parser {
 				setState(152);
 				func();
 				setState(154);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -453,7 +483,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -479,7 +512,10 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==NEW_LINE || _la==WS) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				}
@@ -541,6 +577,7 @@ public class JassParser extends Parser {
 			setState(174);
 			match(T__0);
 			setState(176);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -562,7 +599,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -581,6 +621,7 @@ public class JassParser extends Parser {
 				setState(185);
 				globalDec();
 				setState(187);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -602,7 +643,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -628,7 +672,10 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==NEW_LINE || _la==WS) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				}
@@ -784,6 +831,7 @@ public class JassParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(221);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__3) {
 					{
@@ -806,6 +854,7 @@ public class JassParser extends Parser {
 				case 1:
 					{
 					setState(227);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -817,6 +866,7 @@ public class JassParser extends Parser {
 					setState(229);
 					match(T__4);
 					setState(231);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -877,6 +927,7 @@ public class JassParser extends Parser {
 			setState(238);
 			match(T__5);
 			setState(240);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -888,6 +939,7 @@ public class JassParser extends Parser {
 			setState(242);
 			expr(0);
 			setState(244);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -975,6 +1027,7 @@ public class JassParser extends Parser {
 				setState(249);
 				match(T__5);
 				setState(251);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -986,6 +1039,7 @@ public class JassParser extends Parser {
 				setState(253);
 				expr(0);
 				setState(255);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -997,6 +1051,7 @@ public class JassParser extends Parser {
 				setState(257);
 				match(T__6);
 				setState(259);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1009,10 +1064,14 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==T__7 || _la==T__8) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(263);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1024,6 +1083,7 @@ public class JassParser extends Parser {
 				setState(265);
 				match(T__5);
 				setState(267);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1035,6 +1095,7 @@ public class JassParser extends Parser {
 				setState(269);
 				expr(0);
 				setState(271);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1052,6 +1113,7 @@ public class JassParser extends Parser {
 				setState(275);
 				match(T__5);
 				setState(277);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1063,6 +1125,7 @@ public class JassParser extends Parser {
 				setState(279);
 				expr(0);
 				setState(281);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1074,6 +1137,7 @@ public class JassParser extends Parser {
 				setState(283);
 				match(T__6);
 				setState(285);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1086,13 +1150,16 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==T__7 || _la==T__8) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(288);
 				match(WS);
 				setState(289);
-				expr(0);
+				expr(11);
 				}
 				break;
 			case 3:
@@ -1100,6 +1167,7 @@ public class JassParser extends Parser {
 				setState(291);
 				match(T__9);
 				setState(304);
+				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case WS:
 					{
@@ -1114,6 +1182,7 @@ public class JassParser extends Parser {
 					setState(294);
 					match(T__5);
 					setState(296);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -1125,6 +1194,7 @@ public class JassParser extends Parser {
 					setState(298);
 					expr(0);
 					setState(300);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -1154,10 +1224,14 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==T__10 || _la==T__11) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(309);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1199,6 +1273,7 @@ public class JassParser extends Parser {
 				setState(316);
 				match(T__5);
 				setState(318);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1210,6 +1285,7 @@ public class JassParser extends Parser {
 				setState(320);
 				expr(0);
 				setState(322);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -1247,7 +1323,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==T__7 || _la==T__8) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(331);
@@ -1263,6 +1342,7 @@ public class JassParser extends Parser {
 						setState(333);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
 						setState(335);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1275,10 +1355,14 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13))) != 0)) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(339);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1298,6 +1382,7 @@ public class JassParser extends Parser {
 						setState(342);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(344);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1310,10 +1395,14 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__14) | (1L << T__15) | (1L << T__16) | (1L << T__17) | (1L << T__18) | (1L << T__19))) != 0)) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(348);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1338,10 +1427,14 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==T__7 || _la==T__8) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(355);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1353,6 +1446,7 @@ public class JassParser extends Parser {
 						setState(357);
 						match(T__5);
 						setState(359);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1364,6 +1458,7 @@ public class JassParser extends Parser {
 						setState(361);
 						expr(0);
 						setState(363);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1431,6 +1526,7 @@ public class JassParser extends Parser {
 			setState(372);
 			funcName();
 			setState(374);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -1454,6 +1550,7 @@ public class JassParser extends Parser {
 			setState(380);
 			arg_list();
 			setState(382);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -1511,6 +1608,7 @@ public class JassParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(400);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__5) | (1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__22) | (1L << BOOL_LITERAL) | (1L << INT_LITERAL) | (1L << REAL_LITERAL) | (1L << STRING_LITERAL) | (1L << ID))) != 0)) {
 				{
@@ -1524,6 +1622,7 @@ public class JassParser extends Parser {
 						{
 						{
 						setState(388);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1535,6 +1634,7 @@ public class JassParser extends Parser {
 						setState(390);
 						match(COMMA);
 						setState(392);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -1687,6 +1787,7 @@ public class JassParser extends Parser {
 		enterRule(_localctx, 22, RULE_literal);
 		try {
 			setState(416);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BOOL_LITERAL:
 				enterOuterAlt(_localctx, 1);
@@ -1814,6 +1915,7 @@ public class JassParser extends Parser {
 				case 1:
 					{
 					setState(431);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -1825,6 +1927,7 @@ public class JassParser extends Parser {
 					setState(433);
 					match(T__4);
 					setState(435);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -1902,6 +2005,7 @@ public class JassParser extends Parser {
 					{
 					{
 					setState(444);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -1922,7 +2026,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -1979,6 +2086,7 @@ public class JassParser extends Parser {
 		enterRule(_localctx, 28, RULE_statement2);
 		try {
 			setState(461);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__24:
 				enterOuterAlt(_localctx, 1);
@@ -2047,6 +2155,7 @@ public class JassParser extends Parser {
 		enterRule(_localctx, 30, RULE_statement);
 		try {
 			setState(469);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__24:
 				enterOuterAlt(_localctx, 1);
@@ -2152,6 +2261,7 @@ public class JassParser extends Parser {
 					{
 					{
 					setState(473);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -2172,7 +2282,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -2297,6 +2410,7 @@ public class JassParser extends Parser {
 			case 1:
 				{
 				setState(496);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -2315,6 +2429,7 @@ public class JassParser extends Parser {
 				break;
 			}
 			setState(505);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2326,6 +2441,7 @@ public class JassParser extends Parser {
 			setState(507);
 			match(T__4);
 			setState(509);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2441,6 +2557,7 @@ public class JassParser extends Parser {
 			setState(517);
 			match(T__26);
 			setState(519);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2452,6 +2569,7 @@ public class JassParser extends Parser {
 			setState(521);
 			condition();
 			setState(523);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2463,6 +2581,7 @@ public class JassParser extends Parser {
 			setState(525);
 			match(T__27);
 			setState(527);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2483,7 +2602,10 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==NEW_LINE || _la==WS) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				}
@@ -2562,6 +2684,7 @@ public class JassParser extends Parser {
 			setState(538);
 			match(T__26);
 			setState(540);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2573,6 +2696,7 @@ public class JassParser extends Parser {
 			setState(542);
 			condition();
 			setState(544);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2584,6 +2708,7 @@ public class JassParser extends Parser {
 			setState(546);
 			match(T__27);
 			setState(548);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2605,7 +2730,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -2616,6 +2744,7 @@ public class JassParser extends Parser {
 				_alt = getInterpreter().adaptivePredict(_input,89,_ctx);
 			}
 			setState(558);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__24) | (1L << T__25) | (1L << T__26) | (1L << T__31) | (1L << T__33) | (1L << T__34))) != 0)) {
 				{
@@ -2635,7 +2764,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -2654,6 +2786,7 @@ public class JassParser extends Parser {
 				setState(566);
 				match(T__29);
 				setState(570);
+				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case T__5:
 					{
@@ -2675,6 +2808,7 @@ public class JassParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				setState(573);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -2686,6 +2820,7 @@ public class JassParser extends Parser {
 				setState(575);
 				match(T__27);
 				setState(577);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -2707,7 +2842,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -2718,6 +2856,7 @@ public class JassParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input,95,_ctx);
 				}
 				setState(587);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__24) | (1L << T__25) | (1L << T__26) | (1L << T__31) | (1L << T__33) | (1L << T__34))) != 0)) {
 					{
@@ -2737,7 +2876,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -2754,12 +2896,14 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 			}
 			setState(620);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__30) {
 				{
 				setState(600);
 				match(T__30);
 				setState(602);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -2781,7 +2925,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -2792,6 +2939,7 @@ public class JassParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input,100,_ctx);
 				}
 				setState(612);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__24) | (1L << T__25) | (1L << T__26) | (1L << T__31) | (1L << T__33) | (1L << T__34))) != 0)) {
 					{
@@ -2811,7 +2959,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -2834,7 +2985,10 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==NEW_LINE || _la==WS) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				}
@@ -2895,6 +3049,7 @@ public class JassParser extends Parser {
 			setState(630);
 			match(T__31);
 			setState(632);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -2916,7 +3071,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -2927,12 +3085,14 @@ public class JassParser extends Parser {
 				_alt = getInterpreter().adaptivePredict(_input,106,_ctx);
 			}
 			setState(647);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__24) | (1L << T__25) | (1L << T__26) | (1L << T__31) | (1L << T__33) | (1L << T__34))) != 0)) {
 				{
 				setState(641);
 				loopBody();
 				setState(643);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -2956,7 +3116,10 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==NEW_LINE || _la==WS) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				}
@@ -3012,6 +3175,7 @@ public class JassParser extends Parser {
 			setState(657);
 			match(T__33);
 			setState(670);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case WS:
 				{
@@ -3028,6 +3192,7 @@ public class JassParser extends Parser {
 				setState(660);
 				match(T__5);
 				setState(662);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -3039,6 +3204,7 @@ public class JassParser extends Parser {
 				setState(664);
 				expr(0);
 				setState(666);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -3125,7 +3291,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -3227,6 +3396,7 @@ public class JassParser extends Parser {
 			setState(688);
 			match(T__34);
 			setState(694);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__5:
 				{
@@ -3344,6 +3514,7 @@ public class JassParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(699);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__3) {
 				{
@@ -3428,6 +3599,7 @@ public class JassParser extends Parser {
 			setState(713);
 			funcDec();
 			setState(715);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS) {
 				{
@@ -3449,7 +3621,10 @@ public class JassParser extends Parser {
 					_la = _input.LA(1);
 					if ( !(_la==NEW_LINE || _la==WS) ) {
 					_errHandler.recoverInline(this);
-					} else {
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
 						consume();
 					}
 					}
@@ -3467,6 +3642,7 @@ public class JassParser extends Parser {
 				setState(724);
 				((FuncContext)_localctx).body = funcBody();
 				setState(726);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==WS) {
 					{
@@ -3490,7 +3666,10 @@ public class JassParser extends Parser {
 				_la = _input.LA(1);
 				if ( !(_la==NEW_LINE || _la==WS) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				}
@@ -3537,6 +3716,7 @@ public class JassParser extends Parser {
 		enterRule(_localctx, 60, RULE_funcReturnType);
 		try {
 			setState(742);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__38:
 				enterOuterAlt(_localctx, 1);
@@ -3600,6 +3780,7 @@ public class JassParser extends Parser {
 		try {
 			int _alt;
 			setState(759);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__38:
 				enterOuterAlt(_localctx, 1);
@@ -3622,6 +3803,7 @@ public class JassParser extends Parser {
 						{
 						{
 						setState(747);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -3633,6 +3815,7 @@ public class JassParser extends Parser {
 						setState(749);
 						match(COMMA);
 						setState(751);
+						_errHandler.sync(this);
 						_la = _input.LA(1);
 						if (_la==WS) {
 							{
@@ -3754,6 +3937,7 @@ public class JassParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(766);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__23) {
 					{
@@ -3768,6 +3952,7 @@ public class JassParser extends Parser {
 				case 1:
 					{
 					setState(769);
+					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==WS) {
 						{
@@ -3788,7 +3973,10 @@ public class JassParser extends Parser {
 						_la = _input.LA(1);
 						if ( !(_la==NEW_LINE || _la==WS) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						}
@@ -3809,6 +3997,7 @@ public class JassParser extends Parser {
 				{
 				{
 				setState(782);
+				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__24) | (1L << T__25) | (1L << T__26) | (1L << T__31) | (1L << T__33) | (1L << T__34))) != 0)) {
 					{
@@ -3928,6 +4117,7 @@ public class JassParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(796);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__3) {
 				{
@@ -3995,7 +4185,7 @@ public class JassParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3:\u032d\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3:\u032d\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -4063,13 +4253,13 @@ public class JassParser extends Parser {
 		"\3$\3$\3$\3$\3$\3$\3$\3$\3%\3%\5%\u031f\n%\3%\3%\3%\3%\3%\3%\3%\3%\3%"+
 		"\3%\3%\3%\3%\2\3\16&\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60"+
 		"\62\64\668:<>@BDFH\2\b\3\29:\3\399\3\2\n\13\3\2\r\16\3\2\r\20\3\2\21\26"+
-		"\u03a0\2M\3\2\2\2\4\u00b0\3\2\2\2\6\u00d3\3\2\2\2\b\u00d5\3\2\2\2\n\u00ee"+
-		"\3\2\2\2\f\u00f0\3\2\2\2\16\u0148\3\2\2\2\20\u0176\3\2\2\2\22\u0192\3"+
-		"\2\2\2\24\u0194\3\2\2\2\26\u0199\3\2\2\2\30\u01a2\3\2\2\2\32\u01a4\3\2"+
-		"\2\2\34\u01bc\3\2\2\2\36\u01cf\3\2\2\2 \u01d7\3\2\2\2\"\u01d9\3\2\2\2"+
-		"$\u01ea\3\2\2\2&\u01ee\3\2\2\2(\u0205\3\2\2\2*\u0207\3\2\2\2,\u021c\3"+
-		"\2\2\2.\u0278\3\2\2\2\60\u0293\3\2\2\2\62\u02a2\3\2\2\2\64\u02b0\3\2\2"+
-		"\2\66\u02b2\3\2\2\28\u02ba\3\2\2\2:\u02bd\3\2\2\2<\u02cb\3\2\2\2>\u02e8"+
+		"\2\u03a0\2M\3\2\2\2\4\u00b0\3\2\2\2\6\u00d3\3\2\2\2\b\u00d5\3\2\2\2\n"+
+		"\u00ee\3\2\2\2\f\u00f0\3\2\2\2\16\u0148\3\2\2\2\20\u0176\3\2\2\2\22\u0192"+
+		"\3\2\2\2\24\u0194\3\2\2\2\26\u0199\3\2\2\2\30\u01a2\3\2\2\2\32\u01a4\3"+
+		"\2\2\2\34\u01bc\3\2\2\2\36\u01cf\3\2\2\2 \u01d7\3\2\2\2\"\u01d9\3\2\2"+
+		"\2$\u01ea\3\2\2\2&\u01ee\3\2\2\2(\u0205\3\2\2\2*\u0207\3\2\2\2,\u021c"+
+		"\3\2\2\2.\u0278\3\2\2\2\60\u0293\3\2\2\2\62\u02a2\3\2\2\2\64\u02b0\3\2"+
+		"\2\2\66\u02b2\3\2\2\28\u02ba\3\2\2\2:\u02bd\3\2\2\2<\u02cb\3\2\2\2>\u02e8"+
 		"\3\2\2\2@\u02f9\3\2\2\2B\u02fb\3\2\2\2D\u0312\3\2\2\2F\u0314\3\2\2\2H"+
 		"\u031e\3\2\2\2JL\t\2\2\2KJ\3\2\2\2LO\3\2\2\2MK\3\2\2\2MN\3\2\2\2N]\3\2"+
 		"\2\2OM\3\2\2\2PR\5F$\2QS\7:\2\2RQ\3\2\2\2RS\3\2\2\2ST\3\2\2\2TX\79\2\2"+
@@ -4135,7 +4325,7 @@ public class JassParser extends Parser {
 		"\u011c\7:\2\2\u011b\u011a\3\2\2\2\u011b\u011c\3\2\2\2\u011c\u011d\3\2"+
 		"\2\2\u011d\u011f\7\t\2\2\u011e\u0120\7:\2\2\u011f\u011e\3\2\2\2\u011f"+
 		"\u0120\3\2\2\2\u0120\u0121\3\2\2\2\u0121\u0122\t\4\2\2\u0122\u0123\7:"+
-		"\2\2\u0123\u0124\5\16\b\2\u0124\u0149\3\2\2\2\u0125\u0132\7\f\2\2\u0126"+
+		"\2\2\u0123\u0124\5\16\b\r\u0124\u0149\3\2\2\2\u0125\u0132\7\f\2\2\u0126"+
 		"\u0127\7:\2\2\u0127\u0133\5\16\b\2\u0128\u012a\7\b\2\2\u0129\u012b\7:"+
 		"\2\2\u012a\u0129\3\2\2\2\u012a\u012b\3\2\2\2\u012b\u012c\3\2\2\2\u012c"+
 		"\u012e\5\16\b\2\u012d\u012f\7:\2\2\u012e\u012d\3\2\2\2\u012e\u012f\3\2"+
