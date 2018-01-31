@@ -1,7 +1,18 @@
+buildscript {
+    ext.kotlin_version = '1.2.21'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 plugins {
     id "idea"
     id "jacoco"
-    id 'org.jetbrains.kotlin.jvm' version "1.2.21"
 }
 apply plugin: 'antlr'
 apply plugin: 'kotlin'
@@ -10,33 +21,38 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 group 'net.moonlightflower'
-version '1.0.1'
-ext.kotlin_version = '1.2.21'
+version '1.0.2'
 
 repositories {
     jcenter()
-	mavenCentral()
+    mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
-jar.archiveName = "${jar.baseName}.${jar.extension}"
-jar {
-    from {configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
 dependencies {
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+    antlr "org.antlr:antlr4:4.7"
 
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
     compile 'com.github.inwc3:JMPQ3:1.5.7'
     compile group: 'com.esotericsoftware.minlog', name: 'minlog', version: '1.2'
-    antlr "org.antlr:antlr4:4.7"
-    testCompile 'org.testng:testng:6.1.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    testCompile 'org.testng:testng:6.1.1'
 }
+
+task dist(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from { configurations.compile.collect { zipTree(it) } }
+}
+dist.dependsOn classes
+
+dist.archiveName = "${jar.baseName}.${jar.extension}"
 
 test {
     useTestNG()
 }
+
 jacocoTestReport {
     reports {
         xml.enabled true
@@ -50,7 +66,6 @@ task sourcesJar(type: Jar) {
 
 artifacts {
     archives jar
-
     archives sourcesJar
 }
 
