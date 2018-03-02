@@ -182,47 +182,14 @@ public class W3I {
             return null;
         }
 
-        public static class Flag extends FlagsInt.Flag {
-            private final static List<Flag> _all = new ArrayList<>();
-
-            public final static Flag HIDE_MINIMAP = new Flag(0, "hideMinimap");
-            public final static Flag MODIFY_ALLY_PRIORITIES = new Flag(1, "modifyAllyPriorities");
-            public final static Flag MELEE_MAP = new Flag(2, "meleeMap");
-            public final static Flag INITIAL_MAP_SIZE_LARGE_NEVER_MODIFIED = new Flag(3, "initialMapSizeLargeNeverModified");
-            public final static Flag MASKED_AREAS_PARTIALLY_VISIBLE = new Flag(4, "maskedAreasPartiallyVisible");
-            public final static Flag FIXED_PLAYER_FORCE_SETTING = new Flag(5, "fixedPlayerForceSetting");
-            public final static Flag USE_CUSTOM_FORCES = new Flag(6, "useCustomForces");
-            public final static Flag USE_CUSTOM_TECHS = new Flag(7, "useCustomTechs");
-            public final static Flag USE_CUSTOM_ABILS = new Flag(8, "useCustomAbils");
-            public final static Flag USE_CUSTOM_UPGRADES = new Flag(9, "useCustomUpgrades");
-            public final static Flag MAP_PROPERTIES_WINDOW_OPENED_BEFORE = new Flag(10, "mapPrioritiesWindowOpenedBefore");
-            public final static Flag SHOW_WATER_WAVES_ON_CLIFF_SHORES = new Flag(11, "showWaterWavesOnCliffShores");
-            public final static Flag SHOW_WATER_WAVES_ON_ROLLING_SHORES = new Flag(12, "showWaterWavesOnRollingShores");
-            public final static Flag UNKNOWN = new Flag(13, "unknown");
-            public final static Flag UNKNOWN_B = new Flag(14, "unknownB");
-            public final static Flag UNKNOWN_C = new Flag(15, "unknownC");
-
-            public static Flag[] values() {
-                Flag[] flags = new Flag[_all.size()];
-
-                return _all.toArray(flags);
-            }
-
-            private Flag(int pos, String label) {
-                super(pos, label);
-
-                _all.add(this);
-            }
-        }
-
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder("");
 
-            Flag[] flags = Flag.values();
+            MapFlag[] flags = MapFlag.values();
 
             if (flags.length > 0) {
-                for (Flag flag : flags) {
+                for (MapFlag flag : flags) {
                     if (sb.length() > 0) {
                         sb.append(" ");
                     }
@@ -253,11 +220,11 @@ public class W3I {
         _flags = val;
     }
 
-    public boolean getFlag(Flags.Flag flag) {
+    public boolean getFlag(MapFlag flag) {
         return _flags.containsFlag(flag);
     }
 
-    public void setFlag(Flags.Flag flag, boolean val) {
+    public void setFlag(MapFlag flag, boolean val) {
         _flags.setFlag(flag, val);
     }
 
