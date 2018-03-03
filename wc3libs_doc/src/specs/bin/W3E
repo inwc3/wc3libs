@@ -1,0 +1,49 @@
+//0xB
+Id: startToken (W3E!)
+int: version
+char: mainTileset
+    A: ashenvale
+    B: barrens
+    C: felwood
+    D: dungeon
+    F: lordaeronFall
+    G: underground
+    L: lordaeronSummer
+    N: northrend
+    Q: villageFall
+    V: village
+    W: lordaeronWinter
+    X: dalaran
+    Y: cityscape
+    Z: sunkenRuins
+    I: icecrown
+    J: dalaranRuins
+    O: outland
+    k: blackCitadel
+int: customTilesetFlag (1: enabled)
+int: groundTilesUsedCount
+Id[groundTilesUsedCount]: groundTiles
+int: cliffTilesUsedCount
+Id[cliffTilesUsedCount]: cliffTiles
+int: width + 1
+int: height + 1
+float: centerX
+float: centerY
+
+tiles[(width + 1) * (height + 1)]:
+    short: groundHeight
+        0xC000: minHeight (-16384)
+        0x2000: normalHeight (0)
+        0x3fff: maxHeight (+16383)
+    short: waterLevel, mapEdgeBoundaryFlag
+        & 0x8000: boundary enabled
+    bit[4]: flags
+        0x4000: boundaryFlag
+        0x10: rampFlag
+        0x20: blightFlag
+        0x40: waterFlag
+        0x80: boundaryFlag2
+    bit[4]: texType
+    byte: texDetails
+    bit[4]: cliffTexType
+    bit[4]: layerHeight

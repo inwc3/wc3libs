@@ -1,0 +1,19 @@
+Id: startToken (HM3W)
+int: unknown
+string: mapName
+int: mapFlags
+    0x1: hideMinimapInPreviewScreens
+    0x2: modifyAllyPriorities
+    0x4: meleeMap
+    0x8: playableMapSizeWasLargeAndHasNeverBeenReducedToMedium
+    0x10: maskedAreaArePartiallyVisible
+    0x20: fixedPlayerSettingForCustomForces
+    0x40: useCustomForces
+    0x80: useCustomTechtree
+    0x100: useCustomAbilities
+    0x200: useCustomUpgrades
+    0x400: mapPropertiesMenuOpenedAtLeastOnceSinceMapCreation
+    0x800: showWaterWavesOnCliffShores
+    0x1000: showWaterWavesOnRollingShores
+int: maxPlayersCount
+byte[x]: padding (filled with 0 until header spans 512 bytes)
