@@ -1,0 +1,87 @@
+//0x8
+Id: startToken (W3do)
+int: version (8)
+int: subVersion (0xB)
+int: treesCount
+
+tree[treesCount]:
+    Id: treeId
+    int: variation
+    float: x
+    float: y
+    float: z
+    float: angle (rad)
+    float scaleX
+    float scaleY
+    float scaleZ
+    byte: flags
+        0x0: invisible, non-solid
+        0x1: visible, non-solid
+        0x2: visible, solid
+    int: lifePerc
+    int: randItemTablePtr (dropped on death)
+        -1: no table
+        >=0: table index
+    int: itemSetsDroppedCount (may only be > 0 if randItemTablePtr = -1)
+
+    itemSetDropped[itemSetsDroppedCount]:
+        int: itemsCount
+
+        item[itemsCount]:
+            Id: itemId
+                YxIy: random (x=type, y=level)
+                    x=Y: any
+                    x=h: permanent
+                    x=i: charged
+                    x=j: powerup
+                    x=k: artifact
+                    x=l: purchasable
+                    x=m: campaign
+                    x=n: misc
+                    x=o: unknown
+
+                    y=/: any level
+                    y>/: level=y-/-1
+            int: chancePerc
+
+    int: editorId
+
+int: specialVersion (0)
+int: specialTreesCount
+
+specialTree[specialTreesCount]:
+    Id: treeId
+    int: z (0)
+    int: x
+    int: y
+
+//0x7
+Id: startToken (W3do)
+int: version (7)
+int: subVersion (0x9 or 0x7)
+int: treesCount
+
+tree[treesCount]:
+    Id: treeId
+    int: variation
+    float: x
+    float: y
+    float: z
+    float scaleX
+    float scaleY
+    float scaleZ
+    float: angle (rad)
+    byte: flags
+        0x0: invisible, non-solid
+        0x1: visible, non-solid
+        0x2: visible, solid
+    int: editorId
+
+int: specialVersion (0)
+int: specialTreesCount
+
+specialTree[specialTreesCount]:
+    Id: treeId
+    int: z (0)
+    int: x
+    int: y

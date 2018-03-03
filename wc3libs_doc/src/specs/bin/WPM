@@ -1,0 +1,16 @@
+//0x0
+Id: startToken (MP3W)
+int: version (0)
+int: width (mapWidth*4)
+int: height (mapHeight*4)
+
+tiles[width*height]:
+    byte: flags
+        0x1: unused
+        0x2: walkFlag (1=disabled)
+        0x4: flyFlag (1=disabled)
+        0x8: buildFlag (1=disabled)
+        0x10: unused
+        0x20: blightFlag (1=enabled)
+        0x40: waterFlag (1=disabled)
+        0x80: unknownFlag (1=enabled)
