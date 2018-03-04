@@ -4,11 +4,13 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
 import net.moonlightflower.wc3libs.misc.ObjId;
 
+import javax.annotation.Nonnull;
+
 public class WeatherId extends ObjId {	
 	protected WeatherId(String idString) {
 		super(idString);
 	}
-	
+
 	public static WeatherId valueOf(String id) {
 		return new WeatherId(id);
 	}

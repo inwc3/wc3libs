@@ -1,8 +1,13 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class WeaponType extends Wc3String {
+	private final static Map<String, WeaponType> _nameMap = new LinkedHashMap<>();
+
 	public final static WeaponType ARTILLERY = new WeaponType("artillery");
 	public final static WeaponType ARTILLERY_LINE = new WeaponType("aline");
 	public final static WeaponType INSTANT = new WeaponType("instant");
@@ -26,11 +31,13 @@ public class WeaponType extends Wc3String {
 
 	public WeaponType(@Nonnull String name) {
 		super(name);
+
+		_nameMap.put(name, this);
 	}
 
-	@Nonnull
-	public static WeaponType valueOf(@Nonnull String val) {
-		return new WeaponType(val);
+	@Nullable
+	public static WeaponType valueOf(@Nonnull String name) {
+		return _nameMap.get(name);
 	}
 	
 	@Override

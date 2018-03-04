@@ -9,7 +9,7 @@ public class UnitRace extends Wc3String {
 		return "unitRace";
 	}
 	
-	private static Map<String, UnitRace> _map = new LinkedHashMap<>();
+	private final static Map<String, UnitRace> _nameMap = new LinkedHashMap<>();
 	
 	public final static UnitRace HUMAN = new UnitRace("human");
 	public final static UnitRace ORC = new UnitRace("orc");
@@ -38,11 +38,11 @@ public class UnitRace extends Wc3String {
 	public UnitRace(@Nonnull String val) {
 		super(val);
 		
-		_map.put(val, this);
+		_nameMap.put(val, this);
 	}
 
 	public static UnitRace valueOf(@Nonnull String val) {
-		return _map.get(val);
+		return _nameMap.get(val);
 	}
 	
 	public static UnitRace decodeStatic(Object val) {

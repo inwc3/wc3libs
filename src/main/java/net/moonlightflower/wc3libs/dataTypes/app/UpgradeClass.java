@@ -1,8 +1,12 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class UpgradeClass extends Wc3String {
+	private final static Map<String, UpgradeClass> _nameMap = new LinkedHashMap<>();
+
 	public final static UpgradeClass ARMOR = new UpgradeClass("armor");
 	public final static UpgradeClass ARTILLERY = new UpgradeClass("artillery");
 	public final static UpgradeClass CASTER = new UpgradeClass("caster");
@@ -21,12 +25,14 @@ public class UpgradeClass extends Wc3String {
 		return getVal().equals(other.getVal());
 	}
 
-	private UpgradeClass(@Nonnull String val) {
-		super(val);
+	private UpgradeClass(@Nonnull String name) {
+		super(name);
+
+		_nameMap.put(name, this);
 	}
 	
-	public static UpgradeClass valueOf(@Nonnull String val) {
-		return new UpgradeClass(val);
+	public static UpgradeClass valueOf(@Nonnull String name) {
+		return _nameMap.get(name);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TerrainFogType extends Wc3Int {
-	private static Map<Integer, TerrainFogType> _map = new LinkedHashMap<>();
+	private static Map<Integer, TerrainFogType> _indexMap = new LinkedHashMap<>();
 	
 	public final static TerrainFogType EXP = new TerrainFogType(2);
 	public final static TerrainFogType EXP2 = new TerrainFogType(3);
@@ -27,11 +27,11 @@ public class TerrainFogType extends Wc3Int {
 	private TerrainFogType(int val) {
 		super(val);
 		
-		_map.put(val, this);
+		_indexMap.put(val, this);
 	}
 
 	@Nullable
 	public static TerrainFogType valueOf(Integer val) {
-		return _map.get(val);
+		return _indexMap.get(val);
 	}
 }
