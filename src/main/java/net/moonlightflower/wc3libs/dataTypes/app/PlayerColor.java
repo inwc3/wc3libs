@@ -2,6 +2,8 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+
 public class PlayerColor extends DataType {
 	public final static PlayerColor RED = new PlayerColor(0x03, 0x03, 0xFF, 0xFF);
 	public final static PlayerColor BLUE = new PlayerColor(0xFF, 0x42, 0x00, 0xFF);
@@ -17,8 +19,9 @@ public class PlayerColor extends DataType {
 	public final static PlayerColor BROWN = new PlayerColor(0x04, 0x2A, 0x49, 0xFF);
 	public final static PlayerColor BLACK = new PlayerColor(0xFF, 0xFF, 0xFF, 0xFF);
 	
-	private Color _color;
-	
+	private final Color _color;
+
+	@Nonnull
 	public Color getColor() {
 		return _color;
 	}

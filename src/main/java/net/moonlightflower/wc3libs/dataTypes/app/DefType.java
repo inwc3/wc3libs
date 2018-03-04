@@ -6,7 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DefType extends Wc3String {
-	private static Map<String, DefType> _map = new LinkedHashMap<>();
+	private final static Map<Integer, DefType> _indexMap = new LinkedHashMap<>();
+	private final static Map<String, DefType> _nameMap = new LinkedHashMap<>();
 
 	public final static DefType DIVINE = new DefType(6, "divine");
 	public final static DefType FORT = new DefType(3, "fort");
@@ -32,16 +33,22 @@ public class DefType extends Wc3String {
 	private DefType(int val, @Nonnull String name) {
 		super(name);
 
-		_map.put(name, this);
+		_indexMap.put(val, this);
+		_nameMap.put(name, this);
+	}
+
+	@Nullable
+	public static DefType valueOf(int index) {
+		return _indexMap.get(index);
 	}
 
 	@Nullable
 	public static DefType valueOf(@Nonnull String name) {
-		return _map.get(name);
+		return _nameMap.get(name);
 	}
 
 	@Override
 	public DefType decode(Object val) {
-		return _map.get(val.toString());
+		return _nameMap.get(val.toString());
 	}
 }

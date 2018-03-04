@@ -7,7 +7,7 @@ import java.util.Map;
 public abstract class LoadingScreenBackground {
 	public static class PresetBackground extends LoadingScreenBackground {
 		private static int curIndex = 0;
-		private static Map<Integer, PresetBackground> _map = new LinkedHashMap<>();
+		private final static Map<Integer, PresetBackground> _map = new LinkedHashMap<>();
 		
 		public final static PresetBackground TUTORIAL = new PresetBackground("TUTORIAL");
 		public final static PresetBackground HUMAN = new PresetBackground("HUMAN");

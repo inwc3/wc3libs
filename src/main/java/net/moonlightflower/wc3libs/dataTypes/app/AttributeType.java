@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AttributeType extends Wc3String {
-	private static Map<String, AttributeType> _map = new LinkedHashMap<>();
+	private final static Map<String, AttributeType> _map = new LinkedHashMap<>();
 
 	public final static AttributeType AGI = new AttributeType("AGI");
 	public final static AttributeType INT = new AttributeType("INT");

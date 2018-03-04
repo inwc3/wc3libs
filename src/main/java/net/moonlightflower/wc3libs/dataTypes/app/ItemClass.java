@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ItemClass extends Wc3String {
-	private Map<String, ItemClass> _map = new LinkedHashMap<>();
+	private final Map<String, ItemClass> _map = new LinkedHashMap<>();
 
 	public final static ItemClass ARTIFACT = new ItemClass("Artifact");
 	public final static ItemClass CAMPAIGN = new ItemClass("Campaign");

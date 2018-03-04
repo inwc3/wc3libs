@@ -5,8 +5,8 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Coords2DF extends DataType {
-	private Real _x;
-	private Real _y;
+	private final Real _x;
+	private final Real _y;
 
 	@Nonnull
 	public Real getX() {
@@ -39,7 +39,8 @@ public class Coords2DF extends DataType {
 	/*public Coords2D<Real> toReal() {
 		return new Coords2D<>(Real.valueOf(getX()), Real.valueOf(getY()));
 	}*/
-	
+
+	@Nonnull
 	public Coords2DF scale(double factor) {
 		Double x = getX().toFloat() * factor;
 		Double y = getY().toFloat() * factor;

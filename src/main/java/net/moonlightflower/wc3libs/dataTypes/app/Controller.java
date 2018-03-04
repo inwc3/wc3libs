@@ -1,11 +1,13 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Controller extends Wc3Int {
-	private static Map<Integer, Controller> _map = new LinkedHashMap<>();
+	private final static Map<Integer, Controller> _indexMap = new LinkedHashMap<>();
+	private final static Map<String, Controller> _labelMap = new LinkedHashMap<>();
 	
 	public final static Controller CPU = new Controller(2, "COMPUTER");
 	public final static Controller HUMAN = new Controller(1, "USER");
@@ -24,18 +26,19 @@ public class Controller extends Wc3Int {
 		return getVal().equals(other.getVal());
 	}
 
-	private int _val;
-	private String _label;
+	private final int _val;
+	private final String _label;
 	
 	@Override
 	public String toString() {
 		return _label;
 	}
 	
-	private Controller(int val, String label) {
+	private Controller(int val, @Nonnull String label) {
 		super(val);
 		
-		_map.put(val, this);
+		_indexMap.put(val, this);
+		_labelMap.put(label, this);
 		
 		_label = label;
 		_val = val;
@@ -43,6 +46,6 @@ public class Controller extends Wc3Int {
 
 	@Nullable
 	public static Controller valueOf(Integer val) {
-		return _map.get(val);
+		return _labelMap.get(val);
 	}
 }

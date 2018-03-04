@@ -5,9 +5,9 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Coords3DF extends DataType {
-	private Real _x;
-	private Real _y;
-	private Real _z;
+	private final Real _x;
+	private final Real _y;
+	private final Real _z;
 
 	@Nonnull
 	public Real getX() {

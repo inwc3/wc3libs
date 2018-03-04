@@ -9,11 +9,12 @@ public class DeathType extends Wc3Int {
 		return "deathType";
 	}
 	
-	private static Map<Integer, DeathType> _map = new LinkedHashMap<>();
+	private final static Map<Integer, DeathType> _map = new LinkedHashMap<>();
 	
 	public final static DeathType NONE = new DeathType(0x0);
-	public final static DeathType RAISE = new DeathType(0x1);
+	public final static DeathType RAISES = new DeathType(0x1);
 	public final static DeathType DECAYS = new DeathType(0x2);
+	public final static DeathType RAISES_AND_DECAYS = new DeathType(0x3);
 
 	@Override
 	public boolean equals(Object other) {

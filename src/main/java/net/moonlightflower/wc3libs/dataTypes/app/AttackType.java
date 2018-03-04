@@ -6,8 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AttackType extends Wc3String {
-	private static Map<Integer, AttackType> _indexMap = new LinkedHashMap<>();
-	private static Map<String, AttackType> _nameMap = new LinkedHashMap<>();
+	private final static Map<Integer, AttackType> _indexMap = new LinkedHashMap<>();
+	private final static Map<String, AttackType> _nameMap = new LinkedHashMap<>();
 
 	public final static AttackType CHAOS = new AttackType(5, "chaos");
 	public final static AttackType HERO = new AttackType(7, "hero");

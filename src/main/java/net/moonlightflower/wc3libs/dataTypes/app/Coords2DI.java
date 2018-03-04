@@ -2,9 +2,11 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+
 public class Coords2DI extends DataType {
-	private int _x;
-	private int _y;
+	private final int _x;
+	private final int _y;
 	
 	public int getX() {
 		return _x;
@@ -26,11 +28,13 @@ public class Coords2DI extends DataType {
 		return getX() == (other).getX() &&
 				getY() == (other).getY();
 	}
-	
+
+	@Nonnull
 	public Coords2DF toReal() {
 		return new Coords2DF(Real.valueOf(getX()), Real.valueOf(getY()));
 	}
-	
+
+	@Nonnull
 	public Coords2DI scale(double factor) {
 		Double x = getX() * factor;
 		Double y = getY() * factor;

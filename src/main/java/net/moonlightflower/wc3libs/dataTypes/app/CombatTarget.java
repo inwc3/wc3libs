@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CombatTarget extends Wc3String {
-	private static Map<String, CombatTarget> _map = new LinkedHashMap<>();
+	private final static Map<String, CombatTarget> _map = new LinkedHashMap<>();
 
 	public final static CombatTarget AIR = new CombatTarget("air");
 	public final static CombatTarget ALIVE = new CombatTarget("alive", "aliv");

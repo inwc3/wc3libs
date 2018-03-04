@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CliffClass extends Wc3String {
-	private static Map<String, CliffClass> _map = new LinkedHashMap<>();
+	private final static Map<String, CliffClass> _map = new LinkedHashMap<>();
 
 	public final static CliffClass CLIFF1 = new CliffClass("c1");
 	public final static CliffClass CLIFF2 = new CliffClass("c2");
