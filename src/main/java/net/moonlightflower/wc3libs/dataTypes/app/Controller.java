@@ -46,6 +46,6 @@ public class Controller extends Wc3Int {
 
 	@Nullable
 	public static Controller valueOf(Integer val) {
-		return _labelMap.get(val);
+		return _indexMap.get(val);
 	}
 }
