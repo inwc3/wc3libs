@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CombatSound extends Wc3String {
-	private static Map<String, CombatSound> _map = new LinkedHashMap<>();
+	private final static Map<String, CombatSound> _map = new LinkedHashMap<>();
 
 	public final static CombatSound AXE_MEDIUM_CHOP = new CombatSound("AxeMediumChop");
 	public final static CombatSound METAL_HEAVY_BASH = new CombatSound("MetalHeavyBash");

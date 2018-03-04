@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Tileset extends DataType {
-	private static Map<Character, Tileset> _map = new LinkedHashMap<>();
+	private static Map<Character, Tileset> _nameMap = new LinkedHashMap<>();
 	
 	public final static Tileset ASHENVALE = new Tileset('A', "ASHENVALE");
 	public final static Tileset BARRENS = new Tileset('B', "BARRENS");
@@ -59,13 +59,13 @@ public class Tileset extends DataType {
 	private Tileset(char val, @Nonnull String label) {
 		_char = Char.valueOf(val);
 
-		_map.put(val, this);
+		_nameMap.put(val, this);
 		
 		_label = String.format("WESTRING_LOCALE_%s", label);
 	}
 	
 	public static Tileset valueOf(char val) {
-		return _map.get(val);
+		return _nameMap.get(val);
 	}
 	
 	@Override

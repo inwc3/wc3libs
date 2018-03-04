@@ -5,10 +5,10 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Color extends DataType {
-	private int _red;
-	private int _green;
-	private int _blue;
-	private int _alpha;
+	private final int _red;
+	private final int _green;
+	private final int _blue;
+	private final int _alpha;
 	
 	public int getRed255() {
 		return _red;
@@ -50,6 +50,7 @@ public class Color extends DataType {
 		_red = red;
 		_green = green;
 		_blue = blue;
+		_alpha = 255;
 	}
 	
 	private Color(int red, int green, int blue, int alpha) {

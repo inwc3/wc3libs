@@ -4,8 +4,12 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class UpgradeEffect extends Id {
+	private final static Map<String, UpgradeEffect> _nameMap = new LinkedHashMap<>();
+
 	public static UpgradeEffect ABIL_LEVEL_UP = new UpgradeEffect("rlev");
 	public static UpgradeEffect ARMOR_CHANGE = new UpgradeEffect("rart");
 	public static UpgradeEffect ARMOR_UP_USE = new UpgradeEffect("rarm");
@@ -52,12 +56,14 @@ public class UpgradeEffect extends Id {
 		return getVal().equals(other.getVal());
 	}
 
-	private UpgradeEffect(@Nonnull String val) {
-		super(val);
+	private UpgradeEffect(@Nonnull String name) {
+		super(name);
+
+		_nameMap.put(name, this);
 	}
 	
-	public static UpgradeEffect valueOf(@Nonnull String val) {
-		return new UpgradeEffect(val);
+	public static UpgradeEffect valueOf(@Nonnull String name) {
+		return _nameMap.get(name);
 	}
 
 	@Override

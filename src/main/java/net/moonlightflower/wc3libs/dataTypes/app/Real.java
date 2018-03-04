@@ -8,7 +8,7 @@ public class Real extends DataType implements Wc3Num {
 		return "Real";
 	}
 
-	public static Real getDefVal() {
+	public final static Real getDefVal() {
 		return new Real(0F);
 	}
 	

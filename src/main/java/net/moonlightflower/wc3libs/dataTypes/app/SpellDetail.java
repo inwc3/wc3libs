@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SpellDetail extends Wc3Int {
-	private static Map<Integer, SpellDetail> _map = new LinkedHashMap<>();
+	private static Map<Integer, SpellDetail> _indexMap = new LinkedHashMap<>();
 
 	public final static SpellDetail LOW = new SpellDetail(0);
 	public final static SpellDetail MEDIUM = new SpellDetail(1);
@@ -26,12 +26,12 @@ public class SpellDetail extends Wc3Int {
 	public SpellDetail(int val) {
 		super(val);
 		
-		_map.put(val, this);
+		_indexMap.put(val, this);
 	}
 
 	@Nullable
 	public static SpellDetail valueOf(int val) {
-		return _map.get(val);
+		return _indexMap.get(val);
 	}
 	
 	@Override

@@ -3,9 +3,9 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import javax.annotation.Nonnull;
 
 public class Coords3DI {
-	private Wc3Int _x;
-	private Wc3Int _y;
-	private Wc3Int _z;
+	private final Wc3Int _x;
+	private final Wc3Int _y;
+	private final Wc3Int _z;
 
 	@Nonnull
 	public Wc3Int getX() {

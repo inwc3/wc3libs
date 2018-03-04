@@ -3,15 +3,19 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.Size;
 
+import javax.annotation.Nonnull;
+
 public class Bounds extends DataType {
 	private Coords2DI _center;
-	
+
+	@Nonnull
 	public Coords2DI getCenter() {
 		return _center;
 	}
 	
 	private Size _size;
-	
+
+	@Nonnull
 	public Size getSize() {
 		return _size;
 	}
@@ -49,7 +53,8 @@ public class Bounds extends DataType {
 	public String toString() {
 		return String.format("minX=%d minY=%d maxX=%d maxY=%d [%s]", getMinX(), getMinY(), getMaxX(), getMaxY(), getSize().toString());
 	}
-	
+
+	@Nonnull
 	public Bounds scale(double scale) {
 		return new Bounds(_size.scale(scale), _center);
 	}

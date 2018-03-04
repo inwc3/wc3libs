@@ -9,11 +9,12 @@ public class AttackBits extends Wc3Int {
 		return "attackBits";
 	}
 	
-	private static Map<Integer, AttackBits> _map = new LinkedHashMap<>();
+	private final static Map<Integer, AttackBits> _map = new LinkedHashMap<>();
 	
 	public final static AttackBits NONE = new AttackBits(0x0);
 	public final static AttackBits FIRST = new AttackBits(0x1);
 	public final static AttackBits SECOND = new AttackBits(0x2);
+	public final static AttackBits BOTH = new AttackBits(0x3);
 	
 	private AttackBits(int val) {
 		super(val);

@@ -31,7 +31,7 @@ public class DestructableClass extends Wc3String {
 	}
 
 	@Nullable
-	public DestructableClass valueOf(String val) {
+	public static DestructableClass valueOf(String val) {
 		return _map.get(val);
 	}
 	

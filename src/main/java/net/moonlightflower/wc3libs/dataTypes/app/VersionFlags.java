@@ -2,14 +2,22 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class VersionFlags extends FlagsInt {
 	public static String getTranslatorSection() {
 		return "versionFlags";
 	}
-	
+
+	private final static Map<Integer, VersionFlags> _indexMap = new LinkedHashMap<>();
+
 	public final static VersionFlags NONE = new VersionFlags(0x0);
 	public final static VersionFlags ROC = new VersionFlags(0x1);
 	public final static VersionFlags TFT = new VersionFlags(0x2);
+	public final static VersionFlags BOTH = new VersionFlags(0x3);
 	
 	enum Flags implements FlagsInt.IsFlag {
 		ROC(0x1),
@@ -36,8 +44,15 @@ public class VersionFlags extends FlagsInt {
 		return new FlagsInt[]{NONE, ROC, TFT};
 	}*/
 	
-	public VersionFlags(int val) {
-		super(val);
+	private VersionFlags(int index) {
+		super(index);
+
+		_indexMap.put(index, this);
+	}
+
+	@Nullable
+	public static VersionFlags valueOf(@Nonnull Integer index) {
+		return _indexMap.get(index);
 	}
 
 	@Override

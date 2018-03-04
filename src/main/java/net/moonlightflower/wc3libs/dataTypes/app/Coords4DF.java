@@ -5,10 +5,10 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Coords4DF extends DataType {
-	private Real _x;
-	private Real _y;
-	private Real _z;
-	private Real _a;
+	private final Real _x;
+	private final Real _y;
+	private final Real _z;
+	private final Real _a;
 
 	@Nonnull
 	public Real getX() {

@@ -5,7 +5,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Char extends DataType {
-	private char _val;
+	private final char _val;
 
 	@Nonnull
 	public Character getVal() {

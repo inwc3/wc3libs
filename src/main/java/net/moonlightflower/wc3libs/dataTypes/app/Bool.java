@@ -2,11 +2,14 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
+import javax.annotation.Nonnull;
+
 public class Bool extends DataType {
 	public static String name() {
 		return "Bool";
 	}
-	
+
+	@Nonnull
 	public static Bool getDefVal() {
 		return new Bool(false);
 	}

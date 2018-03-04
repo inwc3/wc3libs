@@ -33,7 +33,7 @@ public class DoodadClass extends Wc3String {
 	}
 
 	@Nullable
-	public DoodadClass valueOf(String val) {
+	public static DoodadClass valueOf(String val) {
 		return _map.get(val);
 	}
 	
