@@ -318,7 +318,7 @@ public abstract class MpqPort {
 	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
 		Vector<File> files = new Vector<>();
 
-		files.add(new File(wc3dir, "War3Patch.mpq"));
+		//files.add(new File(wc3dir, "War3Patch.mpq"));
 		files.add(new File(wc3dir, "War3x.mpq"));
 		files.add(new File(wc3dir, "war3.mpq"));
 		files.add(new File(wc3dir, "War3xlocal.mpq"));
