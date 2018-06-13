@@ -10,9 +10,16 @@ import java.io.IOException;
 
 public class GameExeTest {
     @Test()
-    public void test() throws IOException {
+    public void testReg() throws IOException {
         GameExe gameExe = GameExe.fromRegistry();
 
         if (gameExe != null) System.out.println(gameExe.getVersion());
+    }
+
+    @Test()
+    public void testDir() throws IOException {
+        GameExe gameExe = GameExe.fromDir(MpqPort.getWc3Dir());
+
+        if (gameExe != null) System.out.println(gameExe.getFile());
     }
 }
