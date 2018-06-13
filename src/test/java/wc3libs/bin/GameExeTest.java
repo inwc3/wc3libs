@@ -15,9 +15,4 @@ public class GameExeTest {
 
         if (gameExe != null) System.out.println(gameExe.getVersion());
     }
-
-    @Test()
-    public void write() throws IOException {
-        Registry.set(Registry.ALLOW_LOCAL_FILES, "0x00000001");
-    }
 }
