@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
+import net.moonlightflower.wc3libs.misc.Registry;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
