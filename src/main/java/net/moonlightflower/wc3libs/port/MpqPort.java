@@ -320,7 +320,7 @@ public abstract class MpqPort {
 	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
 		Vector<File> files = new Vector<>();
 
-		//files.add(new File(wc3dir, "War3Patch.mpq"));
+		files.add(new File(wc3dir, "War3Patch.mpq"));
 		files.add(new File(wc3dir, "War3x.mpq"));
 		files.add(new File(wc3dir, "war3.mpq"));
 		files.add(new File(wc3dir, "War3xlocal.mpq"));
@@ -335,13 +335,13 @@ public abstract class MpqPort {
 	}
 	
 	public static void setWc3Dir(@Nullable File val) {
-		if (val != null) {
+		/*if (val != null) {
 			for (File mpqFile : getWc3Mpqs(val)) {
 				if (!mpqFile.exists()) {
 					throw new IllegalArgumentException(String.format("%s does not seem to be a wc3 directory (%s does not exist)", val, mpqFile));
 				}
 			}
-		}
+		}*/
 		
 		_wc3Dir = val;
 	}
