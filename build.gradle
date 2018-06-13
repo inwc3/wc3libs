@@ -36,6 +36,11 @@ dependencies {
     compile 'com.github.inwc3:JMPQ3:1.5.7'
     compile group: 'com.esotericsoftware.minlog', name: 'minlog', version: '1.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    //compile 'com.github.mnk:xz-java:771cc59'
+    //compile 'org.tukaani:xz-java:771cc59'
+    //compile group: 'org.tukaani', name: 'xz', version: '1.8'
+    //compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
+    compile group: 'com.dorkbox', name: 'PeParser', version: '2.12'
 
     testCompile 'org.testng:testng:6.1.1'
 }
