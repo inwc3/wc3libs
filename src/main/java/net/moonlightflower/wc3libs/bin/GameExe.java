@@ -2,14 +2,14 @@ package net.moonlightflower.wc3libs.bin;
 
 import dorkbox.peParser.PE;
 import net.moonlightflower.wc3libs.misc.Registry;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,31 +85,40 @@ public class GameExe {
     }
 
     @Nullable
-    public static GameExe fromDir(@Nonnull File dir) throws IOException {
+    public static GameExe fromDir(@Nonnull File dir) {
         String versionS = null;
-
-        File war3File = new File(dir, "war3.exe");
-
-        if (war3File.exists()) {
-            versionS = new GameExe(war3File).getVersion();
-
-            return fromDir(dir, versionS);
-        }
 
         File warcraftIIIFile = new File(dir, "Warcraft III.exe");
 
         if (warcraftIIIFile.exists()) {
-            versionS = new GameExe(warcraftIIIFile).getVersion();
+            try {
+                versionS = new GameExe(warcraftIIIFile).getVersion();
 
-            return fromDir(dir, versionS);
+                return fromDir(dir, versionS);
+            } catch (IOException e) {
+            }
         }
 
         File frozenThroneFile = new File(dir, "Frozen Throne.exe");
 
         if (frozenThroneFile.exists()) {
-            versionS = new GameExe(frozenThroneFile).getVersion();
+            try {
+                versionS = new GameExe(frozenThroneFile).getVersion();
 
-            return fromDir(dir, versionS);
+                return fromDir(dir, versionS);
+            } catch (IOException e) {
+            }
+        }
+
+        File war3File = new File(dir, "war3.exe");
+
+        if (war3File.exists()) {
+            try {
+                versionS = new GameExe(war3File).getVersion();
+
+                return fromDir(dir, versionS);
+            } catch (IOException e) {
+            }
         }
 
         return null;
