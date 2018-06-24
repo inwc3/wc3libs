@@ -5,7 +5,6 @@ import systems.crigges.jmpq3.JMpqException;
 import systems.crigges.jmpq3.MPQOpenOption;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -222,62 +221,52 @@ public class JMpqPort extends MpqPort {
 						mpqFile = tempFile;
 					}
 	
-					JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.READ_ONLY);
-	
-					Vector<FileExport> failedExports = new Vector<>();
-		
-					for (FileExport fileExport: volExports) {
-						//System.out.println("export " + fileExport.getInFile() + " from " + mpqFile);
-						File outFile = fileExport.getOutFile();
-	
-						try {
-							File inFile = fileExport.getInFile();
-							
-							FileExport resultFileExport = null;
-							
-							if (outFile != null) {
-								if (fileExport.getOutDir() != null) {
-									fileExport.getOutDir().mkdirs();
-								}
-								
-								jmpq.extractFile(inFile.toString(), outFile);
-								
-								resultFileExport = new FileExport(inFile, outFile, false);
-								
-								result.addExport(mpqFile, resultFileExport);
-							} else {
-								DummyOutputStream dummyStream = new DummyOutputStream();
-								
-								jmpq.extractFile(inFile.toString(), dummyStream);
-								
-								OutputStream outStream = fileExport.getOutStream();
-	
-								if (outStream != null) {
-									dummyStream.close(outStream);
+					try (JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.FORCE_V0)) {
+						Vector<FileExport> failedExports = new Vector<>();
+
+						for (FileExport fileExport: volExports) {
+							File outFile = fileExport.getOutFile();
+
+							try {
+								File inFile = fileExport.getInFile();
+
+								FileExport resultFileExport = null;
+
+								if (outFile != null) {
+									if (fileExport.getOutDir() != null) {
+										fileExport.getOutDir().mkdirs();
+									}
+
+									jmpq.extractFile(inFile.toString(), outFile);
+
+									resultFileExport = new FileExport(inFile, outFile, false);
+
+									result.addExport(mpqFile, resultFileExport);
 								} else {
-									dummyStream.close();
+									DummyOutputStream dummyStream = new DummyOutputStream();
+
+									jmpq.extractFile(inFile.toString(), dummyStream);
+
+									OutputStream outStream = fileExport.getOutStream();
+
+									if (outStream != null) {
+										dummyStream.close(outStream);
+									} else {
+										dummyStream.close();
+									}
+
+									resultFileExport = new FileExport(inFile, outStream);
+
+									result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
 								}
-								
-								resultFileExport = new FileExport(inFile, outStream);
-								
-								result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
+								volExports = failedExports;
+							} catch (JMpqException e) {
+								failedExports.add(fileExport);
 							}
-						} catch (JMpqException e) {
-							//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
-							//e.printStackTrace();
-							failedExports.add(fileExport);
 						}
 					}
-					
-					try {
-						jmpq.close();
-					} catch (Exception e) {
-						//e.printStackTrace();
-						
-						//if (e instanceof IOException) throw e;
-					}
-					
-					volExports = failedExports;
+	
+
 					//removeExistingExports(volExports);
 					
 					//failedExports.clear();
