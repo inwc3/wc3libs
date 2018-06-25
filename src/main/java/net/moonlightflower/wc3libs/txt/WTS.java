@@ -71,6 +71,14 @@ public class WTS {
         _vals.put(key, val);
     }
 
+    public void removeEntry(int key) {
+        _vals.remove(key);
+    }
+
+    public void removeEntry(String object) {
+        _vals.values().remove(object);
+    }
+
     public void write(@Nonnull File file) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 
