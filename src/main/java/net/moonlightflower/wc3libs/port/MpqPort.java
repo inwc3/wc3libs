@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.port;
 
+import net.moonlightflower.wc3libs.bin.GameExe;
 import net.moonlightflower.wc3libs.misc.Registry;
 
 import javax.annotation.Nonnull;
@@ -321,7 +322,11 @@ public abstract class MpqPort {
 	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
 		Vector<File> files = new Vector<>();
 
-		files.add(new File(wc3dir, "War3Patch.mpq"));
+        GameExe.Version version = GameExe.getVersion_simple();
+
+		if (version != null && version.compareTo(GameExe.VERSION_1_29) < 0) {
+            files.add(new File(wc3dir, "War3Patch.mpq"));
+        }
 		files.add(new File(wc3dir, "War3x.mpq"));
 		files.add(new File(wc3dir, "war3.mpq"));
 		files.add(new File(wc3dir, "War3xlocal.mpq"));
