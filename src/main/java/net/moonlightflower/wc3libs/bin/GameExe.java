@@ -20,9 +20,17 @@ public class GameExe {
         return _file;
     }
 
-    public String getVersion() throws IOException {
+    public String getVersionString() throws IOException {
         try {
             return PE.getVersion(_file.getAbsolutePath());
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
+    }
+
+    public Version getVersion() throws IOException {
+        try {
+            return new Version(PE.getVersion(_file.getAbsolutePath()));
         } catch (Exception e) {
             throw new IOException(e);
         }
@@ -41,11 +49,30 @@ public class GameExe {
         }
     }
 
-    private static class Version implements Comparable<Version> {
+    public static class Version implements Comparable<Version> {
         private final List<Integer> _versionNumList;
 
         public Version(@Nonnull List<Integer> versionNumList) {
             _versionNumList = new ArrayList<>(versionNumList);
+        }
+
+        public Version(@Nonnull String versionS) {
+            Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
+
+            Matcher matcher = pattern.matcher(versionS);
+
+            int start = 0;
+            List<Integer> versionNumList = new ArrayList<>();
+
+            while (start < versionS.length() && matcher.find(start)) {
+                int version = Integer.parseInt(matcher.group(1));
+
+                start = matcher.end() + 1;
+
+                versionNumList.add(version);
+            }
+
+            _versionNumList = versionNumList;
         }
 
         @Override
@@ -62,39 +89,49 @@ public class GameExe {
         }
     }
 
+    public static final Version VERSION_1_29 = new Version(Arrays.asList(1, 29));
+
+    public static Version _curVersion = null;
+
     @Nullable
-    public static GameExe fromDir(@Nonnull File dir, @Nonnull String versionS) throws IOException {
-        Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
+    public static Version getVersion_simple() {
+        if (_curVersion == null) {
+            GameExe gameExe = fromRegistry();
 
-        Matcher matcher = pattern.matcher(versionS);
-
-        int start = 0;
-        List<Integer> versionNumList = new ArrayList<>();
-
-        while (start < versionS.length() && matcher.find(start)) {
-            int version = Integer.parseInt(matcher.group(1));
-
-            start = matcher.end() + 1;
-
-            versionNumList.add(version);
+            if (gameExe != null) {
+                try {
+                    _curVersion = gameExe.getVersion();
+                } catch (IOException e) {
+                    return null;
+                }
+            }
         }
 
-        if (new Version(versionNumList).compareTo(new Version(Arrays.asList(1, 29))) >= 0) return new GameExe(new File(dir, "Warcraft III.exe"));
+        return _curVersion;
+    }
+
+    public static void setVersion(@Nullable Version version) {
+        _curVersion = version;
+    }
+
+    @Nullable
+    public static GameExe fromDir(@Nonnull File dir, @Nonnull Version version) throws IOException {
+        if (version.compareTo(VERSION_1_29) >= 0) return new GameExe(new File(dir, "Warcraft III.exe"));
 
         return new GameExe(new File(dir, "war3.exe"));
     }
 
     @Nullable
     public static GameExe fromDir(@Nonnull File dir) {
-        String versionS = null;
+        Version version = null;
 
         File warcraftIIIFile = new File(dir, "Warcraft III.exe");
 
         if (warcraftIIIFile.exists()) {
             try {
-                versionS = new GameExe(warcraftIIIFile).getVersion();
+                version = new GameExe(warcraftIIIFile).getVersion();
 
-                return fromDir(dir, versionS);
+                return fromDir(dir, version);
             } catch (IOException e) {
             }
         }
@@ -103,9 +140,9 @@ public class GameExe {
 
         if (frozenThroneFile.exists()) {
             try {
-                versionS = new GameExe(frozenThroneFile).getVersion();
+                version = new GameExe(frozenThroneFile).getVersion();
 
-                return fromDir(dir, versionS);
+                return fromDir(dir, version);
             } catch (IOException e) {
             }
         }
@@ -114,9 +151,9 @@ public class GameExe {
 
         if (war3File.exists()) {
             try {
-                versionS = new GameExe(war3File).getVersion();
+                version = new GameExe(war3File).getVersion();
 
-                return fromDir(dir, versionS);
+                return fromDir(dir, version);
             } catch (IOException e) {
             }
         }
