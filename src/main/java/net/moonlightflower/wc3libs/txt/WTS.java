@@ -80,7 +80,11 @@ public class WTS {
     }
 
     public void write(@Nonnull File file) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+        write(new FileOutputStream(file));
+    }
+
+    public void write(@Nonnull OutputStream outputStream) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
 
         for (Map.Entry<Integer, String> entry : _vals.entrySet()) {
             int key = entry.getKey();
