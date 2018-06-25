@@ -46,9 +46,11 @@ public class TXT {
 						if (translator != null) {
 							valS = translator.translate(valS);
 						}
-						
-						valS = "\"" + valS + "\"";
-						
+
+						if (valS.contains(" ")) {
+							valS = "\"" + valS + "\"";
+						}
+
 						s.append(valS);
 					}
 					
