@@ -7,20 +7,21 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class MpqPort {
 	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
-	
+
 	private final static File classWorkDir = new File(workDir, Orient.localClassPath().toString());
-	
+
 	private final static File tempDir = new File(classWorkDir, "temp");
-	
+
 	private final static File importDir = new File(tempDir, "import");
-	
+
 	private final static File importFilesDir = new File(importDir, "files");
-	
+
 	private final static File exportDir = new File(tempDir, "export");
-	
+
 	private final static File exportFilesDir = new File(exportDir, "files");
 
 	public static class ResourceFile extends File {
@@ -36,7 +37,7 @@ public abstract class MpqPort {
 
 	@Nonnull
 	public abstract List<File> listFiles(@Nonnull File mpqFile) throws IOException;
-	
+
 	public static abstract class In {
 		public class FileImport {
 			private File _outFile;
@@ -55,37 +56,37 @@ public abstract class MpqPort {
 				_inFile = inPath;
 			}
 		}
-	
+
 		private Vector<FileImport> _fileImports = new Vector<>();
 
 		@Nonnull
 		public Vector<FileImport> getFiles() {
 			return new Vector<>(_fileImports);
 		}
-	
+
 		public void add(@Nullable File outPath, @Nonnull File inPath) {
 			_fileImports.add(new FileImport(outPath, inPath));
 		}
-		
+
 		public void addDel(@Nonnull File inPath) {
 			add(null, inPath);
 		}
-		
+
 		public void clear() {
 			_fileImports.clear();
 		}
-	
+
 		public abstract void commit(@Nonnull Vector<File> mpqFiles) throws Exception;
-	
+
 		public void commit(@Nonnull File mpqFile) throws Exception {
 			Vector<File> mpqFiles = new Vector<>();
-	
+
 			mpqFiles.add(mpqFile);
-	
+
 			commit(mpqFiles);
 		}
 	}
-	
+
 	public static class PortException extends IOException {
 		public PortException(@Nonnull String msg) {
 			super(msg);
@@ -95,33 +96,33 @@ public abstract class MpqPort {
 			super(e);
 		}
 	}
-	
+
 	public static abstract class Out {
 		class DummyOutputStream extends OutputStream {
 			private final ByteArrayOutputStream _outBytes = new ByteArrayOutputStream();
-			
+
 			public byte[] getBytes() {
 				return _outBytes.toByteArray();
 			}
-			
+
 			@Override
 			public void write(int val) {
 				_outBytes.write(val);
 			}
-			
+
 			@Override
 			public void close() throws IOException {
 				super.close();
 			}
-			
+
 			public void close(@Nonnull OutputStream outStream) throws IOException {
 				for (byte val : getBytes()) {
 					outStream.write(val);
 				}
-				
+
 				super.close();
 			}
-			
+
 			public DummyOutputStream() {
 			}
 		}
@@ -140,25 +141,25 @@ public abstract class MpqPort {
 				public File getMpqFile() {
 					return _mpqFile;
 				}
-				
+
 				private byte[] _outBytes = null;
-				
+
 				public byte[] getOutBytes() {
 					return Arrays.copyOf(_outBytes, _outBytes.length);
 				}
-				
+
 				private Segment(@Nonnull File mpqFile, @Nonnull FileExport fileExport, byte[] outBytes) {
 					_fileExport = fileExport;
 					_mpqFile = mpqFile;
 					_outBytes = outBytes;
 				}
-				
+
 				private Segment(@Nonnull File mpqFile, @Nonnull FileExport fileExport) {
 					_fileExport = fileExport;
 					_mpqFile = mpqFile;
 				}
 			}
-			
+
 			private Map<File, Segment> _exports = new LinkedHashMap<>();
 
 			@Nonnull
@@ -169,60 +170,60 @@ public abstract class MpqPort {
 			@Nullable
 			public File getFile(@Nonnull File inFile) throws IOException {
 				Segment segment = getExports().get(inFile);
-				
+
 				if (segment == null) throw new NoSuchFileException(String.format("noSuchFile: %s", inFile.toString()));
-				
+
 				File outFile = segment.getExport().getOutFile();
-				
+
 				if (outFile != null) {
 					return outFile;
 				}
-				
+
 				outFile = new File(exportFilesDir, inFile.getName());
-				
+
 				outFile.getParentFile().mkdirs();
-				
+
 				FileOutputStream writer = new FileOutputStream(outFile);
-				
+
 				byte[] outBytes = segment.getOutBytes();
-				
+
 				writer.write(outBytes, 0, outBytes.length);
-				
+
 				writer.close();
-				
+
 				return outFile;
 			}
 
 			@Nullable
 			public InputStream getInputStream(@Nonnull File inFile) throws IOException {
 				Segment segment = getExports().get(inFile);
-				
+
 				if (segment == null) throw new IOException(String.format("noSuchFile: %s", inFile.toString()));
-				
+
 				File outFile = segment.getExport().getOutFile();
-				
+
 				if (outFile != null) {
 					return new FileInputStream(outFile);
 				}
-				
+
 				byte[] outBytes = segment.getOutBytes();
-				
+
 				if (outBytes != null) {
 					return new ByteArrayInputStream(outBytes);
 				}
-				
+
 				return null;
 			}
-			
+
 			public void addExport(@Nonnull File mpqFile, @Nonnull FileExport fileExport, byte[] outBytes) {
 				_exports.put(fileExport.getInFile(), new Segment(mpqFile, fileExport, outBytes));
 			}
-			
+
 			public void addExport(@Nonnull File mpqFile, @Nonnull FileExport fileExport) {
 				_exports.put(fileExport.getInFile(), new Segment(mpqFile, fileExport));
 			}
 		}
-		
+
 		public class FileExport {
 			private File _inFile;
 			private File _outDir = null;
@@ -248,45 +249,45 @@ public abstract class MpqPort {
 			public OutputStream getOutStream() {
 				return _outStream;
 			}
-			
+
 			public FileExport(@Nonnull File inFile) {
 				_inFile = inFile;
 			}
-			
+
 			public FileExport(@Nonnull File inFile, @Nullable OutputStream outStream) {
 				_inFile = inFile;
 				_outStream = outStream;
 			}
-			
+
 			public FileExport(@Nonnull File inFile, @Nonnull File outFile, boolean outFileIsDir) {
 				_inFile = inFile;
 				_outFile = outFile;
-				
+
 				if (outFileIsDir) _outFile = new File(_outFile, _inFile.toString());
-				
+
 				_outDir = _outFile.getParentFile();
 			}
 		}
-	
+
 		private Vector<FileExport> _fileExports = new Vector<>();
 
 		@Nonnull
 		public Vector<FileExport> getFiles() {
 			return _fileExports;
 		}
-		
+
 		public void add(@Nonnull File inFile) {
 			_fileExports.add(new FileExport(inFile));
 		}
-		
+
 		public void add(@Nonnull File inFile, @Nonnull OutputStream outStream) {
 			_fileExports.add(new FileExport(inFile, outStream));
 		}
-		
+
 		public void add(@Nonnull File inFile, @Nonnull File outFile, boolean outFileIsDir) {
 			_fileExports.add(new FileExport(inFile, outFile, outFileIsDir));
 		}
-		
+
 		public void clear() {
 			_fileExports.clear();
 		}
@@ -309,9 +310,9 @@ public abstract class MpqPort {
 		@Nonnull
 		public Result commit(@Nonnull File mpqFile) throws Exception {
 			Vector<File> mpqFiles = new Vector<>();
-	
+
 			mpqFiles.add(mpqFile);
-	
+
 			return commit(mpqFiles);
 		}
 	}
@@ -325,15 +326,15 @@ public abstract class MpqPort {
 		files.add(new File(wc3dir, "war3.mpq"));
 		files.add(new File(wc3dir, "War3xlocal.mpq"));
 
-		return files;
+		return files.stream().filter(File::exists).collect(Collectors.toCollection(Vector::new));
 	}
-	
+
 	private static File _wc3Dir = null;
-	
+
 	public static File getWc3Dir() {
 		return _wc3Dir;
 	}
-	
+
 	public static void setWc3Dir(@Nullable File val) {
 		/*if (val != null) {
 			for (File mpqFile : getWc3Mpqs(val)) {
@@ -342,20 +343,20 @@ public abstract class MpqPort {
 				}
 			}
 		}*/
-		
+
 		_wc3Dir = val;
 	}
 
 	@Nonnull
 	public static Vector<File> getWc3Mpqs() throws IOException {
 		if (_wc3Dir == null) throw new IOException("no wc3Dir set");
-		
+
 		return getWc3Mpqs(_wc3Dir);
 	}
 
 	@Nonnull
 	public abstract Out.Result getGameFiles(@Nonnull File... files) throws Exception;
-	
+
 	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
 
 	@Nonnull
@@ -366,31 +367,31 @@ public abstract class MpqPort {
 			throw new PortException("could not instantiate mpqPort defaultImpl " + _defaultImpl);
 		}
 	}
-	
+
 	public static void setDefaultImpl(Class<? extends MpqPort> type) {
 		_defaultImpl = type;
 	}
-	
+
 	private static String getRegEntry(String dirS, String key) {
 		try {
 			return Registry.get(dirS, key);
 		} catch (IOException ignored) {
 		}
-		
+
 		return null;
 	}
-	
+
 	static {
 		String dirS = getRegEntry("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
-		
+
 		if (dirS == null) dirS = getRegEntry("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
-		
+
 		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
-		
+
 		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
-		
+
 		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "War3InstallPath");
-		
+
 		if (dirS != null) {
 			setWc3Dir(new File(dirS));
 		}

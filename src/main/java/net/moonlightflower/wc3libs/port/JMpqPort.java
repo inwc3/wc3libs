@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class JMpqPort extends MpqPort {
 	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
@@ -286,7 +287,7 @@ public class JMpqPort extends MpqPort {
 		files.add(new File(wc3dir, "War3x.mpq"));
 		files.add(new File(wc3dir, "war3.mpq"));
 
-		return files;
+		return files.stream().filter(File::exists).collect(Collectors.toCollection(Vector::new));
 	}
 
 	public static void importFile(@Nonnull Vector<File> mpqFiles, @Nonnull File outFile, @Nonnull File inFile) throws IOException {
