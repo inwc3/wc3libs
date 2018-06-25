@@ -2134,10 +2134,13 @@ public class W3I {
 
         if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract info file");
 
+        Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
         W3I w3i = new W3I();
 
-        w3i.read(new Wc3BinInputStream(GAME_PATH));
+        w3i.read(inStream);
 
+        inStream.close();
         return w3i;
     }
 }
