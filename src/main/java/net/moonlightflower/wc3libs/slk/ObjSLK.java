@@ -22,7 +22,7 @@ public abstract class ObjSLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdTy
         }
 
         public State(String idString, DataTypeInfo typeInfo) {
-            this(idString, typeInfo, null);
+            this(idString, typeInfo, (T) typeInfo.getDefVal());
         }
 
         public State(String idString, Class<T> type) {

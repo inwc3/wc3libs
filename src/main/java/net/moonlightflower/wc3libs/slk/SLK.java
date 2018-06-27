@@ -226,6 +226,20 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	
 	protected abstract void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk);
 
+    public void cleanEmptyColumns() {
+        HashMap<String, Integer> countMap = new HashMap<>();
+        _fields.keySet().forEach(key -> countMap.put(key.toString(), 0));
+
+        _objs.values().forEach(obj -> obj.getVals().forEach((k, v) -> {
+            Integer val = countMap.get(k.toString());
+            countMap.put(k.toString(), val + 1);
+        }));
+
+        countMap.values().removeIf(count -> count == 0);
+
+        _fields.keySet().removeIf(key -> !countMap.containsKey(key.toString()));
+    }
+
 	public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 
@@ -432,6 +446,8 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 
 		public void exec() throws IOException {
+		    cleanEmptyColumns();
+
 			if (_pivotField == null) throw new RuntimeException("pivotField is null");
 
 			_file.getParentFile().mkdirs();

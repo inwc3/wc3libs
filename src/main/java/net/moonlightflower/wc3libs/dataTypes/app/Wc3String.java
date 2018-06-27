@@ -4,12 +4,14 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
 
 public class Wc3String extends DataType implements Stringable {
+	private static final Wc3String EMPTY_STRING = new Wc3String("");
+
 	public static String name() {
 		return "String";
 	}
 
 	public static Wc3String getDefVal() {
-		return null;
+		return EMPTY_STRING;
 	}
 	
 	private String _val;
