@@ -234,6 +234,8 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         	if (countMap.containsKey(k.toString())) {
 				Integer val = countMap.get(k.toString());
 				countMap.put(k.toString(), val + 1);
+			} else {
+				System.err.println("No count for key: " + k.toString());
 			}
         }));
 
