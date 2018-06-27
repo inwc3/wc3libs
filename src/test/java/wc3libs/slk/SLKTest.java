@@ -1,5 +1,7 @@
 package wc3libs.slk;
 
+import wc3libs.util.MurmurHash;
+
 import static org.testng.Assert.assertEquals;
 
 public class SLKTest {
@@ -22,7 +24,7 @@ public class SLKTest {
     }
 
     public static void assertEqualsIgnoreWhitespace(String actual, String expected) {
-        assertEquals(stripSpace(actual), stripSpace(expected));
+        assertEquals(MurmurHash.hash32(stripSpace(actual)), MurmurHash.hash32(stripSpace(expected)));
     }
 
 }
