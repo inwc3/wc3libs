@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.testng.Assert.*;
+import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
 
 public class DoodSLKTest {
 
@@ -19,7 +20,7 @@ public class DoodSLKTest {
         File rebuild = new File("DoodadsOut.slk");
         doodSLK.write(rebuild);
 
-        assertEquals(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
+        assertEqualsIgnoreWhitespace(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
     }
 
 }

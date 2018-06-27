@@ -512,7 +512,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 			_writer.newLine();
 			
-			_writer.write("E\r\n");
+			_writer.write("E\n");
 
 			_writer.close();
 		}

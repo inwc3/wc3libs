@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.testng.Assert.assertEquals;
+import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
 
 public class AbilSLKTest {
 
@@ -19,6 +19,6 @@ public class AbilSLKTest {
         File rebuild = new File("AbilityDataOut.slk");
         abilSLK.write(rebuild);
 
-        assertEquals(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
+        assertEqualsIgnoreWhitespace(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
     }
 }
