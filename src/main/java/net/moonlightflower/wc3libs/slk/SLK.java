@@ -407,7 +407,6 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 				if (val.toString().isEmpty()) return null;
 				if (val.equals("")) return null;
 				if (val.equals("\"\"")) return null;
-				if (val.equals("-")) return null;
 
 				return "\"" + val + "\"";
 			}
@@ -454,7 +453,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 			if (_pivotField == null) throw new RuntimeException("pivotField is null");
 
-			_file.getParentFile().mkdirs();
+			if(_file.getParentFile() != null) _file.getParentFile().mkdirs();
 
 			_writer = new BufferedWriter(new FileWriter(_file));
 
@@ -462,7 +461,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 			_writer.newLine();
 
-			_writer.write("B;Y" + (_objs.size() + 1) + ";X" + _fields.size() + ";D0");
+			_writer.write("B;X" + _fields.size() + ";Y" + (_objs.size() + 1) + ";D0");
 
 			Map<FieldId, Integer> fieldX = new LinkedHashMap<>();
 			Map<Integer, FieldId> fieldsByX = new LinkedHashMap<>();
@@ -515,7 +514,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
 			_writer.newLine();
 			
-			_writer.write("E");
+			_writer.write("E\r\n");
 
 			_writer.close();
 		}
