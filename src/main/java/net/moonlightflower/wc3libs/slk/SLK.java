@@ -231,8 +231,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         _fields.keySet().forEach(key -> countMap.put(key.toString(), 0));
 
         _objs.values().forEach(obj -> obj.getVals().forEach((k, v) -> {
-            Integer val = countMap.get(k.toString());
-            countMap.put(k.toString(), val + 1);
+        	if (countMap.containsKey(k.toString())) {
+				Integer val = countMap.get(k.toString());
+				countMap.put(k.toString(), val + 1);
+			}
         }));
 
         countMap.values().removeIf(count -> count == 0);
