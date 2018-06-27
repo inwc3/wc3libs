@@ -449,8 +449,6 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		}
 
 		public void exec() throws IOException {
-		    cleanEmptyColumns();
-
 			if (_pivotField == null) throw new RuntimeException("pivotField is null");
 
 			if(_file.getParentFile() != null) _file.getParentFile().mkdirs();
