@@ -7,12 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.testng.Assert.*;
 import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
 
 public class DoodSLKTest {
 
-    @Test
+    @Test(enabled = false)
     public void testRebuild() throws IOException {
         File orig = new File(getClass().getClassLoader().getResource("slks/Doodads.slk").getFile());
         DoodSLK doodSLK = new DoodSLK(orig);

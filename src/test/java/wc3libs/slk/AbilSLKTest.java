@@ -13,7 +13,7 @@ public class AbilSLKTest {
 
     @Test
     public void testRebuild() throws IOException {
-        File orig = new File(getClass().getClassLoader().getResource("slks/AbilityData.slk").getFile());
+        File orig = new File(getClass().getClassLoader().getResource("slks/AbilityDataSmall.slk").getFile());
         AbilSLK abilSLK = new AbilSLK(orig);
 
         File rebuild = new File("AbilityDataOut.slk");

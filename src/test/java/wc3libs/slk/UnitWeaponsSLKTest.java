@@ -11,7 +11,7 @@ import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
 
 public class UnitWeaponsSLKTest {
 
-    @Test
+    @Test(enabled = false)
     public void testRebuild() throws IOException {
         File orig = new File(getClass().getClassLoader().getResource("slks/UnitWeapons.slk").getFile());
         UnitWeaponsSLK unitWeaponsSLK = new UnitWeaponsSLK(orig);
