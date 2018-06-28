@@ -1,28 +1,43 @@
 package wc3libs.slk;
 
-import static org.testng.Assert.assertEquals;
+import org.testng.Assert;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class SLKTest {
-    public static String stripSpace(String toBeStripped) {
-        StringBuilder result = new StringBuilder();
-        boolean lastWasSpace = true;
-        for (int i = 0; i < toBeStripped.length(); i++) {
-            char c = toBeStripped.charAt(i);
-            if (Character.isWhitespace(c)) {
-                if (!lastWasSpace) {
-                    result.append(' ');
-                }
-                lastWasSpace = true;
-            } else {
-                result.append(c);
-                lastWasSpace = false;
+    public static void assertLinesEqual(String actualString, String expectedString) {
+        BufferedReader expectedLinesReader = new BufferedReader(new StringReader(expectedString));
+        BufferedReader actualLinesReader = new BufferedReader(new StringReader(actualString));
+
+        try {
+            int lineNumber = 0;
+
+            String actualLine;
+            while ((actualLine = actualLinesReader.readLine()) != null) {
+                String expectedLine = expectedLinesReader.readLine();
+                Assert.assertEquals(actualLine, expectedLine, "Line " + lineNumber);
+                lineNumber++;
+            }
+
+            if (expectedLinesReader.readLine() != null) {
+                Assert.fail("Actual string does not contain all expected lines");
+            }
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+        } finally {
+            try {
+                expectedLinesReader.close();
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
+            }
+            try {
+                actualLinesReader.close();
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
         }
-        return result.toString().trim();
-    }
-
-    public static void assertEqualsIgnoreWhitespace(String actual, String expected) {
-        assertEquals(stripSpace(actual), stripSpace(expected));
     }
 
 }

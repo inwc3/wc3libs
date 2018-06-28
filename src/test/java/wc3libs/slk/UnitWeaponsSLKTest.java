@@ -7,18 +7,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
+import static wc3libs.slk.SLKTest.assertLinesEqual;
 
 public class UnitWeaponsSLKTest {
 
-    @Test(enabled = false)
+    @Test
     public void testRebuild() throws IOException {
         File orig = new File(getClass().getClassLoader().getResource("slks/UnitWeapons.slk").getFile());
         UnitWeaponsSLK unitWeaponsSLK = new UnitWeaponsSLK(orig);
 
+        unitWeaponsSLK.cleanEmptyColumns();
+
         File rebuild = new File("UnitWeaponsOut.slk");
         unitWeaponsSLK.write(rebuild);
 
-        assertEqualsIgnoreWhitespace(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
+        assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
     }
 }

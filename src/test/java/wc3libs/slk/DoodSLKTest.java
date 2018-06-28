@@ -7,19 +7,21 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
+import static wc3libs.slk.SLKTest.assertLinesEqual;
 
 public class DoodSLKTest {
 
-    @Test(enabled = false)
+    @Test
     public void testRebuild() throws IOException {
         File orig = new File(getClass().getClassLoader().getResource("slks/Doodads.slk").getFile());
         DoodSLK doodSLK = new DoodSLK(orig);
 
+        doodSLK.cleanEmptyColumns();
+
         File rebuild = new File("DoodadsOut.slk");
         doodSLK.write(rebuild);
 
-        assertEqualsIgnoreWhitespace(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
+        assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
     }
 
 }

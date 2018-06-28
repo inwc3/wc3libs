@@ -7,7 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static wc3libs.slk.SLKTest.assertEqualsIgnoreWhitespace;
+import static wc3libs.slk.SLKTest.assertLinesEqual;
+
 
 public class AbilSLKTest {
 
@@ -16,9 +17,9 @@ public class AbilSLKTest {
         File orig = new File(getClass().getClassLoader().getResource("slks/AbilityDataSmall.slk").getFile());
         AbilSLK abilSLK = new AbilSLK(orig);
 
-        File rebuild = new File("AbilityDataOut.slk");
+        File rebuild = new File("AbilityDataSmallOut.slk");
         abilSLK.write(rebuild);
 
-        assertEqualsIgnoreWhitespace(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
+        assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
     }
 }
