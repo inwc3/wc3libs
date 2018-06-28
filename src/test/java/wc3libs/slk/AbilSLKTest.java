@@ -17,7 +17,11 @@ public class AbilSLKTest {
         File orig = new File(getClass().getClassLoader().getResource("slks/AbilityData.slk").getFile());
         AbilSLK abilSLK = new AbilSLK(orig);
 
-        File rebuild = new File("AbilityDataOut.slk");
+        File rebuild = new File("out/slkdat/AbilityDataOut.slk");
+        rebuild.delete();
+
+        abilSLK.cleanEmptyColumns();
+
         abilSLK.write(rebuild);
 
         assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));

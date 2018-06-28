@@ -18,7 +18,8 @@ public class DoodSLKTest {
 
         doodSLK.cleanEmptyColumns();
 
-        File rebuild = new File("DoodadsOut.slk");
+        File rebuild = new File("out/slkdat/DoodadsOut.slk");
+        rebuild.delete();
         doodSLK.write(rebuild);
 
         assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));

@@ -18,7 +18,8 @@ public class UnitWeaponsSLKTest {
 
         unitWeaponsSLK.cleanEmptyColumns();
 
-        File rebuild = new File("UnitWeaponsOut.slk");
+        File rebuild = new File("out/slkdat/UnitWeaponsOut.slk");
+        rebuild.delete();
         unitWeaponsSLK.write(rebuild);
 
         assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));
