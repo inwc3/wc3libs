@@ -239,7 +239,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 			}
         }));
 
-        countMap.values().removeIf(count -> count == 0);
+        countMap.values().removeIf(count -> count == null || count == 0);
 
         _fields.keySet().removeIf(key -> !countMap.containsKey(key.toString()));
     }
