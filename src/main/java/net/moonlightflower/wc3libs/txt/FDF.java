@@ -224,6 +224,10 @@ public class FDF extends UTF8 {
 			}*/
 		}
 	}
+
+	public FDF(@Nonnull File file) throws IOException {
+		this(new FileInputStream(file));
+	}
 	
 	public FDF(@Nonnull InputStream inStream) throws IOException {
 		super();

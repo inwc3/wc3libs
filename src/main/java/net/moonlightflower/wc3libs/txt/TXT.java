@@ -11,10 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -350,13 +347,17 @@ public class TXT {
 	}
 
 	private final Section _defaultSection = new Section((TXTSectionId) null);
-	private final Map<TXTSectionId, Section> _sections = new LinkedHashMap<>();
 
+	private final Map<TXTSectionId, Section> _sections = new LinkedHashMap<>();
 	@Nonnull
 	public Map<TXTSectionId, Section> getSections() {
 		return _sections;
 	}
-	
+
+	public Section getDefaultSection() {
+		return _defaultSection;
+	}
+
 	public Section getSection(@Nonnull TXTSectionId id) {
 		return getSections().get(id);
 	}
