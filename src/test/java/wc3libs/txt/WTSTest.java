@@ -15,9 +15,9 @@ public class WTSTest extends Wc3LibTest {
 
     @Test
     public void testRebuild() throws Exception {
-        List<Path> w3iFile = getFiles("wc3data/WTS/");
+        List<Path> files = getFiles("wc3data/WTS/");
 
-        w3iFile.forEach((Path p) -> {
+        files.forEach((Path p) -> {
             try {
                 Log.info("Testing: " + p.getFileName());
                 WTS wts = new WTS(p.toFile());

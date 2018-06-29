@@ -36,10 +36,10 @@ public class TXT {
 				StringBuilder s = new StringBuilder();
 				
 				int c = 0;
-				
+
 				for (DataType val : getVals()) {
-					if (c > 0) s.append(","); 
-					
+					if (c > 0) s.append(",");
+
 					String valS = (val == null) ? null : val.toTXTVal().toString();
 					
 					if (valS != null) {
@@ -47,13 +47,13 @@ public class TXT {
 							valS = translator.translate(valS);
 						}
 
-						if (valS.contains(" ")) {
+						if (valS.length() == 0 || valS.contains(",")) {
 							valS = "\"" + valS + "\"";
 						}
 
 						s.append(valS);
 					}
-					
+
 					c++;
 				}
 				
@@ -126,24 +126,28 @@ public class TXT {
 						String val = line.substring(startPos, endPos + 1);
 						
 						val = dequote(val);
-						
+
 						ret.add(val);
 						
 						startPos = endPos + 1;
 					} else {
-						int endPos = line.indexOf(',', startPos);
-
-						if (endPos == -1) {
-							endPos = line.length() - 1;
+						if(line.charAt(startPos) == ',' && line.charAt(startPos-1) == '\"') {
+							startPos++;
 						} else {
-							endPos = endPos - 1;
-						}
+							int endPos = line.indexOf(',', startPos);
 
-						String val = (endPos < startPos) ? "" : line.substring(startPos, endPos + 1);
-						
-						ret.add(val);
-						
-						startPos = endPos + 2;
+							if (endPos == -1) {
+								endPos = line.length() - 1;
+							} else {
+								endPos = endPos - 1;
+							}
+
+							String val = (endPos < startPos) ? "" : line.substring(startPos, endPos + 1);
+
+							ret.add(val);
+
+							startPos = endPos + 2;
+						}
 					}
 				}
 				
@@ -153,7 +157,8 @@ public class TXT {
 			public void setLine(@Nonnull String line) {
 				clear();
 
-				for (String val : tokenize(line)) {
+				List<String> tokenize = tokenize(line);
+				for (String val : tokenize) {
 					_vals.add(Wc3String.valueOf(val));
 				}
 			}
@@ -361,7 +366,8 @@ public class TXT {
 	}
 	
 	public Section addSection(@Nonnull TXTSectionId id) {
-		if (_sections.containsKey(id)) return getSection(id);
+		if (_sections.containsKey(id))
+			return getSection(id);
 		
 		Section section = new Section(id);
 		
@@ -488,6 +494,7 @@ public class TXT {
 				curSection.setLine(FieldId.valueOf(valMatcher.group(1)), valMatcher.group(2));
 			}
 		}
+
 	}
 	
 	public void read(@Nonnull File file) throws IOException {
