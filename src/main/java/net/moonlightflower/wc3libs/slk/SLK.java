@@ -460,7 +460,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
             _writer.newLine();
 
-            _writer.write("B;X" + (_fields.size() + 1) + ";Y" + (_objs.size() + 1) + ";D0");
+            _writer.write("B;X" + (_fields.size() + (_fields.containsKey(_pivotField) ? 0 : 1) ) + ";Y" + (_objs.size() + 1) + ";D0");
 
             Map<FieldId, Integer> fieldX = new LinkedHashMap<>();
             Map<Integer, FieldId> fieldsByX = new LinkedHashMap<>();
