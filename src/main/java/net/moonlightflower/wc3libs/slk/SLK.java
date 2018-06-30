@@ -232,8 +232,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         HashMap<String, Integer> countMap = new HashMap<>();
         _fields.keySet().forEach(key -> countMap.put(key.toString(), 0));
         _objs.values().forEach(obj -> obj.getVals().forEach((k, v) -> {
-            DataType defVal = k.getTypeInfo().getDefVal();
-            if (v != null && countMap.containsKey(k.toString()) && (defVal == null || !defVal.toString().equals(k.toString()))) {
+            if (v != null && countMap.containsKey(k.toString())) {
                 Integer val = countMap.get(k.toString());
                 countMap.put(k.toString(), val + 1);
             }

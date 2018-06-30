@@ -428,6 +428,7 @@ public class ObjMerger {
 
             File outFile = new File(outDir, inFile.toString());
 
+            slk.cleanEmptyColumns();
             slk.write(outFile);
 
             portIn.add(outFile, inFile);
