@@ -1,34 +1,39 @@
 [![Build Status](https://travis-ci.org/inwc3/wc3libs.svg?branch=master)](https://travis-ci.org/inwc3/wc3libs) [![Jit](https://jitpack.io/v/inwc3/wc3libs.svg)](https://jitpack.io/#inwc3/wc3libs) [![codebeat badge](https://codebeat.co/badges/f622675c-0de7-4dd7-9936-94b1a78a73c0)](https://codebeat.co/projects/github-com-inwc3-wc3libs-master) [![codecov](https://codecov.io/gh/inwc3/wc3libs/branch/master/graph/badge.svg)](https://codecov.io/gh/inwc3/wc3libs)
 
 
-# wc3libs
-Java library for general wc3 modding.
+# Wc3libs
+
+Pure Java library for general wc3 modding and tool development.
+With Wc3libs we aim to offer a feature-complete, easy, plug & play solution for jvm applications to access, modify and output anz kind of Warcraft III specific game data.
+
+# Usage
+
 Use this library in your maven/gradle project using [JitPack](https://jitpack.io/#inwc3/wc3libs).
 
 Gradle Example:
 ```gradle
-compile 'com.github.inwc3:wc3libs:e5e471c59e'
+allprojects {
+  repositories {
+    maven { url 'https://jitpack.io' }
+  }
+}
+  
+dependencies {
+		implementation 'com.github.inwc3:wc3libs:-SNAPSHOT'
+}
 ```
 
-If you want to know how to read a certain kind of file, refer to the related test for a quick start.
+# Feature Overview
 
-## about
-
-wc3libs aims to be a feature-complete, easy, plug & play solution for jvm programs to access, modify and output arbitrary warcraft 3 data.
-
-This mainly includes support for reading and writing various wc3 formats such as:
-
-_example map formats:_
-* .w3c, .w3i, .shd, .mmp,
-* objMods: .w3a, .w3u,
-* slk, profile files, .wts, .fdf
-
-_campaign formats:_ 
-* .w3f
+* **Map Data formats:** .w3c, .w3i, .shd, .mmp, .wpm, header and footer
+* **Asset Data formats:** .mdx, .mdl, .blp
+* **Object Data formats:** .w3a, .w3u, .w3b
+* **Plain Text formats:** .slk, .txt, .wts, .fdf
+* **Campaign Data formats:** .w3f
 
 _mpq editing_ via [JMPQ](https://github.com/inwc3/JMPQ3)
 
-## contributing
+## Contributing
 
-Feel free to contribute fixed or additions or make tickets on the issue tracker to inform us. Any kind of documentation is also welcome.
+Feel free to contribute fixes or additions or make tickets on the issue tracker to inform us. Any kind of documentation or specification is also welcome.
 
