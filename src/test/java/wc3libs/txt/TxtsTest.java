@@ -1,6 +1,7 @@
 package wc3libs.txt;
 
 import net.moonlightflower.wc3libs.txt.TXT;
+import net.moonlightflower.wc3libs.txt.app.ui.MiscDataTXT;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
@@ -16,7 +17,7 @@ public class TxtsTest extends Wc3LibTest {
 
     @Test
     public void testRebuild() throws Exception {
-        List<Path> files = getFiles("txts/");
+        List<Path> files = getFiles("txts/generic/");
 
         files.forEach(file -> {
             try {
@@ -34,4 +35,24 @@ public class TxtsTest extends Wc3LibTest {
             }
         });
     }
+
+    @Test
+    public void textMiscData() throws Exception {
+        File file = getFile("txts/MiscData.txt");
+
+        try {
+            MiscDataTXT miscDataTXT = new MiscDataTXT(file);
+
+            File rebuild = new File("out/txtdat/" + file.getName());
+            rebuild.delete();
+
+            miscDataTXT.write(rebuild);
+
+            assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(file.toPath())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

@@ -1,21 +1,19 @@
 package net.moonlightflower.wc3libs.txt.app.ui;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.FileType;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MiscDataTXT extends TXT {
 	public final static File GAME_USE_PATH = new File("UI\\MiscData.txt");
@@ -421,5 +419,11 @@ public class MiscDataTXT extends TXT {
 	
 	public MiscDataTXT() {
 		super();
+	}
+
+	public MiscDataTXT(@Nonnull File file) throws IOException {
+		super();
+
+		read(file);
 	}
 }
