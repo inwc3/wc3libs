@@ -31,7 +31,9 @@ ID_INT_LITERAL:
 REAL_LITERAL:
 	[0-9]* '.' [0-9]+ | [0-9]+ '.' ;
 STRING_LITERAL:
-	'"' (~('"' | '\r' | '\n') | '\u002F' | '\\' ('"' | '\\'))* '"' ;
+	'"' ( EscapeSequence | ~('\\'|'"'|'\r'|'\n') | NEW_LINE )* '"';
+
+fragment EscapeSequence: '\\' [abfnrtvz"'\\];
 
 ID:
 	ID_START (ID_TAIL)* ;

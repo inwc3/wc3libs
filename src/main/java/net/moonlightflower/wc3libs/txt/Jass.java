@@ -47,8 +47,7 @@ public class Jass {
 		parser.addParseListener(new ParseTreeListener() {
 			@Override
 			public void enterEveryRule(ParserRuleContext context) {
-				// TODO Auto-generated method stub
-				System.err.println("enter: " + context.toString(parser, context.getParent()));
+//				System.err.println("enter: " + context.toString(parser, context.getParent()));
 			}
 
 			@Override
@@ -89,7 +88,7 @@ public class Jass {
 					//System.err.println("exit " + context.toString(parser, context.getParent()) + "->" + context.getText() + "|||");
 				}
 				
-				System.err.println("exit: " + context.toString(parser, context.getParent()) + "->" + context.getText());
+//				System.err.println("exit: " + context.toString(parser, context.getParent()) + "->" + context.getText());
 			}
 
 			@Override
@@ -107,21 +106,6 @@ public class Jass {
 		});
 		
 		parser.root();
-		
-		BufferedWriter tokenOut = new BufferedWriter(new FileWriter("D:\\tokens.txt"));
-
-		for (int i = 0; i < tokens.getTokens().size(); i++) {
-			Token token = tokens.getTokens().get(i);
-			
-			if (token.getType() == -1) continue;
-			
-			String tokenS = token.getLine()+";"+token.getCharPositionInLine() + "->" + lexer.getVocabulary().getDisplayName(token.getType());
-
-			tokenOut.write(tokenS + ";");
-			tokenOut.newLine();
-		}
-		
-		tokenOut.close();
 		
 		//_map.putAll(newEntries);
 	}
