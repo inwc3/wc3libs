@@ -38,13 +38,13 @@ public class TXT {
 					if (c > 0) s.append(",");
 
 					String valS = (val == null) ? null : val.toTXTVal().toString();
-					
+
 					if (valS != null) {
 						if (translator != null) {
 							valS = translator.translate(valS);
 						}
 
-						if (valS.length() == 0 || valS.contains(",")) {
+						if (valS.length() == 0 || valS.contains(",") || valS.contains(";")) {
 							valS = "\"" + valS + "\"";
 						}
 
