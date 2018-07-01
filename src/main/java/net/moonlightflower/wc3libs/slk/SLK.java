@@ -15,6 +15,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements Mergeable<Self>, SLKable {
 	public static class FieldData {
@@ -226,129 +228,197 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 	
 	protected abstract void read(@Nonnull SLK<?, ? extends ObjId, ? extends SLK.Obj<? extends ObjId>> slk);
 
-	public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+	public class Reader {
+		private final File _file;
+		private final boolean _onlyHeader;
 
-		String line;
+		public void exec() throws IOException {
+			BufferedReader reader = new BufferedReader(new FileReader(_file));
 
-		int curX = 0;
-		int curY = 0;
-		int maxX = 0;
-		int maxY = 0;
+			String line;
 
-		Map<Integer, Map<Integer, DataType>> data = new LinkedHashMap<>();
+			int curX = 0;
+			int curY = 0;
+			int maxX = 0;
+			int maxY = 0;
 
-		while ((line = reader.readLine()) != null) {
-			line = line.replaceAll("[\u0000-\u001f]", "");
+			Map<Integer, Map<Integer, DataType>> data = new LinkedHashMap<>();
 
-			String[] t = line.split(";");
+			while ((line = reader.readLine()) != null) {
+				line = line.replaceAll("[\u0000-\u001f]", "");
 
-			if (t[0].equals("C")) {
-				DataType val = null;
-				int x = 0;
-				int y = 0;
+				String[] t = line.split(";");
 
-				for (String aT : t) {
-					String symbol = aT.substring(0, 1);
+				if (t[0].equals("C")) {
+					DataType val = null;
+					int x = 0;
+					int y = 0;
 
-					if (symbol.equals("X")) {
-						x = Integer.parseInt(aT.substring(1, aT.length()));
-					}
-					if (symbol.equals("Y")) {
-						y = Integer.parseInt(aT.substring(1, aT.length()));
-					}
-					if (symbol.equals("K")) {
-						boolean skip = false;
-						String valS = aT.substring(1, aT.length());
+					for (String aT : t) {
+						String symbol = aT.substring(0, 1);
 
-						if (valS.substring(0, 1).equals("\"")) {
-							valS = valS.substring(1, valS.length() - 1);
+						if (symbol.equals("X")) {
+							x = Integer.parseInt(aT.substring(1, aT.length()));
+						}
+						if (symbol.equals("Y")) {
+							y = Integer.parseInt(aT.substring(1, aT.length()));
+						}
+						if (symbol.equals("K")) {
+							boolean skip = false;
+							String valS = aT.substring(1, aT.length());
 
-							val = Wc3String.valueOf(valS);
-						} else {
-							try {
-								val = Wc3Int.valueOf(Integer.parseInt(valS));
-							} catch (NumberFormatException e) {
+							if (valS.substring(0, 1).equals("\"")) {
+								valS = valS.substring(1, valS.length() - 1);
+
+								val = Wc3String.valueOf(valS);
+							} else {
 								try {
-									val = Real.valueOf(Float.parseFloat(valS));
-								} catch (NumberFormatException ignored) {
+									val = Wc3Int.valueOf(Integer.parseInt(valS));
+								} catch (NumberFormatException e) {
+									try {
+										val = Real.valueOf(Float.parseFloat(valS));
+									} catch (NumberFormatException ignored) {
+									}
+								}
+
+								if (val == null) {
+									if (valS.equals("#VALUE!")) skip = true;
+									if (valS.equals("FALSE")) val = Bool.valueOf(false);
+									if (valS.equals("TRUE")) val = Bool.valueOf(true);
 								}
 							}
 
-							if (val == null) {
-								if (valS.equals("#VALUE!")) skip = true;
-								if (valS.equals("FALSE")) val = Bool.valueOf(false);
-								if (valS.equals("TRUE")) val = Bool.valueOf(true);
+							if (!skip) {
+								if (val == null) throw new RuntimeException("could not parse value " + valS);
 							}
 						}
-
-						if (!skip) {
-							if (val == null) throw new RuntimeException("could not parse value " + valS);
-						}
 					}
+
+					if (x == 0) x = curX;
+					if (y == 0) y = curY;
+
+					if (x > maxX) maxX = x;
+					if (y > maxY) maxY = y;
+
+					if (val != null) {
+						if (!data.containsKey(y)) data.put(y, new LinkedHashMap<>());
+
+						data.get(y).put(x, val);
+					}
+
+					curX = x;
+					curY = y;
 				}
-				
-				if (x == 0) x = curX;
-				if (y == 0) y = curY;
+			}
 
-				if (x > maxX) maxX = x;
-				if (y > maxY) maxY = y;
+			reader.close();
 
-				if (val != null) {
-					if (!data.containsKey(y)) data.put(y, new LinkedHashMap<>());
-	
-					data.get(y).put(x, val);
+			for (Map.Entry<Integer, DataType> entry : data.get(1).entrySet()) {
+				FieldId field = FieldId.valueOf(entry.getValue().toString());
+
+				addField(field);
+			}
+
+			_pivotField = FieldId.valueOf(data.get(1).get(1).toString());
+
+			if (_onlyHeader) return;
+
+			//for (int i = 2; i < data.size(); i++) {
+			for (Integer i : data.keySet()) {
+				if (i == 1) continue;
+
+				DataType val = data.get(i).get(1);
+
+				if (val == null) continue;
+
+				ObjId objId = ObjId.valueOf(val.toString());
+
+				ObjType obj = createObj(objId);
+
+				if (obj == null) continue;
+
+				addObj(obj);
+
+				for (Map.Entry<Integer, DataType> entry : data.get(i).entrySet()) {
+					DataType fieldRaw = data.get(1).get(entry.getKey());
+
+					if (fieldRaw == null) continue;
+
+					FieldId field = FieldId.valueOf(fieldRaw.toString());
+
+					if ((field == null) || (field.equals(_pivotField))) continue;
+
+					obj.set(field, entry.getValue());
 				}
-
-				curX = x;
-				curY = y;
 			}
 		}
 
-		reader.close();
-
-		for (Map.Entry<Integer, DataType> entry : data.get(1).entrySet()) {
-			FieldId field = FieldId.valueOf(entry.getValue().toString());
-			
-			addField(field);
+		public Reader(@Nonnull File file, boolean onlyHeader) {
+			_file = file;
+			_onlyHeader = onlyHeader;
 		}
+	}
 
-		_pivotField = FieldId.valueOf(data.get(1).get(1).toString());
-		
-		if (onlyHeader) return;
-
-		//for (int i = 2; i < data.size(); i++) {
-		for (Integer i : data.keySet()) {
-			if (i == 1) continue;
-			
-			DataType val = data.get(i).get(1);
-			
-			if (val == null) continue;
-			
-			ObjId objId = ObjId.valueOf(val.toString());
-			
-			ObjType obj = createObj(objId);
-
-			if (obj == null) continue;
-			
-			addObj(obj);
-
-			for (Map.Entry<Integer, DataType> entry : data.get(i).entrySet()) {
-				DataType fieldRaw = data.get(1).get(entry.getKey());
-				
-				if (fieldRaw == null) continue;
-				
-				FieldId field = FieldId.valueOf(fieldRaw.toString());
-
-				if ((field == null) || (field.equals(_pivotField))) continue;
-
-				obj.set(field, entry.getValue());
-			}
-		}
+	public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
+		new Reader(file, onlyHeader).exec();
 	}
 	
 	public void read(@Nonnull File file) throws IOException {
 		read(file, false);
+	}
+
+	@Nullable
+	public static Object formatVal(@Nullable Object val) {
+		if (val == null) return null;
+
+		try {
+			Pattern pattern = Pattern.compile("^([-]?[0-9]+\\.?[0-9]*)$", Pattern.DOTALL);
+
+			String valS = val.toString();
+
+			if (valS == null) return null;
+
+			Matcher matcher = pattern.matcher(valS);
+
+			if (matcher.find()) {
+				Number valNum = Double.parseDouble(val.toString());
+
+				if (valNum.floatValue() == valNum.doubleValue()) {
+					valNum = valNum.floatValue();
+
+					if (valNum.intValue() == valNum.floatValue()) {
+						valNum = valNum.intValue();
+					}
+				}
+
+				val = valNum;
+			}
+		} catch (NumberFormatException ignored) {
+		}
+
+		if (val instanceof Boolean) {
+			if ((Boolean) val) return 1;
+		} else if (val instanceof Integer) {
+			if (((Integer) val) != 0) return val;
+		} else if (val instanceof Float) {
+			if (((Float) val) != 0F) return val;
+		} else if (val instanceof Double) {
+			if (((Double) val) != 0D) return val;
+		} else {
+			String valS = val.toString();
+
+			if (valS == null) return null;
+
+			if (valS.isEmpty()) return null;
+			if (valS.equals("\"\"")) return null;
+			if (valS.equals("-")) return null;
+
+			if (valS.contains(";") || valS.contains("\"")) return "\"" + valS + "\"";
+
+			return valS;
+		}
+
+		return null;
 	}
 	
 	public class Writer {
@@ -357,45 +427,6 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 		BufferedWriter _writer;
 		private int _slkCurX;
 		private int _slkCurY;
-
-		@Nullable
-		private Object formatVal(@Nullable Object val) {
-			if (val == null) return null;
-			
-			try {
-				return Integer.parseInt(val.toString());
-			} catch (NumberFormatException ignored) {
-			}
-			try {
-				return Float.parseFloat(val.toString());
-			} catch (NumberFormatException ignored) {
-			}
-			try {
-				return Double.parseDouble(val.toString());
-			} catch (NumberFormatException ignored) {
-			}
-			
-			if (val instanceof Boolean) {
-				if ((Boolean) val) return 1;
-			} else if (val instanceof Integer) {
-				if (((Integer) val) != 0) return val;
-			} else if (val instanceof Float) {
-				if (((Float) val) != 0F) return val;
-			} else if (val instanceof Double) {
-				if (((Double) val) != 0D) return val;
-			} else {
-				val = val.toString();
-				
-				if (val.toString().isEmpty()) return null;
-				if (val.equals("")) return null;
-				if (val.equals("\"\"")) return null;
-				if (val.equals("-")) return null;
-
-				return "\"" + val + "\"";
-			}
-			
-			return null;
-		}
 		
 		private void writeCell(int x, int y, @Nullable DataType slkVal) throws IOException {
 			if (slkVal == null) return;
