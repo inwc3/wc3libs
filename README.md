@@ -19,7 +19,7 @@ allprojects {
 }
   
 dependencies {
-		implementation 'com.github.inwc3:wc3libs:-SNAPSHOT'
+  implementation 'com.github.inwc3:wc3libs:-SNAPSHOT'
 }
 ```
 
