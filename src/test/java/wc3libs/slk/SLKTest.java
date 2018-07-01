@@ -14,8 +14,8 @@ public class SLKTest {
         Assert.assertEquals(SLK.formatVal("-0"), null);
         Assert.assertEquals(SLK.formatVal("0.0"), null);
         Assert.assertEquals(SLK.formatVal("0.123"), 0.123D);
-        Assert.assertEquals(SLK.formatVal("0.-0"), "\"0.-0\"");
-        Assert.assertEquals(SLK.formatVal("000 4"), "\"000 4\"");
+        Assert.assertEquals(SLK.formatVal("0.-0"), "0.-0");
+        Assert.assertEquals(SLK.formatVal("000 4"), "000 4");
         Assert.assertEquals(SLK.formatVal("0"), null);
 
         Assert.assertEquals(SLK.formatVal(";"), "\";\"");
