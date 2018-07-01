@@ -16,8 +16,6 @@ public class DestructableSLKTest {
         File orig = new File(getClass().getClassLoader().getResource("slks/DestructableData.slk").getFile());
         DestructableSLK destrSLK = new DestructableSLK(orig);
 
-        destrSLK.cleanEmptyColumns();
-
         File rebuild = new File("out/slkdat/DestructableDataOut.slk");
         rebuild.delete();
         destrSLK.write(rebuild);

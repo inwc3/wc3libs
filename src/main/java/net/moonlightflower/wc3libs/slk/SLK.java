@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.*;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements
-		Mergeable<Self>, SLKable {
+        Mergeable<Self>, SLKable {
     public static class FieldData {
         private final DataType _defVal;
 
@@ -232,9 +232,12 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         HashMap<String, Integer> countMap = new HashMap<>();
         _fields.keySet().forEach(key -> countMap.put(key.toString(), 0));
         _objs.values().forEach(obj -> obj.getVals().forEach((k, v) -> {
-            if (v != null && countMap.containsKey(k.toString())) {
-                Integer val = countMap.get(k.toString());
-                countMap.put(k.toString(), val + 1);
+            if (v != null && !v.toSLKVal().toString().isEmpty() && countMap.containsKey(k.toString())) {
+                DataType defVal = v.getTypeInfo().getDefVal();
+                if(defVal != null && !defVal.toSLKVal().toString().equals(v.toSLKVal().toString())) {
+                    Integer val = countMap.get(k.toString());
+                    countMap.put(k.toString(), val + 1);
+                }
             }
         }));
 
@@ -326,7 +329,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         _fields.clear();
         for (Map.Entry<Integer, DataType> entry : data.get(1).entrySet()) {
             FieldId field = FieldId.valueOf(entry.getValue().toString());
-            if(!_fields.containsValue(entry.getValue().toString())) {
+            if (!_fields.containsValue(entry.getValue().toString())) {
                 addField(field);
             }
         }
@@ -459,7 +462,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
             _writer.newLine();
 
-            _writer.write("B;X" + (_fields.size() + (_fields.containsKey(_pivotField) ? 0 : 1) ) + ";Y" + (_objs.size() + 1) + ";D0");
+            _writer.write("B;X" + (_fields.size() + (_fields.containsKey(_pivotField) ? 0 : 1)) + ";Y" + (_objs.size() + 1) + ";D0");
 
             Map<FieldId, Integer> fieldX = new LinkedHashMap<>();
             Map<Integer, FieldId> fieldsByX = new LinkedHashMap<>();

@@ -16,7 +16,6 @@ public class UnitWeaponsSLKTest {
         File orig = new File(getClass().getClassLoader().getResource("slks/UnitWeapons.slk").getFile());
         UnitWeaponsSLK unitWeaponsSLK = new UnitWeaponsSLK(orig);
 
-        unitWeaponsSLK.cleanEmptyColumns();
 
         File rebuild = new File("out/slkdat/UnitWeaponsOut.slk");
         rebuild.delete();

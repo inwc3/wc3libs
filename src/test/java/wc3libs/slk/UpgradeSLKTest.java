@@ -36,8 +36,6 @@ public class UpgradeSLKTest {
         File rebuild = new File("out/slkdat/UpgradeMetaDataOut.slk");
         rebuild.delete();
 
-        upgradeSLK.cleanEmptyColumns();
-
         upgradeSLK.write(rebuild);
 
         assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(orig.toPath())));

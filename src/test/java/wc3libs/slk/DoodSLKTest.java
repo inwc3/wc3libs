@@ -16,8 +16,6 @@ public class DoodSLKTest {
         File orig = new File(getClass().getClassLoader().getResource("slks/Doodads.slk").getFile());
         DoodSLK doodSLK = new DoodSLK(orig);
 
-        doodSLK.cleanEmptyColumns();
-
         File rebuild = new File("out/slkdat/DoodadsOut.slk");
         rebuild.delete();
         doodSLK.write(rebuild);
