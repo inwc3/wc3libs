@@ -100,7 +100,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
         }
 
         public Obj(SLK.Obj<? extends ObjId> slkObj) {
-            this(DestructableId.valueOf(slkObj.getId()));
+            super(DestructableId.valueOf(slkObj.getId()));
 
             read(slkObj);
         }
@@ -158,7 +158,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
     }
 
     @Override
-    public void read(File file) throws IOException {
+    public void read(@Nonnull File file) throws IOException {
         super.read(file);
     }
 

@@ -152,7 +152,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(LightningId.valueOf(slkObj.getId()));
+			super(LightningId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -210,7 +210,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 	}
 	

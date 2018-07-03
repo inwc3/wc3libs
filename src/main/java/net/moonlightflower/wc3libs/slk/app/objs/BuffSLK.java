@@ -46,7 +46,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(BuffId.valueOf(slkObj.getId()));
+			super(BuffId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -104,7 +104,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 	

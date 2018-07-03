@@ -253,7 +253,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(SplatId.valueOf(slkObj.getId()));
+			super(SplatId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -329,7 +329,7 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 	}
 	

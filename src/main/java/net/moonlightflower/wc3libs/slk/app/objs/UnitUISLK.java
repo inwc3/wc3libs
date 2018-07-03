@@ -88,7 +88,7 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(UnitId.valueOf(slkObj.getId()));
+			super(UnitId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -148,7 +148,7 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 	

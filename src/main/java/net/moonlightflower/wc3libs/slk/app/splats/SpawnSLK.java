@@ -89,7 +89,7 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(SpawnId.valueOf(slkObj.getId()));
+			super(SpawnId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -147,7 +147,7 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 	}
 	

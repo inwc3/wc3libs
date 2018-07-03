@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
+import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Mergeable;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
@@ -112,7 +113,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             for (Map.Entry<FieldId, DataType> entry : otherObj.getVals().entrySet()) {
                 FieldId field = entry.getKey();
                 DataType val = entry.getValue();
-
+                //if (otherObj.getId().equals(Id.valueOf("nmer"))) System.out.println(field + "->" + val);
                 if (overwrite || (get(field) == null)) {
                     if (val != null) {
                         set(field, val);

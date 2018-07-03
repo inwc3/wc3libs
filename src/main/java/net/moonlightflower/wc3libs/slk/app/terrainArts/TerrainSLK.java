@@ -151,7 +151,7 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj slkObj) {
-			this(TileId.valueOf(slkObj.getId()));
+			super(TileId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -223,7 +223,7 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 	}
 	

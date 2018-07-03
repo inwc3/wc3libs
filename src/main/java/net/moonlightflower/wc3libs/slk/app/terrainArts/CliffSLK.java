@@ -159,7 +159,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(CliffId.valueOf(slkObj.getId()));
+			super(CliffId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -231,7 +231,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 	}
 	

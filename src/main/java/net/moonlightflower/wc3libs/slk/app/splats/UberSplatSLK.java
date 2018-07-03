@@ -196,7 +196,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		}
 
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(UberSplatId.valueOf(slkObj.getId()));
+			super(UberSplatId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -268,7 +268,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 	}
 
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		RawSLK slk = new RawSLK();
 	
 		slk.read(file);

@@ -365,8 +365,6 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		
 		@Override
 		public void reduce() {
-			System.out.println("reduce " + get(States.SOUND_AMBIENT));
-			
 			if ((get(States.SOUND_AMBIENT) != null) && get(States.SOUND_AMBIENT).equals("-")) remove(States.SOUND_AMBIENT);
 		}
 		
@@ -379,7 +377,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> otherObj) {
-			this(WeatherId.valueOf(otherObj.getId()));
+			super(WeatherId.valueOf(otherObj.getId()));
 			
 			read(otherObj);
 			
@@ -464,7 +462,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	}
 
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 		read(this);
 	}

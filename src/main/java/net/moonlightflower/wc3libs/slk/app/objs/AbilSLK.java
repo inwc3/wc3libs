@@ -140,7 +140,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(AbilId.valueOf(slkObj.getId()));
+			super(AbilId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -156,7 +156,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		@Override
 		public void reduce() {
 			// TODO Auto-generated method stub
-			
+			set(States.EDITOR_COMMENTS, null);
 		}
 	}
 	
@@ -198,7 +198,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 	

@@ -107,7 +107,7 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(DoodId.valueOf(slkObj.getId()));
+			super(DoodId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -165,7 +165,7 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 	

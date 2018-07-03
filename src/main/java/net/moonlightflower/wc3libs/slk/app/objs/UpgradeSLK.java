@@ -72,7 +72,7 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(UpgradeId.valueOf(slkObj.getId()));
+			super(UpgradeId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -130,7 +130,7 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 	}
 	
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 	

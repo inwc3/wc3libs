@@ -357,7 +357,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		}
 		
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(WaterId.valueOf(slkObj.getId()));
+			super(WaterId.valueOf(slkObj.getId()));
 			
 			read(slkObj);
 		}
@@ -431,7 +431,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 	}
 
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		read(new RawSLK(file));
 	}
 	

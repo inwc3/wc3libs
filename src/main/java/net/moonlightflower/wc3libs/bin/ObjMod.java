@@ -256,7 +256,7 @@ public abstract class ObjMod {
 		public void merge(@Nonnull Obj otherObj) {
 			for (Field otherField : otherObj.getFields().values()) {
 				MetaFieldId fieldId = otherField.getId();
-				
+
 				Field field = addField(fieldId);
 				
 				field.merge(otherField);
@@ -597,6 +597,16 @@ public abstract class ObjMod {
 			}
 			}
 		}
+
+		private Obj copy() {
+			Obj ret = new Obj(_id, _baseId);
+
+			ret._newId = _newId;
+
+			ret.merge(this);
+
+			return ret;
+		}
 		
 		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
 			read(stream, format, extended);
@@ -639,15 +649,15 @@ public abstract class ObjMod {
 	@Nonnull
 	public List<Obj> getCustomObjs() {
 		List<Obj> ret = new ArrayList<>();
-		
+
 		for (int i = 0; i < getObjsList().size(); i++) {
 			Obj obj = getObjsList().get(i);
-			
+
 			if (obj.getNewId() != null) {
 				ret.add(obj);
 			}
 		}
-		
+
 		return ret;
 	}
 
@@ -691,11 +701,9 @@ public abstract class ObjMod {
 	
 	public void merge(@Nonnull ObjMod other) {
 		for (Obj otherObj : other.getObjs().values()) {
-			ObjId objId = otherObj.getId();
-			
-			Obj obj = addObj(objId, otherObj.getBaseId());
-			
-			obj.merge(otherObj);
+			Obj obj = otherObj.copy();
+
+			addObj(obj);
 		}
 	}
 
@@ -735,7 +743,7 @@ public abstract class ObjMod {
 		
 		private ObjPack(@Nonnull ObjMod orig) {
 			_objMod = orig.copy();
-			
+
 			for (Obj obj : _objMod.getCustomObjs()) {
 				_baseObjIds.put(obj.getId(), obj.getBaseId());
 			}

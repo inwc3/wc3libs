@@ -100,7 +100,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		}
 
 		public Obj(SLK.Obj<? extends ObjId> slkObj) {
-			this(UnitId.valueOf(slkObj.getId()));
+			super(UnitId.valueOf(slkObj.getId()));
 
 			read(slkObj);
 		}
@@ -158,7 +158,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 	}
 
 	@Override
-	public void read(File file) throws IOException {
+	public void read(@Nonnull File file) throws IOException {
 		super.read(file);
 	}
 
