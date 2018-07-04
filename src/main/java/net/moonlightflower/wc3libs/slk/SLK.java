@@ -101,6 +101,14 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             _vals.put(field, val);
         }
 
+        public void remove(@Nonnull FieldId field) {
+            _vals.remove(field);
+        }
+
+        public void clear() {
+            _vals.clear();
+        }
+
         public void set(@Nonnull SLKState state, DataType val) {
             set(state.getFieldId(), val);
         }

@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
+import net.moonlightflower.wc3libs.dataTypes.app.DoodId;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.ObjId;
@@ -35,12 +36,6 @@ public class ObjMerger {
         SLK slk = _slks.computeIfAbsent(inFile, SLK::createFromInFile);
 
         slk.merge(otherSlk);
-
-        if (otherSlk instanceof UnitBalanceSLK) {
-            SLK.Obj obj = (SLK.Obj) slk.getObjs().get(Id.valueOf("nmer"));
-
-            System.out.println(obj.get(FieldId.valueOf("HP")) + ";" + slk);
-        }
     }
 
     private RawMetaSLK _metaSlk = new RawMetaSLK();
@@ -72,7 +67,7 @@ public class ObjMerger {
                 Map<ObjId, SLK.Obj> otherObjs = new LinkedHashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
 
                 otherSlk.clearObjs();
-                System.out.println("addSlk " + file);
+
                 for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {                	
                     ObjId objId = objEntry.getKey();
 
@@ -82,21 +77,16 @@ public class ObjMerger {
 
                     SLK.Obj obj = otherSlk.addObj(objId);
 
+                    obj.clear();
+
                     ObjId baseId = baseObjIds.get(objId);
-                    System.out.println("addObj " + objId + ";" + baseObjIds);
+
                     if (baseId != null) {
                         SLK slk = _slks.get(file);
 
                         SLK.Obj baseObj = slk.getObj(baseId);
-//baseObj.print();
+
                         obj.merge(baseObj);
-
-                        if (slk instanceof UnitBalanceSLK) {
-                            System.out.println("base " + baseId + ";" + file + ";" + _slks.get(file).getObj(ObjId.valueOf("nmer")).get(FieldId.valueOf("HP")));
-                            System.out.println(obj.get(FieldId.valueOf("HP")));
-
-                            otherObj.print();
-                        }
                     }
 
                     obj.merge(otherObj);
@@ -104,7 +94,7 @@ public class ObjMerger {
 
                 addSlk(file, otherSlk);
             }
-            System.out.println("after " + _slks.get(UnitBalanceSLK.GAME_USE_PATH).getObj(ObjId.valueOf("n000")).get(FieldId.valueOf("HP")));
+
             for (File baseSLKFile : otherObjMod.getSLKs()) {
             	SLK newSLK = SLK.createFromInFile(baseSLKFile);
             	
