@@ -380,7 +380,9 @@ public abstract class MpqPort {
 	private static String getRegEntry(String dirS, String key) {
 		try {
 			return Registry.get(dirS, key);
-		} catch (IOException ignored) {
+		} catch (UnsupportedOperationException ignored) {
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		return null;
