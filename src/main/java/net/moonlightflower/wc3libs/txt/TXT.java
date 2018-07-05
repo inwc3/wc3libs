@@ -199,6 +199,12 @@ public class TXT {
 			public FieldId getId() {
 				return _id;
 			}
+
+			@Nonnull
+			@Override
+			public String toString() {
+				return _id.toString();
+			}
 			
 			public Field(@Nonnull FieldId id) {
 				_id = id;

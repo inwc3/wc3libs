@@ -107,6 +107,11 @@ public class Profile extends TXT {
 		}*/
 
 		@Override
+		public boolean containsField(@Nonnull FieldId id) {
+			return _fields.containsKey(id.lower());
+		}
+
+		@Override
 		@Nullable
 		public Field getField(@Nonnull FieldId id) {
 			return (Field) _fields.get(id.lower());

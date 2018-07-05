@@ -52,107 +52,107 @@ public class ObjMerger {
 
     private Map<File, ObjMod> _objMods = new LinkedHashMap<>();
 
-    private void addObjMod(File inFile, ObjMod otherObjMod) {
-        try {
-            ObjPack pack = otherObjMod.reduce(_metaSlk);
+    private void addObjMod(File inFile, ObjMod otherObjMod) throws Exception {
+        ObjPack pack = otherObjMod.reduce(_metaSlk);
 
-            Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
+        Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
 
-            Set<ObjId> objIds = new HashSet<>();
+        Set<ObjId> objIds = new HashSet<>();
 
-            for (Map.Entry<File, SLK> slkEntry : pack.getSlks().entrySet()) {
-                File file = slkEntry.getKey();
-                SLK otherSlk = slkEntry.getValue();
+        for (Map.Entry<File, SLK> slkEntry : pack.getSlks().entrySet()) {
+            File file = slkEntry.getKey();
+            SLK otherSlk = slkEntry.getValue();
 
-                Map<ObjId, SLK.Obj> otherObjs = new LinkedHashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
+            Map<ObjId, SLK.Obj> otherObjs = new LinkedHashMap<>(((Map<ObjId, SLK.Obj>) otherSlk.getObjs()));
 
-                otherSlk.clearObjs();
+            otherSlk.clearObjs();
 
-                for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {                	
-                    ObjId objId = objEntry.getKey();
+            for (Map.Entry<ObjId, SLK.Obj> objEntry : otherObjs.entrySet()) {
+                ObjId objId = objEntry.getKey();
 
-                    objIds.add(objId);
-                    
-                    SLK.Obj otherObj = objEntry.getValue();
+                objIds.add(objId);
 
-                    SLK.Obj obj = otherSlk.addObj(objId);
+                SLK.Obj otherObj = objEntry.getValue();
 
-                    obj.clear();
+                SLK.Obj obj = otherSlk.addObj(objId);
 
-                    ObjId baseId = baseObjIds.get(objId);
-
-                    if (baseId != null) {
-                        SLK slk = _slks.get(file);
-
-                        SLK.Obj baseObj = slk.getObj(baseId);
-
-                        obj.merge(baseObj);
-                    }
-
-                    obj.merge(otherObj);
-                }
-
-                addSlk(file, otherSlk);
-            }
-
-            for (File baseSLKFile : otherObjMod.getSLKs()) {
-            	SLK newSLK = SLK.createFromInFile(baseSLKFile);
-            	
-            	for (ObjId objId : objIds) {
-            		SLK reducedSLK = pack.getSlks().get(baseSLKFile);
-
-            		if ((reducedSLK != null) && reducedSLK.containsObj(objId)) continue;
-            		
-            		ObjId baseId = baseObjIds.get(objId);
-            		
-                    if (baseId != null) {
-                        SLK.Obj baseObj = _slks.get(baseSLKFile).getObj(baseId);
-
-                        if (baseObj != null) {
-                        	SLK.Obj obj = newSLK.addObj(objId);
-
-                        	obj.merge(baseObj);
-                        }
-                    }
-            	}
-            	
-            	addSlk(baseSLKFile, newSLK);
-            }
-            
-            //
-            Profile otherProfile = pack.getProfile();
-
-            Map<TXTSectionId, Profile.Obj> otherObjs = new LinkedHashMap<>(otherProfile.getObjs());
-
-            otherProfile.clearObjs();
-            
-            for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : otherObjs.entrySet()) {
-                ObjId objId = ObjId.valueOf(objEntry.getKey().toString());
-                Profile.Obj otherObj = objEntry.getValue();
-
-                Profile.Obj obj = otherProfile.addObj(TXTSectionId.valueOf(objId.toString()));
+                obj.clear();
 
                 ObjId baseId = baseObjIds.get(objId);
 
                 if (baseId != null) {
-                    Profile.Obj baseObj = _profile.getObj(TXTSectionId.valueOf(baseId.toString()));
+                    SLK slk = _slks.get(file);
 
-                    obj.merge(baseObj);
+                    if (slk != null) {
+                        SLK.Obj baseObj = slk.getObj(baseId);
+
+                        obj.merge(baseObj);
+                    }
                 }
-                
+
                 obj.merge(otherObj);
             }
 
-            //pack.getProfile().print();
-
-            addProfile(pack.getProfile());
-
-            ObjMod objMod = _objMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
-
-            objMod.merge(pack.getObjMod());
-        } catch (Exception e) {
-            e.printStackTrace();
+            addSlk(file, otherSlk);
         }
+
+        for (File baseSLKFile : otherObjMod.getSLKs()) {
+            SLK newSLK = SLK.createFromInFile(baseSLKFile);
+
+            for (ObjId objId : objIds) {
+                SLK reducedSLK = pack.getSlks().get(baseSLKFile);
+
+                if ((reducedSLK != null) && reducedSLK.containsObj(objId)) continue;
+
+                ObjId baseId = baseObjIds.get(objId);
+
+                if (baseId != null) {
+                    SLK.Obj baseObj = _slks.get(baseSLKFile).getObj(baseId);
+
+                    if (baseObj != null) {
+                        SLK.Obj obj = newSLK.addObj(objId);
+
+                        obj.merge(baseObj);
+                    }
+                }
+            }
+
+            addSlk(baseSLKFile, newSLK);
+        }
+
+        //
+        Profile otherProfile = pack.getProfile();
+
+        Map<TXTSectionId, Profile.Obj> otherObjs = new LinkedHashMap<>(otherProfile.getObjs());
+
+        otherProfile.clearObjs();
+
+        for (Map.Entry<TXTSectionId, Profile.Obj> objEntry : otherObjs.entrySet()) {
+            ObjId objId = ObjId.valueOf(objEntry.getKey().toString());
+            Profile.Obj otherObj = objEntry.getValue();
+
+            Profile.Obj obj = otherProfile.addObj(TXTSectionId.valueOf(objId.toString()));
+
+            ObjId baseId = baseObjIds.get(objId);
+
+            if (baseId != null) {
+                Profile.Obj baseObj = _profile.getObj(TXTSectionId.valueOf(baseId.toString()));
+
+                if (baseObj != null) {
+                    obj.merge(baseObj);
+                }
+            }
+
+            obj.merge(otherObj);
+        }
+
+        //pack.getProfile().print();
+
+        addProfile(pack.getProfile());
+
+        ObjMod objMod = _objMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
+
+        objMod.merge(pack.getObjMod());
     }
 
     private boolean isObjModFileExtended(File inFile) {
@@ -411,14 +411,18 @@ public class ObjMerger {
 
         _profile.write(profileOutFile);
 
-		/*for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
+		for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
 			File inFile = objModEntry.getKey();
 			ObjMod objMod = objModEntry.getValue();
 
 			File outFile = new File(outDir, inFile.toString());
 
-			objMod.write(outFile, isObjModFileExtended(inFile));
-		}*/
+			Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
+
+			objMod.write(outStream, isObjModFileExtended(inFile));
+
+			outStream.close();
+		}
     }
 
     public void writeToMap(File mapFile, File outDir) throws Exception {
@@ -476,13 +480,13 @@ public class ObjMerger {
         portIn.commit(mapFile);
     }
 
-    public void exportMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+    public void exportMap(File mapFile, boolean includeNativeData, File wc3Dir, File outDir) throws Exception {
         Log.info("Exporting map: " + mapFile.getAbsolutePath());
         Vector<File> mpqFiles = new Vector<>();
 
         mpqFiles.add(mapFile);
 
-        if (includeNativeMpqs) {
+        if (includeNativeData) {
             if (wc3Dir == null) {
                 //throw new Exception("no wc3Dir");
                 mpqFiles.add(new MpqPort.ResourceFile(""));
@@ -491,11 +495,39 @@ public class ObjMerger {
             }
         }
 
-        MpqPort.Out portOut = new JMpqPort.Out();
+        Vector<File> metaMpqFiles = new Vector<>();
+
+        metaMpqFiles.add(mapFile);
+
+        if (wc3Dir == null) {
+            //throw new Exception("no wc3Dir");
+            metaMpqFiles.add(new MpqPort.ResourceFile(""));
+        } else {
+            metaMpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
+        }
+
+        MpqPort.Out metaPortOut = new JMpqPort.Out();
 
         for (File inFile : _metaSlkInFiles) {
-            portOut.add(inFile);
+            metaPortOut.add(inFile);
         }
+
+        MpqPort.Out.Result metaPortResult = metaPortOut.commit(metaMpqFiles);
+
+        Map<File, File> outFiles = new LinkedHashMap<>();
+
+        for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : metaPortResult.getExports().entrySet()) {
+            File inFile = segmentEntry.getKey();
+
+            try {
+                File outFile = metaPortResult.getFile(inFile);
+
+                outFiles.put(inFile, outFile);
+            } catch (NoSuchFileException e) {
+            }
+        }
+
+        MpqPort.Out portOut = new JMpqPort.Out();
 
         Collection<File> slkFiles = new ArrayList<>();
 
@@ -521,9 +553,6 @@ public class ObjMerger {
 
         MpqPort.Out.Result portResult = portOut.commit(mpqFiles);
 
-        Map<File, File> outFiles = new LinkedHashMap<>();
-
-
         for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
             File inFile = segmentEntry.getKey();
 
@@ -543,23 +572,23 @@ public class ObjMerger {
         exportMap(mapFile, true, MpqPort.getWc3Dir(), outDir);
     }
 
-    public void readFromMap(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+    public void readFromMap(File mapFile, boolean includeNativeData, File wc3Dir, File outDir) throws Exception {
         //File outDir = _workDir;
 
         Orient.removeDir(outDir);
         Orient.createDir(outDir);
 
-        exportMap(mapFile, includeNativeMpqs, wc3Dir, outDir);
+        exportMap(mapFile, includeNativeData, wc3Dir, outDir);
 
         addDir(outDir);
     }
 
-    public void readFromMap2(File mapFile, boolean includeNativeMpqs, File wc3Dir, File outDir) throws Exception {
+    public void readFromMap2(File mapFile, boolean includeNativeData, File wc3Dir, File outDir) throws Exception {
         Vector<File> mpqFiles = new Vector<>();
 
         mpqFiles.add(mapFile);
 
-        if (includeNativeMpqs) {
+        if (includeNativeData) {
             if (wc3Dir == null) throw new Exception("no wc3Dir");
 
             mpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
@@ -614,8 +643,8 @@ public class ObjMerger {
         addExports(outDir, metaSlkResult, slkResult, profileResult, objModResult, wtsResult);
     }
 
-    public void readFromMap(File mapFile, boolean includeNativeMpqs, File outDir) throws Exception {
-        readFromMap(mapFile, includeNativeMpqs, MpqPort.getWc3Dir(), outDir);
+    public void readFromMap(File mapFile, boolean includeNativeData, File outDir) throws Exception {
+        readFromMap(mapFile, includeNativeData, MpqPort.getWc3Dir(), outDir);
     }
 
 }

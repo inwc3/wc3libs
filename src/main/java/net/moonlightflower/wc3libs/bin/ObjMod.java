@@ -187,7 +187,7 @@ public abstract class ObjMod {
 					int level = valEntry.getKey();
 					Val val = valEntry.getValue();
 					
-					System.out.println(String.format("\t\t%d -> %s %s %s", level, getVal(level), val.getType().getVal(), getDataPt()));
+					System.out.println(String.format("\t\t%d -> val:%s valType:%s dataPt:%s", level, getVal(level), val.getType(), getDataPt()));
 				}
 			}
 			
@@ -413,7 +413,7 @@ public abstract class ObjMod {
 					val = Field.Val.valueOf(stream.readString("val (string default)"));
 				}
 				}
-				
+
 				field.setVal(val, level, dataPt);
 
 				stream.readId("endToken");
@@ -810,8 +810,8 @@ public abstract class ObjMod {
 			for (Obj.Field field : obj.getFields().values()) {
 				MetaFieldId fieldId = field.getId();
 
-				ObjId id = ObjId.valueOf(fieldId);
-				MetaSLK.Obj metaObj = reduceMetaSlk.getObj(id);
+				ObjId metaObjId = ObjId.valueOf(fieldId);
+				MetaSLK.Obj metaObj = reduceMetaSlk.getObj(metaObjId);
 
 				if (metaObj != null) {
 					String slkName = metaObj.getS(FieldId.valueOf("slk"));
@@ -864,7 +864,7 @@ public abstract class ObjMod {
 								} else {
 									profileVal = Wc3String.valueOf(val.getVal());
 								}
-								
+
 								profileField.set(profileVal, index);
 							}
 						}
@@ -881,13 +881,15 @@ public abstract class ObjMod {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
 
+							String slkFieldNameAdjusted = slkFieldName;
+
 							if (metaObj.get(FieldId.valueOf("field")).equals("Data")) {
 								int dataPt = field.getDataPt();
 
 								if (dataPt < DATA_PT_MIN) throw new Exception("dataPt < " + DATA_PT_MIN);
 								if (dataPt > DATA_PT_MAX) throw new Exception("dataPt > " + DATA_PT_MAX);
 
-								slkFieldName += (char) ('A' + dataPt - 1);
+								slkFieldNameAdjusted += (char) ('A' + dataPt - 1);
 							}
 
 							Integer repeat = null;
@@ -918,10 +920,10 @@ public abstract class ObjMod {
 									add.insert(0, "0");
 								}
 
-								slkFieldName += add;
+								slkFieldNameAdjusted += add;
 							}
 
-							FieldId slkFieldId = FieldId.valueOf(slkFieldName);
+							FieldId slkFieldId = FieldId.valueOf(slkFieldNameAdjusted);
 
 							outSlk.addField(slkFieldId);
 
