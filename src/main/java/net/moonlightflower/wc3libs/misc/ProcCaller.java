@@ -44,6 +44,12 @@ public class ProcCaller {
 	public String getOutString() {
 		return _outString;
 	}
+
+	private String _errString;
+
+	public String getErrString() {
+		return _errString;
+	}
 	
 	public int exitVal() {
 		return (_proc != null) ? _proc.exitValue() : -1;
@@ -70,8 +76,10 @@ public class ProcCaller {
 		}
 
 		StreamReader reader = new StreamReader(_proc.getInputStream());
+		StreamReader errReader = new StreamReader(_proc.getErrorStream());
 		
 		reader.start();
+		errReader.start();
 		
 		try {
 			_proc.waitFor();
@@ -82,6 +90,7 @@ public class ProcCaller {
 		}
 
 		_outString = reader.toString();
+		_errString = errReader.toString();
 	}
 	
 	private boolean _minimized = false;

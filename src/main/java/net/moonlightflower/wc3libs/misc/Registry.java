@@ -10,21 +10,25 @@ import net.moonlightflower.wc3libs.misc.ProcCaller;
 import javax.annotation.Nonnull;
 
 public class Registry {
-	private enum EntryType {
+	public enum EntryType {
 		REG_SZ,
 		REG_DWORD,
 		REG_MULTI_SZ
 	}
 
 	public static class Entry {
-		private File _dir;
-		private String _key;
-		private EntryType _entryType;
+		private final File _dir;
+		private final String _key;
+		private final EntryType _entryType;
 
-		public Entry(@Nonnull String dirS, @Nonnull String key, @Nonnull EntryType entryType) {
-			_dir = new File(dirS);
+		public Entry(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType) {
+			_dir = dir;
 			_key = key;
 			_entryType = entryType;
+		}
+
+		private Entry(@Nonnull String dirS, @Nonnull String key, @Nonnull EntryType entryType) {
+			this(new File(dirS), key, entryType);
 		}
 	}
 
@@ -256,16 +260,6 @@ public class Registry {
 		}
 	}
 
-	public static void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {
-		ProcCaller proc = new ProcCaller("REG", "ADD", dir.toString(), "/v", key, "/t", entryType.name(), "/d", val, "/f");
-
-		proc.exec();
-	}
-
-	public static void set(@Nonnull Entry entry, @Nonnull String val) throws IOException {
-		set(entry._dir, entry._key, entry._entryType, val);
-	}
-
 	public static String get(@Nonnull File dir, @Nonnull String key) throws IOException {
 		//if (!System.getProperty("os.name").toLowerCase().startsWith("win")) throw new IllegalArgumentException("not a windows system");
 
@@ -279,12 +273,36 @@ public class Registry {
 		
 		String[] splits = result.split("    ");
 
-		if (splits.length < 4) throw new IOException("entry " + dir + ";" + key + " not found");
+		if (splits.length < 4) return null;//throw new IOException("entry " + dir + ";" + key + " not found");
 
 		return splits[3];
 	}
 	
 	public static String get(@Nonnull String dirS, @Nonnull String key) throws IOException {
 		return get(new File(dirS), key);
+	}
+
+	public static void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {
+		ProcCaller proc = new ProcCaller("REG", "ADD", dir.toString(), "/v", key, "/t", entryType.name(), "/d", val, "/f");
+
+		proc.exec();
+
+		if (proc.exitVal() != 0) throw new IOException(proc.getErrString());
+	}
+
+	public static void set(@Nonnull Entry entry, @Nonnull String val) throws IOException {
+		set(entry._dir, entry._key, entry._entryType, val);
+	}
+
+	public static void remove(@Nonnull File dir, @Nonnull String key) throws IOException {
+		ProcCaller proc = new ProcCaller("REG", "DELETE", dir.toString(), "/v", key, "/f");
+
+		proc.exec();
+
+		if (proc.exitVal() != 0) throw new IOException(proc.getErrString());
+	}
+
+	public static void remove(@Nonnull Entry entry) throws IOException {
+		remove(entry._dir, entry._key);
 	}
 }
