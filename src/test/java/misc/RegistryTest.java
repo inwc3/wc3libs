@@ -1,6 +1,9 @@
 package misc;
 
+import com.esotericsoftware.minlog.Log;
+import com.sun.media.jfxmedia.logging.Logger;
 import net.moonlightflower.wc3libs.misc.Registry;
+import net.moonlightflower.wc3libs.port.Orient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,6 +13,12 @@ import java.io.IOException;
 public class RegistryTest {
     @Test()
     public void setGet() throws IOException {
+        if (!Orient.isWindowsSystem()) {
+            Log.info("not a windows system (" + Orient.getSystem() + "), skip setGet tests");
+
+            return;
+        }
+
         File dir = new File("HKCU\\wc3libs");
 
         Registry.set(dir, "setGet", Registry.EntryType.REG_SZ, "abc");

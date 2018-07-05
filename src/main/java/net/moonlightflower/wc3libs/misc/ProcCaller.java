@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.misc;
 
+import net.moonlightflower.wc3libs.port.Orient;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +58,7 @@ public class ProcCaller {
 	}
 	
 	public void exec() throws IOException {
-		if (_minimized && System.getProperty("os.name").startsWith("Windows")) {
+		if (_minimized && Orient.isWindowsSystem()) {
 			StringBuilder sb = new StringBuilder();
 			
 			sb.append("cmd.exe /c ");

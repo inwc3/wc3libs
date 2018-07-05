@@ -20,6 +20,14 @@ import java.util.Vector;
 public class Orient {
 	public static String separator = java.io.File.separator;
 
+	public static String getSystem() {
+		return System.getProperty("os.name");
+	}
+
+	public static boolean isWindowsSystem() {
+		return getSystem().toLowerCase().startsWith("win");
+	}
+
 	@Nonnull
 	public static File getExecPath(@Nullable Class<?> c) {
 		if (c == null) c = Orient.class;

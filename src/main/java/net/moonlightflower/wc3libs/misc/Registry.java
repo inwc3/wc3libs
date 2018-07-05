@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 import net.moonlightflower.wc3libs.misc.ProcCaller;
+import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
 
@@ -261,7 +262,7 @@ public class Registry {
 	}
 
 	public static String get(@Nonnull File dir, @Nonnull String key) throws IOException {
-		//if (!System.getProperty("os.name").toLowerCase().startsWith("win")) throw new IllegalArgumentException("not a windows system");
+        if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
 		ProcCaller proc = new ProcCaller("REG", "QUERY", dir.toString(), "/v", key);
 		
@@ -283,6 +284,8 @@ public class Registry {
 	}
 
 	public static void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {
+        if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
+
 		ProcCaller proc = new ProcCaller("REG", "ADD", dir.toString(), "/v", key, "/t", entryType.name(), "/d", val, "/f");
 
 		proc.exec();
@@ -295,6 +298,8 @@ public class Registry {
 	}
 
 	public static void remove(@Nonnull File dir, @Nonnull String key) throws IOException {
+	    if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
+
 		ProcCaller proc = new ProcCaller("REG", "DELETE", dir.toString(), "/v", key, "/f");
 
 		proc.exec();
