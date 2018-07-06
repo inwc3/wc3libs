@@ -74,14 +74,14 @@ artifacts {
     archives sourcesJar
 }
 
-generateGrammarSource << {
+/*generateGrammarSource << {
     println "Copying generated grammar lexer/parser files to main directory."
     copy {
         from "${buildDir}/generated-src/antlr/main"
         into "src/main/java/net/moonlightflower/wc3libs/antlr"
     }
     project.delete fileTree("${buildDir}/generated-src/antlr/main").include('*.*')
-}
+}*/
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10' //we want gradle 2.10 to run this project
