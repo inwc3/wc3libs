@@ -5,9 +5,9 @@ options {
 	language = Java;
 }
 
-/*@header {
+@header {
 	package net.moonlightflower.wc3libs.antlr;
-}*/
+}
 
 BOOL_LITERAL:
 	'true' | 'false' ;
