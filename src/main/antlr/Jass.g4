@@ -5,9 +5,9 @@ options {
 	language = Java;
 }
 
-@header {
+/*@header {
 	package net.moonlightflower.wc3libs.antlr;
-}
+}*/
 
 BOOL_LITERAL:
 	'true' | 'false' ;
@@ -32,6 +32,12 @@ REAL_LITERAL:
 	[0-9]* '.' [0-9]+ | [0-9]+ '.' ;
 STRING_LITERAL:
 	'"' ( EscapeSequence | ~('\\'|'"'|'\r'|'\n') | NEW_LINE )* '"';
+
+COMMENT_SINGLE:
+    '//' (~('\n'|'\r'))*;
+
+COMMENT_BLOCK:
+    '/*' (~('*') | ('*' + ~('/')))* '*/';
 
 fragment EscapeSequence: '\\' [abfnrtvz"'\\];
 

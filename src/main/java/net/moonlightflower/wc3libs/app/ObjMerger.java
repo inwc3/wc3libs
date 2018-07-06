@@ -5,8 +5,6 @@ import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
-import net.moonlightflower.wc3libs.dataTypes.app.DoodId;
-import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
@@ -21,38 +19,47 @@ import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.WTS;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class ObjMerger {
-    private Map<File, SLK> _slks = new LinkedHashMap<>();
+    private Collection<SLK> _inSlks = new LinkedHashSet<>();
+    private Map<File, SLK> _outSlks = new LinkedHashMap<>();
 
-    private void addSlk(File inFile, SLK otherSlk) {
-        assert (inFile != null);
+    private void addSlk(@Nonnull File inFile, @Nonnull SLK otherSlk) {
+        _inSlks.add(otherSlk);
 
-        SLK slk = _slks.computeIfAbsent(inFile, SLK::createFromInFile);
+        SLK slk = _outSlks.computeIfAbsent(inFile, SLK::createFromInFile);
 
         slk.merge(otherSlk);
     }
 
     private RawMetaSLK _metaSlk = new RawMetaSLK();
 
-    private void addMetaSlk(RawMetaSLK slk) {
+    private void addMetaSlk(@Nonnull RawMetaSLK slk) {
         _metaSlk.merge(slk);
     }
 
-    private Profile _profile = new Profile();
+    private Collection<Profile> _inProfiles = new LinkedHashSet<>();
+    private Profile _outProfile = new Profile();
 
-    private void addProfile(Profile otherProfile) {
-        _profile.merge(otherProfile);
+    private void addProfile(@Nonnull Profile otherProfile) {
+        _inProfiles.add(otherProfile);
+
+        _outProfile.merge(otherProfile);
     }
 
-    private Map<File, ObjMod> _objMods = new LinkedHashMap<>();
+    private Collection<ObjMod> _inObjMods = new LinkedHashSet<>();
+    private Map<File, ObjMod> _outObjMods = new LinkedHashMap<>();
 
-    private void addObjMod(File inFile, ObjMod otherObjMod) throws Exception {
+    private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod otherObjMod) throws Exception {
+        _inObjMods.add(otherObjMod);
+
         ObjPack pack = otherObjMod.reduce(_metaSlk);
 
         Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
@@ -81,7 +88,7 @@ public class ObjMerger {
                 ObjId baseId = baseObjIds.get(objId);
 
                 if (baseId != null) {
-                    SLK slk = _slks.get(file);
+                    SLK slk = _outSlks.get(file);
 
                     if (slk != null) {
                         SLK.Obj baseObj = slk.getObj(baseId);
@@ -107,7 +114,7 @@ public class ObjMerger {
                 ObjId baseId = baseObjIds.get(objId);
 
                 if (baseId != null) {
-                    SLK.Obj baseObj = _slks.get(baseSLKFile).getObj(baseId);
+                    SLK.Obj baseObj = _outSlks.get(baseSLKFile).getObj(baseId);
 
                     if (baseObj != null) {
                         SLK.Obj obj = newSLK.addObj(objId);
@@ -136,7 +143,7 @@ public class ObjMerger {
             ObjId baseId = baseObjIds.get(objId);
 
             if (baseId != null) {
-                Profile.Obj baseObj = _profile.getObj(TXTSectionId.valueOf(baseId.toString()));
+                Profile.Obj baseObj = _outProfile.getObj(TXTSectionId.valueOf(baseId.toString()));
 
                 if (baseObj != null) {
                     obj.merge(baseObj);
@@ -150,13 +157,72 @@ public class ObjMerger {
 
         addProfile(pack.getProfile());
 
-        ObjMod objMod = _objMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
+        ObjMod objMod = _outObjMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
 
         objMod.merge(pack.getObjMod());
     }
 
     private boolean isObjModFileExtended(File inFile) {
         return (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3D.GAME_PATH) || inFile.equals(W3Q.GAME_PATH));
+    }
+
+    public interface Filter {
+        Predicate<Id> calcRemovedIds(Collection<Id> allIds);
+    }
+
+    public Filter FILTER_MODDED_OR_CUSTOM = allIds -> {
+        Collection<Id> moddedIds = new LinkedHashSet<>();
+
+        for (ObjMod objMod : _inObjMods) {
+            for (ObjMod.Obj obj : objMod.getObjsList()) {
+                moddedIds.add(obj.getId());
+            }
+        }
+
+        return id -> !moddedIds.contains(id);
+    };
+
+    public void filter(@Nonnull Filter filter) {
+        Collection<Id> allIds = new LinkedHashSet<>();
+
+        for (SLK slk : _outSlks.values()) {
+            Collection<SLK.Obj> objs = new ArrayList<>(slk.getObjs().values());
+
+            for (SLK.Obj obj : objs) {
+                allIds.add(obj.getId());
+            }
+        }
+
+        for (Profile.Obj obj : _outProfile.getObjs().values()) {
+            TXTSectionId objId = obj.getId();
+
+            if (objId != null && objId.toString().length() == 4) {
+                allIds.add(objId);
+            }
+        }
+
+        Predicate<Id> predicate = filter.calcRemovedIds(allIds);
+
+        Collection<Id> removedIds = new LinkedHashSet<>(allIds);
+
+        removedIds.removeIf(predicate.negate());
+
+        removedIds.remove(Id.valueOf("Avul"));
+
+        System.out.println(removedIds);
+        for (SLK slk : _outSlks.values()) {
+            for (Id id : removedIds) {
+                if (id instanceof ObjId) {
+                    slk.removeObj((ObjId) id);
+                }
+            }
+        }
+
+        for (Id id : removedIds) {
+            if (id instanceof TXTSectionId) {
+                _outProfile.removeObj((TXTSectionId) id);
+            }
+        }
     }
 
     private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws Exception {
@@ -170,7 +236,7 @@ public class ObjMerger {
 
             translator.addTXT(wts.toTXT());
 
-            _profile.setTranslator(translator);
+            _outProfile.setTranslator(translator);
         }
 
         for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
@@ -381,7 +447,7 @@ public class ObjMerger {
     public void writeToDir(File outDir) throws Exception {
         Orient.createDir(outDir);
 
-        for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
+        for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
             SLK slk = slkEntry.getValue();
 
@@ -409,9 +475,9 @@ public class ObjMerger {
 
         File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
 
-        _profile.write(profileOutFile);
+        _outProfile.write(profileOutFile);
 
-		for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
+		for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
 			File inFile = objModEntry.getKey();
 			ObjMod objMod = objModEntry.getValue();
 
@@ -433,7 +499,7 @@ public class ObjMerger {
 
         MpqPort.In portIn = new JMpqPort.In();
 
-        for (Map.Entry<File, SLK> slkEntry : _slks.entrySet()) {
+        for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
             SLK slk = slkEntry.getValue();
 
@@ -453,7 +519,7 @@ public class ObjMerger {
 
         File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
 
-        _profile.write(profileOutFile);
+        _outProfile.write(profileOutFile);
 
         for (File inFile : _profileInFiles) {
             File outFile = new File(outDir, inFile.toString());
@@ -461,7 +527,7 @@ public class ObjMerger {
             portIn.add(outFile, inFile);
         }
 
-        for (Map.Entry<File, ObjMod> objModEntry : _objMods.entrySet()) {
+        for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
             File inFile = objModEntry.getKey();
             ObjMod objMod = objModEntry.getValue();
 

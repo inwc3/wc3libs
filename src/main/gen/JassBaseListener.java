@@ -1,5 +1,7 @@
 // Generated from E:/work/wc3libs/src/main/antlr\Jass.g4 by ANTLR 4.7
-package net.moonlightflower.wc3libs.antlr;
+
+	package net.moonlightflower.wc3libs.antlr;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;

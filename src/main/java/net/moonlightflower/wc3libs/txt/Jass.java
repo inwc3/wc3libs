@@ -8,39 +8,81 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class Jass {
-	private static String stripComments(String val) {
-		val = val.replaceAll("//.*", "");
-		
-		Pattern pattern = Pattern.compile(String.format("%s.*%s", Pattern.quote("/*"), Pattern.quote("*/")), Pattern.DOTALL);
-		
-		Matcher matcher = pattern.matcher(val);
-		
-		val = matcher.replaceAll("");
-		
-		return val;
+	private static List<Token> stripComments(List<Token> tokens) {
+		List<Token> newTokens = new ArrayList<>();
+
+		for (Token token : tokens) {
+			if (token.getType() == JassLexer.COMMENT_BLOCK) {
+				String s = token.getText();
+
+				s = s.replaceAll("\r\n", "n");
+				s = s.replaceAll("\r", "n");
+
+				s = s.replaceAll("[^\n]", "");
+
+				for (int i = 0; i < s.length() + 1; i++) {
+					Token newToken = new CommonTokenFactory().create(JassLexer.NEW_LINE, "\n");
+
+					newTokens.add(newToken);
+				}
+			} else {
+				newTokens.add(token);
+			}
+		}
+
+		newTokens.removeIf(token -> (token.getType() == JassLexer.COMMENT_SINGLE));
+
+		return newTokens;
 	}
 	
 	private void read(InputStream inStream) throws IOException {
-		UTF8 reader = new UTF8(inStream);
+		UTF8 reader = new UTF8(inStream, false, true);
 		
-		String input = stripComments(reader.readAll());
-		
-		input = input.replaceAll("\r\n", "\n");
+		String input = reader.readAll(false);
+
+		/*System.out.println(input);
+
+		for (byte b : input.getBytes()) {
+			System.out.print(String.format("%x", b) + " ");
+		}
+
+		System.out.println();*/
+
+		//input = stripComments(input);
+
+		//input = input.replaceAll("\r\n", "\n");
 
 		CharStream antlrStream = CharStreams.fromString(input);
 		
 		Lexer lexer = new JassLexer(antlrStream);
 		
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		
-		JassParser parser = new JassParser(tokens);
+		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+
+		tokenStream.fill();
+
+		List<Token> tokens = tokenStream.getTokens();
+
+		/*for (Token token : tokens) {
+			System.out.println(token.getText());
+		}*/
+
+		tokens = stripComments(tokens);
+
+		//System.out.println(tokens);
+
+		JassParser parser = new JassParser(new CommonTokenStream(new ListTokenSource(tokens)));
 		
 		Map<String, String> newEntries = new LinkedHashMap<>();
 		
