@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    antlr "org.antlr:antlr4:4.7"
+    //antlr "org.antlr:antlr4:4.7"
 
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
     compile 'com.github.inwc3:JMPQ3:1.6.1'
