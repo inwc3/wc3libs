@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,34 +26,26 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 	public final static File GAME_USE_PATH = new File("Units\\UberSplatData.slk");
 	
 	public static class States {
-		static public class State<T extends DataType> extends SLKState<T> {
-			private static List<State> _values = new ArrayList<>();
-			
-			public static List<State> values() {
-				return _values;
-			}
-			
+		public static class State<T extends DataType> extends ObjSLK.State<T> {
 			public State(String idString, DataTypeInfo typeInfo, T defVal) {
 				super(idString, typeInfo, defVal);
-				
-				_values.add(this);
 			}
-			
+
 			public State(String idString, DataTypeInfo typeInfo) {
-				this(idString, typeInfo, null);
+				super(idString, typeInfo);
 			}
 
 			public State(String idString, Class<T> type) {
-				this(idString, new DataTypeInfo(type));
+				super(idString, type);
 			}
-			
+
 			public State(String idString, Class<T> type, T defVal) {
-				this(idString, new DataTypeInfo(type), defVal);
+				super(idString, type, defVal);
 			}
 		}
-		
-		public static List<State> values() {
-			return State.values();
+
+		public static Collection<State> values() {
+			return (Collection<State>) State.values(State.class);
 		}
 		
 		public final static State<UberSplatId> OBJ_ID = new State<>("Name", UberSplatId.class);
@@ -277,7 +270,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 	}
 	
 	@Override
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		RawSLK slk = toRawSLK();
 		
 		slk.write(file);

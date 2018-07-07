@@ -21,7 +21,7 @@ import java.util.*;
 public class DOO {
 	public final static File GAME_PATH = new File("war3map.doo");
 	
-	private class Dood {
+	public class Dood {
 		private ObjId _typeId;
 		
 		public ObjId getTypeId() {
@@ -305,9 +305,21 @@ public class DOO {
 	}
 	
 	private List<Dood> _doods = new ArrayList<>();
-	
-	private void addDood(@Nonnull Dood val) {
+
+	public List<Dood> getDoods() {
+		return new ArrayList<>(_doods);
+	}
+
+	public void addDood(@Nonnull Dood val) {
 		_doods.add(val);
+	}
+
+	public void removeDood(@Nonnull Dood val) {
+		_doods.remove(val);
+	}
+
+	public void clearDoods() {
+		_doods.clear();
 	}
 
 	@Nonnull
@@ -319,7 +331,7 @@ public class DOO {
 		return dood;
 	}
 	
-	private static class SpecialDood {
+	public static class SpecialDood {
 		private ObjId _typeId;
 
 		@Nonnull
@@ -392,9 +404,21 @@ public class DOO {
 	}
 	
 	private final List<SpecialDood> _specialDoods = new ArrayList<>();
-	
-	private void addSpecialDood(@Nonnull SpecialDood val) {
+
+	public List<SpecialDood> getSpecialDoods() {
+		return new ArrayList<>(_specialDoods);
+	}
+
+	public void addSpecialDood(@Nonnull SpecialDood val) {
 		_specialDoods.add(val);
+	}
+
+	public void removeSpecialDood(@Nonnull SpecialDood val) {
+		_specialDoods.remove(val);
+	}
+
+	public void clearSpecialDoods() {
+		_specialDoods.clear();
 	}
 
 	@Nonnull
@@ -546,7 +570,7 @@ public class DOO {
 		}
 	}
 	
-	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws IOException {
 		Id startToken = stream.readId();
 		
 		int version = stream.readInt32();
@@ -555,12 +579,12 @@ public class DOO {
 
 		EncodingFormat format = EncodingFormat.valueOf(version);
 
-		if (format == null) throw new Exception(String.format("unknown format %x", version));
+		if (format == null) throw new IOException(String.format("unknown format %x", version));
 
 		read(stream, format, null);
 	}
 	
-	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nullable Special.EncodingFormat specialFormat) throws Exception {
+	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, @Nullable Special.EncodingFormat specialFormat) throws IOException {
 		switch (format.toEnum()) {
 		case AUTO: {
 			read_auto(stream);
@@ -594,7 +618,7 @@ public class DOO {
 		new Special(this).write(stream, specialFormat);
 	}
 	
-	private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
+	private void read(@Nonnull Wc3BinInputStream stream) throws IOException {
 		read(stream, EncodingFormat.AUTO, Special.EncodingFormat.AUTO);
 	}
 	
@@ -614,7 +638,7 @@ public class DOO {
 		read(stream);
 	}
 
-	public DOO(@Nonnull File file) throws Exception {
+	public DOO(@Nonnull File file) throws IOException {
 		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 
 		read(inStream);

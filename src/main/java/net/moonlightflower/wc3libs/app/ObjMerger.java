@@ -1,11 +1,14 @@
 package net.moonlightflower.wc3libs.app;
 
 import com.esotericsoftware.minlog.Log;
+import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.app.DOO;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.Math;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.JMpqPort;
@@ -15,9 +18,11 @@ import net.moonlightflower.wc3libs.slk.RawMetaSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
+import net.moonlightflower.wc3libs.txt.Jass;
 import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.WTS;
+import org.antlr.v4.runtime.Token;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -182,7 +187,7 @@ public class ObjMerger {
         return id -> !moddedIds.contains(id);
     };
 
-    public void filter(@Nonnull Filter filter) {
+    public void filter(@Nonnull Filter filter) throws IOException {
         Collection<Id> allIds = new LinkedHashSet<>();
 
         for (SLK slk : _outSlks.values()) {
@@ -208,8 +213,106 @@ public class ObjMerger {
         removedIds.removeIf(predicate.negate());
 
         removedIds.remove(Id.valueOf("Avul"));
+        /*removedIds.remove(Id.valueOf("Aloc"));
+        removedIds.remove(Id.valueOf("Aeth"));*/
+        removedIds.remove(Id.valueOf("Abdt"));
+        /*removedIds.remove(Id.valueOf("Apit"));
+        removedIds.remove(Id.valueOf("AInv"));
+        removedIds.remove(Id.valueOf("Ahrp"));
+        removedIds.remove(Id.valueOf("Adtg"));
+        removedIds.remove(Id.valueOf("Ane2"));*/
+        removedIds.remove(Id.valueOf("Aalr"));
 
-        System.out.println(removedIds);
+        /*List<Id> removedAbils = new ArrayList<>();
+
+        for (Id id : removedIds) {
+            if (id.toString().startsWith("A")) {
+                removedAbils.add(id);
+            }
+        }
+
+        System.out.println(removedAbils.size());
+        System.out.println(removedAbils);
+
+        final int[] delta = {195};
+
+        removedAbils.removeIf(id -> {
+            delta[0]--;
+
+            if (delta[0] > -1) {
+                System.out.println(id);
+
+                return true;
+            }
+
+            return false;
+        });
+
+        System.out.println(removedAbils.size());
+        System.out.println(removedAbils);
+
+        removedIds.removeAll(removedAbils);*/
+
+        Collection<Id> jRefedIds = new LinkedHashSet<>();
+
+        for (File jFile : _jFiles) {
+            Jass j = new Jass(jFile);
+
+            for (Token token : j.getTokens()) {
+                if (token.getType() == JassLexer.INT_LITERAL) {
+                    String text = token.getText();
+
+                    int val;
+
+                    if (text.startsWith("0x") || text.startsWith("0X")) {
+                        val = Math.decode(text.substring(2).toLowerCase(), Math.CODE_HEX);
+                    } else if (text.startsWith("$")) {
+                        val = Math.decode(text.substring(1), Math.CODE_HEX);
+                    } else if (text.startsWith("0")) {
+                        val = Math.decode(text.substring(1), Math.CODE_OCT);
+                    } else if (text.startsWith("'")) {
+                        val = Math.decode(text.substring(1, text.length() - 1), Math.CODE_ASCII);
+                    } else {
+                        val = Math.decode(text, Math.CODE_DEC);
+                    }
+
+                    Id id = Id.valueOf(Math.encode(val, Math.CODE_ASCII));
+
+                    if (id.toString().length() == 4) {
+                        jRefedIds.add(id);
+                    }
+                }
+            }
+        }
+
+        /*HashSet<Id> intersection = new LinkedHashSet<>(jRefedIds);
+
+        intersection.removeIf(id -> !removedIds.contains(id));
+
+        System.out.println(intersection);*/
+
+        removedIds.removeAll(jRefedIds);
+
+        Collection<ObjId> dooRefedIds = new LinkedHashSet<>();
+
+        for (File file : _dooFiles) {
+            DOO doo = new DOO(file);
+
+            for (DOO.Dood dood : doo.getDoods()) {
+                ObjId id = dood.getTypeId();
+
+                dooRefedIds.add(id);
+            }
+
+            for (DOO.SpecialDood dood : doo.getSpecialDoods()) {
+                ObjId id = dood.getTypeId();
+
+                dooRefedIds.add(id);
+            }
+        }
+
+        removedIds.removeAll(dooRefedIds);
+
         for (SLK slk : _outSlks.values()) {
             for (Id id : removedIds) {
                 if (id instanceof ObjId) {
@@ -225,7 +328,10 @@ public class ObjMerger {
         }
     }
 
-    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile) throws Exception {
+    private Collection<File> _jFiles = new LinkedHashSet<>();
+    private Collection<File> _dooFiles = new LinkedHashSet<>();
+
+    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile, File jFile, File dooFile) throws Exception {
         Log.info("adding exported files to object merger");
         if (wtsFile == null) {
             System.out.println("no WTS file");
@@ -246,6 +352,7 @@ public class ObjMerger {
 
             addMetaSlk(metaSlk);
         }
+
 
         for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
             File inFile = fileEntry.getKey();
@@ -273,6 +380,10 @@ public class ObjMerger {
 
             addObjMod(inFile, objMod);
         }
+
+        if (jFile != null) _jFiles.add(jFile);
+
+        if (dooFile != null) _dooFiles.add(dooFile);
     }
 
 
@@ -289,7 +400,7 @@ public class ObjMerger {
     }
 
     private void exportFiles(File outDir, Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles,
-							 File wtsFile) throws IOException {
+							 File wtsFile, File jFile, File dooFile) throws IOException {
         Map<File, File> fileEntries = new LinkedHashMap<>();
 
         for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
@@ -322,6 +433,14 @@ public class ObjMerger {
 
         if (wtsFile != null) {
             fileEntries.put(WTS.GAME_PATH, wtsFile);
+        }
+
+        if (jFile != null) {
+            fileEntries.put(Jass.GAME_PATH, jFile);
+        }
+
+        if (dooFile != null) {
+            fileEntries.put(DOO.GAME_PATH, dooFile);
         }
 
         exportFiles(outDir, fileEntries);
@@ -374,6 +493,8 @@ public class ObjMerger {
         Map<File, File> profileFiles = new LinkedHashMap<>();
         Map<File, File> objModFiles = new LinkedHashMap<>();
         File wtsFile = null;
+        File jFile = null;
+        File dooFile = null;
 
         for (Map.Entry<File, File> fileEntry : files.entrySet()) {
             File inFile = fileEntry.getKey();
@@ -394,13 +515,19 @@ public class ObjMerger {
             if (WTS.GAME_PATH.equals(inFile)) {
                 wtsFile = outFile;
             }
+            if (Jass.GAME_PATH.equals(inFile)) {
+                jFile = outFile;
+            }
+            if (DOO.GAME_PATH.equals(inFile)) {
+                dooFile = outFile;
+            }
         }
 
-        addFiles(metaSlkFiles, slkFiles, profileFiles, objModFiles, wtsFile);
+        addFiles(metaSlkFiles, slkFiles, profileFiles, objModFiles, wtsFile, jFile, dooFile);
     }
 
     private void addExports(File outDir, MpqPort.Out.Result metaSlkResult, MpqPort.Out.Result slkResult, MpqPort.Out.Result profileResult, MpqPort.Out.Result
-			objModResult, MpqPort.Out.Result wtsResult) throws Exception {
+			objModResult, MpqPort.Out.Result wtsResult, MpqPort.Out.Result jResult, MpqPort.Out.Result dooResult) throws Exception {
         Map<File, File> metaSlkFiles = new LinkedHashMap<>();
 
         processSegments(metaSlkResult, metaSlkFiles);
@@ -424,9 +551,23 @@ public class ObjMerger {
         } catch (NoSuchFileException e) {
         }
 
-        exportFiles(outDir, metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile);
+        File jFile = null;
 
-        addFiles(metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile);
+        try {
+            jFile = wtsResult.getFile(Jass.GAME_PATH);
+        } catch (NoSuchFileException e) {
+        }
+
+        File dooFile = null;
+
+        try {
+            dooFile = dooResult.getFile(DOO.GAME_PATH);
+        } catch (NoSuchFileException e) {
+        }
+
+        exportFiles(outDir, metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile, jFile, dooFile);
+
+        addFiles(metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile, jFile, dooFile);
     }
 
     private void processSegments(MpqPort.Out.Result metaSlkResult, Map<File, File> metaSlkFiles) throws IOException {
@@ -617,6 +758,10 @@ public class ObjMerger {
 
         portOut.add(WTS.GAME_PATH);
 
+        portOut.add(Jass.GAME_PATH);
+
+        portOut.add(DOO.GAME_PATH);
+
         MpqPort.Out.Result portResult = portOut.commit(mpqFiles);
 
         for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
@@ -702,11 +847,23 @@ public class ObjMerger {
 
         MpqPort.Out wtsPortOut = new JMpqPort.Out();
 
-        objModPortOut.add(WTS.GAME_PATH);
+        wtsPortOut.add(WTS.GAME_PATH);
 
         MpqPort.Out.Result wtsResult = wtsPortOut.commit(mapFile);
 
-        addExports(outDir, metaSlkResult, slkResult, profileResult, objModResult, wtsResult);
+        MpqPort.Out jPortOut = new JMpqPort.Out();
+
+        jPortOut.add(Jass.GAME_PATH);
+
+        MpqPort.Out.Result jResult = jPortOut.commit(mapFile);
+
+        MpqPort.Out dooPortOut = new JMpqPort.Out();
+
+        dooPortOut.add(DOO.GAME_PATH);
+
+        MpqPort.Out.Result dooResult = dooPortOut.commit(mapFile);
+
+        addExports(outDir, metaSlkResult, slkResult, profileResult, objModResult, wtsResult, jResult, dooResult);
     }
 
     public void readFromMap(File mapFile, boolean includeNativeData, File outDir) throws Exception {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,6 +15,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
 import net.moonlightflower.wc3libs.misc.ObjId;
+import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
@@ -24,34 +26,26 @@ public class SplatSLK extends SLK<SplatSLK, SplatId, SplatSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Splats\\SplatData.slk");
 	
 	public static class States {
-		static public class State<T extends DataType> extends SLKState<T> {
-			private static List<State> _values = new ArrayList<>();
-			
-			public static List<State> values() {
-				return _values;
-			}
-			
+		public static class State<T extends DataType> extends ObjSLK.State<T> {
 			public State(String idString, DataTypeInfo typeInfo, T defVal) {
 				super(idString, typeInfo, defVal);
-				
-				_values.add(this);
 			}
-			
+
 			public State(String idString, DataTypeInfo typeInfo) {
-				this(idString, typeInfo, null);
+				super(idString, typeInfo);
 			}
 
 			public State(String idString, Class<T> type) {
-				this(idString, new DataTypeInfo(type));
+				super(idString, type);
 			}
-			
+
 			public State(String idString, Class<T> type, T defVal) {
-				this(idString, new DataTypeInfo(type), defVal);
+				super(idString, type, defVal);
 			}
 		}
-		
-		public static List<State> values() {
-			return State.values();
+
+		public static Collection<State> values() {
+			return (Collection<State>) State.values(State.class);
 		}
 		
 		public final static State<SplatId> OBJ_ID = new State<>("Name", SplatId.class);

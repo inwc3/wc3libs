@@ -4,6 +4,9 @@ import javax.annotation.Nonnull;
 
 public class Math {
     public final static String CODE_ASCII;
+    public final static String CODE_HEX = "0123456789ABCDEF";
+    public final static String CODE_OCT = "01234567";
+    public final static String CODE_DEC = "0123456789";
 
     public static int decode(@Nonnull String s, @Nonnull String map) {
         int ret = 0;

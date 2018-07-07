@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,34 +25,26 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("TerrainArt\\Weather.slk");
 	
 	static public class States {
-		static public class State<T extends DataType> extends SLKState<T> {
-			private final static List<State> _values = new ArrayList<>();
-			
-			public static List<State> values() {
-				return _values;
-			}
-			
+		public static class State<T extends DataType> extends ObjSLK.State<T> {
 			public State(String idString, DataTypeInfo typeInfo, T defVal) {
 				super(idString, typeInfo, defVal);
-				
-				_values.add(this);
 			}
-			
+
 			public State(String idString, DataTypeInfo typeInfo) {
-				this(idString, typeInfo, null);
+				super(idString, typeInfo);
 			}
 
 			public State(String idString, Class<T> type) {
-				this(idString, new DataTypeInfo(type));
+				super(idString, type);
 			}
-			
+
 			public State(String idString, Class<T> type, T defVal) {
-				this(idString, new DataTypeInfo(type), defVal);
+				super(idString, type, defVal);
 			}
 		}
-		
-		public static List<State> values() {
-			return State.values();
+
+		public static Collection<State> values() {
+			return (Collection<State>) State.values(State.class);
 		}
 
 		public final static State<WeatherId> OBJ_ID = new State<>("effectID", WeatherId.class);
@@ -369,7 +362,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 		
 		private void read(SLK.Obj<? extends ObjId> otherObj) {
-			for (States.State state : States.State.values()) {
+			for (States.State state : States.values()) {
 				FieldId field = state.getFieldId();
 				
 				set(field, state.tryCastVal(otherObj.get(field)));
@@ -468,7 +461,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	}
 	
 	@Override
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		WeatherSLK other = new WeatherSLK();
 		
 		other.merge(this);

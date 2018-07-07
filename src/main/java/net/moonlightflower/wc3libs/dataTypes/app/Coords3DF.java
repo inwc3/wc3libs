@@ -25,6 +25,11 @@ public class Coords3DF extends DataType {
 	}
 
 	@Override
+	public String toString() {
+		return String.format("Coords3DF(x=%s y=%s z=%s)", _x, _y, _z);
+	}
+
+	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Coords3DF)
 			return equals((Coords3DF) other);

@@ -4,21 +4,26 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.misc.ObjId;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class ObjSLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> extends SLK<Self, ObjIdType, ObjType> {
     static public class State<T extends DataType> extends SLKState<T> {
-        private static List<State> _values = new ArrayList<>();
+        private static Map<Class<? extends State>, Collection<State>> _typeValues = new LinkedHashMap<>();
 
-        public static List<State> values() {
-            return _values;
+        public static Collection<? extends State> values(Class<? extends State> specificClass) {
+            if (!_typeValues.containsKey(specificClass)) return null;
+
+            return _typeValues.get(specificClass);
         }
 
         public State(String idString, DataTypeInfo typeInfo, T defVal) {
             super(idString, typeInfo, defVal);
 
-            _values.add(this);
+            Class<? extends State> specificClass = getClass();
+
+            if (!_typeValues.containsKey(specificClass)) _typeValues.put(specificClass, new LinkedHashSet<>());
+
+            _typeValues.get(specificClass).add(this);
         }
 
         public State(String idString, DataTypeInfo typeInfo) {

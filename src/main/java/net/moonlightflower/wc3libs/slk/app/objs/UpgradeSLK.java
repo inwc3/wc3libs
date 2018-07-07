@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.slk.app.objs;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
@@ -9,6 +10,7 @@ import net.moonlightflower.wc3libs.slk.SLK;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,8 +19,26 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("Units\\UpgradeData.slk");
 	
 	public static class States {
-		public static List<State> values() {
-			return State.values();
+		public static class State<T extends DataType> extends ObjSLK.State<T> {
+			public State(String idString, DataTypeInfo typeInfo, T defVal) {
+				super(idString, typeInfo, defVal);
+			}
+
+			public State(String idString, DataTypeInfo typeInfo) {
+				super(idString, typeInfo);
+			}
+
+			public State(String idString, Class<T> type) {
+				super(idString, type);
+			}
+
+			public State(String idString, Class<T> type, T defVal) {
+				super(idString, type, defVal);
+			}
+		}
+
+		public static Collection<State> values() {
+			return (Collection<State>) State.values(State.class);
 		}
 		
 		public final static State<UpgradeId> OBJ_ID = new State<>("upgradeid", UpgradeId.class, null);
@@ -135,7 +155,7 @@ public class UpgradeSLK extends ObjSLK<UpgradeSLK, UpgradeId, UpgradeSLK.Obj> {
 	}
 	
 	@Override
-	public void write(File file) throws IOException {
+	public void write(@Nonnull File file) throws IOException {
 		super.write(file);
 	}
 	
