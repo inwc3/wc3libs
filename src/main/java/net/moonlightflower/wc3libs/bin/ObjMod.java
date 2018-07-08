@@ -25,6 +25,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.MetaFieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
@@ -750,44 +751,9 @@ public abstract class ObjMod {
 			}
 		}
 	}
-	
-	private File convertSLKName(@Nonnull String slkName) {
-		//convert slk names
-		switch (slkName) {
-		case "AbilityData":
-			return AbilSLK.GAME_USE_PATH;
-		case "AbilityBuffData":
-			return BuffSLK.GAME_USE_PATH;
-		case "DestructableData":
-			return DestructableSLK.GAME_USE_PATH;
-		case "DoodadData":
-			return DoodSLK.GAME_USE_PATH;
-		case "ItemData":
-			return ItemSLK.GAME_USE_PATH;
-		case "UnitAbilities":
-			return UnitAbilsSLK.GAME_USE_PATH;
-		case "UnitBalance":
-			return UnitBalanceSLK.GAME_USE_PATH;
-		case "UnitData":
-			return UnitDataSLK.GAME_USE_PATH;
-		case "UnitUI":
-			return UnitUISLK.GAME_USE_PATH;
-		case "UnitWeapons":
-			return UnitWeaponsSLK.GAME_USE_PATH;
-		case "UpgradeData":
-			return UpgradeSLK.GAME_USE_PATH;
-		}
-		
-		return null;
-	}
 
 	public abstract Collection<File> getSLKs();
 	public abstract Collection<File> getNecessarySLKs();
-
-	//data pts are used by abilities, a value of 1 maps to DataA, 2 to DataB, 3 to DataC and so on
-	//the ability slk defines up to DataI, hence 9 is the max
-	public final int DATA_PT_MIN = 1;
-	public final int DATA_PT_MAX = 9;
 
 	@Nonnull
 	public ObjPack reduce(@Nonnull MetaSLK reduceMetaSlk) throws Exception {
@@ -871,7 +837,7 @@ public abstract class ObjMod {
 
 						outObjMod.getObj(objId).removeField(fieldId);
 					} else {
-						File slkFile = convertSLKName(slkName);
+						File slkFile = MetaSLK.convertSLKName(slkName);
 
 						if (slkFile == null) throw new RuntimeException("no slkFile for name " + slkName);
 
@@ -881,51 +847,9 @@ public abstract class ObjMod {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
 
-							String slkFieldNameAdjusted = slkFieldName;
+							FieldId slkFieldIdAdjusted = MetaSLK.getSLKField(slkFile, metaObj, level);
 
-							if (metaObj.get(FieldId.valueOf("field")).equals("Data")) {
-								int dataPt = field.getDataPt();
-
-								if (dataPt < DATA_PT_MIN) throw new Exception("dataPt < " + DATA_PT_MIN);
-								if (dataPt > DATA_PT_MAX) throw new Exception("dataPt > " + DATA_PT_MAX);
-
-								slkFieldNameAdjusted += (char) ('A' + dataPt - 1);
-							}
-
-							Integer repeat = null;
-
-							try {
-								Wc3Int repeatVal = Wc3Int.valueOf(metaObj.get(FieldId.valueOf("repeat")));
-
-								if (repeatVal != null) repeat = repeatVal.toInt();
-							} catch (Exception ignored) {
-							}
-
-							if ((repeat != null) && (repeat > 0)) {
-								int places = 1;
-
-								if (slkFile.equals(DoodSLK.GAME_USE_PATH)) {
-									if (repeat > 10) continue;
-
-									places = 2;
-								} else {
-									if (repeat > 4) continue;
-
-									places = 1;
-								}
-
-								StringBuilder add = new StringBuilder(Integer.toString(level));
-
-								while (add.length() < places) {
-									add.insert(0, "0");
-								}
-
-								slkFieldNameAdjusted += add;
-							}
-
-							FieldId slkFieldId = FieldId.valueOf(slkFieldNameAdjusted);
-
-							outSlk.addField(slkFieldId);
+							outSlk.addField(slkFieldIdAdjusted);
 
 							SLK.Obj slkObj = outSlk.addObj(objId);
 
@@ -951,7 +875,7 @@ public abstract class ObjMod {
 								unitAbilSLK.addCamera(objId);
 							}*/
 
-							slkObj.set(slkFieldId, Wc3String.valueOf(val));
+							slkObj.set(slkFieldIdAdjusted, Wc3String.valueOf(val));
 
 							outObjMod.getObj(objId).removeField(fieldId);
 						}

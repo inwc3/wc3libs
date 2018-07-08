@@ -11,14 +11,12 @@ import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
@@ -98,6 +96,32 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	}
 	
 	public static class Obj extends SLK.Obj<WeatherId> {
+		private final Map<State, DataType> _stateVals = new LinkedHashMap<>();
+
+		@Override
+		public Map<State, DataType> getStateVals() {
+			return new LinkedHashMap<>(_stateVals);
+		}
+
+		@Override
+		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
+			State state = State.valueByField(States.State.class, fieldId);
+
+			if (state != null) _stateVals.put(state, val);
+		}
+
+		@Override
+		protected void on_remove(@Nonnull FieldId fieldId) {
+			State state = State.valueByField(States.State.class, fieldId);
+
+			if (state != null) _stateVals.remove(state);
+		}
+
+		@Override
+		protected void on_clear() {
+			_stateVals.clear();
+		}
+
 		public Path getTex() {
 			return Paths.get(get(States.ART_TEX_DIR).getVal(), get(States.ART_TEX_FILE).getVal());
 		}

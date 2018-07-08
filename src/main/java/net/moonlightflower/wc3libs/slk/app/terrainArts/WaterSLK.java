@@ -4,16 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
+import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
@@ -21,6 +19,7 @@ import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 	public final static File GAME_USE_PATH = new File("TerrainArt\\Water.slk");
@@ -101,6 +100,32 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 	}
 	
 	public static class Obj extends SLK.Obj<WaterId> {
+		private final Map<State, DataType> _stateVals = new LinkedHashMap<>();
+
+		@Override
+		public Map<State, DataType> getStateVals() {
+			return new LinkedHashMap<>(_stateVals);
+		}
+
+		@Override
+		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
+			State state = State.valueByField(States.State.class, fieldId);
+
+			if (state != null) _stateVals.put(state, val);
+		}
+
+		@Override
+		protected void on_remove(@Nonnull FieldId fieldId) {
+			State state = State.valueByField(States.State.class, fieldId);
+
+			if (state != null) _stateVals.remove(state);
+		}
+
+		@Override
+		protected void on_clear() {
+			_stateVals.clear();
+		}
+
 		public Real getHeight() {
 			return get(States.HEIGHT);
 		}

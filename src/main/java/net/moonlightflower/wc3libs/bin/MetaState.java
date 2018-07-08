@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.misc.MetaFieldId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

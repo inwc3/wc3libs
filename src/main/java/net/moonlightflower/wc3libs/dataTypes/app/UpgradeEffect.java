@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.ObjId;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
@@ -69,5 +70,15 @@ public class UpgradeEffect extends Id {
 	@Override
 	public UpgradeEffect decode(Object val) {
 		return valueOf(val.toString());
+	}
+
+	public static UpgradeEffect valueOf(Id id) {
+		return new UpgradeEffect(id.toString());
+	}
+
+	public static UpgradeEffect decodeStatic(Object val) {
+		if (val == null) return null;
+
+		return UpgradeEffect.valueOf(Id.valueOf(val.toString()));
 	}
 }

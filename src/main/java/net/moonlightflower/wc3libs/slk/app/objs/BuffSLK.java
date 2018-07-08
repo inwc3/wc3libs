@@ -3,14 +3,17 @@ package net.moonlightflower.wc3libs.slk.app.objs;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -53,6 +56,32 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 	}
 	
 	public static class Obj extends SLK.Obj<BuffId> {
+		private final Map<State, DataType> _stateVals = new LinkedHashMap<>();
+
+		@Override
+		public Map<State, DataType> getStateVals() {
+			return new LinkedHashMap<>(_stateVals);
+		}
+
+		@Override
+		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
+			State state = State.valueByField(States.State.class, fieldId);
+
+			if (state != null) _stateVals.put(state, val);
+		}
+
+		@Override
+		protected void on_remove(@Nonnull FieldId fieldId) {
+			State state = State.valueByField(States.State.class, fieldId);
+
+			if (state != null) _stateVals.remove(state);
+		}
+
+		@Override
+		protected void on_clear() {
+			_stateVals.clear();
+		}
+
 		public <T extends DataType> T get(State<T> state) {
 			return state.tryCastVal(super.get(state));
 		}

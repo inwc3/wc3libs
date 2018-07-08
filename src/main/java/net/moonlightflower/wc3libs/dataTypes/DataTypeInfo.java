@@ -11,6 +11,7 @@ import net.moonlightflower.wc3libs.misc.TypeInfo;
 import javax.annotation.Nonnull;
 
 public class DataTypeInfo extends TypeInfo<DataType> {
+	@Nonnull
 	@Override
 	public Class<? extends DataType> getType() {
 		return super.getType();

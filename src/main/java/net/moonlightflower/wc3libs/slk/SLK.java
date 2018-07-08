@@ -74,12 +74,20 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
     }
 
     public abstract static class Obj<T extends ObjId> {
-        private Map<FieldId, DataType> _vals = new LinkedHashMap<>();
+        private final Map<FieldId, DataType> _vals = new LinkedHashMap<>();
 
         @Nonnull
         public Map<FieldId, DataType> getVals() {
             return _vals;
         }
+
+        private final Map<SLKState, DataType> _stateVals = new LinkedHashMap<>();
+
+        public abstract Map<? extends SLKState, DataType> getStateVals();
+
+        protected abstract void on_set(@Nonnull FieldId fieldId, @Nullable DataType val);
+        protected abstract void on_remove(@Nonnull FieldId fieldId);
+        protected abstract void on_clear();
 
         public DataType get(@Nonnull FieldId field) {
             return getVals().get(field);
@@ -97,20 +105,27 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             return get(field).toString();
         }
 
-        public void set(@Nonnull FieldId field, DataType val) {
-            _vals.put(field, val);
+        public void set(@Nonnull FieldId fieldId, DataType val) {
+            _vals.put(fieldId, val);
+
+            on_set(fieldId, val);
         }
 
-        public void remove(@Nonnull FieldId field) {
-            _vals.remove(field);
+        public void remove(@Nonnull FieldId fieldId) {
+            _vals.remove(fieldId);
+
+            on_remove(fieldId);
         }
 
         public void clear() {
             _vals.clear();
+
+            on_clear();
         }
 
         public void set(@Nonnull SLKState state, DataType val) {
             set(state.getFieldId(), val);
+            _stateVals.put(state, val);
         }
 
         public void setRaw(@Nonnull FieldId field, String val) {

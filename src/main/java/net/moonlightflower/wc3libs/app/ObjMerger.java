@@ -7,15 +7,18 @@ import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.DOO;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
-import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
+import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.misc.Math;
-import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
+import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawMetaSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
+import net.moonlightflower.wc3libs.slk.SLKState;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 import net.moonlightflower.wc3libs.txt.Jass;
@@ -187,6 +190,96 @@ public class ObjMerger {
         return id -> !moddedIds.contains(id);
     };
 
+    private Collection<ObjId> findObjRefs(@Nonnull Id id) {
+        /*Collection<ObjId> refs = new LinkedHashSet<>();
+
+        if (id instanceof ObjId) {
+            for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
+                File slkFile = slkEntry.getKey();
+                SLK slk = slkEntry.getValue();
+
+                if (slk.containsObj((ObjId) id)) {
+                    SLK.Obj slkObj = slk.getObj((ObjId) id);
+
+                    Map<FieldId, DataType> map = slkObj.getVals();
+
+                    for (Map.Entry<FieldId, DataType> valEntry : map.entrySet()) {
+                        FieldId fieldId = valEntry.getKey();
+
+                        for (RawMetaSLK.Obj metaObj : _metaSlk.getObjs().values()) {
+                            File slkName = MetaSLK.convertSLKName(metaObj.getS(FieldId.valueOf("slk")));
+
+                            if (slkName != null && slkName.equals(slkFile)) {
+                                FieldId otherFieldId = FieldId.valueOf(metaObj.getS(MetaFieldId.valueOf("field")));
+
+                                Integer repeatI = MetaSLK.getRepeatI(metaObj);
+
+                                if (repeatI == null) {
+                                    otherFieldId = MetaSLK.getSLKField(slkFile, metaObj, null);
+
+                                    if (otherFieldId.equals(fieldId)) {
+                                        //found matching meta field
+
+                                        if (metaObj.getS(MetaFieldId.valueOf("type")).equals("UnitID")) {
+                                            DataType val = valEntry.getValue();
+
+                                            refs.add(ObjId.valueOf(val.toString()));
+                                        }
+                                    }
+                                } else {
+                                    for (int level = 1; level <= repeatI; level++) {
+                                        otherFieldId = MetaSLK.getSLKField(slkFile, metaObj, level);
+
+                                        if (metaObj.getS(MetaFieldId.valueOf("type")).equals("UnitID")) {
+                                            DataType val = valEntry.getValue();
+
+                                            refs.add(ObjId.valueOf(val.toString()));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+
+        Collection<ObjId> refs = new LinkedHashSet<>();
+
+        if (id instanceof ObjId) {
+            for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
+                File slkFile = slkEntry.getKey();
+                SLK slk = slkEntry.getValue();
+
+                if (slk.containsObj((ObjId) id)) {
+                    SLK.Obj slkObj = slk.getObj((ObjId) id);
+
+                    Map<SLKState, DataType> stateVals = slkObj.getStateVals();
+
+                    for (Map.Entry<SLKState, DataType> stateVal : stateVals.entrySet()) {
+                        SLKState state = stateVal.getKey();
+                        DataType val = stateVal.getValue();
+
+                        if (val != null && val.toString().length() == 4) {
+                            DataTypeInfo stateInfo = state.getInfo();
+
+                            Class<? extends DataType> stateType = stateInfo.getType();
+                            //System.out.println(state.getFieldId() + ";" + stateType);
+                            if (ObjId.class.isAssignableFrom(stateType)) {
+                                //System.out.println(id + " add " + val);
+                                refs.add((ObjId) stateInfo.tryCastVal(val));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //System.out.println("found " + refs);
+
+        return refs;
+    }
+
     public void filter(@Nonnull Filter filter) throws IOException {
         Collection<Id> allIds = new LinkedHashSet<>();
 
@@ -312,6 +405,12 @@ public class ObjMerger {
         }
 
         removedIds.removeAll(dooRefedIds);
+
+        for (Id id : new LinkedHashSet<>(removedIds)) {
+            Collection<ObjId> refedObjs = findObjRefs(id);
+
+            removedIds.removeAll(refedObjs);
+        }
 
         for (SLK slk : _outSlks.values()) {
             for (Id id : removedIds) {

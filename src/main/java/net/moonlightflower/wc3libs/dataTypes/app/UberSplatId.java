@@ -14,4 +14,10 @@ public class UberSplatId extends ObjId {
 	public static UberSplatId valueOf(Id val) {
 		return new UberSplatId(val.toString());
 	}
+
+	public static UberSplatId decodeStatic(Object val) {
+		if (val == null) return null;
+
+		return UberSplatId.valueOf(ObjId.valueOf(val.toString()));
+	}
 }
