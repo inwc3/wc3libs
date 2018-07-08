@@ -16,7 +16,7 @@ cache:
     
 script:
   - ./gradlew check --info
-  - ./gradlew build --info
+  - ./gradlew generateGrammarSource --info
   - ./gradlew dist --info
 
 after_success:

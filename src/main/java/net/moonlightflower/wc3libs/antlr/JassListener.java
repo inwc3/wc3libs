@@ -1,5 +1,4 @@
-// Generated from E:/work/wc3libs/src/main/antlr\Jass.g4 by ANTLR 4.7
-package net.moonlightflower.wc3libs.antlr;
+// Generated from Jass.g4 by ANTLR 4.7
 
 	package net.moonlightflower.wc3libs.antlr;
 
