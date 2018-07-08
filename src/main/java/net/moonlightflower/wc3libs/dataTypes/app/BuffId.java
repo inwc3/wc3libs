@@ -13,4 +13,10 @@ public class BuffId extends ObjId {
 	public static BuffId valueOf(ObjId id) {
 		return new BuffId(id.toString());
 	}
+
+	public static BuffId decodeStatic(Object val) {
+		if (val == null) return null;
+
+		return BuffId.valueOf(ObjId.valueOf(val.toString()));
+	}
 }

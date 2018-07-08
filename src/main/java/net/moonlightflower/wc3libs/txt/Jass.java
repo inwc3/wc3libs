@@ -2,8 +2,6 @@ package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
-import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.Math;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;

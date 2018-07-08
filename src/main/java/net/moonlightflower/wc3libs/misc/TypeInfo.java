@@ -22,9 +22,9 @@ public class TypeInfo<boundType> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(getClass()).append(" -> ");
+		sb.append(getClass().getSimpleName()).append(" -> ");
 		
-		sb.append(getType());
+		sb.append(getType().getSimpleName());
 		
 		TypeInfo<? extends boundType>[] generics = getGenerics();
 		

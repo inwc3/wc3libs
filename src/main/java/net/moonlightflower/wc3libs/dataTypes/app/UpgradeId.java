@@ -14,4 +14,10 @@ public class UpgradeId extends ObjId {
 	public static UpgradeId valueOf(Id val) {
 		return new UpgradeId(val.toString());
 	}
+
+	public static UpgradeId decodeStatic(Object val) {
+		if (val == null) return null;
+
+		return UpgradeId.valueOf(ObjId.valueOf(val.toString()));
+	}
 }

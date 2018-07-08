@@ -663,6 +663,10 @@ public abstract class ObjMod {
 		return ret;
 	}
 
+	public boolean containsObj(@Nonnull ObjId id) {
+		return _objs.containsKey(id);
+	}
+
 	@Nullable
 	public Obj getObj(@Nonnull ObjId id) {
 		return getObjs().get(id);

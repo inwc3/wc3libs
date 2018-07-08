@@ -7,12 +7,12 @@ import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.DOO;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
+import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.misc.Math;
-import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
@@ -247,6 +247,33 @@ public class ObjMerger {
         Collection<ObjId> refs = new LinkedHashSet<>();
 
         if (id instanceof ObjId) {
+            for (ObjMod objMod : _outObjMods.values()) {
+                if (objMod.containsObj((ObjId) id)) {
+                    ObjMod.Obj objModObj = objMod.getObj((ObjId) id);
+
+                    for (Map.Entry<MetaFieldId, ObjMod.Obj.Field> fieldEntry : objModObj.getFields().entrySet()) {
+                        MetaFieldId fieldId = fieldEntry.getKey();
+                        ObjMod.Obj.Field field = fieldEntry.getValue();
+
+                        for (ObjMod.Obj.Field.Val val : field.getVals().values()) {
+                            DataType realVal = val.getVal();
+
+                            if (realVal != null) {
+                                String[] vals = realVal.toString().split(",");
+
+                                for (String valSingle : vals) {
+                                    ObjId ref = ObjId.valueOf(valSingle);
+
+                                    if (ref.toString().length() == 4) {
+                                        refs.add(ref);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
                 File slkFile = slkEntry.getKey();
                 SLK slk = slkEntry.getValue();
@@ -260,7 +287,7 @@ public class ObjMerger {
                         SLKState state = stateVal.getKey();
                         DataType val = stateVal.getValue();
 
-                        if (val != null && val.toString().length() == 4) {
+                        if (val != null) {
                             DataTypeInfo stateInfo = state.getInfo();
 
                             Class<? extends DataType> stateType = stateInfo.getType();
@@ -268,6 +295,50 @@ public class ObjMerger {
                             if (ObjId.class.isAssignableFrom(stateType)) {
                                 //System.out.println(id + " add " + val);
                                 refs.add((ObjId) stateInfo.tryCastVal(val));
+                            } else if (stateType == DataList.class) {
+                                for (DataTypeInfo subInfo : stateInfo.getGenerics()) {
+
+                                    Class<? extends DataType> subType = subInfo.getType();
+
+                                    if (ObjId.class.isAssignableFrom(subType)) {
+                                        DataList valList;
+
+                                        if (val instanceof Wc3String) {
+                                            valList = new DataList(ObjId.class);
+
+                                            for (String s : val.toString().split(",")) {
+                                                valList.add(ObjId.valueOf(s));
+                                            }
+                                        } else {
+                                            valList = (DataList) val;
+                                        }
+
+                                        for (Object valSingle : valList) {
+                                            if (valSingle instanceof DataType) {
+                                                refs.add((ObjId) subInfo.tryCastVal((DataType) valSingle));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (_outProfile.containsObj(TXTSectionId.valueOf(id.toString()))) {
+                Profile.Obj profileObj = _outProfile.getObj(TXTSectionId.valueOf(id.toString()));
+
+                for (Map.Entry<FieldId, Profile.Obj.Field> fieldEntry : profileObj.getFields().entrySet()) {
+                    FieldId fieldId = fieldEntry.getKey();
+                    Profile.Obj.Field field = fieldEntry.getValue();
+
+                    for (DataType val : field.getVals()) {
+                        if (val != null) {
+                            ObjId ref = ObjId.valueOf(val.toString());
+
+                            if (ref.toString().length() == 4) {
+                                refs.add(ref);
                             }
                         }
                     }
@@ -406,11 +477,21 @@ public class ObjMerger {
 
         removedIds.removeAll(dooRefedIds);
 
-        for (Id id : new LinkedHashSet<>(removedIds)) {
+        Collection<Id> remainingIds = new LinkedHashSet<>(allIds);
+
+        remainingIds.removeAll(removedIds);
+
+        Collection<ObjId> linkRefedIds = new LinkedHashSet<>();
+
+        for (Id id : new LinkedHashSet<>(remainingIds)) {
             Collection<ObjId> refedObjs = findObjRefs(id);
 
-            removedIds.removeAll(refedObjs);
+            linkRefedIds.addAll(refedObjs);
         }
+
+        System.out.println(linkRefedIds);
+
+        removedIds.removeAll(linkRefedIds);
 
         for (SLK slk : _outSlks.values()) {
             for (Id id : removedIds) {
