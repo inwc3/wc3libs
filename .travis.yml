@@ -15,7 +15,7 @@ cache:
     - $HOME/.gradle/caches/modules-2/files-2.1
     
 script:
-  - ./gradlew check --info
+  - ./gradlew clean check --info
   - ./gradlew generateGrammarSource --info
   - ./gradlew dist --info
 
