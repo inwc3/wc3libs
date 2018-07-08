@@ -9,13 +9,13 @@ import net.moonlightflower.wc3libs.bin.app.DOO;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
-import net.moonlightflower.wc3libs.misc.*;
+import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Math;
+import net.moonlightflower.wc3libs.misc.ObjId;
+import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
-import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawMetaSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
@@ -306,14 +306,14 @@ public class ObjMerger {
         removedIds.removeIf(predicate.negate());
 
         removedIds.remove(Id.valueOf("Avul"));
-        /*removedIds.remove(Id.valueOf("Aloc"));
-        removedIds.remove(Id.valueOf("Aeth"));*/
+        removedIds.remove(Id.valueOf("Aloc"));
+        removedIds.remove(Id.valueOf("Aeth"));
         removedIds.remove(Id.valueOf("Abdt"));
-        /*removedIds.remove(Id.valueOf("Apit"));
+        removedIds.remove(Id.valueOf("Apit"));
         removedIds.remove(Id.valueOf("AInv"));
         removedIds.remove(Id.valueOf("Ahrp"));
         removedIds.remove(Id.valueOf("Adtg"));
-        removedIds.remove(Id.valueOf("Ane2"));*/
+        removedIds.remove(Id.valueOf("Ane2"));
         removedIds.remove(Id.valueOf("Aalr"));
 
         /*List<Id> removedAbils = new ArrayList<>();
