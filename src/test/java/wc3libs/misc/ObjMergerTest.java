@@ -44,7 +44,7 @@ public class ObjMergerTest {
 
             Log.info("added all exported files to the objectmerger");
             
-            merger.writeToDir(outDir);
+            merger.writeToDir(outDir, true);
 
             Log.info("Written to directory");
 

@@ -511,7 +511,8 @@ public class ObjMerger {
     private Collection<File> _jFiles = new LinkedHashSet<>();
     private Collection<File> _dooFiles = new LinkedHashSet<>();
 
-    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile, File jFile, File dooFile) throws Exception {
+    private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile,
+                          File jFile, File dooFile) throws Exception {
         Log.info("adding exported files to object merger");
         if (wtsFile == null) {
             System.out.println("no WTS file");
@@ -580,7 +581,7 @@ public class ObjMerger {
     }
 
     private void exportFiles(File outDir, Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles,
-							 File wtsFile, File jFile, File dooFile) throws IOException {
+                             File wtsFile, File jFile, File dooFile) throws IOException {
         Map<File, File> fileEntries = new LinkedHashMap<>();
 
         for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
@@ -707,7 +708,7 @@ public class ObjMerger {
     }
 
     private void addExports(File outDir, MpqPort.Out.Result metaSlkResult, MpqPort.Out.Result slkResult, MpqPort.Out.Result profileResult, MpqPort.Out.Result
-			objModResult, MpqPort.Out.Result wtsResult, MpqPort.Out.Result jResult, MpqPort.Out.Result dooResult) throws Exception {
+            objModResult, MpqPort.Out.Result wtsResult, MpqPort.Out.Result jResult, MpqPort.Out.Result dooResult) throws Exception {
         Map<File, File> metaSlkFiles = new LinkedHashMap<>();
 
         processSegments(metaSlkResult, metaSlkFiles);
@@ -765,14 +766,17 @@ public class ObjMerger {
 
     private final static File PROFILE_OUTPUT_PATH = new File("Units\\CampaignUnitStrings.txt");
 
-    public void writeToDir(File outDir) throws Exception {
+    public void writeToDir(File outDir, boolean clean) throws Exception {
         Orient.createDir(outDir);
 
         for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
             SLK slk = slkEntry.getValue();
 
-            slk.cleanEmptyColumns();
+            if (clean) {
+                slk.cleanEmptyColumns();
+                SLKCleaner.clean(slk);
+            }
             File outFile = new File(outDir, inFile.toString());
 
             slk.write(outFile);
@@ -798,18 +802,18 @@ public class ObjMerger {
 
         _outProfile.write(profileOutFile);
 
-		for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
-			File inFile = objModEntry.getKey();
-			ObjMod objMod = objModEntry.getValue();
+        for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
+            File inFile = objModEntry.getKey();
+            ObjMod objMod = objModEntry.getValue();
 
-			File outFile = new File(outDir, inFile.toString());
+            File outFile = new File(outDir, inFile.toString());
 
-			Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
+            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
 
-			objMod.write(outStream, isObjModFileExtended(inFile));
+            objMod.write(outStream, isObjModFileExtended(inFile));
 
-			outStream.close();
-		}
+            outStream.close();
+        }
     }
 
     public void writeToMap(File mapFile, File outDir) throws Exception {
