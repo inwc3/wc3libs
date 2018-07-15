@@ -42,6 +42,7 @@ public class Profile extends TXT implements Printable {
 		public final static UnitState<War3String> TEXT_DESCRIPTION = new UnitState<>("Description", War3String.class);
 
 		public final static UnitState<War3String> EDITOR_SUFFIX = new UnitState<>("EditorSuffix", War3String.class);
+		public final static UnitState<War3String> EDITOR_NAME = new UnitState<>("EditorName", War3String.class);
 
 		public final static UnitState<War3Char> TEXT_HOTKEY = new UnitState<>("Hotkey", War3Char.class);
 
