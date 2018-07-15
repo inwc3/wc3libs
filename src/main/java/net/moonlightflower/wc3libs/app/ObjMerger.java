@@ -36,7 +36,6 @@ import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 
 public class ObjMerger {
     private final Collection<SLK> _inSlks = new LinkedHashSet<>();
@@ -810,6 +809,8 @@ public class ObjMerger {
         }
 
         File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
+
+        ProfileCleaner.clean(_outProfile);
 
         _outProfile.write(profileOutFile);
 
