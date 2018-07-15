@@ -1,5 +1,5 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-public interface Wc3Num {
+public interface War3Num {
 	float toFloat();
 }

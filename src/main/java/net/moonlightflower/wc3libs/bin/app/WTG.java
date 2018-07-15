@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,22 +44,24 @@ public class WTG {
 			return _id;
 		}
 		
-		public FuncCat(FieldId id) {
+		public FuncCat(@Nonnull FieldId id) {
 			_id = id;
 		}
 	}
 	
-	private Map<FieldId, FuncCat> _funcCats = new LinkedHashMap<>();
-	
+	private final Map<FieldId, FuncCat> _funcCats = new LinkedHashMap<>();
+
+	@Nonnull
 	public Map<FieldId, FuncCat> getFuncCats() {
-		return _funcCats;
+		return new LinkedHashMap<>(_funcCats);
 	}
 	
-	public void addFuncCat(FuncCat val) {
+	public void addFuncCat(@Nonnull FuncCat val) {
 		_funcCats.put(val.getId(), val);
 	}
-	
-	public FuncCat addFuncCat(FieldId id) {
+
+	@Nonnull
+	public FuncCat addFuncCat(@Nonnull FieldId id) {
 		if (_funcCats.containsKey(id)) return _funcCats.get(id);
 		
 		FuncCat cat = new FuncCat(id);
@@ -98,16 +101,17 @@ public class WTG {
 			_cat = val;
 		}
 		
-		private List<String> _params = new ArrayList<>();
-		
+		private final List<String> _params = new ArrayList<>();
+
+		@Nonnull
 		public List<String> getParams() {
-			return _params;
+			return new ArrayList<>(_params);
 		}
 		
 		public String getParam(int index) {
 			return getParams().get(index);
 		}
-		
+
 		public void addParam(String val) {
 			if (val.equals("nothing")) val = null;
 			
@@ -137,20 +141,22 @@ public class WTG {
 		}
 	}
 	
-	private Map<String, Func> _funcs = new LinkedHashMap<>();
-	
+	private final Map<String, Func> _funcs = new LinkedHashMap<>();
+
+	@Nonnull
 	private Map<String, Func> getFuncs() {
-		return _funcs;
+		return new LinkedHashMap<>(_funcs);
 	}
 	
 	private Func getFunc(String name) {
 		return getFuncs().get(name);
 	}
 	
-	private void addFunc(Func val) {
+	private void addFunc(@Nonnull Func val) {
 		_funcs.put(val.getName(), val);
 	}
-	
+
+	@Nonnull
 	private Func addFunc(String name) {
 		if (_funcs.containsKey(name)) return _funcs.get(name);
 		
@@ -193,7 +199,7 @@ public class WTG {
 		}
 		
 		public static class TrigType {
-			private static Map<Integer, TrigType> _map = new LinkedHashMap<>();
+			private final static Map<Integer, TrigType> _map = new LinkedHashMap<>();
 			
 			public final static TrigType COMMENT = new TrigType(1);
 			public final static TrigType NORMAL = new TrigType(0);
@@ -357,13 +363,14 @@ public class WTG {
 					_val = val;
 				}
 				
-				private List<Param> _params = new ArrayList<>();
-				
+				private final List<Param> _params = new ArrayList<>();
+
+				@Nonnull
 				public List<Param> getParams() {
-					return _params;
+					return new ArrayList<>(_params);
 				}
 				
-				public void addParam(Param val) {
+				public void addParam(@Nonnull Param val) {
 					_params.add(val);
 				}
 				
@@ -378,7 +385,7 @@ public class WTG {
 			
 			public static class NormalParam extends Param {				
 				public static class SpecType {
-					private static Map<Integer, SpecType> _map = new LinkedHashMap<>();
+					private final static Map<Integer, SpecType> _map = new LinkedHashMap<>();
 					
 					public final static SpecType PRESET = new SpecType(0);
 					public final static SpecType VARIABLE = new SpecType(1);
@@ -943,7 +950,7 @@ public class WTG {
 				}
 			}
 			
-			private List<Param> _params = new ArrayList<>();
+			private final List<Param> _params = new ArrayList<>();
 
 			@Nonnull
 			public List<Param> getParams() {
@@ -954,7 +961,7 @@ public class WTG {
 				_params.add(val);
 			}
 
-			private List<ECA> _ecas = new ArrayList<>();
+			private final List<ECA> _ecas = new ArrayList<>();
 
 			@Nonnull
 			public List<ECA> getECAs() {
@@ -1166,8 +1173,9 @@ public class WTG {
 			}
 		}
 		
-		private List<ECA> _ecas = new ArrayList<>();
-		
+		private final List<ECA> _ecas = new ArrayList<>();
+
+		@Nonnull
 		public List<ECA> getECAs() {
 			return new ArrayList<>(_ecas);
 		}
@@ -1314,7 +1322,7 @@ public class WTG {
 		}
 	}
 	
-	private List<Trig> _trigs = new ArrayList<>();
+	private final List<Trig> _trigs = new ArrayList<>();
 
 	@Nonnull
 	public List<Trig> getTrigs() {
@@ -1380,12 +1388,13 @@ public class WTG {
 		}
 		
 		private Type _type = Type.NORMAL;
-		
+
+		@Nonnull
 		public Type getType() {
 			return _type;
 		}
 		
-		public void setType(Type val) {
+		public void setType(@Nonnull Type val) {
 			_type = val;
 		}
 		
@@ -1462,8 +1471,9 @@ public class WTG {
 		}
 	}
 
-	private List<TrigCat> _trigCats = new ArrayList<>();
-	
+	private final List<TrigCat> _trigCats = new ArrayList<>();
+
+	@Nonnull
 	public List<TrigCat> getTrigCats() {
 		return new ArrayList<>(_trigCats);
 	}
@@ -1471,7 +1481,8 @@ public class WTG {
 	public void addTrigCat(@Nonnull TrigCat val) {
 		_trigCats.add(val);
 	}
-	
+
+	@Nonnull
 	public TrigCat addTrigCat() {
 		TrigCat trigCat = new TrigCat();
 
@@ -1635,20 +1646,22 @@ public class WTG {
 		}
 	}
 
-	private Map<String, Var> _vars = new LinkedHashMap<>();
+	private final Map<String, Var> _vars = new LinkedHashMap<>();
 	
 	public Map<String, Var> getVars() {
 		return new LinkedHashMap<>(_vars);
 	}
-	
-	public Var getVar(@Nullable String name) {
+
+	@Nullable
+	public Var getVar(@Nonnull String name) {
 		return _vars.get(name);
 	}
 	
 	private void addVar(@Nonnull Var val) {
 		_vars.put(val.getName(), val);
 	}
-	
+
+	@Nonnull
 	public Var addVar(@Nullable String name) {
 		Var var = new Var(name);
 		
@@ -2065,7 +2078,7 @@ public class WTG {
 	public WTG() {
 	}
 
-	@Nonnull
+	@Nullable
 	public static WTG ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
@@ -2077,7 +2090,11 @@ public class WTG {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract wtg file");
 
-		Wc3BinInputStream stream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+		InputStream inStream = portResult.getInputStream(GAME_PATH);
+
+		if (inStream == null) return null;
+
+		Wc3BinInputStream stream = new Wc3BinInputStream(inStream);
 
 		WTG wtg = new WTG(stream);
 

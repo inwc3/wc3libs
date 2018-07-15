@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-public class PathingTex extends Wc3String {
+public class PathingTex extends War3String {
 	public PathingTex(String stringVal, String... aliases) {
 		super(stringVal, aliases);
 	}

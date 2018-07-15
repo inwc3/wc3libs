@@ -2,10 +2,12 @@ package net.moonlightflower.wc3libs.dataTypes;
 
 import java.io.File;
 
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 
-public class FileType extends Wc3String {
-	public FileType(File file) {
+import javax.annotation.Nonnull;
+
+public class FileType extends War3String {
+	public FileType(@Nonnull File file) {
 		super(file.toString());
 	}
 }

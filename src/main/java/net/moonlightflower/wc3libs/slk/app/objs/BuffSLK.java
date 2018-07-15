@@ -12,47 +12,39 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("Units\\AbilityBuffData.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("Units\\AbilityBuffData.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<BuffId> OBJ_ID = new State<>("alias", BuffId.class);
 		public final static State<BuffCode> DATA_CODE = new State<>("code", BuffCode.class);
-		public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comments", Wc3String.class);
-		public final static State<Bool> DATA_IS_EFFECT = new State<>("isEffect", Bool.class);
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
-		public final static State<Bool> EDITOR_IN_EDITOR = new State<>("useInEditor", Bool.class);
-		public final static State<Wc3String> EDITOR_SORT = new State<>("sort", Wc3String.class);
+		public final static State<War3String> EDITOR_COMMENTS = new State<>("comments", War3String.class);
+		public final static State<War3Bool> DATA_IS_EFFECT = new State<>("isEffect", War3Bool.class);
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class);
+		public final static State<War3Bool> EDITOR_IN_EDITOR = new State<>("useInEditor", War3Bool.class);
+		public final static State<War3String> EDITOR_SORT = new State<>("sort", War3String.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("race", UnitRace.class);
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<BuffId> {
@@ -65,14 +57,14 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -82,7 +74,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 			_stateVals.clear();
 		}
 
-		public <T extends DataType> T get(State<T> state) {
+		public <T extends DataType> T get(State<T> state) throws DataTypeInfo.CastException {
 			return state.tryCastVal(super.get(state));
 		}
 		
@@ -103,7 +95,7 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		public Obj(BuffId id) {
 			super(id);
 
-			for (State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -169,9 +161,9 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 	public BuffSLK() {
 		super();
 		
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (State state : States.values()) {
+		for (State state : State.values(State.class)) {
 			addField(state);
 		}
 	}

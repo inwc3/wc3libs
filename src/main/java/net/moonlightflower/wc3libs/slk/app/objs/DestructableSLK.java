@@ -8,7 +8,6 @@ import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,90 +17,84 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, DestructableSLK.Obj> {
-    public final static File GAME_USE_PATH = new File("Units\\DestructableData.slk");
+    public final static File GAME_PATH = new File("Units\\DestructableData.slk");
 
-    public static class States {
-        public static class State<T extends DataType> extends ObjSLK.State<T> {
-            public State(String idString, DataTypeInfo typeInfo, T defVal) {
-                super(idString, typeInfo, defVal);
-            }
-
-            public State(String idString, DataTypeInfo typeInfo) {
-                super(idString, typeInfo);
-            }
-
-            public State(String idString, Class<T> type) {
-                super(idString, type);
-            }
-
-            public State(String idString, Class<T> type, T defVal) {
-                super(idString, type, defVal);
-            }
-        }
-
-        public static Collection<State> values() {
-            return (Collection<State>) State.values(State.class);
-        }
-
+    public static class State<T extends DataType> extends ObjSLK.State<T> {
         public final static State<DestructableId> OBJ_ID = new State<>("DestructableID", DestructableId.class);
-        public final static State<Wc3String> CATEGORY = new State<>("category", Wc3String.class);
+        public final static State<War3String> CATEGORY = new State<>("category", War3String.class);
         public final static State<DataList<Tileset>> TILESETS = new State<>("tilesets", new DataTypeInfo(DataList.class, Tileset.class));
-        public final static State<Bool> TILESET_SPECIFIC = new State<>("tilesetSpecific", Bool.class);
+        public final static State<War3Bool> TILESET_SPECIFIC = new State<>("tilesetSpecific", War3Bool.class);
         public final static State<Model> MODEL = new State<>("file", Model.class);
-        public final static State<Bool> LIGHTWEIGHT = new State<>("lightweight", Bool.class);
-        public final static State<Bool> FAT_LINE_OF_SIGHT = new State<>("fatLOS", Bool.class);
-        public final static State<Wc3Int> TEX_ID = new State<>("texID", Wc3Int.class);
-        public final static State<Wc3String> TEX_FILE = new State<>("texFile", Wc3String.class);
-        public final static State<Wc3String> COMMENT = new State<>("comment", Wc3String.class);
-        public final static State<Wc3String> NAME = new State<>("Name", Wc3String.class);
-        public final static State<Wc3String> EDITOR_SUFFIX = new State<>("EditorSuffix", Wc3String.class);
+        public final static State<War3Bool> LIGHTWEIGHT = new State<>("lightweight", War3Bool.class);
+        public final static State<War3Bool> FAT_LINE_OF_SIGHT = new State<>("fatLOS", War3Bool.class);
+        public final static State<War3Int> TEX_ID = new State<>("texID", War3Int.class);
+        public final static State<War3String> TEX_FILE = new State<>("texFile", War3String.class);
+        public final static State<War3String> COMMENT = new State<>("comment", War3String.class);
+        public final static State<War3String> NAME = new State<>("Name", War3String.class);
+        public final static State<War3String> EDITOR_SUFFIX = new State<>("EditorSuffix", War3String.class);
         public final static State<DoodadClass> DOOD_CLASS = new State<>("doodClass", DoodadClass.class);
-        public final static State<Bool> USE_CLICK_HELPER = new State<>("useClickHelper", Bool.class);
-        public final static State<Bool> ON_CLIFFS = new State<>("onCliffs", Bool.class);
-        public final static State<Bool> ON_WATER = new State<>("onWater", Bool.class);
-        public final static State<Bool> CAN_PLACE_DEAD = new State<>("canPlaceDead", Bool.class);
-        public final static State<Bool> WALKABLE = new State<>("walkable", Bool.class);
-        public final static State<Wc3Int> CLIFF_HEIGHT = new State<>("cliffHeight", Wc3Int.class);
+        public final static State<War3Bool> USE_CLICK_HELPER = new State<>("useClickHelper", War3Bool.class);
+        public final static State<War3Bool> ON_CLIFFS = new State<>("onCliffs", War3Bool.class);
+        public final static State<War3Bool> ON_WATER = new State<>("onWater", War3Bool.class);
+        public final static State<War3Bool> CAN_PLACE_DEAD = new State<>("canPlaceDead", War3Bool.class);
+        public final static State<War3Bool> WALKABLE = new State<>("walkable", War3Bool.class);
+        public final static State<War3Int> CLIFF_HEIGHT = new State<>("CLIFF_HEIGHT", War3Int.class);
         public final static State<DataList<CombatTarget>> TARGS = new State<>("targType", new DataTypeInfo(DataList.class, CombatTarget.class));
         public final static State<DefType> ARMOR_TYPE = new State<>("armor", DefType.class);
-        public final static State<Wc3Int> VARIATION_COUNT = new State<>("numVar", Wc3Int.class);
-        public final static State<Wc3Int> LIFE = new State<>("HP", Wc3Int.class);
-        public final static State<Real> OCCLUSION_HEIGHT = new State<>("occH", Real.class);
-        public final static State<Real> FLY_HEIGHT = new State<>("flyH", Real.class);
-        public final static State<Real> FIXED_ROTATION = new State<>("fixedRot", Real.class);
-        public final static State<Real> SELECTION_SCALE_EDITOR = new State<>("selSize", Real.class);
-        public final static State<Real> SCALE_MIN = new State<>("minScale", Real.class);
-        public final static State<Real> SCALE_MAX = new State<>("maxScale", Real.class);
-        public final static State<Bool> CAN_PLACE_RANDOM_SCALE = new State<>("canPlaceRandScale", Bool.class);
-        public final static State<Real> PITCH_MAX = new State<>("maxPitch", Real.class);
-        public final static State<Real> ROLL_MAX = new State<>("maxRoll", Real.class);
+        public final static State<War3Int> VARIATION_COUNT = new State<>("numVar", War3Int.class);
+        public final static State<War3Int> LIFE = new State<>("HP", War3Int.class);
+        public final static State<War3Real> OCCLUSION_HEIGHT = new State<>("occH", War3Real.class);
+        public final static State<War3Real> FLY_HEIGHT = new State<>("flyH", War3Real.class);
+        public final static State<War3Real> FIXED_ROTATION = new State<>("fixedRot", War3Real.class);
+        public final static State<War3Real> SELECTION_SCALE_EDITOR = new State<>("selSize", War3Real.class);
+        public final static State<War3Real> SCALE_MIN = new State<>("minScale", War3Real.class);
+        public final static State<War3Real> SCALE_MAX = new State<>("maxScale", War3Real.class);
+        public final static State<War3Bool> CAN_PLACE_RANDOM_SCALE = new State<>("canPlaceRandScale", War3Bool.class);
+        public final static State<War3Real> PITCH_MAX = new State<>("maxPitch", War3Real.class);
+        public final static State<War3Real> ROLL_MAX = new State<>("maxRoll", War3Real.class);
 
-        public final static State<Real> ELEV_RAD = new State<>("radius", Real.class);
-        public final static State<Real> FOG_RAD = new State<>("fogRadius", Real.class);
-        public final static State<Bool> FOG_VISIBILITY = new State<>("fogVis", Bool.class);
+        public final static State<War3Real> ELEV_RAD = new State<>("radius", War3Real.class);
+        public final static State<War3Real> FOG_RAD = new State<>("fogRadius", War3Real.class);
+        public final static State<War3Bool> FOG_VISIBILITY = new State<>("fogVis", War3Bool.class);
         public final static State<PathingTex> PATH_TEX = new State<>("pathTex", PathingTex.class);
         public final static State<PathingTex> PATH_TEX_DEAD = new State<>("pathTexDeath", PathingTex.class);
         public final static State<SoundLabel> SOUND_DEATH = new State<>("deathSnd", SoundLabel.class);
 
         public final static State<ShadowTex> SHADOW_TEX = new State<>("shadow", ShadowTex.class);
-        public final static State<Bool> MINIMAP_SHOW = new State<>("showInMM", Bool.class);
-        public final static State<Bool> MINIMAP_USE_COLOR = new State<>("useMMColor", Bool.class);
-        public final static State<Wc3Int> MINIMAP_COLOR_RED = new State<>("MMRed", Wc3Int.class);
-        public final static State<Wc3Int> MINIMAP_COLOR_GREEN = new State<>("MMGreen", Wc3Int.class);
-        public final static State<Wc3Int> MINIMAP_COLOR_BLUE = new State<>("MMBlue", Wc3Int.class);
-        public final static State<Wc3Int> COLOR_RED = new State<>("colorR", Wc3Int.class);
-        public final static State<Wc3Int> COLOR_GREEN = new State<>("colorG", Wc3Int.class);
-        public final static State<Wc3Int> COLOR_BLUE = new State<>("colorB", Wc3Int.class);
-        public final static State<Wc3Int> BUILD_TIME = new State<>("buildTime", Wc3Int.class);
-        public final static State<Wc3Int> REPAIR_TIME = new State<>("repairTime", Wc3Int.class);
-        public final static State<Wc3Int> COSTS_GOLD_REPAIR = new State<>("goldRep", Wc3Int.class);
-        public final static State<Wc3Int> COSTS_LUMBER_REPAIR = new State<>("lumberRep", Wc3Int.class);
-        public final static State<Bool> IN_USER_LIST = new State<>("UserList", Bool.class);
-        public final static State<Bool> IN_BETA = new State<>("InBeta", Bool.class);
-        public final static State<Wc3Int> VERSION = new State<>("version", Wc3Int.class);
-        public final static State<Bool> SELECTABLE = new State<>("selectable", Bool.class);
-        public final static State<Real> SELECTION_SCALE_GAME = new State<>("selcircsize", Real.class);
+        public final static State<War3Bool> MINIMAP_SHOW = new State<>("showInMM", War3Bool.class);
+        public final static State<War3Bool> MINIMAP_USE_COLOR = new State<>("useMMColor", War3Bool.class);
+        public final static State<War3Int> MINIMAP_COLOR_RED = new State<>("MMRed", War3Int.class);
+        public final static State<War3Int> MINIMAP_COLOR_GREEN = new State<>("MMGreen", War3Int.class);
+        public final static State<War3Int> MINIMAP_COLOR_BLUE = new State<>("MMBlue", War3Int.class);
+        public final static State<War3Int> COLOR_RED = new State<>("colorR", War3Int.class);
+        public final static State<War3Int> COLOR_GREEN = new State<>("colorG", War3Int.class);
+        public final static State<War3Int> COLOR_BLUE = new State<>("colorB", War3Int.class);
+        public final static State<War3Int> BUILD_TIME = new State<>("buildTime", War3Int.class);
+        public final static State<War3Int> REPAIR_TIME = new State<>("repairTime", War3Int.class);
+        public final static State<War3Int> COSTS_GOLD_REPAIR = new State<>("goldRep", War3Int.class);
+        public final static State<War3Int> COSTS_LUMBER_REPAIR = new State<>("lumberRep", War3Int.class);
+        public final static State<War3Bool> IN_USER_LIST = new State<>("UserList", War3Bool.class);
+        public final static State<War3Bool> IN_BETA = new State<>("InBeta", War3Bool.class);
+        public final static State<War3Int> VERSION = new State<>("version", War3Int.class);
+        public final static State<War3Bool> SELECTABLE = new State<>("selectable", War3Bool.class);
+        public final static State<War3Real> SELECTION_SCALE_GAME = new State<>("selcircsize", War3Real.class);
         public final static State<Model> MODEL_PORTRAIT = new State<>("portraitmodel", Model.class);
+
+        public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+            super(idString, typeInfo, defVal);
+        }
+
+        public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+            super(idString, typeInfo);
+        }
+
+        public State(@Nonnull String idString, @Nonnull Class<T> type) {
+            super(idString, type);
+        }
+
+        public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+            super(idString, type, defVal);
+        }
     }
 
     public static class Obj extends SLK.Obj<DestructableId> {
@@ -114,14 +107,14 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 
         @Override
         protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-            State state = State.valueByField(States.State.class, fieldId);
+            State state = (State) State.valueByField(State.class, fieldId);
 
             if (state != null) _stateVals.put(state, val);
         }
 
         @Override
         protected void on_remove(@Nonnull FieldId fieldId) {
-            State state = State.valueByField(States.State.class, fieldId);
+            State state = (State) State.valueByField(State.class, fieldId);
 
             if (state != null) _stateVals.remove(state);
         }
@@ -132,7 +125,12 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
         }
 
         public <T extends DataType> T get(State<T> state) {
-            return state.tryCastVal(super.get(state.getFieldId()));
+            try {
+                return state.tryCastVal(super.get(state.getFieldId()));
+            } catch (DataTypeInfo.CastException ignored) {
+            }
+
+            return null;
         }
 
         public <T extends DataType> void set(State<T> state, T val) {
@@ -152,7 +150,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
         public Obj(DestructableId id) {
             super(id);
 
-            for (State state : States.values()) {
+            for (State<?> state : State.values(State.class)) {
                 set(state, state.getDefVal());
             }
         }
@@ -218,7 +216,7 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
     public DestructableSLK() {
         super();
 
-        for (State state : States.values()) {
+        for (State state : State.values(State.class)) {
             addField(state);
         }
     }

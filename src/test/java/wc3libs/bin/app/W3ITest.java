@@ -39,7 +39,7 @@ public class W3ITest extends Wc3LibTest {
                 Assert.assertEquals(MurmurHash.hash64(input, input.length), MurmurHash.hash64(output, output.length));
                 Files.delete(temp);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(e.getMessage(), e);
             }
         });
 

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class BlendMode extends Wc3Int {
+public class BlendMode extends War3Int {
 	private final static Map<Integer, BlendMode> _map = new LinkedHashMap<>();
 	
 	private BlendMode(int val) {

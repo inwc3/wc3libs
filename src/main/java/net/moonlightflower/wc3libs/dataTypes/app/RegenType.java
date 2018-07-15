@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class RegenType extends Wc3String {
+public class RegenType extends War3String {
     private final static Map<String, RegenType> _nameMap = new LinkedHashMap<>();
     private final static Map<Integer, RegenType> _indexMap = new LinkedHashMap<>();
 

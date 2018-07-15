@@ -325,11 +325,11 @@ public abstract class MpqPort {
         GameExe.Version version = GameExe.getVersion_simple();
 
 		if (version != null && version.compareTo(GameExe.VERSION_1_29) < 0) {
-            files.add(new File(wc3dir, "War3Patch.mpq"));
+            files.add(new File(wc3dir, War3MPQs.WAR3PATCH.toString()));
         }
-		files.add(new File(wc3dir, "War3x.mpq"));
-		files.add(new File(wc3dir, "war3.mpq"));
-		files.add(new File(wc3dir, "War3xlocal.mpq"));
+		files.add(new File(wc3dir, War3MPQs.WAR3X.toString()));
+		files.add(new File(wc3dir, War3MPQs.WAR3.toString()));
+		files.add(new File(wc3dir, War3MPQs.WAR3X_LOCAL.toString()));
 
 		return files.stream().filter(File::exists).collect(Collectors.toCollection(Vector::new));
 	}
@@ -377,9 +377,9 @@ public abstract class MpqPort {
 		_defaultImpl = type;
 	}
 
-	private static String getRegEntry(String dirS, String key) {
+	private static String getRegEntry(@Nonnull Registry.Entry entry) {
 		try {
-			return Registry.get(dirS, key);
+			return Registry.get(entry);
 		} catch (UnsupportedOperationException ignored) {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -389,15 +389,15 @@ public abstract class MpqPort {
 	}
 
 	static {
-		String dirS = getRegEntry("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
+		String dirS = getRegEntry(Registry.Wc3Entry.INSTALL_PATH);
 
-		if (dirS == null) dirS = getRegEntry("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
+		if (dirS == null) dirS = getRegEntry(Registry.Wc3Entry.INSTALL_PATH_X);
 
-		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPath");
+		if (dirS == null) dirS = getRegEntry(Registry.Wc3LocalMachineEntry.INSTALL_PATH);
 
-		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "InstallPathX");
+		if (dirS == null) dirS = getRegEntry(Registry.Wc3LocalMachineEntry.INSTALL_PATH_X);
 
-		if (dirS == null) dirS = getRegEntry("HKLM\\Software\\Blizzard Entertainment\\Warcraft III", "War3InstallPath");
+		if (dirS == null) dirS = getRegEntry(Registry.Wc3LocalMachineEntry.WAR3_INSTALL_PATH);
 
 		if (dirS != null) {
 			setWc3Dir(new File(dirS));

@@ -11,6 +11,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
@@ -169,8 +170,7 @@ public class Packed {
 			try {
 				inflater.inflate(uncompressedBlocks.get(c));
 			} catch (DataFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.error(e.getMessage(), e);
 			}
 			
 			c++;
@@ -187,8 +187,7 @@ public class Packed {
 			
 			return new Wc3BinInputStream(new ByteArrayInputStream(outStream.toByteArray()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.error(e.getMessage(), e);
 		}
 		
 		return null;

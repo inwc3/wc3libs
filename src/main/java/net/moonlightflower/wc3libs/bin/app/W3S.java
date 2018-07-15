@@ -30,7 +30,7 @@ public class W3S {
 			}
 
 			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString, T defVal) {
-				super(typeInfo, idString, defVal);
+				super(idString, typeInfo, defVal);
 
 				_values.add(this);
 			}
@@ -121,30 +121,35 @@ public class W3S {
 			}
 		}
 
-		public final static State<Wc3String> DATA_FILE_PATH = new State<>(Wc3String.class, "filePath");
-		public final static State<Wc3String> DATA_EAX = new State<>(Wc3String.class, "eax");
-		public final static State<Wc3Int> DATA_FLAGS = new State<>(Wc3Int.class, "flags");
-		public final static State<Wc3Int> DATA_FADE_IN = new State<>(Wc3Int.class, "fadeIn");
-		public final static State<Wc3Int> DATA_FADE_OUT = new State<>(Wc3Int.class, "fadeOut");
-		public final static State<Wc3Int> DATA_VOLUME = new State<>(Wc3Int.class, "volume");
-		public final static State<Real> DATA_PITCH = new State<>(Real.class, "pitch");
-		public final static State<Real> DATA_UNKNOWN_A = new State<>(Real.class, "unknownA");
-		public final static State<Wc3Int> DATA_UNKNOWN_B = new State<>(Wc3Int.class, "unknownB");
-		public final static State<Wc3Int> DATA_CHANNEL = new State<>(Wc3Int.class, "channel");
-		public final static State<Real> DATA_DIST_MIN = new State<>(Real.class, "distMin");
-		public final static State<Real> DATA_DIST_MAX = new State<>(Real.class, "distMax");
-		public final static State<Real> DATA_DIST_CUTOFF = new State<>(Real.class, "cutoff");
-		public final static State<Real> DATA_UNKNOWN_C = new State<>(Real.class, "unknownC");
-		public final static State<Real> DATA_UNKNOWN_D = new State<>(Real.class, "unknownD");
-		public final static State<Wc3Int> DATA_UNKNOWN_E = new State<>(Wc3Int.class, "unknownE");
-		public final static State<Real> DATA_UNKNOWN_F = new State<>(Real.class, "unknownF");
-		public final static State<Real> DATA_UNKNOWN_G = new State<>(Real.class, "unknownG");
-        public final static State<Real> DATA_UNKNOWN_H = new State<>(Real.class, "unknownH");
+		public final static State<War3String> DATA_FILE_PATH = new State<>(War3String.class, "filePath");
+		public final static State<War3String> DATA_EAX = new State<>(War3String.class, "eax");
+		public final static State<War3Int> DATA_FLAGS = new State<>(War3Int.class, "flags");
+		public final static State<War3Int> DATA_FADE_IN = new State<>(War3Int.class, "fadeIn");
+		public final static State<War3Int> DATA_FADE_OUT = new State<>(War3Int.class, "fadeOut");
+		public final static State<War3Int> DATA_VOLUME = new State<>(War3Int.class, "volume");
+		public final static State<War3Real> DATA_PITCH = new State<>(War3Real.class, "pitch");
+		public final static State<War3Real> DATA_UNKNOWN_A = new State<>(War3Real.class, "unknownA");
+		public final static State<War3Int> DATA_UNKNOWN_B = new State<>(War3Int.class, "unknownB");
+		public final static State<War3Int> DATA_CHANNEL = new State<>(War3Int.class, "channel");
+		public final static State<War3Real> DATA_DIST_MIN = new State<>(War3Real.class, "distMin");
+		public final static State<War3Real> DATA_DIST_MAX = new State<>(War3Real.class, "distMax");
+		public final static State<War3Real> DATA_DIST_CUTOFF = new State<>(War3Real.class, "cutoff");
+		public final static State<War3Real> DATA_UNKNOWN_C = new State<>(War3Real.class, "unknownC");
+		public final static State<War3Real> DATA_UNKNOWN_D = new State<>(War3Real.class, "unknownD");
+		public final static State<War3Int> DATA_UNKNOWN_E = new State<>(War3Int.class, "unknownE");
+		public final static State<War3Real> DATA_UNKNOWN_F = new State<>(War3Real.class, "unknownF");
+		public final static State<War3Real> DATA_UNKNOWN_G = new State<>(War3Real.class, "unknownG");
+        public final static State<War3Real> DATA_UNKNOWN_H = new State<>(War3Real.class, "unknownH");
 
-		public final static State<Wc3String> TEXT_VAR_NAME = new State<>(Wc3String.class, "varName", Wc3String.valueOf("unnamed"));
+		public final static State<War3String> TEXT_VAR_NAME = new State<>(War3String.class, "varName", War3String.valueOf("unnamed"));
 
 		public <T extends DataType> T get(State<T> state) {
-			return state.tryCastVal(super.get(state));
+			try {
+				return state.tryCastVal(super.get(state));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 
 		public <T extends DataType> void set(State<T> state, T val) {
@@ -163,12 +168,12 @@ public class W3S {
 
 		public Float FLOAT_DEFAULT = ByteBuffer.wrap(new byte[]{0x4F, (byte) 0x80, 0x00, 0x00}).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 
-		private Function<Float, Real> FLOAT_READ_FUNC = val -> {
+		private Function<Float, War3Real> FLOAT_READ_FUNC = val -> {
 			if (val.equals(FLOAT_DEFAULT)) return null;
 
-			return Real.valueOf(val);
+			return War3Real.valueOf(val);
 		};
-		private Function<Real, Float> FLOAT_WRITE_FUNC = val -> {
+		private Function<War3Real, Float> FLOAT_WRITE_FUNC = val -> {
 			if (val == null) return FLOAT_DEFAULT;
 
 			return val.getVal();
@@ -176,35 +181,35 @@ public class W3S {
 
 		public final static Integer VOLUME_DEFAULT = -1;
 
-		private Function<Integer, Wc3Int> VOLUME_READ_FUNC = val -> {
+		private Function<Integer, War3Int> VOLUME_READ_FUNC = val -> {
 			if (val.equals(VOLUME_DEFAULT)) return null;
 
-			return Wc3Int.valueOf(val);
+			return War3Int.valueOf(val);
 		};
-		private Function<Wc3Int, Integer> VOLUME_WRITE_FUNC = val -> {
+		private Function<War3Int, Integer> VOLUME_WRITE_FUNC = val -> {
 			if (val == null) return VOLUME_DEFAULT;
 
 			return val.getVal();
 		};
 
 		public void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			set(TEXT_VAR_NAME, Wc3String.valueOf(stream.readString("varName")));
-			set(DATA_FILE_PATH, Wc3String.valueOf(stream.readString("filePath")));
-			set(DATA_EAX, Wc3String.valueOf(stream.readString("eax")));
-			set(DATA_FLAGS, Wc3Int.valueOf(stream.readInt32("flags")));
-			set(DATA_FADE_IN, Wc3Int.valueOf(stream.readInt32("fadeIn")));
-			set(DATA_FADE_OUT, Wc3Int.valueOf(stream.readInt32("fadeOut")));
+			set(TEXT_VAR_NAME, War3String.valueOf(stream.readString("varName")));
+			set(DATA_FILE_PATH, War3String.valueOf(stream.readString("filePath")));
+			set(DATA_EAX, War3String.valueOf(stream.readString("eax")));
+			set(DATA_FLAGS, War3Int.valueOf(stream.readInt32("flags")));
+			set(DATA_FADE_IN, War3Int.valueOf(stream.readInt32("fadeIn")));
+			set(DATA_FADE_OUT, War3Int.valueOf(stream.readInt32("fadeOut")));
 			set(DATA_VOLUME, VOLUME_READ_FUNC.apply(stream.readInt32("volume")));
 			set(DATA_PITCH, FLOAT_READ_FUNC.apply(stream.readFloat32("pitch")));
 			set(DATA_UNKNOWN_A, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownA")));
-			set(DATA_UNKNOWN_B, Wc3Int.valueOf(stream.readInt32("unknownB")));
-			set(DATA_CHANNEL, Wc3Int.valueOf(stream.readInt32("channel")));
+			set(DATA_UNKNOWN_B, War3Int.valueOf(stream.readInt32("unknownB")));
+			set(DATA_CHANNEL, War3Int.valueOf(stream.readInt32("channel")));
 			set(DATA_DIST_MIN, FLOAT_READ_FUNC.apply(stream.readFloat32("distMin")));
 			set(DATA_DIST_MAX, FLOAT_READ_FUNC.apply(stream.readFloat32("distMax")));
 			set(DATA_DIST_CUTOFF, FLOAT_READ_FUNC.apply(stream.readFloat32("distCutoff")));
 			set(DATA_UNKNOWN_C, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownC")));
 			set(DATA_UNKNOWN_D, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownD")));
-			set(DATA_UNKNOWN_E, Wc3Int.valueOf(stream.readInt32("unknownE")));
+			set(DATA_UNKNOWN_E, War3Int.valueOf(stream.readInt32("unknownE")));
 			set(DATA_UNKNOWN_F, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownF")));
 			set(DATA_UNKNOWN_G, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownG")));
             set(DATA_UNKNOWN_H, FLOAT_READ_FUNC.apply(stream.readFloat32("unknownH")));
@@ -274,6 +279,7 @@ public class W3S {
 		_sounds.add(val);
 	}
 
+	@Nonnull
 	public Sound addSound() {
 		Sound sound = new Sound();
 

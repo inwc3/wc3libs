@@ -3,14 +3,14 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
 
-public class Wc3String extends DataType implements Stringable {
-	private static final Wc3String EMPTY_STRING = new Wc3String("");
+public class War3String extends DataType implements Stringable {
+	private static final War3String EMPTY_STRING = new War3String("");
 
 	public static String name() {
 		return "String";
 	}
 
-	public static Wc3String getDefVal() {
+	public static War3String getDefVal() {
 		return EMPTY_STRING;
 	}
 	
@@ -32,15 +32,15 @@ public class Wc3String extends DataType implements Stringable {
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Wc3String)
-			return equals((Wc3String) other);
+		if (other instanceof War3String)
+			return equals((War3String) other);
 		if (other instanceof String)
-			return equals(Wc3String.valueOf(other));
+			return equals(War3String.valueOf(other));
 
 		return super.equals(other);
 	}
 
-	public boolean equals(Wc3String other) {
+	public boolean equals(War3String other) {
 		return (hashCode() == other.hashCode());
 	}
 
@@ -54,26 +54,26 @@ public class Wc3String extends DataType implements Stringable {
 		return toString();
 	}
 	
-	public Wc3String() {
+	public War3String() {
 		
 	}
 	
-	public Wc3String(String val, String... aliases) {
+	public War3String(String val, String... aliases) {
 		_val = val;
 	}
 	
-	public static Wc3String valueOf(Object val) {
+	public static War3String valueOf(Object val) {
 		if (val == null) return null;
 		
-		return new Wc3String(val.toString());
+		return new War3String(val.toString());
 	}
 
 	@Override
-	public Wc3String decode(Object val) {
+	public War3String decode(Object val) {
 		return valueOf(val);
 	}
 	
-	public static Wc3String decodeStatic(Object val) {
+	public static War3String decodeStatic(Object val) {
 		return valueOf(val);
 	}
 }

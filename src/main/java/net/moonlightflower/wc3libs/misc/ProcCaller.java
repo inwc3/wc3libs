@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
@@ -30,7 +31,7 @@ public class ProcCaller {
 					_stringWriter.write(new String(bytes, 0, len));
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.error(e.getMessage(), e);
 			}
 		}
 		

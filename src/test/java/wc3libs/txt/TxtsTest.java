@@ -1,5 +1,6 @@
 package wc3libs.txt;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.app.ui.MiscDataTXT;
 import org.testng.annotations.Test;
@@ -31,7 +32,7 @@ public class TxtsTest extends Wc3LibTest {
                 System.out.println("Testfile: " + file.getFileName());
                 assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(file)));
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.error(e.getMessage(), e);
             }
         });
     }
@@ -50,7 +51,7 @@ public class TxtsTest extends Wc3LibTest {
 
             assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(file.toPath())));
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
         }
     }
 

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DoodadClass extends Wc3String {
+public class DoodadClass extends War3String {
 	private final static Map<Object, DoodadClass> _map = new LinkedHashMap<>();
 	
 	public final static DoodadClass CINEMATIC = new DoodadClass("Z");

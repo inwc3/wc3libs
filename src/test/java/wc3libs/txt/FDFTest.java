@@ -1,5 +1,6 @@
 package wc3libs.txt;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.txt.FDF;
 import net.moonlightflower.wc3libs.txt.TXT;
 import org.testng.annotations.Test;
@@ -30,7 +31,7 @@ public class FDFTest extends Wc3LibTest {
             TXT.Section.Field firstField = defaultSection.getFields().values().iterator().next();
             assertEquals(firstField.getVals().get(0).toString(), "Accept" );
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
         }
     }
 

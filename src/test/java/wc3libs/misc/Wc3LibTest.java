@@ -1,5 +1,6 @@
 package wc3libs.misc;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.model.MDX;
@@ -42,7 +43,7 @@ public abstract class Wc3LibTest {
                 paths.add(path);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
         }
         return paths;
     }

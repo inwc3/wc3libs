@@ -26,7 +26,7 @@ import java.util.Map;
  * shadow map file file for wrapping war3map.SHD
  */
 public class SHD {
-    public final static File GAME_PATH = new File("war3map.SHD");
+    public final static File GAME_PATH = new File("war3map.shd");
 
     private ShadowMap _shadowMap;
 

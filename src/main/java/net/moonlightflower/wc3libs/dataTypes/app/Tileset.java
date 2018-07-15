@@ -37,10 +37,10 @@ public class Tileset extends DataType {
 		return _label;
 	}
 
-	private Char _char;
+	private War3Char _char;
 
 	@Nonnull
-	public Char getChar() {
+	public War3Char getChar() {
 		return _char;
 	}
 
@@ -57,7 +57,7 @@ public class Tileset extends DataType {
 	}
 
 	private Tileset(char val, @Nonnull String label) {
-		_char = Char.valueOf(val);
+		_char = War3Char.valueOf(val);
 
 		_nameMap.put(val, this);
 		

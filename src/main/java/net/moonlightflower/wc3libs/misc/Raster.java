@@ -15,10 +15,11 @@ public abstract class Raster<T> implements Boundable {
 	public Bounds getBounds() {
 		return _bounds;
 	}
-	
+
+	@Nonnull
 	@Override
 	public Coords2DI getCenter() {
-		return getBounds().getCenter();
+		return _bounds.getCenter();
 	}
 
 	@Override
@@ -31,10 +32,10 @@ public abstract class Raster<T> implements Boundable {
 		return getCenter().getY();
 	}
 
-	@Override
 	@Nonnull
+    @Override
 	public Size getSize() {
-		return getBounds().getSize();
+		return _bounds.getSize();
 	}
 
 	@Override
@@ -134,20 +135,17 @@ public abstract class Raster<T> implements Boundable {
 	
 	public abstract T mergeCellVal(T oldVal, T other);
 	
-	public void mergeCell(int index, T otherCell) {
+	public void mergeCell(int index, @Nonnull T otherCell) {
 		set(index, mergeCellVal(get(index), otherCell));
 	}
 
-	public void mergeCells(Raster<T> other) {
+	public void mergeCells(@Nonnull Raster<T> other) {
 		for (int i = 0; i < other.size(); i++) {
 			set(i, get(i));
 		}
 	}
 	
 	public void mergeCellsByPos(@Nonnull Raster<T> other, boolean... extra) {
-		assert _bounds != null: "no bounds set yet";
-		assert other.getBounds() != null: "no bounds of other set yet";
-		
 		Coords2DI center = getCenter();
 		Coords2DI otherCenter = other.getCenter();
 		
@@ -172,6 +170,7 @@ public abstract class Raster<T> implements Boundable {
 	public abstract Raster<T> clone();
 	public abstract int getCellSize();
 	
-	protected Raster() {
+	protected Raster(@Nonnull Bounds bounds) {
+		_bounds = bounds;
 	}
 }

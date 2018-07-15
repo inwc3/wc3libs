@@ -10,36 +10,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TXTState<T extends DataType> extends State<T> {
-	private final T _defVal;
-
-	@Nullable
-	public T getDefVal() {
-		return _defVal;
+	public TXTState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+		super(fieldIdS, typeInfo, defVal);
 	}
 	
-	private final TXTSectionId _sectionId;
-
-	@Nonnull
-	public TXTSectionId getSectionId() {
-		return _sectionId;
-	}
-	
-	private final FieldId _fieldId;
-
-	@Nonnull
-	public FieldId getFieldId() {
-		return _fieldId;
+	public TXTState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo) {
+		this(fieldIdS, typeInfo, (T) typeInfo.getDefVal());
 	}
 
-	public TXTState(@Nonnull TXTSectionId sectionId, @Nonnull String fieldIdString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-		super(typeInfo);
-		
-		_sectionId = sectionId;
-		_fieldId = FieldId.valueOf(fieldIdString);
-		_defVal = defVal;
+	public TXTState(@Nonnull String idString, @Nonnull Class<T> type) {
+		this(idString, new DataTypeInfo(type));
 	}
-	
-	public TXTState(@Nonnull TXTSectionId sectionId, @Nonnull String fieldIdString, @Nonnull DataTypeInfo typeInfo) {
-		this(sectionId, fieldIdString, typeInfo, null);
+
+	public TXTState(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+		this(idString, new DataTypeInfo(type), defVal);
 	}
 }

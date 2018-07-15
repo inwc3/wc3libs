@@ -5,16 +5,16 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Coords2DF extends DataType {
-	private final Real _x;
-	private final Real _y;
+	private final War3Real _x;
+	private final War3Real _y;
 
 	@Nonnull
-	public Real getX() {
+	public War3Real getX() {
 		return _x;
 	}
 
 	@Nonnull
-	public Real getY() {
+	public War3Real getY() {
 		return _y;
 	}
 
@@ -36,8 +36,8 @@ public class Coords2DF extends DataType {
 		return String.format("%s;%s", getX(), getY());
 	}
 	
-	/*public Coords2D<Real> toReal() {
-		return new Coords2D<>(Real.valueOf(getX()), Real.valueOf(getY()));
+	/*public Coords2D<War3Real> toReal() {
+		return new Coords2D<>(War3Real.valueOf(getX()), War3Real.valueOf(getY()));
 	}*/
 
 	@Nonnull
@@ -49,11 +49,11 @@ public class Coords2DF extends DataType {
 	}
 	
 	public Coords2DF(float x, float y) {
-		_x = Real.valueOf(x);
-		_y = Real.valueOf(y);
+		_x = War3Real.valueOf(x);
+		_y = War3Real.valueOf(y);
 	}
 	
-	public Coords2DF(@Nonnull Real x, @Nonnull Real y) {
+	public Coords2DF(@Nonnull War3Real x, @Nonnull War3Real y) {
 		this(x.toFloat(), y.toFloat());
 	}
 

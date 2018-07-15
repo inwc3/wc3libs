@@ -8,7 +8,9 @@ import net.moonlightflower.wc3libs.bin.app.DOO_UNITS;
 import net.moonlightflower.wc3libs.bin.app.W3C;
 import net.moonlightflower.wc3libs.bin.app.W3R;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+
+import javax.annotation.Nonnull;
 
 interface IRemovalListener {
 	void exec();
@@ -22,13 +24,13 @@ public class Placements {
 	private W3R _w3r;
 	
 	public static class Rect {
-		private Wc3Int _index;
+		private War3Int _index;
 		
-		public Wc3Int getIndex() {
+		public War3Int getIndex() {
 			return _index;
 		}
 		
-		public void setIndex(Wc3Int val) {
+		public void setIndex(War3Int val) {
 			_index = val;
 		}
 		
@@ -42,13 +44,13 @@ public class Placements {
 			_bounds = val;
 		}
 		
-		private Wc3String _name;
+		private War3String _name;
 		
-		public Wc3String getName() {
+		public War3String getName() {
 			return _name;
 		}
 	
-		public void setName(Wc3String val) {
+		public void setName(War3String val) {
 			_name = val;
 		}
 
@@ -84,7 +86,7 @@ public class Placements {
 		
 		private List<IRemovalListener> _removalListeners = new ArrayList<>();
 		
-		public void addRemovalListener(IRemovalListener val) {
+		public void addRemovalListener(@Nonnull IRemovalListener val) {
 			_removalListeners.add(val);
 		}
 			
@@ -94,10 +96,10 @@ public class Placements {
 		}
 	}
 
-	private List<Rect> _rects = new ArrayList<>();
+	private final List<Rect> _rects = new ArrayList<>();
 	
 	public List<Rect> getRects() {
-		return _rects;
+		return new ArrayList<>(_rects);
 	}
 
 	public Rect addRect() {
@@ -127,11 +129,7 @@ public class Placements {
 		return enc;
 	}
 
-	public void decode(W3R enc) {
-		if (enc == null) {
-			throw new IllegalArgumentException();
-		}
-
+	public void decode(@Nonnull W3R enc) {
 		for (W3R.Rect encRect : enc.getRects()) {
 			Rect rect = addRect();
 
@@ -143,7 +141,7 @@ public class Placements {
 		}
 	}
 
-	public Placements(W3R w3r) {
+	public Placements(@Nonnull W3R w3r) {
 		_w3r = w3r;
 	}
 	

@@ -55,27 +55,27 @@ CURLY_R:
 COMMA:
 	',' ;
 NEW_LINE:
-	('\r\n' | '\n')+ ;
+	('\r\n' | '\n' | '\r')+ ;
 WS:
-	(' ' | '\t')+ ;
+	(' ' | '\t')+ -> skip ;
 
 root:
-	(WS | NEW_LINE)*
-	(typeDec WS? NEW_LINE (WS | NEW_LINE)*)*
-	(WS | NEW_LINE)*
-	(nativeDec WS? NEW_LINE (WS | NEW_LINE)*)*
-	WS? globalsBlock WS? NEW_LINE
-	(WS | NEW_LINE)*
-	(nativeDec WS? (NEW_LINE | EOF) (WS | NEW_LINE)*)*
-	(WS | NEW_LINE)*
-	(func WS? NEW_LINE (WS | NEW_LINE)*)*
-	(NEW_LINE | WS)* ;
+	NEW_LINE*
+	(typeDec NEW_LINE NEW_LINE*)*
+	NEW_LINE*
+	(nativeDec NEW_LINE NEW_LINE*)*
+	globalsBlock NEW_LINE
+	NEW_LINE*
+	(nativeDec (NEW_LINE | EOF) NEW_LINE*)*
+	NEW_LINE*
+	(func NEW_LINE NEW_LINE*)*
+	NEW_LINE* ;
 
 globalsBlock:
-	'globals' WS? NEW_LINE
-	(WS | NEW_LINE)*
-	(globalDec WS? NEW_LINE (WS | NEW_LINE)*)*
-	(WS | NEW_LINE)*
+	'globals'
+	NEW_LINE+
+	(globalDec NEW_LINE+)*
+	NEW_LINE*
 	'endglobals'
 	;
 
@@ -86,38 +86,35 @@ funcName:
 
 globalDec:
 		type=typeName
-		WS
 		'array'
-		WS
 		name=varName
 	|
-		('constant' WS)?
-		type=typeName 
-		WS
+		('constant')?
+		type=typeName
 		name=varName 
-		(WS? '=' WS? val=expr)?
+		('=' val=expr)?
 	;
 
 surroundedExpr:
-	'(' WS? expr WS? ')' ;
+	'(' expr ')' ;
 expr:
-		expr WS ('and' | 'or') WS expr
+		expr ('and' | 'or') expr
 	|
-		'(' WS? expr WS? ')' WS? ('and' | 'or') WS? '(' WS? expr WS? ')'
+		'(' expr ')' ('and' | 'or') '(' expr ')'
 	|
-		expr WS ('and' | 'or') WS? '(' WS? expr WS? ')'
+		expr ('and' | 'or') '(' expr ')'
 	|
-		'(' WS? expr WS? ')' WS? ('and' | 'or') WS expr
+		'(' expr ')' ('and' | 'or') expr
 	|
-		'not' (WS expr | '(' WS? expr WS? ')')
+		'not' (expr | '(' expr ')')
 	|
 		literal
 	|
-		expr WS? ('+' | '-' | '*' | '/') WS? expr
+		expr ('+' | '-' | '*' | '/') expr
 	|
-		('+' | '-') WS? expr
+		('+' | '-') expr
 	|
-		expr WS? ('<' | '<=' | '==' | '!=' | '>' | '>=') WS? expr
+		expr ('<' | '<=' | '==' | '!=' | '>' | '>=') expr
 	|
 		funcExpr
 	|
@@ -127,23 +124,23 @@ expr:
 	|
 		funcRef
 	|
-		'(' WS? expr WS? ')'
+		'(' expr ')'
 	;
 
 //arithExpr:
-	//expr WS? ('+' | '-' | '*' | '/') WS? expr | ('+' | '-') WS? expr ;
+	//expr ('+' | '-' | '*' | '/') expr | ('+' | '-') expr ;
 //compExpr:
-	//expr WS? ('<' | '<=' | '==' | '!=' | '>' | '>=') WS? expr ;
+	//expr ('<' | '<=' | '==' | '!=' | '>' | '>=') expr ;
 //boolExpr:
-	//expr WS ('and' | 'or') WS expr | 'not' WS expr ;
+	//expr ('and' | 'or') expr | 'not' expr ;
 funcExpr:
-	funcName WS? '(' WS? arg_list WS? ')' ;
+	funcName '(' arg_list ')' ;
 arg_list:
-	(expr (WS? ',' WS? expr)*)? ;
+	(expr (',' expr)*)? ;
 arrayRead:
 	varName '[' expr ']' ;
 funcRef:
-	'function' WS funcName ;
+	'function' funcName ;
 
 literal:
 	BOOL_LITERAL | INT_LITERAL | REAL_LITERAL | STRING_LITERAL | funcRef ;
@@ -152,31 +149,21 @@ localVarDec:
 	'local'
 	(
 			(
-				WS 
-				typeName 
-				WS 
+				typeName
 				'array'
-				WS
 				name=varName
 			)
 		|
 			(
-				WS 
 				typeName
-				WS 
 				name=varName
-				(WS? '=' WS? expr)?
+				('=' expr)?
 			)
 	)
 	;
 localVarDec_list:
-	localVarDec (WS? NEW_LINE (NEW_LINE | WS)* localVarDec)* ;
+	localVarDec (NEW_LINE+ localVarDec)* ;
 
-statement2:
-		callFunc 
-	|
-		selection
-	;
 statement:
 		callFunc 
 	|
@@ -189,97 +176,87 @@ statement:
 		exitwhen
 	|
 		rule_return
+	|
+	    debug
 	;
 statement_list:
-	statement (WS? NEW_LINE (NEW_LINE | WS)* statement)* ;
+	statement (NEW_LINE+ statement)* ;
 
 callFunc:
 	'call'
-	WS
 	funcExpr
 	;
 setVar: 
-	'set' 
-		WS
+	'set'
 		name=varName
-		(WS? '[' index=expr ']')?
-		WS?
+		('[' index=expr ']')?
 		'='
-		WS?
 		val=expr 
 	;
 condition:
 	(surroundedExpr | expr)
 	;
-selection2: 
-	'if' WS? condition WS? 'then' WS? NEW_LINE
-		(WS | NEW_LINE)*
-	'endif'
-	;
 selection: 
-	'if' WS? condition WS? 'then' WS? NEW_LINE
-		(WS | NEW_LINE)*
+	'if' condition 'then' NEW_LINE
+		NEW_LINE*
 		statement_list?
-		(WS | NEW_LINE)*
-		('elseif' (surroundedExpr | (WS expr)) WS? 'then' WS? NEW_LINE
-			(WS | NEW_LINE)*
+		NEW_LINE*
+		('elseif' condition 'then' NEW_LINE
+			NEW_LINE*
 			statement_list?
-			(WS | NEW_LINE)*
+			NEW_LINE*
 		)*
-		('else' WS? NEW_LINE
-			(WS | NEW_LINE)*
+		('else' NEW_LINE
+			NEW_LINE*
 			statement_list?
-			(WS | NEW_LINE)*
+			NEW_LINE*
 		)?
-		(WS | NEW_LINE)*
+		NEW_LINE*
 	'endif'
 	;
 loop:
-	'loop' WS? NEW_LINE
-		(WS | NEW_LINE)*
-		(loopBody WS? NEW_LINE)?
-		(WS | NEW_LINE)*
+	'loop' NEW_LINE
+		NEW_LINE*
+		(loopBody NEW_LINE)?
+		NEW_LINE*
 	'endloop'
 	;
 exitwhen:
 	'exitwhen'
-		((WS expr)
-	|
-		'(' WS? expr WS? ')')
+	condition
 	;
 loopBody:
-	loopBodyLine (NEW_LINE (NEW_LINE | WS)* loopBodyLine)* ;
+	loopBodyLine (NEW_LINE+ loopBodyLine)* ;
 loopBodyLine:
 	statement_list
 	;
 rule_return:
 	'return'
-	(surroundedExpr | (WS name=expr)?)
+	(surroundedExpr | (name=expr)?)
 	;
+debug:
+    'debug'
+    (callFunc | setVar | selection | loop)
+    ;
 
 typeName:
 	ID ;
 
 funcDec:
 	('constant')? 
-	'function' 
-	WS 
-	name=ID 
-	WS 
-	'takes' 
-	WS 
-	params=funcParam_list 
-	WS 
-	'returns' 
-	WS 
+	'function'
+	name=ID
+	'takes'
+	params=funcParam_list
+	'returns'
 	returnType=funcReturnType
 	;
 
 func: 
 	funcDec
-	WS? NEW_LINE (NEW_LINE | WS)* 
-	(body=funcBody WS? NEW_LINE)?
-	(NEW_LINE | WS)*
+	NEW_LINE+
+	(body=funcBody NEW_LINE)?
+	NEW_LINE*
 	'endfunction'
 	;
 
@@ -291,19 +268,16 @@ funcReturnType:
 funcParam_list: 
 		'nothing'
 	|
-		(params=funcParam (WS? ',' WS? funcParam)*)
+		(params=funcParam (',' funcParam)*)
 	;
 funcParam: 
 	typeName
-	WS
 	ID
 	;
 funcBody:
 		(localVarDec_list)?
 		(
-			WS?
-			NEW_LINE
-			(WS | NEW_LINE)*
+			NEW_LINE+
 			statement_list
 		)?
 	|
@@ -312,24 +286,16 @@ funcBody:
 
 typeDec:
 	'type'
-	WS
 	name=ID
-	WS
 	'extends'
-	WS
 	parent=ID
 	;
 nativeDec:
-	('constant' WS)?
+	('constant')?
 	'native'
-	WS
 	name=ID
-	WS
 	'takes'
-	WS
 	params=funcParam_list
-	WS
 	'returns'
-	WS
 	returnType=funcReturnType
 	;

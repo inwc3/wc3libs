@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CombatTarget extends Wc3String {
+public class CombatTarget extends War3String {
 	private final static Map<String, CombatTarget> _map = new LinkedHashMap<>();
 
 	public final static CombatTarget AIR = new CombatTarget("air");

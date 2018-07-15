@@ -1,9 +1,8 @@
 package net.moonlightflower.wc3libs.bin;
 
-import net.moonlightflower.wc3libs.bin.app.W3E;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
@@ -14,7 +13,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * deals with wc3's binary encoding
@@ -35,6 +33,7 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
+	@Override
 	@Nonnull
 	public byte[] readBytes(int size, @Nonnull String label) throws StreamException {
 		byte[] val = null;
@@ -201,13 +200,13 @@ public class Wc3BinInputStream extends BinInputStream {
 	}
 
 	@Nonnull
-	public Wc3Int readWc3Int() throws StreamException {
-		return Wc3Int.valueOf(readInt32());
+	public War3Int readWc3Int() throws StreamException {
+		return War3Int.valueOf(readInt32());
 	}
 
 	@Nonnull
-	public Wc3Int readWc3Int(@Nonnull String label) throws StreamException {
-		Wc3Int val = null;
+	public War3Int readWc3Int(@Nonnull String label) throws StreamException {
+		War3Int val = null;
 
 		try {
 			logBegin();
@@ -301,13 +300,13 @@ public class Wc3BinInputStream extends BinInputStream {
 	}
 
 	@Nonnull
-	public Wc3String readWc3String() throws StreamException {
-		return Wc3String.valueOf(readString());
+	public War3String readWc3String() throws StreamException {
+		return War3String.valueOf(readString());
 	}
 
 	@Nonnull
-	public Wc3String readWc3String(@Nullable String label) throws StreamException {
-		Wc3String val = null;
+	public War3String readWc3String(@Nullable String label) throws StreamException {
+		War3String val = null;
 
 		try {
 			logBegin();
@@ -376,18 +375,18 @@ public class Wc3BinInputStream extends BinInputStream {
 	}
 
 	@Nonnull
-	public Real readReal() throws StreamException {
-		return Real.valueOf(readFloat32());
+	public War3Real readReal() throws StreamException {
+		return War3Real.valueOf(readFloat32());
 	}
 
 	@Nonnull
-	public Real readReal(@Nullable String label) throws StreamException {
-		Real val = null;
+	public War3Real readReal(@Nullable String label) throws StreamException {
+		War3Real val = null;
 
 		try {
 			logBegin();
 
-			val = Real.valueOf(readFloat32());
+			val = War3Real.valueOf(readFloat32());
 
 			return val;
 		} finally {

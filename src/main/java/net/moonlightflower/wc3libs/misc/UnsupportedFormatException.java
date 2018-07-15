@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
+
 public class UnsupportedFormatException extends Exception {
 	private String _msg;
 	
@@ -8,7 +10,7 @@ public class UnsupportedFormatException extends Exception {
 		return _msg;
 	}
 	
-	public UnsupportedFormatException(String msg) {
+	public UnsupportedFormatException(@Nonnull String msg) {
 		_msg = msg;
 	}
 }

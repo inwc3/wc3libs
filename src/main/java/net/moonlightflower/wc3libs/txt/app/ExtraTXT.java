@@ -2,22 +2,21 @@ package net.moonlightflower.wc3libs.txt.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.txt.TXT;
-import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.TXTState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ExtraTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapExtra.txt");
 	
-	public static class SkyModel extends Wc3Int {
+	public static class SkyModel extends War3Int {
 		private static Map<Integer, SkyModel> _map = new LinkedHashMap<>();
 		
 		public final static SkyModel BLIZZARD = new SkyModel(0, "SKY08");
@@ -57,7 +56,7 @@ public class ExtraTXT extends TXT {
 		}
 	}
 
-	public static class TimeOfDay extends Wc3Int {
+	public static class TimeOfDay extends War3Int {
 		private static Map<Integer, TimeOfDay> _map = new LinkedHashMap<>();
 		
 		public final static TimeOfDay UNFIXED = new TimeOfDay(0, "MAPPREFS_TIMEOFDAY_UNFIXED", null);
@@ -91,49 +90,45 @@ public class ExtraTXT extends TXT {
 		}
 	}
 
-	public static class States {
-		private static class Section {
-			public final static Section EXTRA = new Section("MapExtraInfo");
-			
-			private TXTSectionId _id;
-			
-			public TXTSectionId getId() {
-				return _id;
-			}
-			
-			public Section(String name) {
-				_id = TXTSectionId.valueOf(name);
-			}
-		}
-		
-		private static class State<T extends DataType> extends TXTState<T> {
-			private static List<State> _values = new ArrayList<>();
-			
-			public static List<State> values() {
-				return _values;
-			}
-			
-			public State(States.Section section, String name, DataTypeInfo typeInfo, T defVal) {
-				super(section.getId(), name, typeInfo, defVal);
-				
-				_values.add(this);
-			}
-			
-			public State(States.Section section, String name, Class<T> type, T defVal) {
-				this(section, name, new DataTypeInfo(type), defVal);
-			}
-			
-			public State(States.Section section, String name, DataTypeInfo typeInfo) {
-				this(section, name, typeInfo, null);
-			}
-			
-			public State(States.Section section, String name, Class<T> type) {
-				this(section, name, new DataTypeInfo(type), null);
-			}
-		}
+	public static class Section extends TXT.Section {
+		public final static Section EXTRA = new Section("MapExtraInfo");
 
+		public Section(@Nonnull String name) {
+			super(name);
+		}
+	}
+
+	public static class State<T extends DataType> extends TXTState<T> {
 		public final static State<SkyModel> SKY_MODEL = new State<>(Section.EXTRA, "SkyModel", SkyModel.class);
 		public final static State<TimeOfDay> TIME_OF_DAY = new State<>(Section.EXTRA, "TimeOfDay", TimeOfDay.class);
-		public final static State<Wc3String> EXTERNAL_CUSTOM_DATA = new State<>(Section.EXTRA, "ExternalCustomData", Wc3String.class);
+		public final static State<War3String> EXTERNAL_CUSTOM_DATA = new State<>(Section.EXTRA, "ExternalCustomData", War3String.class);
+
+		public State(@Nonnull String name, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(name, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String fieldS, @Nonnull Class<T> type, @Nullable T defVal) {
+			this(fieldS, new DataTypeInfo(type), defVal);
+		}
+
+		public State(@Nonnull String fieldS, @Nonnull DataTypeInfo typeInfo) {
+			this(fieldS, typeInfo, null);
+		}
+
+		public State(@Nonnull String fieldS, @Nonnull Class<T> type) {
+			this(fieldS, new DataTypeInfo(type), null);
+		}
+
+		private State(@Nonnull Section section, @Nonnull String fieldS, @Nonnull DataTypeInfo typeInfo) {
+			this(fieldS, typeInfo);
+
+			section.addField(getFieldId());
+		}
+
+		private State(@Nonnull Section section, @Nonnull String fieldS, @Nonnull Class<T> type) {
+			this(fieldS, type);
+
+			section.addField(getFieldId());
+		}
 	}
 }

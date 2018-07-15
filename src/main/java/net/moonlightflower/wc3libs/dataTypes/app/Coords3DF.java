@@ -5,22 +5,22 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Coords3DF extends DataType {
-	private final Real _x;
-	private final Real _y;
-	private final Real _z;
+	private final War3Real _x;
+	private final War3Real _y;
+	private final War3Real _z;
 
 	@Nonnull
-	public Real getX() {
+	public War3Real getX() {
 		return _x;
 	}
 
 	@Nonnull
-	public Real getY() {
+	public War3Real getY() {
 		return _y;
 	}
 
 	@Nonnull
-	public Real getZ() {
+	public War3Real getZ() {
 		return _z;
 	}
 
@@ -43,14 +43,14 @@ public class Coords3DF extends DataType {
 				getZ().equals(other.getZ());
 	}
 
-	public Coords3DF(@Nonnull Real x, @Nonnull Real y, @Nonnull Real z) {
+	public Coords3DF(@Nonnull War3Real x, @Nonnull War3Real y, @Nonnull War3Real z) {
 		_x = x;
 		_y = y;
 		_z = z;
 	}
 
 	public Coords3DF(float x, float y, float z) {
-		this(Real.valueOf(x), Real.valueOf(y), Real.valueOf(z));
+		this(War3Real.valueOf(x), War3Real.valueOf(y), War3Real.valueOf(z));
 	}
 
 	@Override

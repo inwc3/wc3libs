@@ -13,124 +13,116 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSLK.Obj> {
-    public final static File GAME_USE_PATH = new File("Units\\UnitWeapons.slk");
+    public final static File GAME_PATH = new File("Units\\UnitWeapons.slk");
 
-    public static class States {
-        public static class State<T extends DataType> extends ObjSLK.State<T> {
-            public State(String idString, DataTypeInfo typeInfo, T defVal) {
-                super(idString, typeInfo, defVal);
-            }
-
-            public State(String idString, DataTypeInfo typeInfo) {
-                super(idString, typeInfo);
-            }
-
-            public State(String idString, Class<T> type) {
-                super(idString, type);
-            }
-
-            public State(String idString, Class<T> type, T defVal) {
-                super(idString, type, defVal);
-            }
-        }
-
-        public static Collection<State> values() {
-            return (Collection<State>) State.values(State.class);
-        }
-
+    public static class State<T extends DataType> extends ObjSLK.State<T> {
         public final static State<UnitId> OBJ_ID = new State<>("unitWeapID", UnitId.class);
 
         //public final static State<BuffCode> CODE = new State<>("code", BuffCode.class);
-        public final static State<Wc3String> EDITOR_SORT = new State<>("sortWeap", Wc3String.class);
-        public final static State<Wc3String> EDITOR_SORT2 = new State<>("sort2", Wc3String.class);
-        public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comment(s)", Wc3String.class);
+        public final static State<War3String> EDITOR_SORT = new State<>("sortWeap", War3String.class);
+        public final static State<War3String> EDITOR_SORT2 = new State<>("sort2", War3String.class);
+        public final static State<War3String> EDITOR_COMMENTS = new State<>("comment(s)", War3String.class);
 
         public final static State<AttackBits> COMBAT_ATTACKS_USED = new State<>("weapsOn", AttackBits.class);
-        public final static State<Real> COMBAT_ACQUIRE = new State<>("acquire", Real.class);
-        public final static State<Real> COMBAT_RANGE_MIN = new State<>("minRange", Real.class);
-        public final static State<Real> COMBAT_CAST_PT = new State<>("castpt", Real.class);
-        public final static State<Real> COMBAT_CAST_BACKSWING = new State<>("castbsw", Real.class);
-        public final static State<Real> ART_LAUNCH_X = new State<>("launchX", Real.class);
-        public final static State<Real> ART_LAUNCH_Y = new State<>("launchY", Real.class);
-        public final static State<Real> ART_LAUNCH_Z = new State<>("launchZ", Real.class);
+        public final static State<War3Real> COMBAT_ACQUIRE = new State<>("acquire", War3Real.class);
+        public final static State<War3Real> COMBAT_RANGE_MIN = new State<>("minRange", War3Real.class);
+        public final static State<War3Real> COMBAT_CAST_PT = new State<>("castpt", War3Real.class);
+        public final static State<War3Real> COMBAT_CAST_BACKSWING = new State<>("castbsw", War3Real.class);
+        public final static State<War3Real> ART_LAUNCH_X = new State<>("launchX", War3Real.class);
+        public final static State<War3Real> ART_LAUNCH_Y = new State<>("launchY", War3Real.class);
+        public final static State<War3Real> ART_LAUNCH_Z = new State<>("launchZ", War3Real.class);
 
-        public final static State<Real> ART_LAUNCH_Z_SWIM = new State<>("launchSwimZ", Real.class);
-        public final static State<Real> ART_IMPACT_Z = new State<>("impactZ", Real.class);
-        public final static State<Real> ART_IMPACT_Z_SWIM = new State<>("impactSwimZ", Real.class);
+        public final static State<War3Real> ART_LAUNCH_Z_SWIM = new State<>("launchSwimZ", War3Real.class);
+        public final static State<War3Real> ART_IMPACT_Z = new State<>("impactZ", War3Real.class);
+        public final static State<War3Real> ART_IMPACT_Z_SWIM = new State<>("impactSwimZ", War3Real.class);
 
         public final static State<CombatSound> COMBAT_ATTACK1_WEAPON_SOUND = new State<>("weapType1", CombatSound.class);
         public final static State<DataList<CombatTarget>> COMBAT_ATTACK1_TARGS = new State<>("targs1", new DataTypeInfo(DataList.class, CombatTarget.class));
 
-        public final static State<Bool> COMBAT_ATTACK1_SHOW_UI = new State<>("showUI1", Bool.class);
-        public final static State<Real> COMBAT_ATTACK1_RANGE = new State<>("rangeN1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_RANGE_TEST = new State<>("RngTst", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_RANGE_BUFFER = new State<>("RngBuff1", Real.class);
+        public final static State<War3Bool> COMBAT_ATTACK1_SHOW_UI = new State<>("showUI1", War3Bool.class);
+        public final static State<War3Real> COMBAT_ATTACK1_RANGE = new State<>("rangeN1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_RANGE_TEST = new State<>("RngTst", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_RANGE_BUFFER = new State<>("RngBuff1", War3Real.class);
         public final static State<AttackType> COMBAT_ATTACK1_ATK_TYPE = new State<>("atkType1", AttackType.class);
         public final static State<WeaponType> COMBAT_ATTACK1_WEAPON_TYPE = new State<>("weapTp1", WeaponType.class);
-        public final static State<Real> COMBAT_ATTACK1_COOLDOWN = new State<>("cool1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_COOLDOWN_MIN = new State<>("mincool1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_DICE = new State<>("dice1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_DICE_SIDES = new State<>("sides1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_BASE = new State<>("dmgplus1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_UP = new State<>("dmgUp1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_MIN = new State<>("mindmg1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_AVG = new State<>("avgdmg1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_MAX = new State<>("maxdmg1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_PT = new State<>("dmgpt1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_BACKSWING = new State<>("backSw1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_AREA_FULL = new State<>("Farea1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_AREA_MEDIUM = new State<>("Harea1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_AREA_SMALL = new State<>("Qarea1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_AREA_MEDIUM_DMG_FACTOR = new State<>("Hfact1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_AREA_SMALL_DMG_FACTOR = new State<>("Qfact1", Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_COOLDOWN = new State<>("cool1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_COOLDOWN_MIN = new State<>("mincool1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_DICE = new State<>("dice1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_DICE_SIDES = new State<>("sides1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_BASE = new State<>("dmgplus1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_UP = new State<>("dmgUp1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_MIN = new State<>("mindmg1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_AVG = new State<>("avgdmg1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_MAX = new State<>("maxdmg1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_PT = new State<>("dmgpt1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_BACKSWING = new State<>("backSw1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_AREA_FULL = new State<>("Farea1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_AREA_MEDIUM = new State<>("Harea1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_AREA_SMALL = new State<>("Qarea1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_AREA_MEDIUM_DMG_FACTOR = new State<>("Hfact1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_AREA_SMALL_DMG_FACTOR = new State<>("Qfact1", War3Real.class);
         public final static State<DataList<CombatTarget>> COMBAT_ATTACK1_AREA_TARGS = new State<>("splashTargs1", new DataTypeInfo(DataList.class,
                 CombatTarget.class));
-        public final static State<Wc3Int> COMBAT_ATTACK1_TARGS_MAX = new State<>("targCount1", Wc3Int.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_LOSS_FACTOR = new State<>("damageLoss1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_SPILL_DIST = new State<>("spillDist1", Real.class);
-        public final static State<Real> COMBAT_ATTACK1_DMG_SPILL_RAD = new State<>("spillRadius1", Real.class);
-        public final static State<Wc3String> COMBAT_DMG_UPG = new State<>("DmgUpg", Wc3String.class);
-        public final static State<Wc3Int> COMBAT_DMG_MOD = new State<>("dmod1", Wc3Int.class);
-        public final static State<Real> COMBAT_DMG_PER_SEC = new State<>("DPS", Real.class);
+        public final static State<War3Int> COMBAT_ATTACK1_TARGS_MAX = new State<>("targCount1", War3Int.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_LOSS_FACTOR = new State<>("damageLoss1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_SPILL_DIST = new State<>("spillDist1", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK1_DMG_SPILL_RAD = new State<>("spillRadius1", War3Real.class);
+        public final static State<War3String> COMBAT_DMG_UPG = new State<>("DmgUpg", War3String.class);
+        public final static State<War3Int> COMBAT_DMG_MOD = new State<>("dmod1", War3Int.class);
+        public final static State<War3Real> COMBAT_DMG_PER_SEC = new State<>("DPS", War3Real.class);
 
         public final static State<CombatSound> COMBAT_ATTACK2_WEAPON_SOUND = new State<>("weapType2", CombatSound.class);
         public final static State<DataList<CombatTarget>> COMBAT_ATTACK2_TARGS = new State<>("targs2", new DataTypeInfo(DataList.class, CombatTarget.class));
-        public final static State<Bool> COMBAT_ATTACK2_SHOW_UI = new State<>("showUI2", Bool.class);
-        public final static State<Real> COMBAT_ATTACK2_RANGE = new State<>("rangeN2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_RANGE_TEST = new State<>("RngTst2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_RANGE_BUFFER = new State<>("RngBuff2", Real.class);
+        public final static State<War3Bool> COMBAT_ATTACK2_SHOW_UI = new State<>("showUI2", War3Bool.class);
+        public final static State<War3Real> COMBAT_ATTACK2_RANGE = new State<>("rangeN2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_RANGE_TEST = new State<>("RngTst2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_RANGE_BUFFER = new State<>("RngBuff2", War3Real.class);
         public final static State<AttackType> COMBAT_ATTACK2_ATK_TYPE = new State<>("atkType2", AttackType.class);
         public final static State<WeaponType> COMBAT_ATTACK2_WEAPON_TYPE = new State<>("weapTp2", WeaponType.class);
-        public final static State<Real> COMBAT_ATTACK2_COOLDOWN = new State<>("cool2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_COOLDOWN_MIN = new State<>("mincool2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_DICE = new State<>("dice2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_DICE_SIDES = new State<>("sides2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_BASE = new State<>("dmgplus2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_UP = new State<>("dmgUp2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_MIN = new State<>("mindmg2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_AVG = new State<>("avgdmg2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_MAX = new State<>("maxdmg2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_PT = new State<>("dmgpt2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_BACKSWING = new State<>("backSw2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_AREA_FULL = new State<>("Farea2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_AREA_MEDIUM = new State<>("Harea2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_AREA_SMALL = new State<>("Qarea2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_AREA_MEDIUM_DMG_FACTOR = new State<>("Hfact2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_AREA_SMALL_DMG_FACTOR = new State<>("Qfact2", Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_COOLDOWN = new State<>("cool2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_COOLDOWN_MIN = new State<>("mincool2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_DICE = new State<>("dice2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_DICE_SIDES = new State<>("sides2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_BASE = new State<>("dmgplus2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_UP = new State<>("dmgUp2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_MIN = new State<>("mindmg2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_AVG = new State<>("avgdmg2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_MAX = new State<>("maxdmg2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_PT = new State<>("dmgpt2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_BACKSWING = new State<>("backSw2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_AREA_FULL = new State<>("Farea2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_AREA_MEDIUM = new State<>("Harea2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_AREA_SMALL = new State<>("Qarea2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_AREA_MEDIUM_DMG_FACTOR = new State<>("Hfact2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_AREA_SMALL_DMG_FACTOR = new State<>("Qfact2", War3Real.class);
         public final static State<DataList<CombatTarget>> COMBAT_ATTACK2_AREA_TARGS = new State<>("splashTargs2", new DataTypeInfo(DataList.class,
-				CombatTarget.class));
-        public final static State<Wc3Int> COMBAT_ATTACK2_TARGS_MAX = new State<>("targCount2", Wc3Int.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_LOSS_FACTOR = new State<>("damageLoss2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_SPILL_DIST = new State<>("spillDist2", Real.class);
-        public final static State<Real> COMBAT_ATTACK2_DMG_SPILL_RAD = new State<>("spillRadius2", Real.class);
-        public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
+                CombatTarget.class));
+        public final static State<War3Int> COMBAT_ATTACK2_TARGS_MAX = new State<>("targCount2", War3Int.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_LOSS_FACTOR = new State<>("damageLoss2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_SPILL_DIST = new State<>("spillDist2", War3Real.class);
+        public final static State<War3Real> COMBAT_ATTACK2_DMG_SPILL_RAD = new State<>("spillRadius2", War3Real.class);
+        public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+
+        public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+            super(idString, typeInfo, defVal);
+        }
+
+        public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+            super(idString, typeInfo);
+        }
+
+        public State(@Nonnull String idString, @Nonnull Class<T> type) {
+            super(idString, type);
+        }
+
+        public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+            super(idString, type, defVal);
+        }
     }
 
     public static class Obj extends SLK.Obj<UnitId> {
@@ -143,14 +135,14 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
 
         @Override
         protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-            State state = State.valueByField(States.State.class, fieldId);
+            State state = (State) State.valueByField(State.class, fieldId);
 
             if (state != null) _stateVals.put(state, val);
         }
 
         @Override
         protected void on_remove(@Nonnull FieldId fieldId) {
-            State state = State.valueByField(States.State.class, fieldId);
+            State state = (State) State.valueByField(State.class, fieldId);
 
             if (state != null) _stateVals.remove(state);
         }
@@ -160,7 +152,7 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
             _stateVals.clear();
         }
 
-        public <T extends DataType> T get(State<T> state) {
+        public <T extends DataType> T get(State<T> state) throws DataTypeInfo.CastException {
             return state.tryCastVal(super.get(state));
         }
 
@@ -181,7 +173,7 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
         public Obj(UnitId id) {
             super(id);
 
-            for (State state : States.values()) {
+            for (State<?> state : State.values(State.class)) {
                 set(state, state.getDefVal());
             }
         }
@@ -247,9 +239,9 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
     public UnitWeaponsSLK() {
         super();
 
-        addField(States.OBJ_ID.getFieldId());
+        addField(State.OBJ_ID.getFieldId());
 
-        for (State state : States.values()) {
+        for (State<?> state : State.values(State.class)) {
             addField(state);
         }
     }

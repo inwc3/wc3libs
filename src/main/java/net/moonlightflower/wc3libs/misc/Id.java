@@ -1,27 +1,26 @@
 package net.moonlightflower.wc3libs.misc;
 
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 
-public class Id extends Wc3String {
+public class Id extends War3String {
 	@Override
 	public int hashCode() {
 		if (getVal().length() != 4) return super.hashCode();
 
-		int ret = 0;
-		
-		ret += ((int) getVal().charAt(0)) * 256*256*256;
-		ret += ((int) getVal().charAt(1)) * 256*256;
-		ret += ((int) getVal().charAt(2)) * 256;
-		ret += ((int) getVal().charAt(3)) * 1;
-		
-		return ret;
+		return Math.decode(getVal(), Math.CODE_ASCII);
 	}
 	
 	@Override
 	public boolean equals(Object other) {
 		if (this == other) return true;
 
-		return ((other instanceof Id) || (other instanceof Id)) && (hashCode() == other.hashCode());
+		if (other instanceof Id) return equals((Id) other);
+
+		return super.equals(other);
+	}
+
+	public boolean equals(Id other) {
+		return hashCode() == other.hashCode();
 	}
 	
 	/*@Override

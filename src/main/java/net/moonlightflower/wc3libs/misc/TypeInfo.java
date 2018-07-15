@@ -46,22 +46,7 @@ public class TypeInfo<boundType> {
 	}
 
 	@Nonnull
-	public String getTypeName() {		
-		/*try {
-			Method method = getType().getDeclaredMethod("name");
-			
-			if (method != null) {
-				return (String) method.invoke(null);
-			}
-		} catch (IllegalAccessException e) {
-		} catch (IllegalArgumentException e) {
-		} catch (InvocationTargetException e) {
-		} catch (NoSuchMethodException e) {
-		} catch (SecurityException e) {
-		}
-		
-		return getType().getSimpleName();*/
-		
+	public String getTypeName() {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append(getType().getSimpleName());

@@ -5,28 +5,28 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import javax.annotation.Nonnull;
 
 public class Coords4DF extends DataType {
-	private final Real _x;
-	private final Real _y;
-	private final Real _z;
-	private final Real _a;
+	private final War3Real _x;
+	private final War3Real _y;
+	private final War3Real _z;
+	private final War3Real _a;
 
 	@Nonnull
-	public Real getX() {
+	public War3Real getX() {
 		return _x;
 	}
 
 	@Nonnull
-	public Real getY() {
+	public War3Real getY() {
 		return _y;
 	}
 
 	@Nonnull
-	public Real getZ() {
+	public War3Real getZ() {
 		return _z;
 	}
 
 	@Nonnull
-	public Real getA() {
+	public War3Real getA() {
 		return _a;
 	}
 
@@ -50,7 +50,7 @@ public class Coords4DF extends DataType {
 				getA().equals(other.getA());
 	}
 
-	public Coords4DF(@Nonnull Real x, @Nonnull Real y, @Nonnull Real z, @Nonnull Real a) {
+	public Coords4DF(@Nonnull War3Real x, @Nonnull War3Real y, @Nonnull War3Real z, @Nonnull War3Real a) {
 		_x = x;
 		_y = y;
 		_z = z;
@@ -58,7 +58,7 @@ public class Coords4DF extends DataType {
 	}
 
 	public Coords4DF(float x, float y, float z, float a) {
-		this(Real.valueOf(x), Real.valueOf(y), Real.valueOf(z), Real.valueOf(a));
+		this(War3Real.valueOf(x), War3Real.valueOf(y), War3Real.valueOf(z), War3Real.valueOf(a));
 	}
 
 	@Override

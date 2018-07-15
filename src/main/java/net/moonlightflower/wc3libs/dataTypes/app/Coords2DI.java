@@ -31,7 +31,7 @@ public class Coords2DI extends DataType {
 
 	@Nonnull
 	public Coords2DF toReal() {
-		return new Coords2DF(Real.valueOf(getX()), Real.valueOf(getY()));
+		return new Coords2DF(War3Real.valueOf(getX()), War3Real.valueOf(getY()));
 	}
 
 	@Nonnull

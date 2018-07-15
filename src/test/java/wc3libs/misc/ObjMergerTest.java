@@ -9,8 +9,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 
 public class ObjMergerTest {
-
-    @Test
+    @Test()
     public void testMerger() {
         try {
             ObjMerger merger = new ObjMerger();
@@ -56,8 +55,7 @@ public class ObjMergerTest {
             
             merger.writeToMap(outMapFile, outDir);
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            Assert.fail(e.getMessage(), e);
         }
 
         //merger.addDir(dir);

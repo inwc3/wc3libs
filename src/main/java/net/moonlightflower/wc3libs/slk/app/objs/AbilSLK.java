@@ -13,61 +13,37 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("Units\\AbilityData.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("Units\\AbilityData.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<AbilId> OBJ_ID = new State<>("alias", AbilId.class);
 		public final static State<AbilCode> DATA_CODE = new State<>("code", AbilCode.class);
-		public final static State<Wc3String> EDITOR_COMMENTS = new State<>("comments", Wc3String.class);
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
-		public final static State<Bool> EDITOR_IN_EDITOR = new State<>("useInEditor", Bool.class);
-		public final static State<Bool> DATA_IS_HERO = new State<>("hero", Bool.class);
-		public final static State<Bool> DATA_IS_ITEM = new State<>("item", Bool.class);
-		public final static State<Wc3String> EDITOR_SORT = new State<>("sort", Wc3String.class);
+		public final static State<War3String> EDITOR_COMMENTS = new State<>("comments", War3String.class);
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class);
+		public final static State<War3Bool> EDITOR_IN_EDITOR = new State<>("useInEditor", War3Bool.class);
+		public final static State<War3Bool> DATA_IS_HERO = new State<>("hero", War3Bool.class);
+		public final static State<War3Bool> DATA_IS_ITEM = new State<>("item", War3Bool.class);
+		public final static State<War3String> EDITOR_SORT = new State<>("sort", War3String.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("race", UnitRace.class);
-		public final static State<Bool> DATA_CHECK_DEPENDENCY = new State<>("checkDep", Bool.class);
-		public final static State<Wc3Int> DATA_LEVEL_COUNT = new State<>("levels", Wc3Int.class);
-		public final static State<Wc3Int> DATA_LEVEL_REQ = new State<>("reqLevel", Wc3Int.class);
-		public final static State<Wc3Int> DATA_LEVEL_SKIP = new State<>("levelSkip", Wc3Int.class);
-		public final static State<Wc3Int> DATA_PRIO = new State<>("priority", Wc3Int.class);
+		public final static State<War3Bool> DATA_CHECK_DEPENDENCY = new State<>("checkDep", War3Bool.class);
+		public final static State<War3Int> DATA_LEVEL_COUNT = new State<>("levels", War3Int.class);
+		public final static State<War3Int> DATA_LEVEL_REQ = new State<>("reqLevel", War3Int.class);
+		public final static State<War3Int> DATA_LEVEL_SKIP = new State<>("levelSkip", War3Int.class);
+		public final static State<War3Int> DATA_PRIO = new State<>("priority", War3Int.class);
 
 		public final static State<DataList<CombatTarget>> DATA_TARGS1 = new State<>("targs1", new DataTypeInfo(DataList.class, CombatTarget.class));
-		public final static State<DataList<Real>> DATA_CAST_TIME1 = new State<>("Cast1", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION1 = new State<>("Dur1", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION_HERO1 = new State<>("HeroDur1", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_COOLDOWN1 = new State<>("Cool1", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Wc3Int>> DATA_MANA_COST1 = new State<>("Cost1", new DataTypeInfo(DataList.class, Wc3Int.class));
-		public final static State<DataList<Real>> DATA_AREA1 = new State<>("Area1", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_RANGE1 = new State<>("Rng1", new DataTypeInfo(DataList.class, Real.class));
+		public final static State<DataList<War3Real>> DATA_CAST_TIME1 = new State<>("Cast1", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION1 = new State<>("Dur1", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION_HERO1 = new State<>("HeroDur1", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_COOLDOWN1 = new State<>("Cool1", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Int>> DATA_MANA_COST1 = new State<>("Cost1", new DataTypeInfo(DataList.class, War3Int.class));
+		public final static State<DataList<War3Real>> DATA_AREA1 = new State<>("Area1", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_RANGE1 = new State<>("Rng1", new DataTypeInfo(DataList.class, War3Real.class));
 		public final static State<DataList<DataType>> DATA_A1 = new State<>("DataA1", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_B1 = new State<>("DataB1", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_C1 = new State<>("DataC1", new DataTypeInfo(DataList.class, DataType.class));
@@ -82,13 +58,13 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<BuffId>> ART_EFFECT_ID1 = new State<>("EfctID1", new DataTypeInfo(DataList.class, BuffId.class));
 
 		public final static State<DataList<CombatTarget>> DATA_TARGS2 = new State<>("targs2", new DataTypeInfo(DataList.class, CombatTarget.class));
-		public final static State<DataList<Real>> DATA_CAST_TIME2 = new State<>("Cast2", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION2 = new State<>("Dur2", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION_HERO2 = new State<>("HeroDur2", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_COOLDOWN2 = new State<>("Cool2", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Wc3Int>> DATA_MANA_COST2 = new State<>("Cost2", new DataTypeInfo(DataList.class, Wc3Int.class));
-		public final static State<DataList<Real>> DATA_AREA2 = new State<>("Area2", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_RANGE2 = new State<>("Rng2", new DataTypeInfo(DataList.class, Real.class));
+		public final static State<DataList<War3Real>> DATA_CAST_TIME2 = new State<>("Cast2", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION2 = new State<>("Dur2", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION_HERO2 = new State<>("HeroDur2", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_COOLDOWN2 = new State<>("Cool2", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Int>> DATA_MANA_COST2 = new State<>("Cost2", new DataTypeInfo(DataList.class, War3Int.class));
+		public final static State<DataList<War3Real>> DATA_AREA2 = new State<>("Area2", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_RANGE2 = new State<>("Rng2", new DataTypeInfo(DataList.class, War3Real.class));
 		public final static State<DataList<DataType>> DATA_A2 = new State<>("DataA2", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_B2 = new State<>("DataB2", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_C2 = new State<>("DataC2", new DataTypeInfo(DataList.class, DataType.class));
@@ -103,13 +79,13 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<BuffId>> ART_EFFECT_ID2 = new State<>("EfctID2", new DataTypeInfo(DataList.class, BuffId.class));
 
 		public final static State<DataList<CombatTarget>> DATA_TARGS3 = new State<>("targs3", new DataTypeInfo(DataList.class, CombatTarget.class));
-		public final static State<DataList<Real>> DATA_CAST_TIME3 = new State<>("Cast3", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION3 = new State<>("Dur3", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION_HERO3 = new State<>("HeroDur3", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_COOLDOWN3 = new State<>("Cool3", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Wc3Int>> DATA_MANA_COST3 = new State<>("Cost3", new DataTypeInfo(DataList.class, Wc3Int.class));
-		public final static State<DataList<Real>> DATA_AREA3 = new State<>("Area3", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_RANGE3 = new State<>("Rng3", new DataTypeInfo(DataList.class, Real.class));
+		public final static State<DataList<War3Real>> DATA_CAST_TIME3 = new State<>("Cast3", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION3 = new State<>("Dur3", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION_HERO3 = new State<>("HeroDur3", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_COOLDOWN3 = new State<>("Cool3", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Int>> DATA_MANA_COST3 = new State<>("Cost3", new DataTypeInfo(DataList.class, War3Int.class));
+		public final static State<DataList<War3Real>> DATA_AREA3 = new State<>("Area3", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_RANGE3 = new State<>("Rng3", new DataTypeInfo(DataList.class, War3Real.class));
 		public final static State<DataList<DataType>> DATA_A3 = new State<>("DataA3", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_B3 = new State<>("DataB3", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_C3 = new State<>("DataC3", new DataTypeInfo(DataList.class, DataType.class));
@@ -124,13 +100,13 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<BuffId>> ART_EFFECT_ID3 = new State<>("EfctID3", new DataTypeInfo(DataList.class, BuffId.class));
 
 		public final static State<DataList<CombatTarget>> DATA_TARGS4 = new State<>("targs4", new DataTypeInfo(DataList.class, CombatTarget.class));
-		public final static State<DataList<Real>> DATA_CAST_TIME4 = new State<>("Cast4", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION4 = new State<>("Dur4", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_DURATION_HERO4 = new State<>("HeroDur4", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_COOLDOWN4 = new State<>("Cool4", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Wc3Int>> DATA_MANA_COST4 = new State<>("Cost4", new DataTypeInfo(DataList.class, Wc3Int.class));
-		public final static State<DataList<Real>> DATA_AREA4 = new State<>("Area4", new DataTypeInfo(DataList.class, Real.class));
-		public final static State<DataList<Real>> DATA_RANGE4 = new State<>("Rng4", new DataTypeInfo(DataList.class, Real.class));
+		public final static State<DataList<War3Real>> DATA_CAST_TIME4 = new State<>("Cast4", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION4 = new State<>("Dur4", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_DURATION_HERO4 = new State<>("HeroDur4", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_COOLDOWN4 = new State<>("Cool4", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Int>> DATA_MANA_COST4 = new State<>("Cost4", new DataTypeInfo(DataList.class, War3Int.class));
+		public final static State<DataList<War3Real>> DATA_AREA4 = new State<>("Area4", new DataTypeInfo(DataList.class, War3Real.class));
+		public final static State<DataList<War3Real>> DATA_RANGE4 = new State<>("Rng4", new DataTypeInfo(DataList.class, War3Real.class));
 		public final static State<DataList<DataType>> DATA_A4 = new State<>("DataA4", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_B4 = new State<>("DataB4", new DataTypeInfo(DataList.class, DataType.class));
 		public final static State<DataList<DataType>> DATA_C4 = new State<>("DataC4", new DataTypeInfo(DataList.class, DataType.class));
@@ -144,7 +120,23 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public final static State<DataList<BuffId>> DATA_BUFF_ID4 = new State<>("BuffID4", new DataTypeInfo(DataList.class, BuffId.class));
 		public final static State<DataList<BuffId>> ART_EFFECT_ID4 = new State<>("EfctID4", new DataTypeInfo(DataList.class, BuffId.class));
 
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<AbilId> {
@@ -157,14 +149,14 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -175,7 +167,12 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		}
 
 		public <T extends DataType> T get(State<T> state) {
-			return state.tryCastVal(super.get(state.getFieldId()));
+			try {
+				return state.tryCastVal(super.get(state.getFieldId()));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 		
 		public <T extends DataType> void set(State<T> state, T val) {
@@ -195,7 +192,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public Obj(AbilId id) {
 			super(id);
 
-			for (State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -203,11 +200,11 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		@Override
 		public void reduce() {
 			// TODO Auto-generated method stub
-			set(States.EDITOR_COMMENTS, null);
+			set(State.EDITOR_COMMENTS, null);
 		}
 	}
 	
-	//private Map<AbilId, Camera> _objs = new LinkedHashMap<>();
+	//private final Map<AbilId, Camera> _objs = new LinkedHashMap<>();
 	
 	@Nonnull
 	@Override
@@ -261,9 +258,9 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 	public AbilSLK() {
 		super();
 		
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 
-		for (State state : States.values()) {
+		for (State<?> state : State.values(State.class)) {
 			addField(state);
 		}
 	}

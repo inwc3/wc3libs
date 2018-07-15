@@ -1,5 +1,8 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
+
 public interface TypeInfoed {
-	public TypeInfo getTypeInfo();
+	@Nonnull
+	TypeInfo getTypeInfo();
 }

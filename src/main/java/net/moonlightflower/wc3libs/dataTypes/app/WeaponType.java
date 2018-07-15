@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class WeaponType extends Wc3String {
+public class WeaponType extends War3String {
 	private final static Map<String, WeaponType> _nameMap = new LinkedHashMap<>();
 
 	public final static WeaponType ARTILLERY = new WeaponType("artillery");

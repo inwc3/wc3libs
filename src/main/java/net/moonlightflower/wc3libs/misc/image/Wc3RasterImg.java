@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.misc.image;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.Raster;
 import net.moonlightflower.wc3libs.misc.Size;
@@ -90,6 +91,7 @@ public class Wc3RasterImg extends Wc3Img {
 		}
 		
 		private Rastered() {
+			super(new Bounds(0, 0, 0, 0));
 		}
 	}
 	
@@ -319,6 +321,8 @@ public class Wc3RasterImg extends Wc3Img {
 		
 		String ext = Orient.getFileExt(file);
 
+		if (ext == null) throw new IllegalArgumentException(String.format("file %s has no extension", file));
+
 		switch (ext.toLowerCase()) {
 		case "jpeg":
 		case "jpg": {
@@ -331,7 +335,7 @@ public class Wc3RasterImg extends Wc3Img {
 			return new TGA(file);
 		}
 		default:
-			throw new UnsupportedFormatException(String.format("extension %s of file %s not supported", ext.toLowerCase(), file.toString()));
+			throw new UnsupportedFormatException(String.format("extension %s of file %s not supported", ext.toLowerCase(), file));
 		}
 	}
 

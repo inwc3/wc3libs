@@ -1,8 +1,10 @@
 package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
+import net.moonlightflower.wc3libs.misc.Printable;
+import net.moonlightflower.wc3libs.misc.Printer;
 import net.moonlightflower.wc3libs.misc.Translator;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
@@ -18,9 +20,35 @@ import java.util.regex.Pattern;
 /**
  * manages txt files like UI\\WorldEditStrings.txt and parses their entries to register key->value pairings
  */
-public class TXT {
-	public static class Section {
-		public static class Field {
+public class TXT implements Printable {
+	@Override
+	public void print(@Nonnull Printer printer) {
+		getDefaultSection().print(printer);
+
+		for (Section section : getSections().values()) {
+			if (section.getId() != null) printer.beginGroup(String.format("[%s]", section.getId()));
+
+			section.print(printer);
+
+			if (section.getId() != null) printer.endGroup();
+		}
+	}
+
+	public static class Section implements Printable {
+		@Override
+		public void print(@Nonnull Printer printer) {
+			if (getId() != null) printer.print(getId().toString());
+
+			for (Field field : getFields().values()) {
+				printer.beginGroup(field);
+
+				field.print(printer);
+
+				printer.endGroup();
+			}
+		}
+
+		public static class Field implements Printable {
 			private final List<DataType> _vals = new ArrayList<>();
 
 			@Nonnull
@@ -156,7 +184,7 @@ public class TXT {
 
 				List<String> tokenize = tokenize(line);
 				for (String val : tokenize) {
-					_vals.add(Wc3String.valueOf(val));
+					_vals.add(War3String.valueOf(val));
 				}
 			}
 			
@@ -209,6 +237,11 @@ public class TXT {
 			public Field(@Nonnull FieldId id) {
 				_id = id;
 			}
+
+			@Override
+			public void print(@Nonnull Printer printer) {
+				printer.print(getId() + ": " + getValLine(null));
+			}
 		}
 		
 		protected final Map<FieldId, Field> _fields = new LinkedHashMap<>();
@@ -227,16 +260,22 @@ public class TXT {
 		public boolean containsField(@Nonnull FieldId fieldId) {
 			return _fieldsLower.containsKey(fieldId.lower());
 		}
-		
-		public DataType get(@Nonnull FieldId fieldId, int index) throws Exception {
+
+		public class FieldDoesNotExistException extends Exception {
+			public FieldDoesNotExistException(@Nonnull FieldId fieldId) {
+				super(fieldId.toString());
+			}
+		}
+
+		public DataType get(@Nonnull FieldId fieldId, int index) throws FieldDoesNotExistException {
 			Field field = getField(fieldId);
 			
-			if (field == null) throw new Exception();
+			if (field == null) throw new FieldDoesNotExistException(fieldId);
 			
 			return field.get(index);
 		}
 		
-		public DataType get(@Nonnull FieldId fieldId) throws Exception {
+		public DataType get(@Nonnull FieldId fieldId) throws FieldDoesNotExistException {
 			return get(fieldId, 0);
 		}
 		
@@ -264,7 +303,7 @@ public class TXT {
 		}
 		
 		public void set(@Nonnull String key, @Nullable String val) {
-			set(FieldId.valueOf(key), Wc3String.valueOf(val));
+			set(FieldId.valueOf(key), War3String.valueOf(val));
 		}
 		
 		public <T extends DataType> void set(@Nonnull TXTState<T> state, T val) {
@@ -393,7 +432,7 @@ public class TXT {
 		return false;
 	}
 	
-	public DataType get(@Nonnull FieldId key) throws Exception {
+	public DataType get(@Nonnull FieldId key) throws Section.FieldDoesNotExistException {
 		if (_defaultSection.containsField(key)) return _defaultSection.get(key);
 		
 		for (Section section : getSections().values()) {
@@ -423,16 +462,6 @@ public class TXT {
 	public void merge(@Nonnull TXT other) {
 		merge(other, true);
 	}
-
-	@Nullable
-	public DataType get(@Nonnull TXTState state, int index) throws Exception {
-		return getSection(state.getSectionId()).get(state.getFieldId(), index);
-	}
-
-	@Nullable
-	public DataType get(@Nonnull TXTState state) throws Exception {
-		return get(state, 0);
-	}
 	
 	public void set(@Nonnull TXT.Section section, @Nonnull FieldId field, @Nullable DataType val) {
 		addSection(section);
@@ -440,33 +469,12 @@ public class TXT {
 		section.set(field, val);
 	}
 	
-	public void set(@Nonnull TXTState state, @Nullable DataType val) {
-		set(getSection(state.getSectionId()), state.getFieldId(), val);
-	}
-	
 	public void set(@Nonnull String section, @Nonnull String field, @Nullable String val) {
-		set(addSection(TXTSectionId.valueOf(section)), FieldId.valueOf(field), Wc3String.valueOf(val));
+		set(addSection(TXTSectionId.valueOf(section)), FieldId.valueOf(field), War3String.valueOf(val));
 	}
 	
 	public void set(@Nonnull String field, @Nullable String val) {
 		_defaultSection.set(field, val);
-	}
-	
-	public void print(@Nonnull PrintStream outStream) {
-		_defaultSection.print(outStream);
-		
-		for (Map.Entry<TXTSectionId, TXT.Section> sectionEntry : getSections().entrySet()) {
-			TXTSectionId sectionId = sectionEntry.getKey();
-			TXT.Section section = sectionEntry.getValue();
-			
-			outStream.println(String.format("[%s]", sectionId.toString()));
-			
-			section.print(outStream);
-		}
-	}
-	
-	public void print() {
-		print(System.out);
 	}
 	
 	public void read(@Nonnull InputStream inStream) throws IOException {

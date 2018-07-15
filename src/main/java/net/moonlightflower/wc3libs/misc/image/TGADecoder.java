@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.misc.image;
 
+import com.esotericsoftware.minlog.Log;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -104,10 +105,10 @@ public class TGADecoder {
 				int colors[][] = new int[256][];
 				
 				for (int i = 0; i < 256; i++) {
-					colors[i][0] = _stream.readWord(String.format("colorCorrectionAlpha", i)); //alpha
-					colors[i][1] = _stream.readWord(String.format("colorCorrectionBlue", i)); //blue
-					colors[i][2] = _stream.readWord(String.format("colorCorrectionGreen", i)); //green
-					colors[i][3] = _stream.readWord(String.format("colorCorrectionRed", i)); //red
+					colors[i][0] = _stream.readWord(String.format("colorCorrectionAlpha %d", i)); //alpha
+					colors[i][1] = _stream.readWord(String.format("colorCorrectionBlue %d", i)); //blue
+					colors[i][2] = _stream.readWord(String.format("colorCorrectionGreen %d", i)); //green
+					colors[i][3] = _stream.readWord(String.format("colorCorrectionRed %d", i)); //red
 				}
 			}
 		}
@@ -413,8 +414,8 @@ public class TGADecoder {
 			return bufImg;
 		} catch (Exception e) {
 			_stream.printLog(System.err);
-			
-			e.printStackTrace();
+
+			Log.error(e.getMessage(), e);
 			
 			throw e;
 		}

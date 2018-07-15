@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DestructableClass extends Wc3String {
+public class DestructableClass extends War3String {
 	private final static Map<Object, DestructableClass> _map = new LinkedHashMap<>();
 	
 	public final static DestructableClass BRIDGE = new DestructableClass("B");

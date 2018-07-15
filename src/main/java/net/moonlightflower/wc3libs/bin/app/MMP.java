@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.*;
 
 public class MMP {
-	public final static File GAME_PATH = new File("war3map.MMP");
+	public final static File GAME_PATH = new File("war3map.mmp");
 	
 	public static class Icon {
 		public enum IconType {

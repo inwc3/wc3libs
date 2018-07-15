@@ -26,8 +26,8 @@ public class W3R {
 				return new ArrayList<>(_values);
 			}
 			
-			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString, T defVal) {
-				super(typeInfo, idString, defVal);
+			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String fieldIdS, T defVal) {
+				super(fieldIdS, typeInfo, defVal);
 				
 				_values.add(this);
 			}
@@ -49,14 +49,19 @@ public class W3R {
 		public final static State<WeatherId> ART_WEATHER = new State<>(WeatherId.class, "weather", null);
 		
 		public final static State<Bounds> DATA_BOUNDS = new State<>(Bounds.class, "bounds", new Bounds(0, 0, 0, 0));
-		public final static State<Wc3Int> DATA_INDEX = new State<>(Wc3Int.class, "index", Wc3Int.valueOf(0));
+		public final static State<War3Int> DATA_INDEX = new State<>(War3Int.class, "index", War3Int.valueOf(0));
 		
 		public final static State<SoundLabel> SOUND_LABEL = new State<>(SoundLabel.class, "sound", SoundLabel.valueOf("sound"));
 		
-		public final static State<Wc3String> TEXT_NAME = new State<>(Wc3String.class, "name", Wc3String.valueOf("unnamed"));
+		public final static State<War3String> TEXT_NAME = new State<>(War3String.class, "name", War3String.valueOf("unnamed"));
 
 		public <T extends DataType> T get(State<T> state) {
-			return state.tryCastVal(super.get(state));
+			try {
+				return state.tryCastVal(super.get(state));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 
 		public <T extends DataType> void set(State<T> state, T val) {
@@ -73,7 +78,7 @@ public class W3R {
 			}
 		}
 
-		@Nonnull()
+		@Nonnull
 		public Bounds getBounds() {
 			return get(DATA_BOUNDS) != null ? get(DATA_BOUNDS) : DATA_BOUNDS.getDefVal();
 		}
@@ -90,19 +95,19 @@ public class W3R {
 			set(ART_COLOR, val);
 		}
 
-		public Wc3Int getIndex() {
+		public War3Int getIndex() {
 			return get(DATA_INDEX);
 		}
 
-		public void setIndex(Wc3Int val) {
+		public void setIndex(War3Int val) {
 			set(DATA_INDEX, val);
 		}
 
-		public Wc3String getName() {
+		public War3String getName() {
 			return get(TEXT_NAME);
 		}
 		
-		public void setName(Wc3String val) {
+		public void setName(War3String val) {
 			set(TEXT_NAME, val);
 		}
 
@@ -131,7 +136,7 @@ public class W3R {
 			float maxY = stream.readFloat32();
 			
 			set(DATA_BOUNDS, Bounds.valueOf((int) minX, (int) maxX, (int) minY, (int) maxY));
-			set(TEXT_NAME, Wc3String.valueOf(stream.readString()));
+			set(TEXT_NAME, War3String.valueOf(stream.readString()));
 			set(DATA_INDEX, stream.readWc3Int());
 			
 			WeatherId weatherId = WeatherId.valueOf(stream.readId());
@@ -146,10 +151,10 @@ public class W3R {
 		public void write_0x5(@Nonnull Wc3BinOutputStream stream) {
 			Bounds bounds = get(DATA_BOUNDS);
 			
-			stream.writeReal(Real.valueOf(bounds.getMinX()));
-			stream.writeReal(Real.valueOf(bounds.getMaxX()));
-			stream.writeReal(Real.valueOf(bounds.getMinY()));
-			stream.writeReal(Real.valueOf(bounds.getMaxY()));
+			stream.writeReal(War3Real.valueOf(bounds.getMinX()));
+			stream.writeReal(War3Real.valueOf(bounds.getMaxX()));
+			stream.writeReal(War3Real.valueOf(bounds.getMinY()));
+			stream.writeReal(War3Real.valueOf(bounds.getMaxY()));
 
 			stream.writeString(get(TEXT_NAME));
 			stream.writeInt32(get(DATA_INDEX));
@@ -211,7 +216,8 @@ public class W3R {
 	private void addRect(@Nonnull Rect val) {
 		_rects.add(val);
 	}
-	
+
+	@Nonnull
 	public Rect addRect() {
 		Rect rect = new Rect();
 		
@@ -219,7 +225,8 @@ public class W3R {
 		
 		return rect;
 	}
-	
+
+	@Nonnull
 	public Rect addRect(@Nonnull Bounds bounds) {
 		Rect rect = addRect();
 

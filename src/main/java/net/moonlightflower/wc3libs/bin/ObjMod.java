@@ -19,10 +19,9 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.DoodId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.MetaFieldId;
@@ -30,17 +29,7 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.BuffSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.DestructableSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitAbilsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitBalanceSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitDataSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitUISLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UnitWeaponsSLK;
-import net.moonlightflower.wc3libs.slk.app.objs.UpgradeSLK;
+import net.moonlightflower.wc3libs.slk.app.meta.CommonMetaSLK;
 import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
@@ -65,7 +54,7 @@ public abstract class ObjMod {
 					return _val;
 				}
 				
-				private static Map<Integer, ValType> _map = new LinkedHashMap<>();
+				private final static Map<Integer, ValType> _map = new LinkedHashMap<>();
 				
 				static public ValType valueOf(int val) {
 					return _map.get(val);
@@ -105,21 +94,21 @@ public abstract class ObjMod {
 				}
 				
 				public static Val valueOf(int val) {
-					return new Val(Wc3Int.valueOf(val), ValType.INT);
+					return new Val(War3Int.valueOf(val), ValType.INT);
 				}
 				
 				public static Val valueOf(float val, boolean unreal) {
-					if (unreal) return new Val(Real.valueOf(val), ValType.UNREAL);
+					if (unreal) return new Val(War3Real.valueOf(val), ValType.UNREAL);
 					
-					return new Val(Real.valueOf(val), ValType.REAL);
+					return new Val(War3Real.valueOf(val), ValType.REAL);
 				}
 				
 				public static Val valueOf(String val) {
-					return new Val(Wc3String.valueOf(val), ValType.STRING);
+					return new Val(War3String.valueOf(val), ValType.STRING);
 				}
 			}
 			
-			private Map<Integer, Val> _vals = new LinkedHashMap<>();
+			private final Map<Integer, Val> _vals = new LinkedHashMap<>();
 			
 			public Map<Integer, Val> getVals() {
 				return _vals;
@@ -456,28 +445,28 @@ public abstract class ObjMod {
 
 					switch (valType) {
 					case INT: {
-						Wc3Int valSpec = (Wc3Int) val.getVal();
+						War3Int valSpec = (War3Int) val.getVal();
 						
 						stream.writeInt32(valSpec.toInt());
 						
 						break;
 					}
 					case REAL: {
-						Real valSpec = (Real) val.getVal();
+						War3Real valSpec = (War3Real) val.getVal();
 						
 						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
 					case UNREAL: {
-						Real valSpec = (Real) val.getVal();
+						War3Real valSpec = (War3Real) val.getVal();
 						
 						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
 					case STRING: {
-						Wc3String valSpec = (Wc3String) val.getVal();
+						War3String valSpec = (War3String) val.getVal();
 						
 						stream.writeString(valSpec.getVal());
 						
@@ -528,28 +517,28 @@ public abstract class ObjMod {
 
 					switch (valType) {
 					case INT: {
-						Wc3Int valSpec = (Wc3Int) val.getVal();
+						War3Int valSpec = (War3Int) val.getVal();
 						
 						stream.writeInt32(valSpec.toInt());
 						
 						break;
 					}
 					case REAL: {						
-						Real valSpec = (Real) val.getVal();
+						War3Real valSpec = (War3Real) val.getVal();
 
 						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
 					case UNREAL: {
-						Real valSpec = (Real) val.getVal();
+						War3Real valSpec = (War3Real) val.getVal();
 						
 						stream.writeFloat32(valSpec.toFloat());
 						
 						break;
 					}
 					case STRING: {
-						Wc3String valSpec = (Wc3String) val.getVal();
+						War3String valSpec = (War3String) val.getVal();
 						
 						stream.writeString(valSpec.getVal());
 						
@@ -794,7 +783,7 @@ public abstract class ObjMod {
 							Obj.Field.Val val = valEntry.getValue();
 
 							int index = (level == 0) ? 0 : (level - 1);
-							int metaIndex = Wc3Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
+							int metaIndex = War3Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
 
 							if (metaIndex > 0) {
 								index += metaIndex;
@@ -821,18 +810,18 @@ public abstract class ObjMod {
 									String[] vals = profileVal.toString().split(",");
 
 									for (int i = 0; i < vals.length; i++) {
-										profileField.set(Wc3String.valueOf(vals[i]), index + i);
+										profileField.set(War3String.valueOf(vals[i]), index + i);
 									}
 								}
 							} else {
 								if (val.getType().equals(Obj.Field.ValType.INT)) {
-									profileVal = Wc3Int.valueOf(val.getVal());
+									profileVal = War3Int.valueOf(val.getVal());
 								} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
-									profileVal = Real.valueOf(val.getVal());
+									profileVal = War3Real.valueOf(val.getVal());
 								} else if (val.getType().equals(Obj.Field.ValType.UNREAL)) {
-									profileVal = Real.valueOf(val.getVal());
+									profileVal = War3Real.valueOf(val.getVal());
 								} else {
-									profileVal = Wc3String.valueOf(val.getVal());
+									profileVal = War3String.valueOf(val.getVal());
 								}
 
 								profileField.set(profileVal, index);
@@ -841,7 +830,7 @@ public abstract class ObjMod {
 
 						outObjMod.getObj(objId).removeField(fieldId);
 					} else {
-						File slkFile = MetaSLK.convertSLKName(slkName);
+						File slkFile = CommonMetaSLK.convertSLKName(slkName);
 
 						if (slkFile == null) throw new RuntimeException("no slkFile for name " + slkName);
 
@@ -851,7 +840,7 @@ public abstract class ObjMod {
 							int level = valEntry.getKey();
 							Obj.Field.Val val = valEntry.getValue();
 
-							FieldId slkFieldIdAdjusted = MetaSLK.getSLKField(slkFile, metaObj, level);
+							FieldId slkFieldIdAdjusted = CommonMetaSLK.getSLKField(slkFile, metaObj, level);
 
 							outSlk.addField(slkFieldIdAdjusted);
 
@@ -863,8 +852,8 @@ public abstract class ObjMod {
 								necessarySlk.addObj(objId);
 							}
 							
-							/*if (slkFile.equals(UnitBalanceSLK.GAME_USE_PATH) || slkFile.equals(UnitAbilsSLK.GAME_USE_PATH) || slkFile.equals(UnitUISLK.GAME_USE_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
-								File unitBaseSLKFile = UnitDataSLK.GAME_USE_PATH;
+							/*if (slkFile.equals(UnitBalanceSLK.GAME_PATH) || slkFile.equals(UnitAbilsSLK.GAME_PATH) || slkFile.equals(UnitUISLK.GAME_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_PATH)) {
+								File unitBaseSLKFile = UnitDataSLK.GAME_PATH;
 
 								SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
 
@@ -872,14 +861,14 @@ public abstract class ObjMod {
 
 								//
 
-								File unitAbilSLKFile = UnitAbilsSLK.GAME_USE_PATH;
+								File unitAbilSLKFile = UnitAbilsSLK.GAME_PATH;
 
 								SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
 
 								unitAbilSLK.addCamera(objId);
 							}*/
 
-							slkObj.set(slkFieldIdAdjusted, Wc3String.valueOf(val));
+							slkObj.set(slkFieldIdAdjusted, War3String.valueOf(val));
 
 							outObjMod.getObj(objId).removeField(fieldId);
 						}

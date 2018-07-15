@@ -57,7 +57,6 @@ public class JMpqPort extends MpqPort {
                             jmpq.deleteFile(fileImport.getInFile().toString());
                         }
                     }
-
                 }
 			}
 		}
@@ -150,8 +149,7 @@ public class JMpqPort extends MpqPort {
 								result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
 							}
 						} catch (IOException e) {
-							//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
-							//e.printStackTrace();
+							//Log.info("failed " + fileExport.getInFile() + " at " + mpqFile", e);
 							failedExports.add(fileExport);
 						}
 					}
@@ -205,8 +203,7 @@ public class JMpqPort extends MpqPort {
 								result.addExport(mpqFile, resultFileExport, dummyStream.getBytes());
 							}
 						} catch (IOException e) {
-							//System.err.println("failed " + fileExport.getInFile() + " at " + mpqFile);
-							//e.printStackTrace();
+							//Log.info("failed " + fileExport.getInFile() + " at " + mpqFile, e);
 							failedExports.add(fileExport);
 						}
 					}
@@ -283,9 +280,9 @@ public class JMpqPort extends MpqPort {
 	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
 		Vector<File> files = new Vector<>();
 
-		files.add(new File(wc3dir, "War3Patch.mpq"));
-		files.add(new File(wc3dir, "War3x.mpq"));
-		files.add(new File(wc3dir, "war3.mpq"));
+		files.add(new File(wc3dir, War3MPQs.WAR3PATCH.toString()));
+		files.add(new File(wc3dir, War3MPQs.WAR3X.toString()));
+		files.add(new File(wc3dir, War3MPQs.WAR3.toString()));
 
 		return files.stream().filter(File::exists).collect(Collectors.toCollection(Vector::new));
 	}

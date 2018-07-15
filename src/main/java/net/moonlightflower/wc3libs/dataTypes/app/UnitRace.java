@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class UnitRace extends Wc3String {
+public class UnitRace extends War3String {
 	public static String getTranslatorSection() {
 		return "unitRace";
 	}

@@ -3,7 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class OrderString extends Wc3String {
+public class OrderString extends War3String {
 	private final static Map<Object, OrderString> _map = new LinkedHashMap<>();
 	
 	public OrderString(String val, String... aliases) {

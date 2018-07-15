@@ -1,9 +1,9 @@
 package net.moonlightflower.wc3libs.bin;
 
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
-import net.moonlightflower.wc3libs.dataTypes.app.Char;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Char;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
@@ -58,7 +58,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(_intBytes);
     }
 
-    public void writeInt32(@Nonnull Wc3Int val) {
+    public void writeInt32(@Nonnull War3Int val) {
         writeInt32(val.getVal());
     }
 
@@ -76,11 +76,11 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeBytes(buf.array());
     }
 
-    public void writeFloat32(@Nullable Real val) {
+    public void writeFloat32(@Nullable War3Real val) {
         writeFloat32(val != null ? val.toFloat() : 0F);
     }
 
-    public void writeReal(@Nullable Real val) {
+    public void writeReal(@Nullable War3Real val) {
         writeFloat32(val);
     }
 
@@ -88,7 +88,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
         writeByte((byte) val);
     }
 
-    public void writeChar(@Nullable Char val) {
+    public void writeChar(@Nullable War3Char val) {
         writeChar(val != null ? val.getVal() : '\0');
     }
 

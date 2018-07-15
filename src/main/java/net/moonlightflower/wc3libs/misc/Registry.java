@@ -253,6 +253,18 @@ public class Registry {
 		}
 	}
 
+	public static class Wc3LocalMachineEntry extends Entry {
+		public final static String PREFIX = "HKLM\\Software\\Blizzard Entertainment\\Warcraft III";
+
+		public final static Wc3Entry INSTALL_PATH = new Wc3Entry("InstallPath", EntryType.REG_SZ);
+		public final static Wc3Entry INSTALL_PATH_X = new Wc3Entry("InstallPathX", EntryType.REG_SZ);
+		public final static Wc3Entry WAR3_INSTALL_PATH = new Wc3Entry("War3InstallPath", EntryType.REG_SZ);
+
+		public Wc3LocalMachineEntry(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType) {
+			super(dir, key, entryType);
+		}
+	}
+
 	public static class WorldEditEntry extends Entry {
 		public final static String PREFIX = "HKCU\\Software\\Blizzard Entertainment\\WorldEdit";
 
@@ -281,6 +293,10 @@ public class Registry {
 	
 	public static String get(@Nonnull String dirS, @Nonnull String key) throws IOException {
 		return get(new File(dirS), key);
+	}
+
+	public static String get(@Nonnull Entry entry) throws IOException {
+		return get(entry._dir, entry._key);
 	}
 
 	public static void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {

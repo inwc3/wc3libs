@@ -9,18 +9,35 @@ import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.misc.PathMap;
 import net.moonlightflower.wc3libs.misc.ShadowMap;
 
+import javax.annotation.Nonnull;
+
 public class Env {
-	private MMP _mmp;
 	private SHD _shd;
-	private W3E _w3e;
-	private WPM _wpm;
-	
+
+	@Nonnull
 	public SHD getSHD() {
 		return _shd;
 	}
-	
+
+	private W3E _w3e;
+
+	@Nonnull
 	public W3E getW3E() {
 		return _w3e;
+	}
+
+	private WPM _wpm;
+
+	@Nonnull
+	public WPM getWPM() {
+		return _wpm;
+	}
+
+	private MMP _mmp;
+
+	@Nonnull
+	public MMP getMMP() {
+		return _mmp;
 	}
 	
 	public int getWidth() {
@@ -31,21 +48,21 @@ public class Env {
 		return _w3e.getHeight();
 	}
 	
-	public void setBounds(Bounds val) {
+	public void setBounds(@Nonnull Bounds val) {
 		_shd.setBounds(val, true);
 		_w3e.setBounds(val, true, true);
 		_wpm.setBounds(val, true, true);
 	}
 	
-	public boolean getShadow(Coords2DF pos) {
+	public boolean getShadow(@Nonnull Coords2DF pos) {
 		return _shd.getShadowMap().getByPos(pos);
 	}
 	
-	public void setShadow(Coords2DF pos, boolean val) {
+	public void setShadow(@Nonnull Coords2DF pos, boolean val) {
 		_shd.getShadowMap().setByPos(pos, val);
 	}
 	
-	public Env(W3E w3e, SHD shd, WPM wpm, MMP mmp) {
+	public Env(@Nonnull W3E w3e, @Nonnull SHD shd, @Nonnull WPM wpm, @Nonnull MMP mmp) {
 		_mmp = mmp;
 		_shd = shd;
 		_w3e = w3e;
@@ -55,7 +72,7 @@ public class Env {
 		_wpm.setBounds(_w3e.getBounds().scale(W3E.CELL_SIZE / PathMap.CELL_SIZE), true, true);
 	}
 	
-	public Env(Bounds bounds) {
+	public Env(@Nonnull Bounds bounds) {
 		this(new W3E(bounds), new SHD(bounds), new WPM(bounds), new MMP());
 	}
 }

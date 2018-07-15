@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AttackType extends Wc3String {
+public class AttackType extends War3String {
 	private final static Map<Integer, AttackType> _indexMap = new LinkedHashMap<>();
 	private final static Map<String, AttackType> _nameMap = new LinkedHashMap<>();
 

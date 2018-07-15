@@ -619,9 +619,9 @@ public class W3F {
 		setAmbientSound(stream.readInt32("ambientSoundVal"), stream.readString("ambientSoundPath"));
 
 		TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("type"));
-		Real terrainFogZStart = stream.readReal("zStart");
-		Real terrainFogZEnd = stream.readReal("zEnd");
-		Real terrainFogDensity = stream.readReal("density");
+		War3Real terrainFogZStart = stream.readReal("zStart");
+		War3Real terrainFogZEnd = stream.readReal("zEnd");
+		War3Real terrainFogDensity = stream.readReal("density");
 		Color terrainFogColor = Color.fromRGBA255(stream.readUByte("red"), stream.readUByte("green"), stream.readUByte("blue"), stream.readUByte("alpha"));
 
 		if (terrainFogType != null) setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
@@ -672,10 +672,10 @@ public class W3F {
 		
 		TerrainFog terrainFog = getTerrainFog();
 		
-		stream.writeInt32(terrainFog != null ? terrainFog.getType() : Wc3Int.valueOf(0));
-		stream.writeReal(terrainFog != null ? terrainFog.getZStart() : Real.valueOf(0F));
-		stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : Real.valueOf(0F));
-		stream.writeReal(terrainFog != null ? terrainFog.getDensity() : Real.valueOf(0F));
+		stream.writeInt32(terrainFog != null ? terrainFog.getType() : War3Int.valueOf(0));
+		stream.writeReal(terrainFog != null ? terrainFog.getZStart() : War3Real.valueOf(0F));
+		stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : War3Real.valueOf(0F));
+		stream.writeReal(terrainFog != null ? terrainFog.getDensity() : War3Real.valueOf(0F));
 		
 		Color terrainFogColor = (terrainFog != null) ? terrainFog.getColor() : null;
 		

@@ -10,62 +10,55 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.TileId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("TerrainArt\\Terrain.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("TerrainArt\\Terrain.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<TileId> OBJ_ID = new State<>("tileID", TileId.class);
-		
-		public final static State<Bool> ART_FOOTPRINTS = new State<>("footprints", Bool.class);
-		public final static State<Wc3String> ART_TEX_DIR = new State<>("dir", Wc3String.class);
-		public final static State<Wc3String> ART_TEX_FILE = new State<>("file", Wc3String.class);
-		
-		public final static State<Wc3Int> DATA_BLIGHT_PRIO = new State<>("blightPri", Wc3Int.class);
-		public final static State<Bool> DATA_BUILDABLE = new State<>("buildable", Bool.class);
-		public final static State<Wc3Int> DATA_CLIFF_SET = new State<>("cliffSet", Wc3Int.class);
+
+		public final static State<War3Bool> ART_FOOTPRINTS = new State<>("footprints", War3Bool.class);
+		public final static State<War3String> ART_TEX_DIR = new State<>("dir", War3String.class);
+		public final static State<War3String> ART_TEX_FILE = new State<>("file", War3String.class);
+
+		public final static State<War3Int> DATA_BLIGHT_PRIO = new State<>("blightPri", War3Int.class);
+		public final static State<War3Bool> DATA_BUILDABLE = new State<>("buildable", War3Bool.class);
+		public final static State<War3Int> DATA_CLIFF_SET = new State<>("cliffSet", War3Int.class);
 		public final static State<DataList<TileId>> DATA_CONVERT_TO = new State<>("convertTo", new DataTypeInfo(DataList.class, TileId.class));
-		public final static State<Bool> DATA_FLYABLE = new State<>("flyable", Bool.class);
-		public final static State<Bool> DATA_WALKABLE = new State<>("walkable", Bool.class);
-		
-		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment", Wc3String.class);
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
+		public final static State<War3Bool> DATA_FLYABLE = new State<>("flyable", War3Bool.class);
+		public final static State<War3Bool> DATA_WALKABLE = new State<>("walkable", War3Bool.class);
+
+		public final static State<War3String> EDITOR_COMMENT = new State<>("comment", War3String.class);
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class);
+
+		public State(String idString, DataTypeInfo typeInfo, T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(String idString, DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(String idString, Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(String idString, Class<T> type, T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<TileId> {
@@ -78,14 +71,14 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -96,71 +89,71 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 		}
 
 		public Path getTex() {
-			return Paths.get(get(States.ART_TEX_DIR).toString(), get(States.ART_TEX_FILE).toString());
+			return Paths.get(get(State.ART_TEX_DIR).toString(), get(State.ART_TEX_FILE).toString());
 		}
 		
 		public void setTex(Path val) {
-			set(States.ART_TEX_DIR, Wc3String.valueOf(val.getParent().toString()));
-			set(States.ART_TEX_FILE, Wc3String.valueOf(val.getFileName().toString()));
+			set(State.ART_TEX_DIR, War3String.valueOf(val.getParent().toString()));
+			set(State.ART_TEX_FILE, War3String.valueOf(val.getFileName().toString()));
 		}
 		
-		public Wc3Int getCliffSet() {
-			return get(States.DATA_CLIFF_SET);
+		public War3Int getCliffSet() {
+			return get(State.DATA_CLIFF_SET);
 		}
 		
-		public void setCliffSet(Wc3Int val) {
-			set(States.DATA_CLIFF_SET, val);
+		public void setCliffSet(War3Int val) {
+			set(State.DATA_CLIFF_SET, val);
 		}
 		
-		public Bool getWalkable() {
-			return get(States.DATA_WALKABLE);
+		public War3Bool getWalkable() {
+			return get(State.DATA_WALKABLE);
 		}
 		
-		public void setWalkable(Bool val) {
-			set(States.DATA_WALKABLE, val);
+		public void setWalkable(War3Bool val) {
+			set(State.DATA_WALKABLE, val);
 		}
 		
-		public Bool getFlyable() {
-			return get(States.DATA_FLYABLE);
+		public War3Bool getFlyable() {
+			return get(State.DATA_FLYABLE);
 		}
 		
-		public void setFlyable(Bool val) {
-			set(States.DATA_FLYABLE, val);
+		public void setFlyable(War3Bool val) {
+			set(State.DATA_FLYABLE, val);
 		}
 		
-		public Bool getBuildable() {
-			return get(States.DATA_BUILDABLE);
+		public War3Bool getBuildable() {
+			return get(State.DATA_BUILDABLE);
 		}
 		
-		public void setBuildable(Bool val) {
-			set(States.DATA_BUILDABLE, val);
+		public void setBuildable(War3Bool val) {
+			set(State.DATA_BUILDABLE, val);
 		}
 		
-		public Bool getFootprints() {
-			return get(States.ART_FOOTPRINTS);
+		public War3Bool getFootprints() {
+			return get(State.ART_FOOTPRINTS);
 		}
 		
-		public void setFootprints(Bool val) {
-			set(States.ART_FOOTPRINTS, val);
+		public void setFootprints(War3Bool val) {
+			set(State.ART_FOOTPRINTS, val);
 		}
 		
-		public Wc3Int getBlightPrio() {
-			return get(States.DATA_BLIGHT_PRIO);
+		public War3Int getBlightPrio() {
+			return get(State.DATA_BLIGHT_PRIO);
 		}
 		
-		public void setBlightPrio(Wc3Int val) {
-			set(States.DATA_BLIGHT_PRIO, val);
+		public void setBlightPrio(War3Int val) {
+			set(State.DATA_BLIGHT_PRIO, val);
 		}
 		
-		public <T extends DataType> T get(States.State<T> state) {
+		public <T extends DataType> T get(State<T> state) {
 			return (T) super.get(state);
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			super.set(state, val);
 		}
 		
-		public <T extends DataType> void remove(States.State<T> state) {
+		public <T extends DataType> void remove(State<T> state) {
 			super.set(state, null);
 		}
 		
@@ -177,7 +170,7 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 		public Obj(TileId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -251,9 +244,9 @@ public class TerrainSLK extends ObjSLK<TerrainSLK, TileId, TerrainSLK.Obj> {
 	}
 	
 	public TerrainSLK() {
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (States.State state : States.values()) {
+		for (State<?> state : State.values(State.class)) {
 			addField(state);
 		}
 	}

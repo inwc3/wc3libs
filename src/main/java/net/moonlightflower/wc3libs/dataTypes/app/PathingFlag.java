@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class PathingFlag extends Wc3Int {
+public class PathingFlag extends War3Int {
 	public static class Ints {
 		public final static Integer NONE = 0x0;
 		public final static Integer UNKNOWN = 0x1;

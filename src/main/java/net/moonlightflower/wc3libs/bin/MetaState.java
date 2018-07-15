@@ -1,40 +1,20 @@
 package net.moonlightflower.wc3libs.bin;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.misc.MetaFieldId;
+import net.moonlightflower.wc3libs.misc.State;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MetaState<T> {
-	private T _defVal = null;
-
-	@Nullable
-	public T getDefVal() {
-		return _defVal;
-	}
-	
-	private MetaFieldId _id;
-	
-	public MetaFieldId getId() {
-		return _id;
-	}
-	
-	private final static List<MetaState<?>> all = new ArrayList<>();
-	
-	@Override
-	public String toString() {
-		return _id.toString();
-	}
-	
-	public MetaState(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-		_id = MetaFieldId.valueOf(idString);
-		_defVal = defVal;
-		
-		all.add(this);
+public class MetaState<T extends DataType> extends State<T> {
+	public MetaState(@Nonnull String idS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+		super(idS, typeInfo, defVal);
 	}
 	
 	public MetaState(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {

@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
+import com.esotericsoftware.minlog.Log;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedWriter;
@@ -79,7 +81,7 @@ public class Orient {
 		return file.toPath().getFileName().toString();
 	}
 
-	@Nonnull
+	@Nullable
 	public static String getFileExt(@Nonnull File file) {
 		int index = file.getName().lastIndexOf('.');
 		
@@ -95,20 +97,6 @@ public class Orient {
 	
 	public static void checkFileExists(@Nonnull File file) throws IOException {
 		if (!file.exists()) throw new IOException(String.format("file %s does not exist", file));
-	}
-	
-	public static void log(@Nullable String s) {
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Orient.getExecDir(), "log.txt"), true));
-			
-			writer.write(s != null ? s : "null");
-			
-			writer.newLine();
-			
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Nonnull

@@ -1,9 +1,10 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
+import com.esotericsoftware.minlog.Log;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -14,10 +15,10 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		return new DataTypeInfo(DataList.class);
 	}
 	
-	private List<T> _list = new ArrayList<>();
+	private final List<T> _list = new ArrayList<>();
 
 	@Nonnull
-	public Object getVal() {
+	public List<T> getVal() {
 		return _list;
 	}
 	
@@ -51,7 +52,8 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		//return String.format("dataList<%s>", getElementsTypeInfo().getTypeName());
 	}
 	
-	@Override
+	@Nonnull
+    @Override
 	public DataTypeInfo getTypeInfo() {
 		return new DataTypeInfo(getClass(), getElementsTypeInfo());
 	}
@@ -140,6 +142,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		return _list.isEmpty();
 	}
 
+	@Nonnull
 	@Override
 	public Iterator iterator() {
 		return _list.iterator();
@@ -150,11 +153,13 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		return _list.lastIndexOf(o);
 	}
 
+	@Nonnull
 	@Override
 	public ListIterator listIterator() {
 		return _list.listIterator();
 	}
 
+	@Nonnull
 	@Override
 	public ListIterator listIterator(int index) {
 		return _list.listIterator(index);
@@ -190,16 +195,19 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		return _list.size();
 	}
 
+	@Nonnull
 	@Override
 	public List subList(int fromIndex, int toIndex) {
 		return _list.subList(fromIndex, toIndex);
 	}
 
+	@Nonnull
 	@Override
 	public Object[] toArray() {
 		return _list.toArray();
 	}
 
+	@Nonnull
 	@Override
 	public Object[] toArray(Object[] a) {
 		return _list.toArray(a);
@@ -212,7 +220,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 			try {
 				ret.add((T) elementsType.newInstance().decode(val));
 			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
+				Log.error(e.getMessage(), e);
 			}
 		}
 		
@@ -221,7 +229,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 
 	@Override
 	public DataList<T> decode(Object val) {
-		return decode(val, Wc3String.class);
+		return decode(val, War3String.class);
 	}
 	
 	@Override

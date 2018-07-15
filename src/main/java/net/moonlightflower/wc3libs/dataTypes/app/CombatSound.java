@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CombatSound extends Wc3String {
+public class CombatSound extends War3String {
 	private final static Map<String, CombatSound> _map = new LinkedHashMap<>();
 
 	public final static CombatSound AXE_MEDIUM_CHOP = new CombatSound("AxeMediumChop");

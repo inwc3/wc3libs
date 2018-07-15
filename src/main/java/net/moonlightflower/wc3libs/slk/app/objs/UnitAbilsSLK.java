@@ -4,9 +4,9 @@ import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.AbilId;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
@@ -16,47 +16,39 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("Units\\UnitAbilities.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("Units\\UnitAbilities.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<UnitId> OBJ_ID = new State<>("unitAbilID", UnitId.class);
 
-		public final static State<Wc3String> EDITOR_SORT = new State<>("sortAbil", Wc3String.class);
-		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment(s)", Wc3String.class);
+		public final static State<War3String> EDITOR_SORT = new State<>("sortAbil", War3String.class);
+		public final static State<War3String> EDITOR_COMMENT = new State<>("comment(s)", War3String.class);
 		public final static State<AbilId> DATA_AUTO = new State<>("auto", AbilId.class);
 
 		public final static State<DataList<AbilId>> DATA_ABILS = new State<>("abilList", new DataTypeInfo(DataList.class, AbilId.class));
 		public final static State<DataList<AbilId>> DATA_ABILS_HERO = new State<>("heroAbilList", new DataTypeInfo(DataList.class, AbilId.class));
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<UnitId> {
@@ -69,14 +61,14 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -87,7 +79,12 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 		}
 
 		public <T extends DataType> T get(State<T> state) {
-			return state.tryCastVal(super.get(state.getFieldId()));
+			try {
+				return state.tryCastVal(super.get(state.getFieldId()));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 		
 		public <T extends DataType> void set(State<T> state, T val) {
@@ -107,7 +104,7 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 		public Obj(UnitId id) {
 			super(id);
 
-			for (State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -165,7 +162,7 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 			DataType auto = obj.get(FieldId.valueOf("auto"));
 			
 			if ((auto == null) || auto.toString().isEmpty()) {
-				obj.set(FieldId.valueOf("auto"), Wc3String.valueOf("_"));
+				obj.set(FieldId.valueOf("auto"), War3String.valueOf("_"));
 			}
 		}
 		
@@ -179,9 +176,9 @@ public class UnitAbilsSLK extends ObjSLK<UnitAbilsSLK, UnitId, UnitAbilsSLK.Obj>
 	public UnitAbilsSLK() {
 		super();
 		
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (State state : States.values()) {
+		for (State state : State.values(State.class)) {
 			addField(state);
 		}
 	}

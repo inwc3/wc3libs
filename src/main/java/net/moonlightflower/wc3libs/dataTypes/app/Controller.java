@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Controller extends Wc3Int {
+public class Controller extends War3Int {
 	private final static Map<Integer, Controller> _indexMap = new LinkedHashMap<>();
 	private final static Map<String, Controller> _labelMap = new LinkedHashMap<>();
 	

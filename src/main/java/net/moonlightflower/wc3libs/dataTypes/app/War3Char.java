@@ -4,7 +4,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
 
-public class Char extends DataType {
+public class War3Char extends DataType {
 	private final char _val;
 
 	@Nonnull
@@ -22,17 +22,17 @@ public class Char extends DataType {
 		return toString();
 	}
 
-	private Char(char val) {
+	private War3Char(char val) {
 		_val = val;
 	}
 
 	@Nonnull
-	public static Char valueOf(char val) {
-		return new Char(val);
+	public static War3Char valueOf(char val) {
+		return new War3Char(val);
 	}
 
 	@Override
 	public DataType decode(Object val) {
-		return new Char(val.toString().charAt(0));
+		return new War3Char(val.toString().charAt(0));
 	}
 }

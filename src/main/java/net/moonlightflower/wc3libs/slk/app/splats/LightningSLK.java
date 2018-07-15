@@ -10,58 +10,51 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("Splats\\LightningData.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("Splats\\LightningData.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-		
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<LightningId> OBJ_ID = new State<>("Name", LightningId.class);
-		
-		public final static State<Real> ART_COLOR_ALPHA = new State<>("A", Real.class, Real.valueOf(1F));
-		public final static State<Real> ART_COLOR_BLUE = new State<>("B", Real.class, Real.valueOf(1F));
-		public final static State<Real> ART_COLOR_GREEN = new State<>("G", Real.class, Real.valueOf(1F));
-		public final static State<Real> ART_COLOR_RED = new State<>("R", Real.class, Real.valueOf(1F));
-		public final static State<Real> ART_DURATION = new State<>("Duration", Real.class, Real.valueOf(1F));
-		public final static State<Real> ART_NOISE_SCALE = new State<>("NoiseScale", Real.class, Real.valueOf(0.02F));
-		public final static State<Wc3String> ART_TEX_DIR = new State<>("Dir", Wc3String.class);
-		public final static State<Wc3String> ART_TEX_FILE = new State<>("file", Wc3String.class);
-		public final static State<Real> ART_SEG_LEN_AVG = new State<>("AvgSegLen", Real.class, Real.valueOf(10F));
-		public final static State<Real> ART_TEX_COORD_SCALE = new State<>("TexCoordScale", Real.class);
-		public final static State<Real> ART_WIDTH = new State<>("Width", Real.class, Real.valueOf(10F));
-		
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
+
+		public final static State<War3Real> ART_COLOR_ALPHA = new State<>("A", War3Real.class, War3Real.valueOf(1F));
+		public final static State<War3Real> ART_COLOR_BLUE = new State<>("B", War3Real.class, War3Real.valueOf(1F));
+		public final static State<War3Real> ART_COLOR_GREEN = new State<>("G", War3Real.class, War3Real.valueOf(1F));
+		public final static State<War3Real> ART_COLOR_RED = new State<>("R", War3Real.class, War3Real.valueOf(1F));
+		public final static State<War3Real> ART_DURATION = new State<>("Duration", War3Real.class, War3Real.valueOf(1F));
+		public final static State<War3Real> ART_NOISE_SCALE = new State<>("NoiseScale", War3Real.class, War3Real.valueOf(0.02F));
+		public final static State<War3String> ART_TEX_DIR = new State<>("Dir", War3String.class);
+		public final static State<War3String> ART_TEX_FILE = new State<>("file", War3String.class);
+		public final static State<War3Real> ART_SEG_LEN_AVG = new State<>("AvgSegLen", War3Real.class, War3Real.valueOf(10F));
+		public final static State<War3Real> ART_TEX_COORD_SCALE = new State<>("TexCoordScale", War3Real.class);
+		public final static State<War3Real> ART_WIDTH = new State<>("Width", War3Real.class, War3Real.valueOf(10F));
+
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<LightningId> {
@@ -74,14 +67,14 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -92,76 +85,76 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		}
 
 		public Path getTex() {
-			return Paths.get(get(States.ART_TEX_DIR).getVal(), get(States.ART_TEX_FILE).getVal());
+			return Paths.get(get(State.ART_TEX_DIR).getVal(), get(State.ART_TEX_FILE).getVal());
 		}
 		
 		public void setTex(Path val) {
-			set(States.ART_TEX_DIR, Wc3String.valueOf(val.getParent().toString()));
-			set(States.ART_TEX_FILE, Wc3String.valueOf(val.getFileName().toString()));
+			set(State.ART_TEX_DIR, War3String.valueOf(val.getParent().toString()));
+			set(State.ART_TEX_FILE, War3String.valueOf(val.getFileName().toString()));
 		}
 		
-		public Real getAvgSegLen() {
-			return get(States.ART_SEG_LEN_AVG);
+		public War3Real getAvgSegLen() {
+			return get(State.ART_SEG_LEN_AVG);
 		}
 		
-		public void setAvgSegLen(Real val) {
-			set(States.ART_SEG_LEN_AVG, val);
+		public void setAvgSegLen(War3Real val) {
+			set(State.ART_SEG_LEN_AVG, val);
 		}
 		
-		public Real getWidth() {
-			return get(States.ART_WIDTH);
+		public War3Real getWidth() {
+			return get(State.ART_WIDTH);
 		}
 		
-		public void setWidth(Real val) {
-			set(States.ART_WIDTH, val);
+		public void setWidth(War3Real val) {
+			set(State.ART_WIDTH, val);
 		}
 		
 		public Color getColor() {
-			return Color.fromBGRA255((int) get(States.ART_COLOR_BLUE).toFloat() * 255, (int) get(States.ART_COLOR_GREEN).toFloat() * 255, (int) get(States.ART_COLOR_RED).toFloat() * 255, (int) get(States.ART_COLOR_ALPHA).toFloat() * 255);
+			return Color.fromBGRA255((int) get(State.ART_COLOR_BLUE).toFloat() * 255, (int) get(State.ART_COLOR_GREEN).toFloat() * 255, (int) get(State.ART_COLOR_RED).toFloat() * 255, (int) get(State.ART_COLOR_ALPHA).toFloat() * 255);
 		}
 		
 		public void setColor(Color val) {
-			set(States.ART_COLOR_ALPHA, Real.valueOf(((float) val.getAlpha255()) / 255));
-			set(States.ART_COLOR_BLUE, Real.valueOf(((float) val.getBlue255()) / 255));
-			set(States.ART_COLOR_GREEN, Real.valueOf(((float) val.getGreen255()) / 255));
-			set(States.ART_COLOR_RED, Real.valueOf(((float) val.getRed255()) / 255));
+			set(State.ART_COLOR_ALPHA, War3Real.valueOf(((float) val.getAlpha255()) / 255));
+			set(State.ART_COLOR_BLUE, War3Real.valueOf(((float) val.getBlue255()) / 255));
+			set(State.ART_COLOR_GREEN, War3Real.valueOf(((float) val.getGreen255()) / 255));
+			set(State.ART_COLOR_RED, War3Real.valueOf(((float) val.getRed255()) / 255));
 		}
 		
-		public Real getNoiseScale() {
-			return get(States.ART_NOISE_SCALE);
+		public War3Real getNoiseScale() {
+			return get(State.ART_NOISE_SCALE);
 		}
 		
-		public void setNoiseScale(Real val) {
-			set(States.ART_NOISE_SCALE, val);
+		public void setNoiseScale(War3Real val) {
+			set(State.ART_NOISE_SCALE, val);
 		}
 	
-		public Real getTexCoordScale() {
-			return get(States.ART_TEX_COORD_SCALE);
+		public War3Real getTexCoordScale() {
+			return get(State.ART_TEX_COORD_SCALE);
 		}
 		
-		public void setTexCoordScale(Real val) {
-			set(States.ART_TEX_COORD_SCALE, val);
+		public void setTexCoordScale(War3Real val) {
+			set(State.ART_TEX_COORD_SCALE, val);
 		}
 		
-		public Real getDuration() {
-			return get(States.ART_DURATION);
+		public War3Real getDuration() {
+			return get(State.ART_DURATION);
 		}
 		
-		public void setDuration(Real val) {
+		public void setDuration(War3Real val) {
 			//assert (val > 0);
 
-			set(States.ART_DURATION, val);
+			set(State.ART_DURATION, val);
 		}
 		
-		public <T extends DataType> T get(States.State<T> state) {
+		public <T extends DataType> T get(State<T> state) {
 			return (T) get(state.getFieldId());
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			set(state.getFieldId(), val);
 		}
 		
-		public <T extends DataType> void remove(States.State<T> state) {
+		public <T extends DataType> void remove(State<T> state) {
 			super.set(state, null);
 		}
 		
@@ -178,7 +171,7 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 		public Obj(LightningId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -233,9 +226,9 @@ public class LightningSLK extends ObjSLK<LightningSLK, LightningId, LightningSLK
 	}
 	
 	public LightningSLK() {
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (States.State state : States.values()) {
+		for (State state : State.values(State.class)) {
 			addField(state);
 		}
 	}

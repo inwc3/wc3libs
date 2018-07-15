@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AttributeType extends Wc3String {
+public class AttributeType extends War3String {
 	private final static Map<String, AttributeType> _map = new LinkedHashMap<>();
 
 	public final static AttributeType AGI = new AttributeType("AGI");

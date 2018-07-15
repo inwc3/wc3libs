@@ -18,6 +18,7 @@ public class Math {
         return ret;
     }
 
+    @Nonnull
     public static String encode(int val, @Nonnull String map) {
         StringBuilder sb = new StringBuilder();
 

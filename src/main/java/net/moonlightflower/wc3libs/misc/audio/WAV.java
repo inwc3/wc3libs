@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Vector;
 
+import javax.annotation.Nonnull;
 import javax.sound.sampled.*;
 
 public class WAV {
@@ -56,7 +57,7 @@ public class WAV {
 		return ret;
 	}
 	
-	public WAV(File inFile, boolean a) throws LineUnavailableException {
+	public WAV(@Nonnull File inFile, boolean a) throws LineUnavailableException {
 		AudioFormat af = new AudioFormat(RATE, 8, 1, true, true);
 		
 		SourceDataLine line = AudioSystem.getSourceDataLine(af);

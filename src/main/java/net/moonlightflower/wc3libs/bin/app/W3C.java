@@ -22,140 +22,137 @@ public class W3C {
 	public final static File GAME_PATH = new File("war3map.w3c");
 	
 	public static class Camera extends Bin {
-		private static class State<T extends DataType> extends BinState<T> {
-			private static final List<W3C.Camera.State> _values = new ArrayList<>();
+		public static class State<T extends DataType> extends BinState<T> {
+			public final static W3C.Camera.State<Coords2DF> ART_TARGET = new W3C.Camera.State<>("target", Coords2DF.class, new Coords2DF(0F, 0F));
+			public final static W3C.Camera.State<War3Real> ART_Z_OFFSET = new W3C.Camera.State<>("zOffset", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_ROTATION = new W3C.Camera.State<>("rotation", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_ANGLE_OF_ATTACK = new W3C.Camera.State<>("angleOfAttack", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_ROLL = new W3C.Camera.State<>("roll", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_DIST = new W3C.Camera.State<>("dist", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_FIELD_OF_VIEW = new W3C.Camera.State<>("fieldOfView", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_FAR_Z = new W3C.Camera.State<>("farZ", War3Real.class, War3Real.valueOf(10000F));
+			public final static W3C.Camera.State<War3Real> ART_UNKNOWN = new W3C.Camera.State<>("unknown", War3Real.class, War3Real.valueOf(100F));
 
-			public static List<W3C.Camera.State> values() {
-				return _values;
+			public final static W3C.Camera.State<War3String> EDITOR_CINE_NAME = new W3C.Camera.State<>("cineName", War3String.class, War3String.valueOf("unnamed"));
+
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+				super(idString, typeInfo, defVal);
 			}
 
-			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString, T defVal) {
-				super(typeInfo, idString, defVal);
-
-				_values.add(this);
+			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+				super(idString, typeInfo);
 			}
 
-			public State(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString) {
-				this(typeInfo, idString, null);
+			public State(@Nonnull String idString, @Nonnull Class<T> type) {
+				super(idString, type);
 			}
 
-			public State(@Nonnull Class<T> type, @Nonnull String idString) {
-				this(new DataTypeInfo(type), idString);
-			}
-
-			public State(@Nonnull Class<T> type, @Nonnull String idString, T defVal) {
-				this(new DataTypeInfo(type), idString, defVal);
+			public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+				super(idString, type, defVal);
 			}
 		}
-
-		public final static W3C.Camera.State<Coords2DF> ART_TARGET = new W3C.Camera.State<>(Coords2DF.class, "target", new Coords2DF(0F, 0F));
-		public final static W3C.Camera.State<Real> ART_Z_OFFSET = new W3C.Camera.State<>(Real.class, "zOffset", Real.valueOf(0F));
-		public final static W3C.Camera.State<Real> ART_ROTATION = new W3C.Camera.State<>(Real.class, "rotation", Real.valueOf(0F));
-		public final static W3C.Camera.State<Real> ART_ANGLE_OF_ATTACK = new W3C.Camera.State<>(Real.class, "angleOfAttack", Real.valueOf(0F));
-		public final static W3C.Camera.State<Real> ART_ROLL = new W3C.Camera.State<>(Real.class, "roll", Real.valueOf(0F));
-		public final static W3C.Camera.State<Real> ART_DIST = new W3C.Camera.State<>(Real.class, "dist", Real.valueOf(0F));
-		public final static W3C.Camera.State<Real> ART_FIELD_OF_VIEW = new W3C.Camera.State<>(Real.class, "fieldOfView", Real.valueOf(0F));
-		public final static W3C.Camera.State<Real> ART_FAR_Z = new W3C.Camera.State<>(Real.class, "farZ", Real.valueOf(10000F));
-		public final static W3C.Camera.State<Real> ART_UNKNOWN = new W3C.Camera.State<>(Real.class, "unknown", Real.valueOf(100F));
-
-		public final static W3C.Camera.State<Wc3String> EDITOR_CINE_NAME = new W3C.Camera.State<>(Wc3String.class, "cineName", Wc3String.valueOf("unnamed"));
 
 		public <T extends DataType> T get(@Nonnull W3C.Camera.State<T> state) {
-			return state.tryCastVal(super.get(state));
+			try {
+				return state.tryCastVal(super.get(state));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 
-		public <T extends DataType> void set(@Nonnull W3C.Camera.State<T> state, @Nullable T val) {
+		public <T extends DataType> void set(@Nonnull State<T> state, @Nullable T val) {
 			super.set(state, val);
 		}
 
-		public <T extends DataType> void reset(@Nonnull W3C.Camera.State<T> state) {
+		public <T extends DataType> void reset(@Nonnull State<T> state) {
 			super.set(state, state.getDefVal());
 		}
 
 		public void init() {
-			for (State<?> state : State.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
 
 		public Coords2DF getTarget() {
-			return get(ART_TARGET);
+			return get(State.ART_TARGET);
 		}
 		
 		public void setTarget(Coords2DF val) {
-			set(ART_TARGET, val);
+			set(State.ART_TARGET, val);
 		}
 		
-		public Real getZOffset() {
-			return get(ART_Z_OFFSET);
+		public War3Real getZOffset() {
+			return get(State.ART_Z_OFFSET);
 		}
 		
-		public void setZOffset(Real val) {
-			set(ART_Z_OFFSET, val);
+		public void setZOffset(War3Real val) {
+			set(State.ART_Z_OFFSET, val);
 		}
 		
-		public Real getRotation() {
-			return get(ART_ROTATION);
+		public War3Real getRotation() {
+			return get(State.ART_ROTATION);
 		}
 		
-		public void setRotation(Real val) {
-			set(ART_ROTATION, val);
+		public void setRotation(War3Real val) {
+			set(State.ART_ROTATION, val);
 		}
 		
-		public Real getAngleOfAttack() {
-			return get(ART_ANGLE_OF_ATTACK);
+		public War3Real getAngleOfAttack() {
+			return get(State.ART_ANGLE_OF_ATTACK);
 		}
 		
-		public void setAngleOfAttack(Real val) {
-			set(ART_ANGLE_OF_ATTACK, val);
+		public void setAngleOfAttack(War3Real val) {
+			set(State.ART_ANGLE_OF_ATTACK, val);
 		}
 		
-		public Real getRoll() {
-			return get(ART_ROLL);
+		public War3Real getRoll() {
+			return get(State.ART_ROLL);
 		}
 		
-		public void setRoll(Real val) {
-			set(ART_ROLL, val);
+		public void setRoll(War3Real val) {
+			set(State.ART_ROLL, val);
 		}
 		
-		public Real getDist() {
-			return get(ART_DIST);
+		public War3Real getDist() {
+			return get(State.ART_DIST);
 		}
 		
-		public void setDist(Real val) {
-			set(ART_DIST, val);
+		public void setDist(War3Real val) {
+			set(State.ART_DIST, val);
 		}
 		
-		public Real getFieldOfView() {
-			return get(ART_FIELD_OF_VIEW);
+		public War3Real getFieldOfView() {
+			return get(State.ART_FIELD_OF_VIEW);
 		}
 		
-		public void setFieldOfView(Real val) {
-			set(ART_FIELD_OF_VIEW, val);
+		public void setFieldOfView(War3Real val) {
+			set(State.ART_FIELD_OF_VIEW, val);
 		}
 		
-		public Real getFarZ() {
-			return get(ART_FAR_Z);
+		public War3Real getFarZ() {
+			return get(State.ART_FAR_Z);
 		}
 		
-		public void setFarZ(Real val) {
-			set(ART_FAR_Z, val);
+		public void setFarZ(War3Real val) {
+			set(State.ART_FAR_Z, val);
 		}
 		
-		public Real getUnknown() {
-			return get(ART_UNKNOWN);
+		public War3Real getUnknown() {
+			return get(State.ART_UNKNOWN);
 		}
 		
-		public void setUnknown(Real val) {
-			set(ART_UNKNOWN, val);
+		public void setUnknown(War3Real val) {
+			set(State.ART_UNKNOWN, val);
 		}
 		
-		public Wc3String getCineName() {
-			return get(EDITOR_CINE_NAME);
+		public War3String getCineName() {
+			return get(State.EDITOR_CINE_NAME);
 		}
 		
-		public void setCineName(Wc3String val) {
-			set(EDITOR_CINE_NAME, val);
+		public void setCineName(War3String val) {
+			set(State.EDITOR_CINE_NAME, val);
 		}
 
 		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
@@ -191,7 +188,7 @@ public class W3C {
 			setFarZ(stream.readReal("farZ"));
 			setUnknown(stream.readReal("unknown"));
 			
-			setCineName(Wc3String.valueOf(stream.readString("cineName")));
+			setCineName(War3String.valueOf(stream.readString("cineName")));
 		}
 		
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

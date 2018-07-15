@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ArmorSound extends Wc3String {
+public class ArmorSound extends War3String {
 	private final static Map<String, ArmorSound> _nameMap = new LinkedHashMap<>();
 
 	public final static ArmorSound ETHEREAL = new ArmorSound("Ethereal");

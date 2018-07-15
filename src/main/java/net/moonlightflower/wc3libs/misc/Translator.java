@@ -1,17 +1,18 @@
 package net.moonlightflower.wc3libs.misc;
 
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.util.Map;
 
 /**
  * Translates strings based on previously registered vocabulary, you can add txt game files like UI\WorldEditStrings.txt
  */
-public class Translator {
+public class Translator implements Printable {
 	private final TXT _txt = new TXT();
 
 	@Nonnull
@@ -19,60 +20,61 @@ public class Translator {
 		return _txt;
 	}
 	
-	public boolean contains(String key) {
+	public boolean contains(@Nonnull String key) {
 		return _txt.containsKey(FieldId.valueOf(key));
 	}
 	
-	public boolean contains(String sectionName, String key) {
+	public boolean contains(@Nonnull String sectionName, @Nonnull String key) {
 		TXT.Section section = _txt.getSection(TXTSectionId.valueOf(sectionName));
 
 		return section != null && section.containsField(FieldId.valueOf(key));
 
 	}
-	
-	public String get(String key) {
+
+	@Nullable
+	public String get(@Nonnull String key) {
 		try {
 			return _txt.get(FieldId.valueOf(key)).toString();
-		} catch (Exception e) {
+		} catch (TXT.Section.FieldDoesNotExistException ignored) {
 		}
 
 		return null;
 	}
-	
-	public String get(String sectionName, String fieldName) {
+
+	@Nullable
+	public String get(@Nonnull String sectionName, @Nonnull String fieldName) {
 		TXT.Section section = _txt.getSection(TXTSectionId.valueOf(sectionName));
 		
 		if (section == null) return null;
 		
 		try {
 			return section.get(FieldId.valueOf(fieldName)).toString();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		
 		return null;
 	}
 	
-	public void set(String key, String val) {
-		_txt.set(FieldId.valueOf(key), Wc3String.valueOf(val));
+	public void set(@Nonnull String key, @Nonnull String val) {
+		_txt.set(FieldId.valueOf(key), War3String.valueOf(val));
 	}
 
-	public String translate(String key) {
-		if (contains(key)) {
-			return get(key);
-		}
+	@Nullable
+	public String translate(@Nonnull String key) {
+		if (contains(key)) return get(key);
 		
 		return key;
 	}
 
-	public String translate(String sectionName, String val) {		
-		if (contains(sectionName, val)) {
-			return get(sectionName, val);
-		}
+	@Nullable
+	public String translate(@Nonnull String sectionName, @Nonnull String val) {
+		if (contains(sectionName, val)) return get(sectionName, val);
 		
 		return val;
 	}
-	
-	public String translateText(String text) {
+
+	@Nullable
+	public String translateText(@Nonnull String text) {
 		// TODO
 		return text;
 	}
@@ -100,7 +102,7 @@ public class Translator {
 
 					TXT.Section.Field otherField = otherSection.addField(FieldId.valueOf(dataName));
 					
-					otherField.set(Wc3String.valueOf(displayName));
+					otherField.set(War3String.valueOf(displayName));
 				}
 			}
 		}
@@ -109,8 +111,9 @@ public class Translator {
 		
 	}
 	
-	public void print(@Nonnull PrintStream outStream) {
-		_txt.print(outStream);
+	@Override
+	public void print(@Nonnull Printer printer) {
+		_txt.print(printer);
 	}
 	
 	public Translator() {

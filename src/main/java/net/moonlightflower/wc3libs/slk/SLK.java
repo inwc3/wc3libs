@@ -1,14 +1,11 @@
 package net.moonlightflower.wc3libs.slk;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
-import net.moonlightflower.wc3libs.misc.FieldId;
-import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.Mergeable;
-import net.moonlightflower.wc3libs.misc.ObjId;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
+import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 
@@ -18,8 +15,27 @@ import java.io.*;
 import java.util.*;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements
-        Mergeable<Self>, SLKable {
-    public static class FieldData {
+        Mergeable<Self>, Printable {
+    @Override
+    public void print(@Nonnull Printer printer) {
+        printer.print("pivotField " + getPivotField());
+
+        for (Field field : getFields().values()) {
+            printer.beginGroup(field.getFieldId());
+
+            field.print(printer);
+
+            printer.endGroup();
+        }
+    }
+
+    public static class Field implements Printable {
+        private FieldId _fieldId;
+
+        public FieldId getFieldId() {
+            return _fieldId;
+        }
+
         private final DataType _defVal;
 
         @Nullable
@@ -27,18 +43,23 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             return _defVal;
         }
 
-        public FieldData(@Nullable DataType defVal) {
+        public Field(@Nonnull FieldId fieldId, @Nullable DataType defVal) {
+            _fieldId = fieldId;
             _defVal = defVal;
         }
 
+        @Override
+        public void print(@Nonnull Printer printer) {
+            printer.print(_fieldId + "(" + _defVal + ")");
+        }
     }
 
-    private Map<FieldId, FieldData> _fields = new LinkedHashMap<>();
+    private final Map<FieldId, Field> _fields = new LinkedHashMap<>();
 
     private FieldId _pivotField = null;
 
     @Nonnull
-    public Map<FieldId, FieldData> getFields() {
+    public Map<FieldId, Field> getFields() {
         return _fields;
     }
 
@@ -51,14 +72,12 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         return _pivotField;
     }
 
-    public void addField(@Nonnull FieldId field, @Nullable DataType defVal) {
-        FieldData fieldData = new FieldData(defVal);
+    public void addField(@Nonnull FieldId fieldId, @Nullable DataType defVal) {
+        Field field = new Field(fieldId, defVal);
 
-        _fields.putIfAbsent(field, fieldData);
+        _fields.putIfAbsent(fieldId, field);
 
-        if (_pivotField == null) {
-            _pivotField = field;
-        }
+        if (_pivotField == null) _pivotField = fieldId;
     }
 
     public void addField(@Nonnull SLKState state, @Nullable DataType defVal) {
@@ -129,7 +148,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         }
 
         public void setRaw(@Nonnull FieldId field, String val) {
-            set(field, Wc3String.valueOf(val));
+            set(field, War3String.valueOf(val));
         }
 
         public void merge(@Nonnull Obj<? extends ObjId> otherObj, boolean overwrite) {
@@ -227,12 +246,12 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             _pivotField = other.getPivotField();
         }
 
-        for (Map.Entry<FieldId, FieldData> fieldEntry : other.getFields().entrySet()) {
+        for (Map.Entry<FieldId, Field> fieldEntry : other.getFields().entrySet()) {
             FieldId fieldId = fieldEntry.getKey();
-            FieldData fieldData = fieldEntry.getValue();
+            Field field = fieldEntry.getValue();
 
             if (!containsField(fieldId)) {
-                addField(fieldId, fieldData.getDefVal());
+                addField(fieldId, field.getDefVal());
             }
         }
 
@@ -308,21 +327,21 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                         if (valS.substring(0, 1).equals("\"")) {
                             valS = valS.substring(1, valS.length() - 1);
 
-                            val = Wc3String.valueOf(valS);
+                            val = War3String.valueOf(valS);
                         } else {
                             try {
-                                val = Wc3Int.valueOf(Integer.parseInt(valS));
+                                val = War3Int.valueOf(Integer.parseInt(valS));
                             } catch (NumberFormatException e) {
                                 try {
-                                    val = Real.valueOf(Float.parseFloat(valS));
+                                    val = War3Real.valueOf(Float.parseFloat(valS));
                                 } catch (NumberFormatException ignored) {
                                 }
                             }
 
                             if (val == null) {
                                 if (valS.equals("#VALUE!")) skip = true;
-                                if (valS.equals("FALSE")) val = Bool.valueOf(false);
-                                if (valS.equals("TRUE")) val = Bool.valueOf(true);
+                                if (valS.equals("FALSE")) val = War3Bool.valueOf(false);
+                                if (valS.equals("TRUE")) val = War3Bool.valueOf(true);
                             }
                         }
 
@@ -507,10 +526,10 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             _slkCurX = 0;
             _slkCurY = 0;
 
-            writeCell(1, 1, Wc3String.valueOf(_pivotField.toString()));
+            writeCell(1, 1, War3String.valueOf(_pivotField.toString()));
 
             for (Map.Entry<Integer, FieldId> entry : fieldsByX.entrySet()) {
-                writeCell(entry.getKey(), 1, Wc3String.valueOf(entry.getValue().toString()));
+                writeCell(entry.getKey(), 1, War3String.valueOf(entry.getValue().toString()));
             }
 
             int y = 1;
@@ -570,39 +589,39 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
     public static SLK createFromInFile(@Nonnull File inFile, @Nonnull File outFile) throws IOException {
         SLK slk = null;
 
-        if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
+        if (inFile.equals(DoodSLK.GAME_PATH)) {
             slk = new DoodSLK(outFile);
         }
 
-        if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitAbilsSLK.GAME_PATH)) {
             slk = new UnitAbilsSLK(outFile);
         }
-        if (inFile.equals(UnitBalanceSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitBalanceSLK.GAME_PATH)) {
             slk = new UnitBalanceSLK(outFile);
         }
-        if (inFile.equals(UnitDataSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitDataSLK.GAME_PATH)) {
             slk = new UnitDataSLK(outFile);
         }
-        if (inFile.equals(UnitUISLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitUISLK.GAME_PATH)) {
             slk = new UnitUISLK(outFile);
         }
-        if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitWeaponsSLK.GAME_PATH)) {
             slk = new UnitWeaponsSLK(outFile);
         }
 
-        if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
+        if (inFile.equals(ItemSLK.GAME_PATH)) {
             slk = new ItemSLK(outFile);
         }
-        if (inFile.equals(DestructableSLK.GAME_USE_PATH)) {
+        if (inFile.equals(DestructableSLK.GAME_PATH)) {
             slk = new DestructableSLK(outFile);
         }
-        if (inFile.equals(AbilSLK.GAME_USE_PATH)) {
+        if (inFile.equals(AbilSLK.GAME_PATH)) {
             slk = new AbilSLK(outFile);
         }
-        if (inFile.equals(BuffSLK.GAME_USE_PATH)) {
+        if (inFile.equals(BuffSLK.GAME_PATH)) {
             slk = new BuffSLK(outFile);
         }
-        if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UpgradeSLK.GAME_PATH)) {
             slk = new UpgradeSLK(outFile);
         }
 
@@ -613,39 +632,39 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
     public static SLK createFromInFile(@Nonnull File inFile, @Nonnull SLK sourceSlk) {
         SLK slk = null;
 
-        if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
+        if (inFile.equals(DoodSLK.GAME_PATH)) {
             slk = new DoodSLK(sourceSlk);
         }
 
-        if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitAbilsSLK.GAME_PATH)) {
             slk = new UnitAbilsSLK(sourceSlk);
         }
-        if (inFile.equals(UnitBalanceSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitBalanceSLK.GAME_PATH)) {
             slk = new UnitBalanceSLK(sourceSlk);
         }
-        if (inFile.equals(UnitDataSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitDataSLK.GAME_PATH)) {
             slk = new UnitDataSLK(sourceSlk);
         }
-        if (inFile.equals(UnitUISLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitUISLK.GAME_PATH)) {
             slk = new UnitUISLK(sourceSlk);
         }
-        if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitWeaponsSLK.GAME_PATH)) {
             slk = new UnitWeaponsSLK(sourceSlk);
         }
 
-        if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
+        if (inFile.equals(ItemSLK.GAME_PATH)) {
             slk = new ItemSLK(sourceSlk);
         }
-        if (inFile.equals(DestructableSLK.GAME_USE_PATH)) {
+        if (inFile.equals(DestructableSLK.GAME_PATH)) {
             slk = new DestructableSLK(sourceSlk);
         }
-        if (inFile.equals(AbilSLK.GAME_USE_PATH)) {
+        if (inFile.equals(AbilSLK.GAME_PATH)) {
             slk = new AbilSLK(sourceSlk);
         }
-        if (inFile.equals(BuffSLK.GAME_USE_PATH)) {
+        if (inFile.equals(BuffSLK.GAME_PATH)) {
             slk = new BuffSLK(sourceSlk);
         }
-        if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UpgradeSLK.GAME_PATH)) {
             slk = new UpgradeSLK(sourceSlk);
         }
 
@@ -656,39 +675,39 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
     public static SLK createFromInFile(@Nonnull File inFile) {
         SLK slk = null;
 
-        if (inFile.equals(DoodSLK.GAME_USE_PATH)) {
+        if (inFile.equals(DoodSLK.GAME_PATH)) {
             slk = new DoodSLK();
         }
 
-        if (inFile.equals(UnitAbilsSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitAbilsSLK.GAME_PATH)) {
             slk = new UnitAbilsSLK();
         }
-        if (inFile.equals(UnitBalanceSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitBalanceSLK.GAME_PATH)) {
             slk = new UnitBalanceSLK();
         }
-        if (inFile.equals(UnitDataSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitDataSLK.GAME_PATH)) {
             slk = new UnitDataSLK();
         }
-        if (inFile.equals(UnitUISLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitUISLK.GAME_PATH)) {
             slk = new UnitUISLK();
         }
-        if (inFile.equals(UnitWeaponsSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UnitWeaponsSLK.GAME_PATH)) {
             slk = new UnitWeaponsSLK();
         }
 
-        if (inFile.equals(ItemSLK.GAME_USE_PATH)) {
+        if (inFile.equals(ItemSLK.GAME_PATH)) {
             slk = new ItemSLK();
         }
-        if (inFile.equals(DestructableSLK.GAME_USE_PATH)) {
+        if (inFile.equals(DestructableSLK.GAME_PATH)) {
             slk = new DestructableSLK();
         }
-        if (inFile.equals(AbilSLK.GAME_USE_PATH)) {
+        if (inFile.equals(AbilSLK.GAME_PATH)) {
             slk = new AbilSLK();
         }
-        if (inFile.equals(BuffSLK.GAME_USE_PATH)) {
+        if (inFile.equals(BuffSLK.GAME_PATH)) {
             slk = new BuffSLK();
         }
-        if (inFile.equals(UpgradeSLK.GAME_USE_PATH)) {
+        if (inFile.equals(UpgradeSLK.GAME_PATH)) {
             slk = new UpgradeSLK();
         }
 

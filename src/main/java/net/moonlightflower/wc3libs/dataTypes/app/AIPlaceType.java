@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 //aiBuffer
-public class AIPlaceType extends Wc3String {
+public class AIPlaceType extends War3String {
 	private static Map<Integer, AIPlaceType> _indexMap = new LinkedHashMap<>();
 	private static Map<String, AIPlaceType> _nameMap = new LinkedHashMap<>();
 

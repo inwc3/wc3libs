@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
+import com.esotericsoftware.minlog.Log;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -51,11 +52,9 @@ public class GamePrefetch {
 		public abstract void onError();
 		public abstract void onFinish(MpqPort.Out.FileExport outFile);
 
-		private static Queue<Obj> _toFinish = new ArrayDeque<>();
+		private final static Queue<Obj> _toFinish = new ArrayDeque<>();
 		
-		public Obj(File inFile) {
-			if (inFile == null) throw new RuntimeException("no inFile");
-			
+		public Obj(@Nonnull File inFile) {
 			_inFile = inFile;
 		}
 	}
@@ -79,8 +78,6 @@ public class GamePrefetch {
 				
 				port.add(inFile, outFile, false);
 			}
-			
-			Result result = null;
 			
 			try {
 				_result = port.commit(MpqPort.getWc3Mpqs());
@@ -113,7 +110,7 @@ public class GamePrefetch {
 			}
 		}
 		
-		public PortTask(List<File> procFiles, Collection<Obj> objs, FinishedHandler finishedHandler) {
+		public PortTask(@Nonnull List<File> procFiles, @Nonnull Collection<Obj> objs, @Nonnull FinishedHandler finishedHandler) {
 			super(finishedHandler);
 			
 			_procFiles = procFiles;
@@ -121,10 +118,10 @@ public class GamePrefetch {
 		}
 	}
 
-	private Queue<Obj> _objs = new LinkedList<>();
-	private List<File> _loadingFiles = new ArrayList<>();
+	private final Queue<Obj> _objs = new LinkedList<>();
+	private final List<File> _loadingFiles = new ArrayList<>();
 	
-	private static Map<File, MpqPort.Out.FileExport> _cache = new LinkedHashMap<>();
+	private final static Map<File, MpqPort.Out.FileExport> _cache = new LinkedHashMap<>();
 	
 	private boolean _started = false;
 	
@@ -133,7 +130,7 @@ public class GamePrefetch {
 	
 	private Timeline _timeline;
 	
-	public void add(Obj obj) {
+	public void add(@Nonnull Obj obj) {
 		File inFile = obj.getInFile();
 		
 		if (new File(STORAGE_DIR, inFile.toString()).exists()) {
@@ -208,7 +205,7 @@ removeObjs.addAll(_objs);
 		_objs.clear();
 	}
 	
-	private static GamePrefetch _instance = new GamePrefetch();
+	private final static GamePrefetch _instance = new GamePrefetch();
 	
 	public static GamePrefetch getInstance() {
 		return _instance;
@@ -216,9 +213,8 @@ removeObjs.addAll(_objs);
 	
 	private GamePrefetch() {}
 	
-	public static void preload(File inFile) {
+	public static void preload(@Nonnull File inFile) {
 		getInstance().add(new Obj(inFile) {
-
 			@Override
 			public void onError() {
 				// TODO Auto-generated method stub
@@ -228,13 +224,12 @@ removeObjs.addAll(_objs);
 			@Override
 			public void onFinish(FileExport outFile) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
 		});
 	}
 	
-	public static void preload(String inFileS) {
+	public static void preload(@Nonnull String inFileS) {
 		preload(new File(inFileS));
 	}
 	
@@ -244,7 +239,7 @@ removeObjs.addAll(_objs);
 			
 			getInstance().clear();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e.getMessage(), e);
 		}
 	}
 }

@@ -2,9 +2,11 @@ package net.moonlightflower.wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Size;
+import net.moonlightflower.wc3libs.misc.State;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
@@ -33,14 +35,42 @@ public class W3I {
         _fileVersion = fileVersion;
     }*/
 
-    private int _savesAmount = 0;
+    public static class State<T extends DataType> extends BinState<T> {
+        public static State<War3Int> SAVES_AMOUNT = new State<>("savesAmount", War3Int.class);
 
-    public int getSavesAmount() {
-        return _savesAmount;
+        public State(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+            super(fieldIdS, typeInfo, defVal);
+        }
+
+        public State(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo) {
+            super(fieldIdS, typeInfo);
+        }
+
+        public State(@Nonnull String idString, @Nonnull Class<T> type) {
+            super(idString, type);
+        }
+
+        public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+            super(idString, type, defVal);
+        }
     }
 
-    public void setSavesAmount(int val) {
-        _savesAmount = val;
+    private final Map<State, DataType> _vals = new LinkedHashMap<>();
+
+    public <T extends DataType> T get(@Nonnull State<T> state) {
+        return state.getVal(_vals.get(state));
+    }
+
+    public <T extends DataType> void set(@Nonnull State<T> state, T val) {
+        _vals.put(state, val);
+    }
+
+    public War3Int getSavesAmount() {
+        return get(State.SAVES_AMOUNT);
+    }
+
+    public void setSavesAmount(@Nonnull War3Int val) {
+        set(State.SAVES_AMOUNT, val);
     }
 
     private int _editorVersion = 0;
@@ -152,6 +182,7 @@ public class W3I {
         return _height;
     }
 
+    @Nonnull
     public Bounds getWorldBounds() {
         Size size = new Size(getWidth() + getMargins().getMinX() + getMargins().getMaxX(), getHeight() + getMargins().getMinY() + getMargins().getMaxY());
 
@@ -507,6 +538,7 @@ public class W3I {
             return _index;
         }
 
+        @Nullable
         public static GameDataSet valueOf(int index) {
             return _map.get(index);
         }
@@ -618,7 +650,7 @@ public class W3I {
             _type = val;
         }
 
-        public static class UnitRace extends Wc3Int {
+        public static class UnitRace extends War3Int {
             private final static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
 
             public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF");
@@ -849,6 +881,7 @@ public class W3I {
         return _players;
     }
 
+    @Nullable
     public Player getPlayerFromNum(int num) {
         for (Player p : _players) if (p.getNum() == num) return p;
 
@@ -859,6 +892,7 @@ public class W3I {
         _players.add(val);
     }
 
+    @Nonnull
     public Player addPlayer() {
         Player player = new Player();
 
@@ -1009,11 +1043,11 @@ public class W3I {
         }
     }
 
-    private List<Force> _forces = new ArrayList<>();
+    private final List<Force> _forces = new ArrayList<>();
 
     @Nonnull
     public List<Force> getForces() {
-        return _forces;
+        return new ArrayList<>(_forces);
     }
 
     private void addForce(@Nonnull Force val) {
@@ -1121,7 +1155,7 @@ public class W3I {
         }
     }
 
-    private List<UpgradeMod> _upgradeMods = new ArrayList<>();
+    private final List<UpgradeMod> _upgradeMods = new ArrayList<>();
 
     @Nonnull
     public List<UpgradeMod> getUpgradeMods() {
@@ -1210,7 +1244,7 @@ public class W3I {
 
     @Nonnull
     public List<TechMod> getTechMods() {
-        return _techMods;
+        return new ArrayList<>(_techMods);
     }
 
     private void addTechMod(@Nonnull TechMod val) {
@@ -1259,7 +1293,7 @@ public class W3I {
                 return _val;
             }
 
-            private static Map<Integer, PositionType> _valToPositionTypeMap = new LinkedHashMap<>();
+            private final static Map<Integer, PositionType> _valToPositionTypeMap = new LinkedHashMap<>();
 
             PositionType(int val) {
                 _val = val;
@@ -1363,6 +1397,7 @@ public class W3I {
 
         private List<Set> _sets = new ArrayList<>();
 
+        @Nonnull
         public List<Set> getSets() {
             return new ArrayList<>(_sets);
         }
@@ -1371,6 +1406,7 @@ public class W3I {
             _sets.add(val);
         }
 
+        @Nonnull
         public Set addSet() {
             Set set = new Set();
 
@@ -1554,6 +1590,11 @@ public class W3I {
 
         private List<Set> _sets = new ArrayList<>();
 
+        @Nonnull
+        public List<Set> getSets() {
+            return new ArrayList<>(_sets);
+        }
+
         private void addSet(@Nonnull Set val) {
             _sets.add(val);
         }
@@ -1622,7 +1663,7 @@ public class W3I {
 
     @Nonnull
     public List<ItemTable> getItemTables() {
-        return _itemTables;
+        return new ArrayList<>(_itemTables);
     }
 
     private void addItemTable(@Nonnull ItemTable val) {
@@ -1699,7 +1740,7 @@ public class W3I {
 
         stream.checkFormatVersion(EncodingFormat.W3I_0x12.getVersion(), version);
 
-        setSavesAmount(stream.readInt32("savesAmount"));
+        set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
         setEditorVersion(stream.readInt32("editorVersion"));
         setMapName(stream.readString("mapName"));
         setMapAuthor(stream.readString("mapAuthor"));
@@ -1837,7 +1878,7 @@ public class W3I {
 
         stream.checkFormatVersion(EncodingFormat.W3I_0x19.getVersion(), version);
 
-        setSavesAmount(stream.readInt32("savesAmount"));
+        set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
         setEditorVersion(stream.readInt32("editorVersion"));
         setMapName(stream.readString("mapName"));
         setMapAuthor(stream.readString("mapAuthor"));
@@ -1876,9 +1917,9 @@ public class W3I {
         ));
 
         TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
-        Real terrainFogZStart = stream.readReal("terrainFogZStart");
-        Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
-        Real terrainFogDensity = stream.readReal("terrainFogDensity");
+        War3Real terrainFogZStart = stream.readReal("terrainFogZStart");
+        War3Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
+        War3Real terrainFogDensity = stream.readReal("terrainFogDensity");
         Color terrainFogColor = Color.fromRGBA255(stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"), stream.readUByte("terrainFogBlue"), stream.readUByte("terrainFogAlpha"));
 
         if (terrainFogType != null) setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));

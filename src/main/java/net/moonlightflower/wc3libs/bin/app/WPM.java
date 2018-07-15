@@ -217,6 +217,8 @@ public class WPM extends Raster<FlagsInt> {
 	}
 	
 	public WPM() {
+		super(new Bounds(0, 0, 0, 0));
+
 		_pathMap = new PathMap(new Bounds(new Size(0, 0), new Coords2DI(0, 0)));
 	}
 

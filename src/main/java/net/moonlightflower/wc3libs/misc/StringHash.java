@@ -1,13 +1,13 @@
 package net.moonlightflower.wc3libs.misc;
 
+import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 
 public class StringHash {
-
     private static void mix(int[] abc){
-        int a=abc[0];
-        int b=abc[1];
-        int c=abc[2];
+        int a = abc[0];
+        int b = abc[1];
+        int c = abc[2];
 
         a -= b; a -= c; a ^= (c >>> 13);
         b -= c; b -= a; b ^= (a <<   8);
@@ -26,15 +26,16 @@ public class StringHash {
 
     private static int toi(byte b){
         int i = b;
-        if(b < 0)
-            i+=256;
+
+        if (b < 0) i += 256;
+
         return i;
     }
 
-    private static int hash(byte[] k, int length, int initval){
+    private static int hash(byte[] k, int length, int initVal){
         int idx = 0;
         int len = length;
-        int[] abc = {0x9e3779b9, 0x9e3779b9, initval};
+        int[] abc = {0x9e3779b9, 0x9e3779b9, initVal};
 
         while(len >= 12){
             abc[0] = abc[0] + (toi(k[0 +idx]) + (toi(k[1 +idx]) << 8) + (toi(k[ 2 +idx]) << 16) + (toi(k[ 3 +idx]) << 24));
@@ -46,6 +47,7 @@ public class StringHash {
         }
 
         abc[2] += length;
+
         switch(len){
             case 11: abc[2] =  abc[2] + (toi(k[idx +10]) << 24);
             case 10: abc[2] =  abc[2] + (toi(k[idx + 9]) << 16);
@@ -61,21 +63,23 @@ public class StringHash {
             case 2:  abc[0] =  abc[0] + (toi(k[idx + 1]) <<  8);
             case 1:  abc[0] =  abc[0] +  toi(k[idx + 0]       );
         }
+
         mix(abc);
+
         return abc[2];
     }
 
-    public static int hash(String s) throws UnsupportedEncodingException {
-        if(s.isEmpty()){
-            return 0;
-        }
+    public static int hash(@Nonnull String s) throws UnsupportedEncodingException {
+        if (s.isEmpty()) return 0;
+
         byte[] k = s.getBytes("UTF-8");
-        for(int i=0; i != k.length; i++){
-            if(k[i] < 'a' || k[i] >'z'){
-                if(k[i] == '/'){
+
+        for (int i=0; i != k.length; i++) {
+            if (k[i] < 'a' || k[i] >'z') {
+                if (k[i] == '/') {
                     k[i] = '\\';
                 }
-            }else{
+            } else {
                 k[i] = (byte) (k[i] - 32);
             }
         }

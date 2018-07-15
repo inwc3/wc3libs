@@ -39,8 +39,8 @@ public class W3V {
 //			}
 //		}
 //
-//		public final static State<Wc3String> NAME = new State<>(Wc3String.class, "name");
-//		public final static State<Wc3Int> RESERVED = new State<>(Wc3Int.class, "reserved");
+//		public final static State<War3String> NAME = new State<>(War3String.class, "name");
+//		public final static State<War3Int> RESERVED = new State<>(War3Int.class, "reserved");
 //
 //		public <T extends DataType> T get(State<T> state) {
 //			return state.tryCastVal(super.get(state));
@@ -89,8 +89,8 @@ public class W3V {
 //				}
 //			}
 //
-//			public final static State<Wc3String> NAME = new State<>(Wc3String.class, "name");
-//			public final static State<Wc3Int> CUSTOM_VAR_TYPES = new State<>(Wc3Int.class, "customVarTypes");
+//			public final static State<War3String> NAME = new State<>(War3String.class, "name");
+//			public final static State<War3Int> CUSTOM_VAR_TYPES = new State<>(War3Int.class, "customVarTypes");
 //
 //			public <T extends DataType> T get(State<T> state) {
 //				return state.tryCastVal(super.get(state));
@@ -139,7 +139,7 @@ public class W3V {
 //					}
 //				}
 //
-//				public final static State<Wc3String> LABEL = new State<>(Wc3String.class, "label");
+//				public final static State<War3String> LABEL = new State<>(War3String.class, "label");
 //
 //				public <T extends DataType> T get(State<T> state) {
 //					return state.tryCastVal(super.get(state));
@@ -159,11 +159,11 @@ public class W3V {
 //			}
 //
 //			public static class IntEntry extends Entry {
-//				public final static State<Wc3Int> VAL = new State<>(Wc3Int.class, "val");
+//				public final static State<War3Int> VAL = new State<>(War3Int.class, "val");
 //
 //				@Override
 //				public String toString() {
-//					return Integer.toString(((Wc3Int) get(VAL)).toInt());
+//					return Integer.toString(((War3Int) get(VAL)).toInt());
 //				}
 //
 //				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -222,11 +222,11 @@ public class W3V {
 //			}
 //
 //			public static class RealEntry extends Entry {
-//				public final static State<Real> VAL = new State<>(Real.class, "val");
+//				public final static State<War3Real> VAL = new State<>(War3Real.class, "val");
 //
 //				@Override
 //				public String toString() {
-//					return Float.toString(((Real) get(VAL)).toFloat());
+//					return Float.toString(((War3Real) get(VAL)).toFloat());
 //				}
 //
 //				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -285,16 +285,16 @@ public class W3V {
 //			}
 //
 //			public static class BoolEntry extends Entry {
-//				public final static State<Bool> VAL = new State<>(Bool.class, "val");
+//				public final static State<War3Bool> VAL = new State<>(War3Bool.class, "val");
 //
 //				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //					set(LABEL, stream.readWc3String());
-//					set(VAL, Bool.valueOf(((stream.readInt32()) > 0)));
+//					set(VAL, War3Bool.valueOf(((stream.readInt32()) > 0)));
 //				}
 //
 //				public void write_0x0(Wc3BinInputStream stream) {
 //					stream.writeString(get(LABEL));
-//					stream.writeInt(((Bool) get(VAL)).getVal() ? 1 : 0);
+//					stream.writeInt(((War3Bool) get(VAL)).getVal() ? 1 : 0);
 //				}
 //
 //				public void read(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
@@ -318,7 +318,7 @@ public class W3V {
 //
 //				@Override
 //				public String toString() {
-//					return Boolean.toString(((Bool) get(VAL)).getVal());
+//					return Boolean.toString(((War3Bool) get(VAL)).getVal());
 //				}
 //
 //				public BoolEntry(Wc3BinInputStream stream, EncodingFormat format) throws BinInputStream.StreamException {
@@ -349,9 +349,9 @@ public class W3V {
 //
 //			public static class UnitEntry extends Entry {
 //				public final static State<UnitId> ID = new State<>(UnitId.class, "id");
-//				public final static State<Wc3Int> EXP = new State<>(Wc3Int.class, "exp");
-//				public final static State<Wc3Int> LEVEL = new State<>(Wc3Int.class, "level");
-//				public final static State<Wc3Int> UNUSED_SKILL_PTS = new State<>(Wc3Int.class, "unusedSkillPts");
+//				public final static State<War3Int> EXP = new State<>(War3Int.class, "exp");
+//				public final static State<War3Int> LEVEL = new State<>(War3Int.class, "level");
+//				public final static State<War3Int> UNUSED_SKILL_PTS = new State<>(War3Int.class, "unusedSkillPts");
 //
 //				public static class InvSlot extends Bin {
 //					private static class State<T extends DataType> extends BinState<T> {
@@ -401,8 +401,8 @@ public class W3V {
 //					}
 //
 //					public final static State<ItemId> ID = new State<>(ItemId.class, "id");
-//					public final static State<Wc3Int> CHARGES = new State<>(Wc3Int.class, "charges");
-//					public final static State<Wc3Int> UNKNOWN = new State<>(Wc3Int.class, "unknown");
+//					public final static State<War3Int> CHARGES = new State<>(War3Int.class, "charges");
+//					public final static State<War3Int> UNKNOWN = new State<>(War3Int.class, "unknown");
 //
 //					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //						set(LABEL, ItemId.valueOf(stream.readId()));
@@ -509,7 +509,7 @@ public class W3V {
 //					}
 //
 //					public final static State<AbilId> ID = new State<>(AbilId.class, "id");
-//					public final static State<Wc3Int> LEVEL = new State<>(Wc3Int.class, "level");
+//					public final static State<War3Int> LEVEL = new State<>(War3Int.class, "level");
 //
 //					public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {
 //						set(ID, AbilId.valueOf(stream.readId()));
@@ -691,11 +691,11 @@ public class W3V {
 //			}
 //
 //			public static class StringEntry extends Entry {
-//				public final static State<Wc3String> VAL = new State<>(Wc3String.class, "val");
+//				public final static State<War3String> VAL = new State<>(War3String.class, "val");
 //
 //				@Override
 //				public String toString() {
-//					return ((Wc3String) get(VAL)).getVal();
+//					return ((War3String) get(VAL)).getVal();
 //				}
 //
 //				public void read_0x0(Wc3BinInputStream stream) throws BinInputStream.StreamException {

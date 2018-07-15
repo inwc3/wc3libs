@@ -10,93 +10,86 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("TerrainArt\\Water.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("TerrainArt\\Water.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<WaterId> OBJ_ID = new State<>("waterID", WaterId.class);
-		
+
 		public final static State<AlphaMode> ALPHA_MODE = new State<>("alphaMode", AlphaMode.class);
-		public final static State<Wc3Int> CELLS = new State<>("cells", Wc3Int.class);
-		public final static State<Wc3Int> D_MAX_ALPHA = new State<>("DmaxA", Wc3Int.class);
-		public final static State<Wc3Int> D_MAX_BLUE = new State<>("DmaxB", Wc3Int.class);
-		public final static State<Wc3Int> D_MAX_GREEN = new State<>("DmaxG", Wc3Int.class);
-		public final static State<Wc3Int> D_MAX_RED = new State<>("DmaxR", Wc3Int.class);
-		public final static State<Wc3Int> D_MIN_ALPHA = new State<>("DminA", Wc3Int.class);
-		public final static State<Wc3Int> D_MIN_BLUE = new State<>("DminB", Wc3Int.class);
-		public final static State<Wc3Int> D_MIN_GREEN = new State<>("DminG", Wc3Int.class);
-		public final static State<Wc3Int> D_MIN_RED = new State<>("DminR", Wc3Int.class);
-		public final static State<Real> HEIGHT = new State<>("height", Real.class);
-		public final static State<Bool> IMPASSABLE = new State<>("impassable", Bool.class);
-		public final static State<Bool> LIGHTING = new State<>("lighting", Bool.class);
-		public final static State<Real> MAX_X = new State<>("maxX", Real.class);
-		public final static State<Real> MAX_Y = new State<>("maxY", Real.class);
-		public final static State<Real> MAX_Z = new State<>("maxZ", Real.class);
-		public final static State<Real> MIN_X = new State<>("minX", Real.class);
-		public final static State<Real> MIN_Y = new State<>("minX", Real.class);
-		public final static State<Real> MIN_Z = new State<>("minX", Real.class);
-		public final static State<Wc3Int> MINIMAP_COLOR_ALPHA = new State<>("mmAlpha", Wc3Int.class);
-		public final static State<Wc3Int> MINIMAP_COLOR_BLUE = new State<>("mmBlue", Wc3Int.class);
-		public final static State<Wc3Int> MINIMAP_COLOR_GREEN = new State<>("mmGreen", Wc3Int.class);
-		public final static State<Wc3Int> MINIMAP_COLOR_RED = new State<>("mmRed", Wc3Int.class);
-		public final static State<Real> RATE_X = new State<>("rateX", Real.class);
-		public final static State<Real> RATE_Y = new State<>("rateY", Real.class);
-		public final static State<Real> RATE_Z = new State<>("rateZ", Real.class);
-		public final static State<Real> REV_X = new State<>("revX", Real.class);
-		public final static State<Real> REV_Y = new State<>("revY", Real.class);
-		public final static State<Wc3Int> S_MAX_ALPHA = new State<>("SmaxA", Wc3Int.class);
-		public final static State<Wc3Int> S_MAX_BLUE = new State<>("SmaxB", Wc3Int.class);
-		public final static State<Wc3Int> S_MAX_GREEN = new State<>("SmaxG", Wc3Int.class);
-		public final static State<Wc3Int> S_MAX_RED = new State<>("SmaxR", Wc3Int.class);
-		public final static State<Wc3Int> S_MIN_ALPHA = new State<>("SminA", Wc3Int.class);
-		public final static State<Wc3Int> S_MIN_BLUE = new State<>("SminB", Wc3Int.class);
-		public final static State<Wc3Int> S_MIN_GREEN = new State<>("SminG", Wc3Int.class);
-		public final static State<Wc3Int> S_MIN_RED = new State<>("SminR", Wc3Int.class);
-		public final static State<Bool> SHORE_IN_FOG = new State<>("shoreInFog", Bool.class);
-		public final static State<Wc3String> SHORE_DIR = new State<>("shoreDir", Wc3String.class);
-		public final static State<Wc3String> SHORE_IC_FILE = new State<>("shoreICFile", Wc3String.class);
-		public final static State<Real> SHORE_IC_VAR = new State<>("shoreICVar", Real.class);
-		public final static State<Wc3String> SHORE_OC_FILE = new State<>("shoreOCFile", Wc3String.class);
-		public final static State<Real> SHORE_OC_VAR = new State<>("shoreOCVar", Real.class);
-		public final static State<Wc3String> SHORE_S_FILE = new State<>("shoreSFile", Wc3String.class);
-		public final static State<Real> SHORE_S_VAR = new State<>("shoreSVar", Real.class);
-		public final static State<Wc3String> TEX_FILE = new State<>("texFile", Wc3String.class);
-		public final static State<Wc3Int> TEX_NUM = new State<>("numTex", Wc3Int.class);
-		public final static State<Real> TEX_RATE = new State<>("texRate", Real.class);
-		public final static State<Real> TEX_OFFSET = new State<>("texOffset", Real.class);
+		public final static State<War3Int> CELLS = new State<>("cells", War3Int.class);
+		public final static State<War3Int> D_MAX_ALPHA = new State<>("DmaxA", War3Int.class);
+		public final static State<War3Int> D_MAX_BLUE = new State<>("DmaxB", War3Int.class);
+		public final static State<War3Int> D_MAX_GREEN = new State<>("DmaxG", War3Int.class);
+		public final static State<War3Int> D_MAX_RED = new State<>("DmaxR", War3Int.class);
+		public final static State<War3Int> D_MIN_ALPHA = new State<>("DminA", War3Int.class);
+		public final static State<War3Int> D_MIN_BLUE = new State<>("DminB", War3Int.class);
+		public final static State<War3Int> D_MIN_GREEN = new State<>("DminG", War3Int.class);
+		public final static State<War3Int> D_MIN_RED = new State<>("DminR", War3Int.class);
+		public final static State<War3Real> HEIGHT = new State<>("height", War3Real.class);
+		public final static State<War3Bool> IMPASSABLE = new State<>("impassable", War3Bool.class);
+		public final static State<War3Bool> LIGHTING = new State<>("lighting", War3Bool.class);
+		public final static State<War3Real> MAX_X = new State<>("maxX", War3Real.class);
+		public final static State<War3Real> MAX_Y = new State<>("maxY", War3Real.class);
+		public final static State<War3Real> MAX_Z = new State<>("maxZ", War3Real.class);
+		public final static State<War3Real> MIN_X = new State<>("minX", War3Real.class);
+		public final static State<War3Real> MIN_Y = new State<>("minX", War3Real.class);
+		public final static State<War3Real> MIN_Z = new State<>("minX", War3Real.class);
+		public final static State<War3Int> MINIMAP_COLOR_ALPHA = new State<>("mmAlpha", War3Int.class);
+		public final static State<War3Int> MINIMAP_COLOR_BLUE = new State<>("mmBlue", War3Int.class);
+		public final static State<War3Int> MINIMAP_COLOR_GREEN = new State<>("mmGreen", War3Int.class);
+		public final static State<War3Int> MINIMAP_COLOR_RED = new State<>("mmRed", War3Int.class);
+		public final static State<War3Real> RATE_X = new State<>("rateX", War3Real.class);
+		public final static State<War3Real> RATE_Y = new State<>("rateY", War3Real.class);
+		public final static State<War3Real> RATE_Z = new State<>("rateZ", War3Real.class);
+		public final static State<War3Real> REV_X = new State<>("revX", War3Real.class);
+		public final static State<War3Real> REV_Y = new State<>("revY", War3Real.class);
+		public final static State<War3Int> S_MAX_ALPHA = new State<>("SmaxA", War3Int.class);
+		public final static State<War3Int> S_MAX_BLUE = new State<>("SmaxB", War3Int.class);
+		public final static State<War3Int> S_MAX_GREEN = new State<>("SmaxG", War3Int.class);
+		public final static State<War3Int> S_MAX_RED = new State<>("SmaxR", War3Int.class);
+		public final static State<War3Int> S_MIN_ALPHA = new State<>("SminA", War3Int.class);
+		public final static State<War3Int> S_MIN_BLUE = new State<>("SminB", War3Int.class);
+		public final static State<War3Int> S_MIN_GREEN = new State<>("SminG", War3Int.class);
+		public final static State<War3Int> S_MIN_RED = new State<>("SminR", War3Int.class);
+		public final static State<War3Bool> SHORE_IN_FOG = new State<>("shoreInFog", War3Bool.class);
+		public final static State<War3String> SHORE_DIR = new State<>("shoreDir", War3String.class);
+		public final static State<War3String> SHORE_IC_FILE = new State<>("shoreICFile", War3String.class);
+		public final static State<War3Real> SHORE_IC_VAR = new State<>("shoreICVar", War3Real.class);
+		public final static State<War3String> SHORE_OC_FILE = new State<>("shoreOCFile", War3String.class);
+		public final static State<War3Real> SHORE_OC_VAR = new State<>("shoreOCVar", War3Real.class);
+		public final static State<War3String> SHORE_S_FILE = new State<>("shoreSFile", War3String.class);
+		public final static State<War3Real> SHORE_S_VAR = new State<>("shoreSVar", War3Real.class);
+		public final static State<War3String> TEX_FILE = new State<>("texFile", War3String.class);
+		public final static State<War3Int> TEX_NUM = new State<>("numTex", War3Int.class);
+		public final static State<War3Real> TEX_RATE = new State<>("texRate", War3Real.class);
+		public final static State<War3Real> TEX_OFFSET = new State<>("texOffset", War3Real.class);
+
+		public State(String idString, DataTypeInfo typeInfo, T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(String idString, DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(String idString, Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(String idString, Class<T> type, T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<WaterId> {
@@ -109,14 +102,14 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -126,247 +119,252 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 			_stateVals.clear();
 		}
 
-		public Real getHeight() {
-			return get(States.HEIGHT);
+		public War3Real getHeight() {
+			return get(State.HEIGHT);
 		}
 		
-		public void setHeight(Real val) {
-			set(States.HEIGHT, val);
+		public void setHeight(War3Real val) {
+			set(State.HEIGHT, val);
 		}
 		
-		public Bool getImpassable() {
-			return get(States.IMPASSABLE);
+		public War3Bool getImpassable() {
+			return get(State.IMPASSABLE);
 		}
 		
-		public void setImpassable(Bool val) {
-			set(States.IMPASSABLE, val);
+		public void setImpassable(War3Bool val) {
+			set(State.IMPASSABLE, val);
 		}
 		
 		public Path getTex() {
-			return Paths.get(get(States.TEX_FILE).toString());
+			return Paths.get(get(State.TEX_FILE).toString());
 		}
 		
 		public void setTex(Path val) {
-			set(States.TEX_FILE, Wc3String.valueOf(val.toString()));
+			set(State.TEX_FILE, War3String.valueOf(val.toString()));
 		}
 		
 		private Color _minimapColor = Color.fromBGRA255(0, 0, 0, 0);
 		
 		public Color getMinimapColor() {
-			return Color.fromBGRA255(get(States.MINIMAP_COLOR_BLUE).toInt(), get(States.MINIMAP_COLOR_GREEN).toInt(), get(States.MINIMAP_COLOR_RED).toInt(), get(States.MINIMAP_COLOR_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.MINIMAP_COLOR_BLUE).toInt(), get(State.MINIMAP_COLOR_GREEN).toInt(), get(State.MINIMAP_COLOR_RED).toInt(), get(State.MINIMAP_COLOR_ALPHA).toInt());
 		}
 		
 		public void setMinimapColor(Color val) {
-			set(States.MINIMAP_COLOR_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
-			set(States.MINIMAP_COLOR_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.MINIMAP_COLOR_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.MINIMAP_COLOR_RED, Wc3Int.valueOf(val.getRed255()));
+			set(State.MINIMAP_COLOR_ALPHA, War3Int.valueOf(val.getAlpha255()));
+			set(State.MINIMAP_COLOR_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.MINIMAP_COLOR_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.MINIMAP_COLOR_RED, War3Int.valueOf(val.getRed255()));
 		}
 		
-		public Wc3Int getNumTex() {
-			return get(States.TEX_NUM);
+		public War3Int getNumTex() {
+			return get(State.TEX_NUM);
 		}
 		
-		public void setNumTex(Wc3Int val) {
-			set(States.TEX_NUM, val);
+		public void setNumTex(War3Int val) {
+			set(State.TEX_NUM, val);
 		}
 		
-		public Real getTexOffset() {
-			return get(States.TEX_OFFSET);
+		public War3Real getTexOffset() {
+			return get(State.TEX_OFFSET);
 		}
 		
-		public void setTexOffset(Real val) {
-			set(States.TEX_OFFSET, val);
+		public void setTexOffset(War3Real val) {
+			set(State.TEX_OFFSET, val);
 		}
 		
-		public Real getTexRate() {
-			return get(States.TEX_RATE);
+		public War3Real getTexRate() {
+			return get(State.TEX_RATE);
 		}
 		
-		public void setTexRate(Real val) {
-			set(States.TEX_RATE, val);
+		public void setTexRate(War3Real val) {
+			set(State.TEX_RATE, val);
 		}
 		
 		public AlphaMode getAlphaMode() {
-			return get(States.ALPHA_MODE);
+			return get(State.ALPHA_MODE);
 		}
 		
 		public void setAlphaMode(AlphaMode val) {
-			set(States.ALPHA_MODE, val);
+			set(State.ALPHA_MODE, val);
 		}
 		
-		public Bool getLighting() {
-			return get(States.LIGHTING);
+		public War3Bool getLighting() {
+			return get(State.LIGHTING);
 		}
 		
-		public void setLighting(Bool val) {
-			set(States.LIGHTING, val);
+		public void setLighting(War3Bool val) {
+			set(State.LIGHTING, val);
 		}
 		
-		public Wc3Int getCells() {
-			return get(States.CELLS);
+		public War3Int getCells() {
+			return get(State.CELLS);
 		}
 		
-		public void setCells(Wc3Int val) {
-			set(States.CELLS, val);
+		public void setCells(War3Int val) {
+			set(State.CELLS, val);
 		}
 		
 		public Coords3DF getMinExtents() {
-			return new Coords3DF(get(States.MIN_X), get(States.MIN_Y), get(States.MIN_Z));
+			return new Coords3DF(get(State.MIN_X), get(State.MIN_Y), get(State.MIN_Z));
 		}
 		
 		public void setMinExtents(Coords3DF val) {
-			set(States.MIN_X, val.getX());
-			set(States.MIN_Y, val.getY());
-			set(States.MIN_Z, val.getZ());
+			set(State.MIN_X, val.getX());
+			set(State.MIN_Y, val.getY());
+			set(State.MIN_Z, val.getZ());
 		}
 
 		public Coords3DF getMaxExtents() {
-			return new Coords3DF(get(States.MAX_X), get(States.MAX_Y), get(States.MAX_Z));
+			return new Coords3DF(get(State.MAX_X), get(State.MAX_Y), get(State.MAX_Z));
 		}
 
 		public void setMaxExtents(Coords3DF val) {
-			set(States.MAX_X, val.getX());
-			set(States.MAX_Y, val.getY());
-			set(States.MAX_Z, val.getZ());
+			set(State.MAX_X, val.getX());
+			set(State.MAX_Y, val.getY());
+			set(State.MAX_Z, val.getZ());
 		}
 
 		public Coords3DF getRates() {
-			return new Coords3DF(get(States.RATE_X), get(States.RATE_Y), get(States.RATE_Z));
+			return new Coords3DF(get(State.RATE_X), get(State.RATE_Y), get(State.RATE_Z));
 		}
 
 		public void setRates(Coords3DF val) {
-			set(States.RATE_X, val.getX());
-			set(States.RATE_Y, val.getY());
-			set(States.RATE_Z, val.getZ());
+			set(State.RATE_X, val.getX());
+			set(State.RATE_Y, val.getY());
+			set(State.RATE_Z, val.getZ());
 		}
 
 		public Coords2DF getRevs() {
-			return new Coords2DF(get(States.REV_X), get(States.REV_Y));
+			return new Coords2DF(get(State.REV_X), get(State.REV_Y));
 		}
 
 		public void setRevs(Coords2DF val) {
-			set(States.REV_X, val.getX());
-			set(States.REV_Y, val.getY());
+			set(State.REV_X, val.getX());
+			set(State.REV_Y, val.getY());
 		}
 		
-		public Bool getShoreInFog() {
-			return get(States.SHORE_IN_FOG);
+		public War3Bool getShoreInFog() {
+			return get(State.SHORE_IN_FOG);
 		}
 
-		public void setShoreInFog(Bool val) {
-			set(States.SHORE_IN_FOG, val);
+		public void setShoreInFog(War3Bool val) {
+			set(State.SHORE_IN_FOG, val);
 		}
 		
 		public String getShoreDir() {
-			return get(States.SHORE_DIR).toString();
+			return get(State.SHORE_DIR).toString();
 		}
 
 		public void setShoreDir(String val) {
-			set(States.SHORE_DIR, Wc3String.valueOf(val));
+			set(State.SHORE_DIR, War3String.valueOf(val));
 		}
 		
 		public String getShoreSFile() {
-			return get(States.SHORE_S_FILE).toString();
+			return get(State.SHORE_S_FILE).toString();
 		}
 
 		public void setShoreSFile(String val) {
-			set(States.SHORE_S_FILE, Wc3String.valueOf(val));
+			set(State.SHORE_S_FILE, War3String.valueOf(val));
 		}
 		
-		public Real getShoreSVar() {
-			return get(States.SHORE_S_VAR);
+		public War3Real getShoreSVar() {
+			return get(State.SHORE_S_VAR);
 		}
 
-		public void setShoreSVar(Real val) {
-			set(States.SHORE_S_VAR, val);
+		public void setShoreSVar(War3Real val) {
+			set(State.SHORE_S_VAR, val);
 		}
 		
 		public String getShoreOCFile() {
-			return get(States.SHORE_OC_FILE).toString();
+			return get(State.SHORE_OC_FILE).toString();
 		}
 
 		public void setShoreOCFile(String val) {
-			set(States.SHORE_OC_FILE, Wc3String.valueOf(val));
+			set(State.SHORE_OC_FILE, War3String.valueOf(val));
 		}
 		
-		public Real getShoreOCVar() {
-			return get(States.SHORE_OC_VAR);
+		public War3Real getShoreOCVar() {
+			return get(State.SHORE_OC_VAR);
 		}
 
-		public void setShoreOCVar(Real val) {
-			set(States.SHORE_OC_VAR, val);
+		public void setShoreOCVar(War3Real val) {
+			set(State.SHORE_OC_VAR, val);
 		}
 		
 		public String getShoreICFile() {
-			return get(States.SHORE_IC_FILE).toString();
+			return get(State.SHORE_IC_FILE).toString();
 		}
 		
 		public void setShoreICFile(String val) {
-			set(States.SHORE_IC_FILE, Wc3String.valueOf(val));
+			set(State.SHORE_IC_FILE, War3String.valueOf(val));
 		}
 		
-		public Real getShoreICVar() {
-			return get(States.SHORE_IC_VAR);
+		public War3Real getShoreICVar() {
+			return get(State.SHORE_IC_VAR);
 		}
 
-		public void setShoreICVar(Real val) {
-			set(States.SHORE_IC_VAR, val);
+		public void setShoreICVar(War3Real val) {
+			set(State.SHORE_IC_VAR, val);
 		}
 		
 		public Color getSMinColor() {
-			return Color.fromBGRA255(get(States.S_MIN_BLUE).toInt(), get(States.S_MIN_GREEN).toInt(), get(States.S_MIN_RED).toInt(), get(States.S_MIN_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.S_MIN_BLUE).toInt(), get(State.S_MIN_GREEN).toInt(), get(State.S_MIN_RED).toInt(), get(State.S_MIN_ALPHA).toInt());
 		}
 		
 		public void setSMinColor(Color val) {
-			set(States.S_MIN_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
-			set(States.S_MIN_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.S_MIN_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.S_MIN_RED, Wc3Int.valueOf(val.getRed255()));
+			set(State.S_MIN_ALPHA, War3Int.valueOf(val.getAlpha255()));
+			set(State.S_MIN_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.S_MIN_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.S_MIN_RED, War3Int.valueOf(val.getRed255()));
 		}
 
 		public Color getSMaxColor() {
-			return Color.fromBGRA255(get(States.S_MAX_BLUE).toInt(), get(States.S_MAX_GREEN).toInt(), get(States.S_MAX_RED).toInt(), get(States.S_MAX_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.S_MAX_BLUE).toInt(), get(State.S_MAX_GREEN).toInt(), get(State.S_MAX_RED).toInt(), get(State.S_MAX_ALPHA).toInt());
 		}
 
 		public void setSMaxColor(Color val) {
-			set(States.S_MAX_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
-			set(States.S_MAX_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.S_MAX_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.S_MAX_RED, Wc3Int.valueOf(val.getRed255()));
+			set(State.S_MAX_ALPHA, War3Int.valueOf(val.getAlpha255()));
+			set(State.S_MAX_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.S_MAX_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.S_MAX_RED, War3Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getDMinColor() {
-			return Color.fromBGRA255(get(States.D_MIN_BLUE).toInt(), get(States.D_MIN_GREEN).toInt(), get(States.D_MIN_RED).toInt(), get(States.D_MIN_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.D_MIN_BLUE).toInt(), get(State.D_MIN_GREEN).toInt(), get(State.D_MIN_RED).toInt(), get(State.D_MIN_ALPHA).toInt());
 		}
 		
 		public void setDMinColor(Color val) {
-			set(States.D_MIN_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
-			set(States.D_MIN_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.D_MIN_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.D_MIN_RED, Wc3Int.valueOf(val.getRed255()));
+			set(State.D_MIN_ALPHA, War3Int.valueOf(val.getAlpha255()));
+			set(State.D_MIN_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.D_MIN_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.D_MIN_RED, War3Int.valueOf(val.getRed255()));
 		}
 		
 		public Color getDMaxColor() {
-			return Color.fromBGRA255(get(States.D_MAX_BLUE).toInt(), get(States.D_MAX_GREEN).toInt(), get(States.D_MAX_RED).toInt(), get(States.D_MAX_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.D_MAX_BLUE).toInt(), get(State.D_MAX_GREEN).toInt(), get(State.D_MAX_RED).toInt(), get(State.D_MAX_ALPHA).toInt());
 		}
 		
 		public void setDMaxColor(Color val) {
-			set(States.D_MAX_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
-			set(States.D_MAX_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.D_MAX_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.D_MAX_RED, Wc3Int.valueOf(val.getRed255()));
+			set(State.D_MAX_ALPHA, War3Int.valueOf(val.getAlpha255()));
+			set(State.D_MAX_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.D_MAX_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.D_MAX_RED, War3Int.valueOf(val.getRed255()));
 		}
 
-		public <T extends DataType> T get(States.State<T> state) {
-			return state.tryCastVal(super.get(state));
+		public <T extends DataType> T get(State<T> state) {
+			try {
+				return state.tryCastVal(super.get(state));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			super.set(state, val);
 		}
 		
-		public <T extends DataType> void remove(States.State<T> state) {
+		public <T extends DataType> void remove(State<T> state) {
 			super.set(state, null);
 		}
 		
@@ -383,7 +381,7 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 		public Obj(WaterId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -459,9 +457,9 @@ public class WaterSLK extends ObjSLK<WaterSLK, WaterId, WaterSLK.Obj> {
 	}
 	
 	public WaterSLK() {
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (States.State state : States.values()) {
+		for (State<?> state : State.values(State.class)) {
 			addField(state);
 		}
 	}

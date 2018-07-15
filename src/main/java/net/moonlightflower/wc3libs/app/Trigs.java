@@ -3,17 +3,20 @@ package net.moonlightflower.wc3libs.app;
 import net.moonlightflower.wc3libs.bin.app.WCT;
 import net.moonlightflower.wc3libs.bin.app.WTG;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Trigs {
-	private WCT _wct;
-	private WTG _wtg;
-	
+	private final WCT _wct;
+	private final WTG _wtg;
+
+	@Nonnull
 	public WCT getWCT() {
 		return _wct;
 	}
-	
+
+	@Nonnull
 	public WTG getWTG() {
 		return _wtg;
 	}
@@ -63,7 +66,7 @@ public class Trigs {
 			_arraySize = val;
 		}
 		
-		public Var(WTG.Var wtgVar) {
+		public Var(@Nonnull WTG.Var wtgVar) {
 			setName(wtgVar.getName());
 			setType(wtgVar.getType());
 			setInitVal(wtgVar.getInitVal());
@@ -74,9 +77,13 @@ public class Trigs {
 		}
 	}
 	
-	private List<Var> _vars = new ArrayList<>();
+	private final List<Var> _vars = new ArrayList<>();
+
+	public final List<Var> getVars() {
+		return _vars;
+	}
 	
-	private void addVar(Var val) {
+	private void addVar(@Nonnull Var val) {
 		_vars.add(val);
 	}
 	
@@ -109,7 +116,7 @@ public class Trigs {
 			_isComment = val;
 		}
 		
-		public TrigCat(WTG.TrigCat wtgTrigCat) {
+		public TrigCat(@Nonnull WTG.TrigCat wtgTrigCat) {
 			setName(wtgTrigCat.getName());
 		}
 		
@@ -117,13 +124,13 @@ public class Trigs {
 		}
 	}
 	
-	private List<TrigCat> _trigCats = new ArrayList<>();
+	private final List<TrigCat> _trigCats = new ArrayList<>();
 	
 	public List<TrigCat> getTrigCats() {
-		return _trigCats;
+		return new ArrayList<>(_trigCats);
 	}
 	
-	private void addTrigCat(TrigCat val) {
+	private void addTrigCat(@Nonnull TrigCat val) {
 		_trigCats.add(val);
 	}
 	
@@ -192,11 +199,11 @@ public class Trigs {
 			return _trigCat;
 		}
 		
-		public void setTrigCat(TrigCat val) {
+		public void setTrigCat(@Nonnull TrigCat val) {
 			_trigCat = val;
 		}
 		
-		public Trig(WTG.Trig wtgTrig) {
+		public Trig(@Nonnull WTG.Trig wtgTrig) {
 			setName(wtgTrig.getName());
 			setComment(wtgTrig.getDescription());
 			setEnabled(wtgTrig.isEnabled());
@@ -220,7 +227,7 @@ public class Trigs {
 			_text = val;
 		}
 		
-		public TextTrig(WTG.Trig wtgTrig, WCT.Trig wctTrig) {
+		public TextTrig(@Nonnull WTG.Trig wtgTrig, WCT.Trig wctTrig) {
 			setText(wctTrig.getText());
 		}
 		
@@ -283,7 +290,7 @@ public class Trigs {
 			}
 		}
 
-		public GUITrig(WTG.Trig wtgTrig) {
+		public GUITrig(@Nonnull WTG.Trig wtgTrig) {
 			super(wtgTrig);
 		}
 		
@@ -292,13 +299,13 @@ public class Trigs {
 		}
 	}
 	
-	private List<Trig> _trigs = new ArrayList<>();
+	private final List<Trig> _trigs = new ArrayList<>();
 	
 	private List<Trig> getTrigs() {
-		return _trigs;
+		return new ArrayList<>(_trigs);
 	}
 	
-	private void addTrig(Trig val) {
+	private void addTrig(@Nonnull Trig val) {
 		_trigs.add(val);
 	}
 	
@@ -316,7 +323,7 @@ public class Trigs {
 		return trig;
 	}
 	
-	public Trigs(WCT wct, WTG wtg) {
+	public Trigs(@Nonnull WCT wct, @Nonnull WTG wtg) {
 		_wct = wct;
 		_wtg = wtg;
 	}

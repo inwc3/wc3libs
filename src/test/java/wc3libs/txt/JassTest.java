@@ -29,4 +29,31 @@ public class JassTest extends Wc3LibTest {
 
         assertFalse(System.err.checkError());
     }
+
+    @Test()
+    public void testRebuild3() throws IOException {
+        File file = getFile("jass/inventorySys.j");
+
+        Jass jass = new Jass(file);
+
+        assertFalse(System.err.checkError());
+    }
+
+    @Test()
+    public void testRebuild4() throws IOException {
+        File file = getFile("jass/League.j");
+
+        Jass jass = new Jass(file);
+
+        assertFalse(System.err.checkError());
+    }
+
+    @Test()
+    public void testRebuild5() throws IOException {
+        File file = getFile("jass/dota.j");
+
+        Jass jass = new Jass(file);
+
+        assertFalse(System.err.checkError());
+    }
 }

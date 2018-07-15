@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class UpgradeClass extends Wc3String {
+public class UpgradeClass extends War3String {
 	private final static Map<String, UpgradeClass> _nameMap = new LinkedHashMap<>();
 
 	public final static UpgradeClass ARMOR = new UpgradeClass("armor");

@@ -3,7 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ItemClass extends Wc3String {
+public class ItemClass extends War3String {
 	private final Map<String, ItemClass> _map = new LinkedHashMap<>();
 
 	public final static ItemClass ARTIFACT = new ItemClass("Artifact");

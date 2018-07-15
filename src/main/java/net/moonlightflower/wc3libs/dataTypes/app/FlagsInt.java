@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 
@@ -41,8 +42,7 @@ public abstract class FlagsInt extends DataType {
 			return (Class<Enum>) c.getMethod("getEnumStatic").invoke(null);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.error(e.getMessage(), e);
 		}
 		
 		return null;

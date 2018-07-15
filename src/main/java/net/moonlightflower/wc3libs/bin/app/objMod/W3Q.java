@@ -17,10 +17,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * upgrade modifications file for wrapping war3map.w3q
@@ -28,80 +26,64 @@ import java.util.List;
 public class W3Q extends ObjMod {
 	public final static File GAME_PATH = new File("war3map.w3q");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3q");
-	
-	public static class States {
-		public static class State<T extends DataType> extends MetaState<T> {
-			private final static List<State> _values = new ArrayList<>();
 
-			@Nonnull
-			public static List<State> values() {
-				return new ArrayList<>(_values);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-				super(idString, typeInfo, defVal);
-				
-				_values.add(this);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
-				this(idString, new DataTypeInfo(type), defVal);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
-				this(idString, typeInfo, null);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull Class<T> type) {
-				this(idString, new DataTypeInfo(type), null);
-			}
-		}
-
-		@Nonnull
-		public static List<State> values() {
-			return State.values();
-		}
-		
-		public final static State<Wc3Int> ART_BUTTON_POS_X = new State<>("gbpx", Wc3Int.class);
-		public final static State<Wc3Int> ART_BUTTON_POS_Y = new State<>("gbpy", Wc3Int.class);
+	public static class State<T extends DataType> extends MetaState<T> {
+		public final static State<War3Int> ART_BUTTON_POS_X = new State<>("gbpx", War3Int.class);
+		public final static State<War3Int> ART_BUTTON_POS_Y = new State<>("gbpy", War3Int.class);
 		public final static State<Icon> ART_ICON = new State<>("gar1", Icon.class);
-		
+
 		public final static State<UpgradeClass> DATA_CLASS = new State<>("gcls", UpgradeClass.class);
 		public final static State<UpgradeEffect> DATA_EFFECT1 = new State<>("gef1", UpgradeEffect.class);
-		public final static State<Real> DATA_EFFECT1_BASE = new State<>("gba1", Real.class);
-		public final static State<Real> DATA_EFFECT1_INC = new State<>("gmo1", Real.class);
-		public final static State<Wc3String> DATA_EFFECT1_CODE = new State<>("gco1", Wc3String.class);
+		public final static State<War3Real> DATA_EFFECT1_BASE = new State<>("gba1", War3Real.class);
+		public final static State<War3Real> DATA_EFFECT1_INC = new State<>("gmo1", War3Real.class);
+		public final static State<War3String> DATA_EFFECT1_CODE = new State<>("gco1", War3String.class);
 		public final static State<UpgradeEffect> DATA_EFFECT2 = new State<>("gef2", UpgradeEffect.class);
-		public final static State<Real> DATA_EFFECT2_BASE = new State<>("gba2", Real.class);
-		public final static State<Real> DATA_EFFECT2_INC = new State<>("gmo2", Real.class);
-		public final static State<Wc3String> DATA_EFFECT2_CODE = new State<>("gco2", Wc3String.class);
+		public final static State<War3Real> DATA_EFFECT2_BASE = new State<>("gba2", War3Real.class);
+		public final static State<War3Real> DATA_EFFECT2_INC = new State<>("gmo2", War3Real.class);
+		public final static State<War3String> DATA_EFFECT2_CODE = new State<>("gco2", War3String.class);
 		public final static State<UpgradeEffect> DATA_EFFECT3 = new State<>("gef3", UpgradeEffect.class);
-		public final static State<Real> DATA_EFFECT3_BASE = new State<>("gba3", Real.class);
-		public final static State<Real> DATA_EFFECT3_INC = new State<>("gmo3", Real.class);
-		public final static State<Wc3String> DATA_EFFECT3_CODE = new State<>("gco3", Wc3String.class);
+		public final static State<War3Real> DATA_EFFECT3_BASE = new State<>("gba3", War3Real.class);
+		public final static State<War3Real> DATA_EFFECT3_INC = new State<>("gmo3", War3Real.class);
+		public final static State<War3String> DATA_EFFECT3_CODE = new State<>("gco3", War3String.class);
 		public final static State<UpgradeEffect> DATA_EFFECT4 = new State<>("gef4", UpgradeEffect.class);
-		public final static State<Real> DATA_EFFECT4_BASE = new State<>("gba4", Real.class);
-		public final static State<Real> DATA_EFFECT4_INC = new State<>("gmo4", Real.class);
-		public final static State<Wc3String> DATA_EFFECT4_CODE = new State<>("gco4", Wc3String.class);
-		public final static State<Wc3Int> DATA_COSTS_GOLD = new State<>("gglb", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_GOLD_INC = new State<>("gglm", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_LUMBER = new State<>("glmb", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_LUMBER_INC = new State<>("glmm", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_TIME = new State<>("gtib", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_TIME_ADD = new State<>("gtim", Wc3Int.class);
-		public final static State<Bool> DATA_IS_GLOBAL = new State<>("glob", Bool.class);
-		public final static State<Bool> DATA_IS_INHERITED = new State<>("ginh", Bool.class);
-		public final static State<Wc3Int> DATA_LEVEL_COUNT = new State<>("glvl", Wc3Int.class);
+		public final static State<War3Real> DATA_EFFECT4_BASE = new State<>("gba4", War3Real.class);
+		public final static State<War3Real> DATA_EFFECT4_INC = new State<>("gmo4", War3Real.class);
+		public final static State<War3String> DATA_EFFECT4_CODE = new State<>("gco4", War3String.class);
+		public final static State<War3Int> DATA_COSTS_GOLD = new State<>("gglb", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_GOLD_INC = new State<>("gglm", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_LUMBER = new State<>("glmb", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_LUMBER_INC = new State<>("glmm", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_TIME = new State<>("gtib", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_TIME_ADD = new State<>("gtim", War3Int.class);
+		public final static State<War3Bool> DATA_IS_GLOBAL = new State<>("glob", War3Bool.class);
+		public final static State<War3Bool> DATA_IS_INHERITED = new State<>("ginh", War3Bool.class);
+		public final static State<War3Int> DATA_LEVEL_COUNT = new State<>("glvl", War3Int.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("grac", UnitRace.class);
-		
+
 		public final static State<DataList<TechId>> TECH_REQUIRES = new State<>("greq", new DataTypeInfo(DataList.class, TechId.class));
-		public final static State<DataList<Wc3Int>> TECH_REQUIRES_LEVELS = new State<>("grqc", new DataTypeInfo(DataList.class, Wc3Int.class));
-		
-		public final static State<Wc3String> TEXT_EDITOR_SUFFIX = new State<>("gnsf", Wc3String.class);
-		public final static State<Char> TEXT_HOTKEY = new State<>("ghk1", Char.class);
-		public final static State<Wc3String> TEXT_NAME = new State<>("gnam", Wc3String.class);
-		public final static State<Wc3String> TEXT_TOOLTIP = new State<>("gtp1", Wc3String.class);
-		public final static State<Wc3String> TEXT_TOOLTIP_UBER = new State<>("gub1", Wc3String.class);
+		public final static State<DataList<War3Int>> TECH_REQUIRES_LEVELS = new State<>("grqc", new DataTypeInfo(DataList.class, War3Int.class));
+
+		public final static State<War3String> TEXT_EDITOR_SUFFIX = new State<>("gnsf", War3String.class);
+		public final static State<War3Char> TEXT_HOTKEY = new State<>("ghk1", War3Char.class);
+		public final static State<War3String> TEXT_NAME = new State<>("gnam", War3String.class);
+		public final static State<War3String> TEXT_TOOLTIP = new State<>("gtp1", War3String.class);
+		public final static State<War3String> TEXT_TOOLTIP_UBER = new State<>("gub1", War3String.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			this(idString, new DataTypeInfo(type), defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			this(idString, typeInfo, null);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			this(idString, new DataTypeInfo(type), null);
+		}
 	}
 	
 	public static class Obj extends ObjMod.Obj {
@@ -122,12 +104,12 @@ public class W3Q extends ObjMod {
 
 	@Override
 	public Collection<File> getSLKs() {
-		return Collections.singletonList(UpgradeSLK.GAME_USE_PATH);
+		return Collections.singletonList(UpgradeSLK.GAME_PATH);
 	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Collections.singletonList(UpgradeSLK.GAME_USE_PATH);
+		return Collections.singletonList(UpgradeSLK.GAME_PATH);
 	}
 
 	@Override

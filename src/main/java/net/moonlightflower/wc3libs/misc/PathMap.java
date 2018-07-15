@@ -11,6 +11,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PathMap extends Raster<Integer> {
 	public static class PathingInt extends FlagsInt {
@@ -93,14 +94,15 @@ public class PathMap extends Raster<Integer> {
 	public Integer get(int index) {
 		return _cells[index];
 	}
-	
-	public @Nonnull Coords2DI indexToCoords(int index) {
+
+	@Nullable
+	public Coords2DI indexToCoords(int index) {
 		if ((index < 0) || (index >= size())) return null; 
 		
 		return new Coords2DI(index % getWidth(), index / getWidth());
 	}
 	
-	private int coordsToIndex(Coords2DI pos) {
+	private int coordsToIndex(@Nonnull Coords2DI pos) {
 		return (pos.getY() * getWidth() + pos.getX());
 	}
 	
@@ -217,6 +219,9 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	public PathMap(@Nonnull Bounds bounds) {
+		super(bounds);
+
+		//TODO: needed?
 		setBounds(bounds, false, false);
 	}
 }

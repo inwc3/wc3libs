@@ -7,8 +7,8 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.Model;
 import net.moonlightflower.wc3libs.dataTypes.app.SpawnId;
 import net.moonlightflower.wc3libs.misc.FieldId;
@@ -16,43 +16,36 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("Splats\\SpawnData.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("Splats\\SpawnData.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<SpawnId> OBJ_ID = new State<>("Name", SpawnId.class);
-		
+
 		public final static State<Model> ART_MODEL = new State<>("Model", Model.class);
-		
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
+
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<SpawnId> {
@@ -65,14 +58,14 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -83,22 +76,22 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 		}
 
 		public Model getModel() {
-			return get(States.ART_MODEL);
+			return get(State.ART_MODEL);
 		}
 		
 		public void setModel(Model val) {
-			set(States.ART_MODEL, val);
+			set(State.ART_MODEL, val);
 		}
 
-		public <T extends DataType> T get(States.State<T> state) {
+		public <T extends DataType> T get(State<T> state) {
 			return (T) super.get(state);
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			super.set(state, val);
 		}
 		
-		public <T extends DataType> void remove(States.State<T> state) {
+		public <T extends DataType> void remove(State<T> state) {
 			super.set(state, null);
 		}
 		
@@ -115,7 +108,7 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 		public Obj(SpawnId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -170,9 +163,9 @@ public class SpawnSLK extends ObjSLK<SpawnSLK, SpawnId, SpawnSLK.Obj> {
 	}
 	
 	public SpawnSLK() {
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 
-		for (States.State state : States.values()) {
+		for (State state : State.values(State.class)) {
 			addField(state);
 		}
 	}

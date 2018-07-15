@@ -14,5 +14,7 @@ public class MathTest {
         Assert.assertEquals(Math.encode(1747988548, Math.CODE_ASCII), "h00D");
 
         Assert.assertEquals(Math.decode("D00h", Math.CODE_ASCII), 1144008808);
+
+        System.out.println(Math.encode(1747988549, Math.CODE_ASCII));
     }
 }

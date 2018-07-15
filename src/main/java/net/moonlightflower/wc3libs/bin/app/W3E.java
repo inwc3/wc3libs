@@ -3,15 +3,13 @@ package net.moonlightflower.wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
-import net.moonlightflower.wc3libs.misc.Boundable;
-import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.Raster;
-import net.moonlightflower.wc3libs.misc.Size;
+import net.moonlightflower.wc3libs.misc.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.lang.Math;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -79,25 +77,25 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		_cliffTiles.put(index, val);
 	}
 	
-	public static class Tile {
-		final int groundZero = 0x2000;
-		final float waterZero = 89.6F;
-		final int cliffHeight = 0x200;
+	public static class Tile implements Printable {
+		public final static int GROUND_ZERO = 0x2000;
+		public final static float WATER_ZERO = 89.6F;
+		public final static int CLIFF_HEIGHT = 0x200;
 		
 		public float rawToFinalGroundHeight(float rawVal, int cliffLevel) {
-			return ((rawVal - groundZero + (cliffLevel - 2) * cliffHeight) / 4);
+			return ((rawVal - GROUND_ZERO + (cliffLevel - 2) * CLIFF_HEIGHT) / 4);
 		}
 	
 		public float finalGroundToRawHeight(float finalVal, int cliffLevel) {
-			return (finalVal * 4 - (cliffLevel - 2) * cliffHeight + groundZero);
+			return (finalVal * 4 - (cliffLevel - 2) * CLIFF_HEIGHT + GROUND_ZERO);
 		}
 	
 		public float rawToFinalWaterHeight(float rawVal) {
-			return ((rawVal - groundZero) / 4) - waterZero;
+			return ((rawVal - GROUND_ZERO) / 4) - WATER_ZERO;
 		}
 	
 		public float finalWaterToRawHeight(float finalVal) {
-			return ((finalVal + waterZero) * 4 + groundZero);
+			return ((finalVal + WATER_ZERO) * 4 + GROUND_ZERO);
 		}
 		
 		private short _groundHeight = 0;
@@ -219,12 +217,12 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		public void setCliff(int val) {
 			_cliff = val;
 		}
-		
-		public void print() {
+
+		@Override
+		public void print(@Nonnull Printer printer) {
 			//TODO
-			System.out.println(getBlight());
-			System.out.println(getBoundary());
-			System.out.println();
+			printer.print(getBlight());
+			printer.print(getBoundary());
 		}
 
 		public static class Writer extends net.moonlightflower.wc3libs.bin.Writer<EncodingFormat> {
@@ -592,10 +590,14 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 
 	public W3E(@Nonnull Bounds bounds) {
+		super(bounds);
+
 		setBounds(bounds, false, false);
 	}
 
 	public W3E(@Nonnull Reader reader) throws IOException {
+		super(new Bounds(0, 0, 0, 0));
+
 		read(reader);
 	}
 
@@ -604,6 +606,8 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 
 	public W3E(@Nonnull File file) throws IOException {
+		super(new Bounds(0, 0, 0, 0));
+
 		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 		
 		read(new Reader(inStream));

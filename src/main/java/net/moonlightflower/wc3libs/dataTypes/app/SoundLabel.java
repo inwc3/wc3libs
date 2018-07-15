@@ -1,9 +1,8 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class SoundLabel extends Wc3String {
+public class SoundLabel extends War3String {
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof SoundLabel)

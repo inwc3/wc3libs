@@ -7,15 +7,12 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class Jass {
 	public final static File GAME_PATH = new File("war3map.j");
@@ -30,6 +27,11 @@ public class Jass {
 
 	public JassParser.RootContext getRootContext() {
 		return _rootContext;
+	}
+
+	@Override
+	public String toString() {
+		return _rootContext.toString();
 	}
 
 	private static List<Token> stripComments(List<Token> tokens) {
@@ -196,5 +198,21 @@ public class Jass {
 		read(inStream);
 		
 		inStream.close();
+	}
+
+	public Jass(String s) {
+		try {
+			InputStream inStream = new ByteArrayInputStream(s.getBytes());
+
+			read(inStream);
+
+			inStream.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Jass() {
+		_rootContext = new JassParser.RootContext(null, -1);
 	}
 }

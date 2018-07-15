@@ -3,7 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MoveType extends Wc3String {
+public class MoveType extends War3String {
 	public final static MoveType AMPHIBIOUS = new MoveType("amph");
 	public final static MoveType FLOAT = new MoveType("float");
 	public final static MoveType FLY = new MoveType("fly");

@@ -9,29 +9,20 @@ import net.moonlightflower.wc3libs.misc.State;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SLKState<T extends DataType> extends State<T> {	
-	private final T _defVal;
+public class SLKState<T extends DataType> extends State<T> {
+	public SLKState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+		super(fieldIdS, typeInfo, defVal);
+	}
 
-	@Nullable
-	public T getDefVal() {
-		return _defVal;
+	public SLKState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo) {
+		this(fieldIdS, typeInfo, (T) typeInfo.getDefVal());
 	}
-	
-	private final FieldId _field;
 
-	@Nonnull
-	public FieldId getFieldId() {
-		return _field;
+	public SLKState(@Nonnull String idString, @Nonnull Class<T> type) {
+		this(idString, new DataTypeInfo(type));
 	}
-	
-	public SLKState(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-		super(typeInfo);
-		
-		_field = FieldId.valueOf(idString);
-		_defVal = defVal;
-	}
-	
-	public SLKState(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
-		this(idString, typeInfo, null);
+
+	public SLKState(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+		this(idString, new DataTypeInfo(type), defVal);
 	}
 }

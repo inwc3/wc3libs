@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TerrainFogType extends Wc3Int {
+public class TerrainFogType extends War3Int {
 	private static Map<Integer, TerrainFogType> _indexMap = new LinkedHashMap<>();
 	
 	public final static TerrainFogType EXP = new TerrainFogType(2);

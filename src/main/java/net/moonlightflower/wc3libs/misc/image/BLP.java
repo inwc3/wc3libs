@@ -12,6 +12,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
+import com.esotericsoftware.minlog.Log;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -64,7 +65,7 @@ public class BLP extends Wc3RasterImg {
 			_pos = val;
 		}
 		
-		public Reader(InputStream inStream) throws IOException {
+		public Reader(@Nonnull InputStream inStream) throws IOException {
 			int val;
 			List<Byte> bytes = new ArrayList<>();
 			
@@ -221,7 +222,7 @@ public class BLP extends Wc3RasterImg {
 					imageRGB = decoder.read(all);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.error(e.getMessage(), e);
 				}
 
 				Graphics2D graphics = imageRGB.createGraphics();
@@ -321,8 +322,7 @@ public class BLP extends Wc3RasterImg {
 			}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.error(e.getMessage(), e);
 		}
 	}
 	

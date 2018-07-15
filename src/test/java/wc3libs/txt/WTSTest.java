@@ -35,7 +35,7 @@ public class WTSTest extends Wc3LibTest {
 
                 Files.delete(temp);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(e.getMessage(), e);
             }
         });
 

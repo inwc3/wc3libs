@@ -1,14 +1,11 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.Real;
 import net.moonlightflower.wc3libs.misc.TypeInfo;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class DataTypeInfo extends TypeInfo<DataType> {
 	@Nonnull
@@ -16,7 +13,8 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 	public Class<? extends DataType> getType() {
 		return super.getType();
 	}
-	
+
+	@Nullable
 	@Override
 	public DataTypeInfo[] getGenerics() {
 		TypeInfo[] superGenerics = super.getGenerics();
@@ -31,30 +29,39 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 		
 		return ret;
 	}
-	
+
+	@Nullable
 	public DataType getDefVal() {		
 		try {
 			Method method = getType().getDeclaredMethod("getDefVal");
 			
 			return (DataType) method.invoke(null);
-		} catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException e) {
+		} catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException ignored) {
 		}
 
         return null;
 	}
-	
+
+	@Nullable
 	public String getTranslatorSection() {		
 		try {
 			Method method = getType().getDeclaredMethod("getTranslatorSection");
 			
 			return (String) method.invoke(null);
-		} catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException e) {
+		} catch (IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException ignored) {
 		}
 
         return null;
 	}
-	
-	public DataType tryCastVal(DataType val) {
+
+	public class CastException extends Exception {
+		public CastException(@Nonnull Exception enclosedException) {
+			super(enclosedException);
+		}
+	}
+
+	@Nullable
+	public DataType tryCastVal(@Nullable DataType val) throws CastException {
 		if (val == null) return null;		
 		
 		Class<? extends DataType> type = getType();
@@ -65,14 +72,14 @@ public class DataTypeInfo extends TypeInfo<DataType> {
 			} else {
 				Method c = type.getDeclaredMethod("decodeStatic", Object.class);
 
-				assert (c != null) : "decodeStatic not defined on " + type;
+				assert (c != null) : "decodeStatic not declared on " + type;
 				//if (c == null) return null;
 				
 				return ((DataType) c.invoke(null, val));
 				//return type.newInstance().decode(val);
 			}
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			throw new RuntimeException(e);
+			throw new CastException(e);
 		}
 	}
 	

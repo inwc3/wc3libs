@@ -2,39 +2,25 @@ package net.moonlightflower.wc3libs.bin;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.State;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BinState<T extends DataType> extends State<T> {
-	private FieldId _fieldId;
-	
-	public FieldId getFieldId() {
-		return _fieldId;
+	public BinState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+		super(fieldIdS, typeInfo, defVal);
 	}
-	
-	@Override
-	public String toString() {
-		return _fieldId.toString();
-	}
-	
-	private T _defVal = null;
 
-	@Nullable
-	public T getDefVal() {
-		return _defVal;
+	public BinState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo) {
+		this(fieldIdS, typeInfo, (T) typeInfo.getDefVal());
 	}
-	
-	public BinState(@Nonnull DataTypeInfo info) {
-		super(info);
+
+	public BinState(@Nonnull String idString, @Nonnull Class<T> type) {
+		this(idString, new DataTypeInfo(type));
 	}
-	
-	public BinState(@Nonnull DataTypeInfo typeInfo, @Nonnull String idString, @Nullable T defVal) {
-		this(typeInfo);
-		
-		_fieldId = FieldId.valueOf(idString);
-		_defVal = defVal;
+
+	public BinState(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+		this(idString, new DataTypeInfo(type), defVal);
 	}
 }

@@ -10,7 +10,7 @@ import net.moonlightflower.wc3libs.bin.app.objMod.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.misc.Math;
 import net.moonlightflower.wc3libs.port.JMpqPort;
@@ -20,11 +20,13 @@ import net.moonlightflower.wc3libs.slk.RawMetaSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
+import net.moonlightflower.wc3libs.slk.app.meta.*;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 import net.moonlightflower.wc3libs.txt.Jass;
 import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.WTS;
+import net.moonlightflower.wc3libs.txt.app.profile.CampaignUnitStrings;
 import org.antlr.v4.runtime.Token;
 
 import javax.annotation.Nonnull;
@@ -34,10 +36,11 @@ import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class ObjMerger {
-    private Collection<SLK> _inSlks = new LinkedHashSet<>();
-    private Map<File, SLK> _outSlks = new LinkedHashMap<>();
+    private final Collection<SLK> _inSlks = new LinkedHashSet<>();
+    private final Map<File, SLK> _outSlks = new LinkedHashMap<>();
 
     private void addSlk(@Nonnull File inFile, @Nonnull SLK otherSlk) {
         _inSlks.add(otherSlk);
@@ -47,14 +50,14 @@ public class ObjMerger {
         slk.merge(otherSlk);
     }
 
-    private RawMetaSLK _metaSlk = new RawMetaSLK();
+    private final RawMetaSLK _metaSlk = new RawMetaSLK();
 
     private void addMetaSlk(@Nonnull RawMetaSLK slk) {
         _metaSlk.merge(slk);
     }
 
-    private Collection<Profile> _inProfiles = new LinkedHashSet<>();
-    private Profile _outProfile = new Profile();
+    private final Collection<Profile> _inProfiles = new LinkedHashSet<>();
+    private final Profile _outProfile = new Profile();
 
     private void addProfile(@Nonnull Profile otherProfile) {
         _inProfiles.add(otherProfile);
@@ -62,8 +65,8 @@ public class ObjMerger {
         _outProfile.merge(otherProfile);
     }
 
-    private Collection<ObjMod> _inObjMods = new LinkedHashSet<>();
-    private Map<File, ObjMod> _outObjMods = new LinkedHashMap<>();
+    private final Collection<ObjMod> _inObjMods = new LinkedHashSet<>();
+    private final Map<File, ObjMod> _outObjMods = new LinkedHashMap<>();
 
     private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod otherObjMod) throws Exception {
         _inObjMods.add(otherObjMod);
@@ -294,7 +297,11 @@ public class ObjMerger {
                             //System.out.println(state.getFieldId() + ";" + stateType);
                             if (ObjId.class.isAssignableFrom(stateType)) {
                                 //System.out.println(id + " add " + val);
-                                refs.add((ObjId) stateInfo.tryCastVal(val));
+                                try {
+                                    refs.add((ObjId) stateInfo.tryCastVal(val));
+                                } catch (DataTypeInfo.CastException e) {
+                                    Log.error(e.getMessage(), e);
+                                }
                             } else if (stateType == DataList.class) {
                                 for (DataTypeInfo subInfo : stateInfo.getGenerics()) {
 
@@ -303,7 +310,7 @@ public class ObjMerger {
                                     if (ObjId.class.isAssignableFrom(subType)) {
                                         DataList valList;
 
-                                        if (val instanceof Wc3String) {
+                                        if (val instanceof War3String) {
                                             valList = new DataList(ObjId.class);
 
                                             for (String s : val.toString().split(",")) {
@@ -315,7 +322,11 @@ public class ObjMerger {
 
                                         for (Object valSingle : valList) {
                                             if (valSingle instanceof DataType) {
-                                                refs.add((ObjId) subInfo.tryCastVal((DataType) valSingle));
+                                                try {
+                                                    refs.add((ObjId) subInfo.tryCastVal((DataType) valSingle));
+                                                } catch (DataTypeInfo.CastException e) {
+                                                    Log.error(e.getMessage(), e);
+                                                }
                                             }
                                         }
                                     }
@@ -508,8 +519,8 @@ public class ObjMerger {
         }
     }
 
-    private Collection<File> _jFiles = new LinkedHashSet<>();
-    private Collection<File> _dooFiles = new LinkedHashSet<>();
+    private final Collection<File> _jFiles = new LinkedHashSet<>();
+    private final Collection<File> _dooFiles = new LinkedHashSet<>();
 
     private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile, File jFile, File dooFile) throws Exception {
         Log.info("adding exported files to object merger");
@@ -627,25 +638,25 @@ public class ObjMerger {
     }
 
     private final static Collection<File> _metaSlkInFiles = Arrays.asList(
-            new File("Doodads\\DoodadMetaData.slk"),
-            new File("Units\\AbilityBuffMetaData.slk"),
-            new File("Units\\AbilityMetaData.slk"),
-            new File("Units\\DestructableMetaData.slk"),
-            new File("Units\\UnitMetaData.slk"),
-            new File("Units\\UpgradeMetaData.slk"));
+            DoodadsMetaSLK.GAME_PATH,
+            AbilityBuffMetaSLK.GAME_PATH,
+            AbilityMetaSLK.GAME_PATH,
+            DestructableMetaSLK.GAME_PATH,
+            UnitMetaSLK.GAME_PATH,
+            UpgradeMetaSLK.GAME_PATH);
 
     private final static Collection<File> _slkInFiles = Arrays.asList(
-            DoodSLK.GAME_USE_PATH,
-            UnitAbilsSLK.GAME_USE_PATH,
-            UnitBalanceSLK.GAME_USE_PATH,
-            UnitDataSLK.GAME_USE_PATH,
-            UnitUISLK.GAME_USE_PATH,
-            UnitWeaponsSLK.GAME_USE_PATH,
-            ItemSLK.GAME_USE_PATH,
-            DestructableSLK.GAME_USE_PATH,
-            AbilSLK.GAME_USE_PATH,
-            BuffSLK.GAME_USE_PATH,
-            UpgradeSLK.GAME_USE_PATH);
+            DoodSLK.GAME_PATH,
+            UnitAbilsSLK.GAME_PATH,
+            UnitBalanceSLK.GAME_PATH,
+            UnitDataSLK.GAME_PATH,
+            UnitUISLK.GAME_PATH,
+            UnitWeaponsSLK.GAME_PATH,
+            ItemSLK.GAME_PATH,
+            DestructableSLK.GAME_PATH,
+            AbilSLK.GAME_PATH,
+            BuffSLK.GAME_PATH,
+            UpgradeSLK.GAME_PATH);
 
     private final static Collection<File> _profileInFiles = Arrays.asList(Profile.getNativePaths());
 
@@ -728,21 +739,21 @@ public class ObjMerger {
 
         try {
             wtsFile = wtsResult.getFile(WTS.GAME_PATH);
-        } catch (NoSuchFileException e) {
+        } catch (NoSuchFileException ignored) {
         }
 
         File jFile = null;
 
         try {
             jFile = wtsResult.getFile(Jass.GAME_PATH);
-        } catch (NoSuchFileException e) {
+        } catch (NoSuchFileException ignored) {
         }
 
         File dooFile = null;
 
         try {
             dooFile = dooResult.getFile(DOO.GAME_PATH);
-        } catch (NoSuchFileException e) {
+        } catch (NoSuchFileException ignored) {
         }
 
         exportFiles(outDir, metaSlkFiles, metaSlkFiles, profileFiles, objModFiles, wtsFile, jFile, dooFile);
@@ -758,12 +769,12 @@ public class ObjMerger {
                 File outFile = metaSlkResult.getFile(inFile);
 
                 metaSlkFiles.put(inFile, outFile);
-            } catch (NoSuchFileException e) {
+            } catch (NoSuchFileException ignored) {
             }
         }
     }
 
-    private final static File PROFILE_OUTPUT_PATH = new File("Units\\CampaignUnitStrings.txt");
+    private final static File PROFILE_OUTPUT_PATH = CampaignUnitStrings.GAME_PATH;
 
     public void writeToDir(File outDir) throws Exception {
         Orient.createDir(outDir);
@@ -910,23 +921,19 @@ public class ObjMerger {
                 File outFile = metaPortResult.getFile(inFile);
 
                 outFiles.put(inFile, outFile);
-            } catch (NoSuchFileException e) {
+            } catch (NoSuchFileException ignored) {
             }
         }
 
         MpqPort.Out portOut = new JMpqPort.Out();
 
-        Collection<File> slkFiles = new ArrayList<>();
-
-        slkFiles.addAll(_slkInFiles);
+        Collection<File> slkFiles = new ArrayList<>(_slkInFiles);
 
         for (File inFile : slkFiles) {
             portOut.add(inFile);
         }
 
-        Collection<File> profileFiles = new ArrayList<>();
-
-        profileFiles.addAll(_profileInFiles);
+        Collection<File> profileFiles = new ArrayList<>(_profileInFiles);
 
         for (File inFile : profileFiles) {
             portOut.add(inFile);
@@ -951,7 +958,7 @@ public class ObjMerger {
                 File outFile = portResult.getFile(inFile);
 
                 outFiles.put(inFile, outFile);
-            } catch (NoSuchFileException e) {
+            } catch (NoSuchFileException ignored) {
             }
         }
         Log.info("Extracting following files: " + Arrays.toString(outFiles.values().toArray()));
@@ -995,9 +1002,7 @@ public class ObjMerger {
 
         MpqPort.Out slkPortOut = new JMpqPort.Out();
 
-        Collection<File> slkFiles = new ArrayList<>();
-
-        slkFiles.addAll(_slkInFiles);
+        Collection<File> slkFiles = new ArrayList<>(_slkInFiles);
 
         for (File inFile : slkFiles) {
             slkPortOut.add(inFile);
@@ -1005,9 +1010,7 @@ public class ObjMerger {
 
         MpqPort.Out.Result slkResult = slkPortOut.commit(mpqFiles);
 
-        Collection<File> profileFiles = new ArrayList<>();
-
-        profileFiles.addAll(_profileInFiles);
+        Collection<File> profileFiles = new ArrayList<>(_profileInFiles);
 
         MpqPort.Out profilePortOut = new JMpqPort.Out();
 

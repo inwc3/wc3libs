@@ -51,7 +51,10 @@ public class ShadowMap extends Raster<Boolean> {
 		return new Wc3RasterImg(fxImg);
 	}
 	
-	public ShadowMap(Bounds bounds) {
+	public ShadowMap(@Nonnull Bounds bounds) {
+		super(bounds);
+
+		//TODO: needed?
 		setBounds(bounds, false, false);
 	}
 }

@@ -15,33 +15,33 @@ public class TerrainFog extends DataType {
 		_type = val;
 	}
 	
-	private Real _zStart = Real.valueOf(0F);
+	private War3Real _zStart = War3Real.valueOf(0F);
 	
-	public Real getZStart() {
+	public War3Real getZStart() {
 		return _zStart;
 	}
 	
-	public void setZStart(@Nonnull Real val) {
+	public void setZStart(@Nonnull War3Real val) {
 		_zStart = val;
 	}
 
-	private Real _zEnd = Real.valueOf(0F);
+	private War3Real _zEnd = War3Real.valueOf(0F);
 	
-	public Real getZEnd() {
+	public War3Real getZEnd() {
 		return _zEnd;
 	}
 	
-	public void setZEnd(@Nonnull Real val) {
+	public void setZEnd(@Nonnull War3Real val) {
 		_zEnd = val;
 	}
 	
-	private Real _density = Real.valueOf(0F);
+	private War3Real _density = War3Real.valueOf(0F);
 	
-	public Real getDensity() {
+	public War3Real getDensity() {
 		return _density;
 	}
 	
-	public void setDensity(@Nonnull Real val) {
+	public void setDensity(@Nonnull War3Real val) {
 		_density = val;
 	}
 	
@@ -77,7 +77,7 @@ public class TerrainFog extends DataType {
 		return String.format("type=[%s] zStart=%.2f zEnd=%.2f density=%.2f color=[%s]", getType(), getZStart().getVal(), getZEnd().getVal(), getDensity().getVal(), getColor());
 	}
 	
-	public TerrainFog(@Nonnull TerrainFogType type, @Nonnull Real zStart, @Nonnull Real zEnd, @Nonnull Real density, @Nonnull Color color) {
+	public TerrainFog(@Nonnull TerrainFogType type, @Nonnull War3Real zStart, @Nonnull War3Real zEnd, @Nonnull War3Real density, @Nonnull Color color) {
 		setType(type);
 		setZStart(zStart);
 		setZEnd(zEnd);

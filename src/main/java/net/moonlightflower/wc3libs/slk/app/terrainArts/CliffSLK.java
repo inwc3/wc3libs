@@ -9,63 +9,52 @@ import java.util.Map.Entry;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.CliffClass;
-import net.moonlightflower.wc3libs.dataTypes.app.CliffId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3Int;
-import net.moonlightflower.wc3libs.dataTypes.app.TileId;
-import net.moonlightflower.wc3libs.dataTypes.app.Wc3String;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("TerrainArt\\CliffTypes.slk");
-	
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("TerrainArt\\CliffTypes.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<CliffId> OBJ_ID = new State<>("cliffID", CliffId.class);
 
-		public final static State<Wc3String> ART_CLIFF_MODEL_DIR = new State<>("cliffModelDir", Wc3String.class);
-		public final static State<Wc3String> ART_RAMP_MODEL_DIR = new State<>("rampModelDir", Wc3String.class);
-		public final static State<Wc3String> ART_TEX_DIR = new State<>("texDir", Wc3String.class);
-		public final static State<Wc3String> ART_TEX_FILE = new State<>("texFile", Wc3String.class);
+		public final static State<War3String> ART_CLIFF_MODEL_DIR = new State<>("cliffModelDir", War3String.class);
+		public final static State<War3String> ART_RAMP_MODEL_DIR = new State<>("rampModelDir", War3String.class);
+		public final static State<War3String> ART_TEX_DIR = new State<>("texDir", War3String.class);
+		public final static State<War3String> ART_TEX_FILE = new State<>("texFile", War3String.class);
 
 		public final static State<CliffClass> DATA_CLIFF_CLASS = new State<>("cliffClass", CliffClass.class);
 		public final static State<TileId> DATA_GROUND_TILE = new State<>("groundTile", TileId.class);
 		public final static State<TileId> DATA_OLD_ID = new State<>("oldID", TileId.class);
 		public final static State<TileId> DATA_UPPER_TILE = new State<>("upperTile", TileId.class);
 
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("inBeta", Bool.class);
-		public final static State<Wc3String> EDITOR_NAME = new State<>("name", Wc3String.class);
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class);
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("inBeta", War3Bool.class);
+		public final static State<War3String> EDITOR_NAME = new State<>("name", War3String.class);
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<CliffId> {
@@ -78,14 +67,14 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -96,79 +85,84 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 		}
 
 		public Path getRampModelDir() {
-			return Paths.get(get(States.ART_RAMP_MODEL_DIR).toString());
+			return Paths.get(get(State.ART_RAMP_MODEL_DIR).toString());
 		}
 		
 		public void setRampModelDir(Path val) {
-			set(States.ART_RAMP_MODEL_DIR, Wc3String.valueOf(val.toString()));
+			set(State.ART_RAMP_MODEL_DIR, War3String.valueOf(val.toString()));
 		}
 		
 		public Path getCliffModelDir() {
-			return Paths.get(get(States.ART_CLIFF_MODEL_DIR).toString());
+			return Paths.get(get(State.ART_CLIFF_MODEL_DIR).toString());
 		}
 		
 		public void setCliffModelDir(Path val) {
-			set(States.ART_CLIFF_MODEL_DIR, Wc3String.valueOf(val.toString()));
+			set(State.ART_CLIFF_MODEL_DIR, War3String.valueOf(val.toString()));
 		}
 		
 		public Path getTex() {
-			return Paths.get(get(States.ART_TEX_DIR).toString(), get(States.ART_TEX_FILE).toString());
+			return Paths.get(get(State.ART_TEX_DIR).toString(), get(State.ART_TEX_FILE).toString());
 		}
 		
 		public void setTex(Path val) {
-			set(States.ART_TEX_DIR, Wc3String.valueOf(val.getParent().toString()));
-			set(States.ART_TEX_DIR, Wc3String.valueOf(val.getFileName().toString()));
+			set(State.ART_TEX_DIR, War3String.valueOf(val.getParent().toString()));
+			set(State.ART_TEX_DIR, War3String.valueOf(val.getFileName().toString()));
 		}
 		
 		public String getName() {
-			return get(States.EDITOR_NAME).toString();
+			return get(State.EDITOR_NAME).toString();
 		}
 		
 		public void setName(String val) {
-			set(States.EDITOR_NAME, Wc3String.valueOf(val));
+			set(State.EDITOR_NAME, War3String.valueOf(val));
 		}
 		
 		public TileId getGroundTile() {
-			return get(States.DATA_GROUND_TILE);
+			return get(State.DATA_GROUND_TILE);
 		}
 		
 		public void setGroundTile(TileId val) {
-			set(States.DATA_GROUND_TILE, val);
+			set(State.DATA_GROUND_TILE, val);
 		}
 		
 		public TileId getUpperTile() {
-			return get(States.DATA_UPPER_TILE);
+			return get(State.DATA_UPPER_TILE);
 		}
 		
 		public void setUpperTile(TileId val) {
-			set(States.DATA_UPPER_TILE, val);
+			set(State.DATA_UPPER_TILE, val);
 		}
 		
 		public CliffClass getCliffClass() {
-			return get(States.DATA_CLIFF_CLASS);
+			return get(State.DATA_CLIFF_CLASS);
 		}
 		
 		public void setCliffClass(CliffClass val) {
-			set(States.DATA_CLIFF_CLASS, val);
+			set(State.DATA_CLIFF_CLASS, val);
 		}
 		
 		public TileId getOldId() {
-			return get(States.DATA_OLD_ID);
+			return get(State.DATA_OLD_ID);
 		}
 		
 		public void setOldId(TileId val) {
-			set(States.DATA_OLD_ID, val);
+			set(State.DATA_OLD_ID, val);
 		}
 
-		public <T extends DataType> T get(States.State<T> state) {
-			return state.tryCastVal(super.get(state));
+		public <T extends DataType> T get(State<T> state) {
+			try {
+				return state.tryCastVal(super.get(state));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			super.set(state, val);
 		}
 		
-		public <T extends DataType> void remove(States.State<T> state) {
+		public <T extends DataType> void remove(State<T> state) {
 			super.set(state, null);
 		}
 		
@@ -185,7 +179,7 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 		public Obj(CliffId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -259,9 +253,9 @@ public class CliffSLK extends ObjSLK<CliffSLK, CliffId, CliffSLK.Obj> {
 	}
 	
 	public CliffSLK() {
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (States.State state : States.values()) {
+		for (State<?> state : State.values(State.class)) {
 			addField(state);
 		}
 	}

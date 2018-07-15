@@ -114,8 +114,8 @@ public class GameExe {
         _curVersion = version;
     }
 
-    @Nullable
-    public static GameExe fromDir(@Nonnull File dir, @Nonnull Version version) throws IOException {
+    @Nonnull
+    public static GameExe fromDir(@Nonnull File dir, @Nonnull Version version) {
         if (version.compareTo(VERSION_1_29) >= 0) return new GameExe(new File(dir, "Warcraft III.exe"));
 
         return new GameExe(new File(dir, "war3.exe"));
@@ -123,7 +123,7 @@ public class GameExe {
 
     @Nullable
     public static GameExe fromDir(@Nonnull File dir) {
-        Version version = null;
+        Version version;
 
         File warcraftIIIFile = new File(dir, "Warcraft III.exe");
 
@@ -132,7 +132,7 @@ public class GameExe {
                 version = new GameExe(warcraftIIIFile).getVersion();
 
                 return fromDir(dir, version);
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
 
@@ -143,7 +143,7 @@ public class GameExe {
                 version = new GameExe(frozenThroneFile).getVersion();
 
                 return fromDir(dir, version);
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
 
@@ -154,7 +154,7 @@ public class GameExe {
                 version = new GameExe(war3File).getVersion();
 
                 return fromDir(dir, version);
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
 

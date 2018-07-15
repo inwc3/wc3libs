@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class UnitClass extends Wc3String {
+public class UnitClass extends War3String {
 	private static Map<String, UnitClass> _nameMap = new LinkedHashMap<>();
 
 	public final static UnitClass ANCIENT = new UnitClass("ancient");

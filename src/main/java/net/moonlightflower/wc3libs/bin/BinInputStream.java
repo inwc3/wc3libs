@@ -1,11 +1,10 @@
 package net.moonlightflower.wc3libs.bin;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class BinInputStream extends BinStream {
 	public byte readByte() throws StreamException {
@@ -83,7 +82,7 @@ public class BinInputStream extends BinStream {
 	}
 
 	@Nonnull
-	public byte[] writeToByteArray() throws IOException {
+	public byte[] writeToByteArray() {
 		ByteList bytes = _bytes;
 
 		if (bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + bytes.size());

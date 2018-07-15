@@ -11,7 +11,7 @@ public class ObservableLinkedHashSet<T> extends LinkedHashSet<T> {
         void clear();
     }
 
-    protected Set<Listener<T>> _listeners = new LinkedHashSet<>();
+    protected final Set<Listener<T>> _listeners = new LinkedHashSet<>();
 
     public void onAdd(T val) {
 

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AttackBits extends Wc3Int {
+public class AttackBits extends War3Int {
 	public static String getTranslatorSection() {
 		return "attackBits";
 	}

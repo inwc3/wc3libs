@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DefType extends Wc3String {
+public class DefType extends War3String {
 	private final static Map<Integer, DefType> _indexMap = new LinkedHashMap<>();
 	private final static Map<String, DefType> _nameMap = new LinkedHashMap<>();
 

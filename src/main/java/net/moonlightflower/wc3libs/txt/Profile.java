@@ -1,8 +1,13 @@
 package net.moonlightflower.wc3libs.txt;
 
+import net.moonlightflower.wc3libs.dataTypes.DataList;
+import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.FieldId;
-import net.moonlightflower.wc3libs.misc.ObjId;
+import net.moonlightflower.wc3libs.misc.Printable;
 import net.moonlightflower.wc3libs.misc.Translator;
+import net.moonlightflower.wc3libs.txt.app.profile.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,61 +19,156 @@ import java.util.Map.Entry;
 /**
  * handles profile files like Units\CommandFunc.txt
  */
-public class Profile extends TXT {
+public class Profile extends TXT implements Printable {
+	public static class UnitState<T extends DataType> extends TXTState<T> {
+		public final static UnitState<War3String> ART_ANIM_PROPS = new UnitState<>("animProps", new DataTypeInfo(DataList.class, War3String.class));
+		public final static UnitState<Icon> ART_ICON = new UnitState<>("Art", Icon.class);
+		public final static UnitState<War3String> ART_ATTACHMENT_ANIM_PROPS = new UnitState<>("Attachmentanimprops", new DataTypeInfo(DataList.class, War3String.class));
+		public final static UnitState<War3String> ART_ATTACHMENT_LINKS_PROPS = new UnitState<>("Attachmentlinkprops", new DataTypeInfo(DataList.class, War3String.class));
+		public final static UnitState<War3String> ART_AWAKEN_TIP = new UnitState<>("Awakentip", War3String.class);
+		public final static UnitState<War3String> ART_BONE_PROPS = new UnitState<>("Boneprops", new DataTypeInfo(DataList.class, War3String.class));
+		public final static UnitState<SoundLabel> ART_BUILDING_SOUND_LABEL = new UnitState<>("BuildingSoundLabel", SoundLabel.class);
+
+		public final static UnitState<War3String> TECH_BUILDS = new UnitState<>("BuildingSoundLabel", new DataTypeInfo(DataList.class, UnitId.class));
+
+		public final static UnitState<War3String> ART_BUTTON_POS = new UnitState<>("Buttonpos", new DataTypeInfo(DataList.class, War3Int.class));
+
+		public final static UnitState<Icon> ART_CASTER_UPGRADE = new UnitState<>("Casterupgradeart", Icon.class);
+		public final static UnitState<War3String> ART_CASTER_UPGRADE_NAME = new UnitState<>("Casterupgradeart", new DataTypeInfo(DataList.class, War3String.class));
+		public final static UnitState<War3String> ART_CASTER_UPGRADE_TIP = new UnitState<>("Casterupgradetip", new DataTypeInfo(DataList.class, War3String.class));
+
+		public final static UnitState<War3Bool> TECH_DEPENDENCY_OR = new UnitState<>("DependencyOr", War3Bool.class);
+
+		public final static UnitState<War3String> TEXT_DESCRIPTION = new UnitState<>("Description", War3String.class);
+
+		public final static UnitState<War3String> EDITOR_SUFFIX = new UnitState<>("EditorSuffix", War3String.class);
+
+		public final static UnitState<War3Char> TEXT_HOTKEY = new UnitState<>("Hotkey", War3Char.class);
+
+		public final static UnitState<War3Int> SOUND_LOOPING_FADE_IN = new UnitState<>("LoopingSoundFadeIn", War3Int.class);
+		public final static UnitState<War3Int> SOUND_LOOPING_FADE_OUT = new UnitState<>("LoopingSoundFadeOut", War3Int.class);
+
+		public final static UnitState<War3String> TECH_MAKE_ITEMS = new UnitState<>("Makeitems", new DataTypeInfo(DataList.class, ItemId.class));
+
+		public final static UnitState<War3String> COMBAT_MISSILE_ARCS = new UnitState<>("Missilearc", new DataTypeInfo(DataList.class, War3Real.class));
+
+		public final static UnitState<War3String> COMBAT_MISSILE_ARTS = new UnitState<>("Missileart", new DataTypeInfo(DataList.class, Model.class));
+
+		public final static UnitState<War3String> COMBAT_MISSILE_HOMINGS = new UnitState<>("MissileHoming", new DataTypeInfo(DataList.class, War3Bool.class));
+		public final static UnitState<War3String> COMBAT_MISSILE_SPEEDS = new UnitState<>("Missilespeed", new DataTypeInfo(DataList.class, War3Int.class));
+
+		public final static UnitState<SoundLabel> SOUND_MOVEMENT = new UnitState<>("MovementSoundLabel", SoundLabel.class);
+		public final static UnitState<War3String> TEXT_NAME = new UnitState<>("Name", War3String.class);
+
+		public final static UnitState<War3String> TEXT_PROPER_NAMES = new UnitState<>("Propernames", new DataTypeInfo(DataList.class, War3String.class));
+
+		public final static UnitState<SoundLabel> SOUND_RANDOM = new UnitState<>("RandomSoundLabel", SoundLabel.class);
+
+		public final static UnitState<War3Int> TECH_REQUIRES_COUNT = new UnitState<>("Requirescount", War3Int.class);
+
+		public final static UnitState<War3String> TECH_REQUIRES = new UnitState<>("Requires", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES1 = new UnitState<>("Requires1", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES2 = new UnitState<>("Requires2", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES3 = new UnitState<>("Requires3", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES4 = new UnitState<>("Requires4", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES5 = new UnitState<>("Requires5", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES6 = new UnitState<>("Requires6", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES7 = new UnitState<>("Requires7", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES8 = new UnitState<>("Requires8", new DataTypeInfo(DataList.class, TechId.class));
+		public final static UnitState<War3String> TECH_REQUIRES_AMOUNT = new UnitState<>("Requiresamount", new DataTypeInfo(DataList.class, War3Int.class));
+
+		public final static UnitState<War3String> TECH_RESEARCHES = new UnitState<>("Requiresamount", new DataTypeInfo(DataList.class, UpgradeId.class));
+
+		public final static UnitState<War3Bool> TECH_REVIVE = new UnitState<>("Revive", War3Bool.class);
+		public final static UnitState<War3String> TECH_REVIVE_TIP = new UnitState<>("Revivetip", War3String.class);
+
+		public final static UnitState<Icon> ART_SCORE_SCREEN_ICON = new UnitState<>("ScoreScreenIcon", Icon.class);
+		public final static UnitState<War3String> TECH_SELL_ITEMS = new UnitState<>("Sellitems", new DataTypeInfo(DataList.class, ItemId.class));
+		public final static UnitState<War3String> TECH_SELL_UNITS = new UnitState<>("Sellunits", new DataTypeInfo(DataList.class, UnitId.class));
+
+		public final static UnitState<War3String> ART_SPECIAL = new UnitState<>("Specialart", new DataTypeInfo(DataList.class, Model.class));
+		public final static UnitState<War3String> ART_TARGET = new UnitState<>("Targetart", new DataTypeInfo(DataList.class, Model.class));
+
+		public final static UnitState<War3String> TEXT_TIP = new UnitState<>("Tip", War3String.class);
+
+		public final static UnitState<War3String> TECH_TRAINS = new UnitState<>("Trains", new DataTypeInfo(DataList.class, UnitId.class));
+		public final static UnitState<War3String> TECH_REVIVE_AT = new UnitState<>("Reviveat", new DataTypeInfo(DataList.class, UnitId.class));
+
+		public final static UnitState<War3String> TEXT_UBER_TIP = new UnitState<>("Ubertip", War3String.class);
+
+		public final static UnitState<War3String> TECH_UPGRADE = new UnitState<>("Upgrade", new DataTypeInfo(DataList.class, UnitId.class));
+
+		public UnitState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(fieldIdS, typeInfo, defVal);
+		}
+
+		public UnitState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo) {
+			super(fieldIdS, typeInfo);
+		}
+
+		public UnitState(@Nonnull String fieldIdS, @Nonnull Class<T> type) {
+			super(fieldIdS, type);
+		}
+
+		public UnitState(@Nonnull String fieldIdS, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(fieldIdS, type, defVal);
+		}
+	}
+
 	public static File[] getNativePaths() {
 		return new File[]{
-			new File("Units\\CampaignUnitStrings.txt"),
+				CampaignUnitStrings.GAME_PATH,
 
-			new File("Units\\HumanUnitStrings.txt"),
-			new File("Units\\NeutralUnitStrings.txt"),
-			new File("Units\\NightElfUnitStrings.txt"),
-			new File("Units\\OrcUnitStrings.txt"),
-			new File("Units\\UndeadUnitStrings.txt"),
+				HumanUnitStrings.GAME_PATH,
+				NeutralUnitStrings.GAME_PATH,
+				NightElfUnitStrings.GAME_PATH,
+				OrcUnitStrings.GAME_PATH,
+				UndeadUnitStrings.GAME_PATH,
 
-			new File("Units\\CampaignUnitFunc.txt"),
-			new File("Units\\HumanUnitFunc.txt"),
-			new File("Units\\NeutralUnitFunc.txt"),
-			new File("Units\\NightElfUnitFunc.txt"),
-			new File("Units\\OrcUnitFunc.txt"),
-			new File("Units\\UndeadUnitFunc.txt"),
+				CampaignUnitFunc.GAME_PATH,
+				HumanUnitFunc.GAME_PATH,
+				NeutralUnitFunc.GAME_PATH,
+				NightElfUnitFunc.GAME_PATH,
+				OrcUnitFunc.GAME_PATH,
+				UndeadUnitFunc.GAME_PATH,
 
-			new File("Units\\CampaignAbilityStrings.txt"),
-			new File("Units\\CommonAbilityStrings.txt"),
-			new File("Units\\HumanAbilityStrings.txt"),
-			new File("Units\\NeutralAbilityStrings.txt"),
-			new File("Units\\NightElfAbilityStrings.txt"),
-			new File("Units\\OrcAbilityStrings.txt"),
-			new File("Units\\UndeadAbilityStrings.txt"),
-			new File("Units\\ItemAbilityStrings.txt"),
+				CampaignAbilityStrings.GAME_PATH,
+				CommonAbilityStrings.GAME_PATH,
+				HumanAbilityStrings.GAME_PATH,
+				NeutralAbilityStrings.GAME_PATH,
+				NightElfAbilityStrings.GAME_PATH,
+				OrcAbilityStrings.GAME_PATH,
+				UndeadAbilityStrings.GAME_PATH,
+				ItemAbilityStrings.GAME_PATH,
 
-			new File("Units\\CampaignAbilityFunc.txt"),
-			new File("Units\\CommonAbilityFunc.txt"),
-			new File("Units\\HumanAbilityFunc.txt"),
-			new File("Units\\NeutralAbilityFunc.txt"),
-			new File("Units\\NightElfAbilityFunc.txt"),
-			new File("Units\\OrcAbilityFunc.txt"),
-			new File("Units\\UndeadAbilityFunc.txt"),
-			new File("Units\\ItemAbilityFunc.txt"),
+				CampaignAbilityFunc.GAME_PATH,
+				CommonAbilityFunc.GAME_PATH,
+				HumanAbilityFunc.GAME_PATH,
+				NeutralAbilityFunc.GAME_PATH,
+				NightElfAbilityFunc.GAME_PATH,
+				OrcAbilityFunc.GAME_PATH,
+				UndeadAbilityFunc.GAME_PATH,
+				ItemAbilityFunc.GAME_PATH,
 
-			new File("Units\\CampaignUpgradeStrings.txt"),
-			new File("Units\\HumanUpgradeStrings.txt"),
-			new File("Units\\NightElfUpgradeStrings.txt"),
-			new File("Units\\OrcUpgradeStrings.txt"),
-			new File("Units\\UndeadUpgradeStrings.txt"),
-			//new File("Units\\NeutralUpgradeStrings.txt"),
+				CampaignUpgradeStrings.GAME_PATH,
+				HumanUpgradeStrings.GAME_PATH,
+				NightElfUpgradeStrings.GAME_PATH,
+				OrcUpgradeStrings.GAME_PATH,
+				UndeadUpgradeStrings.GAME_PATH,
+				//NeutralUpgradeStrings.GAME_PATH,
 
-			//new File("Units\\CampaignUpgradeFunc.txt"),
-			new File("Units\\HumanUpgradeFunc.txt"),
-			new File("Units\\NightElfUpgradeFunc.txt"),
-			new File("Units\\OrcUpgradeFunc.txt"),
-			new File("Units\\UndeadUpgradeFunc.txt"),
-			new File("Units\\NeutralUpgradeFunc.txt"),
+				//CampaignUpgradeFunc.GAME_PATH,
+				HumanUpgradeFunc.GAME_PATH,
+				NightElfUpgradeFunc.GAME_PATH,
+				OrcUpgradeFunc.GAME_PATH,
+				UndeadUpgradeFunc.GAME_PATH,
+				NeutralUpgradeFunc.GAME_PATH,
 
-			new File("Units\\CommandStrings.txt"),
-			new File("Units\\ItemStrings.txt"),
+				CommandStrings.GAME_PATH,
+				ItemStrings.GAME_PATH,
 
-			new File("Units\\CommandFunc.txt"),
-			new File("Units\\ItemFunc.txt")
+				CommandFunc.GAME_PATH,
+				ItemFunc.GAME_PATH
 		};
 	}
 	
@@ -160,11 +260,6 @@ public class Profile extends TXT {
 					System.out.println(String.format("%s=%s", fieldId.toTXTVal().toString(), valS));
 				}*/
 			}
-		}
-		
-		@Override
-		public void print() {
-			print(System.out);
 		}
 		
 		@Override
@@ -290,18 +385,6 @@ public class Profile extends TXT {
 	@Override
 	public void write(@Nonnull File file) throws IOException {
 		super.write(file, _translator);
-	}
-	
-	@Override
-	public void print() {
-		for (Entry<TXTSectionId, Obj> objEntry : getObjs().entrySet()) {
-			TXTSectionId objId = objEntry.getKey();
-			Obj obj = objEntry.getValue();
-			
-			System.out.println(String.format("[%s]", objId.toString()));
-			
-			obj.print();
-		}
 	}
 	
 	@Override

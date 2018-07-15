@@ -1,15 +1,15 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.Wc3Num;
+import net.moonlightflower.wc3libs.dataTypes.War3Num;
 
-public class Real extends DataType implements Wc3Num {
+public class War3Real extends DataType implements War3Num {
 	public static String name() {
-		return "Real";
+		return "War3Real";
 	}
 
-	public final static Real getDefVal() {
-		return new Real(0F);
+	public final static War3Real getDefVal() {
+		return new War3Real(0F);
 	}
 	
 	private float _val;
@@ -20,13 +20,13 @@ public class Real extends DataType implements Wc3Num {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Real)
-			return equals((Real) other);
+		if (other instanceof War3Real)
+			return equals((War3Real) other);
 
 		return super.equals(other);
 	}
 
-	public boolean equals(Real other) {
+	public boolean equals(War3Real other) {
 		return getVal().equals(other.getVal());
 	}
 
@@ -58,19 +58,19 @@ public class Real extends DataType implements Wc3Num {
 		return getVal().intValue();
 	}
 	
-	public Real(float val) {
+	public War3Real(float val) {
 		super();
 		
 		_val = val;
 	}
 	
-	public static Real valueOf(float val) {
-		return new Real(val);
+	public static War3Real valueOf(float val) {
+		return new War3Real(val);
 	}
 
-	public static Real valueOf(Object val) {
+	public static War3Real valueOf(Object val) {
 		try {
-			Real ret = valueOf(Float.parseFloat(val.toString()));
+			War3Real ret = valueOf(Float.parseFloat(val.toString()));
 			
 			return ret;
 		} catch (NumberFormatException e) {
@@ -79,16 +79,16 @@ public class Real extends DataType implements Wc3Num {
 		return null;
 	}
 	
-	public Real() {
+	public War3Real() {
 		
 	}
 	
 	@Override
-	public Real decode(Object val) {
+	public War3Real decode(Object val) {
 		return valueOf(val);
 	}
 	
-	public static Real decodeStatic(Object val) {
+	public static War3Real decodeStatic(Object val) {
 		return valueOf(val);
 	}
 }

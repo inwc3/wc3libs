@@ -8,7 +8,6 @@ import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
-import net.moonlightflower.wc3libs.slk.SLKState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,79 +19,73 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("TerrainArt\\Weather.slk");
-	
-	static public class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
+	public final static File GAME_PATH = new File("TerrainArt\\Weather.slk");
 
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<WeatherId> OBJ_ID = new State<>("effectID", WeatherId.class);
-		
+
 		public final static State<AlphaMode> ART_ALPHA_MODE = new State<>("alphaMode", AlphaMode.class);
-		public final static State<Real> ART_ANGLE_X = new State<>("angx", Real.class, Real.valueOf(-50F));
-		public final static State<Real> ART_ANGLE_Y = new State<>("angy", Real.class, Real.valueOf(50F));
-		public final static State<Real> ART_EMISSION_RATE = new State<>("emrate", Real.class, Real.valueOf(10F));
-		public final static State<Wc3Int> ART_END_ALPHA = new State<>("alphaEnd", Wc3Int.class, Wc3Int.valueOf(0));
-		public final static State<Wc3Int> ART_END_BLUE = new State<>("blueEnd", Wc3Int.class, Wc3Int.valueOf(0));
-		public final static State<Wc3Int> ART_END_GREEN = new State<>("greenEnd", Wc3Int.class, Wc3Int.valueOf(0));
-		public final static State<Wc3Int> ART_END_RED = new State<>("redEnd", Wc3Int.class, Wc3Int.valueOf(0));
-		public final static State<Real> ART_END_SCALE = new State<>("scaleEnd", Real.class, Real.valueOf(100F));
-		public final static State<Real> ART_END_UV_H = new State<>("hUVEnd", Real.class, Real.valueOf(0F));
-		public final static State<Real> ART_END_UV_T = new State<>("tUVEnd", Real.class, Real.valueOf(0F));
-		public final static State<Real> ART_HEIGHT = new State<>("height", Real.class, Real.valueOf(100F));
-		public final static State<Real> ART_LATITUDE = new State<>("lati", Real.class, Real.valueOf(2.5F));
-		public final static State<Real> ART_LIFESPAN = new State<>("lifespan", Real.class, Real.valueOf(5F));
-		public final static State<Real> ART_LONGITUDE = new State<>("long", Real.class, Real.valueOf(180F));
-		public final static State<Wc3Int> ART_MID_ALPHA = new State<>("alphaMid", Wc3Int.class, Wc3Int.valueOf(127));
-		public final static State<Wc3Int> ART_MID_BLUE = new State<>("blueMid", Wc3Int.class, Wc3Int.valueOf(127));
-		public final static State<Wc3Int> ART_MID_GREEN = new State<>("greenMid", Wc3Int.class, Wc3Int.valueOf(127));
-		public final static State<Wc3Int> ART_MID_RED = new State<>("redMid", Wc3Int.class, Wc3Int.valueOf(127));
-		public final static State<Real> ART_MID_SCALE = new State<>("scaleMid", Real.class, Real.valueOf(100F));
-		public final static State<Real> ART_MID_TIME = new State<>("midTime", Real.class, Real.valueOf(0.5F));
-		public final static State<Real> ART_MID_UV_H = new State<>("hUVMid", Real.class, Real.valueOf(0F));
-		public final static State<Real> ART_MID_UV_T = new State<>("tUVMid", Real.class, Real.valueOf(0F));
-		public final static State<Wc3Int> ART_PARTICLES = new State<>("particles", Wc3Int.class, Wc3Int.valueOf(1000));
-		public final static State<Real> ART_SPEED = new State<>("veloc", Real.class, Real.valueOf(-100F));
-		public final static State<Real> ART_SPEED_ACCEL = new State<>("accel", Real.class, Real.valueOf(0F));
-		public final static State<Wc3Int> ART_START_ALPHA = new State<>("alphaStart", Wc3Int.class, Wc3Int.valueOf(255));
-		public final static State<Wc3Int> ART_START_BLUE = new State<>("blueStart", Wc3Int.class, Wc3Int.valueOf(255));
-		public final static State<Wc3Int> ART_START_GREEN = new State<>("greenStart", Wc3Int.class, Wc3Int.valueOf(255));
-		public final static State<Wc3Int> ART_START_RED = new State<>("redStart", Wc3Int.class, Wc3Int.valueOf(255));
-		public final static State<Real> ART_START_SCALE = new State<>("scaleStart", Real.class, Real.valueOf(100F));
-		public final static State<Real> ART_START_UV_H = new State<>("hUVStart", Real.class, Real.valueOf(0F));
-		public final static State<Real> ART_START_UV_T = new State<>("tUVStart", Real.class, Real.valueOf(0F));
-		public final static State<Real> ART_TAIL_LEN = new State<>("tailLen", Real.class, Real.valueOf(1F));
-		public final static State<Real> ART_TEX_C = new State<>("texc", Real.class, Real.valueOf(10F));
-		public final static State<Wc3String> ART_TEX_DIR = new State<>("Dir", Wc3String.class);
-		public final static State<Wc3String> ART_TEX_FILE = new State<>("file", Wc3String.class);
-		public final static State<Real> ART_TEX_R = new State<>("texr", Real.class, Real.valueOf(10F));
-		public final static State<Bool> ART_USE_FOG = new State<>("useFog", Bool.class, Bool.valueOf(true));
-		public final static State<Bool> ART_USE_HEAD = new State<>("head", Bool.class, Bool.valueOf(true));
-		public final static State<Bool> ART_USE_TAIL = new State<>("tail", Bool.class, Bool.valueOf(true));
-		public final static State<Real> ART_VARIANCE = new State<>("var", Real.class, Real.valueOf(0.05F));
-		
-		public final static State<Wc3Int> EDITOR_VERSION = new State<>("version", Wc3Int.class, Wc3Int.valueOf(0));
-		
+		public final static State<War3Real> ART_ANGLE_X = new State<>("angx", War3Real.class, War3Real.valueOf(-50F));
+		public final static State<War3Real> ART_ANGLE_Y = new State<>("angy", War3Real.class, War3Real.valueOf(50F));
+		public final static State<War3Real> ART_EMISSION_RATE = new State<>("emrate", War3Real.class, War3Real.valueOf(10F));
+		public final static State<War3Int> ART_END_ALPHA = new State<>("alphaEnd", War3Int.class, War3Int.valueOf(0));
+		public final static State<War3Int> ART_END_BLUE = new State<>("blueEnd", War3Int.class, War3Int.valueOf(0));
+		public final static State<War3Int> ART_END_GREEN = new State<>("greenEnd", War3Int.class, War3Int.valueOf(0));
+		public final static State<War3Int> ART_END_RED = new State<>("redEnd", War3Int.class, War3Int.valueOf(0));
+		public final static State<War3Real> ART_END_SCALE = new State<>("scaleEnd", War3Real.class, War3Real.valueOf(100F));
+		public final static State<War3Real> ART_END_UV_H = new State<>("hUVEnd", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Real> ART_END_UV_T = new State<>("tUVEnd", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Real> ART_HEIGHT = new State<>("height", War3Real.class, War3Real.valueOf(100F));
+		public final static State<War3Real> ART_LATITUDE = new State<>("lati", War3Real.class, War3Real.valueOf(2.5F));
+		public final static State<War3Real> ART_LIFESPAN = new State<>("lifespan", War3Real.class, War3Real.valueOf(5F));
+		public final static State<War3Real> ART_LONGITUDE = new State<>("long", War3Real.class, War3Real.valueOf(180F));
+		public final static State<War3Int> ART_MID_ALPHA = new State<>("alphaMid", War3Int.class, War3Int.valueOf(127));
+		public final static State<War3Int> ART_MID_BLUE = new State<>("blueMid", War3Int.class, War3Int.valueOf(127));
+		public final static State<War3Int> ART_MID_GREEN = new State<>("greenMid", War3Int.class, War3Int.valueOf(127));
+		public final static State<War3Int> ART_MID_RED = new State<>("redMid", War3Int.class, War3Int.valueOf(127));
+		public final static State<War3Real> ART_MID_SCALE = new State<>("scaleMid", War3Real.class, War3Real.valueOf(100F));
+		public final static State<War3Real> ART_MID_TIME = new State<>("midTime", War3Real.class, War3Real.valueOf(0.5F));
+		public final static State<War3Real> ART_MID_UV_H = new State<>("hUVMid", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Real> ART_MID_UV_T = new State<>("tUVMid", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Int> ART_PARTICLES = new State<>("particles", War3Int.class, War3Int.valueOf(1000));
+		public final static State<War3Real> ART_SPEED = new State<>("veloc", War3Real.class, War3Real.valueOf(-100F));
+		public final static State<War3Real> ART_SPEED_ACCEL = new State<>("accel", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Int> ART_START_ALPHA = new State<>("alphaStart", War3Int.class, War3Int.valueOf(255));
+		public final static State<War3Int> ART_START_BLUE = new State<>("blueStart", War3Int.class, War3Int.valueOf(255));
+		public final static State<War3Int> ART_START_GREEN = new State<>("greenStart", War3Int.class, War3Int.valueOf(255));
+		public final static State<War3Int> ART_START_RED = new State<>("redStart", War3Int.class, War3Int.valueOf(255));
+		public final static State<War3Real> ART_START_SCALE = new State<>("scaleStart", War3Real.class, War3Real.valueOf(100F));
+		public final static State<War3Real> ART_START_UV_H = new State<>("hUVStart", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Real> ART_START_UV_T = new State<>("tUVStart", War3Real.class, War3Real.valueOf(0F));
+		public final static State<War3Real> ART_TAIL_LEN = new State<>("tailLen", War3Real.class, War3Real.valueOf(1F));
+		public final static State<War3Real> ART_TEX_C = new State<>("texc", War3Real.class, War3Real.valueOf(10F));
+		public final static State<War3String> ART_TEX_DIR = new State<>("Dir", War3String.class);
+		public final static State<War3String> ART_TEX_FILE = new State<>("file", War3String.class);
+		public final static State<War3Real> ART_TEX_R = new State<>("texr", War3Real.class, War3Real.valueOf(10F));
+		public final static State<War3Bool> ART_USE_FOG = new State<>("useFog", War3Bool.class, War3Bool.valueOf(true));
+		public final static State<War3Bool> ART_USE_HEAD = new State<>("head", War3Bool.class, War3Bool.valueOf(true));
+		public final static State<War3Bool> ART_USE_TAIL = new State<>("tail", War3Bool.class, War3Bool.valueOf(true));
+		public final static State<War3Real> ART_VARIANCE = new State<>("var", War3Real.class, War3Real.valueOf(0.05F));
+
+		public final static State<War3Int> EDITOR_VERSION = new State<>("version", War3Int.class, War3Int.valueOf(0));
+
 		public final static State<SoundLabel> SOUND_AMBIENT = new State<>("AmbientSound", SoundLabel.class);
+
+		public State(String idString, DataTypeInfo typeInfo, T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(String idString, DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(String idString, Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(String idString, Class<T> type, T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 	
 	public static class Obj extends SLK.Obj<WeatherId> {
@@ -105,14 +98,14 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -123,273 +116,279 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		}
 
 		public Path getTex() {
-			return Paths.get(get(States.ART_TEX_DIR).getVal(), get(States.ART_TEX_FILE).getVal());
+			return Paths.get(get(State.ART_TEX_DIR).getVal(), get(State.ART_TEX_FILE).getVal());
 		}
 		
 		public void setTex(Path path) {
-			set(States.ART_TEX_DIR, Wc3String.valueOf(path.getParent().toString()));
-			set(States.ART_TEX_FILE, Wc3String.valueOf(path.getFileName().toString()));
+			set(State.ART_TEX_DIR, War3String.valueOf(path.getParent().toString()));
+			set(State.ART_TEX_FILE, War3String.valueOf(path.getFileName().toString()));
 		}
 		
 		public AlphaMode getAlphaMode() {
-			return get(States.ART_ALPHA_MODE);
+			return get(State.ART_ALPHA_MODE);
 		}
 		
 		public void setAlphaMode(WeatherId val) {
-			set(States.ART_ALPHA_MODE, val);
+			set(State.ART_ALPHA_MODE, val);
 		}
 		
-		public Bool getUseFog() {
-			return get(States.ART_USE_FOG);
+		public War3Bool getUseFog() {
+			return get(State.ART_USE_FOG);
 		}
 		
-		public void setUseFog(Bool val) {
-			set(States.ART_USE_FOG, val);
+		public void setUseFog(War3Bool val) {
+			set(State.ART_USE_FOG, val);
 		}
 		
-		public Real getHeight() {
-			return get(States.ART_HEIGHT);
+		public War3Real getHeight() {
+			return get(State.ART_HEIGHT);
 		}
 		
-		public void setHeight(Real val) {
-			set(States.ART_HEIGHT, val);
+		public void setHeight(War3Real val) {
+			set(State.ART_HEIGHT, val);
 		}
 		
-		public Real getAngX() {
-			return get(States.ART_ANGLE_X);
+		public War3Real getAngX() {
+			return get(State.ART_ANGLE_X);
 		}
 		
-		public Real getAngY() {
-			return get(States.ART_ANGLE_Y);
+		public War3Real getAngY() {
+			return get(State.ART_ANGLE_Y);
 		}
 		
-		public void setAng(Real x, Real y) {
-			set(States.ART_ANGLE_X, x);
-			set(States.ART_ANGLE_Y, y);
+		public void setAng(War3Real x, War3Real y) {
+			set(State.ART_ANGLE_X, x);
+			set(State.ART_ANGLE_Y, y);
 		}
 		
-		public Real getEmissionRate() {
-			return get(States.ART_EMISSION_RATE);
+		public War3Real getEmissionRate() {
+			return get(State.ART_EMISSION_RATE);
 		}
 		
-		public void setEmissionRate(Real val) {
-			set(States.ART_EMISSION_RATE, val);
+		public void setEmissionRate(War3Real val) {
+			set(State.ART_EMISSION_RATE, val);
 		}
 		
-		public Real getLifespan() {
-			return get(States.ART_LIFESPAN);
+		public War3Real getLifespan() {
+			return get(State.ART_LIFESPAN);
 		}
 		
-		public void setLifespan(Real val) {
-			set(States.ART_LIFESPAN, val);
+		public void setLifespan(War3Real val) {
+			set(State.ART_LIFESPAN, val);
 		}
 		
-		public Wc3Int getParticles() {
-			return get(States.ART_PARTICLES);
+		public War3Int getParticles() {
+			return get(State.ART_PARTICLES);
 		}
 		
-		public void setParticles(Wc3Int val) {
-			set(States.ART_PARTICLES, val);
+		public void setParticles(War3Int val) {
+			set(State.ART_PARTICLES, val);
 		}
 		
-		public Real getSpeed() {
-			return get(States.ART_SPEED);
+		public War3Real getSpeed() {
+			return get(State.ART_SPEED);
 		}
 		
-		public Real getAccel() {
-			return get(States.ART_SPEED_ACCEL);
+		public War3Real getAccel() {
+			return get(State.ART_SPEED_ACCEL);
 		}
 		
-		public void setSpeed(Real speed, Real accel) {
-			set(States.ART_SPEED, speed);
-			set(States.ART_SPEED_ACCEL, accel);
+		public void setSpeed(War3Real speed, War3Real accel) {
+			set(State.ART_SPEED, speed);
+			set(State.ART_SPEED_ACCEL, accel);
 		}
 
-		public Real getVariance() {
-			return get(States.ART_VARIANCE);
+		public War3Real getVariance() {
+			return get(State.ART_VARIANCE);
 		}
 		
-		public void setVariance(Real val) {
-			set(States.ART_VARIANCE, val);
+		public void setVariance(War3Real val) {
+			set(State.ART_VARIANCE, val);
 		}
 		
-		public Real getTexC() {
-			return get(States.ART_TEX_C);
+		public War3Real getTexC() {
+			return get(State.ART_TEX_C);
 		}
 		
-		public Real getTexR() {
-			return get(States.ART_TEX_R);
+		public War3Real getTexR() {
+			return get(State.ART_TEX_R);
 		}
 		
-		public void setTexOffsets(Real texC, Real texR) {
-			set(States.ART_TEX_C, texC);
-			set(States.ART_TEX_R, texR);
+		public void setTexOffsets(War3Real texC, War3Real texR) {
+			set(State.ART_TEX_C, texC);
+			set(State.ART_TEX_R, texR);
 		}
 		
-		public Bool getHead() {
-			return get(States.ART_USE_HEAD);
+		public War3Bool getHead() {
+			return get(State.ART_USE_HEAD);
 		}
 		
-		public void setHead(Bool val) {
-			set(States.ART_USE_HEAD, val);
+		public void setHead(War3Bool val) {
+			set(State.ART_USE_HEAD, val);
 		}
 		
-		public Bool getTail() {
-			return get(States.ART_USE_TAIL);
+		public War3Bool getTail() {
+			return get(State.ART_USE_TAIL);
 		}
 		
-		public Real getTailLen() {
-			return get(States.ART_TAIL_LEN);
+		public War3Real getTailLen() {
+			return get(State.ART_TAIL_LEN);
 		}
 
-		public void setTail(Bool val, Real len) {
-			set(States.ART_USE_TAIL, val);
-			set(States.ART_TAIL_LEN, len);
+		public void setTail(War3Bool val, War3Real len) {
+			set(State.ART_USE_TAIL, val);
+			set(State.ART_TAIL_LEN, len);
 		}
 		
-		public Real getLatitude() {
-			return get(States.ART_LATITUDE);
+		public War3Real getLatitude() {
+			return get(State.ART_LATITUDE);
 		}
 		
-		public void setLatitude(Real val) {
-			set(States.ART_LATITUDE, val);
+		public void setLatitude(War3Real val) {
+			set(State.ART_LATITUDE, val);
 		}
 		
-		public Real getLongitude() {
-			return get(States.ART_LONGITUDE);
+		public War3Real getLongitude() {
+			return get(State.ART_LONGITUDE);
 		}
 		
-		public void setLongitude(Real val) {
-			set(States.ART_LONGITUDE, val);
+		public void setLongitude(War3Real val) {
+			set(State.ART_LONGITUDE, val);
 		}
 		
-		public Real getMidTime() {
-			return get(States.ART_MID_TIME);
+		public War3Real getMidTime() {
+			return get(State.ART_MID_TIME);
 		}
 		
-		public void setMidTime(Real val) {
-			set(States.ART_MID_TIME, val);
+		public void setMidTime(War3Real val) {
+			set(State.ART_MID_TIME, val);
 		}
 	
 		public Color getColorStart() {
-			return Color.fromBGRA255(get(States.ART_START_BLUE).toInt(), get(States.ART_START_GREEN).toInt(), get(States.ART_START_RED).toInt(), get(States.ART_START_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.ART_START_BLUE).toInt(), get(State.ART_START_GREEN).toInt(), get(State.ART_START_RED).toInt(), get(State.ART_START_ALPHA).toInt());
 		}
 		
 		public void setColorStart(Color val) {
-			set(States.ART_START_RED, Wc3Int.valueOf(val.getRed255()));
-			set(States.ART_START_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.ART_START_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.ART_START_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(State.ART_START_RED, War3Int.valueOf(val.getRed255()));
+			set(State.ART_START_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.ART_START_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.ART_START_ALPHA, War3Int.valueOf(val.getAlpha255()));
 		}
 		
 		public Color getColorMid() {
-			return Color.fromBGRA255(get(States.ART_MID_BLUE).toInt(), get(States.ART_MID_GREEN).toInt(), get(States.ART_MID_RED).toInt(), get(States.ART_MID_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.ART_MID_BLUE).toInt(), get(State.ART_MID_GREEN).toInt(), get(State.ART_MID_RED).toInt(), get(State.ART_MID_ALPHA).toInt());
 		}
 		
 		public void setColorMid(Color val) {
-			set(States.ART_MID_RED, Wc3Int.valueOf(val.getRed255()));
-			set(States.ART_MID_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.ART_MID_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.ART_MID_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(State.ART_MID_RED, War3Int.valueOf(val.getRed255()));
+			set(State.ART_MID_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.ART_MID_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.ART_MID_ALPHA, War3Int.valueOf(val.getAlpha255()));
 		}
 		
 		public Color getColorEnd() {
-			return Color.fromBGRA255(get(States.ART_END_BLUE).toInt(), get(States.ART_END_GREEN).toInt(), get(States.ART_END_RED).toInt(), get(States.ART_END_ALPHA).toInt());
+			return Color.fromBGRA255(get(State.ART_END_BLUE).toInt(), get(State.ART_END_GREEN).toInt(), get(State.ART_END_RED).toInt(), get(State.ART_END_ALPHA).toInt());
 		}
 		
 		public void setColorEnd(Color val) {
-			set(States.ART_END_RED, Wc3Int.valueOf(val.getRed255()));
-			set(States.ART_END_GREEN, Wc3Int.valueOf(val.getGreen255()));
-			set(States.ART_END_BLUE, Wc3Int.valueOf(val.getBlue255()));
-			set(States.ART_END_ALPHA, Wc3Int.valueOf(val.getAlpha255()));
+			set(State.ART_END_RED, War3Int.valueOf(val.getRed255()));
+			set(State.ART_END_GREEN, War3Int.valueOf(val.getGreen255()));
+			set(State.ART_END_BLUE, War3Int.valueOf(val.getBlue255()));
+			set(State.ART_END_ALPHA, War3Int.valueOf(val.getAlpha255()));
 		}
 		
-		public Real getScaleStart() {
-			return get(States.ART_START_SCALE);
+		public War3Real getScaleStart() {
+			return get(State.ART_START_SCALE);
 		}
 		
-		public Real getScaleMid() {
-			return get(States.ART_MID_SCALE);
+		public War3Real getScaleMid() {
+			return get(State.ART_MID_SCALE);
 		}
 		
-		public Real getScaleEnd() {
-			return get(States.ART_END_SCALE);
+		public War3Real getScaleEnd() {
+			return get(State.ART_END_SCALE);
 		}
 		
-		public void setScale(Real valStart, Real valMid, Real valEnd) {
-			set(States.ART_START_SCALE, valStart);
-			set(States.ART_MID_SCALE, valMid);
-			set(States.ART_END_SCALE, valEnd);
+		public void setScale(War3Real valStart, War3Real valMid, War3Real valEnd) {
+			set(State.ART_START_SCALE, valStart);
+			set(State.ART_MID_SCALE, valMid);
+			set(State.ART_END_SCALE, valEnd);
 		}
 		
-		public Real getHUVStart() {
-			return get(States.ART_START_UV_H);
+		public War3Real getHUVStart() {
+			return get(State.ART_START_UV_H);
 		}
 
-		public Real getHUVMid() {
-			return get(States.ART_MID_UV_H);
+		public War3Real getHUVMid() {
+			return get(State.ART_MID_UV_H);
 		}
 
-		public Real getHUVEnd() {
-			return get(States.ART_END_UV_H);
+		public War3Real getHUVEnd() {
+			return get(State.ART_END_UV_H);
 		}
 		
-		public void setHUV(Real valStart, Real valMid, Real valEnd) {
-			set(States.ART_START_UV_H, valStart);
-			set(States.ART_MID_UV_H, valMid);
-			set(States.ART_END_UV_H, valEnd);
+		public void setHUV(War3Real valStart, War3Real valMid, War3Real valEnd) {
+			set(State.ART_START_UV_H, valStart);
+			set(State.ART_MID_UV_H, valMid);
+			set(State.ART_END_UV_H, valEnd);
 		}
 
-		public Real getTUVStart() {
-			return get(States.ART_START_UV_T);
+		public War3Real getTUVStart() {
+			return get(State.ART_START_UV_T);
 		}
 
-		public Real getTUVMid() {
-			return get(States.ART_MID_UV_T);
+		public War3Real getTUVMid() {
+			return get(State.ART_MID_UV_T);
 		}
 
-		public Real getTUVEnd() {
-			return get(States.ART_END_UV_T);
+		public War3Real getTUVEnd() {
+			return get(State.ART_END_UV_T);
 		}
 		
-		public void setTUV(Real valStart, Real valMid, Real valEnd) {
-			set(States.ART_START_UV_T, valStart);
-			set(States.ART_MID_UV_T, valMid);
-			set(States.ART_END_UV_T, valEnd);
+		public void setTUV(War3Real valStart, War3Real valMid, War3Real valEnd) {
+			set(State.ART_START_UV_T, valStart);
+			set(State.ART_MID_UV_T, valMid);
+			set(State.ART_END_UV_T, valEnd);
 		}
 		
 		public SoundLabel getSound() {
-			return get(States.SOUND_AMBIENT);
+			return get(State.SOUND_AMBIENT);
 		}
 		
 		public void setSound(SoundLabel val) {
-			set(States.SOUND_AMBIENT, val);
+			set(State.SOUND_AMBIENT, val);
 		}
 		
-		public <T extends DataType> T get(States.State<T> state) {
-			System.out.println("get " + state);
-			
-			return state.tryCastVal(super.get(state));
+		public <T extends DataType> T get(State<T> state) {
+			try {
+				return state.tryCastVal(super.get(state));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 		
-		public <T extends DataType> void set(States.State<T> state, T val) {
+		public <T extends DataType> void set(State<T> state, T val) {
 			super.set(state, val);
 		}
 		
-		public <T extends DataType> void remove(States.State<T> state) {
+		public <T extends DataType> void remove(State<T> state) {
 			super.set(state, null);
 		}
 		
 		@Override
 		public void reduce() {
-			if ((get(States.SOUND_AMBIENT) != null) && get(States.SOUND_AMBIENT).equals("-")) remove(States.SOUND_AMBIENT);
+			if ((get(State.SOUND_AMBIENT) != null) && get(State.SOUND_AMBIENT).equals("-")) remove(State.SOUND_AMBIENT);
 		}
 		
 		private void read(SLK.Obj<? extends ObjId> otherObj) {
-			for (States.State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				FieldId field = state.getFieldId();
-				
-				set(field, state.tryCastVal(otherObj.get(field)));
+
+				try {
+					set(field, state.tryCastVal(otherObj.get(field)));
+				} catch (DataTypeInfo.CastException ignored) {
+				}
 			}
 		}
 		
@@ -404,7 +403,7 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		public Obj(WeatherId id) {
 			super(id);
 
-			for (States.State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -512,9 +511,9 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 	public WeatherSLK() {
 		super();
 		
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 		
-		for (SLKState state : States.values()) {
+		for (State<?> state : State.values(State.class)) {
 			addField(state);
 		}
 	}

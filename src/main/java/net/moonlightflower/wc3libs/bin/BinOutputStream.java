@@ -3,8 +3,9 @@ package net.moonlightflower.wc3libs.bin;
 import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class BinOutputStream extends BinStream {
     private void ensureCap(long size) {

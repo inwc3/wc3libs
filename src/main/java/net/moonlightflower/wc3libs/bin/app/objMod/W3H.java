@@ -17,10 +17,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * buff modifications file for wrapping war3map.w3h
@@ -28,71 +26,54 @@ import java.util.List;
 public class W3H extends ObjMod {
 	public final static File GAME_PATH = new File("war3map.w3h");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3h");
-	
-	public static class States {
-		public static class State<T extends DataType> extends MetaState<T> {
-			private final static List<State> _values = new ArrayList<>();
 
-			@Nonnull
-			public static List<State> values() {
-				return new ArrayList<>(_values);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-				super(idString, typeInfo, defVal);
-				
-				_values.add(this);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
-				this(idString, new DataTypeInfo(type), defVal);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
-				this(idString, typeInfo, null);
-			}
-			
-			public State(@Nonnull String idString, @Nonnull Class<T> type) {
-				this(idString, new DataTypeInfo(type), null);
-			}
-		}
-
-		@Nonnull
-		public static List<State> values() {
-			return State.values();
-		}
-		
+	public static class State<T extends DataType> extends MetaState<T> {
 		public final static State<SpellDetail> ART_DETAIL = new State<>("fspd", SpellDetail.class);
 		public final static State<Icon> ART_ICON = new State<>("fart", Icon.class);
 		public final static State<LightningId> ART_LIGHTNING = new State<>("flig", new DataTypeInfo(DataList.class, LightningId.class));
 		public final static State<DataList<Model>> ART_MISSILE = new State<>("fmat", new DataTypeInfo(DataList.class, Model.class));
-		public final static State<Real> ART_MISSILE_ARC = new State<>("fmac", Real.class);
-		public final static State<Bool> ART_MISSILE_HOMING = new State<>("fmho", Bool.class);
-		public final static State<Wc3Int> ART_MISSILE_SPEED = new State<>("fmsp", Wc3Int.class);
+		public final static State<War3Real> ART_MISSILE_ARC = new State<>("fmac", War3Real.class);
+		public final static State<War3Bool> ART_MISSILE_HOMING = new State<>("fmho", War3Bool.class);
+		public final static State<War3Int> ART_MISSILE_SPEED = new State<>("fmsp", War3Int.class);
 		public final static State<DataList<Model>> ART_SFX = new State<>("feat", new DataTypeInfo(DataList.class, Model.class));
-		public final static State<DataList<Wc3String>> ART_SFX_ATTACH = new State<>("feft", new DataTypeInfo(DataList.class, Wc3String.class));
+		public final static State<DataList<War3String>> ART_SFX_ATTACH = new State<>("feft", new DataTypeInfo(DataList.class, War3String.class));
 		public final static State<DataList<Model>> ART_SFX_SPECIAL = new State<>("fsat", new DataTypeInfo(DataList.class, Model.class));
-		public final static State<DataList<Wc3String>> ART_SFX_SPECIAL_ATTACH = new State<>("fspt", new DataTypeInfo(DataList.class, Wc3String.class));
+		public final static State<DataList<War3String>> ART_SFX_SPECIAL_ATTACH = new State<>("fspt", new DataTypeInfo(DataList.class, War3String.class));
 		public final static State<DataList<Model>> ART_SFX_TARGET = new State<>("ftat", new DataTypeInfo(DataList.class, Model.class));
-		public final static State<Wc3Int> ART_SFX_TARGET_ATTACH_COUNT = new State<>("ftac", Wc3Int.class);
-		public final static State<DataList<Wc3String>> ART_SFX_TARGET_ATTACH0 = new State<>("fta0", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<DataList<Wc3String>> ART_SFX_TARGET_ATTACH1 = new State<>("fta1", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<DataList<Wc3String>> ART_SFX_TARGET_ATTACH2 = new State<>("fta2", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<DataList<Wc3String>> ART_SFX_TARGET_ATTACH3 = new State<>("fta3", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<DataList<Wc3String>> ART_SFX_TARGET_ATTACH4 = new State<>("fta4", new DataTypeInfo(DataList.class, Wc3String.class));
-		public final static State<DataList<Wc3String>> ART_SFX_TARGET_ATTACH5 = new State<>("fta5", new DataTypeInfo(DataList.class, Wc3String.class));
-		
-		public final static State<Bool> DATA_IS_EFFECT = new State<>("feff", Bool.class);
+		public final static State<War3Int> ART_SFX_TARGET_ATTACH_COUNT = new State<>("ftac", War3Int.class);
+		public final static State<DataList<War3String>> ART_SFX_TARGET_ATTACH0 = new State<>("fta0", new DataTypeInfo(DataList.class, War3String.class));
+		public final static State<DataList<War3String>> ART_SFX_TARGET_ATTACH1 = new State<>("fta1", new DataTypeInfo(DataList.class, War3String.class));
+		public final static State<DataList<War3String>> ART_SFX_TARGET_ATTACH2 = new State<>("fta2", new DataTypeInfo(DataList.class, War3String.class));
+		public final static State<DataList<War3String>> ART_SFX_TARGET_ATTACH3 = new State<>("fta3", new DataTypeInfo(DataList.class, War3String.class));
+		public final static State<DataList<War3String>> ART_SFX_TARGET_ATTACH4 = new State<>("fta4", new DataTypeInfo(DataList.class, War3String.class));
+		public final static State<DataList<War3String>> ART_SFX_TARGET_ATTACH5 = new State<>("fta5", new DataTypeInfo(DataList.class, War3String.class));
+
+		public final static State<War3Bool> DATA_IS_EFFECT = new State<>("feff", War3Bool.class);
 		public final static State<UnitRace> DATA_RACE = new State<>("frac", UnitRace.class);
-		
+
 		public final static State<SoundLabel> SOUND_ONESHOT = new State<>("fefs", SoundLabel.class);
 		public final static State<SoundLabel> SOUND_LOOP = new State<>("fefl", SoundLabel.class);
-		
-		public final static State<Wc3String> TEXT_EDITOR_SUFFIX = new State<>("fnsf", Wc3String.class);
-		public final static State<Wc3String> TEXT_NAME_EDITOR = new State<>("fnam", Wc3String.class);
-		public final static State<Wc3String> TEXT_TOOLTIP = new State<>("ftip", Wc3String.class);
-		public final static State<Wc3String> TEXT_TOOLTIP_UBER = new State<>("fube", Wc3String.class);
-		
+
+		public final static State<War3String> TEXT_EDITOR_SUFFIX = new State<>("fnsf", War3String.class);
+		public final static State<War3String> TEXT_NAME_EDITOR = new State<>("fnam", War3String.class);
+		public final static State<War3String> TEXT_TOOLTIP = new State<>("ftip", War3String.class);
+		public final static State<War3String> TEXT_TOOLTIP_UBER = new State<>("fube", War3String.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			this(idString, new DataTypeInfo(type), defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			this(idString, typeInfo, null);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			this(idString, new DataTypeInfo(type), null);
+		}
 	}
 	
 	public static class Obj extends ObjMod.Obj {		
@@ -113,12 +94,12 @@ public class W3H extends ObjMod {
 
 	@Override
 	public Collection<File> getSLKs() {
-		return Collections.singletonList(BuffSLK.GAME_USE_PATH);
+		return Collections.singletonList(BuffSLK.GAME_PATH);
 	}
 	
 	@Override
 	public Collection<File> getNecessarySLKs() {
-		return Collections.singletonList(BuffSLK.GAME_USE_PATH);
+		return Collections.singletonList(BuffSLK.GAME_PATH);
 	}
 
 	@Override

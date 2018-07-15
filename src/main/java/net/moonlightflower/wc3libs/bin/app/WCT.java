@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -79,11 +80,11 @@ public class WCT {
 		}
 	}
 	
-	private List<Trig> _trigs = new ArrayList<>();
+	private final List<Trig> _trigs = new ArrayList<>();
 
 	@Nonnull
 	public List<Trig> getTrigs() {
-		return _trigs;
+		return new ArrayList<>(_trigs);
 	}
 	
 	private void addTrig(@Nonnull Trig val) {
@@ -107,7 +108,7 @@ public class WCT {
 	
 	private Trig _headTrig;
 	
-	public void setHeadTrig(Trig trig) {
+	public void setHeadTrig(@Nullable Trig trig) {
 		_headTrig = trig;
 	}
 	
@@ -259,7 +260,7 @@ public class WCT {
 	public WCT() {
 	}
 
-	@Nonnull
+	@Nullable
 	public static WCT ofMapFile(@Nonnull File mapFile) throws Exception {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
@@ -271,13 +272,17 @@ public class WCT {
 
 		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract wct file");
 
-		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+		InputStream inStream = portResult.getInputStream(GAME_PATH);
+
+		if (inStream == null) return null;
+
+		Wc3BinInputStream stream = new Wc3BinInputStream(inStream);
 
 		WCT wct = new WCT();
 
-		wct.read(inStream);
+		wct.read(stream);
 
-		inStream.close();
+		stream.close();
 
 		return wct;
 	}

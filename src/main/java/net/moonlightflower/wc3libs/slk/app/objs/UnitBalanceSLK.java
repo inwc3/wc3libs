@@ -13,99 +13,91 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSLK.Obj> {
-	public final static File GAME_USE_PATH = new File("Units\\UnitBalance.slk");
+	public final static File GAME_PATH = new File("Units\\UnitBalance.slk");
 
-	public static class States {
-		public static class State<T extends DataType> extends ObjSLK.State<T> {
-			public State(String idString, DataTypeInfo typeInfo, T defVal) {
-				super(idString, typeInfo, defVal);
-			}
-
-			public State(String idString, DataTypeInfo typeInfo) {
-				super(idString, typeInfo);
-			}
-
-			public State(String idString, Class<T> type) {
-				super(idString, type);
-			}
-
-			public State(String idString, Class<T> type, T defVal) {
-				super(idString, type, defVal);
-			}
-		}
-
-		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
-		}
-
+	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public final static State<UnitId> OBJ_ID = new State<>("unitBalanceID", UnitId.class);
-		public final static State<Wc3String> EDITOR_SORT = new State<>("sortBalance", Wc3String.class);
-		public final static State<Wc3String> EDITOR_SORT2 = new State<>("sort2", Wc3String.class);
-		public final static State<Wc3String> EDITOR_COMMENT = new State<>("comment(s)", Wc3String.class);
-		public final static State<Wc3Int> DATA_LEVEL = new State<>("level", Wc3Int.class);
+		public final static State<War3String> EDITOR_SORT = new State<>("sortBalance", War3String.class);
+		public final static State<War3String> EDITOR_SORT2 = new State<>("sort2", War3String.class);
+		public final static State<War3String> EDITOR_COMMENT = new State<>("comment(s)", War3String.class);
+		public final static State<War3Int> DATA_LEVEL = new State<>("level", War3Int.class);
 		public final static State<UnitClass> DATA_CLASS = new State<>("type", UnitClass.class);
-		public final static State<Wc3Int> DATA_COSTS_GOLD = new State<>("goldcost", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_LUMBER = new State<>("lumbercost", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_GOLD_REPAIR = new State<>("goldRep", Wc3Int.class);
-		public final static State<Wc3Int> DATA_COSTS_LUMBER_REPAIR = new State<>("lumberRep", Wc3Int.class);
-		public final static State<Wc3Int> DATA_SUPPLY_PRODUCED = new State<>("fmade", Wc3Int.class);
-		public final static State<Wc3Int> DATA_SUPPLY_USED = new State<>("fused", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BOUNTY_GOLD_DICE = new State<>("bountydice", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BOUNTY_GOLD_DICE_SIDES = new State<>("bountysides", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BOUNTY_GOLD_BASE = new State<>("bountyplus", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BOUNTY_LUMBER_DICE = new State<>("lumberbountydice", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BOUNTY_LUMBER_DICE_SIDES = new State<>("lumberbountysides", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BOUNTY_LUMBER_BASE = new State<>("lumberbountyplus", Wc3Int.class);
-		public final static State<Wc3Int> DATA_STOCK_MAX = new State<>("stockMax", Wc3Int.class);
-		public final static State<Wc3Int> DATA_STOCK_REGEN = new State<>("stockRegen", Wc3Int.class);
-		public final static State<Wc3Int> DATA_STOCK_INITIAL = new State<>("stockStart", Wc3Int.class);
-		public final static State<Wc3Int> DATA_LIFE = new State<>("HP", Wc3Int.class);
-		public final static State<Wc3Int> DATA_LIFE_REAL = new State<>("realHP", Wc3Int.class);
-		public final static State<Real> DATA_LIFE_REGEN = new State<>("regenHP", Real.class);
+		public final static State<War3Int> DATA_COSTS_GOLD = new State<>("goldcost", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_LUMBER = new State<>("lumbercost", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_GOLD_REPAIR = new State<>("goldRep", War3Int.class);
+		public final static State<War3Int> DATA_COSTS_LUMBER_REPAIR = new State<>("lumberRep", War3Int.class);
+		public final static State<War3Int> DATA_SUPPLY_PRODUCED = new State<>("fmade", War3Int.class);
+		public final static State<War3Int> DATA_SUPPLY_USED = new State<>("fused", War3Int.class);
+		public final static State<War3Int> DATA_BOUNTY_GOLD_DICE = new State<>("bountydice", War3Int.class);
+		public final static State<War3Int> DATA_BOUNTY_GOLD_DICE_SIDES = new State<>("bountysides", War3Int.class);
+		public final static State<War3Int> DATA_BOUNTY_GOLD_BASE = new State<>("bountyplus", War3Int.class);
+		public final static State<War3Int> DATA_BOUNTY_LUMBER_DICE = new State<>("lumberbountydice", War3Int.class);
+		public final static State<War3Int> DATA_BOUNTY_LUMBER_DICE_SIDES = new State<>("lumberbountysides", War3Int.class);
+		public final static State<War3Int> DATA_BOUNTY_LUMBER_BASE = new State<>("lumberbountyplus", War3Int.class);
+		public final static State<War3Int> DATA_STOCK_MAX = new State<>("stockMax", War3Int.class);
+		public final static State<War3Int> DATA_STOCK_REGEN = new State<>("stockRegen", War3Int.class);
+		public final static State<War3Int> DATA_STOCK_INITIAL = new State<>("stockStart", War3Int.class);
+		public final static State<War3Int> DATA_LIFE = new State<>("HP", War3Int.class);
+		public final static State<War3Int> DATA_LIFE_REAL = new State<>("realHP", War3Int.class);
+		public final static State<War3Real> DATA_LIFE_REGEN = new State<>("regenHP", War3Real.class);
 		public final static State<RegenType> DATA_LIFE_REGEN_TYPE = new State<>("regenType", RegenType.class);
-		public final static State<Wc3Int> DATA_MANA = new State<>("manaN", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MANA_REAL = new State<>("realM", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MANA_INITIAL = new State<>("mana0", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MANA_REGEN = new State<>("regenMana", Wc3Int.class);
-		public final static State<Wc3Int> DATA_ARMOR = new State<>("def", Wc3Int.class);
-		public final static State<Wc3Int> DATA_ARMOR_UP = new State<>("defUp", Wc3Int.class);
-		public final static State<Wc3Int> DATA_ARMOR_REAL = new State<>("realdef", Wc3Int.class);
+		public final static State<War3Int> DATA_MANA = new State<>("manaN", War3Int.class);
+		public final static State<War3Int> DATA_MANA_REAL = new State<>("realM", War3Int.class);
+		public final static State<War3Int> DATA_MANA_INITIAL = new State<>("mana0", War3Int.class);
+		public final static State<War3Int> DATA_MANA_REGEN = new State<>("regenMana", War3Int.class);
+		public final static State<War3Int> DATA_ARMOR = new State<>("def", War3Int.class);
+		public final static State<War3Int> DATA_ARMOR_UP = new State<>("defUp", War3Int.class);
+		public final static State<War3Int> DATA_ARMOR_REAL = new State<>("realdef", War3Int.class);
 		public final static State<DefType> DATA_ARMOR_TYPE = new State<>("defType", DefType.class);
-		public final static State<Wc3Int> DATA_MOVEMENT_SPEED = new State<>("spd", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MOVEMENT_SPEED_MIN = new State<>("minSpd", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MOVEMENT_SPEED_MAX = new State<>("maxSpd", Wc3Int.class);
-		public final static State<Wc3Int> DATA_BUILD_TIME = new State<>("bldtm", Wc3Int.class);
-		public final static State<Wc3Int> DATA_REPAIR_TIME = new State<>("reptm", Wc3Int.class);
-		public final static State<Wc3Int> DATA_SIGHT_RANGE_DAY = new State<>("sight", Wc3Int.class);
-		public final static State<Wc3Int> DATA_SIGHT_RANGE_NIGHT = new State<>("nsight", Wc3Int.class);
-		public final static State<Wc3Int> DATA_HERO_ATTR_STR = new State<>("STR", Wc3Int.class);
-		public final static State<Wc3Int> DATA_HERO_ATTR_INT = new State<>("INT", Wc3Int.class);
-		public final static State<Wc3Int> DATA_HERO_ATTR_AGI = new State<>("AGI", Wc3Int.class);
-		public final static State<Wc3Int> DATA_HERO_ATTR_STR_UP = new State<>("STRplus", Wc3Int.class);
-		public final static State<Wc3Int> DATA_HERO_ATTR_INT_UP = new State<>("INTplus", Wc3Int.class);
-		public final static State<Wc3Int> DATA_HERO_ATTR_AGI_UP = new State<>("AGIplus", Wc3Int.class);
-		public final static State<Wc3Int> DATA_ABIL_TEST = new State<>("abilTest", Wc3Int.class);
+		public final static State<War3Int> DATA_MOVEMENT_SPEED = new State<>("spd", War3Int.class);
+		public final static State<War3Int> DATA_MOVEMENT_SPEED_MIN = new State<>("minSpd", War3Int.class);
+		public final static State<War3Int> DATA_MOVEMENT_SPEED_MAX = new State<>("maxSpd", War3Int.class);
+		public final static State<War3Int> DATA_BUILD_TIME = new State<>("bldtm", War3Int.class);
+		public final static State<War3Int> DATA_REPAIR_TIME = new State<>("reptm", War3Int.class);
+		public final static State<War3Int> DATA_SIGHT_RANGE_DAY = new State<>("sight", War3Int.class);
+		public final static State<War3Int> DATA_SIGHT_RANGE_NIGHT = new State<>("nsight", War3Int.class);
+		public final static State<War3Int> DATA_HERO_ATTR_STR = new State<>("STR", War3Int.class);
+		public final static State<War3Int> DATA_HERO_ATTR_INT = new State<>("INT", War3Int.class);
+		public final static State<War3Int> DATA_HERO_ATTR_AGI = new State<>("AGI", War3Int.class);
+		public final static State<War3Int> DATA_HERO_ATTR_STR_UP = new State<>("STRplus", War3Int.class);
+		public final static State<War3Int> DATA_HERO_ATTR_INT_UP = new State<>("INTplus", War3Int.class);
+		public final static State<War3Int> DATA_HERO_ATTR_AGI_UP = new State<>("AGIplus", War3Int.class);
+		public final static State<War3Int> DATA_ABIL_TEST = new State<>("abilTest", War3Int.class);
 		public final static State<AttributeType> DATA_HERO_ATTR_PRIMARY = new State<>("Primary", AttributeType.class);
 		public final static State<DataList<UpgradeId>> TECH_UPGRADES = new State<>("upgrades", new DataTypeInfo(DataList.class, UpgradeId.class));
 		public final static State<DataList<Tileset>> EDITOR_TILESETS = new State<>("tilesets", new DataTypeInfo(DataList.class, Tileset.class));
-		static final public State<Bool> DATA_NEUTRAL_STRUCTURE_RANDOMED = new State<>("nbrandom", Bool.class);
-		static final public State<Bool> DATA_IS_STRUCTURE = new State<>("isbldg", Bool.class);
+		static final public State<War3Bool> DATA_NEUTRAL_STRUCTURE_RANDOMED = new State<>("nbrandom", War3Bool.class);
+		static final public State<War3Bool> DATA_IS_STRUCTURE = new State<>("isbldg", War3Bool.class);
 		static final public State<DataList<PathingPrevent>> PATH_PREVENT_PLACE = new State<>("preventPlace", new DataTypeInfo(DataList.class, PathingPrevent.class));
 		static final public State<DataList<PathingRequire>> PATH_REQUIRE_PLACE = new State<>("requirePlace", new DataTypeInfo(DataList.class, PathingRequire.class));
-		public final static State<Bool> DATA_MOVEMENT_REPULSE = new State<>("repulse", Bool.class);
-		public final static State<Wc3Int> DATA_MOVEMENT_REPULSE_PARAM = new State<>("repulseParam", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MOVEMENT_REPULSE_GROUP = new State<>("repulseGroup", Wc3Int.class);
-		public final static State<Wc3Int> DATA_MOVEMENT_REPULSE_PRIO = new State<>("repulsePrio", Wc3Int.class);
-		public final static State<Real> DATA_COLLISION = new State<>("collision", Real.class);
+		public final static State<War3Bool> DATA_MOVEMENT_REPULSE = new State<>("repulse", War3Bool.class);
+		public final static State<War3Int> DATA_MOVEMENT_REPULSE_PARAM = new State<>("repulseParam", War3Int.class);
+		public final static State<War3Int> DATA_MOVEMENT_REPULSE_GROUP = new State<>("repulseGroup", War3Int.class);
+		public final static State<War3Int> DATA_MOVEMENT_REPULSE_PRIO = new State<>("repulsePrio", War3Int.class);
+		public final static State<War3Real> DATA_COLLISION = new State<>("collision", War3Real.class);
 
-		public final static State<Bool> EDITOR_IN_BETA = new State<>("InBeta", Bool.class);
+		public final static State<War3Bool> EDITOR_IN_BETA = new State<>("InBeta", War3Bool.class);
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
+			super(idString, typeInfo, defVal);
+		}
+
+		public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {
+			super(idString, typeInfo);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type) {
+			super(idString, type);
+		}
+
+		public State(@Nonnull String idString, @Nonnull Class<T> type, @Nullable T defVal) {
+			super(idString, type, defVal);
+		}
 	}
 
 	public static class Obj extends SLK.Obj<UnitId> {
@@ -118,14 +110,14 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 
 		@Override
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.put(state, val);
 		}
 
 		@Override
 		protected void on_remove(@Nonnull FieldId fieldId) {
-			State state = State.valueByField(States.State.class, fieldId);
+			State state = (State) State.valueByField(State.class, fieldId);
 
 			if (state != null) _stateVals.remove(state);
 		}
@@ -136,7 +128,12 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		}
 
 		public <T extends DataType> T get(State<T> state) {
-			return state.tryCastVal(super.get(state.getFieldId()));
+			try {
+				return state.tryCastVal(super.get(state.getFieldId()));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
 		}
 
 		public <T extends DataType> void set(State<T> state, T val) {
@@ -156,7 +153,7 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		public Obj(UnitId id) {
 			super(id);
 
-			for (State state : States.values()) {
+			for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
 			}
 		}
@@ -222,9 +219,9 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 	public UnitBalanceSLK() {
 		super();
 
-		addField(States.OBJ_ID);
+		addField(State.OBJ_ID);
 
-		for (State state : States.values()) {
+		for (State state : State.values(State.class)) {
 			addField(state);
 		}
 	}
