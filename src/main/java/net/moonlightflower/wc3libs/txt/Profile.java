@@ -212,6 +212,10 @@ public class Profile extends TXT implements Printable {
 			return _fields.containsKey(id.lower());
 		}
 
+		public void removeField(@Nonnull FieldId id) {
+			_fields.remove(id.lower());
+		}
+
 		@Override
 		@Nullable
 		public Field getField(@Nonnull FieldId id) {

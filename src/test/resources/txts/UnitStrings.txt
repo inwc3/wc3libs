@@ -1,0 +1,18 @@
+[ANsl]
+art=ReplaceableTextures\CommandButtons\BTNSleep.blp
+researchart=ReplaceableTextures\CommandButtons\BTNSleep.blp
+buttonpos=3,2
+researchbuttonpos=3,0
+order=soulpreservation
+name=Soul Preservation
+tip=Sou|cffffcc00l|r Preservation
+ubertip=Puts a converted zombie into the nether-realm for later use.
+hotkey=L
+researchtip=Learn Sou|cffffcc00l|r Preservation
+researchubertip=Puts a converted zombie into the nether-realm for later use.
+researchhotkey=L
+editorsuffix= (Malganis)
+[BNsl]
+buffart=ReplaceableTextures\CommandButtons\BTNSleep.blp
+effectsound=SoulPreservation
+editorname=Soul Preservation

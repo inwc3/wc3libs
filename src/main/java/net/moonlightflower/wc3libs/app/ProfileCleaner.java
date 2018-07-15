@@ -10,10 +10,10 @@ public class ProfileCleaner {
     public static void clean(Profile txt) {
         txt.getObjs().entrySet().forEach(entry -> {
             if (entry.getValue().containsField(EDITOR_SUFFIX.getFieldId())) {
-                entry.getValue().getFields().remove(EDITOR_SUFFIX.getFieldId());
+                entry.getValue().removeField(EDITOR_SUFFIX.getFieldId());
             }
             if (entry.getValue().containsField(EDITOR_NAME.getFieldId())) {
-                entry.getValue().getFields().remove(EDITOR_NAME.getFieldId());
+                entry.getValue().removeField(EDITOR_NAME.getFieldId());
             }
         });
     }
