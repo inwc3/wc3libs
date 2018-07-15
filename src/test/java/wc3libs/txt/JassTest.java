@@ -30,7 +30,7 @@ public class JassTest extends Wc3LibTest {
         assertFalse(System.err.checkError());
     }
 
-    @Test()
+    /*@Test()
     public void testRebuild3() throws IOException {
         File file = getFile("jass/inventorySys.j");
 
@@ -55,5 +55,5 @@ public class JassTest extends Wc3LibTest {
         Jass jass = new Jass(file);
 
         assertFalse(System.err.checkError());
-    }
+    }*/
 }
