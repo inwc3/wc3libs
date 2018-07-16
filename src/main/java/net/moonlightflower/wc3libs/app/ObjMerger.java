@@ -810,7 +810,9 @@ public class ObjMerger {
 
         File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
 
-        ProfileCleaner.clean(_outProfile);
+        if(clean) {
+            ProfileCleaner.clean(_outProfile);
+        }
 
         _outProfile.write(profileOutFile);
 
