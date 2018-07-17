@@ -638,7 +638,7 @@ public class ObjMerger {
     }
 
     private final static Collection<File> _metaSlkInFiles = Arrays.asList(
-//            DoodadsMetaSLK.GAME_PATH,
+            DoodadsMetaSLK.GAME_PATH,
             AbilityBuffMetaSLK.GAME_PATH,
             AbilityMetaSLK.GAME_PATH,
             DestructableMetaSLK.GAME_PATH,
@@ -646,7 +646,7 @@ public class ObjMerger {
             UpgradeMetaSLK.GAME_PATH);
 
     private final static Collection<File> _slkInFiles = Arrays.asList(
-            DoodSLK.GAME_PATH,
+//            DoodSLK.GAME_PATH,
             UnitAbilsSLK.GAME_PATH,
             UnitBalanceSLK.GAME_PATH,
             UnitDataSLK.GAME_PATH,
@@ -778,6 +778,7 @@ public class ObjMerger {
 
     public void writeToDir(File outDir, boolean clean) throws Exception {
         Orient.createDir(outDir);
+        _outSlks.remove(DoodSLK.GAME_PATH);
 
         for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
@@ -837,7 +838,7 @@ public class ObjMerger {
         Orient.createDir(outDir);
 
         MpqPort.In portIn = new JMpqPort.In();
-
+        _outSlks.remove(DoodSLK.GAME_PATH);
         for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
             SLK slk = slkEntry.getValue();
