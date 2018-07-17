@@ -638,7 +638,7 @@ public class ObjMerger {
     }
 
     private final static Collection<File> _metaSlkInFiles = Arrays.asList(
-            DoodadsMetaSLK.GAME_PATH,
+//            DoodadsMetaSLK.GAME_PATH,
             AbilityBuffMetaSLK.GAME_PATH,
             AbilityMetaSLK.GAME_PATH,
             DestructableMetaSLK.GAME_PATH,
