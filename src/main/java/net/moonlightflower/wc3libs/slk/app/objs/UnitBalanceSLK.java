@@ -129,6 +129,8 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 
 		public <T extends DataType> T get(State<T> state) {
 			try {
+				if (!super.contains(state.getFieldId())) return state.getDefVal();
+
 				return state.tryCastVal(super.get(state.getFieldId()));
 			} catch (DataTypeInfo.CastException ignored) {
 			}
@@ -153,9 +155,9 @@ public class UnitBalanceSLK extends ObjSLK<UnitBalanceSLK, UnitId, UnitBalanceSL
 		public Obj(UnitId id) {
 			super(id);
 
-			for (State<?> state : State.values(State.class)) {
+			/*for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
-			}
+			}*/
 		}
 
 		@Override

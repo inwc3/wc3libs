@@ -153,6 +153,8 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
         }
 
         public <T extends DataType> T get(State<T> state) throws DataTypeInfo.CastException {
+            if (!super.contains(state.getFieldId())) return state.getDefVal();
+
             return state.tryCastVal(super.get(state));
         }
 
@@ -173,9 +175,9 @@ public class UnitWeaponsSLK extends ObjSLK<UnitWeaponsSLK, UnitId, UnitWeaponsSL
         public Obj(UnitId id) {
             super(id);
 
-            for (State<?> state : State.values(State.class)) {
+            /*for (State<?> state : State.values(State.class)) {
                 set(state, state.getDefVal());
-            }
+            }*/
         }
 
         @Override

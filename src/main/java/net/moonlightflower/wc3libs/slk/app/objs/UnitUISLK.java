@@ -118,6 +118,8 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 
 		public <T extends DataType> T get(State<T> state) {
 			try {
+				if (!super.contains(state.getFieldId())) return state.getDefVal();
+
 				return state.tryCastVal(super.get(state));
 			} catch (DataTypeInfo.CastException ignored) {
 			}
@@ -142,9 +144,9 @@ public class UnitUISLK extends ObjSLK<UnitUISLK, UnitId, UnitUISLK.Obj> {
 		public Obj(UnitId id) {
 			super(id);
 
-			for (State<?> state : State.values(State.class)) {
+			/*for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
-			}
+			}*/
 		}
 
 		@Override

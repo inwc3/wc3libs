@@ -881,11 +881,11 @@ public abstract class ObjMod {
 			if (outObj != null) {
 				if (outObj.getFields().isEmpty()) {
 					outObjMod.removeObj(objId);
-				} else {
+				}/* else {
 					outObjMod.removeObj(objId);
 
 					outObjMod.addObj(objId, null).merge(outObj);
-				}
+				}*/
 			}
 		}
 

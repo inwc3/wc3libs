@@ -103,6 +103,8 @@ public class ObjMerger {
                     if (slk != null) {
                         SLK.Obj baseObj = slk.getObj(baseId);
 
+                        if (baseObj == null) throw new IllegalStateException("obj " + objId + " is based on " + baseId + " which does not exist");
+
                         obj.merge(baseObj);
                     }
                 }
@@ -364,6 +366,7 @@ public class ObjMerger {
     public void filter(@Nonnull Filter filter) throws IOException {
         Collection<Id> allIds = new LinkedHashSet<>();
 
+        Log.info("filter slk");
         for (SLK slk : _outSlks.values()) {
             Collection<SLK.Obj> objs = new ArrayList<>(slk.getObjs().values());
 
@@ -371,7 +374,7 @@ public class ObjMerger {
                 allIds.add(obj.getId());
             }
         }
-
+        Log.info("filter profile");
         for (Profile.Obj obj : _outProfile.getObjs().values()) {
             TXTSectionId objId = obj.getId();
 
@@ -380,12 +383,14 @@ public class ObjMerger {
             }
         }
 
+        Log.info("calc removed ids");
         Predicate<Id> predicate = filter.calcRemovedIds(allIds);
 
         Collection<Id> removedIds = new LinkedHashSet<>(allIds);
 
         removedIds.removeIf(predicate.negate());
 
+        Log.info("remove special ids");
         removedIds.remove(Id.valueOf("Avul"));
         removedIds.remove(Id.valueOf("Aloc"));
         removedIds.remove(Id.valueOf("Aeth"));
@@ -397,41 +402,13 @@ public class ObjMerger {
         removedIds.remove(Id.valueOf("Ane2"));
         removedIds.remove(Id.valueOf("Aalr"));
 
-        /*List<Id> removedAbils = new ArrayList<>();
-
-        for (Id id : removedIds) {
-            if (id.toString().startsWith("A")) {
-                removedAbils.add(id);
-            }
-        }
-
-        System.out.println(removedAbils.size());
-        System.out.println(removedAbils);
-
-        final int[] delta = {195};
-
-        removedAbils.removeIf(id -> {
-            delta[0]--;
-
-            if (delta[0] > -1) {
-                System.out.println(id);
-
-                return true;
-            }
-
-            return false;
-        });
-
-        System.out.println(removedAbils.size());
-        System.out.println(removedAbils);
-
-        removedIds.removeAll(removedAbils);*/
-
+        Log.info("find j refed ids");
         Collection<Id> jRefedIds = new LinkedHashSet<>();
 
         for (File jFile : _jFiles) {
             Jass j = new Jass(jFile);
 
+            Log.info("examine tokens");
             for (Token token : j.getTokens()) {
                 if (token.getType() == JassLexer.INT_LITERAL) {
                     String text = token.getText();
@@ -459,6 +436,8 @@ public class ObjMerger {
             }
         }
 
+        Log.info("jRefedIds: " + jRefedIds);
+
         /*HashSet<Id> intersection = new LinkedHashSet<>(jRefedIds);
 
         intersection.removeIf(id -> !removedIds.contains(id));
@@ -467,6 +446,7 @@ public class ObjMerger {
 
         removedIds.removeAll(jRefedIds);
 
+        Log.info("find doo refed ids");
         Collection<ObjId> dooRefedIds = new LinkedHashSet<>();
 
         for (File file : _dooFiles) {
@@ -485,12 +465,15 @@ public class ObjMerger {
             }
         }
 
+        Log.info("dooRefedIds: " + dooRefedIds);
+
         removedIds.removeAll(dooRefedIds);
 
         Collection<Id> remainingIds = new LinkedHashSet<>(allIds);
 
         remainingIds.removeAll(removedIds);
 
+        Log.info("find link refed ids");
         Collection<ObjId> linkRefedIds = new LinkedHashSet<>();
 
         for (Id id : new LinkedHashSet<>(remainingIds)) {
@@ -499,7 +482,7 @@ public class ObjMerger {
             linkRefedIds.addAll(refedObjs);
         }
 
-        System.out.println(linkRefedIds);
+        Log.info("linkRefedIds: " + linkRefedIds);
 
         removedIds.removeAll(linkRefedIds);
 
@@ -525,7 +508,7 @@ public class ObjMerger {
                           File jFile, File dooFile) throws Exception {
         Log.info("adding exported files to object merger");
         if (wtsFile == null) {
-            System.out.println("no WTS file");
+            Log.info("no WTS file");
         } else {
             WTS wts = new WTS(wtsFile);
 
@@ -536,6 +519,7 @@ public class ObjMerger {
             _outProfile.setTranslator(translator);
         }
 
+        Log.info("add meta slks");
         for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
             File outFile = fileEntry.getValue();
 
@@ -544,6 +528,7 @@ public class ObjMerger {
             addMetaSlk(metaSlk);
         }
 
+        Log.info("add slks");
 
         for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
             File inFile = fileEntry.getKey();
@@ -554,6 +539,7 @@ public class ObjMerger {
             addSlk(inFile, slk);
         }
 
+        Log.info("add profiles");
         for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
             File inFile = fileEntry.getKey();
             File outFile = fileEntry.getValue();
@@ -562,7 +548,7 @@ public class ObjMerger {
 
             addProfile(profile);
         }
-
+        Log.info("add objmods");
         for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
             File inFile = fileEntry.getKey();
             File outFile = fileEntry.getValue();
@@ -572,9 +558,15 @@ public class ObjMerger {
             addObjMod(inFile, objMod);
         }
 
-        if (jFile != null) _jFiles.add(jFile);
+        if (jFile != null) {
+            Log.info("add j");
+            _jFiles.add(jFile);
+        }
 
-        if (dooFile != null) _dooFiles.add(dooFile);
+        if (dooFile != null) {
+            Log.info("add doo");
+            _dooFiles.add(dooFile);
+        }
     }
 
 
@@ -638,7 +630,7 @@ public class ObjMerger {
     }
 
     private final static Collection<File> _metaSlkInFiles = Arrays.asList(
-            DoodadsMetaSLK.GAME_PATH,
+            //DoodadsMetaSLK.GAME_PATH,
             AbilityBuffMetaSLK.GAME_PATH,
             AbilityMetaSLK.GAME_PATH,
             DestructableMetaSLK.GAME_PATH,
@@ -646,7 +638,7 @@ public class ObjMerger {
             UpgradeMetaSLK.GAME_PATH);
 
     private final static Collection<File> _slkInFiles = Arrays.asList(
-//            DoodSLK.GAME_PATH,
+            //DoodSLK.GAME_PATH,
             UnitAbilsSLK.GAME_PATH,
             UnitBalanceSLK.GAME_PATH,
             UnitDataSLK.GAME_PATH,
@@ -777,6 +769,7 @@ public class ObjMerger {
     private final static File PROFILE_OUTPUT_PATH = CampaignUnitStrings.GAME_PATH;
 
     public void writeToDir(File outDir, boolean clean) throws Exception {
+        Orient.removeDir(outDir);
         Orient.createDir(outDir);
         _outSlks.remove(DoodSLK.GAME_PATH);
 

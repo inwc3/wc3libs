@@ -166,8 +166,10 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 			_stateVals.clear();
 		}
 
-		public <T extends DataType> T get(State<T> state) {
+		public <T extends DataType> T get(@Nonnull State<T> state) {
 			try {
+				if (!super.contains(state.getFieldId())) return state.getDefVal();
+
 				return state.tryCastVal(super.get(state.getFieldId()));
 			} catch (DataTypeInfo.CastException ignored) {
 			}
@@ -175,7 +177,7 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 			return null;
 		}
 		
-		public <T extends DataType> void set(State<T> state, T val) {
+		public <T extends DataType> void set(@Nonnull State<T> state, T val) {
 			super.set(state.getFieldId(), val);
 		}
 		
@@ -192,9 +194,9 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		public Obj(AbilId id) {
 			super(id);
 
-			for (State<?> state : State.values(State.class)) {
+			/*for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
-			}
+			}*/
 		}
 
 		@Override

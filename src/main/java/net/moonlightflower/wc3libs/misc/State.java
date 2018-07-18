@@ -7,10 +7,7 @@ import net.moonlightflower.wc3libs.dataTypes.Serializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
+import java.util.*;
 
 abstract public class State<T extends DataType> {
 	private final T _defVal;
@@ -78,7 +75,13 @@ abstract public class State<T extends DataType> {
 
 	private final static Map<Class<? extends State>, ClassAssignment> _typeValues = new LinkedHashMap<>();
 
+	private final static Set<Class> _loadedClasses = new LinkedHashSet<>();
+
 	private static void initializeClass(Class c) {
+		if (_loadedClasses.contains(c)) return;
+
+		_loadedClasses.add(c);
+
 		try {
 			Class.forName(c.getName(), true, c.getClassLoader());
 
@@ -107,10 +110,6 @@ abstract public class State<T extends DataType> {
 				Collection<State> states = entry.getValue()._states.values();
 
 				for (State state : states) {
-					/*if (specificClass.isInstance(state)) {
-						System.out.println("is instance");
-						ret.add(specificClass.cast(state));
-					}*/
 					ret.add(state);
 				}
 			}
@@ -122,6 +121,8 @@ abstract public class State<T extends DataType> {
 
 		return ret;
 	}
+
+	private static Map<Class<? extends State>, Collection<? extends State>> _values = new LinkedHashMap<>();
 
 	@Nonnull
 	public static <T extends State> Collection<T> values(@Nonnull Class<T> specificClass) {
@@ -143,11 +144,9 @@ abstract public class State<T extends DataType> {
 			}
 		}
 
-		//if (!_typeValues.containsKey(specificClass)) return null;
+		if (!_values.containsKey(specificClass)) _values.put(specificClass, ret);
 
-		//return new LinkedHashSet<>(_typeValues.get(specificClass)._states.values());
-
-		return ret;
+		return (Collection<T>) _values.get(specificClass);
 	}
 
 	@Nullable

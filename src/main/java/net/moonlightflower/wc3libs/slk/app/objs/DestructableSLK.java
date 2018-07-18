@@ -126,6 +126,8 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 
         public <T extends DataType> T get(State<T> state) {
             try {
+                if (!super.contains(state.getFieldId())) return state.getDefVal();
+
                 return state.tryCastVal(super.get(state.getFieldId()));
             } catch (DataTypeInfo.CastException ignored) {
             }
@@ -150,9 +152,9 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
         public Obj(DestructableId id) {
             super(id);
 
-            for (State<?> state : State.values(State.class)) {
+            /*for (State<?> state : State.values(State.class)) {
                 set(state, state.getDefVal());
-            }
+            }*/
         }
 
         @Override
@@ -215,6 +217,8 @@ public class DestructableSLK extends ObjSLK<DestructableSLK, DestructableId, Des
 
     public DestructableSLK() {
         super();
+
+        addField(State.OBJ_ID);
 
         for (State state : State.values(State.class)) {
             addField(state);

@@ -135,6 +135,8 @@ public class DoodSLK extends ObjSLK<DoodSLK, DoodId, DoodSLK.Obj> {
 		}
 
 		public <T extends DataType> T get(State<T> state) throws DataTypeInfo.CastException {
+			if (!super.contains(state.getFieldId())) return state.getDefVal();
+
 			return state.tryCastVal(super.get(state.getFieldId()));
 		}
 		

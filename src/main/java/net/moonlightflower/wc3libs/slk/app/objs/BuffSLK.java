@@ -75,6 +75,8 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		}
 
 		public <T extends DataType> T get(State<T> state) throws DataTypeInfo.CastException {
+			if (!super.contains(state.getFieldId())) return state.getDefVal();
+
 			return state.tryCastVal(super.get(state));
 		}
 		
@@ -95,9 +97,9 @@ public class BuffSLK extends ObjSLK<BuffSLK, BuffId, BuffSLK.Obj> {
 		public Obj(BuffId id) {
 			super(id);
 
-			for (State<?> state : State.values(State.class)) {
+			/*for (State<?> state : State.values(State.class)) {
 				set(state, state.getDefVal());
-			}
+			}*/
 		}
 
 		@Override

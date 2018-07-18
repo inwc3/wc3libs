@@ -108,12 +108,16 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         protected abstract void on_remove(@Nonnull FieldId fieldId);
         protected abstract void on_clear();
 
+        public boolean contains(@Nonnull FieldId field) {
+            return _vals.containsKey(field);
+        }
+
         public DataType get(@Nonnull FieldId field) {
-            return getVals().get(field);
+            return _vals.get(field);
         }
 
         public DataType get(@Nonnull SLKState state) {
-            return getVals().get(state.getFieldId());
+            return _vals.get(state.getFieldId());
         }
 
         public DataType get(@Nonnull String fieldS) {
@@ -121,6 +125,8 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         }
 
         public String getS(@Nonnull FieldId field) {
+            if (!contains(field)) return null;
+
             return get(field).toString();
         }
 
@@ -299,7 +305,34 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         int maxX = 0;
         int maxY = 0;
 
-        Map<Integer, Map<Integer, DataType>> data = new LinkedHashMap<>();
+        boolean foundB = false;
+
+        while ((line = reader.readLine()) != null) {
+            line = line.replaceAll("[\u0000-\u001f]", "");
+
+            String[] t = line.split(";");
+
+            if (t[0].equals("B")) {
+                for (String aT : t) {
+                    String symbol = aT.substring(0, 1);
+
+                    if (symbol.equals("X")) {
+                        maxX = Integer.parseInt(aT.substring(1, aT.length())) - 1;
+                    }
+                    if (symbol.equals("Y")) {
+                        maxY = Integer.parseInt(aT.substring(1, aT.length())) - 1;
+                    }
+                }
+
+                break;
+            }
+
+            foundB = true;
+        }
+
+        if (!foundB) throw new IllegalStateException("did not find B record");
+
+        DataType[][] data = new DataType[maxY + 1][maxX + 1];
 
         while ((line = reader.readLine()) != null) {
             line = line.replaceAll("[\u0000-\u001f]", "");
@@ -357,11 +390,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                 if (x > maxX) maxX = x;
                 if (y > maxY) maxY = y;
 
-                if (val != null) {
-                    if (!data.containsKey(y)) data.put(y, new LinkedHashMap<>());
-
-                    data.get(y).put(x, val);
-                }
+                if (val != null) data[y - 1][x - 1] = val;
 
                 curX = x;
                 curY = y;
@@ -370,43 +399,42 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
         reader.close();
         _fields.clear();
-        for (Map.Entry<Integer, DataType> entry : data.get(1).entrySet()) {
-            FieldId field = FieldId.valueOf(entry.getValue().toString());
-            if (!_fields.containsValue(entry.getValue().toString())) {
-                addField(field);
-            }
+
+        DataType[] headerData = data[0];
+
+        for (DataType fieldRaw : headerData) {
+            if (fieldRaw == null) continue;
+
+            FieldId field = FieldId.valueOf(fieldRaw.toString());
+
+            if (!_fields.containsKey(field)) addField(field);
         }
 
-        _pivotField = FieldId.valueOf(data.get(1).get(1).toString());
+        _pivotField = FieldId.valueOf(headerData[0].toString());
 
         if (onlyHeader) return;
 
-        //for (int i = 2; i < data.size(); i++) {
-        for (Integer i : data.keySet()) {
-            if (i == 1) continue;
+        for (int i = 1; i < data.length; i++) {
+            DataType objIdRaw = data[i][0];
 
-            DataType val = data.get(i).get(1);
+            if (objIdRaw == null) continue;
 
-            if (val == null) continue;
-
-            ObjId objId = ObjId.valueOf(val.toString());
+            ObjId objId = ObjId.valueOf(objIdRaw.toString());
 
             ObjType obj = createObj(objId);
 
-            if (obj == null) continue;
-
             addObj(obj);
 
-            for (Map.Entry<Integer, DataType> entry : data.get(i).entrySet()) {
-                DataType fieldRaw = data.get(1).get(entry.getKey());
+            for (int j = 1; j < headerData.length; j++) {
+                DataType fieldRaw = headerData[j];
 
                 if (fieldRaw == null) continue;
 
                 FieldId field = FieldId.valueOf(fieldRaw.toString());
 
-                if ((field == null) || (field.equals(_pivotField))) continue;
+                if (field.equals(_pivotField)) continue;
 
-                obj.set(field, entry.getValue());
+                obj.set(field, data[i][j]);
             }
         }
     }
