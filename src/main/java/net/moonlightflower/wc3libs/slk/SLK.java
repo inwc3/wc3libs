@@ -321,6 +321,36 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         _fields.entrySet().removeIf(entry -> countMap.containsKey(entry.getKey().toString()));
     }
 
+    private class RecordPart {
+        private String _attr;
+        private DataType _val;
+
+        private RecordPart(@Nonnull String s) {
+            if (s.startsWith("X") || s.startsWith("Y") || s.startsWith("K")) {
+                _attr = s.substring(0, 1);
+
+                String valS = s.substring(1);
+
+                if (valS.startsWith("\"") && valS.endsWith("\"")) {
+                    _val = War3String.valueOf(valS.substring(1, s.length() - 2));
+                } else {
+                    try {
+                        _val = War3Int.valueOf(Integer.parseInt(valS));
+                    } catch (NumberFormatException ignored) {
+                        try {
+                            _val = War3Real.valueOf(Float.parseFloat(valS));
+                        } catch (NumberFormatException ignored2) {
+                            _val = War3String.valueOf(valS);
+                        }
+                    }
+                }
+            } else {
+                _attr = s;
+                _val = null;
+            }
+        }
+    }
+
     public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
         InputStream inStream = new FileInputStream(file);
 
@@ -357,14 +387,16 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                 int y = 0;
 
                 for (SLKParser.RecordPartContext part : record.recordPart()) {
-                    if (part.attr.getText().equals("X")) {
-                        if (part.recordVal() != null) {
-                            x = Integer.parseInt(part.recordVal().getText());
+                    RecordPart partData = new RecordPart(part.getText());
+
+                    if (partData._attr.equals("X")) {
+                        if (partData._val instanceof War3Int) {
+                            x = ((War3Int) partData._val).toInt();
                         }
                     }
-                    if (part.attr.getText().equals("Y")) {
-                        if (part.recordVal() != null) {
-                            y = Integer.parseInt(part.recordVal().getText());
+                    if (partData._attr.equals("Y")) {
+                        if (partData._val instanceof War3Int) {
+                            y = ((War3Int) partData._val).toInt();
                         }
                     }
                 }
@@ -378,7 +410,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
         if (!foundB) throw new IllegalStateException("did not find B record");
 
-        DataType[][] data = new DataType[maxY + 1][maxX + 1];
+        DataType[][] data = new DataType[maxY][maxX];
 
         int curX = 0;
         int curY = 0;
@@ -390,42 +422,21 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                 DataType val = null;
 
                 for (SLKParser.RecordPartContext part : record.recordPart()) {
-                    if (part.attr.getText().equals("X")) {
-                        if (part.recordVal() != null) {
-                            x = Integer.parseInt(part.recordVal().getText()) - 1;
-                        }
-                    }
-                    if (part.attr.getText().equals("Y")) {
-                        if (part.recordVal() != null) {
-                            y = Integer.parseInt(part.recordVal().getText()) - 1;
-                        }
-                    }
-                    if (part.attr.getText().equals("K")) {
-                        if (part.recordVal() != null) {
-                            String valS = part.recordVal().getText();
+                    RecordPart partData = new RecordPart(part.getText());
 
-                            SLKParser.ComplexValContext complexVal = part.recordVal().complexVal();
-
-                            if (complexVal != null) {
-                                if (complexVal.start.equals(complexVal.stop) && complexVal.start.getType() == SLKLexer.DEC_INT_LITERAL) {
-                                    val = War3Int.valueOf(Integer.parseInt(valS));
-                                } else {
-                                    try {
-                                        val = War3Real.valueOf(Float.parseFloat(valS));
-                                    } catch (NumberFormatException ignored) {
-                                        //System.out.println("unquoted " + valS);
-                                        val = War3String.valueOf(valS);
-                                    }
-                                }
-                            } else if (part.recordVal().str != null) {
-                                val = War3String.valueOf(valS.substring(1, valS.length() - 1));
-                            }
-                        }
+                    if (partData._attr.equals("X") && partData._val instanceof War3Int) {
+                        x = ((War3Int) partData._val).toInt() - 1;
+                    }
+                    if (partData._attr.equals("Y") && partData._val instanceof War3Int) {
+                        y = ((War3Int) partData._val).toInt() - 1;
+                    }
+                    if (partData._attr.equals("K")) {
+                        val = partData._val;
                     }
                 }
-
+                //System.out.println("set " + x + ";" + y + "->" + val);
                 if (val != null) data[y][x] = val;
-                //System.out.println(y  + ";" + x + "->" + val);
+
                 if (x > maxX) maxX = x;
                 if (y > maxY) maxY = y;
 
@@ -433,99 +444,6 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                 curY = y;
             }
         }
-
-        /*BufferedReader reader = new BufferedReader(new FileReader(file));
-
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            line = line.replaceAll("[\u0000-\u001f]", "");
-
-            String[] t = line.split(";");
-
-            if (t[0].equals("B")) {
-                for (String aT : t) {
-                    String symbol = aT.substring(0, 1);
-
-                    if (symbol.equals("X")) {
-                        maxX = Integer.parseInt(aT.substring(1, aT.length())) - 1;
-                    }
-                    if (symbol.equals("Y")) {
-                        maxY = Integer.parseInt(aT.substring(1, aT.length())) - 1;
-                    }
-                }
-
-                break;
-            }
-
-            foundB = true;
-        }*/
-
-        /*while ((line = reader.readLine()) != null) {
-            line = line.replaceAll("[\u0000-\u001f]", "");
-
-            String[] t = line.split(";");
-
-            if (t[0].equals("C")) {
-                DataType val = null;
-                int x = 0;
-                int y = 0;
-
-                for (String aT : t) {
-                    String symbol = aT.substring(0, 1);
-
-                    if (symbol.equals("X")) {
-                        x = Integer.parseInt(aT.substring(1, aT.length()));
-                    }
-                    if (symbol.equals("Y")) {
-                        y = Integer.parseInt(aT.substring(1, aT.length()));
-                    }
-                    if (symbol.equals("K")) {
-                        boolean skip = false;
-                        String valS = aT.substring(1, aT.length());
-
-                        if (valS.substring(0, 1).equals("\"")) {
-                            valS = valS.substring(1, valS.length() - 1);
-
-                            val = War3String.valueOf(valS);
-                        } else {
-                            try {
-                                val = War3Int.valueOf(Integer.parseInt(valS));
-                            } catch (NumberFormatException e) {
-                                try {
-                                    val = War3Real.valueOf(Float.parseFloat(valS));
-                                } catch (NumberFormatException ignored) {
-                                }
-                            }
-
-                            if (val == null) {
-                                if (valS.equals("#VALUE!")) skip = true;
-                                if (valS.equals("FALSE")) val = War3Bool.valueOf(false);
-                                if (valS.equals("TRUE")) val = War3Bool.valueOf(true);
-                            }
-                        }
-
-                        if (!skip) {
-                            if (val == null) throw new RuntimeException("could not parse value " + valS);
-                        }
-                    }
-                }
-
-                if (x == 0) x = curX;
-                if (y == 0) y = curY;
-
-                if (x > maxX) maxX = x;
-                if (y > maxY) maxY = y;
-
-                if (val != null) data[y - 1][x - 1] = val;
-
-                curX = x;
-                curY = y;
-            }
-        }
-
-        reader.close();*/
-
 
         _fields.clear();
 

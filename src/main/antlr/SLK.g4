@@ -9,22 +9,14 @@ options {
 	package net.moonlightflower.wc3libs.antlr;
 }
 
-BOOL_LITERAL:
-	'true' | 'false' ;
-DEC_INT_LITERAL:
-	[1-9] [0-9]* | [0-9] ;
-/*ID:
-	ID_START (ID_TAIL)* ;
-fragment ID_START:
-	[A-Za-z] ;
-fragment ID_TAIL:
-	[A-Z] | [a-z] | [0-9] | '_' ;*/
-STRING_LITERAL:
+RECORD_PART:
+	(STRING_UNQUOTED STRING_QUOTED?) | STRING_QUOTED;
+
+fragment STRING_UNQUOTED:
+    ( EscapeSequence | ~('"'|'\r'|'\n'|';') )+;
+
+fragment STRING_QUOTED:
 	'"' ( EscapeSequence | ~('"'|'\r'|'\n') | NEW_LINE )* '"';
-ID:
-//    [A-Za-z]+;
-//UNQUOTED_STRING_LITERAL:
-	( EscapeSequence | ~('"'|'\r'|'\n'|';'|[0-9]) )+;
 
 fragment EscapeSequence: '\\' [abfnrtvz"'\\];
 
@@ -41,16 +33,7 @@ root:
     ;
 
 record:
-    type=recordType (SEP recordPart)*;
-
-recordType:
-    ID;
+    type=RECORD_PART (SEP recordPart?)*;
 
 recordPart:
-    attr=ID recordVal?;
-
-recordVal:
-    (complex=complexVal | str=STRING_LITERAL);
-
-complexVal:
-    val=(DEC_INT_LITERAL | ID)+;
+    RECORD_PART;
