@@ -3,26 +3,33 @@ package net.moonlightflower.wc3libs.misc;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class Printer {
-    private PrintStream _stream;
+    private final PrintStream _stream;
 
-    private int _nestDepth = 0;
+    private final Stack<Object> _groups = new Stack<>();
 
     public void beginGroup(@Nonnull Object name) {
-        _nestDepth++;
+        println("begin " + name + ":");
 
-        _stream.print(new String(new char[_nestDepth]).replace("\0", "\t") + name);
+        _groups.push(name);
     }
 
     public void endGroup() {
-        _nestDepth--;
+        if (_groups.isEmpty()) return;
 
-        if (_nestDepth < 0) _nestDepth = 0;
+        println("end " + _groups.pop());
     }
 
     public void print(@Nullable Object s) {
-        _stream.print(s);
+        _stream.print(new String(new char[_groups.size()]).replace("\0", "\t") + s);
+    }
+
+    public void println(@Nullable Object s) {
+        _stream.println(new String(new char[_groups.size()]).replace("\0", "\t") + s);
     }
 
     public Printer(@Nonnull PrintStream stream) {

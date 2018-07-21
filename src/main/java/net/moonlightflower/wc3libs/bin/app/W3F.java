@@ -115,7 +115,7 @@ public class W3F {
 			}
 			
 			private Flag(int pos, @Nonnull String label) {
-				super(pos, label);
+				super(label, pos);
 				
 				_all.add(this);
 			}

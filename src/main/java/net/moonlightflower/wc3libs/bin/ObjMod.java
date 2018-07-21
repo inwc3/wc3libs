@@ -411,8 +411,8 @@ public abstract class ObjMod {
 		}
 		
 		private void write_0x1(@Nonnull Wc3BinOutputStream stream, boolean extended) {
-			stream.writeId(getBaseId());
-			stream.writeId(getNewId());
+			stream.writeId((_baseId == null) ? _id : _baseId);
+			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
 			
 			int modsAmount = 0;
 			
@@ -483,8 +483,8 @@ public abstract class ObjMod {
 		}
 		
 		private void write_0x2(@Nonnull Wc3BinOutputStream stream, boolean extended) {
-			stream.writeId(getBaseId());
-			stream.writeId(getNewId());
+			stream.writeId((_baseId == null) ? _id : _baseId);
+			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
 
 			int modsAmount = 0;
 
@@ -749,8 +749,10 @@ public abstract class ObjMod {
 	public abstract Collection<File> getNecessarySLKs();
 
 	@Nonnull
-	public ObjPack reduce(@Nonnull MetaSLK reduceMetaSlk) throws Exception {
+	public ObjPack reduce(@Nonnull MetaSLK reduceMetaSlk, Collection<Class<? extends ObjMod>> excludedClasses) throws Exception {
 		ObjPack pack = new ObjPack(this);
+
+		if (excludedClasses.contains(getClass())) return pack;
 		
 		Map<File, SLK> outSlks = pack.getSlks();
 		Profile outProfile = pack.getProfile();
@@ -783,7 +785,7 @@ public abstract class ObjMod {
 							Obj.Field.Val val = valEntry.getValue();
 
 							int index = (level == 0) ? 0 : (level - 1);
-							int metaIndex = War3Int.valueOf(metaObj.get(FieldId.valueOf("index"))).getVal();
+							int metaIndex = War3Int.valueOf(metaObj.get(FieldId.valueOf("index"), War3Int.valueOf(0))).getVal();
 
 							if (metaIndex > 0) {
 								index += metaIndex;
@@ -879,13 +881,15 @@ public abstract class ObjMod {
 			Obj outObj = outObjMod.getObj(objId);
 
 			if (outObj != null) {
+				//outObj.removeField(MetaFieldId.valueOf("wurs"));
+
 				if (outObj.getFields().isEmpty()) {
 					outObjMod.removeObj(objId);
-				}/* else {
+				} else {
 					outObjMod.removeObj(objId);
 
 					outObjMod.addObj(objId, null).merge(outObj);
-				}*/
+				}
 			}
 		}
 

@@ -374,7 +374,8 @@ public class W3U extends ObjMod {
 		super();
 	}
 
-	public static W3U ofMapFile(@Nonnull File mapFile) throws Exception {
+	@Nonnull
+	public static W3U ofMapFile(@Nonnull File mapFile) throws IOException {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

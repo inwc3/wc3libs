@@ -11,7 +11,7 @@ import java.util.Arrays;
 public abstract class Raster<T> implements Boundable {
 	private Bounds _bounds;
 
-	@Nullable
+	@Nonnull
 	public Bounds getBounds() {
 		return _bounds;
 	}

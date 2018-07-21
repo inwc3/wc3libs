@@ -14,10 +14,7 @@ import net.moonlightflower.wc3libs.port.Orient;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * info file for wrapping war3map.w3i
@@ -217,9 +214,9 @@ public class W3I {
         public String toString() {
             StringBuilder sb = new StringBuilder("");
 
-            MapFlag[] flags = MapFlag.values();
+            Collection<MapFlag> flags = MapFlag.values();
 
-            if (flags.length > 0) {
+            if (!flags.isEmpty()) {
                 for (MapFlag flag : flags) {
                     if (sb.length() > 0) {
                         sb.append(" ");
@@ -922,14 +919,14 @@ public class W3I {
             }
 
             public static class Flag extends FlagsInt.Flag {
-                public final static Flag ALLIED = new Flag(0);
-                public final static Flag ALLIED_VICTORY = new Flag(1);
-                public final static Flag SHARED_VISION = new Flag(2);
-                public final static Flag SHARED_UNIT_CONTROL = new Flag(4);
-                public final static Flag SHARED_UNIT_CONTROL_ADVANCED = new Flag(5);
+                public final static Flag ALLIED = new Flag("allied", 0);
+                public final static Flag ALLIED_VICTORY = new Flag("allied_victory", 1);
+                public final static Flag SHARED_VISION = new Flag("shared_vision", 2);
+                public final static Flag SHARED_UNIT_CONTROL = new Flag("shared_unit_control", 4);
+                public final static Flag SHARED_UNIT_CONTROL_ADVANCED = new Flag("shared_unit_control_advanced", 5);
 
-                private Flag(int pos) {
-                    super(pos);
+                private Flag(@Nonnull String label, int pos) {
+                    super(label, pos);
                 }
             }
 

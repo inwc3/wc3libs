@@ -70,7 +70,7 @@ public class ObjMerger {
     private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod otherObjMod) throws Exception {
         _inObjMods.add(otherObjMod);
 
-        ObjPack pack = otherObjMod.reduce(_metaSlk);
+        ObjPack pack = otherObjMod.reduce(_metaSlk, Collections.singletonList(W3D.class));
 
         Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
 
@@ -813,7 +813,9 @@ public class ObjMerger {
         for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
             File inFile = objModEntry.getKey();
             ObjMod objMod = objModEntry.getValue();
-
+            if (objMod instanceof W3A) {
+                objMod.print();
+            }
             File outFile = new File(outDir, inFile.toString());
 
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);

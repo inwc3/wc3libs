@@ -340,7 +340,7 @@ public class Wc3RasterImg extends Wc3Img {
 	}
 
 	@Nonnull
-	public static Wc3RasterImg ofGameFile(@Nonnull File inFile) throws Exception {
+	public static Wc3RasterImg ofGameFile(@Nonnull File inFile) throws IOException, UnsupportedFormatException {
 		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
 
 		Wc3RasterImg img = Wc3RasterImg.ofFile(portResult.getFile(inFile));

@@ -321,7 +321,7 @@ public class JMpqPort extends MpqPort {
 
 	@Nonnull
 	@Override
-	public Out.Result getGameFiles(@Nonnull File... files) throws Exception {
+	public Out.Result getGameFiles(@Nonnull File... files) throws IOException {
 		MpqPort.Out portOut = new Out();
 
 		for (File file : files) {

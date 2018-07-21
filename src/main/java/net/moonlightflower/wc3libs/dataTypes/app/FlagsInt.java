@@ -5,33 +5,18 @@ import java.lang.reflect.InvocationTargetException;
 import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.misc.Flag;
+
+import javax.annotation.Nonnull;
 
 public abstract class FlagsInt extends DataType {
 	public interface IsFlag {
 		int getVal();
 	}
 	
-	public static class Flag {
-		private int _pos;
-		private String _label = null;
-		
-		public int getPos() {
-			return _pos;
-		}
-		
-		@Override
-		public String toString() {
-			return _label;
-		}
-		
-		public Flag(int pos) {
-			_pos = pos;
-			_label = String.format("flag %d", pos);
-		}
-		
-		public Flag(int pos, String label) {
-			_pos = pos;
-			_label = label;
+	public static class Flag extends net.moonlightflower.wc3libs.misc.Flag {
+		public Flag(@Nonnull String label, int pos) {
+			super(label, pos);
 		}
 	}
 	

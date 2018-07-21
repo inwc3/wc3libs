@@ -1,5 +1,8 @@
 package net.moonlightflower.wc3libs.slk;
 
+import net.moonlightflower.wc3libs.antlr.JassLexer;
+import net.moonlightflower.wc3libs.antlr.SLKLexer;
+import net.moonlightflower.wc3libs.antlr.SLKParser;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
@@ -8,6 +11,11 @@ import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
+import net.moonlightflower.wc3libs.txt.UTF8;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,15 +26,27 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         Mergeable<Self>, Printable {
     @Override
     public void print(@Nonnull Printer printer) {
-        printer.print("pivotField " + getPivotField());
+        printer.beginGroup("slk");
 
+        printer.println("pivotField " + getPivotField());
+
+        printer.beginGroup("fields");
         for (Field field : getFields().values()) {
-            printer.beginGroup(field.getFieldId());
+            //printer.beginGroup(field.getFieldId());
 
             field.print(printer);
 
-            printer.endGroup();
+            //printer.endGroup();
         }
+        printer.endGroup();
+
+        printer.beginGroup("objs");
+        for (Obj obj : getObjs().values()) {
+            obj.print(printer);
+        }
+        printer.endGroup();
+
+        printer.endGroup();
     }
 
     public static class Field implements Printable {
@@ -50,7 +70,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
 
         @Override
         public void print(@Nonnull Printer printer) {
-            printer.print(_fieldId + "(" + _defVal + ")");
+            printer.println(_fieldId + " (" + _defVal + ")");
         }
     }
 
@@ -116,6 +136,12 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             return _vals.get(field);
         }
 
+        public DataType get(@Nonnull FieldId field, @Nonnull DataType defVal) {
+            if (!_vals.containsKey(field)) return defVal;
+
+            return _vals.get(field);
+        }
+
         public DataType get(@Nonnull SLKState state) {
             return _vals.get(state.getFieldId());
         }
@@ -174,17 +200,17 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             merge(otherObj, true);
         }
 
-        public void print(@Nonnull PrintStream stream) {
+        public void print(@Nonnull Printer printer) {
+            printer.beginGroup(_id);
+
             for (Map.Entry<FieldId, DataType> valEntry : getVals().entrySet()) {
                 FieldId fieldId = valEntry.getKey();
                 DataType val = valEntry.getValue();
 
-                stream.println(fieldId + " -> " + val);
+                printer.println(fieldId + " -> " + val);
             }
-        }
 
-        public void print() {
-            print(System.out);
+            printer.endGroup();
         }
 
         public abstract void reduce();
@@ -296,16 +322,121 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
     }
 
     public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        InputStream inStream = new FileInputStream(file);
 
-        String line;
+        UTF8 reader = new UTF8(inStream, false, true);
 
-        int curX = 0;
-        int curY = 0;
+        String input = reader.readAll(false);
+
+        inStream.close();
+
+        CharStream antlrStream = CharStreams.fromString(input);
+
+        Lexer lexer = new SLKLexer(antlrStream);
+
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+
+        tokenStream.fill();
+
+        List<Token> tokens = tokenStream.getTokens();
+
+        SLKParser parser = new SLKParser(new CommonTokenStream(new ListTokenSource(tokens)));
+
+        SLKParser.RootContext rootContext = parser.root();
+
+        boolean foundB = false;
+
         int maxX = 0;
         int maxY = 0;
 
-        boolean foundB = false;
+        //System.out.println(tokens);
+
+        for (SLKParser.RecordContext record : rootContext.record()) {
+            if (record.type.getText().equals("B")) {
+                int x = 0;
+                int y = 0;
+
+                for (SLKParser.RecordPartContext part : record.recordPart()) {
+                    if (part.attr.getText().equals("X")) {
+                        if (part.recordVal() != null) {
+                            x = Integer.parseInt(part.recordVal().getText());
+                        }
+                    }
+                    if (part.attr.getText().equals("Y")) {
+                        if (part.recordVal() != null) {
+                            y = Integer.parseInt(part.recordVal().getText());
+                        }
+                    }
+                }
+
+                maxX = x;
+                maxY = y;
+                //System.out.println("max " + maxX+";"+maxY);
+                foundB = true;
+            }
+        }
+
+        if (!foundB) throw new IllegalStateException("did not find B record");
+
+        DataType[][] data = new DataType[maxY + 1][maxX + 1];
+
+        int curX = 0;
+        int curY = 0;
+        //System.out.println("size " + rootContext.record().size());
+        for (SLKParser.RecordContext record : rootContext.record()) {
+            if (record.type.getText().equals("C")) {
+                int x = curX;
+                int y = curY;
+                DataType val = null;
+
+                for (SLKParser.RecordPartContext part : record.recordPart()) {
+                    if (part.attr.getText().equals("X")) {
+                        if (part.recordVal() != null) {
+                            x = Integer.parseInt(part.recordVal().getText()) - 1;
+                        }
+                    }
+                    if (part.attr.getText().equals("Y")) {
+                        if (part.recordVal() != null) {
+                            y = Integer.parseInt(part.recordVal().getText()) - 1;
+                        }
+                    }
+                    if (part.attr.getText().equals("K")) {
+                        if (part.recordVal() != null) {
+                            String valS = part.recordVal().getText();
+
+                            SLKParser.ComplexValContext complexVal = part.recordVal().complexVal();
+
+                            if (complexVal != null) {
+                                if (complexVal.start.equals(complexVal.stop) && complexVal.start.getType() == SLKLexer.DEC_INT_LITERAL) {
+                                    val = War3Int.valueOf(Integer.parseInt(valS));
+                                } else {
+                                    try {
+                                        val = War3Real.valueOf(Float.parseFloat(valS));
+                                    } catch (NumberFormatException ignored) {
+                                        //System.out.println("unquoted " + valS);
+                                        val = War3String.valueOf(valS);
+                                    }
+                                }
+                            } else if (part.recordVal().str != null) {
+                                val = War3String.valueOf(valS.substring(1, valS.length() - 1));
+                            }
+                        }
+                    }
+                }
+
+                if (val != null) data[y][x] = val;
+                //System.out.println(y  + ";" + x + "->" + val);
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+
+                curX = x;
+                curY = y;
+            }
+        }
+
+        /*BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        String line;
 
         while ((line = reader.readLine()) != null) {
             line = line.replaceAll("[\u0000-\u001f]", "");
@@ -328,13 +459,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             }
 
             foundB = true;
-        }
+        }*/
 
-        if (!foundB) throw new IllegalStateException("did not find B record");
-
-        DataType[][] data = new DataType[maxY + 1][maxX + 1];
-
-        while ((line = reader.readLine()) != null) {
+        /*while ((line = reader.readLine()) != null) {
             line = line.replaceAll("[\u0000-\u001f]", "");
 
             String[] t = line.split(";");
@@ -397,7 +524,9 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             }
         }
 
-        reader.close();
+        reader.close();*/
+
+
         _fields.clear();
 
         DataType[] headerData = data[0];
@@ -433,7 +562,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                 FieldId field = FieldId.valueOf(fieldRaw.toString());
 
                 if (field.equals(_pivotField)) continue;
-
+                System.out.println(objId + ";" + field + "->" + data[i][j]);
                 obj.set(field, data[i][j]);
             }
         }

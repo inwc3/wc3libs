@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class Jass {
 		return _rootContext.toString();
 	}
 
-	private static List<Token> stripComments(List<Token> tokens) {
+	@Nonnull
+	private static List<Token> stripComments(@Nonnull List<Token> tokens) {
 		List<Token> newTokens = new ArrayList<>();
 
 		for (Token token : tokens) {
@@ -67,7 +69,7 @@ public class Jass {
 		return newTokens;
 	}
 	
-	private void read(InputStream inStream) throws IOException {
+	private void read(@Nonnull InputStream inStream) throws IOException {
 		UTF8 reader = new UTF8(inStream, false, true);
 		
 		String input = reader.readAll(false);
@@ -85,11 +87,11 @@ public class Jass {
 		_tokens = stripComments(tokens);
 	}
 	
-	public Jass(InputStream inStream) throws IOException {
+	public Jass(@Nonnull InputStream inStream) throws IOException {
 		read(inStream);
 	}
 	
-	public Jass(File file) throws IOException {
+	public Jass(@Nonnull File file) throws IOException {
 		InputStream inStream = new FileInputStream(file);
 		
 		read(inStream);
@@ -97,7 +99,7 @@ public class Jass {
 		inStream.close();
 	}
 
-	public Jass(String s) {
+	public Jass(@Nonnull String s) {
 		try {
 			InputStream inStream = new ByteArrayInputStream(s.getBytes());
 

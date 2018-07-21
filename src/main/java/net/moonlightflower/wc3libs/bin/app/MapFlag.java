@@ -4,11 +4,10 @@ import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MapFlag extends FlagsInt.Flag {
-    private final static List<MapFlag> _all = new ArrayList<>();
-
     public final static MapFlag HIDE_MINIMAP = new MapFlag(0, "hideMinimap");
     public final static MapFlag MODIFY_ALLY_PRIORITIES = new MapFlag(1, "modifyAllyPriorities");
     public final static MapFlag MELEE_MAP = new MapFlag(2, "meleeMap");
@@ -27,15 +26,11 @@ public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag UNKNOWN_C = new MapFlag(15, "unknownC");
 
     @Nonnull
-    public static MapFlag[] values() {
-        MapFlag[] flags = new MapFlag[_all.size()];
-
-        return _all.toArray(flags);
+    public static Collection<MapFlag> values() {
+        return values(MapFlag.class);
     }
 
     private MapFlag(int pos, @Nonnull String label) {
-        super(pos, label);
-
-        _all.add(this);
+        super(label, pos);
     }
 }

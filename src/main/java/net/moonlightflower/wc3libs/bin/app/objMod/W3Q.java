@@ -133,7 +133,8 @@ public class W3Q extends ObjMod {
 		super();
 	}
 
-	public static W3Q ofMapFile(File mapFile) throws Exception {
+	@Nonnull
+	public static W3Q ofMapFile(@Nonnull File mapFile) throws IOException {
 		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
 		
 		MpqPort.Out port = new JMpqPort.Out();

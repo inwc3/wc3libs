@@ -306,10 +306,10 @@ public abstract class MpqPort {
 		}*/
 
 		@Nonnull
-		public abstract Result commit(@Nonnull Vector<File> mpqFiles) throws Exception;
+		public abstract Result commit(@Nonnull Vector<File> mpqFiles) throws IOException;
 
 		@Nonnull
-		public Result commit(@Nonnull File mpqFile) throws Exception {
+		public Result commit(@Nonnull File mpqFile) throws IOException {
 			Vector<File> mpqFiles = new Vector<>();
 
 			mpqFiles.add(mpqFile);
@@ -360,7 +360,7 @@ public abstract class MpqPort {
 	}
 
 	@Nonnull
-	public abstract Out.Result getGameFiles(@Nonnull File... files) throws Exception;
+	public abstract Out.Result getGameFiles(@Nonnull File... files) throws IOException;
 
 	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
 

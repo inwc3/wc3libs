@@ -15,14 +15,14 @@ import javax.annotation.Nullable;
 
 public class PathMap extends Raster<Integer> {
 	public static class PathingInt extends FlagsInt {
-		static FlagsInt.Flag UNUSED = new FlagsInt.Flag(0, "unused (0)");
-		static FlagsInt.Flag UNWALK = new FlagsInt.Flag(1, "nowalk");
-		static FlagsInt.Flag UNFLY = new FlagsInt.Flag(2, "nofly");
-		static FlagsInt.Flag UNBUILD = new FlagsInt.Flag(3, "nobuild");
-		static FlagsInt.Flag UNUSED4 = new FlagsInt.Flag(4, "unused (4)");
-		static FlagsInt.Flag BLIGHT = new FlagsInt.Flag(5, "blight");
-		static FlagsInt.Flag UNWATER = new FlagsInt.Flag(6, "nowater");
-		static FlagsInt.Flag UNKNOWN = new FlagsInt.Flag(7, "unknown");
+		static FlagsInt.Flag UNUSED = new FlagsInt.Flag("unused (0)", 0);
+		static FlagsInt.Flag UNWALK = new FlagsInt.Flag("nowalk", 1);
+		static FlagsInt.Flag UNFLY = new FlagsInt.Flag("nofly", 2);
+		static FlagsInt.Flag UNBUILD = new FlagsInt.Flag("nobuild", 3);
+		static FlagsInt.Flag UNUSED4 = new FlagsInt.Flag("unused (4)", 4);
+		static FlagsInt.Flag BLIGHT = new FlagsInt.Flag("blight", 5);
+		static FlagsInt.Flag UNWATER = new FlagsInt.Flag("nowater", 6);
+		static FlagsInt.Flag UNKNOWN = new FlagsInt.Flag("unknown", 7);
 
 		@Nonnull
 		public Color getColor() {

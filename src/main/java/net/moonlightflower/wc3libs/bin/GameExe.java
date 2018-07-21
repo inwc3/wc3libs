@@ -14,6 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GameExe {
+    public final static File WAR3_EXE_PATH = new File("war3.exe");
+    public final static File WARCRAFT_III_EXE_PATH = new File("Warcraft III.exe");
+    public final static File FROZEN_THRONE_EXE_PATH = new File("Frozen Throne.exe");
+
     private final File _file;
 
     public File getFile() {
@@ -116,16 +120,16 @@ public class GameExe {
 
     @Nonnull
     public static GameExe fromDir(@Nonnull File dir, @Nonnull Version version) {
-        if (version.compareTo(VERSION_1_29) >= 0) return new GameExe(new File(dir, "Warcraft III.exe"));
+        if (version.compareTo(VERSION_1_29) >= 0) return new GameExe(new File(dir, WARCRAFT_III_EXE_PATH.toString()));
 
-        return new GameExe(new File(dir, "war3.exe"));
+        return new GameExe(new File(dir, WAR3_EXE_PATH.toString()));
     }
 
     @Nullable
     public static GameExe fromDir(@Nonnull File dir) {
         Version version;
 
-        File warcraftIIIFile = new File(dir, "Warcraft III.exe");
+        File warcraftIIIFile = new File(dir, WARCRAFT_III_EXE_PATH.toString());
 
         if (warcraftIIIFile.exists()) {
             try {
@@ -136,7 +140,7 @@ public class GameExe {
             }
         }
 
-        File frozenThroneFile = new File(dir, "Frozen Throne.exe");
+        File frozenThroneFile = new File(dir, FROZEN_THRONE_EXE_PATH.toString());
 
         if (frozenThroneFile.exists()) {
             try {
@@ -147,7 +151,7 @@ public class GameExe {
             }
         }
 
-        File war3File = new File(dir, "war3.exe");
+        File war3File = new File(dir, WAR3_EXE_PATH.toString());
 
         if (war3File.exists()) {
             try {

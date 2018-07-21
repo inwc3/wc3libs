@@ -14,7 +14,9 @@ public abstract class Format<T> {
 		public String toString() {
 			if (_format != null) return _format.toString();
 
-			return Integer.valueOf(_version).toString();
+			if (_version != null) return _version.toString();
+
+			return super.toString();
 		}
 
 		public InvalidFormatException(int version) {

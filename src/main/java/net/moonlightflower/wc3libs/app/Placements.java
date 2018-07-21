@@ -12,10 +12,6 @@ import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 
 import javax.annotation.Nonnull;
 
-interface IRemovalListener {
-	void exec();
-}
-
 public class Placements {
 	private DOO _doo;
 	private DOO_UNITS _dooUnits;
@@ -84,13 +80,6 @@ public class Placements {
 			_color = val;
 		}
 		
-		private List<IRemovalListener> _removalListeners = new ArrayList<>();
-		
-		public void addRemovalListener(@Nonnull IRemovalListener val) {
-			_removalListeners.add(val);
-		}
-			
-		
 		public Rect() {
 			setBounds(new Bounds(0, 0, 0, 0));
 		}
@@ -106,8 +95,6 @@ public class Placements {
 		Rect rect = new Rect();
 	
 		getRects().add(rect);
-
-		rect.addRemovalListener(() -> getRects().remove(rect));
 
 		return rect;
 	}

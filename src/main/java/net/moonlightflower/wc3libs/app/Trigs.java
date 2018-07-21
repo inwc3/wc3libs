@@ -87,14 +87,6 @@ public class Trigs {
 		_vars.add(val);
 	}
 	
-	public Var addVar() {
-		Var var = new Var();
-		
-		addVar(var);
-		
-		return var;
-	}
-	
 	public class TrigCat {
 		private String _name;
 		
@@ -132,14 +124,6 @@ public class Trigs {
 	
 	private void addTrigCat(@Nonnull TrigCat val) {
 		_trigCats.add(val);
-	}
-	
-	public TrigCat addTrigCat() {
-		TrigCat trigCat = new TrigCat();
-		
-		addTrigCat(trigCat);
-		
-		return trigCat;
 	}
 	
 	private abstract class Trig {
@@ -238,7 +222,7 @@ public class Trigs {
 	
 	public class GUITrig extends Trig {
 		private abstract class ECA {
-			String _funcName;
+			private String _funcName;
 			
 			public String getFuncName() {
 				return _funcName;
@@ -261,8 +245,6 @@ public class Trigs {
 			private class Param {
 				
 			}
-			
-			
 			
 			public ECA(String funcName) {
 				setFuncName(funcName);
@@ -307,20 +289,6 @@ public class Trigs {
 	
 	private void addTrig(@Nonnull Trig val) {
 		_trigs.add(val);
-	}
-	
-	public Trig addTrig(boolean isGUITrig) {
-		Trig trig;
-		
-		if (isGUITrig) {
-			trig = new GUITrig();
-		} else {
-			trig = new TextTrig();
-		}
-		
-		addTrig(trig);
-
-		return trig;
 	}
 	
 	public Trigs(@Nonnull WCT wct, @Nonnull WTG wtg) {
