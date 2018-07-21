@@ -562,7 +562,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
                 FieldId field = FieldId.valueOf(fieldRaw.toString());
 
                 if (field.equals(_pivotField)) continue;
-                System.out.println(objId + ";" + field + "->" + data[i][j]);
+
                 obj.set(field, data[i][j]);
             }
         }

@@ -22,8 +22,6 @@ public class SLKTest extends Wc3LibTest {
 
             try {
                 SLK slk = new RawSLK(path.toFile());
-
-                slk.print(new Printer(System.out));
             } catch (IOException e) {
                 Log.error(path.toString() + ":");
 

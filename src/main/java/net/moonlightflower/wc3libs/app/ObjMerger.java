@@ -813,9 +813,7 @@ public class ObjMerger {
         for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
             File inFile = objModEntry.getKey();
             ObjMod objMod = objModEntry.getValue();
-            if (objMod instanceof W3A) {
-                objMod.print();
-            }
+
             File outFile = new File(outDir, inFile.toString());
 
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
