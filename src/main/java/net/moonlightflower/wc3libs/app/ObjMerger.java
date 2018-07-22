@@ -6,6 +6,8 @@ import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.DOO;
+import net.moonlightflower.wc3libs.bin.app.MapFlag;
+import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
@@ -28,6 +30,7 @@ import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.profile.CampaignUnitStrings;
 import org.antlr.v4.runtime.Token;
+import systems.crigges.jmpq3.JMpqEditor;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -879,89 +882,118 @@ public class ObjMerger {
         portIn.commit(mapFile);
     }
 
-    public void exportMap(File mapFile, boolean includeNativeData, File wc3Dir, File outDir) throws Exception {
+    public void exportMap(@Nonnull File mapFile, boolean includeNativeData, @Nonnull File wc3Dir, @Nonnull File outDir) throws Exception {
         Log.info("Exporting map: " + mapFile.getAbsolutePath());
-        Vector<File> mpqFiles = new Vector<>();
+        Collection<File> filesToExport = new LinkedHashSet<>();
 
-        mpqFiles.add(mapFile);
+        filesToExport.addAll(_metaSlkInFiles);
+        filesToExport.addAll(_slkInFiles);
+        filesToExport.addAll(_profileInFiles);
+        filesToExport.addAll(_objModInFiles);
+        filesToExport.add(WTS.GAME_PATH);
+        filesToExport.add(Jass.GAME_PATH);
+        filesToExport.add(DOO.GAME_PATH);
 
-        if (includeNativeData) {
-            if (wc3Dir == null) {
-                //throw new Exception("no wc3Dir");
-                mpqFiles.add(new MpqPort.ResourceFile(""));
-            } else {
-                mpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
-            }
-        }
-
-        Vector<File> metaMpqFiles = new Vector<>();
-
-        metaMpqFiles.add(mapFile);
-
-        if (wc3Dir == null) {
-            //throw new Exception("no wc3Dir");
-            metaMpqFiles.add(new MpqPort.ResourceFile(""));
-        } else {
-            metaMpqFiles.addAll(JMpqPort.getWc3Mpqs(wc3Dir));
-        }
-
-        MpqPort.Out metaPortOut = new JMpqPort.Out();
-
-        for (File inFile : _metaSlkInFiles) {
-            metaPortOut.add(inFile);
-        }
-
-        MpqPort.Out.Result metaPortResult = metaPortOut.commit(metaMpqFiles);
-
+        Log.info("try export from map (" + filesToExport + ")");
+        Map<File, File> redirectMap = new LinkedHashMap<>();
         Map<File, File> outFiles = new LinkedHashMap<>();
-
-        for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : metaPortResult.getExports().entrySet()) {
-            File inFile = segmentEntry.getKey();
-
-            try {
-                File outFile = metaPortResult.getFile(inFile);
-
-                outFiles.put(inFile, outFile);
-            } catch (NoSuchFileException ignored) {
-            }
-        }
 
         MpqPort.Out portOut = new JMpqPort.Out();
 
-        Collection<File> slkFiles = new ArrayList<>(_slkInFiles);
+        for (File inFile : filesToExport) {
+            File redirectFile = inFile;
 
-        for (File inFile : slkFiles) {
-            portOut.add(inFile);
+            redirectMap.put(redirectFile, inFile);
+            portOut.add(redirectFile);
         }
 
-        Collection<File> profileFiles = new ArrayList<>(_profileInFiles);
+        MpqPort.Out.Result portResult = portOut.commit(mapFile);
 
-        for (File inFile : profileFiles) {
-            portOut.add(inFile);
-        }
-
-        for (File inFile : _objModInFiles) {
-            portOut.add(inFile);
-        }
-
-        portOut.add(WTS.GAME_PATH);
-
-        portOut.add(Jass.GAME_PATH);
-
-        portOut.add(DOO.GAME_PATH);
-
-        MpqPort.Out.Result portResult = portOut.commit(mpqFiles);
+        portOut.clear();
 
         for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
-            File inFile = segmentEntry.getKey();
+            File redirectedFile = segmentEntry.getKey();
 
             try {
-                File outFile = portResult.getFile(inFile);
+                File outFile = portResult.getFile(redirectedFile);
 
+                File inFile = redirectMap.get(redirectedFile);
+
+                filesToExport.remove(inFile);
                 outFiles.put(inFile, outFile);
             } catch (NoSuchFileException ignored) {
             }
         }
+
+        if (!filesToExport.isEmpty()) {
+            W3I w3i = W3I.ofMapFile(mapFile);
+
+            W3I.GameDataSet dataSet = w3i.getGameDataSet();
+
+            Log.info("try export from wc3 mpqs with dataset " + dataSet + " (meleeMap=" + w3i.getFlag(MapFlag.MELEE_MAP) + ")" + " (" + filesToExport + ")");
+
+            if (!includeNativeData) {
+                filesToExport.clear();
+
+                filesToExport.addAll(_metaSlkInFiles);
+            }
+
+            if (!filesToExport.isEmpty()) {
+                for (File inFile : filesToExport) {
+                    File redirectFile = new File(w3i.getGameDataSetPath(), inFile.toString());
+
+                    redirectMap.put(redirectFile, inFile);
+                    portOut.add(redirectFile);
+                }
+
+                portResult = portOut.commit(JMpqPort.getWc3Mpqs(wc3Dir));
+
+                portOut.clear();
+
+                for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
+                    File redirectedFile = segmentEntry.getKey();
+
+                    try {
+                        File outFile = portResult.getFile(redirectedFile);
+
+                        File inFile = redirectMap.get(redirectedFile);
+
+                        filesToExport.remove(inFile);
+                        outFiles.put(inFile, outFile);
+                    } catch (NoSuchFileException ignored) {
+                    }
+                }
+
+                if (!filesToExport.isEmpty()) {
+                    Log.info("try export from wc3 mpqs standard dataset (" + filesToExport + ")");
+                    for (File inFile : filesToExport) {
+                        File redirectFile = inFile;
+
+                        redirectMap.put(redirectFile, inFile);
+                        portOut.add(redirectFile);
+                    }
+
+                    portResult = portOut.commit(JMpqPort.getWc3Mpqs(wc3Dir));
+
+                    portOut.clear();
+
+                    for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
+                        File redirectedFile = segmentEntry.getKey();
+
+                        try {
+                            File outFile = portResult.getFile(redirectedFile);
+
+                            File inFile = redirectMap.get(redirectedFile);
+
+                            filesToExport.remove(inFile);
+                            outFiles.put(inFile, outFile);
+                        } catch (NoSuchFileException ignored) {
+                        }
+                    }
+                }
+            }
+        }
+
         Log.info("Extracting following files: " + Arrays.toString(outFiles.values().toArray()));
 
         exportFiles(outDir, outFiles);

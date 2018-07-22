@@ -566,6 +566,22 @@ public class W3I {
         return _gameData;
     }
 
+    public static File getGameDataSetPath(@Nonnull GameDataSet dataSet, boolean isMeleeMap) {
+        if (dataSet.equals(GameDataSet.CUSTOM_V1)) {
+            return new File("Custom_V1");
+        } else if (dataSet.equals(GameDataSet.MELEE_V1)) {
+            return new File("Melee_V0");
+        }
+
+        if (isMeleeMap) return new File("Melee_V0");
+
+        return new File("Custom_V1");
+    }
+
+    public File getGameDataSetPath() {
+        return getGameDataSetPath(_gameData, getFlag(MapFlag.MELEE_MAP));
+    }
+
     public void setGameDataSet(@Nonnull GameDataSet val) {
         _gameData = val;
     }
