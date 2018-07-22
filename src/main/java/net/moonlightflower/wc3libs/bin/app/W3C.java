@@ -3,7 +3,11 @@ package net.moonlightflower.wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.app.*;
+import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
+import net.moonlightflower.wc3libs.port.JMpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -352,5 +356,28 @@ public class W3C {
 
 	public W3C() {
 
+	}
+
+	@Nonnull
+	public static W3C ofMapFile(@Nonnull File mapFile) throws IOException {
+		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
+
+		MpqPort.Out port = new JMpqPort.Out();
+
+		port.add(GAME_PATH);
+
+		MpqPort.Out.Result portResult = port.commit(mapFile);
+
+		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3c file");
+
+		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
+
+		W3C w3c = new W3C();
+
+		w3c.read(inStream);
+
+		inStream.close();
+
+		return w3c;
 	}
 }
