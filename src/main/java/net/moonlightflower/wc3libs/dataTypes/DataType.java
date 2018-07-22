@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class DataType implements Serializable, TypeInfoed {
-	public abstract DataType decode(Object val);
+	public abstract DataType decode(Object val) throws DataTypeInfo.CastException;
 
 	@Nonnull
     @Override

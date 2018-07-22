@@ -38,7 +38,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ObjMerger {
     private final Collection<SLK> _inSlks = new LinkedHashSet<>();
@@ -366,6 +368,27 @@ public class ObjMerger {
         return refs;
     }
 
+    private final static Collection<String> _importantObjsS = new LinkedHashSet<>(Arrays.asList(
+            "Avul", "Adda", "Amnz", "Aalr", "Aatk",
+            "ANbu", "AHbu", "AObu", "AEbu", "AUbu", "AGbu",
+            "Abdt", "Argd", "AHer", "Arev", "ARal", "ACsp", "Sloa",
+            "Aetl", "Amov", "Afir", "Afih", "Afio", "Afin", "Afiu",
+
+            "Aloc", "Aeth", "Abdt", "Apit",
+            "AInv", "Ahrp", "Adtg", "Ane2",
+
+            "BPSE", "BSTN", "Btlf", "Bdet",
+            "Bvul", "Bspe", "Bfro", "Bsha",
+            "Btrv", "Xbdt", "Xbli", "Xdis",
+
+            "Xfhs", "Xfhm", "Xfhl",
+            "Xfos", "Xfom", "Xfol",
+            "Xfns", "Xfnm", "Xfnl",
+            "Xfus", "Xfum", "Xful"
+    ));
+
+    private final static Collection<ObjId> _importantObjs = _importantObjsS.stream().map(ObjId::valueOf).collect(Collectors.toList());
+
     public void filter(@Nonnull Filter filter) throws IOException {
         Collection<Id> allIds = new LinkedHashSet<>();
 
@@ -377,6 +400,7 @@ public class ObjMerger {
                 allIds.add(obj.getId());
             }
         }
+
         Log.info("filter profile");
         for (Profile.Obj obj : _outProfile.getObjs().values()) {
             TXTSectionId objId = obj.getId();
@@ -394,16 +418,7 @@ public class ObjMerger {
         removedIds.removeIf(predicate.negate());
 
         Log.info("remove special ids");
-        removedIds.remove(Id.valueOf("Avul"));
-        removedIds.remove(Id.valueOf("Aloc"));
-        removedIds.remove(Id.valueOf("Aeth"));
-        removedIds.remove(Id.valueOf("Abdt"));
-        removedIds.remove(Id.valueOf("Apit"));
-        removedIds.remove(Id.valueOf("AInv"));
-        removedIds.remove(Id.valueOf("Ahrp"));
-        removedIds.remove(Id.valueOf("Adtg"));
-        removedIds.remove(Id.valueOf("Ane2"));
-        removedIds.remove(Id.valueOf("Aalr"));
+        removedIds.removeAll(_importantObjs);
 
         Log.info("find j refed ids");
         Collection<Id> jRefedIds = new LinkedHashSet<>();

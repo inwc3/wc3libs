@@ -151,7 +151,11 @@ public class AbilSLK extends ObjSLK<AbilSLK, AbilId, AbilSLK.Obj> {
 		protected void on_set(@Nonnull FieldId fieldId, @Nullable DataType val) {
 			State state = (State) State.valueByField(State.class, fieldId);
 
-			if (state != null) _stateVals.put(state, val);
+			if (state != null) {
+				//set(fieldId, state.tryCastVal(val, null));
+
+				_stateVals.put(state, val);
+			}
 		}
 
 		@Override

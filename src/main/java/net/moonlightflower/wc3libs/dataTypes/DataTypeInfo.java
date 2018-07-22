@@ -54,7 +54,7 @@ public class DataTypeInfo extends TypeInfo<DataType> {
         return null;
 	}
 
-	public class CastException extends Exception {
+	public static class CastException extends Exception {
 		public CastException(@Nonnull Exception enclosedException) {
 			super(enclosedException);
 		}

@@ -46,19 +46,14 @@ abstract public class State<T extends DataType> {
 
 	public T tryCastVal(DataType val) throws DataTypeInfo.CastException {
 		return (T) getInfo().tryCastVal(val);
-		/*Class<? extends DataType> type = getInfo().getType();
-		
+	}
+
+	public T tryCastVal(DataType val, @Nullable T defVal) {
 		try {
-			if (type.newInstance() instanceof DataList) {
-				return (T) new DataList().decode(val, type);
-			} else {		
-				return (T) type.newInstance().decode(val);
-			}
-		} catch (InstantiationException e) {
-		} catch (IllegalAccessException e) {
+			return (T) getInfo().tryCastVal(val);
+		} catch (DataTypeInfo.CastException e) {
+			return defVal;
 		}
-		
-		return null;*/
 	}
 
 	private static class ClassAssignment {

@@ -253,12 +253,17 @@ public class TXT implements Printable {
 		}
 
 		@Nullable
-		public Field getField(@Nonnull FieldId fieldId) {
+		public Field getField(@Nonnull FieldId fieldId) throws FieldDoesNotExistException {
 			return _fieldsLower.get(fieldId.lower());
 		}
 		
 		public boolean containsField(@Nonnull FieldId fieldId) {
 			return _fieldsLower.containsKey(fieldId.lower());
+		}
+
+		public void removeField(@Nonnull FieldId fieldId) {
+			_fields.remove(fieldId);
+			_fieldsLower.remove(fieldId.lower());
 		}
 
 		public class FieldDoesNotExistException extends Exception {
@@ -285,7 +290,12 @@ public class TXT implements Printable {
 		}
 		
 		public Field addField(@Nonnull FieldId fieldId) {
-			if (containsField(fieldId)) return getField(fieldId);
+			if (containsField(fieldId)) {
+				try {
+					return getField(fieldId);
+				} catch (FieldDoesNotExistException ignored) {
+				}
+			}
 			
 			Field field = new Field(fieldId);
 			

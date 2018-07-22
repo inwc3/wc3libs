@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.War3Num;
 
 import javax.annotation.Nonnull;
@@ -71,21 +72,26 @@ public class War3Int extends DataType implements War3Num {
 		return new War3Int(val);
 	}
 
-	public static War3Int valueOf(Object val) {
+	public static War3Int valueOf(Integer val) {
+		if (val == null) return null;
+
+		return valueOf(val.intValue());
+	}
+
+	public static War3Int valueOf(Object val) throws DataTypeInfo.CastException {
 		try {
 			return valueOf(Integer.parseInt(val.toString()));
 		} catch (NumberFormatException e) {
+			throw new DataTypeInfo.CastException(e);
 		}
-		
-		return null;
 	}
 	
 	@Override
-	public War3Int decode(Object val) {
+	public War3Int decode(Object val) throws DataTypeInfo.CastException {
 		return valueOf(val);
 	}
 	
-	public static War3Int decodeStatic(Object val) {
+	public static War3Int decodeStatic(Object val) throws DataTypeInfo.CastException {
 		return valueOf(val);
 	}
 }

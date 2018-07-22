@@ -213,7 +213,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		return _list.toArray(a);
 	}
 
-	public DataList<T> decode(Object val, Class<? extends DataType> elementsType) {
+	public DataList<T> decode(Object val, Class<? extends DataType> elementsType) throws DataTypeInfo.CastException {
 		DataList<T> ret = new DataList<>(elementsType);
 		
 		for (String s : val.toString().split(",")) {
@@ -228,7 +228,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 	}
 
 	@Override
-	public DataList<T> decode(Object val) {
+	public DataList<T> decode(Object val) throws DataTypeInfo.CastException {
 		return decode(val, War3String.class);
 	}
 	

@@ -209,27 +209,33 @@ public class Profile extends TXT implements Printable {
 
 		@Override
 		public boolean containsField(@Nonnull FieldId id) {
-			return _fields.containsKey(id.lower());
+			return super.containsField(id);
 		}
 
+		@Override
 		public void removeField(@Nonnull FieldId id) {
-			_fields.remove(id.lower());
+			super.removeField(id);
 		}
 
 		@Override
 		@Nullable
-		public Field getField(@Nonnull FieldId id) {
-			return (Field) _fields.get(id.lower());
+		public Field getField(@Nonnull FieldId id) throws FieldDoesNotExistException {
+			return (Field) super.getField(id);
 		}
 		
 		@Override
 		public Field addField(@Nonnull FieldId id) {
-			if (containsField(id)) return getField(id);
+			if (containsField(id)) {
+				try {
+					return getField(id);
+				} catch (FieldDoesNotExistException ignored) {
+				}
+			}
 			//super.addField(id);
 
 			Field field = new Field(id);
 
-			_fields.put(id.lower(), field);
+			super.addField(field);
 			
 			return field;
 		}
