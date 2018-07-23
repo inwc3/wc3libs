@@ -29,6 +29,7 @@ import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.profile.CampaignUnitStrings;
+import net.moonlightflower.wc3libs.txt.app.profile.CommandFunc;
 import org.antlr.v4.runtime.Token;
 import systems.crigges.jmpq3.JMpqEditor;
 
@@ -668,7 +669,17 @@ public class ObjMerger {
             BuffSLK.GAME_PATH,
             UpgradeSLK.GAME_PATH);
 
-    private final static Collection<File> _profileInFiles = Arrays.asList(Profile.getNativePaths());
+    private static Collection<File> getProfilePaths() {
+        Collection<File> ret = new LinkedHashSet<>();
+
+        ret.addAll(Arrays.asList(Profile.getNativePaths()));
+
+        ret.remove(CommandFunc.GAME_PATH);
+
+        return ret;
+    }
+
+    private final static Collection<File> _profileInFiles = getProfilePaths();
 
     private final static Collection<File> _objModInFiles = Arrays.asList(
             W3A.GAME_PATH,
@@ -836,13 +847,15 @@ public class ObjMerger {
 
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
 
-            objMod.write(outStream, isObjModFileExtended(inFile));
+            if (!objMod.getObjs().isEmpty()) {
+                objMod.write(outStream, isObjModFileExtended(inFile));
+            }
 
             outStream.close();
         }
     }
 
-    public void writeToMap(File mapFile, File outDir) throws Exception {
+    public void writeToMap(@Nonnull File mapFile, @Nonnull File outDir) throws Exception {
         //File outDir = _workDir;
 
         Orient.removeDir(outDir);
@@ -886,11 +899,17 @@ public class ObjMerger {
 
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
 
-            objMod.write(outStream, isObjModFileExtended(inFile));
+            if (!objMod.getObjs().isEmpty()) {
+                objMod.write(outStream, isObjModFileExtended(inFile));
+            }
 
             outStream.close();
 
-            portIn.add(outFile, inFile);
+            if (!objMod.getObjs().isEmpty()) {
+                portIn.add(outFile, inFile);
+            } else {
+                portIn.addDel(inFile);
+            }
         }
 
         //if(true) return;

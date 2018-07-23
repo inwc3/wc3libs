@@ -881,7 +881,7 @@ public abstract class ObjMod {
 			Obj outObj = outObjMod.getObj(objId);
 
 			if (outObj != null) {
-				//outObj.removeField(MetaFieldId.valueOf("wurs"));
+				outObj.removeField(MetaFieldId.valueOf("wurs"));
 
 				if (outObj.getFields().isEmpty()) {
 					outObjMod.removeObj(objId);
