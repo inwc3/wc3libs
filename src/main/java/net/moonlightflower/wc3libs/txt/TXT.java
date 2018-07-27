@@ -156,7 +156,7 @@ public class TXT implements Printable {
 						
 						startPos = endPos + 1;
 					} else {
-						if(line.charAt(startPos) == ',' && line.charAt(startPos-1) == '\"') {
+						if (line.charAt(startPos) == ',' && startPos > 0 && line.charAt(startPos-1) == '\"') {
 							startPos++;
 						} else {
 							int endPos = line.indexOf(',', startPos);

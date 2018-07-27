@@ -222,6 +222,11 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
             return _id;
         }
 
+        @Override
+        public String toString() {
+            return _id.toString();
+        }
+
         public Obj(@Nonnull T id) {
             _id = id;
         }

@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -385,7 +386,11 @@ public class ObjMerger {
             "Xfhs", "Xfhm", "Xfhl",
             "Xfos", "Xfom", "Xfol",
             "Xfns", "Xfnm", "Xfnl",
-            "Xfus", "Xfum", "Xful"
+            "Xfus", "Xfum", "Xful",
+
+            "nmed",
+
+            "Bstt", "Bbsk", "Binf", "Bsta", "Btlf", "Bpxf", "Boar"
     ));
 
     private final static Collection<ObjId> _importantObjs = _importantObjsS.stream().map(ObjId::valueOf).collect(Collectors.toList());
@@ -800,7 +805,10 @@ public class ObjMerger {
     public void writeToDir(File outDir, boolean clean) throws Exception {
         Orient.removeDir(outDir);
         Orient.createDir(outDir);
+
         _outSlks.remove(DoodSLK.GAME_PATH);
+
+        Collection<ObjId> slkObjIds = new LinkedHashSet<>();
 
         for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
@@ -813,6 +821,8 @@ public class ObjMerger {
             File outFile = new File(outDir, inFile.toString());
 
             slk.write(outFile);
+
+            ((Collection<SLK.Obj>) slk.getObjs().values()).stream().forEach(obj -> slkObjIds.add(obj.getId()));
         }
 
         File emptyFile = new File(outDir, "empty.txt");
@@ -837,6 +847,9 @@ public class ObjMerger {
             ProfileCleaner.clean(_outProfile);
         }
 
+        for (ObjId objId : slkObjIds) _outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
+        for (ObjId objId : _importantObjs) _outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
+
         _outProfile.write(profileOutFile);
 
         for (Map.Entry<File, ObjMod> objModEntry : _outObjMods.entrySet()) {
@@ -847,9 +860,7 @@ public class ObjMerger {
 
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
 
-            if (!objMod.getObjs().isEmpty()) {
-                objMod.write(outStream, isObjModFileExtended(inFile));
-            }
+            if (!objMod.getObjs().isEmpty()) objMod.write(outStream, isObjModFileExtended(inFile));
 
             outStream.close();
         }
@@ -862,7 +873,11 @@ public class ObjMerger {
         Orient.createDir(outDir);
 
         MpqPort.In portIn = new JMpqPort.In();
+
         _outSlks.remove(DoodSLK.GAME_PATH);
+
+        Collection<ObjId> slkObjIds = new LinkedHashSet<>();
+
         for (Map.Entry<File, SLK> slkEntry : _outSlks.entrySet()) {
             File inFile = slkEntry.getKey();
             SLK slk = slkEntry.getValue();
@@ -873,6 +888,8 @@ public class ObjMerger {
             slk.write(outFile);
 
             portIn.add(outFile, inFile);
+
+            ((Collection<SLK.Obj>) slk.getObjs().values()).stream().forEach(obj -> slkObjIds.add(obj.getId()));
         }
 
         for (File inFile : _profileInFiles) {
@@ -882,6 +899,9 @@ public class ObjMerger {
         }
 
         File profileOutFile = new File(outDir, PROFILE_OUTPUT_PATH.toString());
+
+        for (ObjId objId : slkObjIds) _outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
+        for (ObjId objId : _importantObjs) _outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
 
         _outProfile.write(profileOutFile);
 

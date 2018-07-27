@@ -149,15 +149,17 @@ public class UTF8 {
 
 	public UTF8(@Nonnull InputStream inStream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
-		
+
 		String line = reader.readLine();
 
-		if (line.startsWith(BOM)) line = line.substring(BOM.length());
-		
-		_lines.addElement(line);
+		if (line != null) {
+			if (line.startsWith(BOM)) line = line.substring(BOM.length());
 
-		while ((line = reader.readLine()) != null) {
-			_lines.add(line);
+			_lines.addElement(line);
+
+			while ((line = reader.readLine()) != null) {
+				_lines.add(line);
+			}
 		}
 		
 		reader.close();
