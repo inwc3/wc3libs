@@ -33,7 +33,7 @@ dependencies {
     antlr "org.antlr:antlr4:4.7"
 
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
-    compile 'com.github.inwc3:JMPQ3:1.7.0'
+    compile 'com.github.inwc3:JMPQ3:1.7.1'
     //compile 'com.github.inwc3:JMPQ3'
     compile group: 'com.esotericsoftware.minlog', name: 'minlog', version: '1.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
