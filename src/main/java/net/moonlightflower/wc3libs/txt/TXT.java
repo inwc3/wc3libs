@@ -262,7 +262,7 @@ public class TXT implements Printable {
 		}
 
 		public void removeField(@Nonnull FieldId fieldId) {
-			_fields.remove(fieldId);
+			_fields.remove(fieldId.lower());
 			_fieldsLower.remove(fieldId.lower());
 		}
 
