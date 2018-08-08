@@ -7,6 +7,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,10 +38,42 @@ public class GameExe {
     public Version getVersion() throws IOException {
         try {
             return new Version(PE.getVersion(_file.getAbsolutePath()));
-        } catch (Exception e) {
-            throw new IOException(e);
+        } catch (Exception _e) {
+            try {
+                return getVersionFallback();
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
         }
     }
+
+    /**
+     * Reads the game version from embedded telemetry data
+     */
+    private Version getVersionFallback() throws IOException {
+        FileChannel ch1 = new RandomAccessFile(_file, "r").getChannel();
+        long size = ch1.size();
+        ByteBuffer m1 = ch1.map(FileChannel.MapMode.READ_ONLY, 0L, size);
+        byte[] buffer = new byte[KEY.length];
+        ByteBuffer verBuffer = ByteBuffer.allocate(15);
+        for (int pos = 0; pos < size - KEY.length - 1; pos++) {
+            m1.position(pos);
+            m1.get(buffer);
+            if (Arrays.equals(buffer, KEY)) {
+                byte b = m1.get();
+                while (verBuffer.get(verBuffer.position()) != 0x0 || b != 0x0) {
+                    verBuffer.put(b);
+                    b = m1.get();
+                }
+                String verString = new String(verBuffer.array()).substring(0, verBuffer.position());
+                return new Version(verString);
+            }
+        }
+        return null;
+    }
+
+    private static final byte[] KEY = {0x54, 0x65, 0x6c, 0x65, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x2e, 0x50, 0x72, 0x6f, 0x67, 0x72,
+            0x61, 0x6d, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x3d};
 
     public GameExe(@Nonnull File file) {
         _file = file;
@@ -81,7 +116,7 @@ public class GameExe {
 
         @Override
         public int compareTo(@Nonnull Version other) {
-            for (int i = 0;; i++) {
+            for (int i = 0; ; i++) {
                 int curNum = (i < _versionNumList.size()) ? _versionNumList.get(i) : 0;
                 int otherCurNum = (i < other._versionNumList.size()) ? other._versionNumList.get(i) : 0;
 
