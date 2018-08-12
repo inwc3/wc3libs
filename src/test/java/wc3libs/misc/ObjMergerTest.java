@@ -1,14 +1,17 @@
 package wc3libs.misc;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.app.ObjMerger;
 import net.moonlightflower.wc3libs.port.Orient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
 
 public class ObjMergerTest {
+    private static final Logger log = LoggerFactory.getLogger(ObjMergerTest.class.getName());
+
     @Test()
     public void testMerger() {
         try {
@@ -21,9 +24,9 @@ public class ObjMergerTest {
             
             Orient.createDir(workDir);
 
-            Log.info("workDir: " + workDir + "; exists: " + workDir.exists());
+            log.info("workDir: " + workDir + "; exists: " + workDir.exists());
             //merger.setWorkDir(workDir);
-            Log.info("map: " + inMapFile + "; exists: " + inMapFile.exists());
+            log.info("map: " + inMapFile + "; exists: " + inMapFile.exists());
             //merger.readFromMap(inMapFile, true);
 
             File inDir = new File(workDir, "in");
@@ -37,15 +40,15 @@ public class ObjMergerTest {
             
             merger.exportMap(inMapFile, inDir);
 
-            Log.info("exported all files from input map");
+            log.info("exported all files from input map");
             
             merger.addDir(inDir);
 
-            Log.info("added all exported files to the objectmerger");
+            log.info("added all exported files to the objectmerger");
             
             merger.writeToDir(outDir, true);
 
-            Log.info("Written to directory");
+            log.info("Written to directory");
 
             File outMapFile = new File(workDir, "merged.w3x");
 

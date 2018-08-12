@@ -1,15 +1,19 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-import com.esotericsoftware.minlog.Log;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
 public class DataList<T extends DataType> extends DataType implements ObservableList<T> {
+	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+
 	@Nonnull
 	public static DataTypeInfo getTypeDescriptor() {
 		return new DataTypeInfo(DataList.class);
@@ -220,7 +224,7 @@ public class DataList<T extends DataType> extends DataType implements Observable
 			try {
 				ret.add((T) elementsType.newInstance().decode(val));
 			} catch (InstantiationException | IllegalAccessException e) {
-				Log.error(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 			}
 		}
 		

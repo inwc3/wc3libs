@@ -1,13 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
-import com.esotericsoftware.minlog.Log;
-import javafx.application.Platform;
-
 import javax.annotation.Nonnull;
-import javax.swing.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 public abstract class AsyncTask {
 	private final Thread _thread;

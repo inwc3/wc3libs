@@ -1,18 +1,20 @@
 package wc3libs.bin;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.GameExe;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 
 public class GameExeTest {
+    private static final Logger log = LoggerFactory.getLogger(GameExeTest.class.getName());
     @Test()
     public void testReg() throws IOException {
         if (!Orient.isWindowsSystem()) {
-            Log.info("not a windows system (" + Orient.getSystem() + "), skip setGet tests");
+            log.info("not a windows system (" + Orient.getSystem() + "), skip setGet tests");
 
             return;
         }

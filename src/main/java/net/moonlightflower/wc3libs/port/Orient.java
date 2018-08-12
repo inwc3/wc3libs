@@ -1,14 +1,10 @@
 package net.moonlightflower.wc3libs.port;
 
-import com.esotericsoftware.minlog.Log;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

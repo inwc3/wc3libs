@@ -1,15 +1,15 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import java.lang.reflect.InvocationTargetException;
-
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.misc.Flag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class FlagsInt extends DataType {
+	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+
 	public interface IsFlag {
 		int getVal();
 	}
@@ -27,7 +27,7 @@ public abstract class FlagsInt extends DataType {
 			return (Class<Enum>) c.getMethod("getEnumStatic").invoke(null);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException e) {
-			Log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 		
 		return null;

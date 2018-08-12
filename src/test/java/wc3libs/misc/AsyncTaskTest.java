@@ -1,12 +1,14 @@
 package wc3libs.misc;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.misc.AsyncTask;
-import net.moonlightflower.wc3libs.misc.Size;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class AsyncTaskTest {
+    private static final Logger log = LoggerFactory.getLogger(AsyncTaskTest.class.getName());
+
     @Test()
     public void test() throws InterruptedException {
         boolean finishedCalled[] = {false};
@@ -21,7 +23,7 @@ public class AsyncTaskTest {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    Log.error(e.getMessage());
+                    log.error(e.getMessage());
                 }
             }
 

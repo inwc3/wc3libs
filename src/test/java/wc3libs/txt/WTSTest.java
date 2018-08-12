@@ -1,7 +1,8 @@
 package wc3libs.txt;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.txt.WTS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
@@ -12,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class WTSTest extends Wc3LibTest {
+    private static final Logger log = LoggerFactory.getLogger(WTSTest.class.getName());
 
     @Test
     public void testRebuild() throws Exception {
@@ -19,7 +21,7 @@ public class WTSTest extends Wc3LibTest {
 
         files.forEach((Path p) -> {
             try {
-                Log.info("Testing: " + p.getFileName());
+                log.info("Testing: " + p.getFileName());
                 WTS wts = new WTS(p.toFile());
 
                 Assert.assertEquals(wts.getEntry(1), "Player 1");
@@ -35,7 +37,7 @@ public class WTSTest extends Wc3LibTest {
 
                 Files.delete(temp);
             } catch (Exception e) {
-                Log.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         });
 

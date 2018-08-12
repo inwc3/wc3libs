@@ -1,28 +1,24 @@
 package net.moonlightflower.wc3libs.misc.image;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
+import net.moonlightflower.wc3libs.misc.Size;
+import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 import java.io.*;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
-
-import com.esotericsoftware.minlog.Log;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-import net.moonlightflower.wc3libs.misc.Size;
-import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
-
 public class BLP extends Wc3RasterImg {
+	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+
 	private class Reader {		
 		private byte[] _bytes;
 		private int _pos;
@@ -322,7 +318,7 @@ public class BLP extends Wc3RasterImg {
 			}
 			}
 		} catch (IOException e) {
-			Log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 	}
 	

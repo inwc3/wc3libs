@@ -1,8 +1,9 @@
 package wc3libs.txt;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.txt.FDF;
 import net.moonlightflower.wc3libs.txt.TXT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
@@ -13,6 +14,7 @@ import static org.testng.Assert.assertEquals;
 
 
 public class FDFTest extends Wc3LibTest {
+    private static final Logger log = LoggerFactory.getLogger(FDFTest.class.getName());
 
     @Test
     public void testRebuild() throws Exception {
@@ -31,7 +33,7 @@ public class FDFTest extends Wc3LibTest {
             TXT.Section.Field firstField = defaultSection.getFields().values().iterator().next();
             assertEquals(firstField.getVals().get(0).toString(), "Accept" );
         } catch (IOException e) {
-            Log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 

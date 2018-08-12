@@ -1,13 +1,16 @@
 package wc3libs.misc;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
-import net.moonlightflower.wc3libs.misc.model.MDX;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
 import javax.annotation.Nonnull;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Wc3LibTest {
+    private static final Logger log = LoggerFactory.getLogger(Wc3LibTest.class.getName());
 
     public static InputStream getFileStream(String name) {
         return Wc3LibTest.class.getResourceAsStream(name.startsWith("/") ? name : "/" + name);
@@ -43,7 +47,7 @@ public abstract class Wc3LibTest {
                 paths.add(path);
             }
         } catch (IOException e) {
-            Log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return paths;
     }

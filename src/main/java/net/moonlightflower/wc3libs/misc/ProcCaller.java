@@ -1,7 +1,9 @@
 package net.moonlightflower.wc3libs.misc;
 
-import com.esotericsoftware.minlog.Log;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.port.Orient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ProcCaller {
+	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+
 	private static class StreamReader extends Thread {
 		private final InputStream _inStream;
 		private final StringWriter _stringWriter = new StringWriter();
@@ -31,7 +35,7 @@ public class ProcCaller {
 					_stringWriter.write(new String(bytes, 0, len));
 				}
 			} catch (IOException e) {
-				Log.error(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 			}
 		}
 		

@@ -1,8 +1,10 @@
 package wc3libs.txt;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.app.ProfileCleaner;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.txt.Profile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import static org.testng.Assert.assertTrue;
 
 public class ProfileCleanTest extends Wc3LibTest {
+    private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
 
     @Test
     public void testClean() throws Exception {
@@ -31,7 +34,7 @@ public class ProfileCleanTest extends Wc3LibTest {
             assertTrue(!generated.contains("editorsuffix"));
             assertTrue(!generated.contains("editorname"));
         } catch (IOException e) {
-            Log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 

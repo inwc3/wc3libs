@@ -1,6 +1,5 @@
 package net.moonlightflower.wc3libs.app;
 
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
@@ -12,6 +11,7 @@ import net.moonlightflower.wc3libs.bin.app.objMod.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.misc.Math;
@@ -31,7 +31,8 @@ import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.profile.CampaignUnitStrings;
 import net.moonlightflower.wc3libs.txt.app.profile.CommandFunc;
 import org.antlr.v4.runtime.Token;
-import systems.crigges.jmpq3.JMpqEditor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -39,12 +40,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ObjMerger {
+    private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+    
     private final Collection<SLK> _inSlks = new LinkedHashSet<>();
     private final Map<File, SLK> _outSlks = new LinkedHashMap<>();
 
@@ -308,7 +309,7 @@ public class ObjMerger {
                                 try {
                                     refs.add((ObjId) stateInfo.tryCastVal(val));
                                 } catch (DataTypeInfo.CastException e) {
-                                    Log.error(e.getMessage(), e);
+                                    log.error(e.getMessage(), e);
                                 }
                             } else if (stateType == DataList.class) {
                                 for (DataTypeInfo subInfo : stateInfo.getGenerics()) {
@@ -333,7 +334,7 @@ public class ObjMerger {
                                                 try {
                                                     refs.add((ObjId) subInfo.tryCastVal((DataType) valSingle));
                                                 } catch (DataTypeInfo.CastException e) {
-                                                    Log.error(e.getMessage(), e);
+                                                    log.error(e.getMessage(), e);
                                                 }
                                             }
                                         }
@@ -398,7 +399,7 @@ public class ObjMerger {
     public void filter(@Nonnull Filter filter) throws IOException {
         Collection<Id> allIds = new LinkedHashSet<>();
 
-        Log.info("filter slk");
+        log.info("filter slk");
         for (SLK slk : _outSlks.values()) {
             Collection<SLK.Obj> objs = new ArrayList<>(slk.getObjs().values());
 
@@ -407,7 +408,7 @@ public class ObjMerger {
             }
         }
 
-        Log.info("filter profile");
+        log.info("filter profile");
         for (Profile.Obj obj : _outProfile.getObjs().values()) {
             TXTSectionId objId = obj.getId();
 
@@ -416,23 +417,23 @@ public class ObjMerger {
             }
         }
 
-        Log.info("calc removed ids");
+        log.info("calc removed ids");
         Predicate<Id> predicate = filter.calcRemovedIds(allIds);
 
         Collection<Id> removedIds = new LinkedHashSet<>(allIds);
 
         removedIds.removeIf(predicate.negate());
 
-        Log.info("remove special ids");
+        log.info("remove special ids");
         removedIds.removeAll(_importantObjs);
 
-        Log.info("find j refed ids");
+        log.info("find j refed ids");
         Collection<Id> jRefedIds = new LinkedHashSet<>();
 
         for (File jFile : _jFiles) {
             Jass j = new Jass(jFile);
 
-            Log.info("examine tokens");
+            log.info("examine tokens");
             for (Token token : j.getTokens()) {
                 if (token.getType() == JassLexer.INT_LITERAL) {
                     String text = token.getText();
@@ -460,7 +461,7 @@ public class ObjMerger {
             }
         }
 
-        Log.info("jRefedIds: " + jRefedIds);
+        log.info("jRefedIds: " + jRefedIds);
 
         /*HashSet<Id> intersection = new LinkedHashSet<>(jRefedIds);
 
@@ -470,7 +471,7 @@ public class ObjMerger {
 
         removedIds.removeAll(jRefedIds);
 
-        Log.info("find doo refed ids");
+        log.info("find doo refed ids");
         Collection<ObjId> dooRefedIds = new LinkedHashSet<>();
 
         for (File file : _dooFiles) {
@@ -489,7 +490,7 @@ public class ObjMerger {
             }
         }
 
-        Log.info("dooRefedIds: " + dooRefedIds);
+        log.info("dooRefedIds: " + dooRefedIds);
 
         removedIds.removeAll(dooRefedIds);
 
@@ -497,7 +498,7 @@ public class ObjMerger {
 
         remainingIds.removeAll(removedIds);
 
-        Log.info("find link refed ids");
+        log.info("find link refed ids");
         Collection<ObjId> linkRefedIds = new LinkedHashSet<>();
 
         for (Id id : new LinkedHashSet<>(remainingIds)) {
@@ -506,7 +507,7 @@ public class ObjMerger {
             linkRefedIds.addAll(refedObjs);
         }
 
-        Log.info("linkRefedIds: " + linkRefedIds);
+        log.info("linkRefedIds: " + linkRefedIds);
 
         removedIds.removeAll(linkRefedIds);
 
@@ -530,9 +531,9 @@ public class ObjMerger {
 
     private void addFiles(Map<File, File> metaSlkFiles, Map<File, File> slkFiles, Map<File, File> profileFiles, Map<File, File> objModFiles, File wtsFile,
                           File jFile, File dooFile) throws Exception {
-        Log.info("adding exported files to object merger");
+        log.info("adding exported files to object merger");
         if (wtsFile == null) {
-            Log.info("no WTS file");
+            log.info("no WTS file");
         } else {
             WTS wts = new WTS(wtsFile);
 
@@ -543,7 +544,7 @@ public class ObjMerger {
             _outProfile.setTranslator(translator);
         }
 
-        Log.info("add meta slks");
+        log.info("add meta slks");
         for (Map.Entry<File, File> fileEntry : metaSlkFiles.entrySet()) {
             File outFile = fileEntry.getValue();
 
@@ -552,7 +553,7 @@ public class ObjMerger {
             addMetaSlk(metaSlk);
         }
 
-        Log.info("add slks");
+        log.info("add slks");
 
         for (Map.Entry<File, File> fileEntry : slkFiles.entrySet()) {
             File inFile = fileEntry.getKey();
@@ -563,7 +564,7 @@ public class ObjMerger {
             addSlk(inFile, slk);
         }
 
-        Log.info("add profiles");
+        log.info("add profiles");
         for (Map.Entry<File, File> fileEntry : profileFiles.entrySet()) {
             File inFile = fileEntry.getKey();
             File outFile = fileEntry.getValue();
@@ -572,7 +573,7 @@ public class ObjMerger {
 
             addProfile(profile);
         }
-        Log.info("add objmods");
+        log.info("add objmods");
         for (Map.Entry<File, File> fileEntry : objModFiles.entrySet()) {
             File inFile = fileEntry.getKey();
             File outFile = fileEntry.getValue();
@@ -583,12 +584,12 @@ public class ObjMerger {
         }
 
         if (jFile != null) {
-            Log.info("add j");
+            log.info("add j");
             _jFiles.add(jFile);
         }
 
         if (dooFile != null) {
-            Log.info("add doo");
+            log.info("add doo");
             _dooFiles.add(dooFile);
         }
     }
@@ -696,7 +697,7 @@ public class ObjMerger {
             W3U.GAME_PATH);
 
     public void addDir(File dir) throws Exception {
-        Log.info("Adding directory of files to be merged: " + dir.getAbsolutePath());
+        log.info("Adding directory of files to be merged: " + dir.getAbsolutePath());
         Map<File, File> files = new LinkedHashMap<>();
 
         for (File outFile : Orient.getFiles(dir)) {
@@ -937,7 +938,7 @@ public class ObjMerger {
     }
 
     public void exportMap(@Nonnull File mapFile, boolean includeNativeData, @Nonnull File wc3Dir, @Nonnull File outDir) throws Exception {
-        Log.info("Exporting map: " + mapFile.getAbsolutePath());
+        log.info("Exporting map: " + mapFile.getAbsolutePath());
         Collection<File> filesToExport = new LinkedHashSet<>();
 
         filesToExport.addAll(_metaSlkInFiles);
@@ -948,7 +949,7 @@ public class ObjMerger {
         filesToExport.add(Jass.GAME_PATH);
         filesToExport.add(DOO.GAME_PATH);
 
-        Log.info("try export from map (" + filesToExport + ")");
+        log.info("try export from map (" + filesToExport + ")");
         Map<File, File> redirectMap = new LinkedHashMap<>();
         Map<File, File> outFiles = new LinkedHashMap<>();
 
@@ -984,7 +985,7 @@ public class ObjMerger {
 
             W3I.GameDataSet dataSet = w3i.getGameDataSet();
 
-            Log.info("try export from wc3 mpqs with dataset " + dataSet + " (meleeMap=" + w3i.getFlag(MapFlag.MELEE_MAP) + ")" + " (" + filesToExport + ")");
+            log.info("try export from wc3 mpqs with dataset " + dataSet + " (meleeMap=" + w3i.getFlag(MapFlag.MELEE_MAP) + ")" + " (" + filesToExport + ")");
 
             if (!includeNativeData) {
                 filesToExport.clear();
@@ -1019,7 +1020,7 @@ public class ObjMerger {
                 }
 
                 if (!filesToExport.isEmpty()) {
-                    Log.info("try export from wc3 mpqs standard dataset (" + filesToExport + ")");
+                    log.info("try export from wc3 mpqs standard dataset (" + filesToExport + ")");
                     for (File inFile : filesToExport) {
                         File redirectFile = inFile;
 
@@ -1048,7 +1049,7 @@ public class ObjMerger {
             }
         }
 
-        Log.info("Extracting following files: " + Arrays.toString(outFiles.values().toArray()));
+        log.info("Extracting following files: " + Arrays.toString(outFiles.values().toArray()));
 
         exportFiles(outDir, outFiles);
     }

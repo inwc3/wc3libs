@@ -1,8 +1,10 @@
 package wc3libs.txt;
 
-import com.esotericsoftware.minlog.Log;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.app.ui.MiscDataTXT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import static wc3libs.slk.SLKTest.assertLinesEqual;
 
 public class TxtsTest extends Wc3LibTest {
+    private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
 
     @Test
     public void testRebuild() throws Exception {
@@ -32,7 +35,7 @@ public class TxtsTest extends Wc3LibTest {
                 System.out.println("Testfile: " + file.getFileName());
                 assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(file)));
             } catch (IOException e) {
-                Log.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         });
     }
@@ -51,7 +54,7 @@ public class TxtsTest extends Wc3LibTest {
 
             assertLinesEqual(new String(Files.readAllBytes(rebuild.toPath())), new String(Files.readAllBytes(file.toPath())));
         } catch (IOException e) {
-            Log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 

@@ -1,17 +1,19 @@
 package net.moonlightflower.wc3libs.misc;
 
-import com.esotericsoftware.minlog.Log;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort.Out.FileExport;
 import net.moonlightflower.wc3libs.port.MpqPort.Out.Result;
 import net.moonlightflower.wc3libs.port.MpqPort.Out.Result.Segment;
 import net.moonlightflower.wc3libs.port.Orient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -19,6 +21,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class GamePrefetch {
+	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+
 	public static abstract class Obj implements Comparable<Obj> {
 		private final File _inFile;
 		
@@ -239,7 +243,7 @@ removeObjs.addAll(_objs);
 			
 			getInstance().clear();
 		} catch (IOException e) {
-			Log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 	}
 }

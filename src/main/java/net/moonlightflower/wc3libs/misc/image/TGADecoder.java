@@ -1,11 +1,13 @@
 package net.moonlightflower.wc3libs.misc.image;
 
-import com.esotericsoftware.minlog.Log;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.bin.StdBinInputStream;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.awt.image.BufferedImage;
@@ -13,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class TGADecoder {
+	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+
 	private int _height;
 	private int _width;
 	
@@ -415,7 +419,7 @@ public class TGADecoder {
 		} catch (Exception e) {
 			_stream.printLog(System.err);
 
-			Log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 			
 			throw e;
 		}

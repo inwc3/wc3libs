@@ -18,7 +18,10 @@ repositories {
 dependencies {
     antlr "org.antlr:antlr4:4.7"
 
-    compile 'com.github.inwc3:jmpq3:1.7.1'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    compile group: 'com.github.inwc3', name: 'jmpq3', version: '1.7.1'
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
     compile group: 'com.dorkbox', name: 'PeParser', version: '2.12'
 

@@ -1,9 +1,10 @@
 package misc;
 
-import com.esotericsoftware.minlog.Log;
-import com.sun.media.jfxmedia.logging.Logger;
+import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.Registry;
 import net.moonlightflower.wc3libs.port.Orient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -11,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class RegistryTest {
+    private static final Logger log = LoggerFactory.getLogger(RegistryTest.class.getName());
+
     @Test()
     public void setGet() throws IOException {
         if (!Orient.isWindowsSystem()) {

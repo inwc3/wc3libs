@@ -1,10 +1,10 @@
 package wc3libs.bin.app;
-import com.esotericsoftware.minlog.Log;
 import net.moonlightflower.wc3libs.bin.app.W3I;
-import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
-import net.moonlightflower.wc3libs.misc.model.MDX;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import wc3libs.bin.GameExeTest;
 import wc3libs.misc.Wc3LibTest;
 import wc3libs.util.MurmurHash;
 
@@ -16,13 +16,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class W3ITest extends Wc3LibTest {
+    private static final Logger log = LoggerFactory.getLogger(GameExeTest.class.getName());
+
     @Test
     public void testRebuild() throws Exception {
         List<Path> w3iFile = getFiles("wc3data/Infos/");
 
         w3iFile.forEach((Path p) -> {
             try {
-                Log.info("Testing: " + p.getFileName());
+                log.info("Testing: " + p.getFileName());
                 byte[] input = Files.readAllBytes(p);
                 W3I w3I = new W3I(input);
 
@@ -39,7 +41,7 @@ public class W3ITest extends Wc3LibTest {
                 Assert.assertEquals(MurmurHash.hash64(input, input.length), MurmurHash.hash64(output, output.length));
                 Files.delete(temp);
             } catch (Exception e) {
-                Log.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         });
 
