@@ -9,137 +9,150 @@ import java.io.*;
 import java.util.Vector;
 
 public class WAV {
-	private static final Logger log = LoggerFactory.getLogger(WAV.class);
-	final static int RATE = 16 * 1024;
-	
-   public static byte[] createSinWaveBuffer(double freq, int ms) {
-       int samples = (ms * RATE) / 1000;
-       byte[] output = new byte[samples];
-           //
-       double period = (double)RATE / freq;
-       for (int i = 0; i < output.length; i++) {
-           double angle = 2.0 * Math.PI * i / period;
+    private static final Logger log = LoggerFactory.getLogger(WAV.class);
+    final static int RATE = 16 * 1024;
+    private byte[] bytes;
 
-           output[i] = (byte)(Math.abs(Math.sin(angle)) * 10f);
-           
-           if (angle > Math.PI) {
-        	   output[i] = (byte) 10f;
-           } else {
-        	   output[i] = 0;
-           }
+    public static byte[] createSinWaveBuffer(double freq, int ms) {
+        int samples = (ms * RATE) / 1000;
+        byte[] output = new byte[samples];
+        //
+        double period = (double) RATE / freq;
+        for (int i = 0; i < output.length; i++) {
+            double angle = 2.0 * Math.PI * i / period;
 
-           angle = angle % (2 * Math.PI);
-           
-           if (angle > Math.PI) {
-        	   output[i] = (byte) (5f - 5f * angle / (2 * Math.PI));
-           } else {
-        	   output[i] = (byte) (0f + 5f * angle / (2 * Math.PI));
-           }
-           //output[i] = (byte) (10f * angle / 2 * Math.PI);
-       }
+            output[i] = (byte) (Math.abs(Math.sin(angle)) * 10f);
 
-       return output;
-   }
-	
-	private byte[] getTone(int durMS) {		
-		int count = (durMS * RATE) / 1000;
-		
-		byte[] ret = new byte[count];
-		
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = (byte) 127F;
-		}
-		
-		return ret;
-	}
-	
-	public WAV(@Nonnull File inFile, boolean a) throws LineUnavailableException {
-		AudioFormat af = new AudioFormat(RATE, 8, 1, true, true);
-		
-		SourceDataLine line = AudioSystem.getSourceDataLine(af);
-		
-		line.open(af, RATE);
-		line.start();
+            if (angle > Math.PI) {
+                output[i] = (byte) 10f;
+            } else {
+                output[i] = 0;
+            }
 
-       for(double freq = 3200; freq <= 3200;)  {
-           byte [] toneBuffer = createSinWaveBuffer(freq, 5000);
-           int count = line.write(toneBuffer, 0, toneBuffer.length);
-           
-           System.out.println(count);
+            angle = angle % (2 * Math.PI);
 
-           freq += 100;  
-       }
-		
-		line.drain();
-		line.close();
-		
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void play() {
-	}
-	
-	private void read(InputStream inStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		Vector<Byte> bBuf = new Vector<>();
-		int val;
-		
-		while ((val = inStream.read()) != -1) {
-			bBuf.add((byte) val);
-		}
-		
-		byte[] bytes = new byte[bBuf.size()];
-		
-		for (int i = 0; i < bBuf.size(); i++) {
-			bytes[i] = bBuf.get(i);
-		}
-		
-		ByteArrayInputStream inByteStream = new ByteArrayInputStream(bytes);
-		
-		AudioInputStream inAudioStream = AudioSystem.getAudioInputStream(inByteStream);
+            if (angle > Math.PI) {
+                output[i] = (byte) (5f - 5f * angle / (2 * Math.PI));
+            } else {
+                output[i] = (byte) (0f + 5f * angle / (2 * Math.PI));
+            }
+            //output[i] = (byte) (10f * angle / 2 * Math.PI);
+        }
 
-		log.info(inAudioStream.toString());
+        return output;
+    }
 
-		AudioFormat inFormat = inAudioStream.getFormat();
-		
-		log.info(inFormat.toString());
+    private byte[] getTone(int durMS) {
+        int count = (durMS * RATE) / 1000;
 
-		log.info(String.valueOf(inFormat.getSampleRate()*4));
-		
-		AudioFormat outFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, inFormat.getSampleRate()*4, inFormat.getSampleSizeInBits(), inFormat.getChannels(), inFormat.getChannels() * 2, inFormat.getSampleRate(), !inFormat.isBigEndian());
-		//AudioFormat outFormat = new AudioFormat(1, 1, 1, false, false);
-		
-		//ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-		
-		AudioInputStream newInAudioStream = AudioSystem.getAudioInputStream(outFormat, inAudioStream);
-		
-		//AudioSystem.write(inAudioStream, AudioFileFormat.Type.WAVE, outStream);
-		
-		DataLine.Info info = new DataLine.Info(Clip.class, outFormat);
+        byte[] ret = new byte[count];
 
-		log.info(String.valueOf(info));
-		
-		Clip clip = (Clip) AudioSystem.getLine(info);
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = (byte) 127F;
+        }
 
-		clip.open(newInAudioStream);
+        return ret;
+    }
 
-		clip.close();
-		newInAudioStream.close();
-	}
-	
-	public WAV(InputStream inStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		read(inStream);
-	}
-	
-	public WAV(File inFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		InputStream inStream = new FileInputStream(inFile);
-		
-		read(inStream);
-		
-		inStream.close();
-	}
+    public WAV(@Nonnull File inFile, boolean a) throws LineUnavailableException {
+        AudioFormat af = new AudioFormat(RATE, 8, 1, true, true);
+
+        SourceDataLine line = AudioSystem.getSourceDataLine(af);
+
+        line.open(af, RATE);
+        line.start();
+
+        for (double freq = 3200; freq <= 3200; ) {
+            byte[] toneBuffer = createSinWaveBuffer(freq, 5000);
+            int count = line.write(toneBuffer, 0, toneBuffer.length);
+
+            System.out.println(count);
+
+            freq += 100;
+        }
+
+        line.drain();
+        line.close();
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void play() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        ByteArrayInputStream inByteStream = new ByteArrayInputStream(bytes);
+
+        AudioInputStream inAudioStream = AudioSystem.getAudioInputStream(inByteStream);
+
+        log.info(inAudioStream.toString());
+
+        AudioFormat inFormat = inAudioStream.getFormat();
+
+        log.info(inFormat.toString());
+
+        log.info(String.valueOf(inFormat.getSampleRate() * 4));
+
+        AudioFormat outFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, inFormat.getSampleRate() * 4, inFormat.getSampleSizeInBits(),
+                inFormat.getChannels(), inFormat.getChannels() * 2, inFormat.getSampleRate(), !inFormat.isBigEndian());
+        inAudioStream.close();
+
+        AudioInputStream newInAudioStream = AudioSystem.getAudioInputStream(outFormat, inAudioStream);
+
+        DataLine.Info info = new DataLine.Info(Clip.class, outFormat);
+
+        log.info(String.valueOf(info));
+
+        Clip clip = (Clip) AudioSystem.getLine(info);
+
+        clip.open(newInAudioStream);
+
+        clip.setFramePosition(0);
+
+        clip.start();
+    }
+
+    private void read(InputStream inStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        Vector<Byte> bBuf = new Vector<>();
+        int val;
+
+        while ((val = inStream.read()) != -1) {
+            bBuf.add((byte) val);
+        }
+
+        bytes = new byte[bBuf.size()];
+
+        for (int i = 0; i < bBuf.size(); i++) {
+            bytes[i] = bBuf.get(i);
+        }
+
+        ByteArrayInputStream inByteStream = new ByteArrayInputStream(bytes);
+
+        AudioInputStream inAudioStream = AudioSystem.getAudioInputStream(inByteStream);
+
+        log.info(inAudioStream.toString());
+
+        AudioFormat inFormat = inAudioStream.getFormat();
+
+        log.info(inFormat.toString());
+
+        log.info(String.valueOf(inFormat.getSampleRate() * 4));
+
+        inStream.close();
+        inAudioStream.close();
+    }
+
+    public WAV(InputStream inStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        read(inStream);
+    }
+
+    public WAV(File inFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        InputStream inStream = new FileInputStream(inFile);
+
+        read(inStream);
+
+        inStream.close();
+    }
 }
