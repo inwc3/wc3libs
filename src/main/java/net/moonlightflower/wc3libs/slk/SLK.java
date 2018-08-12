@@ -1,21 +1,16 @@
 package net.moonlightflower.wc3libs.slk;
 
-import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.SLKLexer;
 import net.moonlightflower.wc3libs.antlr.SLKParser;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
-import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 import net.moonlightflower.wc3libs.txt.UTF8;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
