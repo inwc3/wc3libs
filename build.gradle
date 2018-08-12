@@ -49,8 +49,8 @@ artifacts {
 }
 
 task cleanAntlrDir {
-    project.delete fileTree("${buildDir}/generated-src/antlr/main").include('*.*')
-    project.delete fileTree("src/main/java/net/moonlightflower/wc3libs/antlr").include('*.*')
+    delete "${buildDir}/generated-src/"
+    delete fileTree("src/main/java/net/moonlightflower/wc3libs/antlr").include('*.*')
 }
 
 generateGrammarSource { doLast {
