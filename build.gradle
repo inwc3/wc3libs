@@ -49,7 +49,8 @@ artifacts {
 }
 
 task cleanAntlrDir {
-    delete fileTree("src/main/java/net/moonlightflower/wc3libs/antlr")
+    project.delete fileTree("${buildDir}/generated-src/antlr/main").include('*.*')
+    project.delete fileTree("src/main/java/net/moonlightflower/wc3libs/antlr").include('*.*')
 }
 
 generateGrammarSource { doLast {
@@ -66,5 +67,5 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.4' // We want gradle 4.4 to run this project
 }
 
-generateGrammarSource.dependsOn clean
+generateGrammarSource.dependsOn cleanAntlrDir
 compileJava.dependsOn generateGrammarSource
