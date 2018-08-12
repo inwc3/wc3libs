@@ -15,9 +15,8 @@ cache:
     - $HOME/.gradle/caches/modules-2/files-2.1
     
 script:
-  - ./gradlew clean check --info
-  - ./gradlew compileJava --info
-  - ./gradlew jar --info
+  - ./gradlew clean check jar --info
+  - ./gradlew test --info
 
 after_success:
  - ./gradlew jacocoTestReport
