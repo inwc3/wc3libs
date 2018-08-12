@@ -18,23 +18,13 @@ repositories {
 dependencies {
     antlr "org.antlr:antlr4:4.7"
 
-    api 'com.github.inwc3:jmpq3:1.7.1'
+    compile 'com.github.inwc3:jmpq3:1.7.1'
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+    compile group: 'com.dorkbox', name: 'PeParser', version: '2.12'
+    compile group: 'org.wildfly.swarm', name: 'javafx', version: '2018.5.0'
 
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
-    implementation group: 'com.dorkbox', name: 'PeParser', version: '2.12'
-    implementation group: 'org.wildfly.swarm', name: 'javafx', version: '2018.5.0'
-
-    testImplementation 'org.testng:testng:6.1.1'
+    testCompile 'org.testng:testng:6.1.1'
 }
-
-task dist(type: Jar) {
-    from files(sourceSets.main.java.outputDir)
-    from files(sourceSets.main.output.resourcesDir)
-    from { configurations.compile.collect { zipTree(it) } }
-}
-dist.dependsOn classes
-
-dist.archiveName = "${jar.baseName}.${jar.extension}"
 
 test {
     useTestNG()
@@ -60,7 +50,7 @@ task cleanAntlrDir {
     delete fileTree("src/main/java/net/moonlightflower/wc3libs/antlr")
 }
 
-generateGrammarSource << {
+generateGrammarSource { doLast {
     println "Copying generated grammar lexer/parser files to main directory."
 
     copy {
@@ -68,7 +58,7 @@ generateGrammarSource << {
         into "src/main/java/net/moonlightflower/wc3libs/antlr"
     }
     project.delete fileTree("${buildDir}/generated-src/antlr/main").include('*.*')
-}
+}}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4' // We want gradle 4.4 to run this project
@@ -76,5 +66,3 @@ task wrapper(type: Wrapper) {
 
 generateGrammarSource.dependsOn clean
 compileJava.dependsOn generateGrammarSource
-
-
