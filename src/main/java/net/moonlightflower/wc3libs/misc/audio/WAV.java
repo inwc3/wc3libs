@@ -1,19 +1,15 @@
 package net.moonlightflower.wc3libs.misc.audio;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.util.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.sound.sampled.*;
+import java.io.*;
+import java.util.Vector;
 
 public class WAV {
+	private static final Logger log = LoggerFactory.getLogger(WAV.class);
 	final static int RATE = 16 * 1024;
 	
    public static byte[] createSinWaveBuffer(double freq, int ms) {
@@ -86,7 +82,6 @@ public class WAV {
 	}
 	
 	public void play() {
-		
 	}
 	
 	private void read(InputStream inStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
@@ -106,14 +101,14 @@ public class WAV {
 		ByteArrayInputStream inByteStream = new ByteArrayInputStream(bytes);
 		
 		AudioInputStream inAudioStream = AudioSystem.getAudioInputStream(inByteStream);
-		
-		System.out.println(inAudioStream);
-		
+
+		log.info(inAudioStream.toString());
+
 		AudioFormat inFormat = inAudioStream.getFormat();
 		
-		System.out.println(inFormat);
-		
-		System.out.println(inFormat.getSampleRate()*4);
+		log.info(inFormat.toString());
+
+		log.info(String.valueOf(inFormat.getSampleRate()*4));
 		
 		AudioFormat outFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, inFormat.getSampleRate()*4, inFormat.getSampleSizeInBits(), inFormat.getChannels(), inFormat.getChannels() * 2, inFormat.getSampleRate(), !inFormat.isBigEndian());
 		//AudioFormat outFormat = new AudioFormat(1, 1, 1, false, false);
@@ -125,25 +120,15 @@ public class WAV {
 		//AudioSystem.write(inAudioStream, AudioFileFormat.Type.WAVE, outStream);
 		
 		DataLine.Info info = new DataLine.Info(Clip.class, outFormat);
-		
-		System.out.println(info);
+
+		log.info(String.valueOf(info));
 		
 		Clip clip = (Clip) AudioSystem.getLine(info);
-		
-		System.out.println(clip);
-		
+
 		clip.open(newInAudioStream);
 
-		clip.setFramePosition(0);
-		
-		clip.start();
-		
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		clip.close();
+		newInAudioStream.close();
 	}
 	
 	public WAV(InputStream inStream) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
