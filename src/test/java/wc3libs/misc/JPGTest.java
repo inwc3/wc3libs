@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 public class JPGTest extends Wc3LibTest {
     @Test
     public void testJpg() throws FileNotFoundException {
-        File file = getFile("test.jpg");
+        File file = getFile("images/test.jpg");
         JPG jpg = new JPG(file);
 
         Assert.assertEquals(jpg.getHeight(), 256);
