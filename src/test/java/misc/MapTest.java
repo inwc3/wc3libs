@@ -16,6 +16,8 @@ import java.io.File;
 
 import static net.moonlightflower.wc3libs.txt.app.ExtraTXT.SkyModel.LORDAERON_WINTER_PURPLE;
 import static net.moonlightflower.wc3libs.txt.app.ExtraTXT.State.SKY_MODEL;
+import static net.moonlightflower.wc3libs.txt.app.ExtraTXT.State.TIME_OF_DAY;
+import static net.moonlightflower.wc3libs.txt.app.ExtraTXT.TimeOfDay.NOON;
 import static net.moonlightflower.wc3libs.txt.app.MiscTXT.State.MOVE_SPEED_UNIT_MAX;
 import static net.moonlightflower.wc3libs.txt.app.SkinTXT.States.State.IDLE_PEON;
 
@@ -43,6 +45,9 @@ public class MapTest extends Wc3LibTest {
 
         DataType actual = extraTXT.get(SKY_MODEL.getFieldId());
         Assert.assertEquals(Integer.parseInt(((War3String) actual).getVal()), (int) LORDAERON_WINTER_PURPLE.getVal());
+
+        actual = extraTXT.get(TIME_OF_DAY.getFieldId());
+        Assert.assertEquals(Integer.parseInt(((War3String) actual).getVal()), (int) NOON.getVal());
 
         MiscTXT miscTXT = new MiscTXT();
         miscTXT.read(misc);
