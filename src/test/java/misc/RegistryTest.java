@@ -1,6 +1,5 @@
 package misc;
 
-import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.Registry;
 import net.moonlightflower.wc3libs.port.Orient;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ public class RegistryTest {
     @Test()
     public void setGet() throws IOException {
         if (!Orient.isWindowsSystem()) {
-            Log.info("not a windows system (" + Orient.getSystem() + "), skip setGet tests");
+            log.info("not a windows system (" + Orient.getSystem() + "), skip setGet tests");
 
             return;
         }
