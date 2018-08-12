@@ -21,7 +21,6 @@ dependencies {
     compile 'com.github.inwc3:jmpq3:1.7.1'
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
     compile group: 'com.dorkbox', name: 'PeParser', version: '2.12'
-    compile group: 'org.wildfly.swarm', name: 'javafx', version: '2018.5.0'
 
     testCompile 'org.testng:testng:6.1.1'
 }
