@@ -154,7 +154,7 @@ public class TGADecoder {
 		case 15: {
 			red = ((float) ((colorData >> 10) & 0x1F)) / 0x1F;
 			green = ((float) ((colorData >> 5) & 0x1F)) / 0x1F;
-			blue = ((float) ((colorData >> 0) & 0x1F)) / 0x1F;
+			blue = ((float) ((colorData) & 0x1F)) / 0x1F;
 			alpha = 1D;
 			
 			break;
@@ -162,13 +162,13 @@ public class TGADecoder {
 		case 16: {
 			red = ((float) ((colorData >> 10) & 0x1F)) / 0x1F;
 			green = ((float) ((colorData >> 5) & 0x1F)) / 0x1F;
-			blue = ((float) ((colorData >> 0) & 0x1F)) / 0x1F;
+			blue = ((float) ((colorData) & 0x1F)) / 0x1F;
 			alpha = colorData >> 15;
 			
 			break;
 		}
 		case 24: {
-			red = ((double) ((colorData >> 0) & 0xFF)) / 0xFF;
+			red = ((double) ((colorData) & 0xFF)) / 0xFF;
 			green = ((double) ((colorData >> 8) & 0xFF)) / 0xFF;
 			blue = ((double) ((colorData >> 16) & 0xFF)) / 0xFF;
 			alpha = 1D;
@@ -179,7 +179,7 @@ public class TGADecoder {
 			red = ((float) ((colorData >> 8) & 0xFF)) / 0xFF;
 			green = ((float) ((colorData >> 16) & 0xFF)) / 0xFF;
 			blue = ((float) ((colorData >> 24) & 0xFF)) / 0xFF;
-			alpha = ((float) ((colorData >> 0) & 0xFF)) / 0xFF;
+			alpha = ((float) ((colorData) & 0xFF)) / 0xFF;
 
 			break;
 		}
@@ -431,9 +431,7 @@ public class TGADecoder {
 	@Nonnull
 	public static BufferedImage read(@Nonnull InputStream inStream) throws IOException, UnsupportedFormatException {
 		TGADecoder decoder = new TGADecoder();
-		
-		BufferedImage img = decoder.readPriv(inStream);
-		
-		return img;
+
+        return decoder.readPriv(inStream);
 	}
 }
