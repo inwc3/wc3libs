@@ -18,14 +18,17 @@ repositories {
 dependencies {
     antlr "org.antlr:antlr4:4.7"
 
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    // Looging
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
-    compile group: 'com.github.inwc3', name: 'jmpq3', version: '1.7.1'
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
-    compile group: 'com.dorkbox', name: 'PeParser', version: '2.12'
+    // Libs
+    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '1.7.1'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+    implementation group: 'com.dorkbox', name: 'PeParser', version: '2.12'
 
-    testCompile 'org.testng:testng:6.1.1'
+    // TestNG
+    testImplementation 'org.testng:testng:6.1.1'
 }
 
 test {
