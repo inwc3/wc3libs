@@ -69,7 +69,7 @@ public class GameExe {
                 return new Version(verString);
             }
         }
-        return null;
+        throw new IOException("telemetry data could not be extracted");
     }
 
     private static final byte[] KEY = {0x54, 0x65, 0x6c, 0x65, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x2e, 0x50, 0x72, 0x6f, 0x67, 0x72,

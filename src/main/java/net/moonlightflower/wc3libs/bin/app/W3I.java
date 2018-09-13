@@ -6,14 +6,16 @@ import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Size;
-import net.moonlightflower.wc3libs.misc.State;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -22,7 +24,7 @@ import java.util.*;
 public class W3I {
     public final static File GAME_PATH = new File("war3map.w3i");
 
-    /*private int _fileVersion;
+    private int _fileVersion = 0;
 
     public int getFileVersion() {
         return _fileVersion;
@@ -30,7 +32,7 @@ public class W3I {
 
     public void setFileVersion(int fileVersion) {
         _fileVersion = fileVersion;
-    }*/
+    }
 
     public static class State<T extends DataType> extends BinState<T> {
         public static State<War3Int> SAVES_AMOUNT = new State<>("savesAmount", War3Int.class);
@@ -1749,9 +1751,9 @@ public class W3I {
     }
 
     private void read_0x12(@Nonnull Wc3BinInputStream stream) throws Exception {
-        int version = stream.readInt32("version");
+        _fileVersion = stream.readInt32("version");
 
-        stream.checkFormatVersion(EncodingFormat.W3I_0x12.getVersion(), version);
+        stream.checkFormatVersion(EncodingFormat.W3I_0x12.getVersion(), _fileVersion);
 
         set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
         setEditorVersion(stream.readInt32("editorVersion"));
@@ -1760,7 +1762,8 @@ public class W3I {
         setMapDescription(stream.readString("mapDescription"));
         setPlayersRecommendedAmount(stream.readString("playersRecommendedAmount"));
 
-        setCameraBounds(new Coords2DF(stream.readFloat32("camA"), stream.readFloat32("camB")), new Coords2DF(stream.readFloat32("camC"), stream.readFloat32("camD")),
+        setCameraBounds(new Coords2DF(stream.readFloat32("camA"), stream.readFloat32("camB")), new Coords2DF(stream.readFloat32("camC"), stream.readFloat32(
+                "camD")),
                 new Coords2DF(stream.readFloat32("camE"), stream.readFloat32("camF")), new Coords2DF(stream.readFloat32("camG"), stream.readFloat32("camH")));
         setMargins(new Bounds(-stream.readInt32("marginA"), stream.readInt32("marginB"), -stream.readInt32("marginC"), stream.readInt32("marginD")));
 
@@ -1887,9 +1890,9 @@ public class W3I {
     }
 
     private void read_0x19(@Nonnull Wc3BinInputStream stream) throws Exception {
-        int version = stream.readInt32("version");
+        _fileVersion = stream.readInt32("version");
 
-        stream.checkFormatVersion(EncodingFormat.W3I_0x19.getVersion(), version);
+        stream.checkFormatVersion(EncodingFormat.W3I_0x19.getVersion(), _fileVersion);
 
         set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
         setEditorVersion(stream.readInt32("editorVersion"));
@@ -1933,9 +1936,10 @@ public class W3I {
         War3Real terrainFogZStart = stream.readReal("terrainFogZStart");
         War3Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
         War3Real terrainFogDensity = stream.readReal("terrainFogDensity");
-        Color terrainFogColor = Color.fromRGBA255(stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"), stream.readUByte("terrainFogBlue"), stream.readUByte("terrainFogAlpha"));
+        Color terrainFogColor = Color.fromRGBA255(stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"), stream.readUByte("terrainFogBlue"),
+                stream.readUByte("terrainFogAlpha"));
 
-        if (terrainFogType != null) setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
+        setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
 
         setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
         setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
@@ -2131,6 +2135,10 @@ public class W3I {
     private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
         switch (format.toEnum()) {
             case AUTO:
+                if (_fileVersion == 0x12) {
+                    write_0x12(stream);
+                    break;
+                }
             case W3I_0x19: {
                 write_0x19(stream);
 
