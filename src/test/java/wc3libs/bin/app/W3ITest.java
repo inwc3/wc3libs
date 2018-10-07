@@ -22,14 +22,10 @@ public class W3ITest extends Wc3LibTest {
 
     @Test
     public void testBroken() throws Exception {
-        File w3iFile = getFile("bugs/broken2.w3i");
-        File w3iFile2 = getFile("bugs/correct.w3i");
+        File w3iFile = getFile("bugs/broken.w3i");
         log.info("Testing: " + w3iFile.getName());
         byte[] input = Files.readAllBytes(w3iFile.toPath());
-        byte[] input2 = Files.readAllBytes(w3iFile2.toPath());
         W3I w3I = new W3I(input);
-
-        W3I w3I_2 = new W3I(input2);
 
         Path outPath = Paths.get("out.w3i");
         Files.deleteIfExists(outPath);
