@@ -561,7 +561,7 @@ public class W3I {
         }
     }
 
-    private GameDataSet _gameData;
+    private GameDataSet _gameData = GameDataSet.STANDARD;
 
     @Nonnull
     public GameDataSet getGameDataSet() {
@@ -1695,7 +1695,7 @@ public class W3I {
     }
 
     public void print(@Nonnull PrintStream outStream) {
-        outStream.println(String.format("savesAmount: %d", getSavesAmount()));
+        outStream.println(String.format("savesAmount: %s", getSavesAmount()));
         outStream.println(String.format("editorVersion: %d", getEditorVersion()));
 
         outStream.println(String.format("mapName: %s", getMapName()));
@@ -1815,6 +1815,7 @@ public class W3I {
         stream.writeInt32(getSavesAmount());
         stream.writeInt32(getEditorVersion());
         stream.writeString(getMapName());
+        stream.writeString(getMapAuthor());
         stream.writeString(getMapDescription());
         stream.writeString(getPlayersRecommendedAmount());
 
@@ -1880,12 +1881,6 @@ public class W3I {
 
         for (UnitTable unitTable : _unitTables) {
             unitTable.write(stream, EncodingFormat.W3I_0x12);
-        }
-
-        stream.writeInt32(_itemTables.size());
-
-        for (ItemTable itemTable : _itemTables) {
-            itemTable.write(stream, EncodingFormat.W3I_0x12);
         }
     }
 
