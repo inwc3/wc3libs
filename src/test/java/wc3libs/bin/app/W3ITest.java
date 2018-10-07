@@ -1,4 +1,5 @@
 package wc3libs.bin.app;
+
 import net.moonlightflower.wc3libs.bin.app.W3I;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import wc3libs.bin.GameExeTest;
 import wc3libs.misc.Wc3LibTest;
 import wc3libs.util.MurmurHash;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +19,32 @@ import java.util.List;
 
 public class W3ITest extends Wc3LibTest {
     private static final Logger log = LoggerFactory.getLogger(GameExeTest.class.getName());
+
+    @Test
+    public void testBroken() throws Exception {
+        File w3iFile = getFile("bugs/broken2.w3i");
+        File w3iFile2 = getFile("bugs/correct.w3i");
+        log.info("Testing: " + w3iFile.getName());
+        byte[] input = Files.readAllBytes(w3iFile.toPath());
+        byte[] input2 = Files.readAllBytes(w3iFile2.toPath());
+        W3I w3I = new W3I(input);
+
+        W3I w3I_2 = new W3I(input2);
+
+        Path outPath = Paths.get("out.w3i");
+        Files.deleteIfExists(outPath);
+        Path temp = Files.createFile(outPath);
+        w3I.write(temp.toFile());
+        byte[] output = Files.readAllBytes(temp);
+
+        W3I w3I2 = new W3I(output);
+
+        assertEqualsW3I(w3I, w3I2);
+
+        Assert.assertEquals(MurmurHash.hash64(input, input.length), MurmurHash.hash64(output, output.length));
+        Files.delete(temp);
+
+    }
 
     @Test
     public void testRebuild() throws Exception {
