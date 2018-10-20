@@ -48,4 +48,9 @@ public class Controller extends War3Int {
 	public static Controller valueOf(Integer val) {
 		return _indexMap.get(val);
 	}
+
+	@Nullable
+	public static Controller valueOf(String val) {
+		return _labelMap.get(val);
+	}
 }

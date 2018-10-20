@@ -667,6 +667,7 @@ public class W3I {
 
         public static class UnitRace extends War3Int {
             private final static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
+            private final static Map<String, UnitRace> _smap = new LinkedHashMap<>();
 
             public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF");
             public final static UnitRace HUMAN = new UnitRace(1, "HUMAN");
@@ -689,6 +690,7 @@ public class W3I {
                 super(val);
 
                 _map.put(val, this);
+                _smap.put(label, this);
 
                 _label = label;
             }
@@ -696,6 +698,11 @@ public class W3I {
             @Nullable
             public static UnitRace valueOf(@Nonnull Integer val) {
                 return _map.get(val);
+            }
+
+            @Nullable
+            public static UnitRace valueOf(@Nonnull String val) {
+                return _smap.get(val);
             }
 
 			/*public static UnitRace decodeStatic(Object val) {
