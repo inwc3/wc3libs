@@ -1,8 +1,5 @@
 package net.moonlightflower.wc3libs.misc.image;
 
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.bin.StdBinInputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
@@ -10,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,7 +117,7 @@ public class TGADecoder {
 	}
 
 	@Nonnull
-	private Color readColor(int bitsPerPx) throws IOException {
+	private java.awt.Color readColor(int bitsPerPx) throws IOException {
 		int bytesPerPx = (bitsPerPx + 8 - 1) / 8;
 		
 		int colorData = 0;
@@ -187,7 +185,7 @@ public class TGADecoder {
 			throw new IOException("bitsPerPx " + bitsPerPx + " not supported");
 		}
 		
-		return new Color(red, green, blue, alpha);
+		return new Color((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
 	}
 
 	@Nonnull
@@ -262,7 +260,7 @@ public class TGADecoder {
 				}
 			}
 
-			Color pxColors[][] = new Color[width][height];
+			java.awt.Color pxColors[][] = new java.awt.Color[width][height];
 
 			//img data
 			switch (imgType) {
@@ -393,10 +391,7 @@ public class TGADecoder {
 			//meta
 			readMeta();
 			
-			WritableImage writeImg = new WritableImage(width, height);
-			BufferedImage bufImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			
-			PixelWriter pxWriter = writeImg.getPixelWriter();
+			BufferedImage writeImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
@@ -405,17 +400,16 @@ public class TGADecoder {
 					
 					if (dirLeftwards) x2 = width - x - 1;
 					if (!dirDownwards) y2 = height - y - 1;
-					
-					Color pxColor = pxColors[x2][y2];
+
+					java.awt.Color pxColor = pxColors[x2][y2];
 
 					//pxColor = new Color(pxColor.getRed255(), pxColor.getGreen255(), pxColor.getBlue255(), 1D);
-			
-					pxWriter.setColor(x, y, pxColor);
-					bufImg.setRGB(x, y, new java.awt.Color((float) pxColor.getRed(), (float) pxColor.getGreen(), (float) pxColor.getBlue(), (float) pxColor.getOpacity()).getRGB());
+
+					writeImg.setRGB(x, y, pxColor.getRGB());
 				}
 			}
 			
-			return bufImg;
+			return writeImg;
 		} catch (Exception e) {
 			_stream.printLog(System.err);
 

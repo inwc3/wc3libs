@@ -1,8 +1,5 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
@@ -11,12 +8,14 @@ import net.moonlightflower.wc3libs.dataTypes.app.Color;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 import net.moonlightflower.wc3libs.misc.image.BLP;
+import net.moonlightflower.wc3libs.misc.image.FxImg;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -186,16 +185,14 @@ public class MMP {
 		public int[] _pxBuf;
 		
 		public IconImg(@Nonnull InputStream inStream) throws UnsupportedFormatException {
-			javafx.scene.image.Image fxImg = new BLP(inStream).getFXImg();
-			
-			javafx.scene.image.PixelReader pxReader = fxImg.getPixelReader();
+			FxImg fxImg = new BLP(inStream).getFXImg();
 			
 			int width = (int) fxImg.getWidth();
 			int height = (int) fxImg.getHeight();
 			
 			int[] pxBuf = new int[width * height];
-			
-			pxReader.getPixels(0, 0, width, height, PixelFormat.getIntArgbInstance(), pxBuf, 0, width);
+
+			fxImg.toBufImg().getRGB(0, 0, width, height, pxBuf, 0, width);
 			
 			_width = width;
 			_height = height;
@@ -204,10 +201,8 @@ public class MMP {
 	}
 
 	@Nonnull
-	public javafx.scene.image.Image toFXImg() throws Exception {
-		WritableImage img = new WritableImage(256, 256);
-		
-		PixelWriter pxWriter = img.getPixelWriter();
+	public FxImg toFXImg() throws Exception {
+		BufferedImage img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 		
 		Map<File, IconImg> iconImgMap = new LinkedHashMap<>();
 		
@@ -274,11 +269,11 @@ public class MMP {
 			
 			int xOff = Math.max(-minX, 0);
 			int yOff = Math.max(-minY, 0);
-			
-			pxWriter.setPixels(minX, minY, width - xOff, height - yOff, PixelFormat.getIntArgbInstance(), pxBuf, iconImg._width * yOff + xOff, iconImg._width);
+
+			img.setRGB(minX, minY, width - xOff, height - yOff, pxBuf, iconImg._width * yOff + xOff, iconImg._width);
 		}
 		
-		return img;
+		return new FxImg(img);
 	}
 
 	@Nonnull

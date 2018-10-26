@@ -1,10 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.util.Duration;
+
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
@@ -19,6 +15,9 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GamePrefetch {
 	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
@@ -132,7 +131,8 @@ public class GamePrefetch {
 	private final static int INTERVAL = 1000;
 	private final static int MAX_OBJS_PER_CYCLE = 500;
 	
-	private Timeline _timeline;
+	private ScheduledExecutorService _timeline;
+	private Runnable _timelineTask;
 	
 	public void add(@Nonnull Obj obj) {
 		File inFile = obj.getInFile();
@@ -159,46 +159,49 @@ public class GamePrefetch {
 		if (_started) return;
 		
 		if (_timeline == null) {
-			_timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), new EventHandler<ActionEvent>() {
+			_timeline = Executors.newSingleThreadScheduledExecutor();
+
+			_timelineTask = new Runnable() {
 				@Override
-				public void handle(ActionEvent event) {
+				public void run() {
 					List<File> procFiles = new ArrayList<>();
 
-					for (File inFile : _loadingFiles) {					
+					for (File inFile : _loadingFiles) {
 						procFiles.add(inFile);
-						
+
 						if (procFiles.size() == MAX_OBJS_PER_CYCLE) break;
 					}
 
-                    _loadingFiles.removeAll(procFiles);
+					_loadingFiles.removeAll(procFiles);
 
-					final EventHandler<ActionEvent> eventHandler = this;
-					
+					final Runnable eventHandler = this;
+
 					AsyncTask task = new PortTask(procFiles, _objs, () -> {
-                        List<Obj> removeObjs = new ArrayList<>();
+						List<Obj> removeObjs = new ArrayList<>();
 
-removeObjs.addAll(_objs);
+						removeObjs.addAll(_objs);
 
-                        _objs.removeAll(removeObjs);
+						_objs.removeAll(removeObjs);
 
-                        if (_loadingFiles.isEmpty()) {
-                            _started = false;
-                            _timeline = null;
-                        } else {
-                            _timeline = new Timeline(new KeyFrame(Duration.millis(INTERVAL), eventHandler));
+						if (_loadingFiles.isEmpty()) {
+							_started = false;
+							_timeline = null;
+							_timelineTask = null;
+						} else {
+							_timeline = Executors.newSingleThreadScheduledExecutor();
 
-                            _timeline.play();
-                        }
-                    });
-					
+							_timeline.scheduleAtFixedRate(eventHandler, INTERVAL, INTERVAL, TimeUnit.MILLISECONDS);
+						}
+					});
+
 					task.start();
 				}
-			}));
+			};
 		}
 		
 		_started = true;
-		
-		_timeline.play();
+
+		_timeline.scheduleAtFixedRate(_timelineTask, INTERVAL, INTERVAL, TimeUnit.MILLISECONDS);
 	}
 	
 	private void clear() {

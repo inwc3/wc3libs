@@ -1,20 +1,14 @@
 package net.moonlightflower.wc3libs.misc.image;
 
+import javax.annotation.Nonnull;
 import java.awt.image.BufferedImage;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-
-import javax.annotation.Nonnull;
-
 public abstract class Wc3Img {
-	public abstract javafx.scene.image.Image getFXImg();
+	public abstract FxImg getFXImg();
 
 	@Nonnull
 	private BufferedImage toBufImg() {
-		return SwingFXUtils.fromFXImage(getFXImg(), null);
+		return getFXImg().toBufImg();
 	}
 
 	@Nonnull

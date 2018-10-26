@@ -1,8 +1,5 @@
 package net.moonlightflower.wc3libs.dataTypes;
 
-import javafx.beans.InvalidationListener;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import org.slf4j.Logger;
@@ -11,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class DataList<T extends DataType> extends DataType implements ObservableList<T> {
+public class DataList<T extends DataType> extends DataType implements List<T> {
 	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
 
 	@Nonnull
@@ -250,65 +247,5 @@ public class DataList<T extends DataType> extends DataType implements Observable
 		}
 		
 		return other;
-	}
-
-	@Override
-	public void addListener(InvalidationListener arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeListener(InvalidationListener arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean addAll(T... arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addListener(ListChangeListener<? super T> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void remove(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean removeAll(T... arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void removeListener(ListChangeListener<? super T> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean retainAll(T... arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean setAll(T... arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean setAll(Collection<? extends T> arg0) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
