@@ -998,6 +998,42 @@ public class W3I {
             _players = val;
         }
 
+        public Set<Integer> getPlayerNums() {
+            Set<Integer> ret = new LinkedHashSet<>();
+
+            int players = _players;
+            int c = 0;
+
+            while (players != 0) {
+                if ((players & 1) == 1) ret.add(c);
+
+                c++;
+                players >>= 1;
+            }
+
+            return ret;
+        }
+
+        public void removePlayerNums(int... players) {
+            int rem = 0;
+
+            for (int player : players) {
+                rem |= (1 << player);
+            }
+
+            _players &= ~rem;
+        }
+
+        public void addPlayerNums(int... players) {
+            int add = 0;
+
+            for (int player : players) {
+                add |= (1 << player);
+            }
+
+            _players |= add;
+        }
+
         private String _name;
 
         @Nullable
