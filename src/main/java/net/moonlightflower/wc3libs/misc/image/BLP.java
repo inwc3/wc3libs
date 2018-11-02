@@ -1,8 +1,5 @@
 package net.moonlightflower.wc3libs.misc.image;
 
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
@@ -10,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -276,10 +274,8 @@ public class BLP extends Wc3RasterImg {
 						}
 					}
 				}
-				
-				WritableImage writeImg = new WritableImage(width, height);
-				
-				PixelWriter pxWriter = writeImg.getPixelWriter();
+
+				BufferedImage writeImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				
 				int c = 0;
 				
@@ -302,14 +298,14 @@ public class BLP extends Wc3RasterImg {
 							alpha = ((double) (alphaIndex & 0xFF)) / 0xFF;
 						}
 						
-						pxWriter.setColor(x, y, new Color(red, green, blue, alpha));
+						writeImg.setRGB(x, y, new java.awt.Color((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255)).getRGB());
 						//pxWriter.setColor(x, y, Color.BLACK);
 						
 						c++;
 					}
 				}
 
-				setFXImg(writeImg);
+				setFXImg(new FxImg(writeImg));
 				
 				break;
 			}

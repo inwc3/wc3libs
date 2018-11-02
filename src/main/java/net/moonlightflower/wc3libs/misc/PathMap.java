@@ -1,17 +1,16 @@
 package net.moonlightflower.wc3libs.misc;
 
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
+import net.moonlightflower.wc3libs.misc.image.FxImg;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
 
 public class PathMap extends Raster<Integer> {
 	public static class PathingInt extends FlagsInt {
@@ -25,12 +24,12 @@ public class PathMap extends Raster<Integer> {
 		static FlagsInt.Flag UNKNOWN = new FlagsInt.Flag("unknown", 7);
 
 		@Nonnull
-		public Color getColor() {
-			double red = containsFlag(UNWALK) ? 1D : 0D;
-			double green = containsFlag(UNFLY) ? 1D : 0D;
-			double blue = containsFlag(UNBUILD) ? 1D : 0D;
+		public java.awt.Color getColor() {
+			int red = containsFlag(UNWALK) ? 255 : 0;
+			int green = containsFlag(UNFLY) ? 255 : 0;
+			int blue = containsFlag(UNBUILD) ? 255 : 0;
 			
-			return new Color(red, green, blue, 1D);
+			return new java.awt.Color(red, green, blue, 255);
 		}
 		
 		private PathingInt(int val) {
@@ -167,9 +166,6 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	public void mergeCellsByPos(@Nonnull PathMap other, boolean additive) {
-		assert getBounds() != null: "no bounds set yet";
-		assert other.getBounds() != null: "no bounds of other set yet";
-		
 		Coords2DI center = getCenter();
 		Coords2DI otherCenter = other.getCenter();
 		
@@ -205,17 +201,15 @@ public class PathMap extends Raster<Integer> {
 
 	@Nonnull
 	public Wc3RasterImg toImg() {
-		WritableImage fxImg = new WritableImage(getWidth(), getHeight());
-		
-		PixelWriter pxWriter = fxImg.getPixelWriter();
+		BufferedImage bufImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		for (int y = 0; y < getHeight(); y++) {
 			for (int x = 0; x < getWidth(); x++) {
-				pxWriter.setColor(x, y, PathingInt.valueOf(get(new Coords2DI(x, getHeight() - 1 - y))).getColor());
+				bufImg.setRGB(x, y, PathingInt.valueOf(get(new Coords2DI(x, getHeight() - 1 - y))).getColor().getRGB());
 			}
 		}
 		
-		return new Wc3RasterImg(fxImg);
+		return new Wc3RasterImg(new FxImg(bufImg));
 	}
 	
 	public PathMap(@Nonnull Bounds bounds) {

@@ -1,13 +1,12 @@
 package net.moonlightflower.wc3libs.misc;
 
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
+import net.moonlightflower.wc3libs.misc.image.FxImg;
 import net.moonlightflower.wc3libs.misc.image.Wc3RasterImg;
 
 import javax.annotation.Nonnull;
+import java.awt.image.BufferedImage;
 
 public class ShadowMap extends Raster<Boolean> {
 	public final static int CELL_SIZE = 32;
@@ -38,17 +37,15 @@ public class ShadowMap extends Raster<Boolean> {
 
 	@Nonnull
 	public Wc3RasterImg toImg() {
-		WritableImage fxImg = new WritableImage(getWidth(), getHeight());
-		
-		PixelWriter pxWriter = fxImg.getPixelWriter();
+		BufferedImage bufImg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		for (int y = 0; y < getHeight(); y++) {
 			for (int x = 0; x < getWidth(); x++) {
-				pxWriter.setColor(x, y, get(new Coords2DI(x, getHeight() - 1 - y)) ? Color.WHITE : Color.BLACK);
+				bufImg.setRGB(x, y, (get(new Coords2DI(x, getHeight() - 1 - y)) ? java.awt.Color.WHITE : java.awt.Color.BLACK).getRGB());
 			}
 		}
 		
-		return new Wc3RasterImg(fxImg);
+		return new Wc3RasterImg(new FxImg(bufImg));
 	}
 	
 	public ShadowMap(@Nonnull Bounds bounds) {

@@ -1,7 +1,5 @@
 package net.moonlightflower.wc3libs.misc.image;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.Raster;
@@ -37,32 +35,18 @@ public class Wc3RasterImg extends Wc3Img {
 		_bufImg.setRGB(x, y, color.getRGB());
 	}
 	
-	/*private javafx.scene.image.Image toFXImg() {
-		WritableImage wr = new WritableImage(_bufImg.getWidth(), _bufImg.getHeight());
-		
-		PixelWriter pw = wr.getPixelWriter();
-		
-		for (int x = 0; x < _bufImg.getWidth(); x++) {
-			for (int y = 0; y < _bufImg.getHeight(); y++) {					
-				pw.setArgb(x, y, _bufImg.getRGB(x, y));
-			}
-		}
-		
-		return wr;
-	}*/
-	
 	@Override
 	@Nonnull
-	public Image getFXImg() {
-		return SwingFXUtils.toFXImage(_bufImg, null);
+	public FxImg getFXImg() {
+		return new FxImg(_bufImg);
 	}
 	
 	public void setBufImg(@Nonnull BufferedImage bufImg) {
 		_bufImg = bufImg;
 	}
 	
-	public void setFXImg(@Nonnull javafx.scene.image.Image fxImg) {
-		setBufImg(SwingFXUtils.fromFXImage(fxImg, null));
+	public void setFXImg(@Nonnull FxImg fxImg) {
+		setBufImg(fxImg.toBufImg());
 	}
 	
 	private static class Rastered extends Raster<Color> {
@@ -137,17 +121,17 @@ public class Wc3RasterImg extends Wc3Img {
 		setBufImg(_bufImg);
 	}
 	
-	public void enlarge(@Nonnull Size size, @Nonnull javafx.scene.paint.Color color) {
-		javafx.scene.image.WritableImage fxImg = new javafx.scene.image.WritableImage(Math.max(size.getWidth(), getWidth()), Math.max(size.getHeight(), getHeight()));
+	public void enlarge(@Nonnull Size size, @Nonnull java.awt.Color color) {
+		BufferedImage bufImg = new BufferedImage(Math.max(size.getWidth(), getWidth()), Math.max(size.getHeight(), getHeight()), BufferedImage.TYPE_INT_ARGB);
 		
-		javafx.scene.image.PixelWriter pxWriter = fxImg.getPixelWriter();
-		
-		for (int y = 0; y < fxImg.getHeight(); y++) {
-			for (int x = 0; x < fxImg.getWidth(); x++) {
-				pxWriter.setColor(x, y, new javafx.scene.paint.Color(color.getRed(), color.getGreen(), color.getBlue(), 1D));
+		for (int y = 0; y < bufImg.getHeight(); y++) {
+			for (int x = 0; x < bufImg.getWidth(); x++) {
+				bufImg.setRGB(x, y, new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), 255).getRGB());
 			}
 		}
-		
+
+		FxImg fxImg = new FxImg(bufImg);
+
 		Wc3RasterImg other = new Wc3RasterImg(fxImg);
 
 		int xOff = (((int) fxImg.getWidth()) - getWidth())/2;
@@ -239,28 +223,25 @@ public class Wc3RasterImg extends Wc3Img {
 	}
 	
 	public void ignoreAlpha2() {
-		javafx.scene.image.Image oldImg = getFXImg();
-		
-		javafx.scene.image.WritableImage newImg = new javafx.scene.image.WritableImage((int) oldImg.getWidth(), (int) oldImg.getHeight());
-		
-		javafx.scene.image.PixelReader pxReader = oldImg.getPixelReader();
-		javafx.scene.image.PixelWriter pxWriter = newImg.getPixelWriter();
+		BufferedImage oldImg = getBufImg();
+
+		BufferedImage newImg = new BufferedImage(oldImg.getWidth(), oldImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		for (int y = 0; y < newImg.getHeight(); y++) {
 			for (int x = 0; x < newImg.getWidth(); x++) {
-				javafx.scene.paint.Color oldColor = pxReader.getColor(x, y);
-				System.out.println(oldColor);
-				javafx.scene.paint.Color newColor = new javafx.scene.paint.Color(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue(), 1D);
-				
-				pxWriter.setColor(x, y, newColor);
+				Color oldColor = new Color(oldImg.getRGB(x, y));
+
+				Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue(), oldColor.getAlpha());
+
+				newImg.setRGB(x, y, newColor.getRGB());
 			}
 		}
 		
-		setFXImg(newImg);
+		setFXImg(new FxImg(newImg));
 	}
 	
 	public Wc3RasterImg copy() {
-		BufferedImage bufImg = SwingFXUtils.fromFXImage(getFXImg(), null);
+		BufferedImage bufImg = getFXImg().toBufImg();
 		
 		return new Wc3RasterImg(bufImg);
 	}
@@ -271,18 +252,18 @@ public class Wc3RasterImg extends Wc3Img {
 	
 	public Wc3RasterImg(@Nonnull Size size) {
 		this();
-		
-		javafx.scene.image.WritableImage fxImg = new javafx.scene.image.WritableImage(size.getWidth(), size.getHeight());
-		
-		javafx.scene.image.PixelWriter pxWriter = fxImg.getPixelWriter();
-		
+
+		BufferedImage bufImg = new BufferedImage(size.getWidth(), size.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+		int blankColor = new Color(0, 0, 0, 0).getRGB();
+
 		for (int y = 0; y < size.getHeight(); y++) {
 			for (int x = 0; x < size.getWidth(); x++) {
-				pxWriter.setColor(x, y, new javafx.scene.paint.Color(0D, 0D, 0D, 0D));
+				bufImg.setRGB(x, y, blankColor);
 			}
 		}
 		
-		setFXImg(fxImg);
+		setFXImg(new FxImg(bufImg));
 		
 		//_bufImg = new BufferedImage(size.getWidth(), size.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	}
@@ -293,8 +274,8 @@ public class Wc3RasterImg extends Wc3Img {
 		_bufImg = bufImg;
 	}
 	
-	public Wc3RasterImg(@Nonnull javafx.scene.image.Image fxImg) {
-		this(SwingFXUtils.fromFXImage(fxImg, null));
+	public Wc3RasterImg(@Nonnull FxImg fxImg) {
+		this(fxImg.toBufImg());
 	}
 
 	@Nonnull
