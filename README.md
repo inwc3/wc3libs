@@ -4,7 +4,7 @@
 # Wc3libs
 
 Pure Java library for general wc3 modding and tool development.
-With Wc3libs we aim to offer a feature-complete, easy, plug & play solution for jvm applications to access, modify and output anz kind of Warcraft III specific game data.
+With Wc3libs we aim to offer a feature-complete, easy, plug & play solution for jvm applications to access, modify and output any kind of Warcraft III specific game data.
 
 # Usage
 
