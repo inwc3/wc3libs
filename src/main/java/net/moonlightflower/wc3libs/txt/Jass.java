@@ -78,11 +78,11 @@ public class Jass {
 		public static class Func {
 			private FuncDecl _decl;
 
-			public abstract static class Statement {
+			public static class Statement {
 				private String _stmt;
 				private boolean _isDebug;
 
-				public static Statement makeStatement(@Nonnull String stmt) {
+				/*public static Statement makeStatement(@Nonnull String stmt) {
 					_stmt = stmt;
 				}
 
@@ -90,13 +90,17 @@ public class Jass {
 					_stmt = stmt;
 
 					_isDebug = (stmt.debug() != null);
+				}*/
+
+				public Statement(@Nonnull String stmt) {
+					_stmt = stmt;
 				}
 			}
 
-			public static class SetVarStatement extends Statement {
+			/*public static class SetVarStatement extends Statement {
 				private String _name;
 				private Expr _val;
-			}
+			}*/
 
 			public static class Body {
 				private List<VarDecl> _localVars;
