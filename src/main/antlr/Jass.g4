@@ -59,6 +59,18 @@ NEW_LINE:
 WS:
 	(' ' | '\t')+ -> skip ;
 
+ARRAY_DECL:
+    'array';
+
+CONST_DECL:
+    'constant';
+BOOL_OP_CONJUNCT:
+    'and';
+BOOL_OP_DISJUNCT:
+    'or' ;
+BOOL_OP_NEG:
+    'not' ;
+
 root:
 	NEW_LINE*
 	(typeDec NEW_LINE NEW_LINE*)*
@@ -86,10 +98,10 @@ funcName:
 
 globalDec:
 		type=typeName
-		'array'
+		ARRAY_DECL
 		name=varName
 	|
-		('constant')?
+		CONST_DECL?
 		type=typeName
 		name=varName 
 		('=' val=expr)?
@@ -98,15 +110,15 @@ globalDec:
 surroundedExpr:
 	'(' expr ')' ;
 expr:
-		expr ('and' | 'or') expr
+		expr (BOOL_OP_CONJUNCT | BOOL_OP_DISJUNCT) expr
 	|
-		'(' expr ')' ('and' | 'or') '(' expr ')'
+		'(' expr ')' (BOOL_OP_CONJUNCT | BOOL_OP_DISJUNCT) '(' expr ')'
 	|
-		expr ('and' | 'or') '(' expr ')'
+		expr (BOOL_OP_CONJUNCT | BOOL_OP_DISJUNCT) '(' expr ')'
 	|
-		'(' expr ')' ('and' | 'or') expr
+		'(' expr ')' (BOOL_OP_CONJUNCT | BOOL_OP_DISJUNCT) expr
 	|
-		'not' (expr | '(' expr ')')
+		BOOL_OP_NEG (expr | '(' expr ')')
 	|
 		literal
 	|
@@ -150,7 +162,7 @@ localVarDec:
 	(
 			(
 				typeName
-				'array'
+				ARRAY_DECL
 				name=varName
 			)
 		|
@@ -243,7 +255,7 @@ typeName:
 	ID ;
 
 funcDec:
-	('constant')? 
+	CONST_DECL?
 	'function'
 	name=ID
 	'takes'
@@ -291,7 +303,7 @@ typeDec:
 	parent=ID
 	;
 nativeDec:
-	('constant')?
+	CONST_DECL?
 	'native'
 	name=ID
 	'takes'

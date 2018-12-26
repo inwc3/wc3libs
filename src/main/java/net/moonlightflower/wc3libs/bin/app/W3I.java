@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app;
 
+import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -9,6 +10,7 @@ import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
+import net.moonlightflower.wc3libs.txt.Jass;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * info file for wrapping war3map.w3i
@@ -799,6 +802,42 @@ public class W3I {
             _allyLowPrioFlags.setPos(index, val);
         }
 
+        public Set<Integer> getAllyLowPrioPlayerNums() {
+            Set<Integer> ret = new LinkedHashSet<>();
+
+            int players = _allyLowPrioFlags.toInt();
+            int c = 0;
+
+            while (players != 0) {
+                if ((players & 1) == 1) ret.add(c);
+
+                c++;
+                players >>= 1;
+            }
+
+            return ret;
+        }
+
+        public void removeAllyLowPrioPlayers(int... players) {
+            int rem = 0;
+
+            for (int player : players) {
+                rem |= (1 << player);
+            }
+
+            _allyLowPrioFlags.setVal(_allyLowPrioFlags.toInt() & ~rem);
+        }
+
+        public void addAllyLowPrioPlayerNums(int... players) {
+            int add = 0;
+
+            for (int player : players) {
+                add |= (1 << player);
+            }
+
+            _allyLowPrioFlags.setVal(_allyLowPrioFlags.toInt() | add);
+        }
+
         private FlagsInt _allyHighPrioFlags = AllyFlags.valueOf(0);
 
         public int getAllyHighPrioFlags() {
@@ -811,6 +850,42 @@ public class W3I {
 
         public void setAllyHighPrioFlag(int index, boolean val) {
             _allyHighPrioFlags.setPos(index, val);
+        }
+
+        public Set<Integer> getAllyHighPrioPlayerNums() {
+            Set<Integer> ret = new LinkedHashSet<>();
+
+            int players = _allyHighPrioFlags.toInt();
+            int c = 0;
+
+            while (players != 0) {
+                if ((players & 1) == 1) ret.add(c);
+
+                c++;
+                players >>= 1;
+            }
+
+            return ret;
+        }
+
+        public void removeAllyHighPrioPlayers(int... players) {
+            int rem = 0;
+
+            for (int player : players) {
+                rem |= (1 << player);
+            }
+
+            _allyHighPrioFlags.setVal(_allyHighPrioFlags.toInt() & ~rem);
+        }
+
+        public void addAllyHighPrioPlayerNums(int... players) {
+            int add = 0;
+
+            for (int player : players) {
+                add |= (1 << player);
+            }
+
+            _allyHighPrioFlags.setVal(_allyHighPrioFlags.toInt() | add);
         }
 
         @Override
@@ -2242,5 +2317,122 @@ public class W3I {
 
         inStream.close();
         return w3i;
+    }
+
+    public Jass.Script.Func makeInitCustomPlayerSlots() {
+        Jass.Script.FuncDecl funcDecl = new Jass.Script.FuncDecl(false, Jass.Script.Func.CONFIG_NAME, new ArrayList<>(), null);
+
+        List<Jass.Script.Func.Statement> stmts = new ArrayList<>();
+
+        for (Player player : getPlayers()) {
+            stmts.add(new Jass.Script.Func.Statement("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            stmts.add(new Jass.Script.Func.Statement("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
+            stmts.add(new Jass.Script.Func.Statement("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace() + ")"));
+            stmts.add(new Jass.Script.Func.Statement("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", false)"));
+            stmts.add(new Jass.Script.Func.Statement("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType() + ")"));
+        }
+
+        Jass.Script.Func.Body body = new Jass.Script.Func.Body(new ArrayList<>(), stmts);
+
+        Jass.Script.Func func = new Jass.Script.Func(funcDecl, body);
+
+        return func;
+    }
+
+    public Jass.Script.Func makeInitCustomTeams() {
+        Jass.Script.FuncDecl funcDecl = new Jass.Script.FuncDecl(false, Jass.Script.Func.CONFIG_NAME, new ArrayList<>(), null);
+
+        List<Jass.Script.Func.Statement> stmts = new ArrayList<>();
+
+        Map<Integer, Player> numToPlayerMap = new LinkedHashMap<>();
+
+        for (Player player : getPlayers()) {
+            numToPlayerMap.put(player.getNum(), player);
+        }
+
+        for (Force force : getForces()) {
+            for (Integer playerNum : force.getPlayerNums()) {
+                Player player = numToPlayerMap.get(playerNum);
+
+                stmts.add(new Jass.Script.Func.Statement("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
+
+                if (force.getFlag(Force.Flags.Flag.ALLIED)) {
+                    for (Integer playerNum2 : force.getPlayerNums()) {
+                        if (playerNum == playerNum2) continue;
+
+                        stmts.add(new Jass.Script.Func.Statement("call SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", " + playerNum2 + ", true)"));
+                    }
+                }
+                if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
+                    for (Integer playerNum2 : force.getPlayerNums()) {
+                        if (playerNum == playerNum2) continue;
+
+                        stmts.add(new Jass.Script.Func.Statement("call SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", " + playerNum2 + ", true)"));
+                    }
+                }
+            }
+        }
+
+        Jass.Script.Func.Body body = new Jass.Script.Func.Body(new ArrayList<>(), stmts);
+
+        Jass.Script.Func func = new Jass.Script.Func(funcDecl, body);
+
+        return func;
+    }
+
+    public Jass.Script.Func makeInitAllyPriorities() {
+        Jass.Script.FuncDecl funcDecl = new Jass.Script.FuncDecl(false, Jass.Script.Func.CONFIG_NAME, new ArrayList<>(), null);
+
+        List<Jass.Script.Func.Statement> stmts = new ArrayList<>();
+
+        for (Player player : getPlayers()) {
+            Set<Integer> lowNums = player.getAllyLowPrioPlayerNums();
+            Set<Integer> highNums = player.getAllyHighPrioPlayerNums();
+
+            int playerNum = player.getNum();
+
+            stmts.add(new Jass.Script.Func.Statement(String.format("call SetStartLocPrioCount(%d, %d)", playerNum, lowNums.size() + highNums.size())));
+
+            int c = 0;
+
+            for (Integer lowNum : lowNums) {
+                stmts.add(new Jass.Script.Func.Statement(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, lowNum, "MAP_LOC_PRIO_LOW")));
+                c++;
+            }
+            for (Integer highNum : highNums) {
+                stmts.add(new Jass.Script.Func.Statement(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, highNum, "MAP_LOC_PRIO_HIGH")));
+                c++;
+            }
+        }
+
+        Jass.Script.Func.Body body = new Jass.Script.Func.Body(new ArrayList<>(), stmts);
+
+        Jass.Script.Func func = new Jass.Script.Func(funcDecl, body);
+
+        return func;
+    }
+
+    public Jass.Script.Func makeConfig() {
+        Jass.Script.FuncDecl funcDecl = new Jass.Script.FuncDecl(false, Jass.Script.Func.CONFIG_NAME, new ArrayList<>(), null);
+
+        List<Jass.Script.Func.Statement> stmts = new ArrayList<>();
+
+        stmts.add(new Jass.Script.Func.Statement("call SetMapName(" + getMapName() + ")"));
+        stmts.add(new Jass.Script.Func.Statement("call SetMapDescription(" + getMapDescription() + ")"));
+
+        stmts.add(new Jass.Script.Func.Statement("call SetPlayers(" + getPlayers().size() + ")"));
+        stmts.add(new Jass.Script.Func.Statement("call SetForces(" + getForces().size() + ")"));
+
+        stmts.add(new Jass.Script.Func.Statement("call SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
+
+        for (Player player : getPlayers()) {
+            stmts.add(new Jass.Script.Func.Statement("call DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
+        }
+
+        Jass.Script.Func.Body body = new Jass.Script.Func.Body(new ArrayList<>(), stmts);
+
+        Jass.Script.Func func = new Jass.Script.Func(funcDecl, body);
+
+        return func;
     }
 }
