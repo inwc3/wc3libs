@@ -1,19 +1,20 @@
-package net.moonlightflower.wc3libs.txt;
+package net.moonlightflower.wc3libs.txt.app.jass;
 
+import com.sun.org.apache.xpath.internal.operations.Variable;
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
+import net.moonlightflower.wc3libs.antlr.LightJassParser;
+import net.moonlightflower.wc3libs.misc.Math;
+import net.moonlightflower.wc3libs.txt.UTF8;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Jass {
 	public final static File GAME_PATH = new File("war3map.j");
@@ -28,7 +29,9 @@ public class Jass {
 
 	public JassParser.RootContext getRootContext() {
 		if (_rootContext == null) {
-			JassParser parser = new JassParser(new CommonTokenStream(new ListTokenSource(_tokens)));
+			TokenStream tokenStream = new CommonTokenStream(new ListTokenSource(_tokens));
+
+			JassParser parser = new JassParser(tokenStream);
 
 			_rootContext = parser.root();
 		}
@@ -55,7 +58,7 @@ public class Jass {
 				s = s.replaceAll("[^\n]", "");
 
 				for (int i = 0; i < s.length() + 1; i++) {
-					Token newToken = new CommonTokenFactory().create(JassLexer.NEW_LINE, "\n");
+					Token newToken = new CommonTokenFactory().create(JassLexer.NEW_LINES, "\n");
 
 					newTokens.add(newToken);
 				}
@@ -68,7 +71,27 @@ public class Jass {
 
 		return newTokens;
 	}
-	
+
+	public static JassParser transform(@Nonnull String input) {
+		CharStream antlrStream = CharStreams.fromString(input);
+
+		Lexer lexer = new JassLexer(antlrStream);
+
+		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+
+		tokenStream.fill();
+
+		//List<Token> tokens = new ArrayList<>(tokenStream.getTokens());
+
+		//_tokens = stripComments(tokens);
+
+		//TokenStream tokenStream = new CommonTokenStream(new ListTokenSource(_tokens));
+
+		JassParser parser = new JassParser(tokenStream);
+
+		return parser;
+	}
+
 	private void read(@Nonnull InputStream inStream) throws IOException {
 		UTF8 reader = new UTF8(inStream, false, true);
 		
@@ -82,9 +105,13 @@ public class Jass {
 
 		tokenStream.fill();
 
-		List<Token> tokens = tokenStream.getTokens();
+		List<Token> tokens = new ArrayList<>(tokenStream.getTokens());
 
 		_tokens = stripComments(tokens);
+
+		/*for (Token token : _tokens) {
+			System.out.println(JassLexer.VOCABULARY.getSymbolicName(token.getType()) + " -> " + token.getText());
+		}*/
 	}
 	
 	public Jass(@Nonnull InputStream inStream) throws IOException {

@@ -999,7 +999,7 @@ public class WTG {
 					for (int i = 0; i < _func.getParams().size(); i++) {
 						Param sub = null;
 
-						/*Func subFunc = funcMap.get(func.getParam(i));
+						/*FuncImpl subFunc = funcMap.get(func.getParam(i));
 
 						switch (subFunc.getType()) {
 						case BOOLCALL:
@@ -1068,7 +1068,7 @@ public class WTG {
 				for (int i = 0; i < _func.getParams().size(); i++) {
 					Param sub = null;
 
-					/*Func subFunc = funcMap.get(func.getParam(i).toLowerCase());
+					/*FuncImpl subFunc = funcMap.get(func.getParam(i).toLowerCase());
 
 					switch (subFunc.getType()) {
 					case BOOLCALL:

@@ -9,6 +9,10 @@ import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
+import net.moonlightflower.wc3libs.txt.app.jass.FuncImpl;
+import net.moonlightflower.wc3libs.txt.app.jass.FuncDecl;
+import net.moonlightflower.wc3libs.txt.app.jass.JassScript;
+import net.moonlightflower.wc3libs.txt.app.jass.statement.Statement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -799,6 +803,42 @@ public class W3I {
             _allyLowPrioFlags.setPos(index, val);
         }
 
+        public Set<Integer> getAllyLowPrioPlayerNums() {
+            Set<Integer> ret = new LinkedHashSet<>();
+
+            int players = _allyLowPrioFlags.toInt();
+            int c = 0;
+
+            while (players != 0) {
+                if ((players & 1) == 1) ret.add(c);
+
+                c++;
+                players >>= 1;
+            }
+
+            return ret;
+        }
+
+        public void removeAllyLowPrioPlayers(int... players) {
+            int rem = 0;
+
+            for (int player : players) {
+                rem |= (1 << player);
+            }
+
+            _allyLowPrioFlags.setVal(_allyLowPrioFlags.toInt() & ~rem);
+        }
+
+        public void addAllyLowPrioPlayerNums(int... players) {
+            int add = 0;
+
+            for (int player : players) {
+                add |= (1 << player);
+            }
+
+            _allyLowPrioFlags.setVal(_allyLowPrioFlags.toInt() | add);
+        }
+
         private FlagsInt _allyHighPrioFlags = AllyFlags.valueOf(0);
 
         public int getAllyHighPrioFlags() {
@@ -811,6 +851,42 @@ public class W3I {
 
         public void setAllyHighPrioFlag(int index, boolean val) {
             _allyHighPrioFlags.setPos(index, val);
+        }
+
+        public Set<Integer> getAllyHighPrioPlayerNums() {
+            Set<Integer> ret = new LinkedHashSet<>();
+
+            int players = _allyHighPrioFlags.toInt();
+            int c = 0;
+
+            while (players != 0) {
+                if ((players & 1) == 1) ret.add(c);
+
+                c++;
+                players >>= 1;
+            }
+
+            return ret;
+        }
+
+        public void removeAllyHighPrioPlayers(int... players) {
+            int rem = 0;
+
+            for (int player : players) {
+                rem |= (1 << player);
+            }
+
+            _allyHighPrioFlags.setVal(_allyHighPrioFlags.toInt() & ~rem);
+        }
+
+        public void addAllyHighPrioPlayerNums(int... players) {
+            int add = 0;
+
+            for (int player : players) {
+                add |= (1 << player);
+            }
+
+            _allyHighPrioFlags.setVal(_allyHighPrioFlags.toInt() | add);
         }
 
         @Override
@@ -2241,6 +2317,159 @@ public class W3I {
         w3i.read(inStream);
 
         inStream.close();
+
         return w3i;
+    }
+
+    public FuncImpl makeInitCustomPlayerSlots() {
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null);
+
+        List<Statement> stmts = new ArrayList<>();
+
+        for (Player player : getPlayers()) {
+            stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
+            stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace() + ")"));
+            stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", false)"));
+            stmts.add(Statement.create("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType() + ")"));
+        }
+
+        FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
+
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public FuncImpl makeInitCustomTeams() {
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_TEAMS, new ArrayList<>(), null);
+
+        List<Statement> stmts = new ArrayList<>();
+
+        Map<Integer, Player> numToPlayerMap = new LinkedHashMap<>();
+
+        for (Player player : getPlayers()) {
+            numToPlayerMap.put(player.getNum(), player);
+        }
+
+        for (Force force : getForces()) {
+            for (Integer playerNum : force.getPlayerNums()) {
+                Player player = numToPlayerMap.get(playerNum);
+
+                stmts.add(Statement.create("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
+
+                if (force.getFlag(Force.Flags.Flag.ALLIED)) {
+                    for (Integer playerNum2 : force.getPlayerNums()) {
+                        if (playerNum == playerNum2) continue;
+
+                        stmts.add(Statement.create("call SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", " + playerNum2 + ", true)"));
+                    }
+                }
+                if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
+                    for (Integer playerNum2 : force.getPlayerNums()) {
+                        if (playerNum == playerNum2) continue;
+
+                        stmts.add(Statement.create("call SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", " + playerNum2 + ", true)"));
+                    }
+                }
+            }
+        }
+
+        FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
+
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public FuncImpl makeInitAllyPriorities() {
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null);
+
+        List<Statement> stmts = new ArrayList<>();
+
+        for (Player player : getPlayers()) {
+            Set<Integer> lowNums = player.getAllyLowPrioPlayerNums();
+            Set<Integer> highNums = player.getAllyHighPrioPlayerNums();
+
+            int playerNum = player.getNum();
+
+            stmts.add(Statement.create(String.format("call SetStartLocPrioCount(%d, %d)", playerNum, lowNums.size() + highNums.size())));
+
+            int c = 0;
+
+            for (Integer lowNum : lowNums) {
+                stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, lowNum, "MAP_LOC_PRIO_LOW")));
+                c++;
+            }
+            for (Integer highNum : highNums) {
+                stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, highNum, "MAP_LOC_PRIO_HIGH")));
+                c++;
+            }
+        }
+
+        FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
+
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public FuncImpl makeConfig() {
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.CONFIG_NAME, new ArrayList<>(), null);
+
+        List<Statement> stmts = new ArrayList<>();
+
+        stmts.add(Statement.create("call SetMapName(\"" + getMapName() + "\")"));
+        stmts.add(Statement.create("call SetMapDescription(\"" + getMapDescription() + "\")"));
+
+        stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
+        stmts.add(Statement.create("call SetForces(" + getForces().size() + ")"));
+
+        stmts.add(Statement.create("call SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
+
+        for (Player player : getPlayers()) {
+            stmts.add(Statement.create("call DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
+        }
+
+        stmts.add(Statement.create("call " + FuncDecl.INIT_CUSTOM_PLAYER_SLOTS + "()"));
+        stmts.add(Statement.create("call " + FuncDecl.INIT_CUSTOM_TEAMS + "()"));
+        stmts.add(Statement.create("call " + FuncDecl.INIT_ALLY_PRIORITIES + "()"));
+
+        FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
+
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public void injectConfigsInJassScript(@Nonnull JassScript jassScript) {
+        List<String> funcNames = new ArrayList<>();
+
+        funcNames.add(FuncDecl.CONFIG_NAME);
+        funcNames.add(FuncDecl.INIT_CUSTOM_PLAYER_SLOTS);
+        funcNames.add(FuncDecl.INIT_CUSTOM_TEAMS);
+        funcNames.add(FuncDecl.INIT_ALLY_PRIORITIES);
+
+        List<FuncImpl> funcImplsToRemove = new ArrayList<>();
+
+        for (FuncImpl funcImpl : jassScript.getFuncImpls()) {
+            if (funcNames.contains(funcImpl.getDecl().getName())) {
+                funcImplsToRemove.add(funcImpl);
+            }
+        }
+
+        for (FuncImpl funcImpl : funcImplsToRemove) {
+            jassScript.removeFuncImpl(funcImpl);
+        }
+
+        FuncImpl initCustomPlayerSlots = makeInitCustomPlayerSlots();
+        FuncImpl initCustomTeams = makeInitCustomTeams();
+        FuncImpl initAllyPriorities = makeInitAllyPriorities();
+        FuncImpl config = makeConfig();
+
+        jassScript.addFuncImpl(initCustomPlayerSlots);
+        jassScript.addFuncImpl(initCustomTeams);
+        jassScript.addFuncImpl(initAllyPriorities);
+        jassScript.addFuncImpl(config);
     }
 }

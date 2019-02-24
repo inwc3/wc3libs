@@ -1,5 +1,5 @@
 // Define a grammar called Jass
-grammar Jass;
+grammar LightJass;
 
 options {
 	language = Java;
@@ -206,268 +206,57 @@ global_decl:
 	;
 
 expr:
-        handle_expr
+    expr_prim
     |
-        null_expr
+    PARENS_L expr PARENS_R
     |
-        code_expr
+    BOOL_OP_NEG expr
     |
-        bool_expr
+    ADD expr
     |
-        int_expr
+    SUB expr
     |
-        real_expr
+    expr (MULT | DIV | MOD) expr
     |
-        string_expr
+    expr (ADD | SUB) expr
+    |
+    expr (LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) expr
+    |
+    expr (EQUAL | UNEQUAL) expr
+    |
+    expr BOOL_OP_CONJUNCT expr
+    |
+    expr BOOL_OP_DISJUNCT expr
     ;
 
-handle_expr:
-        handle_literal
+expr_prim:
+    array_read
     |
-        handle_parens
+    var_ref
     |
-        any_expr_atom
+    func_call
+    |
+    literal
     ;
 
-handle_literal:
-    null_literal;
-
-handle_parens:
-    PARENS_L handle_expr PARENS_R;
-
-code_expr:
-        code_literal
+literal:
+    NULL_LITERAL
     |
-        code_parens
+    FUNCTION func_ref
     |
-        any_expr_atom
-    ;
-
-code_parens:
-    PARENS_L code_expr PARENS_R;
-
-code_literal:
-        FUNCTION func_ref
+    BOOL_LITERAL
     |
-        null_literal
-    ;
-
-null_expr:
-        null_literal
+    OCT_INT_LITERAL
     |
-        null_parens
+    DEC_INT_LITERAL
     |
-        any_expr_atom
-    ;
-
-null_parens:
-    PARENS_L null_expr PARENS_R;
-
-null_literal:
-    NULL_LITERAL;
-
-bool_expr:
-    bool_maybe_disjunct;
-
-bool_maybe_disjunct:
-        left=bool_maybe_disjunct BOOL_OP_DISJUNCT right=bool_maybe_conjunct
+    HEX_INT_LITERAL
     |
-        exit=bool_maybe_conjunct
-    ;
-
-bool_maybe_conjunct:
-        left=bool_maybe_conjunct BOOL_OP_CONJUNCT right=bool_maybe_full_relation
+    ID_INT_LITERAL
     |
-        exit=bool_maybe_full_relation
-    ;
-
-bool_maybe_full_relation:
-        bool_full_relation
+    REAL_LITERAL
     |
-        bool_maybe_num_order_relation
-    ;
-
-bool_full_relation:
-        bool_null_relation
-    |
-        bool_handle_relation
-    |
-        bool_code_relation
-    |
-        bool_bool_relation
-    |
-        bool_num_relation
-    |
-        bool_string_relation
-    ;
-
-bool_null_relation:
-    left=null_expr bool_relation_op right=null_expr;
-bool_handle_relation:
-    left=handle_expr bool_relation_op right=handle_expr;
-bool_code_relation:
-    left=code_expr bool_relation_op right=code_expr;
-bool_bool_relation:
-    left=bool_maybe_num_order_relation bool_relation_op right=bool_maybe_num_order_relation;
-bool_num_relation:
-    left=num_expr bool_relation_op right=num_expr;
-bool_string_relation:
-    left=string_expr bool_relation_op right=string_expr;
-
-bool_maybe_num_order_relation:
-        bool_num_order_relation
-    |
-        bool_maybe_unary
-    ;
-
-bool_num_order_relation:
-    left=num_expr bool_num_order_relation_op right=num_expr;
-
-bool_maybe_unary:
-        BOOL_OP_NEG bool_maybe_unary
-    |
-        bool_atom
-    ;
-
-bool_atom:
-        any_expr_atom
-    |
-        bool_literal
-    |
-        bool_parens
-    ;
-
-bool_literal:
-    BOOL_LITERAL;
-
-bool_parens:
-    PARENS_L bool_expr PARENS_R;
-
-bool_relation_op:
-    EQUAL | UNEQUAL;
-bool_num_order_relation_op:
-    LESS | LESS_EQUAL | GREATER | GREATER_EQUAL;
-
-num_expr:
-        int_expr
-    |
-        real_expr
-    ;
-
-int_expr:
-    int_maybe_sum;
-
-int_maybe_sum:
-        left=int_maybe_sum num_sum_op right=int_maybe_prod
-    |
-        int_maybe_prod
-    ;
-
-int_maybe_prod:
-        left=int_maybe_prod num_prod_op right=int_maybe_unary
-    |
-        int_maybe_unary
-    ;
-
-int_maybe_unary:
-        num_unary_op int_maybe_unary
-    |
-        int_atom
-    ;
-
-int_atom:
-        int_literal
-    |
-        int_parens
-    |
-        any_expr_atom
-    ;
-
-//int_literal:
-	//INT_LITERAL;
-
-int_parens:
-	PARENS_L int_expr PARENS_R;
-
-real_expr:
-    real_maybe_sum;
-
-real_maybe_sum:
-        left=real_maybe_sum num_sum_op right=real_maybe_prod
-    |
-        real_maybe_prod
-    ;
-
-real_maybe_prod:
-        left=real_maybe_prod num_prod_op right=real_maybe_unary
-    |
-        real_maybe_unary
-    ;
-
-real_maybe_unary:
-        num_unary_op real_maybe_unary
-    |
-        real_atom
-    ;
-
-real_atom:
-        int_atom
-    |
-        real_literal
-    |
-        real_parens
-    |
-        any_expr_atom
-    ;
-
-real_literal:
-    REAL_LITERAL;
-
-real_parens:
-    PARENS_L real_expr PARENS_R;
-
-num_sum_op:
-    ADD | SUB;
-num_prod_op:
-    MULT | DIV | MOD;
-num_unary_op:
-    ADD | SUB;
-
-string_expr:
-    string_maybe_concat;
-
-string_maybe_concat:
-        left=string_maybe_concat string_concat_op right=string_atom
-    |
-        string_atom
-    ;
-
-string_atom:
-        string_literal
-    |
-        string_parens
-    |
-        any_expr_atom
-    ;
-
-string_literal:
-        STRING_LITERAL
-    |
-        null_literal
-    ;
-
-string_parens:
-    PARENS_L string_expr PARENS_R;
-
-string_concat_op:
-    ADD;
-
-any_expr_atom:
-        func_call
-    |
-        var_ref
-    |
-        array_read
+    STRING_LITERAL
     ;
 
 func_call:
@@ -475,7 +264,7 @@ func_call:
 arg_list:
 	(expr (COMMA expr)*)? ;
 array_read:
-	var_ref BRACKET_L int_expr BRACKET_R;
+	var_ref BRACKET_L expr BRACKET_R;
 
 local_var_decl:
 	LOCAL
@@ -521,12 +310,12 @@ call:
 set_var:
 	SET
 		var_ref
-		(BRACKET_L index=int_expr BRACKET_R)?
+		(BRACKET_L index=expr BRACKET_R)?
 		ASSIGN_OP
 		val=expr
 	;
 condition:
-	bool_expr
+	expr
 	;
 selection_elseif_branch:
     ELSEIF condition THEN
