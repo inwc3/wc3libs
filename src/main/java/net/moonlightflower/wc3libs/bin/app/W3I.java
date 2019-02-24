@@ -2463,7 +2463,7 @@ public class W3I {
         stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
 
         stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
-        stmts.add(Statement.create("call SetForces(" + getForces().size() + ")"));
+        stmts.add(Statement.create("call SetTeams(" + getForces().size() + ")"));
 
         stmts.add(Statement.create("call SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
 
