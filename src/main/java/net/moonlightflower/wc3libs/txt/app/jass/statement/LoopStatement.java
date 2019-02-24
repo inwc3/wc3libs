@@ -35,18 +35,12 @@ public class LoopStatement extends Statement {
 
         sw.write("loop");
 
-        boolean first = true;
-
         for (Statement stmt : _stmts) {
-            if (first) {
-                first = false;
-            } else {
-                sw.write("\n");
-            }
+            sw.write("\n");
 
             stmt.write(sw);
         }
 
-        sw.write("endloop");
+        sw.write("\nendloop");
     }
 }

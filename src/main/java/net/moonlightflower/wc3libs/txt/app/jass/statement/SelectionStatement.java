@@ -91,68 +91,38 @@ public class SelectionStatement extends Statement {
 
         sw.write(" then");
 
-        boolean first;
-
         if (!_thenBranch._statements.isEmpty()) {
-            sw.write("\n");
-
-            first = true;
-
             for (Statement stmt : _thenBranch._statements) {
-                if (first) {
-                    first = false;
-                } else {
-                    sw.write("\n");
-                }
+                sw.write("\n");
 
                 stmt.write(sw);
             }
         }
 
-        if (!_elseifBranches.isEmpty()) {
-            sw.write("\n");
-        }
-
         for (ConditionalBranch elseifBranch : _elseifBranches) {
-            sw.write("elseif ");
+            sw.write("\nelseif ");
 
             elseifBranch._condition.write(sw);
 
             sw.write(" then");
 
-            first = true;
-
             for (Statement stmt : elseifBranch._statements) {
-                if (first) {
-                    first = false;
-                } else {
-                    sw.write("\n");
-                }
+                sw.write("\n");
 
                 stmt.write(sw);
             }
         }
 
         if (!_elseStmts.isEmpty()) {
-            sw.write("\n");
-
-            sw.write("else");
-
-            first = true;
+            sw.write("\nelse");
 
             for (Statement stmt : _elseStmts) {
-                if (first) {
-                    first = false;
-                } else {
-                    sw.write("\n");
-                }
+                sw.write("\n");
 
                 stmt.write(sw);
             }
         }
 
-        sw.write("\n");
-
-        sw.write("endif");
+        sw.write("\nendif");
     }
 }

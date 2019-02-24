@@ -21,16 +21,22 @@ public class FuncDecl implements Decl {
     private String _name;
     private List<Param> _params;
     private String _returnType;
+    private boolean _isNative;
 
     public String getName() {
         return _name;
     }
 
-    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType) {
+    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative) {
         _isConstant = isConstant;
         _name = name;
         _params = params;
         _returnType = returnType;
+        _isNative = isNative;
+    }
+
+    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType) {
+        this(isConstant, name, params, returnType, false);
     }
 
     public static FuncDecl create(@Nonnull LightJassParser.Native_declContext native_declContext) {
@@ -42,7 +48,7 @@ public class FuncDecl implements Decl {
             params.add(Param.create(funcParamContext));
         }
 
-        return new FuncDecl(native_declContext.CONST_DECL() != null, native_declContext.func_name().getText(), params, native_declContext.func_return_type().getText());
+        return new FuncDecl(native_declContext.CONST_DECL() != null, native_declContext.func_name().getText(), params, native_declContext.func_return_type().getText(), true);
     }
 
     public static FuncDecl create(@Nonnull LightJassParser.Func_declContext func_declContext) {
@@ -54,13 +60,17 @@ public class FuncDecl implements Decl {
             params.add(Param.create(funcParamContext));
         }
 
-        return new FuncDecl(func_declContext.CONST_DECL() != null, func_declContext.func_name().getText(), params, func_declContext.func_return_type().getText());
+        return new FuncDecl(func_declContext.CONST_DECL() != null, func_declContext.func_name().getText(), params, func_declContext.func_return_type().getText(), false);
     }
 
     public void write(@Nonnull StringWriter sw) {
         if (_isConstant) sw.write(JassScript.getPrimaryLiteral(JassLexer.CONST_DECL) + " ");
 
-        sw.write(JassScript.getPrimaryLiteral(JassLexer.FUNCTION));
+        if (_isNative) {
+            sw.write(JassScript.getPrimaryLiteral(JassLexer.NATIVE));
+        } else {
+            sw.write(JassScript.getPrimaryLiteral(JassLexer.FUNCTION));
+        }
 
         sw.write(" ");
 

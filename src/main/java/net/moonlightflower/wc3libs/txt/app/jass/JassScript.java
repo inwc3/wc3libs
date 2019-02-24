@@ -61,10 +61,25 @@ public class JassScript {
             List<VarDecl> varDecls = new ArrayList<>();
 
             for (LightJassParser.Global_declContext global_declContext : globals_blockContext.global_decl()) {
-                varDecls.add(VarDecl.create(global_declContext));
+                varDecls.add(GlobalVarDecl.create(global_declContext));
             }
 
             return new GlobalsBlock(varDecls);
+        }
+
+        @Override
+        public void write(@Nonnull StringWriter sw) {
+            sw.write(getPrimaryLiteral(JassLexer.GLOBALS_START));
+
+            sw.write("\n");
+
+            for (VarDecl varDecl : _varDecls) {
+                varDecl.write(sw);
+
+                sw.write("\n");
+            }
+
+            sw.write(getPrimaryLiteral(JassLexer.GLOBALS_END));
         }
     }
 
@@ -121,6 +136,12 @@ public class JassScript {
     public void write(@Nonnull StringWriter sw) {
         for (TypeDecl typeDecl : _typeDecls) {
             typeDecl.write(sw);
+
+            sw.write("\n");
+        }
+
+        for (FuncDecl nativeDecl : _nativeDecls) {
+            nativeDecl.write(sw);
 
             sw.write("\n");
         }

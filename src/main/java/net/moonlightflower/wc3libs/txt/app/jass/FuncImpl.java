@@ -61,7 +61,7 @@ public class FuncImpl implements Decl {
 
                     if (localVarDeclContext != null) {
                         for (LightJassParser.Local_var_declContext localVarDecContext : localVarDeclContext) {
-                            localVars.add(VarDecl.create(localVarDecContext));
+                            localVars.add(LocalVarDecl.create(localVarDecContext));
                         }
                     }
                 }
