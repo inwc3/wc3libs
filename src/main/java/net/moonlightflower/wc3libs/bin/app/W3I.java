@@ -677,11 +677,11 @@ public class W3I {
             private final static Map<Integer, UnitRace> _map = new LinkedHashMap<>();
             private final static Map<String, UnitRace> _smap = new LinkedHashMap<>();
 
-            public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF");
-            public final static UnitRace HUMAN = new UnitRace(1, "HUMAN");
-            public final static UnitRace ORC = new UnitRace(2, "ORC");
-            public final static UnitRace SELECTABLE = new UnitRace(0, "SELECTABLE");
-            public final static UnitRace UNDEAD = new UnitRace(3, "UNDEAD");
+            public final static UnitRace NIGHT_ELF = new UnitRace(4, "NIGHT_ELF", "RACE_PREF_NIGHTELF");
+            public final static UnitRace HUMAN = new UnitRace(1, "HUMAN", "RACE_PREF_HUMAN");
+            public final static UnitRace ORC = new UnitRace(2, "ORC", "RACE_PREF_ORC");
+            public final static UnitRace SELECTABLE = new UnitRace(0, "SELECTABLE", "RACE_PREF_RANDOM");
+            public final static UnitRace UNDEAD = new UnitRace(3, "UNDEAD", "RACE_PREF_UNDEAD");
 
             private String _label;
 
@@ -689,18 +689,25 @@ public class W3I {
                 return _label;
             }
 
+            private String _jassExpr;
+
+            public String getJassExpr() {
+                return _jassExpr;
+            }
+
             @Override
             public String toString() {
                 return getLabel();
             }
 
-            public UnitRace(int val, String label) {
+            public UnitRace(int val, String label, String jassExpr) {
                 super(val);
 
                 _map.put(val, this);
                 _smap.put(label, this);
 
                 _label = label;
+                _jassExpr = jassExpr;
             }
 
             @Nullable
@@ -2334,9 +2341,9 @@ public class W3I {
         for (Player player : getPlayers()) {
             stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
             stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
-            stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace() + ")"));
-            stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", false)"));
-            stmts.add(Statement.create("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType() + ")"));
+            stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
+            stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "false" : "true") + ")"));
+            stmts.add(Statement.create("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType().getJassExpr() + ")"));
         }
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
@@ -2362,19 +2369,25 @@ public class W3I {
                 Player player = numToPlayerMap.get(playerNum);
 
                 stmts.add(Statement.create("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
+            }
+        }
+
+        for (Force force : getForces()) {
+            for (Integer playerNum : force.getPlayerNums(getPlayers())) {
+                Player player = numToPlayerMap.get(playerNum);
 
                 if (force.getFlag(Force.Flags.Flag.ALLIED)) {
-                    for (Integer playerNum2 : force.getPlayerNums()) {
-                        if (playerNum == playerNum2) continue;
+                    for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
+                        if (playerNum.equals(playerNum2)) continue;
 
-                        stmts.add(Statement.create("call SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", " + playerNum2 + ", true)"));
+                        stmts.add(Statement.create("call SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
                     }
                 }
                 if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
-                    for (Integer playerNum2 : force.getPlayerNums()) {
-                        if (playerNum == playerNum2) continue;
+                    for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
+                        if (playerNum.equals(playerNum2)) continue;
 
-                        stmts.add(Statement.create("call SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", " + playerNum2 + ", true)"));
+                        stmts.add(Statement.create("call SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
                     }
                 }
             }
@@ -2402,14 +2415,30 @@ public class W3I {
 
             int c = 0;
 
-            for (Integer lowNum : lowNums) {
+            for (Player otherPlayer : getPlayers()) {
+                int otherPlayerNum = otherPlayer.getNum();
+
+                if (playerNum == otherPlayerNum) continue;
+
+                if (lowNums.contains(otherPlayerNum)) {
+                    stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                } else if (highNums.contains(otherPlayerNum)) {
+                    stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                } else {
+                    //stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                }
+
+                c++;
+            }
+
+            /*for (Integer lowNum : lowNums) {
                 stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, lowNum, "MAP_LOC_PRIO_LOW")));
                 c++;
             }
             for (Integer highNum : highNums) {
                 stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, highNum, "MAP_LOC_PRIO_HIGH")));
                 c++;
-            }
+            }*/
         }
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
@@ -2424,8 +2453,14 @@ public class W3I {
 
         List<Statement> stmts = new ArrayList<>();
 
-        stmts.add(Statement.create("call SetMapName(\"" + getMapName() + "\")"));
-        stmts.add(Statement.create("call SetMapDescription(\"" + getMapDescription() + "\")"));
+        Function enquote = (Function<String, String>) s -> {
+            if (s.startsWith("TRIGSTR_")) return s;
+
+            return "\"" + s + "\"";
+        };
+
+        stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
+        stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
 
         stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
         stmts.add(Statement.create("call SetForces(" + getForces().size() + ")"));

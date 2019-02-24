@@ -9,10 +9,10 @@ public class Controller extends War3Int {
 	private final static Map<Integer, Controller> _indexMap = new LinkedHashMap<>();
 	private final static Map<String, Controller> _labelMap = new LinkedHashMap<>();
 	
-	public final static Controller CPU = new Controller(2, "COMPUTER");
-	public final static Controller HUMAN = new Controller(1, "USER");
-	public final static Controller NEUTRAL = new Controller(3, "NEUTRAL");
-	public final static Controller RESCUABLE = new Controller(4, "RESCUABLE");
+	public final static Controller CPU = new Controller(2, "COMPUTER", "MAP_CONTROL_COMPUTER");
+	public final static Controller HUMAN = new Controller(1, "USER", "MAP_CONTROL_USER");
+	public final static Controller NEUTRAL = new Controller(3, "NEUTRAL", "MAP_CONTROL_NEUTRAL");
+	public final static Controller RESCUABLE = new Controller(4, "RESCUABLE", "MAP_CONTROL_RESCUABLE");
 
 	@Override
 	public boolean equals(Object other) {
@@ -28,13 +28,18 @@ public class Controller extends War3Int {
 
 	private final int _val;
 	private final String _label;
-	
+	private final String _jassExpr;
+
+	public String getJassExpr() {
+		return _jassExpr;
+	}
+
 	@Override
 	public String toString() {
 		return _label;
 	}
 	
-	private Controller(int val, @Nonnull String label) {
+	private Controller(int val, @Nonnull String label, String jassExpr) {
 		super(val);
 		
 		_indexMap.put(val, this);
@@ -42,6 +47,7 @@ public class Controller extends War3Int {
 		
 		_label = label;
 		_val = val;
+		_jassExpr = jassExpr;
 	}
 
 	@Nullable
