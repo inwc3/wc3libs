@@ -21,6 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * info file for wrapping war3map.w3i
@@ -1064,50 +1068,45 @@ public class W3I {
             _flags.setFlag(flag, val);
         }
 
-        private int _players = 0;
+        private BitSet _players = new BitSet();
 
-        public int getPlayers() {
+        @Nonnull
+        public BitSet getPlayers() {
             return _players;
         }
 
-        public void setPlayers(int val) {
+        public void setPlayers(@Nonnull BitSet val) {
             _players = val;
         }
 
         public Set<Integer> getPlayerNums() {
             Set<Integer> ret = new LinkedHashSet<>();
 
-            int players = _players;
-            int c = 0;
+            ret.addAll(_players.stream().boxed().collect(Collectors.toList()));
 
-            while (players != 0) {
-                if ((players & 1) == 1) ret.add(c);
+            return ret;
+        }
 
-                c++;
-                players >>= 1;
-            }
+        public Set<Integer> getPlayerNums(@Nonnull List<Player> definedPlayers) {
+            Set<Integer> definedPlayerNums = definedPlayers.stream().map(Player::getNum).collect(Collectors.toSet());
+
+            Set<Integer> ret = getPlayerNums();
+
+            ret.removeIf(playerNum -> !definedPlayerNums.contains(playerNum));
 
             return ret;
         }
 
         public void removePlayerNums(int... players) {
-            int rem = 0;
-
             for (int player : players) {
-                rem |= (1 << player);
+                _players.clear(player);
             }
-
-            _players &= ~rem;
         }
 
         public void addPlayerNums(int... players) {
-            int add = 0;
-
             for (int player : players) {
-                add |= (1 << player);
+                _players.set(player);
             }
-
-            _players |= add;
         }
 
         private String _name;
@@ -1123,7 +1122,7 @@ public class W3I {
 
         @Override
         public String toString() {
-            String playersS = String.format("%12s", Integer.toBinaryString(getPlayers()));
+            String playersS = String.format("%12s", _players);
 
             playersS = playersS.substring(playersS.length() - 12).replaceAll(" ", "0");
 
@@ -1133,7 +1132,11 @@ public class W3I {
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
             setFlags(Flags.valueOf(stream.readInt32("forceFlags")));
 
-            setPlayers(stream.readInt32("forcePlayers"));
+            long playersL = stream.readUInt32("forcePlayers");
+
+            BitSet players = BitSet.valueOf(new long[]{playersL});
+
+            setPlayers(players);
 
             setName(stream.readString("forceName"));
         }
@@ -1141,7 +1144,9 @@ public class W3I {
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             stream.writeInt32(getFlags().toInt());
 
-            stream.writeInt32(getPlayers());
+            long playersL = _players.toLongArray().length != 0 ? _players.toLongArray()[0] : Long.parseLong("0", 2);
+
+            stream.writeUInt32(playersL);
 
             stream.writeString(getName());
         }
@@ -2353,7 +2358,7 @@ public class W3I {
         }
 
         for (Force force : getForces()) {
-            for (Integer playerNum : force.getPlayerNums()) {
+            for (Integer playerNum : force.getPlayerNums(getPlayers())) {
                 Player player = numToPlayerMap.get(playerNum);
 
                 stmts.add(Statement.create("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
