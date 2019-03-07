@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.txt.app.jass;
 
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
+import net.moonlightflower.wc3libs.antlr.LightJassLexer;
 import net.moonlightflower.wc3libs.antlr.LightJassParser;
 import net.moonlightflower.wc3libs.txt.UTF8;
 import org.antlr.v4.runtime.*;
@@ -12,7 +13,10 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 
 public class LightJass {
 	public final static File GAME_PATH = new File("war3map.j");
@@ -43,6 +47,29 @@ public class LightJass {
 	}
 
 	@Nonnull
+	private static List<Token> cleanDuplicateNewLines(@Nonnull List<Token> tokens) {
+		List<Token> newTokens = new ArrayList<>();
+
+		boolean inNewlines = false;
+
+		for (Token token : tokens) {
+			if (token.getType() == LightJassLexer.NEW_LINES) {
+				if (!inNewlines) {
+					inNewlines = true;
+
+					newTokens.add(token);
+				}
+			} else {
+				inNewlines = false;
+
+				newTokens.add(token);
+			}
+		}
+
+		return newTokens;
+	}
+
+	@Nonnull
 	private static List<Token> stripComments(@Nonnull List<Token> tokens) {
 		List<Token> newTokens = new ArrayList<>();
 
@@ -50,8 +77,8 @@ public class LightJass {
 			if (token.getType() == JassLexer.COMMENT_BLOCK) {
 				String s = token.getText();
 
-				s = s.replaceAll("\r\n", "n");
-				s = s.replaceAll("\r", "n");
+				s = s.replaceAll("\r\n", "\n");
+				s = s.replaceAll("\r", "\n");
 
 				s = s.replaceAll("[^\n]", "");
 
@@ -66,6 +93,8 @@ public class LightJass {
 		}
 
 		newTokens.removeIf(token -> (token.getType() == JassLexer.COMMENT_SINGLE));
+
+		newTokens = cleanDuplicateNewLines(newTokens);
 
 		return newTokens;
 	}
