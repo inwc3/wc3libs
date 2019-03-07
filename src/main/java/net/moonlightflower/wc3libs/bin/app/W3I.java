@@ -1209,6 +1209,14 @@ public class W3I {
         return force;
     }
 
+    public void removeForce(@Nonnull Force force) {
+        _forces.remove(force);
+    }
+
+    public void clearForces() {
+        _forces.clear();
+    }
+
     public static class UpgradeMod {
         private int _players = 0;
 
