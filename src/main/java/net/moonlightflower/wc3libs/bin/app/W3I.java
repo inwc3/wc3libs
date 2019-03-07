@@ -16,14 +16,14 @@ import net.moonlightflower.wc3libs.txt.app.jass.statement.Statement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -2511,5 +2511,73 @@ public class W3I {
         jassScript.addFuncImpl(initCustomTeams);
         jassScript.addFuncImpl(initAllyPriorities);
         jassScript.addFuncImpl(config);
+    }
+
+    public void removeConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
+
+        String line;
+
+        List<String> toBeRemovedFuncs = new ArrayList<>();
+
+        toBeRemovedFuncs.add(FuncDecl.CONFIG_NAME);
+        toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_PLAYER_SLOTS);
+        toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_TEAMS);
+        toBeRemovedFuncs.add(FuncDecl.INIT_ALLY_PRIORITIES);
+
+        boolean first = true;
+        boolean skip = false;
+
+        while ((line = reader.readLine()) != null) {
+            Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
+
+            Matcher funcStartMatcher = funcStartPattern.matcher(line);
+
+            if (funcStartMatcher.find()) {
+                String funcName = funcStartMatcher.group(1);
+
+                if (toBeRemovedFuncs.contains(funcName)) {
+                    skip = true;
+                }
+            }
+
+            if (skip) {
+                Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
+
+                Matcher funcEndMatcher = funcEndPattern.matcher(line);
+
+                if (funcEndMatcher.find()) {
+                    skip = false;
+                }
+
+                continue;
+            }
+
+            if (first) {
+                first = false;
+            } else {
+                sw.write("\n");
+            }
+
+            sw.write(line);
+        }
+
+        reader.close();
+    }
+
+    public void injectConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+        removeConfigsInJassScript(inStream, sw);
+
+        List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
+
+        toBeAddedFuncImpls.add(makeInitCustomPlayerSlots());
+        toBeAddedFuncImpls.add(makeInitCustomTeams());
+        toBeAddedFuncImpls.add(makeInitAllyPriorities());
+        toBeAddedFuncImpls.add(makeConfig());
+
+        for (FuncImpl funcImpl : toBeAddedFuncImpls) {
+            sw.write("\n");
+            funcImpl.write(sw);
+        }
     }
 }

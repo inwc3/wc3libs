@@ -45,6 +45,29 @@ public class Jass {
 	}
 
 	@Nonnull
+	private static List<Token> cleanDuplicateNewLines(@Nonnull List<Token> tokens) {
+		List<Token> newTokens = new ArrayList<>();
+
+		boolean inNewlines = false;
+
+		for (Token token : tokens) {
+			if (token.getType() == JassLexer.NEW_LINES) {
+				if (!inNewlines) {
+					inNewlines = true;
+
+					newTokens.add(token);
+				}
+			} else {
+				inNewlines = false;
+
+				newTokens.add(token);
+			}
+		}
+
+		return newTokens;
+	}
+
+	@Nonnull
 	private static List<Token> stripComments(@Nonnull List<Token> tokens) {
 		List<Token> newTokens = new ArrayList<>();
 
@@ -52,8 +75,8 @@ public class Jass {
 			if (token.getType() == JassLexer.COMMENT_BLOCK) {
 				String s = token.getText();
 
-				s = s.replaceAll("\r\n", "n");
-				s = s.replaceAll("\r", "n");
+				s = s.replaceAll("\r\n", "\n");
+				s = s.replaceAll("\r", "\n");
 
 				s = s.replaceAll("[^\n]", "");
 
@@ -68,6 +91,8 @@ public class Jass {
 		}
 
 		newTokens.removeIf(token -> (token.getType() == JassLexer.COMMENT_SINGLE));
+
+		newTokens = cleanDuplicateNewLines(newTokens);
 
 		return newTokens;
 	}
