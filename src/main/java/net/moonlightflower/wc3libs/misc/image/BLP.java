@@ -7,11 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.event.IIOReadWarningListener;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.MemoryCacheImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BLP extends Wc3RasterImg {
@@ -190,50 +197,54 @@ public class BLP extends Wc3RasterImg {
 				InputStream stream = new ByteArrayInputStream(buf.array());
 				
 				stream.reset();
-				
-				setFXImg(new JPG(stream).getFXImg());
-				
-				/*OutputStream writer = new FileOutputStream("D:\\a\\test.jpg");
-				
-				writer.write(buf.array());
-				
-				writer.close();
 
-				JpegDecoder decoder = new JpegDecoder();
-				
-				BufferedImage imageRGB = null;
-				
-				try {
-					byte[] all = new byte[headerBytes.length + mipmapDatas[0].length];
-					
-					for (int i = 0; i < headerBytes.length; i++) {
-						all[i] = headerBytes[i];
+				Iterator<ImageReader> imgReaders = ImageIO.getImageReadersByFormatName("jpeg");
+
+				ImageReader imgReader = null;
+
+				while (imgReaders.hasNext()) {
+					imgReader = imgReaders.next();
+
+					if (imgReader.canReadRaster()) {
+						break;
 					}
-					for (int i = 0; i < mipmapDatas[0].length; i++) {
-						all[headerBytes.length + i] = mipmapDatas[0][i];
-					}
-					
-					imageRGB = decoder.read(all);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					Log.error(e.getMessage(), e);
+
+					imgReader = null;
 				}
 
-				Graphics2D graphics = imageRGB.createGraphics();
+				if (imgReader == null) throw new AssertionError("found no suitable reader");
 
-				ImageIO.write(
-						  imageRGB, 
-						  "jpg", 
-						  new File(
-								  "D:\\a\\outMinimap.jpg"));
+				ImageInputStream imageInputStream = new MemoryCacheImageInputStream(stream);
+
+				imgReader.setInput(imageInputStream, true, true);
+
+				ImageReadParam readParam = imgReader.getDefaultReadParam();
+
+				readParam.setDestinationBands(new int[]{2, 1, 0, 3});
+
+				java.awt.image.Raster raster = imgReader.readRaster(0, readParam);
+				imgReader.dispose();
+
+				BufferedImage writeImg = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_INT_ARGB);
 				
-				//Image fxImg = new JPG(stream).getFXImg();
-				System.out.println("A");
-				//ImageIO.write(SwingFXUtils.fromFXImage(fxImg, null), "jpg", new File("D:\\a\\outMinimap.jpg"));
-				System.out.println("B");
-				setFXImg(null);
-				
-				graphics.dispose();*/
+				for (int x = 0; x < raster.getWidth(); x++) {
+					for (int y = 0; y < raster.getHeight(); y++) {
+						int[] colors = new int[4];
+
+						raster.getPixel(x, y, colors);
+
+						int red = colors[2];
+						int green = colors[1];
+						int blue = colors[0];
+						int alpha = 255;
+
+						java.awt.Color color = new java.awt.Color(red, green, blue, alpha);
+
+						writeImg.setRGB(x, y, color.getRGB());
+					}
+				}
+
+				setFXImg(new FxImg(writeImg));
 
 				break;
 			}
