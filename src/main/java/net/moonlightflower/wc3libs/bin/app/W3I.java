@@ -730,7 +730,7 @@ public class W3I {
 			}*/
         }
 
-        private UnitRace _race = UnitRace.HUMAN;
+        private UnitRace _race = UnitRace.SELECTABLE;
 
         @Nonnull
         public UnitRace getRace() {
