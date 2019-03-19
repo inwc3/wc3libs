@@ -662,7 +662,7 @@ public class W3I {
             _num = val;
         }
 
-        private Controller _type = Controller.HUMAN;
+        private Controller _type = Controller.USER;
 
         @Nonnull
         public Controller getType() {
@@ -2350,7 +2350,7 @@ public class W3I {
             stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
             stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
             stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
-            stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "false" : "true") + ")"));
+            stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
             stmts.add(Statement.create("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType().getJassExpr() + ")"));
         }
 
