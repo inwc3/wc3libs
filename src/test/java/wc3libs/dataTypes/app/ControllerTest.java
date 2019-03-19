@@ -8,11 +8,9 @@ import org.testng.annotations.Test;
 public class ControllerTest {
     @Test
     public void test() {
-        System.out.println(Controller.valueOf(1) + ";" + Controller.CPU);
-
-        Assert.assertEquals(Controller.valueOf(1), Controller.HUMAN);
-        Assert.assertEquals(Controller.valueOf(2), Controller.CPU);
+        Assert.assertEquals(Controller.valueOf(2), Controller.COMPUTER);
         Assert.assertEquals(Controller.valueOf(3), Controller.NEUTRAL);
         Assert.assertEquals(Controller.valueOf(4), Controller.RESCUABLE);
+        Assert.assertEquals(Controller.valueOf(1), Controller.USER);
     }
 }
