@@ -9,8 +9,8 @@ import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
-import net.moonlightflower.wc3libs.txt.app.jass.FuncImpl;
 import net.moonlightflower.wc3libs.txt.app.jass.FuncDecl;
+import net.moonlightflower.wc3libs.txt.app.jass.FuncImpl;
 import net.moonlightflower.wc3libs.txt.app.jass.JassScript;
 import net.moonlightflower.wc3libs.txt.app.jass.statement.Statement;
 
@@ -20,8 +20,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.IntConsumer;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -2348,6 +2346,9 @@ public class W3I {
 
         for (Player player : getPlayers()) {
             stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            if (player.getStartPosFixed() == 1) {
+                stmts.add(Statement.create("call ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
+            }
             stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
             stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
             stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
