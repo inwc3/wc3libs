@@ -2346,6 +2346,9 @@ public class W3I {
 
         for (Player player : getPlayers()) {
             stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            if (player.getStartPosFixed() == 1) {
+                stmts.add(Statement.create("call ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
+            }
             stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
             stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
             stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
@@ -2475,9 +2478,6 @@ public class W3I {
 
         for (Player player : getPlayers()) {
             stmts.add(Statement.create("call DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
-            if (player.getStartPosFixed() == 1) {
-                stmts.add(Statement.create("call ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
-            }
         }
 
         stmts.add(Statement.create("call " + FuncDecl.INIT_CUSTOM_PLAYER_SLOTS + "()"));
