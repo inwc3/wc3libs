@@ -775,7 +775,15 @@ public class W3I {
                 super(val);
             }
 
+            private AllyFlags(@Nonnull BitSet val) {
+                super(val);
+            }
+
             public static AllyFlags valueOf(int val) {
+                return new AllyFlags(val);
+            }
+
+            public static AllyFlags valueOf(@Nonnull BitSet val) {
                 return new AllyFlags(val);
             }
 
@@ -798,7 +806,7 @@ public class W3I {
             }
         }
 
-        private FlagsInt _allyLowPrioFlags = AllyFlags.valueOf(0);
+        private FlagsInt _allyLowPrioFlags = AllyFlags.valueOf(new BitSet());
 
         public int getAllyLowPrioFlags() {
             return _allyLowPrioFlags.toInt();
@@ -812,40 +820,17 @@ public class W3I {
             _allyLowPrioFlags.setPos(index, val);
         }
 
+        @Nonnull
         public Set<Integer> getAllyLowPrioPlayerNums() {
-            Set<Integer> ret = new LinkedHashSet<>();
-
-            int players = _allyLowPrioFlags.toInt();
-            int c = 0;
-
-            while (players != 0) {
-                if ((players & 1) == 1) ret.add(c);
-
-                c++;
-                players >>= 1;
-            }
-
-            return ret;
+            return _allyLowPrioFlags.getPoses();
         }
 
         public void removeAllyLowPrioPlayers(int... players) {
-            int rem = 0;
-
-            for (int player : players) {
-                rem |= (1 << player);
-            }
-
-            _allyLowPrioFlags.setVal(_allyLowPrioFlags.toInt() & ~rem);
+            _allyLowPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), false);
         }
 
         public void addAllyLowPrioPlayerNums(int... players) {
-            int add = 0;
-
-            for (int player : players) {
-                add |= (1 << player);
-            }
-
-            _allyLowPrioFlags.setVal(_allyLowPrioFlags.toInt() | add);
+            _allyLowPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), true);
         }
 
         private FlagsInt _allyHighPrioFlags = AllyFlags.valueOf(0);
@@ -862,40 +847,17 @@ public class W3I {
             _allyHighPrioFlags.setPos(index, val);
         }
 
+        @Nonnull
         public Set<Integer> getAllyHighPrioPlayerNums() {
-            Set<Integer> ret = new LinkedHashSet<>();
-
-            int players = _allyHighPrioFlags.toInt();
-            int c = 0;
-
-            while (players != 0) {
-                if ((players & 1) == 1) ret.add(c);
-
-                c++;
-                players >>= 1;
-            }
-
-            return ret;
+            return _allyHighPrioFlags.getPoses();
         }
 
         public void removeAllyHighPrioPlayers(int... players) {
-            int rem = 0;
-
-            for (int player : players) {
-                rem |= (1 << player);
-            }
-
-            _allyHighPrioFlags.setVal(_allyHighPrioFlags.toInt() & ~rem);
+            _allyHighPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), false);
         }
 
         public void addAllyHighPrioPlayerNums(int... players) {
-            int add = 0;
-
-            for (int player : players) {
-                add |= (1 << player);
-            }
-
-            _allyHighPrioFlags.setVal(_allyHighPrioFlags.toInt() | add);
+            _allyHighPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), true);
         }
 
         @Override
