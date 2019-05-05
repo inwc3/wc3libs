@@ -2425,8 +2425,6 @@ public class W3I {
         List<Statement> stmts = new ArrayList<>();
 
         Function enquote = (Function<String, String>) s -> {
-            if (s.startsWith("TRIGSTR_")) return s;
-
             return "\"" + s + "\"";
         };
 
