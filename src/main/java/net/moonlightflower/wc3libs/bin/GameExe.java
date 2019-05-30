@@ -21,6 +21,12 @@ public class GameExe {
     public final static File WARCRAFT_III_EXE_PATH = new File("Warcraft III.exe");
     public final static File FROZEN_THRONE_EXE_PATH = new File("Frozen Throne.exe");
 
+    public final static File X86_DIR = new File("x86");
+    public final static File X64_DIR = new File("x86_64");
+
+    public final static File X86_EXE_PATH_131 = new File(X86_DIR, WARCRAFT_III_EXE_PATH.toString());
+    public final static File X64_EXE_PATH_131 = new File(X64_DIR, WARCRAFT_III_EXE_PATH.toString());
+
     private final File _file;
 
     public File getFile() {
@@ -129,6 +135,7 @@ public class GameExe {
     }
 
     public static final Version VERSION_1_29 = new Version(Arrays.asList(1, 29));
+    public static final Version VERSION_1_31 = new Version(Arrays.asList(1, 31));
 
     public static Version _curVersion = null;
 
@@ -154,46 +161,36 @@ public class GameExe {
     }
 
     @Nonnull
-    public static GameExe fromDir(@Nonnull File dir, @Nonnull Version version) {
+    public static GameExe fromDir(@Nonnull File dir, @Nonnull Version version, boolean x64) {
+        if (version.compareTo(VERSION_1_31) >= 0) {
+            if (x64) return new GameExe(new File(dir, WARCRAFT_III_EXE_PATH.toString()));
+
+            return new GameExe(new File(dir, WARCRAFT_III_EXE_PATH.toString()));
+        }
         if (version.compareTo(VERSION_1_29) >= 0) return new GameExe(new File(dir, WARCRAFT_III_EXE_PATH.toString()));
 
         return new GameExe(new File(dir, WAR3_EXE_PATH.toString()));
     }
 
     @Nullable
-    public static GameExe fromDir(@Nonnull File dir) {
-        Version version;
+    public static GameExe fromDir(@Nonnull File dir, boolean x64) {
+        List<File> relativeSearchPaths = Arrays.asList(WARCRAFT_III_EXE_PATH,
+                FROZEN_THRONE_EXE_PATH,
+                WAR3_EXE_PATH,
+                X86_EXE_PATH_131,
+                X64_EXE_PATH_131
+        );
 
-        File warcraftIIIFile = new File(dir, WARCRAFT_III_EXE_PATH.toString());
+        for (File relativeSearchPath : relativeSearchPaths) {
+            File inDirPath = new File(dir, relativeSearchPath.toString());
 
-        if (warcraftIIIFile.exists()) {
-            try {
-                version = new GameExe(warcraftIIIFile).getVersion();
+            if (inDirPath.exists()) {
+                try {
+                    Version version = new GameExe(inDirPath).getVersion();
 
-                return fromDir(dir, version);
-            } catch (IOException ignored) {
-            }
-        }
-
-        File frozenThroneFile = new File(dir, FROZEN_THRONE_EXE_PATH.toString());
-
-        if (frozenThroneFile.exists()) {
-            try {
-                version = new GameExe(frozenThroneFile).getVersion();
-
-                return fromDir(dir, version);
-            } catch (IOException ignored) {
-            }
-        }
-
-        File war3File = new File(dir, WAR3_EXE_PATH.toString());
-
-        if (war3File.exists()) {
-            try {
-                version = new GameExe(war3File).getVersion();
-
-                return fromDir(dir, version);
-            } catch (IOException ignored) {
+                    return fromDir(dir, version, x64);
+                } catch (IOException ignored) {
+                }
             }
         }
 
