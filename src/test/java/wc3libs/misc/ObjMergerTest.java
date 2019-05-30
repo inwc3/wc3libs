@@ -1,6 +1,9 @@
 package wc3libs.misc;
 
 import net.moonlightflower.wc3libs.app.ObjMerger;
+import net.moonlightflower.wc3libs.port.Context;
+import net.moonlightflower.wc3libs.port.GameDirFinder;
+import net.moonlightflower.wc3libs.port.NotFoundException;
 import net.moonlightflower.wc3libs.port.Orient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,53 +18,59 @@ public class ObjMergerTest {
     @Test()
     public void testMerger() {
         try {
-            ObjMerger merger = new ObjMerger();
+            Context.getService(GameDirFinder.class).get();
 
-            //File classDir = new File(Orient.getWorkingDir(), "tests\\objMergerTest");
-            File inMapFile = new File(getClass().getClassLoader().getResource("in.w3x").getFile());
+            try {
+                ObjMerger merger = new ObjMerger();
 
-            File workDir = new File(new File(getClass().getClassLoader().getResource("").getFile()), "work");
-            
-            Orient.createDir(workDir);
+                //File classDir = new File(Orient.getWorkingDir(), "tests\\objMergerTest");
+                File inMapFile = new File(getClass().getClassLoader().getResource("in.w3x").getFile());
 
-            log.info("workDir: " + workDir + "; exists: " + workDir.exists());
-            //merger.setWorkDir(workDir);
-            log.info("map: " + inMapFile + "; exists: " + inMapFile.exists());
-            //merger.readFromMap(inMapFile, true);
+                File workDir = new File(new File(getClass().getClassLoader().getResource("").getFile()), "work");
 
-            File inDir = new File(workDir, "in");
-            File outDir = new File(workDir, "out");
-            
-            Orient.removeDir(inDir);
-            Orient.removeDir(outDir);
-            
-            Orient.createDir(inDir);
-            Orient.createDir(outDir);
-            
-            merger.exportMap(inMapFile, inDir);
+                Orient.createDir(workDir);
 
-            log.info("exported all files from input map");
-            
-            merger.addDir(inDir);
+                log.info("workDir: " + workDir + "; exists: " + workDir.exists());
+                //merger.setWorkDir(workDir);
+                log.info("map: " + inMapFile + "; exists: " + inMapFile.exists());
+                //merger.readFromMap(inMapFile, true);
 
-            log.info("added all exported files to the objectmerger");
-            
-            merger.writeToDir(outDir, true);
+                File inDir = new File(workDir, "in");
+                File outDir = new File(workDir, "out");
 
-            log.info("Written to directory");
+                Orient.removeDir(inDir);
+                Orient.removeDir(outDir);
 
-            File outMapFile = new File(workDir, "merged.w3x");
+                Orient.createDir(inDir);
+                Orient.createDir(outDir);
 
-            Orient.copyFile(inMapFile, outMapFile, true);
-            
-            System.out.println("outMap:" + outMapFile + ";" + outMapFile.exists());
-            
-            merger.writeToMap(outMapFile, outDir);
-        } catch (Exception e) {
-            Assert.fail(e.getMessage(), e);
+                merger.exportMap(inMapFile, inDir);
+
+                log.info("exported all files from input map");
+
+                merger.addDir(inDir);
+
+                log.info("added all exported files to the objectmerger");
+
+                merger.writeToDir(outDir, true);
+
+                log.info("Written to directory");
+
+                File outMapFile = new File(workDir, "merged.w3x");
+
+                Orient.copyFile(inMapFile, outMapFile, true);
+
+                System.out.println("outMap:" + outMapFile + ";" + outMapFile.exists());
+
+                merger.writeToMap(outMapFile, outDir);
+            } catch (Exception e) {
+                Assert.fail(e.getMessage(), e);
+            }
+
+            //merger.addDir(dir);
+        } catch (NotFoundException e) {
+            log.info("no game dir found, skip test", e);
         }
-
-        //merger.addDir(dir);
     }
 
 }

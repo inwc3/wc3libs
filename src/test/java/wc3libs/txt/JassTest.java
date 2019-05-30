@@ -44,7 +44,7 @@ public class JassTest extends Wc3LibTest {
 
         script.write(sw);
 
-        System.out.println(sw.toString());
+        //System.out.println(sw.toString());
 
         /*Jass newJass = new Jass(sw.toString());
 
