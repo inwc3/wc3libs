@@ -13,10 +13,21 @@ public class StdGameDirFinder implements GameDirFinder {
     @Nonnull
     @Override
     public File get() throws NotFoundException {
-        GameDirFinder registryGameDirFinder = Context.getService(RegistryGameDirFinder.class);
+        String envWar3Dir = System.getenv("war3dir");
+
+        if (envWar3Dir != null) return new File(envWar3Dir);
+
+        GameDirFinder registryGameDirFinder = new RegistryGameDirFinder();
 
         try {
-            registryGameDirFinder.get();
+            return registryGameDirFinder.get();
+        } catch (NotFoundException e) {
+        }
+
+        GameDirFinder defaultGameDirFinder = new RegistryGameDirFinder();
+
+        try {
+            return defaultGameDirFinder.get();
         } catch (NotFoundException e) {
         }
 

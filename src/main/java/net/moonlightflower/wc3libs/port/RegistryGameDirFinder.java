@@ -14,8 +14,12 @@ public class RegistryGameDirFinder implements GameDirFinder {
 
     private static File getRegEntry(@Nonnull Registry.Entry entry) {
         try {
-            return new File(Registry.get(entry));
-        } catch (UnsupportedOperationException ignored) {
+            String fileS = Registry.get(entry);
+
+            if (fileS == null) throw new NotFoundException();
+
+            return new File(fileS);
+        } catch (UnsupportedOperationException | NotFoundException ignored) {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
