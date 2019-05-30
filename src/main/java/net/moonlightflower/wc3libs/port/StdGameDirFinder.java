@@ -24,7 +24,7 @@ public class StdGameDirFinder implements GameDirFinder {
         } catch (NotFoundException e) {
         }
 
-        GameDirFinder defaultGameDirFinder = new RegistryGameDirFinder();
+        GameDirFinder defaultGameDirFinder = new DefaultGameDirFinder();
 
         try {
             return defaultGameDirFinder.get();
