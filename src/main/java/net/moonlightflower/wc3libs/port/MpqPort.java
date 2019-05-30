@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.port;
 
 import net.moonlightflower.wc3libs.bin.GameExe;
-import net.moonlightflower.wc3libs.misc.Registry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -319,48 +318,33 @@ public abstract class MpqPort {
 	}
 
 	@Nonnull
-	public static Vector<File> getWc3Mpqs(@Nonnull File wc3dir) {
+	public static Vector<File> getWar3Mpqs(@Nonnull File war3dir) throws NotFoundException {
 		Vector<File> files = new Vector<>();
 
-        GameExe.Version version = GameExe.getVersion_simple();
+		GameVersion gameVersion = Context.getService(GameVersionFinder.class).get();
 
-		if (version != null && version.compareTo(GameExe.VERSION_1_29) < 0) {
-            files.add(new File(wc3dir, War3MPQs.WAR3PATCH.toString()));
-        }
-		files.add(new File(wc3dir, War3MPQs.WAR3X.toString()));
-		files.add(new File(wc3dir, War3MPQs.WAR3.toString()));
-		files.add(new File(wc3dir, War3MPQs.WAR3X_LOCAL.toString()));
+		if (gameVersion != null && gameVersion.compareTo(GameVersion.VERSION_1_29) < 0) {
+			files.add(new File(war3dir, War3MPQs.WAR3PATCH.toString()));
+		}
+
+		files.add(new File(war3dir, War3MPQs.WAR3X.toString()));
+		files.add(new File(war3dir, War3MPQs.WAR3.toString()));
+		files.add(new File(war3dir, War3MPQs.WAR3X_LOCAL.toString()));
 
 		return files.stream().filter(File::exists).collect(Collectors.toCollection(Vector::new));
 	}
 
-	private static File _wc3Dir = null;
+	@Nonnull
+	public static Vector<File> getWar3Mpqs() throws IOException, NotFoundException {
+		GameDirFinder finder = Context.getService(GameDirFinder.class);
 
-	public static File getWc3Dir() {
-		return _wc3Dir;
-	}
+		File war3dir = finder.get();
 
-	public static void setWc3Dir(@Nullable File val) {
-		/*if (val != null) {
-			for (File mpqFile : getWc3Mpqs(val)) {
-				if (!mpqFile.exists()) {
-					throw new IllegalArgumentException(String.format("%s does not seem to be a wc3 directory (%s does not exist)", val, mpqFile));
-				}
-			}
-		}*/
-
-		_wc3Dir = val;
+		return getWar3Mpqs(war3dir);
 	}
 
 	@Nonnull
-	public static Vector<File> getWc3Mpqs() throws IOException {
-		if (_wc3Dir == null) throw new IOException("no wc3Dir set");
-
-		return getWc3Mpqs(_wc3Dir);
-	}
-
-	@Nonnull
-	public abstract Out.Result getGameFiles(@Nonnull File... files) throws IOException;
+	public abstract Out.Result getGameFiles(@Nonnull File... files) throws IOException, NotFoundException;
 
 	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
 
@@ -375,32 +359,5 @@ public abstract class MpqPort {
 
 	public static void setDefaultImpl(Class<? extends MpqPort> type) {
 		_defaultImpl = type;
-	}
-
-	private static String getRegEntry(@Nonnull Registry.Entry entry) {
-		try {
-			return Registry.get(entry);
-		} catch (UnsupportedOperationException ignored) {
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		return null;
-	}
-
-	static {
-		String dirS = getRegEntry(Registry.Wc3Entry.INSTALL_PATH);
-
-		if (dirS == null) dirS = getRegEntry(Registry.Wc3Entry.INSTALL_PATH_X);
-
-		if (dirS == null) dirS = getRegEntry(Registry.Wc3LocalMachineEntry.INSTALL_PATH);
-
-		if (dirS == null) dirS = getRegEntry(Registry.Wc3LocalMachineEntry.INSTALL_PATH_X);
-
-		if (dirS == null) dirS = getRegEntry(Registry.Wc3LocalMachineEntry.WAR3_INSTALL_PATH);
-
-		if (dirS != null) {
-			setWc3Dir(new File(dirS));
-		}
 	}
 }

@@ -83,7 +83,7 @@ public class GamePrefetch {
 			}
 			
 			try {
-				_result = port.commit(MpqPort.getWc3Mpqs());
+				_result = port.commit(MpqPort.getWar3Mpqs());
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

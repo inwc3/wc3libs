@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.misc.Raster;
 import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.misc.UnsupportedFormatException;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.port.NotFoundException;
 import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
@@ -321,7 +322,7 @@ public class Wc3RasterImg extends Wc3Img {
 	}
 
 	@Nonnull
-	public static Wc3RasterImg ofGameFile(@Nonnull File inFile) throws IOException, UnsupportedFormatException {
+	public static Wc3RasterImg ofGameFile(@Nonnull File inFile) throws IOException, UnsupportedFormatException, NotFoundException {
 		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
 
 		Wc3RasterImg img = Wc3RasterImg.ofFile(portResult.getFile(inFile));

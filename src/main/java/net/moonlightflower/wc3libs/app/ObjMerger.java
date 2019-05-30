@@ -15,9 +15,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.misc.*;
 import net.moonlightflower.wc3libs.misc.Math;
-import net.moonlightflower.wc3libs.port.JMpqPort;
-import net.moonlightflower.wc3libs.port.MpqPort;
-import net.moonlightflower.wc3libs.port.Orient;
+import net.moonlightflower.wc3libs.port.*;
 import net.moonlightflower.wc3libs.slk.RawMetaSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import net.moonlightflower.wc3libs.slk.SLKState;
@@ -1079,7 +1077,7 @@ public class ObjMerger {
     }
 
     public void exportMap(File mapFile, File outDir) throws Exception {
-        exportMap(mapFile, true, MpqPort.getWc3Dir(), outDir);
+        exportMap(mapFile, true, Context.getService(GameDirFinder.class).get(), outDir);
     }
 
     public void readFromMap(File mapFile, boolean includeNativeData, File wc3Dir, File outDir) throws Exception {
@@ -1162,7 +1160,7 @@ public class ObjMerger {
     }
 
     public void readFromMap(File mapFile, boolean includeNativeData, File outDir) throws Exception {
-        readFromMap(mapFile, includeNativeData, MpqPort.getWc3Dir(), outDir);
+        readFromMap(mapFile, includeNativeData, Context.getService(GameDirFinder.class).get(), outDir);
     }
 
 }

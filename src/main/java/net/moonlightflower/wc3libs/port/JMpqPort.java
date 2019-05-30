@@ -321,13 +321,13 @@ public class JMpqPort extends MpqPort {
 
 	@Nonnull
 	@Override
-	public Out.Result getGameFiles(@Nonnull File... files) throws IOException {
+	public Out.Result getGameFiles(@Nonnull File... files) throws IOException, NotFoundException {
 		MpqPort.Out portOut = new Out();
 
 		for (File file : files) {
 			portOut.add(file);
 		}
 
-		return portOut.commit(MpqPort.getWc3Mpqs());
+		return portOut.commit(MpqPort.getWar3Mpqs());
 	}
 }

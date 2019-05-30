@@ -26,6 +26,20 @@ public class Orient {
 		return getSystem().toLowerCase().startsWith("win");
 	}
 
+	public enum WinArch {
+		X86,
+		X64
+	}
+
+	public static WinArch getWinArch() {
+		if (isWindowsSystem()) {
+			if (System.getenv("ProgramFiles(x86)") != null) return WinArch.X64;
+		}
+
+		// default to x86
+		return WinArch.X86;
+	}
+
 	@Nonnull
 	public static File getExecPath(@Nullable Class<?> c) {
 		if (c == null) c = Orient.class;
