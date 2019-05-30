@@ -26,7 +26,7 @@ public class GameExeTest {
 
     @Test()
     public void testDir() {
-        GameExe gameExe = GameExe.fromDir(MpqPort.getWc3Dir());
+        GameExe gameExe = GameExe.fromDir(MpqPort.getWc3Dir(), false);
 
         if (gameExe != null) System.out.println(gameExe.getFile());
     }
