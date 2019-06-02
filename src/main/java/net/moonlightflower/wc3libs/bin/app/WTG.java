@@ -3,8 +3,10 @@ package net.moonlightflower.wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.port.Context;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
+import net.moonlightflower.wc3libs.port.NotFoundException;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
@@ -1733,10 +1735,23 @@ public class WTG {
 		}
 	}
 
-	public void addGameTriggerData() throws Exception {
-		TXT txt = new TXT(MpqPort.getDefaultImpl().getGameFiles(new File("UI\\TriggerData.txt")).getInputStream(new File("UI\\TriggerData.txt")));
+	@Nonnull
+	protected MpqPort getMpqPort() {
+		return Context.getService(MpqPort.class);
+	}
 
-		addTriggerData(txt);
+	public void addGameTriggerData() throws NotFoundException {
+		try {
+			InputStream inputStream = getMpqPort().getGameFiles(new File("UI\\TriggerData.txt")).getInputStream(new File("UI\\TriggerData.txt"));
+
+			if (inputStream == null) throw new NotFoundException();
+
+			TXT txt = new TXT(inputStream);
+
+			addTriggerData(txt);
+		} catch (IOException e) {
+			throw new NotFoundException(e);
+		}
 	}
 	
 	public void print(@Nonnull PrintStream outStream) {

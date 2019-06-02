@@ -1,5 +1,6 @@
 package net.moonlightflower.wc3libs.txt;
 
+import net.moonlightflower.wc3libs.port.Context;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
@@ -140,7 +141,7 @@ public class WTS {
 
     @Nonnull
     public static WTS ofMapFile(@Nonnull File mapFile) throws Exception {
-        MpqPort.Out portOut = new JMpqPort.Out();
+        MpqPort.Out portOut = Context.getService(MpqPort.class).createOut();
 
         portOut.add(WTS.GAME_PATH);
 

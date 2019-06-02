@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.port;
 
-import net.moonlightflower.wc3libs.bin.GameExe;
-import net.moonlightflower.wc3libs.misc.Registry;
+import net.moonlightflower.wc3libs.misc.WinRegistryHandler;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -15,7 +14,7 @@ public class RegistryGameExeFinder implements GameExeFinder {
     @Override
     public File get() throws NotFoundException {
         try {
-            String fileS = Registry.get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "Program");
+            String fileS = getRegistryHandler().get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "Program");
 
             if (fileS == null) throw new NotFoundException();
 
@@ -24,5 +23,9 @@ public class RegistryGameExeFinder implements GameExeFinder {
         }
 
         throw new NotFoundException();
+    }
+
+    protected WinRegistryHandler getRegistryHandler() {
+        return new WinRegistryHandler();
     }
 }

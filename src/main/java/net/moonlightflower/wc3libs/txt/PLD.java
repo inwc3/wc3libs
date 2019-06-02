@@ -11,6 +11,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class PLD {
+    public PLD() {
+    }
+
     public FuncImpl toJassFunc() {
         StringBuilder sb = new StringBuilder();
 
@@ -30,17 +33,33 @@ public class PLD {
 
         sb.append("endfunction");
 
-        CharStream antlrStream = CharStreams.fromString(sb.toString());
+        CharStream antlrStream = getAntlrStream(sb.toString());
 
-        Lexer lexer = new JassLexer(antlrStream);
+        JassLexer lexer = getJassLexer(antlrStream);
 
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        CommonTokenStream tokenStream = getCommonTokenStream(lexer);
 
-        JassParser parser = new JassParser(tokenStream);
+        JassParser parser = getJassParser(tokenStream);
 
         return null;
         //TODO: fix
         //return FuncImpl.create(parser.func_impl());
+    }
+
+    protected CharStream getAntlrStream(@Nonnull String s) {
+        return CharStreams.fromString(s);
+    }
+
+    protected JassLexer getJassLexer(@Nonnull CharStream antlrStream) {
+        return new JassLexer(antlrStream);
+    }
+
+    protected CommonTokenStream getCommonTokenStream(@Nonnull JassLexer lexer) {
+        return new CommonTokenStream(lexer);
+    }
+
+    protected JassParser getJassParser(@Nonnull CommonTokenStream tokenStream) {
+        return new JassParser(tokenStream);
     }
 
     private Set<String> _preloads = new LinkedHashSet<>();
@@ -52,8 +71,5 @@ public class PLD {
 
     public void addPreload(@Nonnull String path) {
         _preloads.add(path);
-    }
-
-    public PLD() {
     }
 }

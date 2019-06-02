@@ -30,5 +30,6 @@ public class Context {
         pushService(GameDirFinder.class, new StdGameDirFinder());
         pushService(GameExeFinder.class, new StdGameExeFinder());
         pushService(GameVersionFinder.class, new StdGameVersionFinder());
+        pushService(MpqPort.class, new JMpqPort());
     }
 }

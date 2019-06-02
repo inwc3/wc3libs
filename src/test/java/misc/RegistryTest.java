@@ -1,6 +1,6 @@
 package misc;
 
-import net.moonlightflower.wc3libs.misc.Registry;
+import net.moonlightflower.wc3libs.misc.WinRegistryHandler;
 import net.moonlightflower.wc3libs.port.Orient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,20 +23,20 @@ public class RegistryTest {
 
         File dir = new File("HKCU\\wc3libs");
 
-        Registry.set(dir, "setGet", Registry.EntryType.REG_SZ, "abc");
+        WinRegistryHandler.set(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ, "abc");
 
-        Assert.assertEquals(Registry.get(dir, "setGet"), "abc");
+        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), "abc");
 
-        Registry.remove(dir, "setGet");
+        WinRegistryHandler.remove(dir, "setGet");
 
-        Assert.assertEquals(Registry.get(dir, "setGet"), null);
+        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), null);
 
-        Registry.set(new Registry.Entry(dir, "setGet", Registry.EntryType.REG_SZ), "def");
+        WinRegistryHandler.set(new WinRegistryHandler.Entry(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ), "def");
 
-        Assert.assertEquals(Registry.get(dir, "setGet"), "def");
+        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), "def");
 
-        Registry.remove(new Registry.Entry(dir, "setGet", Registry.EntryType.REG_SZ));
+        WinRegistryHandler.remove(new WinRegistryHandler.Entry(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ));
 
-        Assert.assertEquals(Registry.get(dir, "setGet"), null);
+        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), null);
     }
 }

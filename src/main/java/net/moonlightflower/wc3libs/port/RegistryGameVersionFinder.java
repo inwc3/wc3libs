@@ -12,7 +12,7 @@ public class RegistryGameVersionFinder implements GameVersionFinder {
 
     @Nonnull
     public GameVersion get() throws NotFoundException {
-        GameExeFinder gameExeFinder = Context.getService(RegistryGameExeFinder.class);
+        GameExeFinder gameExeFinder = getRegistryGameExeFinder();
 
         File gameExeFile = gameExeFinder.get();
 
@@ -21,5 +21,9 @@ public class RegistryGameVersionFinder implements GameVersionFinder {
         } catch (IOException e) {
             throw new NotFoundException(e);
         }
+    }
+
+    protected GameExeFinder getRegistryGameExeFinder() {
+        return new RegistryGameExeFinder();
     }
 }

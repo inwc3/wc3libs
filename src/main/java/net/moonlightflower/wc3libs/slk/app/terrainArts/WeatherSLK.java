@@ -11,6 +11,8 @@ import net.moonlightflower.wc3libs.slk.SLK;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -507,7 +509,17 @@ public class WeatherSLK extends ObjSLK<WeatherSLK, WeatherId, WeatherSLK.Obj> {
 		
 		read(new RawSLK(file));
 	}
-	
+
+	public void toJSON() {
+		/*JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+		for (State state : State.values(State.class)) {
+			state.
+		}
+
+		objectBuilder.add()*/
+	}
+
 	public WeatherSLK() {
 		super();
 		

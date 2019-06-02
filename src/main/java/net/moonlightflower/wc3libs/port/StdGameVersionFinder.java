@@ -16,7 +16,7 @@ public class StdGameVersionFinder implements GameVersionFinder {
         if (!_enteredGameExeFinder) {
             _enteredGameExeFinder = true;
 
-            GameExeFinder gameExeFinder = Context.getService(GameExeFinder.class);
+            GameExeFinder gameExeFinder = getGameExeFinder();
 
             try {
                 File gameExeFile = gameExeFinder.get();
@@ -32,6 +32,14 @@ public class StdGameVersionFinder implements GameVersionFinder {
             _enteredGameExeFinder = false;
         }
 
-        return new TelemetryGameVersionFinder().get();
+        return getTelemetryGameVersionFinder().get();
+    }
+
+    protected GameExeFinder getGameExeFinder() {
+        return Context.getService(GameExeFinder.class);
+    }
+
+    protected GameVersionFinder getTelemetryGameVersionFinder() {
+        return new TelemetryGameVersionFinder();
     }
 }

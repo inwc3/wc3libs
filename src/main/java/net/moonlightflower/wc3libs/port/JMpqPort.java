@@ -42,6 +42,16 @@ public class JMpqPort extends MpqPort {
 		}
 	}
 
+	@Override
+	public MpqPort.In createIn() {
+		return new In();
+	}
+
+	@Override
+	public MpqPort.Out createOut() {
+		return new Out();
+	}
+
 	public static class In extends MpqPort.In {
 		private void commitJ(@Nonnull Vector<File> mpqFiles) throws IOException {
 			Vector<String> lines = new Vector<>();

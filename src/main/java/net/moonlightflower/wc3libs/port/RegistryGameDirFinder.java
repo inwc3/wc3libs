@@ -1,6 +1,6 @@
 package net.moonlightflower.wc3libs.port;
 
-import net.moonlightflower.wc3libs.misc.Registry;
+import net.moonlightflower.wc3libs.misc.WinRegistryHandler;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -12,9 +12,9 @@ public class RegistryGameDirFinder implements GameDirFinder {
     public RegistryGameDirFinder() {
     }
 
-    private static File getRegEntry(@Nonnull Registry.Entry entry) {
+    private File getRegEntry(@Nonnull WinRegistryHandler.Entry entry) {
         try {
-            String fileS = Registry.get(entry);
+            String fileS = getRegistryHandler().get(entry);
 
             if (fileS == null) throw new NotFoundException();
 
@@ -27,18 +27,22 @@ public class RegistryGameDirFinder implements GameDirFinder {
         return null;
     }
 
+    protected WinRegistryHandler getRegistryHandler() {
+        return new WinRegistryHandler();
+    }
+
     @Nonnull
     @Override
     public File get() throws NotFoundException {
-        List<Registry.Wc3Entry> entries = Arrays.asList(
-                Registry.Wc3Entry.INSTALL_PATH,
-                Registry.Wc3Entry.INSTALL_PATH_X,
-                Registry.Wc3LocalMachineEntry.INSTALL_PATH,
-                Registry.Wc3LocalMachineEntry.INSTALL_PATH_X,
-                Registry.Wc3LocalMachineEntry.WAR3_INSTALL_PATH
+        List<WinRegistryHandler.Wc3Entry> entries = Arrays.asList(
+                WinRegistryHandler.Wc3Entry.INSTALL_PATH,
+                WinRegistryHandler.Wc3Entry.INSTALL_PATH_X,
+                WinRegistryHandler.Wc3LocalMachineEntry.INSTALL_PATH,
+                WinRegistryHandler.Wc3LocalMachineEntry.INSTALL_PATH_X,
+                WinRegistryHandler.Wc3LocalMachineEntry.WAR3_INSTALL_PATH
         );
 
-        for (Registry.Wc3Entry entry : entries) {
+        for (WinRegistryHandler.Wc3Entry entry : entries) {
             File dir = getRegEntry(entry);
 
             if (dir != null) return dir;

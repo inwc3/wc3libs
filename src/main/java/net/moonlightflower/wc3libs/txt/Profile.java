@@ -20,6 +20,9 @@ import java.util.Map.Entry;
  * handles profile files like Units\CommandFunc.txt
  */
 public class Profile extends TXT implements Printable {
+	public Profile() {
+	}
+
 	public static class UnitState<T extends DataType> extends TXTState<T> {
 		public final static UnitState<War3String> ART_ANIM_PROPS = new UnitState<>("animProps", new DataTypeInfo(DataList.class, War3String.class));
 		public final static UnitState<Icon> ART_ICON = new UnitState<>("Art", Icon.class);
@@ -430,8 +433,5 @@ public class Profile extends TXT implements Printable {
 	
 	public Profile(@Nonnull File file) throws IOException {
 		read(new TXT(file));
-	}
-	
-	public Profile() {
 	}
 }

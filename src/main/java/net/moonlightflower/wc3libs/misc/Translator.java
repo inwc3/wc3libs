@@ -13,7 +13,11 @@ import java.util.Map;
  * Translates strings based on previously registered vocabulary, you can add txt game files like UI\WorldEditStrings.txt
  */
 public class Translator implements Printable {
-	private final TXT _txt = new TXT();
+	private final TXT _txt = createTXT();
+
+	protected TXT createTXT() {
+		return new TXT();
+	}
 
 	@Nonnull
 	public TXT getTXT() {

@@ -10,7 +10,11 @@ import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
 
-public class Registry {
+public class WinRegistryHandler {
+	public WinRegistryHandler() throws UnsupportedOperationException {
+		if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
+	}
+
 	public enum EntryType {
 		REG_SZ,
 		REG_DWORD,
@@ -273,10 +277,10 @@ public class Registry {
 		}
 	}
 
-	public static String get(@Nonnull File dir, @Nonnull String key) throws IOException {
+	public String get(@Nonnull File dir, @Nonnull String key) throws IOException {
         if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
-		ProcCaller proc = new ProcCaller("REG", "QUERY", dir.toString(), "/v", key);
+		ProcCaller proc = getQueryingProcCaller(dir, key);
 		
 		proc.exec();
 		
@@ -290,40 +294,52 @@ public class Registry {
 
 		return splits[3];
 	}
+
+	protected ProcCaller getQueryingProcCaller(@Nonnull File dir, @Nonnull String key) {
+		return new ProcCaller("REG", "QUERY", dir.toString(), "/v", key);
+	}
 	
-	public static String get(@Nonnull String dirS, @Nonnull String key) throws IOException {
+	public String get(@Nonnull String dirS, @Nonnull String key) throws IOException {
 		return get(new File(dirS), key);
 	}
 
-	public static String get(@Nonnull Entry entry) throws IOException {
+	public String get(@Nonnull Entry entry) throws IOException {
 		return get(entry._dir, entry._key);
 	}
 
-	public static void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {
+	public void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {
         if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
-		ProcCaller proc = new ProcCaller("REG", "ADD", dir.toString(), "/v", key, "/t", entryType.name(), "/d", val, "/f");
+		ProcCaller proc = getUpdatingProcCaller(dir, key, entryType.name(), val);
 
 		proc.exec();
 
 		if (proc.exitVal() != 0) throw new IOException(proc.getErrString());
 	}
 
-	public static void set(@Nonnull Entry entry, @Nonnull String val) throws IOException {
+	protected ProcCaller getUpdatingProcCaller(@Nonnull File dir, @Nonnull String key, @Nonnull String entryTypeName, @Nonnull String val) {
+		return new ProcCaller("REG", "ADD", dir.toString(), "/v", key, "/t", entryTypeName, "/d", val, "/f");
+	}
+
+	public void set(@Nonnull Entry entry, @Nonnull String val) throws IOException {
 		set(entry._dir, entry._key, entry._entryType, val);
 	}
 
-	public static void remove(@Nonnull File dir, @Nonnull String key) throws IOException {
+	public void remove(@Nonnull File dir, @Nonnull String key) throws IOException {
 	    if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
-		ProcCaller proc = new ProcCaller("REG", "DELETE", dir.toString(), "/v", key, "/f");
+		ProcCaller proc = getDeletionProcCaller(dir, key);
 
 		proc.exec();
 
 		if (proc.exitVal() != 0) throw new IOException(proc.getErrString());
 	}
 
-	public static void remove(@Nonnull Entry entry) throws IOException {
+	protected ProcCaller getDeletionProcCaller(@Nonnull File dir, @Nonnull String key) {
+		return new ProcCaller("REG", "DELETE", dir.toString(), "/v", key, "/f");
+	}
+
+	public void remove(@Nonnull Entry entry) throws IOException {
 		remove(entry._dir, entry._key);
 	}
 }

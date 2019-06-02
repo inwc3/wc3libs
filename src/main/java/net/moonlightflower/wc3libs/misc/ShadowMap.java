@@ -28,11 +28,15 @@ public class ShadowMap extends Raster<Boolean> {
 
 	@Override
 	public ShadowMap clone() {
-		ShadowMap other = new ShadowMap(getBounds());
+		ShadowMap other = getShadowMap(getBounds());
 
 		other.mergeCells(this);
 		
 		return other;
+	}
+
+	protected ShadowMap getShadowMap(@Nonnull Bounds bounds) {
+		return new ShadowMap(bounds);
 	}
 
 	@Nonnull

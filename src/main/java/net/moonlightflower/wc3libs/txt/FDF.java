@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.antlr.FDFLexer;
 import net.moonlightflower.wc3libs.antlr.FDFParser;
+import net.moonlightflower.wc3libs.port.Context;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -236,8 +237,13 @@ public class FDF extends UTF8 {
 	}
 
 	@Nonnull
+	protected static MpqPort getMpqPort() {
+		return Context.getService(MpqPort.class);
+	}
+
+	@Nonnull
 	public static FDF ofGameFile(@Nonnull File inFile) throws Exception {
-		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
+		MpqPort.Out.Result portResult = getMpqPort().getGameFiles(inFile);
 		
 		if (!portResult.getExports().containsKey(inFile)) throw new IOException(String.format("could not extract %s file", inFile.toString()));
 		

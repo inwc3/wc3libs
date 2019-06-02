@@ -57,7 +57,7 @@ public class StdGameExeFinder implements GameExeFinder {
 
     @Nonnull
     private File getGameExeInDir(@Nonnull File dir) throws NotFoundException {
-        GameVersionFinder gameVersionFinder = Context.getService(GameVersionFinder.class);
+        GameVersionFinder gameVersionFinder = getGameVersionFinder();
 
         try {
             GameVersion gameVersion = gameVersionFinder.get();
@@ -68,17 +68,21 @@ public class StdGameExeFinder implements GameExeFinder {
         }
     }
 
+    protected GameVersionFinder getGameVersionFinder() {
+        return Context.getService(GameVersionFinder.class);
+    }
+
     @Nonnull
     @Override
     public File get() throws NotFoundException {
-        GameExeFinder registryGameExeFinder = Context.getService(RegistryGameExeFinder.class);
+        GameExeFinder registryGameExeFinder = getRegistryGameExeFinder();
 
         try {
             return registryGameExeFinder.get();
         } catch (NotFoundException e) {
         }
 
-        GameDirFinder gameDirFinder = Context.getService(GameDirFinder.class);
+        GameDirFinder gameDirFinder = getGameDirFinder();
 
         try {
             File gameDir = gameDirFinder.get();
@@ -88,5 +92,13 @@ public class StdGameExeFinder implements GameExeFinder {
         }
 
         throw new NotFoundException();
+    }
+
+    protected GameExeFinder getRegistryGameExeFinder() {
+        return Context.getService(RegistryGameExeFinder.class);
+    }
+
+    protected GameDirFinder getGameDirFinder() {
+        return Context.getService(GameDirFinder.class);
     }
 }

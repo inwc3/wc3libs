@@ -87,6 +87,8 @@ public abstract class MpqPort {
 		}
 	}
 
+	public abstract In createIn();
+
 	public static class PortException extends IOException {
 		public PortException(@Nonnull String msg) {
 			super(msg);
@@ -317,11 +319,17 @@ public abstract class MpqPort {
 		}
 	}
 
+	public abstract Out createOut();
+
+	protected static GameVersion getGameVersion() throws NotFoundException {
+		return Context.getService(GameVersionFinder.class).get();
+	}
+
 	@Nonnull
 	public static Vector<File> getWar3Mpqs(@Nonnull File war3dir) throws NotFoundException {
 		Vector<File> files = new Vector<>();
 
-		GameVersion gameVersion = Context.getService(GameVersionFinder.class).get();
+		GameVersion gameVersion = getGameVersion();
 
 		if (gameVersion != null && gameVersion.compareTo(GameVersion.VERSION_1_29) < 0) {
 			files.add(new File(war3dir, War3MPQs.WAR3PATCH.toString()));
@@ -345,19 +353,4 @@ public abstract class MpqPort {
 
 	@Nonnull
 	public abstract Out.Result getGameFiles(@Nonnull File... files) throws IOException, NotFoundException;
-
-	private static Class<? extends MpqPort> _defaultImpl = JMpqPort.class;
-
-	@Nonnull
-	public static MpqPort getDefaultImpl() throws PortException {
-		try {
-			return _defaultImpl.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new PortException("could not instantiate mpqPort defaultImpl " + _defaultImpl);
-		}
-	}
-
-	public static void setDefaultImpl(Class<? extends MpqPort> type) {
-		_defaultImpl = type;
-	}
 }

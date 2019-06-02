@@ -1,13 +1,19 @@
 package net.moonlightflower.wc3libs.port;
 
-import net.moonlightflower.wc3libs.misc.Registry;
-
 import javax.annotation.Nonnull;
 import java.io.File;
 
 public class StdGameDirFinder implements GameDirFinder {
     public StdGameDirFinder() {
 
+    }
+
+    protected GameDirFinder getRegistryGameDirFinder() {
+        return new RegistryGameDirFinder();
+    }
+
+    protected GameDirFinder getDefaultGameDirFinder() {
+        return new DefaultGameDirFinder();
     }
 
     @Nonnull
@@ -17,14 +23,14 @@ public class StdGameDirFinder implements GameDirFinder {
 
         if (envWar3Dir != null) return new File(envWar3Dir);
 
-        GameDirFinder registryGameDirFinder = new RegistryGameDirFinder();
+        GameDirFinder registryGameDirFinder = getRegistryGameDirFinder();
 
         try {
             return registryGameDirFinder.get();
         } catch (NotFoundException e) {
         }
 
-        GameDirFinder defaultGameDirFinder = new DefaultGameDirFinder();
+        GameDirFinder defaultGameDirFinder = getDefaultGameDirFinder();
 
         try {
             return defaultGameDirFinder.get();

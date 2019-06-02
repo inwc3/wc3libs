@@ -10,6 +10,10 @@ import java.util.Stack;
 public class Printer {
     private final PrintStream _stream;
 
+    public Printer(@Nonnull PrintStream stream) {
+        _stream = stream;
+    }
+
     private final Stack<Object> _groups = new Stack<>();
 
     public void beginGroup(@Nonnull Object name) {
@@ -30,9 +34,5 @@ public class Printer {
 
     public void println(@Nullable Object s) {
         _stream.println(new String(new char[_groups.size()]).replace("\0", "\t") + s);
-    }
-
-    public Printer(@Nonnull PrintStream stream) {
-        _stream = stream;
     }
 }
