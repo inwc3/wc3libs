@@ -15,28 +15,28 @@ public class RegistryTest {
 
     @Test()
     public void setGet() throws IOException {
-        if (!Orient.isWindowsSystem()) {
+        try {
+            WinRegistryHandler winRegistryHandler = new WinRegistryHandler();
+
+            File dir = new File("HKCU\\wc3libs");
+
+            winRegistryHandler.set(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ, "abc");
+
+            Assert.assertEquals(winRegistryHandler.get(dir, "setGet"), "abc");
+
+            winRegistryHandler.remove(dir, "setGet");
+
+            Assert.assertEquals(winRegistryHandler.get(dir, "setGet"), null);
+
+            winRegistryHandler.set(new WinRegistryHandler.Entry(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ), "def");
+
+            Assert.assertEquals(winRegistryHandler.get(dir, "setGet"), "def");
+
+            winRegistryHandler.remove(new WinRegistryHandler.Entry(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ));
+
+            Assert.assertEquals(winRegistryHandler.get(dir, "setGet"), null);
+        } catch (UnsupportedOperationException e) {
             log.info("not a windows system (" + Orient.getSystem() + "), skip setGet tests");
-
-            return;
         }
-
-        File dir = new File("HKCU\\wc3libs");
-
-        WinRegistryHandler.set(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ, "abc");
-
-        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), "abc");
-
-        WinRegistryHandler.remove(dir, "setGet");
-
-        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), null);
-
-        WinRegistryHandler.set(new WinRegistryHandler.Entry(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ), "def");
-
-        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), "def");
-
-        WinRegistryHandler.remove(new WinRegistryHandler.Entry(dir, "setGet", WinRegistryHandler.EntryType.REG_SZ));
-
-        Assert.assertEquals(WinRegistryHandler.get(dir, "setGet"), null);
     }
 }
