@@ -2572,10 +2572,13 @@ public class W3I {
     private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
         switch (format.toEnum()) {
             case AUTO:
-                if (_fileVersion == 0x12) {
-                    write_0x12(stream);
-                    break;
-                }
+                format = EncodingFormat.valueOf(_fileVersion);
+
+                if (format == null) throw new IllegalArgumentException("no writer for " + _fileVersion);
+
+                write(stream, format);
+
+                break;
             case W3I_0x1C: {
                 write_0x1C(stream);
 
