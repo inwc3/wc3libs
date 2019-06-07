@@ -6,6 +6,7 @@ import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.Printable;
 import net.moonlightflower.wc3libs.misc.Printer;
 import net.moonlightflower.wc3libs.misc.Translator;
+import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
 
@@ -571,7 +572,7 @@ public class TXT implements Printable {
 
 	@Nonnull
 	public static TXT ofGameFile(@Nonnull File inFile) throws Exception {
-		MpqPort.Out.Result portResult = MpqPort.getDefaultImpl().getGameFiles(inFile);
+		MpqPort.Out.Result portResult = new JMpqPort().getGameFiles(inFile);
 		
 		if (!portResult.getExports().containsKey(inFile)) throw new IOException(String.format("could not extract %s file", inFile.toString()));
 		

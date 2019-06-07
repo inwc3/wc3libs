@@ -1,20 +1,14 @@
 package net.moonlightflower.wc3libs.txt.app.jass;
 
-import com.sun.org.apache.xpath.internal.operations.Variable;
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
-import net.moonlightflower.wc3libs.antlr.LightJassParser;
-import net.moonlightflower.wc3libs.misc.Math;
 import net.moonlightflower.wc3libs.txt.UTF8;
 import org.antlr.v4.runtime.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class Jass {
 	public final static File GAME_PATH = new File("war3map.j");
