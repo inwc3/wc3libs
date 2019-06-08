@@ -19,9 +19,15 @@ public class StdGameDirFinder implements GameDirFinder {
     @Nonnull
     @Override
     public File get() throws NotFoundException {
-        String envWar3Dir = System.getenv("war3dir");
+        String envWar3DirS = System.getenv("war3dir");
 
-        if (envWar3Dir != null) return new File(envWar3Dir);
+        if (envWar3DirS != null) {
+            File envWar3Dir = new File(envWar3DirS);
+
+            if (envWar3Dir.exists()) {
+                return envWar3Dir;
+            }
+        }
 
         GameDirFinder registryGameDirFinder = getRegistryGameDirFinder();
 

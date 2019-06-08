@@ -18,7 +18,11 @@ public class RegistryGameDirFinder implements GameDirFinder {
 
             if (fileS == null) throw new NotFoundException();
 
-            return new File(fileS);
+            File file = new File(fileS);
+
+            if (file.exists()) {
+                return file;
+            }
         } catch (UnsupportedOperationException | NotFoundException ignored) {
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -45,7 +49,7 @@ public class RegistryGameDirFinder implements GameDirFinder {
         for (WinRegistryHandler.Wc3Entry entry : entries) {
             File dir = getRegEntry(entry);
 
-            if (dir != null) return dir;
+            if (dir != null && dir.exists()) return dir;
         }
 
         throw new NotFoundException();

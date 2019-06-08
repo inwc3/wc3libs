@@ -23,18 +23,39 @@ public class StdGameExeFinder implements GameExeFinder {
     public final static File X64_EXE_PATH_131 = new File(X64_DIR, WARCRAFT_III_EXE_PATH.toString());
 
     @Nonnull
-    public static File fromDir(@Nonnull File dir, @Nonnull GameVersion version, @Nonnull Orient.WinArch arch) {
+    public static File fromDir(@Nonnull File dir, @Nonnull GameVersion version, @Nonnull Orient.WinArch arch) throws NotFoundException {
         if (version.compareTo(GameVersion.VERSION_1_31) >= 0) {
             switch (arch) {
                 case X86:
-                    return new File(dir, X86_EXE_PATH_131.toString());
+                    File inDirPathX86 = new File(dir, X86_EXE_PATH_131.toString());
+
+                    if (inDirPathX86.exists()) {
+                        return inDirPathX86;
+                    }
                 case X64:
-                    return new File(dir, X64_EXE_PATH_131.toString());
+                    File inDirPathX64 = new File(dir, X64_EXE_PATH_131.toString());
+
+                    if (inDirPathX64.exists()) {
+                        return inDirPathX64;
+                    }
+
+                    return inDirPathX64;
+            }
+        } else if (version.compareTo(GameVersion.VERSION_1_29) >= 0) {
+            File inDirPath = new File(dir, WARCRAFT_III_EXE_PATH.toString());
+
+            if (inDirPath.exists()) {
+                return inDirPath;
             }
         }
-        if (version.compareTo(GameVersion.VERSION_1_29) >= 0) return new File(dir, WARCRAFT_III_EXE_PATH.toString());
 
-        return new File(dir, WAR3_EXE_PATH.toString());
+        File inDirPath = new File(dir, WAR3_EXE_PATH.toString());
+
+        if (inDirPath.exists()) {
+            return inDirPath;
+        }
+
+        throw new NotFoundException();
     }
 
     @Nonnull

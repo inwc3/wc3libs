@@ -18,7 +18,11 @@ public class RegistryGameExeFinder implements GameExeFinder {
 
             if (fileS == null) throw new NotFoundException();
 
-            return new File(fileS);
+            File file = new File(fileS);
+
+            if (file.exists()) {
+                return file;
+            }
         } catch (IOException ignored) {
         }
 
