@@ -113,26 +113,36 @@ public class StdGameExeFinder implements GameExeFinder {
         return Context.getService(GameVersionFinder.class);
     }
 
+    private boolean _entered = false;
+
     @Nonnull
     @Override
     public File get() throws NotFoundException {
-        GameExeFinder registryGameExeFinder = getRegistryGameExeFinder();
+        if (_entered) throw new NotFoundException(new Exception("already tried"));
+
+        _entered = true;
 
         try {
-            return registryGameExeFinder.get();
-        } catch (NotFoundException e) {
+            GameExeFinder registryGameExeFinder = getRegistryGameExeFinder();
+
+            try {
+                return registryGameExeFinder.get();
+            } catch (NotFoundException e) {
+            }
+
+            GameDirFinder gameDirFinder = getGameDirFinder();
+
+            try {
+                File gameDir = gameDirFinder.get();
+
+                return getGameExeInDir(gameDir);
+            } catch (NotFoundException e) {
+            }
+
+            throw new NotFoundException();
+        } finally {
+            _entered = false;
         }
-
-        GameDirFinder gameDirFinder = getGameDirFinder();
-
-        try {
-            File gameDir = gameDirFinder.get();
-
-            return getGameExeInDir(gameDir);
-        } catch (NotFoundException e) {
-        }
-
-        throw new NotFoundException();
     }
 
     protected GameExeFinder getRegistryGameExeFinder() {

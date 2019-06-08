@@ -10,13 +10,15 @@ public class StdGameVersionFinder implements GameVersionFinder {
     public StdGameVersionFinder() {
     }
 
-    private boolean _enteredGameExeFinder = false;
+    private boolean _entered = false;
 
     @Nonnull
     public GameVersion get() throws NotFoundException {
-        if (!_enteredGameExeFinder) {
-            _enteredGameExeFinder = true;
+        if (_entered) throw new NotFoundException(new Exception("already tried"));
 
+        _entered = true;
+
+        try {
             GameExeFinder gameExeFinder = getGameExeFinder();
 
             try {
@@ -30,10 +32,10 @@ public class StdGameVersionFinder implements GameVersionFinder {
             } catch (NotFoundException ignored) {
             }
 
-            _enteredGameExeFinder = false;
+            return getTelemetryGameVersionFinder().get();
+        } finally {
+            _entered = false;
         }
-
-        return getTelemetryGameVersionFinder().get();
     }
 
     protected GameExeFinder getGameExeFinder() {

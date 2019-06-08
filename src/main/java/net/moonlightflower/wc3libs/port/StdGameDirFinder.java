@@ -16,33 +16,43 @@ public class StdGameDirFinder implements GameDirFinder {
         return new DefaultGameDirFinder();
     }
 
+    private boolean _entered = false;
+
     @Nonnull
     @Override
     public File get() throws NotFoundException {
-        String envWar3DirS = System.getenv("war3dir");
+        if (_entered) throw new NotFoundException(new Exception("already tried"));
 
-        if (envWar3DirS != null) {
-            File envWar3Dir = new File(envWar3DirS);
+        _entered = true;
+        
+        try {
+            String envWar3DirS = System.getenv("war3dir");
 
-            if (envWar3Dir.exists()) {
-                return envWar3Dir;
+            if (envWar3DirS != null) {
+                File envWar3Dir = new File(envWar3DirS);
+
+                if (envWar3Dir.exists()) {
+                    return envWar3Dir;
+                }
             }
+
+            GameDirFinder registryGameDirFinder = getRegistryGameDirFinder();
+
+            try {
+                return registryGameDirFinder.get();
+            } catch (NotFoundException e) {
+            }
+
+            GameDirFinder defaultGameDirFinder = getDefaultGameDirFinder();
+
+            try {
+                return defaultGameDirFinder.get();
+            } catch (NotFoundException e) {
+            }
+
+            throw new NotFoundException();
+        } finally {
+            _entered = false;
         }
-
-        GameDirFinder registryGameDirFinder = getRegistryGameDirFinder();
-
-        try {
-            return registryGameDirFinder.get();
-        } catch (NotFoundException e) {
-        }
-
-        GameDirFinder defaultGameDirFinder = getDefaultGameDirFinder();
-
-        try {
-            return defaultGameDirFinder.get();
-        } catch (NotFoundException e) {
-        }
-
-        throw new NotFoundException();
     }
 }
