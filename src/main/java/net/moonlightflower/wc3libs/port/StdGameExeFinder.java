@@ -38,7 +38,22 @@ public class StdGameExeFinder implements GameExeFinder {
     }
 
     @Nonnull
-    public static File fromDirIgnoreVersion(@Nonnull File dir) throws NotFoundException {
+    public static File fromDirIgnoreVersion(@Nonnull File dir, @Nonnull Orient.WinArch arch) throws NotFoundException {
+        switch (arch) {
+            case X86:
+                File inDirPathX86 = new File(dir, X86_EXE_PATH_131.toString());
+
+                if (inDirPathX86.exists()) return inDirPathX86;
+
+                break;
+            case X64:
+                File inDirPathX64 = new File(dir, X64_EXE_PATH_131.toString());
+
+                if (inDirPathX64.exists()) return inDirPathX64;
+
+                break;
+        }
+
         List<File> relativeSearchPaths = Arrays.asList(WARCRAFT_III_EXE_PATH,
                 FROZEN_THRONE_EXE_PATH,
                 WAR3_EXE_PATH,
@@ -53,6 +68,11 @@ public class StdGameExeFinder implements GameExeFinder {
         }
 
         throw new NotFoundException(new Exception("tried: " + relativeSearchPaths.toString()));
+    }
+
+    @Nonnull
+    public static File fromDirIgnoreVersion(@Nonnull File dir) throws NotFoundException {
+        return fromDirIgnoreVersion(dir, Orient.getWinArch());
     }
 
     @Nonnull
