@@ -31,5 +31,6 @@ public class Context {
         pushService(GameExeFinder.class, new StdGameExeFinder());
         pushService(GameVersionFinder.class, new StdGameVersionFinder());
         pushService(MpqPort.class, new JMpqPort());
+        pushService(RegistryGameExeFinder.class, new RegistryGameExeFinder());
     }
 }

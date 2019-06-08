@@ -49,10 +49,10 @@ public class StdGameExeFinder implements GameExeFinder {
         for (File relativeSearchPath : relativeSearchPaths) {
             File inDirPath = new File(dir, relativeSearchPath.toString());
 
-            if (relativeSearchPath.exists()) return inDirPath;
+            if (inDirPath.exists()) return inDirPath;
         }
 
-        throw new NotFoundException();
+        throw new NotFoundException(new Exception("tried: " + relativeSearchPaths.toString()));
     }
 
     @Nonnull
