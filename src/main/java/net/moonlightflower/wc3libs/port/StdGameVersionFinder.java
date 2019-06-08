@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
 import dorkbox.peParser.PE;
+import net.moonlightflower.wc3libs.bin.GameExe;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -22,7 +23,7 @@ public class StdGameVersionFinder implements GameVersionFinder {
                 File gameExeFile = gameExeFinder.get();
 
                 try {
-                    return new GameVersion(PE.getVersion(gameExeFile.getAbsolutePath()));
+                    return GameExe.getVersion(gameExeFile);
                 } catch (Exception e) {
                     throw new NotFoundException(e);
                 }

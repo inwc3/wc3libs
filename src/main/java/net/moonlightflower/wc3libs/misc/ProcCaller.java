@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -76,9 +77,13 @@ public class ProcCaller {
 					sb.append(String.format("\"%s\" ", s.replace("/", "/")));
 				}
 			}
-			
+
+			System.out.println("execute " + sb.toString());
+
 			_proc = Runtime.getRuntime().exec(sb.toString());
 		} else {
+			System.out.println("execute " + _builder.command());
+
 			_proc = _builder.start();
 		}
 
@@ -90,7 +95,7 @@ public class ProcCaller {
 		
 		try {
 			_proc.waitFor();
-			
+
 			reader.join();
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);

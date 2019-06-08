@@ -37,6 +37,11 @@ public class GameVersion implements Comparable<GameVersion> {
     }
 
     @Override
+    public String toString() {
+        return _versionNumList.toString();
+    }
+
+    @Override
     public int compareTo(@Nonnull GameVersion other) {
         for (int i = 0; ; i++) {
             int curNum = (i < _versionNumList.size()) ? _versionNumList.get(i) : 0;
