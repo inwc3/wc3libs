@@ -30,7 +30,7 @@ public class GameExe {
 
             tmpOut.deleteOnExit();
 
-            String query = "wmic"+
+            String query = "\"%SystemRoot%\\System32\\Wbem\\wmic.exe\""+
                     " datafile"+
                     " where"+
                     String.format(" name=\"%s\"", file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"))+
@@ -39,7 +39,7 @@ public class GameExe {
                     " /value"+
                     String.format(" 1>\"%s\"", tmpOut.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"));
 
-            System.out.println("load " + query);
+            //System.out.println("load " + query);
 
             Files.write(tmpBat.toPath(), Arrays.asList("chcp 65001", query, "EXIT /B %ERRORLEVEL%"));
 

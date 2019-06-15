@@ -78,11 +78,11 @@ public class ProcCaller {
 				}
 			}
 
-			System.out.println("execute " + sb.toString());
+			//System.out.println("execute " + sb.toString());
 
 			_proc = Runtime.getRuntime().exec(sb.toString());
 		} else {
-			System.out.println("execute " + _builder.command());
+			//System.out.println("execute " + _builder.command());
 
 			_proc = _builder.start();
 		}
