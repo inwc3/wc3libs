@@ -45,7 +45,6 @@ Wc3libs supports read and write operations for the following data types:
 Wc3libs can transform object definitions between the binary objectmod format and raw slk/txt formats.
 The raw file handling also comes with inbuilt cleaning to prevent bloating maps.
 
-
 # Contributing
 
 Feel free to contribute fixes or additions or make tickets on the issue tracker to inform us. Any kind of documentation or specification is also welcome.
