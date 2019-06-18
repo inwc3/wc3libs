@@ -69,9 +69,6 @@ generateGrammarSource { doLast {
     project.delete fileTree("${buildDir}/generated-src/antlr/main").include('*.*')
 }}
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4' // We want gradle 4.4 to run this project
-}
 
 generateGrammarSource.dependsOn cleanAntlrDir
 compileJava.dependsOn generateGrammarSource
