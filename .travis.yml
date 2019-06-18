@@ -4,7 +4,7 @@ branches:
 
 language: java
 jdk:
-  - oraclejdk10
+  - openjdk10
 
 before_install:
  - chmod +x gradlew
