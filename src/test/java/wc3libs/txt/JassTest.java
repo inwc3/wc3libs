@@ -1,13 +1,15 @@
 package wc3libs.txt;
 
 import net.moonlightflower.wc3libs.bin.app.W3I;
-import net.moonlightflower.wc3libs.port.JMpqPort;
-import net.moonlightflower.wc3libs.txt.app.jass.*;
+import net.moonlightflower.wc3libs.txt.app.jass.Jass;
+import net.moonlightflower.wc3libs.txt.app.jass.JassScript;
+import net.moonlightflower.wc3libs.txt.app.jass.LightJass;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 
 import static org.testng.Assert.assertFalse;
 
@@ -51,7 +53,7 @@ public class JassTest extends Wc3LibTest {
         assertFalse(System.err.checkError());*/
     }
 
-    @Test()
+    @Test(enabled = false)
     public void testRebuildDwc() throws IOException {
         File file = getFile("jass/dwc.j");
 
