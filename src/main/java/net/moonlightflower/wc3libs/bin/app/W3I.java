@@ -6,7 +6,6 @@ import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.Size;
-import net.moonlightflower.wc3libs.port.GameVersion;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.Orient;
@@ -2652,7 +2651,7 @@ public class W3I {
         return w3i;
     }
 
-    public FuncImpl makeInitCustomPlayerSlots() {
+    public FuncImpl makeJassInitCustomPlayerSlots() {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
@@ -2675,7 +2674,30 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeInitCustomTeams() {
+    public net.moonlightflower.wc3libs.txt.app.lua.FuncImpl makeLuaInitCustomPlayerSlots() {
+        net.moonlightflower.wc3libs.txt.app.lua.FuncDecl funcDecl = new net.moonlightflower.wc3libs.txt.app.lua.FuncDecl(new ArrayList<>());
+
+        List<net.moonlightflower.wc3libs.txt.app.lua.Statement> stmts = new ArrayList<>();
+
+        for (Player player : getPlayers()) {
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            if (player.getStartPosFixed() == 1) {
+                stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
+            }
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType().getJassExpr() + ")"));
+        }
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body body = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body(stmts);
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl funcImpl = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public FuncImpl makeJassInitCustomTeams() {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_TEAMS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
@@ -2722,7 +2744,54 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeInitAllyPriorities() {
+    public net.moonlightflower.wc3libs.txt.app.lua.FuncImpl makeLuaInitCustomTeams() {
+        net.moonlightflower.wc3libs.txt.app.lua.FuncDecl funcDecl = new net.moonlightflower.wc3libs.txt.app.lua.FuncDecl(new ArrayList<>());
+
+        List<net.moonlightflower.wc3libs.txt.app.lua.Statement> stmts = new ArrayList<>();
+
+        Map<Integer, Player> numToPlayerMap = new LinkedHashMap<>();
+
+        for (Player player : getPlayers()) {
+            numToPlayerMap.put(player.getNum(), player);
+        }
+
+        for (Force force : getForces()) {
+            for (Integer playerNum : force.getPlayerNums(getPlayers())) {
+                Player player = numToPlayerMap.get(playerNum);
+
+                stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
+            }
+        }
+
+        for (Force force : getForces()) {
+            for (Integer playerNum : force.getPlayerNums(getPlayers())) {
+                Player player = numToPlayerMap.get(playerNum);
+
+                if (force.getFlag(Force.Flags.Flag.ALLIED)) {
+                    for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
+                        if (playerNum.equals(playerNum2)) continue;
+
+                        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
+                    }
+                }
+                if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
+                    for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
+                        if (playerNum.equals(playerNum2)) continue;
+
+                        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
+                    }
+                }
+            }
+        }
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body body = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body(stmts);
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl funcImpl = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public FuncImpl makeJassInitAllyPriorities() {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
@@ -2770,14 +2839,60 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeConfig() {
+    public net.moonlightflower.wc3libs.txt.app.lua.FuncImpl makeLuaInitAllyPriorities() {
+        net.moonlightflower.wc3libs.txt.app.lua.FuncDecl funcDecl = new net.moonlightflower.wc3libs.txt.app.lua.FuncDecl(new ArrayList<>());
+
+        List<net.moonlightflower.wc3libs.txt.app.lua.Statement> stmts = new ArrayList<>();
+
+        for (Player player : getPlayers()) {
+            Set<Integer> lowNums = player.getAllyLowPrioPlayerNums();
+            Set<Integer> highNums = player.getAllyHighPrioPlayerNums();
+
+            int playerNum = player.getNum();
+
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create(String.format("SetStartLocPrioCount(%d, %d)", playerNum, lowNums.size() + highNums.size())));
+
+            int c = 0;
+
+            for (Player otherPlayer : getPlayers()) {
+                int otherPlayerNum = otherPlayer.getNum();
+
+                if (playerNum == otherPlayerNum) continue;
+
+                if (lowNums.contains(otherPlayerNum)) {
+                    stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create(String.format("SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                } else if (highNums.contains(otherPlayerNum)) {
+                    stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create(String.format("SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                } else {
+                    //stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create(String.format("SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                }
+
+                c++;
+            }
+
+            /*for (Integer lowNum : lowNums) {
+                stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create(String.format("SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, lowNum, "MAP_LOC_PRIO_LOW")));
+                c++;
+            }
+            for (Integer highNum : highNums) {
+                stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create(String.format("SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, highNum, "MAP_LOC_PRIO_HIGH")));
+                c++;
+            }*/
+        }
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body body = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body(stmts);
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl funcImpl = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
+    public FuncImpl makeJassConfig() {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.CONFIG_NAME, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
-        Function enquote = (Function<String, String>) s -> {
-            return "\"" + s + "\"";
-        };
+        Function enquote = (Function<String, String>) s -> "\"" + s + "\"";
 
         stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
         stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
@@ -2802,6 +2917,52 @@ public class W3I {
         return funcImpl;
     }
 
+    public net.moonlightflower.wc3libs.txt.app.lua.FuncImpl makeLuaConfig() {
+        net.moonlightflower.wc3libs.txt.app.lua.FuncDecl funcDecl = new net.moonlightflower.wc3libs.txt.app.lua.FuncDecl(new ArrayList<>());
+
+        List<net.moonlightflower.wc3libs.txt.app.lua.Statement> stmts = new ArrayList<>();
+
+        Function enquote = (Function<String, String>) s -> "\"" + s + "\"";
+
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetMapName(" + enquote.apply(getMapName()) + ")"));
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
+
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetPlayers(" + getPlayers().size() + ")"));
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetTeams(" + getForces().size() + ")"));
+
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
+
+        for (Player player : getPlayers()) {
+            stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
+        }
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl initCustomPlayerSlotsFunc = makeLuaInitCustomPlayerSlots();
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl initCustomTeamsFunc = makeLuaInitCustomTeams();
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl initAllyPrioritiesFunc = makeLuaInitAllyPriorities();
+
+        StringWriter initCustomPlayerSlotsFuncWriter = new StringWriter();
+        StringWriter initCustomTeamsFuncWriter = new StringWriter();
+        StringWriter initAllyPrioritiesFuncWriter = new StringWriter();
+
+        initCustomPlayerSlotsFunc.write(initCustomPlayerSlotsFuncWriter);
+        initCustomTeamsFunc.write(initCustomTeamsFuncWriter);
+        initAllyPrioritiesFunc.write(initAllyPrioritiesFuncWriter);
+
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("local initCustomPlayersFunc = " + initCustomPlayerSlotsFuncWriter.toString()));
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("local initCustomTeamsFunc = " + initCustomTeamsFuncWriter.toString()));
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("local initAllyPrioritiesFunc = " + initAllyPrioritiesFuncWriter.toString()));
+
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("initCustomPlayersFunc()"));
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("initCustomTeamsFunc()"));
+        stmts.add(net.moonlightflower.wc3libs.txt.app.lua.Statement.create("initAllyPrioritiesFunc()"));
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body body = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl.Body(stmts);
+
+        net.moonlightflower.wc3libs.txt.app.lua.FuncImpl funcImpl = new net.moonlightflower.wc3libs.txt.app.lua.FuncImpl(funcDecl, body);
+
+        return funcImpl;
+    }
+
     public void injectConfigsInJassScript(@Nonnull JassScript jassScript) {
         List<String> funcNames = new ArrayList<>();
 
@@ -2822,10 +2983,10 @@ public class W3I {
             jassScript.removeFuncImpl(funcImpl);
         }
 
-        FuncImpl initCustomPlayerSlots = makeInitCustomPlayerSlots();
-        FuncImpl initCustomTeams = makeInitCustomTeams();
-        FuncImpl initAllyPriorities = makeInitAllyPriorities();
-        FuncImpl config = makeConfig();
+        FuncImpl initCustomPlayerSlots = makeJassInitCustomPlayerSlots();
+        FuncImpl initCustomTeams = makeJassInitCustomTeams();
+        FuncImpl initAllyPriorities = makeJassInitAllyPriorities();
+        FuncImpl config = makeJassConfig();
 
         jassScript.addFuncImpl(initCustomPlayerSlots);
         jassScript.addFuncImpl(initCustomTeams);
@@ -2890,14 +3051,36 @@ public class W3I {
 
         List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
 
-        toBeAddedFuncImpls.add(makeInitCustomPlayerSlots());
-        toBeAddedFuncImpls.add(makeInitCustomTeams());
-        toBeAddedFuncImpls.add(makeInitAllyPriorities());
-        toBeAddedFuncImpls.add(makeConfig());
+        toBeAddedFuncImpls.add(makeJassInitCustomPlayerSlots());
+        toBeAddedFuncImpls.add(makeJassInitCustomTeams());
+        toBeAddedFuncImpls.add(makeJassInitAllyPriorities());
+        toBeAddedFuncImpls.add(makeJassConfig());
 
         for (FuncImpl funcImpl : toBeAddedFuncImpls) {
             sw.write("\n");
             funcImpl.write(sw);
         }
+    }
+
+    public void injectConfigsInLuaScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
+
+        boolean first = true;
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            if (first) {
+                first = false;
+            } else {
+                sw.write("\n");
+            }
+
+            sw.write(line);
+        }
+
+        reader.close();
+
+        sw.write("config = ");
+        makeLuaConfig().write(sw);
     }
 }
