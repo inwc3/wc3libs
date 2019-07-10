@@ -75,3 +75,15 @@ generateGrammarSource { doLast {
 
 generateGrammarSource.dependsOn cleanAntlrDir
 compileJava.dependsOn generateGrammarSource
+
+compileJava {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.compilerArgs += ["--release 8"]
+    }
+}
+
+compileTestJava {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.compilerArgs += ["--release 8"]
+    }
+}
