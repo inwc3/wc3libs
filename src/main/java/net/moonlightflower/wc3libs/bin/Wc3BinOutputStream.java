@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +34,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     }
 
     public void writeInt16(short val) {
-        _shortBuf.rewind();
+        ((Buffer) _shortBuf).rewind();
         _shortBuf.order(ByteOrder.LITTLE_ENDIAN);
 
         _shortBuf.putShort(val);
@@ -50,7 +51,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     private final static ByteBuffer _intBuf = ByteBuffer.wrap(_intBytes);
 
     public void writeInt32(int val) {
-        _intBuf.rewind();
+        ((Buffer) _intBuf).rewind();
         _intBuf.order(ByteOrder.LITTLE_ENDIAN);
 
         _intBuf.putInt(val);
