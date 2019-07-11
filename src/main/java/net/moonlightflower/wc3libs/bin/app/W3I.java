@@ -617,7 +617,7 @@ public class W3I {
 
         @Nullable
         public static GameDataSet valueOf(int index) {
-            return _map.get(index);
+            return _map.getOrDefault(index, STANDARD);
         }
 
         private String _label;
