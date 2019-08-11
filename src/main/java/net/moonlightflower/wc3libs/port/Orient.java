@@ -22,6 +22,10 @@ public class Orient {
 		return System.getProperty("os.name");
 	}
 
+	public static boolean isMacSystem() {
+		return getSystem().toLowerCase().startsWith("mac");
+	}
+
 	public static boolean isWindowsSystem() {
 		return getSystem().toLowerCase().startsWith("win");
 	}

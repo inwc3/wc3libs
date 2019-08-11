@@ -53,4 +53,11 @@ public class GameVersion implements Comparable<GameVersion> {
             if (i == _versionNumList.size() && i == other._versionNumList.size()) return 0;
         }
     }
+
+    @Override
+    public boolean equals(@Nonnull Object other) {
+        if (!(other instanceof GameVersion)) return false;
+
+        return compareTo((GameVersion) other) == 0;
+    }
 }

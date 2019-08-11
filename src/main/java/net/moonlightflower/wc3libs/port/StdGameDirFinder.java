@@ -1,5 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
+import net.moonlightflower.wc3libs.port.mac.MacGameDirFinder;
+
 import javax.annotation.Nonnull;
 import java.io.File;
 
@@ -8,12 +10,8 @@ public class StdGameDirFinder implements GameDirFinder {
 
     }
 
-    protected GameDirFinder getRegistryGameDirFinder() {
-        return new RegistryGameDirFinder();
-    }
-
-    protected GameDirFinder getDefaultGameDirFinder() {
-        return new DefaultGameDirFinder();
+    protected GameDirFinder getMacGameDirFinder() {
+        return new MacGameDirFinder();
     }
 
     private boolean _entered = false;
@@ -36,21 +34,21 @@ public class StdGameDirFinder implements GameDirFinder {
                 }
             }
 
-            GameDirFinder registryGameDirFinder = getRegistryGameDirFinder();
+            if (Orient.isMacSystem()) {
+                GameDirFinder macGameDirFinder = getMacGameDirFinder();
 
-            try {
-                return registryGameDirFinder.get();
-            } catch (NotFoundException e) {
+                try {
+                    return macGameDirFinder.get();
+                } catch (NotFoundException e) {
+                    throw e;
+                }
+            } else if (Orient.isWindowsSystem()) {
+
+
+                throw new NotFoundException();
+            } else {
+                throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
             }
-
-            GameDirFinder defaultGameDirFinder = getDefaultGameDirFinder();
-
-            try {
-                return defaultGameDirFinder.get();
-            } catch (NotFoundException e) {
-            }
-
-            throw new NotFoundException();
         } finally {
             _entered = false;
         }

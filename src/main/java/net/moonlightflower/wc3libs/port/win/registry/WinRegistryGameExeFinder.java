@@ -1,13 +1,15 @@
-package net.moonlightflower.wc3libs.port;
+package net.moonlightflower.wc3libs.port.win.registry;
 
 import net.moonlightflower.wc3libs.misc.WinRegistryHandler;
+import net.moonlightflower.wc3libs.port.GameExeFinder;
+import net.moonlightflower.wc3libs.port.NotFoundException;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
-public class RegistryGameExeFinder implements GameExeFinder {
-    public RegistryGameExeFinder() {
+public class WinRegistryGameExeFinder implements GameExeFinder {
+    public WinRegistryGameExeFinder() {
     }
 
     @Nonnull

@@ -1,5 +1,14 @@
 package net.moonlightflower.wc3libs.port;
 
+import net.moonlightflower.wc3libs.port.mac.MacGameDirFinder;
+import net.moonlightflower.wc3libs.port.mac.MacGameExeFinder;
+import net.moonlightflower.wc3libs.port.mac.MacGameVersionFinder;
+import net.moonlightflower.wc3libs.port.mac.MacMapsDirFinder;
+import net.moonlightflower.wc3libs.port.win.*;
+import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameDirFinder;
+import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameExeFinder;
+import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameVersionFinder;
+
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.LinkedHashMap;
@@ -31,6 +40,18 @@ public class Context {
         pushService(GameExeFinder.class, new StdGameExeFinder());
         pushService(GameVersionFinder.class, new StdGameVersionFinder());
         pushService(MpqPort.class, new JMpqPort());
-        pushService(RegistryGameExeFinder.class, new RegistryGameExeFinder());
+        pushService(MacGameDirFinder.class, new MacGameDirFinder());
+        pushService(MacGameExeFinder.class, new MacGameExeFinder());
+        pushService(MacGameVersionFinder.class, new MacGameVersionFinder());
+        pushService(MacMapsDirFinder.class, new MacMapsDirFinder());
+        pushService(WinDefaultGameDirFinder.class, new WinDefaultGameDirFinder());
+        pushService(WinGameDirFinder.class, new WinGameDirFinder());
+        pushService(WinGameExeFinder.class, new WinGameExeFinder());
+        pushService(WinGameVersionFinder.class, new WinGameVersionFinder());
+        pushService(WinMapsDirFinder.class, new WinMapsDirFinder());
+        pushService(WinTelemetryGameVersionFinder.class, new WinTelemetryGameVersionFinder());
+        pushService(WinRegistryGameDirFinder.class, new WinRegistryGameDirFinder());
+        pushService(WinRegistryGameExeFinder.class, new WinRegistryGameExeFinder());
+        pushService(WinRegistryGameVersionFinder.class, new WinRegistryGameVersionFinder());
     }
 }

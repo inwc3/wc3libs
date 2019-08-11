@@ -1,13 +1,17 @@
-package net.moonlightflower.wc3libs.port;
+package net.moonlightflower.wc3libs.port.win.registry;
 
 import net.moonlightflower.wc3libs.bin.GameExe;
+import net.moonlightflower.wc3libs.port.GameExeFinder;
+import net.moonlightflower.wc3libs.port.GameVersion;
+import net.moonlightflower.wc3libs.port.GameVersionFinder;
+import net.moonlightflower.wc3libs.port.NotFoundException;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
-public class RegistryGameVersionFinder implements GameVersionFinder {
-    public RegistryGameVersionFinder() {
+public class WinRegistryGameVersionFinder implements GameVersionFinder {
+    public WinRegistryGameVersionFinder() {
     }
 
     @Nonnull
@@ -24,6 +28,6 @@ public class RegistryGameVersionFinder implements GameVersionFinder {
     }
 
     protected GameExeFinder getRegistryGameExeFinder() {
-        return new RegistryGameExeFinder();
+        return new WinRegistryGameExeFinder();
     }
 }

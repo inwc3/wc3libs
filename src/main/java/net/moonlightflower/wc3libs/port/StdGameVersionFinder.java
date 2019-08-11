@@ -2,12 +2,23 @@ package net.moonlightflower.wc3libs.port;
 
 import dorkbox.peParser.PE;
 import net.moonlightflower.wc3libs.bin.GameExe;
+import net.moonlightflower.wc3libs.port.mac.MacGameExeFinder;
+import net.moonlightflower.wc3libs.port.mac.MacGameVersionFinder;
+import net.moonlightflower.wc3libs.port.win.WinGameVersionFinder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 
 public class StdGameVersionFinder implements GameVersionFinder {
     public StdGameVersionFinder() {
+    }
+
+    protected GameVersionFinder getMacGameVersionFinder() {
+        return new MacGameVersionFinder();
+    }
+
+    protected GameVersionFinder getWinGameVersionFinder() {
+        return new WinGameVersionFinder();
     }
 
     private boolean _entered = false;
@@ -19,30 +30,27 @@ public class StdGameVersionFinder implements GameVersionFinder {
         _entered = true;
 
         try {
-            GameExeFinder gameExeFinder = getGameExeFinder();
-
-            try {
-                File gameExeFile = gameExeFinder.get();
-
+            if (Orient.isMacSystem()) {
                 try {
-                    return GameExe.getVersion(gameExeFile);
-                } catch (Exception e) {
+                    GameVersionFinder macGameVersionFinder = getMacGameVersionFinder();
+
+                    return macGameVersionFinder.get();
+                } catch (NotFoundException e) {
                     throw new NotFoundException(e);
                 }
-            } catch (NotFoundException ignored) {
-            }
+            } else if (Orient.isWindowsSystem()) {
+                try {
+                    GameVersionFinder winGameVersionFinder = getWinGameVersionFinder();
 
-            return getTelemetryGameVersionFinder().get();
+                    return winGameVersionFinder.get();
+                } catch (NotFoundException e) {
+                    throw new NotFoundException(e);
+                }
+            } else {
+                throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
+            }
         } finally {
             _entered = false;
         }
-    }
-
-    protected GameExeFinder getGameExeFinder() {
-        return Context.getService(GameExeFinder.class);
-    }
-
-    protected GameVersionFinder getTelemetryGameVersionFinder() {
-        return new TelemetryGameVersionFinder();
     }
 }

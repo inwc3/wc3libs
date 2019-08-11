@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+ <key>CFBundleDevelopmentRegion</key>
+ <string>English</string>
+ <key>CFBundleDocumentTypes</key>
+ <array>
+  <dict>
+   <key>CFBundleTypeExtensions</key>
+   <array>
+    <string>w3m</string>
+   </array>
+   <key>CFBundleTypeIconFile</key>
+   <string>Map.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III Map</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>Ww3m</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+  <dict>
+   <key>CFBundleTypeExtensions</key>
+   <array>
+    <string>w3g</string>
+   </array>
+   <key>CFBundleTypeIconFile</key>
+   <string>Replay.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III Replay</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>Ww3g</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+  <dict>
+   <key>CFBundleTypeExtensions</key>
+   <array>
+    <string>mpq</string>
+   </array>
+   <key>CFBundleTypeIconFile</key>
+   <string>MPQ.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III Data</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>Wmpq</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+  <dict>
+   <key>CFBundleTypeIconFile</key>
+   <string>Library.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III Data</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>shlb</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+  <dict>
+   <key>CFBundleTypeExtensions</key>
+   <array>
+    <string>w3x</string>
+   </array>
+   <key>CFBundleTypeIconFile</key>
+   <string>ExpansionMap.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III Expansion Map</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>Ww3x</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+  <dict>
+   <key>CFBundleTypeExtensions</key>
+   <array>
+    <string>wai</string>
+   </array>
+   <key>CFBundleTypeIconFile</key>
+   <string>MPQ.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III AI Script</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>Wwai</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+  <dict>
+   <key>CFBundleTypeExtensions</key>
+   <array>
+    <string>w3n</string>
+   </array>
+   <key>CFBundleTypeIconFile</key>
+   <string>Campaign.icns</string>
+   <key>CFBundleTypeName</key>
+   <string>Warcraft III Campaign</string>
+   <key>CFBundleTypeOSTypes</key>
+   <array>
+    <string>Ww3n</string>
+   </array>
+   <key>CFBundleTypeRole</key>
+   <string>Viewer</string>
+  </dict>
+ </array>
+ <key>CFBundleExecutable</key>
+ <string>Warcraft III</string>
+ <key>CFBundleIconFile</key>
+ <string>Thrall.icns</string>
+ <key>CFBundleIdentifier</key>
+ <string>com.blizzard.WarcraftIII</string>
+ <key>CFBundleInfoDictionaryVersion</key>
+ <string>6.0</string>
+ <key>CFBundlePackageType</key>
+ <string>APPL</string>
+ <key>CFBundleShortVersionString</key>
+ <string>1.31.1.12164</string>
+ <key>CFBundleSignature</key>
+ <string>War3</string>
+ <key>CFBundleVersion</key>
+ <string>1.31.1.12164</string>
+ <key>CSResourcesFileMapped</key>
+ <true/>
+ <key>LSMinimumSystemVersion</key>
+ <string>10.12</string>
+ <key>BlizzardFileVersion</key>
+ <string>1.31.1.12164</string>
+ <key>CFBundleGetInfoString</key>
+ <string>1.31.1.12164</string>
+</dict>
+</plist>

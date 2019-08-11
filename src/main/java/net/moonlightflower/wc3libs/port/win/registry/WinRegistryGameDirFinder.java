@@ -1,6 +1,8 @@
-package net.moonlightflower.wc3libs.port;
+package net.moonlightflower.wc3libs.port.win.registry;
 
 import net.moonlightflower.wc3libs.misc.WinRegistryHandler;
+import net.moonlightflower.wc3libs.port.GameDirFinder;
+import net.moonlightflower.wc3libs.port.NotFoundException;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -8,8 +10,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class RegistryGameDirFinder implements GameDirFinder {
-    public RegistryGameDirFinder() {
+public class WinRegistryGameDirFinder implements GameDirFinder {
+    public WinRegistryGameDirFinder() {
     }
 
     private File getRegEntry(@Nonnull WinRegistryHandler.Entry entry) {

@@ -1,4 +1,6 @@
-package net.moonlightflower.wc3libs.port;
+package net.moonlightflower.wc3libs.port.win;
+
+import net.moonlightflower.wc3libs.port.*;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -8,8 +10,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
-public class TelemetryGameVersionFinder implements GameVersionFinder {
-    public TelemetryGameVersionFinder() {
+public class WinTelemetryGameVersionFinder implements GameVersionFinder {
+    public WinTelemetryGameVersionFinder() {
     }
 
     /**
