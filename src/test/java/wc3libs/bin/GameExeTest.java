@@ -1,10 +1,9 @@
 package wc3libs.bin;
 
 import net.moonlightflower.wc3libs.bin.GameExe;
-import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.port.NotFoundException;
 import net.moonlightflower.wc3libs.port.Orient;
-import net.moonlightflower.wc3libs.port.RegistryGameExeFinder;
+import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameExeFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -22,13 +21,12 @@ public class GameExeTest {
             return;
         }
 
-        File gameExeFile = null;
-        try {
-            gameExeFile = new RegistryGameExeFinder().get();
+        /*try {
+            File gameExeFile = new WinRegistryGameExeFinder().get();
 
             System.out.println(GameExe.getVersion(gameExeFile));
         } catch (NotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
