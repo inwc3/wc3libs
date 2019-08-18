@@ -30,6 +30,10 @@ public class Orient {
 		return getSystem().toLowerCase().startsWith("win");
 	}
 
+  public static boolean isLinuxSystem() {
+    return getSystem().toLowerCase().startsWith("lin");
+  }
+
 	public enum WinArch {
 		X86,
 		X64
@@ -47,10 +51,10 @@ public class Orient {
 	@Nonnull
 	public static File getExecPath(@Nullable Class<?> c) {
 		if (c == null) c = Orient.class;
-		
-		try {			
+
+		try {
 			URI uri = c.getProtectionDomain().getCodeSource().getLocation().toURI();
-			
+
 			return new File(uri);
 		} catch (URISyntaxException | IllegalArgumentException e) {
 			throw new RuntimeException(e);
@@ -80,13 +84,13 @@ public class Orient {
 	@Nonnull
 	public static String getFileName(@Nonnull File file, boolean ignoreExtension) {
 		String fileName = getFileName(file);
-		
+
 		if (ignoreExtension) {
 			if (fileName.lastIndexOf(".") != -1) {
 				fileName = fileName.substring(0, fileName.lastIndexOf(".") - 1);
 			}
 		}
-		
+
 		return fileName;
 	}
 
@@ -98,9 +102,9 @@ public class Orient {
 	@Nullable
 	public static String getFileExt(@Nonnull File file) {
 		int index = file.getName().lastIndexOf('.');
-		
+
 		if (index < 0) return null;
-		
+
 		return file.getName().substring(index + 1);
 	}
 
@@ -108,7 +112,7 @@ public class Orient {
 	public static File getDir(@Nonnull File file) {
 		return file.getParentFile();
 	}
-	
+
 	public static void checkFileExists(@Nonnull File file) throws IOException {
 		if (!file.exists()) throw new IOException(String.format("file %s does not exist", file));
 	}
@@ -116,7 +120,7 @@ public class Orient {
 	@Nonnull
 	private static File localClassPath(int offset) {
 		StackTraceElement[] traces = Thread.currentThread().getStackTrace();
-		
+
 		return new File(traces[2 + offset].getClassName().replace(".", java.io.File.separator));
 	}
 
@@ -146,9 +150,9 @@ public class Orient {
 		} catch (Exception e) {
 			return true;
 		}
-		
+
 		if (!lock.isValid()) return true;
-		
+
 		try {
 			fileChannel.close();
 		} catch (IOException e) {
@@ -168,9 +172,9 @@ public class Orient {
 
 	public static void copyFile(@Nonnull File inFile, @Nonnull File outFile, boolean replace) throws IOException {
 		File outDir = outFile.getParentFile();
-		
+
 		if (outDir != null) outDir.mkdirs();
-		
+
 		if (replace) {
 			Files.copy(inFile.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} else {
@@ -205,9 +209,9 @@ public class Orient {
 
 		f.delete();
 	}
-	
+
 	public static void removeDir(@Nonnull String path) {
-		removeDir(new File(path)); 
+		removeDir(new File(path));
 	}
 
 	public static void createDir(@Nonnull File f) {
@@ -265,20 +269,20 @@ public class Orient {
 
 		return ret;
 	};
-	
+
 	public static boolean createFile(@Nonnull File file) throws IOException {
 		File parentFile = file.getParentFile();
 
 		if (parentFile != null) parentFile.mkdirs();
-		
+
 		return file.createNewFile();
 	}
-	
+
 	public static FileOutputStream createFileOutputStream(@Nonnull File file) throws FileNotFoundException {
 		File parentFile = file.getParentFile();
 
 		if (parentFile != null) parentFile.mkdirs();
-		
+
 		return new FileOutputStream(file);
 	}
 }
