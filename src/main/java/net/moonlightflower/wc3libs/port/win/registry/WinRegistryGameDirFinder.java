@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class WinRegistryGameDirFinder implements GameDirFinder {
+public class WinRegistryGameDirFinder extends GameDirFinder {
     public WinRegistryGameDirFinder() {
     }
 
@@ -39,7 +39,7 @@ public class WinRegistryGameDirFinder implements GameDirFinder {
 
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
+    public File find() throws NotFoundException {
         List<WinRegistryHandler.Wc3Entry> entries = Arrays.asList(
                 WinRegistryHandler.Wc3Entry.INSTALL_PATH,
                 WinRegistryHandler.Wc3Entry.INSTALL_PATH_X,

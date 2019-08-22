@@ -4,7 +4,5 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
-public interface GameDirFinder {
-    @Nonnull
-    File get() throws NotFoundException;
+public abstract class GameDirFinder extends Finder<File> {
 }

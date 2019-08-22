@@ -9,7 +9,7 @@ import net.moonlightflower.wc3libs.port.win.WinGameVersionFinder;
 import javax.annotation.Nonnull;
 import java.io.File;
 
-public class StdGameVersionFinder implements GameVersionFinder {
+public class StdGameVersionFinder extends GameVersionFinder {
     public StdGameVersionFinder() {
     }
 
@@ -21,36 +21,26 @@ public class StdGameVersionFinder implements GameVersionFinder {
         return new WinGameVersionFinder();
     }
 
-    private boolean _entered = false;
-
     @Nonnull
-    public GameVersion get() throws NotFoundException {
-        if (_entered) throw new NotFoundException(new Exception("already tried"));
+    public GameVersion find() throws NotFoundException {
+        if (Orient.isMacSystem()) {
+            try {
+                GameVersionFinder macGameVersionFinder = getMacGameVersionFinder();
 
-        _entered = true;
-
-        try {
-            if (Orient.isMacSystem()) {
-                try {
-                    GameVersionFinder macGameVersionFinder = getMacGameVersionFinder();
-
-                    return macGameVersionFinder.get();
-                } catch (NotFoundException e) {
-                    throw new NotFoundException(e);
-                }
-            } else if (Orient.isWindowsSystem()) {
-                try {
-                    GameVersionFinder winGameVersionFinder = getWinGameVersionFinder();
-
-                    return winGameVersionFinder.get();
-                } catch (NotFoundException e) {
-                    throw new NotFoundException(e);
-                }
-            } else {
-                throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
+                return macGameVersionFinder.get();
+            } catch (NotFoundException e) {
+                throw new NotFoundException(e);
             }
-        } finally {
-            _entered = false;
+        } else if (Orient.isWindowsSystem()) {
+            try {
+                GameVersionFinder winGameVersionFinder = getWinGameVersionFinder();
+
+                return winGameVersionFinder.get();
+            } catch (NotFoundException e) {
+                throw new NotFoundException(e);
+            }
+        } else {
+            throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
         }
     }
 }

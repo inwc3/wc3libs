@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
-public class WinMapsDirFinder implements MapsDirFinder {
+public class WinMapsDirFinder extends MapsDirFinder {
     public static File DEFAULT_DOCUMENTS_DIR = new File("%USERPROFILE%/Documents");
     public static File LOCAL_SUB_DIR = new File("Warcraft III/Maps");
     public static File GAME_SUB_DIR = new File("Maps");
@@ -25,7 +25,7 @@ public class WinMapsDirFinder implements MapsDirFinder {
         return new WinGameVersionFinder();
     }
 
-    public File get(@Nonnull GameVersion gameVersion) throws NotFoundException {
+    public File find(@Nonnull GameVersion gameVersion) throws NotFoundException {
         if (gameVersion.compareTo(GameVersion.VERSION_1_29) > 0) {
             WinRegistryHandler winRegistryHandler = getWinRegistryHandler();
             File documentsDir = DEFAULT_DOCUMENTS_DIR;
@@ -64,13 +64,13 @@ public class WinMapsDirFinder implements MapsDirFinder {
 
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
+    public File find() throws NotFoundException {
         GameVersionFinder winGameVersionFinder = getWinGameVersionFinder();
 
         try {
             GameVersion gameVersion = winGameVersionFinder.get();
 
-            return get(gameVersion);
+            return find(gameVersion);
         } catch (NotFoundException e) {
             throw new NotFoundException(e);
         }

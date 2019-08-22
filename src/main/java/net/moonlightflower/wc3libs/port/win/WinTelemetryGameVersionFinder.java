@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
-public class WinTelemetryGameVersionFinder implements GameVersionFinder {
+public class WinTelemetryGameVersionFinder extends GameVersionFinder {
     public WinTelemetryGameVersionFinder() {
     }
 
@@ -45,7 +45,7 @@ public class WinTelemetryGameVersionFinder implements GameVersionFinder {
 
     @Nonnull
     @Override
-    public GameVersion get() throws NotFoundException {
+    public GameVersion find() throws NotFoundException {
         GameExeFinder gameExeFinder = Context.getService(GameExeFinder.class);
 
         try {

@@ -1,14 +1,11 @@
 package net.moonlightflower.wc3libs.port.mac;
 
-import net.moonlightflower.wc3libs.port.GameDirFinder;
-import net.moonlightflower.wc3libs.port.GameVersion;
-import net.moonlightflower.wc3libs.port.MapsDirFinder;
-import net.moonlightflower.wc3libs.port.NotFoundException;
+import net.moonlightflower.wc3libs.port.*;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 
-public class MacMapsDirFinder implements MapsDirFinder {
+public class MacMapsDirFinder extends MapsDirFinder {
     public static File LOCAL_MAPS_DIR = new File("~/Library/Application Support/Blizzard/Warcraft III/Maps/");
     public static File GAME_SUB_DIR = new File("Maps");
 
@@ -16,7 +13,11 @@ public class MacMapsDirFinder implements MapsDirFinder {
         return new MacGameDirFinder();
     }
 
-    public File get(@Nonnull GameVersion gameVersion) throws NotFoundException {
+    protected GameVersionFinder getMacGameVersionFinder() {
+        return new MacGameVersionFinder();
+    }
+
+    public File find(@Nonnull GameVersion gameVersion) throws NotFoundException {
         if (gameVersion.compareTo(GameVersion.VERSION_1_29) > 0) {
             if (!(LOCAL_MAPS_DIR.exists())) {
                 throw new NotFoundException(new Exception(LOCAL_MAPS_DIR + " does not exist"));
@@ -28,7 +29,7 @@ public class MacMapsDirFinder implements MapsDirFinder {
         GameDirFinder macGameDirFinder = getMacGameDirFinder();
 
         try {
-            File gameDir = macGameDirFinder.get();
+            File gameDir = macGameDirFinder.find();
 
             File mapsDir = new File(gameDir, GAME_SUB_DIR.toString());
 
@@ -45,7 +46,15 @@ public class MacMapsDirFinder implements MapsDirFinder {
 
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
-        return null;
+    public File find() throws NotFoundException {
+        GameVersionFinder macGameVersionFinder = getMacGameVersionFinder();
+
+        try {
+            GameVersion gameVersion = macGameVersionFinder.get();
+
+            return find(gameVersion);
+        } catch (AlreadyTriedException e) {
+            throw new NotFoundException(e);
+        }
     }
 }

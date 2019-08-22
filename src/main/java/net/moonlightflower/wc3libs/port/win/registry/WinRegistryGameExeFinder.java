@@ -8,13 +8,13 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
-public class WinRegistryGameExeFinder implements GameExeFinder {
+public class WinRegistryGameExeFinder extends GameExeFinder {
     public WinRegistryGameExeFinder() {
     }
 
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
+    public File find() throws NotFoundException {
         try {
             String fileS = getRegistryHandler().get("HKCU\\Software\\Blizzard Entertainment\\Warcraft III", "Program");
 

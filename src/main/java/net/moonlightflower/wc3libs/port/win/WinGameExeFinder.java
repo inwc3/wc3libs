@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class WinGameExeFinder implements GameExeFinder {
+public class WinGameExeFinder extends GameExeFinder {
     public final static File WAR3_EXE_PATH = new File("war3.exe");
     public final static File WARCRAFT_III_EXE_PATH = new File("Warcraft III.exe");
     public final static File FROZEN_THRONE_EXE_PATH = new File("Frozen Throne.exe");
@@ -121,7 +121,7 @@ public class WinGameExeFinder implements GameExeFinder {
 
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
+    public File find() throws NotFoundException {
         GameExeFinder winRegistryGameExeFinder = getRegistryGameExeFinder();
 
         try {

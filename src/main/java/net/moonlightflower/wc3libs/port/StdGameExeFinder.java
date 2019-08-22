@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class StdGameExeFinder implements GameExeFinder {
+public class StdGameExeFinder extends GameExeFinder {
     public StdGameExeFinder() {
     }
 
@@ -21,37 +21,27 @@ public class StdGameExeFinder implements GameExeFinder {
         return Context.getService(WinGameExeFinder.class);
     }
 
-    private boolean _entered = false;
-
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
-        if (_entered) throw new NotFoundException(new Exception("already tried"));
+    public File find() throws NotFoundException {
+        if (Orient.isMacSystem()) {
+            GameExeFinder macGameExeFinder = getMacGameExeFinder();
 
-        _entered = true;
-
-        try {
-            if (Orient.isMacSystem()) {
-                GameExeFinder macGameExeFinder = getMacGameExeFinder();
-
-                try {
-                    return macGameExeFinder.get();
-                } catch (NotFoundException e) {
-                    throw e;
-                }
-            } else if (Orient.isWindowsSystem()) {
-                GameExeFinder winGameExeFinder = getWinGameExeFinder();
-
-                try {
-                    return winGameExeFinder.get();
-                } catch (NotFoundException e) {
-                    throw e;
-                }
-            } else {
-                throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
+            try {
+                return macGameExeFinder.get();
+            } catch (NotFoundException e) {
+                throw e;
             }
-        } finally {
-            _entered = false;
+        } else if (Orient.isWindowsSystem()) {
+            GameExeFinder winGameExeFinder = getWinGameExeFinder();
+
+            try {
+                return winGameExeFinder.get();
+            } catch (NotFoundException e) {
+                throw e;
+            }
+        } else {
+            throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
         }
     }
 }

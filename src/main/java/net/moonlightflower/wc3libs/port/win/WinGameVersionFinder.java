@@ -6,7 +6,7 @@ import net.moonlightflower.wc3libs.port.*;
 import javax.annotation.Nonnull;
 import java.io.File;
 
-public class WinGameVersionFinder implements GameVersionFinder {
+public class WinGameVersionFinder extends GameVersionFinder {
     protected GameExeFinder getGameExeFinder() {
         return Context.getService(WinGameExeFinder.class);
     }
@@ -17,7 +17,7 @@ public class WinGameVersionFinder implements GameVersionFinder {
 
     @Nonnull
     @Override
-    public GameVersion get() throws NotFoundException {
+    public GameVersion find() throws NotFoundException {
         GameExeFinder gameExeFinder = getGameExeFinder();
 
         try {

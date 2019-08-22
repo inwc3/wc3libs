@@ -7,13 +7,13 @@ import net.moonlightflower.wc3libs.port.NotFoundException;
 import javax.annotation.Nonnull;
 import java.io.File;
 
-public class MacGameExeFinder implements GameExeFinder {
+public class MacGameExeFinder extends GameExeFinder {
     public static File X32_FILE = new File("/Applications/Warcraft III/Warcraft III.app/Contents/MacOS/Warcraft III");
     public static File X64_FILE = new File("/Applications/Warcraft III/x86_64/Warcraft III.app/Contents/MacOS/Warcraft III");
 
     @Nonnull
     @Override
-    public File get() throws NotFoundException {
+    public File find() throws NotFoundException {
         if (X64_FILE.exists()) {
             return X64_FILE;
         } else if (X32_FILE.exists()) {
