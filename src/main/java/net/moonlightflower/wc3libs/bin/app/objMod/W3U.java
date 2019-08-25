@@ -1,16 +1,11 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import net.moonlightflower.wc3libs.bin.MetaState;
-import net.moonlightflower.wc3libs.bin.ObjMod;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.port.JMpqPort;
-import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
 
 import javax.annotation.Nonnull;
@@ -24,9 +19,103 @@ import java.util.Collection;
 /**
  * unit modifications file for wrapping war3map.w3u
  */
-public class W3U extends ObjMod {
+public class W3U extends ObjMod<W3U.Unit> {
 	public final static File GAME_PATH = new File("war3map.w3u");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3u");
+
+	public W3U(@Nonnull Wc3BinInputStream stream) throws IOException {
+		super(stream);
+	}
+
+	public W3U(@Nonnull File file) throws Exception {
+		super(file);
+	}
+
+	public W3U() {
+		super();
+	}
+
+	@Nonnull
+	public static W3U ofMapFile(@Nonnull File mapFile) throws IOException {
+		return ofMapFile(W3U.class, mapFile);
+	}
+
+	@Override
+	protected Unit createObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
+		return new Unit(id, baseId);
+	}
+
+	@Nonnull
+	@Override
+	protected Unit createObj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		return new Unit(stream, format);
+	}
+
+	@Nonnull
+	@Override
+	public W3U copy() {
+		W3U other = new W3U();
+
+		other.merge(this);
+
+		return other;
+	}
+
+	@Override
+	public Collection<File> getSLKs() {
+		return Arrays.asList(UnitAbilsSLK.GAME_PATH, UnitBalanceSLK.GAME_PATH, UnitDataSLK.GAME_PATH, UnitUISLK.GAME_PATH, UnitWeaponsSLK.GAME_PATH);
+	}
+
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Arrays.asList(UnitAbilsSLK.GAME_PATH, UnitBalanceSLK.GAME_PATH, UnitDataSLK.GAME_PATH, UnitUISLK.GAME_PATH, UnitWeaponsSLK.GAME_PATH);
+	}
+
+	@Override
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		super.write(stream, format);
+	}
+
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		super.write(stream);
+	}
+
+	public static class Unit extends ObjMod.Obj {
+		public Unit(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+			super(stream, format);
+		}
+
+		public Unit(@Nonnull ObjId id, @Nullable ObjId baseId) {
+			super(id, baseId);
+		}
+
+		@Override
+		public boolean isExtended() {
+			return false;
+		}
+
+		@Override
+		protected Unit copySpec() {
+			return new Unit(getId(), getBaseId());
+		}
+
+		public <T extends DataType> T get(@Nonnull State<T> state) {
+			try {
+				return state.tryCastVal(super.get(state.getFieldId()));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
+		}
+
+		public <T extends DataType> void set(@Nonnull State<T> state, T val) {
+			super.set(state.getFieldId(), val);
+		}
+
+		public <T extends DataType> void remove(@Nonnull State<T> state) {
+			super.remove(state.getFieldId());
+		}
+	}
 
 	static public class State<T extends DataType> extends MetaState<T> {
 		public final static State<AbilCode> ABIL_AUTO = new State<>("udaa", AbilCode.class);
@@ -287,113 +376,5 @@ public class W3U extends ObjMod {
 		public State(@Nonnull String idString, @Nonnull Class<T> type) {
 			this(idString, new DataTypeInfo(type), null);
 		}
-	}
-
-	public static class Unit extends ObjMod.Obj {
-		public Unit(ObjId id, ObjId baseId) {
-			super(id, baseId);
-		}
-	}
-	
-	/*private Map<ObjId, Unit> _objs = new LinkedHashMap<>();
-
-	@Override
-	public Map<ObjId, Unit> getCameras() {
-		return _objs;
-	}
-	
-	public Map<ObjId, Unit> getUnits() {
-		return getCameras();
-	}
-	
-	public Unit getUnit(ObjId id) {
-		return getCameras().get(id);
-	}
-	
-	private void addCamera(Unit val) {
-		_objs.put(val.getId(), val);
-	}
-	
-	@Override
-	public Unit addCamera(ObjId id, ObjId baseId) {
-		if (getCameras().containsKey(id)) return getCameras().get(id);
-		
-		Unit obj = new Unit(id, baseId);
-		
-		addCamera(obj);
-		
-		return obj;
-	}*/
-
-	@Nonnull
-	@Override
-	public ObjMod copy() {
-		ObjMod other = new W3U();
-
-		other.merge(this);
-
-		return other;
-	}
-
-	@Override
-	public Collection<File> getSLKs() {
-		return Arrays.asList(UnitAbilsSLK.GAME_PATH, UnitBalanceSLK.GAME_PATH, UnitDataSLK.GAME_PATH, UnitUISLK.GAME_PATH, UnitWeaponsSLK.GAME_PATH);
-	}
-	
-	@Override
-	public Collection<File> getNecessarySLKs() {
-		return Arrays.asList(UnitAbilsSLK.GAME_PATH, UnitBalanceSLK.GAME_PATH, UnitDataSLK.GAME_PATH, UnitUISLK.GAME_PATH, UnitWeaponsSLK.GAME_PATH);
-	}
-	
-	public void read(@Nonnull InputStream inStream) throws IOException {
-		ObjMod other = new W3U();
-		
-		other.read(inStream, false);
-		
-		merge(other);
-	}
-
-	@Override
-	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
-		super.write(stream, format, false);
-	}
-
-	public void write(@Nonnull Wc3BinOutputStream stream) {
-		super.write(stream, false);
-	}
-
-	public W3U(@Nonnull Wc3BinInputStream stream) throws IOException {
-		super(stream, false);
-	}
-
-	public W3U(@Nonnull File file) throws Exception {
-		super(file, false);
-	}
-	
-	public W3U() {
-		super();
-	}
-
-	@Nonnull
-	public static W3U ofMapFile(@Nonnull File mapFile) throws IOException {
-		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
-		
-		MpqPort.Out port = new JMpqPort.Out();
-		
-		port.add(GAME_PATH);
-		
-		MpqPort.Out.Result portResult = port.commit(mapFile);
-
-		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3u file");
-
-		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
-
-		W3U w3u = new W3U();
-
-		w3u.read(inStream, false);
-
-		inStream.close();
-
-		return w3u;
 	}
 }

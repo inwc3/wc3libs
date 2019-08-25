@@ -1,16 +1,11 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import net.moonlightflower.wc3libs.bin.MetaState;
-import net.moonlightflower.wc3libs.bin.ObjMod;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.port.JMpqPort;
-import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.ItemSLK;
 
 import javax.annotation.Nonnull;
@@ -23,9 +18,103 @@ import java.util.Collections;
 /**
  * item modifications file for wrapping war3map.w3t
  */
-public class W3T extends ObjMod {
+public class W3T extends ObjMod<W3T.Item> {
 	public final static File GAME_PATH = new File("war3map.w3t");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3t");
+
+	public W3T(@Nonnull Wc3BinInputStream stream) throws IOException {
+		super(stream);
+	}
+
+	public W3T(@Nonnull File file) throws Exception {
+		super(file);
+	}
+
+	public W3T() {
+		super();
+	}
+
+	@Nonnull
+	public static W3T ofMapFile(@Nonnull File mapFile) throws IOException {
+		return ofMapFile(W3T.class, mapFile);
+	}
+
+	@Override
+	protected Item createObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
+		return new Item(id, baseId);
+	}
+
+	@Nonnull
+	@Override
+	protected Item createObj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		return new Item(stream, format);
+	}
+
+	@Nonnull
+	@Override
+	public W3T copy() {
+		W3T other = new W3T();
+
+		other.merge(this);
+
+		return other;
+	}
+
+	@Override
+	public Collection<File> getSLKs() {
+		return Collections.singletonList(ItemSLK.GAME_PATH);
+	}
+
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Collections.singletonList(ItemSLK.GAME_PATH);
+	}
+
+	@Override
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		super.write(stream, format);
+	}
+
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		super.write(stream);
+	}
+	
+	public static class Item extends ObjMod.Obj {
+		public Item(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+			super(stream, format);
+		}
+
+		public Item(@Nonnull ObjId id, @Nullable ObjId baseId) {
+			super(id, baseId);
+		}
+
+		@Override
+		public boolean isExtended() {
+			return false;
+		}
+
+		@Override
+		protected ObjMod.Obj copySpec() {
+			return new Item(getId(), getBaseId());
+		}
+
+		public <T extends DataType> T get(@Nonnull State<T> state) {
+            try {
+                return state.tryCastVal(super.get(state.getFieldId()));
+            } catch (DataTypeInfo.CastException ignored) {
+            }
+
+            return null;
+        }
+
+        public <T extends DataType> void set(@Nonnull State<T> state, T val) {
+            super.set(state.getFieldId(), val);
+        }
+
+        public <T extends DataType> void remove(@Nonnull State<T> state) {
+            super.remove(state.getFieldId());
+        }
+	}
 
 	public static class State<T extends DataType> extends MetaState<T> {
 		public final static State<DataList<AbilId>> ABIL_ABILS = new State<>("iabi", new DataTypeInfo(DataList.class, AbilId.class));
@@ -89,75 +178,5 @@ public class W3T extends ObjMod {
 		public State(@Nonnull String idString, @Nonnull Class<T> type) {
 			this(idString, new DataTypeInfo(type), null);
 		}
-	}
-	
-	public static class Obj extends ObjMod.Obj {
-		public Obj(ObjId id, ObjId baseId) {
-			super(id, baseId);
-		}
-	}
-
-	@Nonnull
-	@Override
-	public ObjMod copy() {
-		ObjMod other = new W3T();
-
-		other.merge(this);
-
-		return other;
-	}
-
-	@Override
-	public Collection<File> getSLKs() {
-		return Collections.singletonList(ItemSLK.GAME_PATH);
-	}
-	
-	@Override
-	public Collection<File> getNecessarySLKs() {
-		return Collections.singletonList(ItemSLK.GAME_PATH);
-	}
-
-	@Override
-	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
-		super.write(stream, format, false);
-	}
-
-	public void write(@Nonnull Wc3BinOutputStream stream) {
-		super.write(stream, false);
-	}
-
-	public W3T(@Nonnull Wc3BinInputStream stream) throws IOException {
-		super(stream, false);
-	}
-
-	public W3T(@Nonnull File file) throws Exception {
-		super(file, false);
-	}
-	
-	public W3T() {
-		super();
-	}
-
-	@Nonnull
-	public static W3T ofMapFile(@Nonnull File mapFile) throws IOException {
-		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
-		
-		MpqPort.Out port = new JMpqPort.Out();
-		
-		port.add(GAME_PATH);
-		
-		MpqPort.Out.Result portResult = port.commit(mapFile);
-
-		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3t file");
-
-		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
-
-		W3T w3t = new W3T();
-
-		w3t.read(inStream, false);
-
-		inStream.close();
-
-		return w3t;
 	}
 }

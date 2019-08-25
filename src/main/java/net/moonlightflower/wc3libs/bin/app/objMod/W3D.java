@@ -1,9 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import net.moonlightflower.wc3libs.bin.MetaState;
-import net.moonlightflower.wc3libs.bin.ObjMod;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -23,9 +20,103 @@ import java.util.Collections;
 /**
  * doodad modifications file for wrapping war3map.w3d
  */
-public class W3D extends ObjMod {
+public class W3D extends ObjMod<W3D.Dood> {
 	public final static File GAME_PATH = new File("war3map.w3d");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3d");
+
+	public W3D(@Nonnull Wc3BinInputStream stream) throws IOException {
+		super(stream);
+	}
+
+	public W3D(@Nonnull File file) throws Exception {
+		super(file);
+	}
+
+	public W3D() {
+		super();
+	}
+
+	@Nonnull
+	public static W3D ofMapFile(@Nonnull File mapFile) throws IOException {
+		return ofMapFile(W3D.class, mapFile);
+	}
+
+	@Override
+	protected Dood createObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
+		return new Dood(id, baseId);
+	}
+
+	@Nonnull
+	@Override
+	protected Dood createObj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		return new Dood(stream, format);
+	}
+
+	@Nonnull
+	@Override
+	public W3D copy() {
+		W3D other = new W3D();
+
+		other.merge(this);
+
+		return other;
+	}
+
+	@Override
+	public Collection<File> getSLKs() {
+		return Collections.singletonList(DoodSLK.GAME_PATH);
+	}
+
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Collections.singletonList(DoodSLK.GAME_PATH);
+	}
+
+	@Override
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		super.write(stream, format);
+	}
+
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		super.write(stream);
+	}
+	
+	public static class Dood extends ObjMod.Obj {
+		public Dood(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+			super(stream, format);
+		}
+
+		public Dood(@Nonnull ObjId id, @Nullable ObjId baseId) {
+			super(id, baseId);
+		}
+
+		@Override
+		public boolean isExtended() {
+			return true;
+		}
+
+		@Override
+		protected Dood copySpec() {
+			return new Dood(getId(), getBaseId());
+		}
+
+		public <T extends DataType> T get(@Nonnull W3H.State<T> state) {
+			try {
+				return state.tryCastVal(super.get(state.getFieldId()));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
+		}
+
+		public <T extends DataType> void set(@Nonnull W3H.State<T> state, T val) {
+			super.set(state.getFieldId(), val);
+		}
+
+		public <T extends DataType> void remove(@Nonnull W3H.State<T> state) {
+			super.remove(state.getFieldId());
+		}
+	}
 
 	public static class State<T extends DataType> extends MetaState<T> {
 		public final static State<War3Bool> ART_ANIM_IN_FOG = new State<>("danf", War3Bool.class);
@@ -83,75 +174,5 @@ public class W3D extends ObjMod {
 		public State(@Nonnull String idString, @Nonnull Class<T> type) {
 			this(idString, new DataTypeInfo(type), null);
 		}
-	}
-	
-	public static class Obj extends ObjMod.Obj {
-		public Obj(ObjId id, ObjId baseId) {
-			super(id, baseId);
-		}
-	}
-
-	@Nonnull
-	@Override
-	public ObjMod copy() {
-		ObjMod other = new W3D();
-
-		other.merge(this);
-
-		return other;
-	}
-
-	@Override
-	public Collection<File> getSLKs() {
-		return Collections.singletonList(DoodSLK.GAME_PATH);
-	}
-	
-	@Override
-	public Collection<File> getNecessarySLKs() {
-		return Collections.singletonList(DoodSLK.GAME_PATH);
-	}
-
-	@Override
-	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
-		super.write(stream, format, true);
-	}
-
-	public void write(@Nonnull Wc3BinOutputStream stream) {
-		super.write(stream, true);
-	}
-
-	public W3D(@Nonnull Wc3BinInputStream stream) throws IOException {
-		super(stream, true);
-	}
-
-	public W3D(File file) throws Exception {
-		super(file, true);
-	}
-	
-	public W3D() {
-		super();
-	}
-
-	@Nonnull
-	public static W3D ofMapFile(@Nonnull File mapFile) throws IOException {
-		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
-		
-		MpqPort.Out port = new JMpqPort.Out();
-		
-		port.add(GAME_PATH);
-		
-		MpqPort.Out.Result portResult = port.commit(mapFile);
-
-		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3d file");
-
-		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
-
-		W3D w3d = new W3D();
-
-		w3d.read(inStream, true);
-
-		inStream.close();
-
-		return w3d;
 	}
 }

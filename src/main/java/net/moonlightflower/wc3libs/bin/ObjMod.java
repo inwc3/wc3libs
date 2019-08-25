@@ -3,11 +3,8 @@ package net.moonlightflower.wc3libs.bin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
@@ -19,13 +16,13 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.War3Num;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
-import net.moonlightflower.wc3libs.misc.FieldId;
-import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.MetaFieldId;
-import net.moonlightflower.wc3libs.misc.ObjId;
+import net.moonlightflower.wc3libs.misc.*;
+import net.moonlightflower.wc3libs.port.JMpqPort;
+import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.MetaSLK;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
@@ -39,218 +36,215 @@ import javax.annotation.Nullable;
 /**
  * base class for object modification files
  */
-public abstract class ObjMod {
-	public static class Obj {
-		public static class Field {
-			public enum ValType {
-				INT(0),
-				REAL(1),
-				UNREAL(2),
-				STRING(3);
-				
-				private int _val;
-				
-				public int getVal() {
-					return _val;
-				}
-				
-				private final static Map<Integer, ValType> _map = new LinkedHashMap<>();
-				
-				static public ValType valueOf(int val) {
-					return _map.get(val);
-				}
-				
-				ValType(int val) {
-					_val = val;
-				}
-				
-				static {
-					for (ValType varType : ValType.values()) {
-						_map.put(varType.getVal(), varType);
-					}
-				}
-			}
-			
-			public static class Val {
-				private DataType _val;
-				private ValType _valType;
-				
-				public DataType getVal() {
-					return _val;
-				}
-				
-				@Override
-				public String toString() {
-					return getVal().toString();
-				}
-				
-				public ValType getType() {
-					return _valType;
-				}
-				
-				private Val(DataType val, ValType valType) {
-					_val = val;
-					_valType = valType;
-				}
-				
-				public static Val valueOf(int val) {
-					return new Val(War3Int.valueOf(val), ValType.INT);
-				}
-				
-				public static Val valueOf(float val, boolean unreal) {
-					if (unreal) return new Val(War3Real.valueOf(val), ValType.UNREAL);
-					
-					return new Val(War3Real.valueOf(val), ValType.REAL);
-				}
-				
-				public static Val valueOf(String val) {
-					return new Val(War3String.valueOf(val), ValType.STRING);
-				}
-			}
-			
-			private final Map<Integer, Val> _vals = new LinkedHashMap<>();
-			
-			public Map<Integer, Val> getVals() {
-				return _vals;
-			}
-			
-			public Val getVal(int level) {
-				return _vals.get(level);
-			}
-			
-			public Val getVal() {
-				return getVal(0);
-			}
-			
-			public void setVal(Val val, int level, int dataPt) {
-				_vals.put(level, val);
-				setDataPt(dataPt);
-			}
-			
-			public void setVal(@Nullable Val val, int level) {
-				setVal(val, level, 0);
-			}
-			
-			public void setVal(@Nullable Val val) {
-				setVal(val, 0);
-			}
-			
-			public void addVal(@Nullable Val val) {
-				int level = 1;
+public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
+	public enum ValType {
+		INT(0),
+		REAL(1),
+		UNREAL(2),
+		STRING(3);
 
-				while (getVal(level) == null) {
-					level++;
-				}
-				
-				setVal(val, level);
+		private int _val;
+
+		public int getVal() {
+			return _val;
+		}
+
+		private final static Map<Integer, ValType> _map = new LinkedHashMap<>();
+
+		static public ValType valueOf(int val) {
+			return _map.get(val);
+		}
+
+		ValType(int val) {
+			_val = val;
+		}
+
+		static {
+			for (ValType varType : ValType.values()) {
+				_map.put(varType.getVal(), varType);
 			}
-			
-			public void deleteVal(int level) {
-				_vals.remove(level);
-			}
-			
-			private int _dataPt;
-			
-			public int getDataPt() {
-				return _dataPt;
-			}
-			
-			public void setDataPt(int val) {
-				_dataPt = val;
-			}
-			
-			public void merge(@Nonnull Field otherField) {
-				setDataPt(otherField.getDataPt());
-				
-				for (Entry<Integer, Val> valEntry : otherField.getVals().entrySet()) {
-					Integer level = valEntry.getKey();
-					Val val = valEntry.getValue();
-					
-					setVal(val, level);
-				}
-			}
-			
-			public void print() {
-				System.out.println(String.format("\t%s", getId()));
-				
-				for (Entry<Integer, Val> valEntry : getVals().entrySet()) {
-					int level = valEntry.getKey();
-					Val val = valEntry.getValue();
-					
-					System.out.println(String.format("\t\t%d -> val:%s valType:%s dataPt:%s", level, getVal(level), val.getType(), getDataPt()));
-				}
-			}
-			
-			private MetaFieldId _id;
-			
+		}
+	}
+
+	public abstract static class Obj implements Printable {
+		public abstract boolean isExtended();
+
+		public static class Mod implements Printable {
+			protected MetaFieldId _id;
+
 			public MetaFieldId getId() {
 				return _id;
 			}
-			
+
+			private ValType _valType;
+
+			@Nullable
+			public ValType getValType() {
+				return _valType;
+			}
+
+			protected final DataType _val;
+
+			@Nullable
+			public DataType getVal() {
+				return _val;
+			}
+
 			@Override
 			public String toString() {
 				return getId().toString();
 			}
 			
-			public Field(@Nonnull MetaFieldId id) {
+			public Mod(@Nonnull MetaFieldId id, @Nonnull ValType valType, @Nullable DataType val) {
 				_id = id;
+				_valType = valType;
+				_val = val;
+			}
+
+			public Mod(@Nonnull MetaFieldId id, @Nullable DataType val) {
+				_id = id;
+				_valType = null;
+				_val = val;
+			}
+
+			@Override
+			public void print(@Nonnull Printer printer) {
+				printer.print(String.format("%s: %s", _id, _val));
 			}
 		}
 
-		private Map<MetaFieldId, Field> _fieldsMap = new LinkedHashMap<>();
-		private List<Field> _fieldsList = new ArrayList<>();
-		
-		public Map<MetaFieldId, Field> getFields() {
-			return new LinkedHashMap<>(_fieldsMap);
-		}
-		
-		public List<Field> getFieldsList() {
-			return new ArrayList<>(_fieldsList);
-		}
-		
-		public Field getField(@Nonnull MetaFieldId id) {
-			return _fieldsMap.get(id);
-		}
-		
-		public Field addField(@Nonnull MetaFieldId id) {
-			if (getFields().containsKey(id)) return getFields().get(id);
-			
-			Field field = new Field(id);
-			
-			_fieldsMap.put(id, field);
-			_fieldsList.add(field);
-			
-			return field;
-		}
-		
-		public void removeField(@Nonnull MetaFieldId id) {
-			if (!_fieldsMap.containsKey(id)) return;
-			
-			Field field = _fieldsMap.get(id);
-			
-			_fieldsMap.remove(id);
-			_fieldsList.remove(field);
-		}
-		
-		public void remove() {
-			/*objs:remove(obj)
+		public static class ExtendedMod extends Mod implements Printable {
+			private int _level;
 
-			objsById[id] = nil
+			public int getLevel() {
+				return _level;
+			}
 
-			if custom then
-				customObjs:remove(obj)
-			else
-				origObjs:remove(obj)
-			end*/
+			private int _dataPt;
+
+			public int getDataPt() {
+				return _dataPt;
+			}
+
+			public void setDataPt(int val) {
+				_dataPt = val;
+			}
+
+			public ExtendedMod(@Nonnull MetaFieldId id, @Nonnull ValType valType, @Nullable DataType val, int level, int dataPt) {
+				super(id, valType, val);
+
+				_level = level;
+				_dataPt = dataPt;
+			}
+
+			public ExtendedMod(@Nonnull MetaFieldId id, @Nullable DataType val, int level, int dataPt) {
+				super(id, val);
+
+				_level = level;
+				_dataPt = dataPt;
+			}
+
+			@Override
+			public void print(@Nonnull Printer printer) {
+				printer.print(String.format("%s (level %d, dataPt %d): %s", _id, _level, _dataPt, _val));
+			}
+		}
+
+		private List<Mod> _mods = new ArrayList<>();
+		private Map<MetaFieldId, List<Mod>> _modsMap = new LinkedHashMap<>();
+
+		@Nonnull
+		public List<Mod> getMods() {
+			return _mods;
+		}
+
+		@Nonnull
+		public Map<MetaFieldId, List<Mod>> getModsMapByField() {
+			return _modsMap;
+		}
+
+		@Nonnull
+		public Set<MetaFieldId> getFields() {
+			return _modsMap.keySet();
+		}
+
+		@Nonnull
+		public List<Mod> getModsOfField(@Nonnull MetaFieldId fieldId) {
+			return _modsMap.getOrDefault(fieldId, Collections.emptyList());
+		}
+
+		public void addMod(@Nonnull Mod mod) {
+			_mods.add(mod);
+
+			MetaFieldId id = mod.getId();
+
+			if (!_modsMap.containsKey(id)) {
+				_modsMap.put(id, new ArrayList<>());
+			}
+
+			_modsMap.get(id).add(mod);
+		}
+
+		@Nullable
+		public DataType get(@Nonnull MetaFieldId id) {
+			List<Mod> modsMapList = _modsMap.get(id);
+
+			if (modsMapList == null) {
+				return null;
+			}
+
+			Mod mod = modsMapList.get(0);
+
+			if (mod == null) {
+				return null;
+			}
+
+			return mod.getVal();
+		}
+
+		public void set(@Nonnull MetaFieldId id, @Nullable DataType val) {
+			Mod mod = new Mod(id, val);
+
+			if (_modsMap.containsKey(id)) {
+				_mods.removeIf((Mod filterMod) -> {return filterMod._id.equals(id);});
+				_modsMap.remove(id);
+			}
+
+			_mods.add(mod);
+			_modsMap.put(id, new ArrayList<>());
+
+			_modsMap.get(id).add(mod);
+ 		}
+
+ 		public void remove(@Nonnull Mod mod) {
+			_mods.remove(mod);
+
+			List<Mod> modsMapList = _modsMap.get(mod.getId());
+
+			if (modsMapList != null) {
+				modsMapList.remove(mod);
+
+				if (modsMapList.isEmpty()) {
+					_modsMap.remove(mod.getId());
+				}
+			}
+		}
+		
+		public void remove(@Nonnull MetaFieldId id) {
+			_mods.removeIf((Mod mod) -> {return mod.getId().equals(id);});
+			_modsMap.remove(id);
 		}
 		
 		public void merge(@Nonnull Obj otherObj) {
-			for (Field otherField : otherObj.getFields().values()) {
-				MetaFieldId fieldId = otherField.getId();
+			for (Map.Entry<MetaFieldId, List<Mod>> otherModEntry : otherObj.getModsMapByField().entrySet()) {
+				MetaFieldId fieldId = otherModEntry.getKey();
+				List<Mod> otherModsList = otherModEntry.getValue();
 
-				Field field = addField(fieldId);
-				
-				field.merge(otherField);
+				List<Mod> modsList = _modsMap.getOrDefault(fieldId, Collections.emptyList());
+
+				for (int i = 0; i < otherModsList.size(); i++) {
+					modsList.set(i, otherModsList.get(i));
+				}
 			}
 		}
 		
@@ -268,7 +262,7 @@ public abstract class ObjMod {
 			return _baseId;
 		}
 
-		private ObjId _newId;
+		protected ObjId _newId;
 
 		@Nullable
 		public ObjId getNewId() {
@@ -282,15 +276,27 @@ public abstract class ObjMod {
 			return String.format("%s (%s)", getId().toString(), getBaseId().toString());
 		}
 
-		public void print() {
-			System.out.println(String.format("%s %s", getId(), getBaseId()));
-			
-			for (Field field : getFields().values()) {
-				field.print();
+		@Override
+		public void print(@Nonnull Printer printer) {
+			printer.beginGroup(String.format("%s %s", getId(), getBaseId()));
+
+			for (Map.Entry<MetaFieldId, List<Mod>> modEntry : getModsMapByField().entrySet()) {
+				MetaFieldId fieldId = modEntry.getKey();
+				List<Mod> modsList = modEntry.getValue();
+
+				printer.beginGroup(String.format("%s", fieldId));
+
+				for (Mod mod : modsList) {
+					mod.print(printer);
+				}
+
+				printer.endGroup();
 			}
+
+			printer.endGroup();
 		}
 		
-		private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+		private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			_baseId = ObjId.valueOf(stream.readId("baseId"));
 			_newId = ((Function<Id, ObjId>) id -> {
 				if (id.equals(Id.valueOf("\0\0\0\0"))) return null;
@@ -303,55 +309,57 @@ public abstract class ObjMod {
 			int modsAmount = stream.readInt32("modsAmount");
 			
 			for (int i = 0; i < modsAmount; i++) {
-				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
+				MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
 				
 				int varTypeI = stream.readInt32("varType");
 
-				Field.ValType varType = Field.ValType.valueOf(varTypeI);
+				ValType varType = ValType.valueOf(varTypeI);
 				
 				int level = 0;
 				int dataPt = 0;
 
-				if (extended) {
+				if (isExtended()) {
 					level = stream.readInt32("level/variation");
 					dataPt = stream.readInt32("dataPt");
 				}
 
-				Field.Val val;
+				DataType val;
 
 				switch (varType) {
 				case INT: {
-					val = Field.Val.valueOf(stream.readInt32("val (int)"));
+					val = War3Int.valueOf(stream.readInt32("val (int)"));
 					
 					break;
 				}
 				case REAL: {
-					val = Field.Val.valueOf(stream.readFloat32("val (real)"), false);
+					val = War3Real.valueOf(stream.readFloat32("val (real)"));
 					
 					break;
 				}
 				case UNREAL: {
-					val = Field.Val.valueOf(stream.readFloat32("val (unreal)"), true);
+					val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
 					
 					break;
 				}
 				case STRING: {
-					val = Field.Val.valueOf(stream.readString("val (string) "));
+					val = War3String.valueOf(stream.readString("val (string) "));
 					
 					break;
 				}
 				default: {
-					val = Field.Val.valueOf(stream.readString("val (string default)"));
+					val = War3String.valueOf(stream.readString("val (string default)"));
 				}
 				}
-				
-				field.setVal(val, level, dataPt);
+
+				Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
+
+				addMod(mod);
 				
 				stream.readId("endToken");
 			}
 		}
 
-		private void read_0x2(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+		private void read_0x2(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			_baseId = ObjId.valueOf(stream.readId("baseId"));
 			_newId = ((Function<Id, ObjId>) id -> {
 				if (id.equals(Id.valueOf("\0\0\0\0"))) return null;
@@ -363,207 +371,193 @@ public abstract class ObjMod {
 
 			int modsAmount = stream.readInt32("modsAmount");
 
-			for (int i = 0; i < modsAmount; i++) {				
-				Field field = addField(MetaFieldId.valueOf(stream.readId("fieldId")));
+			for (int i = 0; i < modsAmount; i++) {
+				MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
 
-				Field.ValType varType = Field.ValType.valueOf(stream.readInt32("varType"));
+				int varTypeI = stream.readInt32("varType");
+
+				ValType varType = ValType.valueOf(varTypeI);
 				
 				int level = 0;
 				int dataPt = 0;
 
-				if (extended) {
+				if (isExtended()) {
 					level = stream.readInt32("level/variation");
 					dataPt = stream.readInt32("dataPt");
 				}
 
-				Field.Val val;
+				DataType val;
 				
 				switch (varType) {
 				case INT: {
-					val = Field.Val.valueOf(stream.readInt32("val (int)"));
+					val = War3Int.valueOf(stream.readInt32("val (int)"));
 					
 					break;
 				}
 				case REAL: {
-					val = Field.Val.valueOf(stream.readFloat32("val (real)"), false);
+					val = War3Real.valueOf(stream.readFloat32("val (real)"));
 					
 					break;
 				}
 				case UNREAL: {
-					val = Field.Val.valueOf(stream.readFloat32("val (unreal)"), true);
+					val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
 					
 					break;
 				}
 				case STRING: {
-					val = Field.Val.valueOf(stream.readString("val (string)"));
+					val = War3String.valueOf(stream.readString("val (string)"));
 					
 					break;
 				}
 				default: {
-					val = Field.Val.valueOf(stream.readString("val (string default)"));
+					val = War3String.valueOf(stream.readString("val (string default)"));
 				}
 				}
 
-				field.setVal(val, level, dataPt);
+				Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
+
+				addMod(mod);
 
 				stream.readId("endToken");
 			}
 		}
 		
-		private void write_0x1(@Nonnull Wc3BinOutputStream stream, boolean extended) {
-			stream.writeId((_baseId == null) ? _id : _baseId);
-			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
-			
-			int modsAmount = 0;
-			
-			for (Field field : getFields().values()) {
-				modsAmount += field.getVals().size();
-			}
-
-			stream.writeInt32(modsAmount);
-			
-			for (int i = 0; i < getFieldsList().size(); i++) {
-				Field field = getFieldsList().get(i);
-				
-				MetaFieldId id = field.getId();
-				int dataPt = field.getDataPt();
-				
-				for (Map.Entry<Integer, Field.Val> valEntry : field.getVals().entrySet()) {
-					int level = valEntry.getKey();
-					Field.Val val = valEntry.getValue();
-
-					stream.writeId(id);
-					
-					Field.ValType valType = val.getType();
-					
-					stream.writeInt32(valType.getVal());
-
-					if (extended) {
-						stream.writeInt32(level);
-						stream.writeInt32(dataPt);
-					}
-
-					switch (valType) {
-					case INT: {
-						War3Int valSpec = (War3Int) val.getVal();
-						
-						stream.writeInt32(valSpec.toInt());
-						
-						break;
-					}
-					case REAL: {
-						War3Real valSpec = (War3Real) val.getVal();
-						
-						stream.writeFloat32(valSpec.toFloat());
-						
-						break;
-					}
-					case UNREAL: {
-						War3Real valSpec = (War3Real) val.getVal();
-						
-						stream.writeFloat32(valSpec.toFloat());
-						
-						break;
-					}
-					case STRING: {
-						War3String valSpec = (War3String) val.getVal();
-						
-						stream.writeString(valSpec.getVal());
-						
-						break;
-					}
-					default: {
-						stream.writeString(val.getVal().toString());
-					}
-					}
-					
-					stream.writeId(null); //endToken
-				}
-			}
-		}
-		
-		private void write_0x2(@Nonnull Wc3BinOutputStream stream, boolean extended) {
+		private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 			stream.writeId((_baseId == null) ? _id : _baseId);
 			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
 
-			int modsAmount = 0;
-
-			for (Field field : getFields().values()) {
-				modsAmount += field.getVals().size();
-			}
+			int modsAmount = _mods.size();
 
 			stream.writeInt32(modsAmount);
-			
-			for (int i = 0; i < getFieldsList().size(); i++) {
-				Field field = getFieldsList().get(i);
-				
-				MetaFieldId id = field.getId();
-				int dataPt = field.getDataPt();
 
-				for (Map.Entry<Integer, Field.Val> valEntry : field.getVals().entrySet()) {
-					int level = valEntry.getKey();
-					Field.Val val = valEntry.getValue();
-					
-					stream.writeId(id);
-					
-					Field.ValType valType = val.getType();
-					
-					stream.writeInt32(valType.getVal());
+			for (Mod mod : _mods) {
+				MetaFieldId id = mod.getId();
+				int dataPt = mod instanceof ExtendedMod ? ((ExtendedMod) mod).getDataPt() : 0;
+				int level = mod instanceof ExtendedMod ? ((ExtendedMod) mod).getLevel() : 0;
 
-					if (extended) {
-						stream.writeInt32(level);
-						stream.writeInt32(dataPt);
-					}
+				ValType valType = mod.getValType() == null ? ValType.STRING : mod.getValType();
+				DataType val = mod.getVal();
 
-					switch (valType) {
+				stream.writeId(id);
+
+				stream.writeInt32(valType.getVal());
+
+				if (isExtended()) {
+					stream.writeInt32(level);
+					stream.writeInt32(dataPt);
+				}
+
+				switch (valType) {
 					case INT: {
-						War3Int valSpec = (War3Int) val.getVal();
-						
-						stream.writeInt32(valSpec.toInt());
-						
-						break;
-					}
-					case REAL: {						
-						War3Real valSpec = (War3Real) val.getVal();
+						if (!(val instanceof War3Int)) {
+							throw new BinStream.StreamException(stream, "no int: " + val);
+						}
 
-						stream.writeFloat32(valSpec.toFloat());
-						
+						stream.writeInt32(((War3Int) val).toInt());
+
 						break;
 					}
+					case REAL:
 					case UNREAL: {
-						War3Real valSpec = (War3Real) val.getVal();
-						
-						stream.writeFloat32(valSpec.toFloat());
-						
+						if (!(val instanceof War3Num)) {
+							throw new BinStream.StreamException(stream, "no real: " + val);
+						}
+
+						stream.writeFloat32(((War3Num) val).toFloat());
+
 						break;
 					}
 					case STRING: {
-						War3String valSpec = (War3String) val.getVal();
-						
-						stream.writeString(valSpec.getVal());
-						
+						String valS = val == null ? "" : val.toString();
+
+						stream.writeString(valS);
+
 						break;
 					}
 					default: {
-						stream.writeString(val.getVal().toString());
+						String valS = val == null ? "" : val.toString();
+
+						stream.writeString(valS);
 					}
-					}
-					
-					stream.writeId(null); //endToken
 				}
+
+				stream.writeId(null); //endToken
 			}
 		}
 		
-		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
+		private void write_0x2(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+			stream.writeId((_baseId == null) ? _id : _baseId);
+			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
+
+			int modsAmount = _mods.size();
+
+			stream.writeInt32(modsAmount);
+
+			for (Mod mod : _mods) {
+				MetaFieldId id = mod.getId();
+				int dataPt = mod instanceof ExtendedMod ? ((ExtendedMod) mod).getDataPt() : 0;
+				int level = mod instanceof ExtendedMod ? ((ExtendedMod) mod).getLevel() : 0;
+
+				ValType valType = mod.getValType() == null ? ValType.STRING : mod.getValType();
+				DataType val = mod.getVal();
+
+				stream.writeId(id);
+
+				stream.writeInt32(valType.getVal());
+
+				if (isExtended()) {
+					stream.writeInt32(level);
+					stream.writeInt32(dataPt);
+				}
+
+				switch (valType) {
+					case INT: {
+						if (!(val instanceof War3Int)) {
+							throw new BinStream.StreamException(stream, "no int: " + val);
+						}
+
+						stream.writeInt32(((War3Int) val).toInt());
+
+						break;
+					}
+					case REAL:
+					case UNREAL: {
+						if (!(val instanceof War3Num)) {
+							throw new BinStream.StreamException(stream, "no real: " + val);
+						}
+
+						stream.writeFloat32(((War3Num) val).toFloat());
+
+						break;
+					}
+					case STRING: {
+						String valS = val == null ? "" : val.toString();
+
+						stream.writeString(valS);
+
+						break;
+					}
+					default: {
+						String valS = val == null ? "" : val.toString();
+
+						stream.writeString(valS);
+					}
+				}
+
+				stream.writeId(null); //endToken
+			}
+		}
+		
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			try {
 				switch (format.toEnum()) {
 				case OBJ_0x1: {
-					read_0x1(stream, extended);
+					read_0x1(stream);
 					
 					break;
 				}
 				case OBJ_0x2: {
-					read_0x2(stream, extended);
+					read_0x2(stream);
 					
 					break;
 				}
@@ -573,34 +567,37 @@ public abstract class ObjMod {
 			}
 		}
 		
-		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 			switch (format.toEnum()) {
 			case AUTO:
 			case OBJ_0x2: {
-				write_0x2(stream, extended);
+				write_0x2(stream);
 				
 				break;
 			}
 			case OBJ_0x1: {
-				write_0x1(stream, extended);
+				write_0x1(stream);
 				
 				break;
 			}
 			}
 		}
 
-		private Obj copy() {
-			Obj ret = new Obj(_id, _baseId);
+		protected abstract Obj copySpec();
+
+		@Nonnull
+		public <T extends Obj> T copy() {
+			Obj ret = copySpec();
 
 			ret._newId = _newId;
 
 			ret.merge(this);
 
-			return ret;
+			return (T) ret;
 		}
 		
-		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
-			read(stream, format, extended);
+		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+			read(stream, format);
 		}
 		
 		public Obj(@Nonnull ObjId id, @Nullable ObjId baseId) {
@@ -609,25 +606,25 @@ public abstract class ObjMod {
 		}
 	}
 	
-	protected final Map<ObjId, Obj> _objs = new LinkedHashMap<>();
-	private final List<Obj> _objsList = new ArrayList<>();
+	protected final Map<ObjId, ObjType> _objs = new LinkedHashMap<>();
+	private final List<ObjType> _objsList = new ArrayList<>();
 
 	@Nonnull
-	public Map<ObjId, ? extends Obj> getObjs() {
+	public Map<ObjId, ObjType> getObjs() {
 		return _objs;
 	}
 
 	@Nonnull
-	public List<Obj> getObjsList() {
+	public List<ObjType> getObjsList() {
 		return _objsList;
 	}
 
 	@Nonnull
-	public List<Obj> getOrigObjs() {
-		List<Obj> ret = new ArrayList<>();
+	public List<ObjType> getOrigObjs() {
+		List<ObjType> ret = new ArrayList<>();
 		
 		for (int i = 0; i < getObjsList().size(); i++) {
-			Obj obj = getObjsList().get(i);
+			ObjType obj = getObjsList().get(i);
 			
 			if (obj.getNewId() == null) {
 				ret.add(obj);
@@ -638,11 +635,11 @@ public abstract class ObjMod {
 	}
 
 	@Nonnull
-	public List<Obj> getCustomObjs() {
-		List<Obj> ret = new ArrayList<>();
+	public List<ObjType> getCustomObjs() {
+		List<ObjType> ret = new ArrayList<>();
 
 		for (int i = 0; i < getObjsList().size(); i++) {
-			Obj obj = getObjsList().get(i);
+			ObjType obj = getObjsList().get(i);
 
 			if (obj.getNewId() != null) {
 				ret.add(obj);
@@ -657,22 +654,22 @@ public abstract class ObjMod {
 	}
 
 	@Nullable
-	public Obj getObj(@Nonnull ObjId id) {
+	public ObjType getObj(@Nonnull ObjId id) {
 		return getObjs().get(id);
 	}
 	
-	private void addObj(@Nonnull Obj val) {
+	private void addObj(@Nonnull ObjType val) {
 		_objs.put(val.getId(), val);
 		_objsList.add(val);
 	}
 	
-	public void removeObj(@Nonnull Obj val) {
+	public void removeObj(@Nonnull ObjType val) {
 		_objs.remove(val.getId());
 		_objsList.remove(val);
 	}
 
 	public void removeObj(@Nonnull ObjId id) {
-		Obj obj = getObj(id);
+		ObjType obj = getObj(id);
 		
 		if (obj != null) {
 			removeObj(obj);
@@ -683,35 +680,42 @@ public abstract class ObjMod {
 		_objs.clear();
 		_objsList.clear();
 	}
+
+	protected abstract ObjType createObj(@Nonnull ObjId id, @Nullable ObjId baseId);
 	
 	public Obj addObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
 		
-		Obj obj = new Obj(id, baseId);
+		ObjType obj = createObj(id, baseId);
 	
 		addObj(obj);
 		
 		return obj;
 	}
 	
-	public void merge(@Nonnull ObjMod other) {
-		for (Obj otherObj : other.getObjs().values()) {
-			Obj obj = otherObj.copy();
+	public void merge(@Nonnull ObjMod<ObjType> other) {
+		for (ObjType otherObj : other.getObjs().values()) {
+			ObjType obj = otherObj.copy();
 
 			addObj(obj);
 		}
 	}
 
 	@Nonnull
-	public abstract ObjMod copy();
-	
-	public void print() {
+	public abstract ObjMod<ObjType> copy();
+
+	@Override
+	public void print(@Nonnull Printer printer) {
+		printer.beginGroup(getClass().getSimpleName());
+
 		for (Obj obj : getObjs().values()) {
-			obj.print();
+			obj.print(printer);
 		}
+
+		printer.endGroup();
 	}
 	
-	public static class ObjPack {
+	public static class ObjPack<ObjType extends ObjMod.Obj> {
 		private Map<ObjId, ObjId> _baseObjIds = new LinkedHashMap<>();
 		
 		public Map<ObjId, ObjId> getBaseObjIds() {
@@ -730,16 +734,16 @@ public abstract class ObjMod {
 			return _profile;
 		}
 		
-		private ObjMod _objMod;
+		private ObjMod<ObjType> _objMod;
 		
-		public ObjMod getObjMod() {
+		public ObjMod<ObjType> getObjMod() {
 			return _objMod;
 		}
 		
-		private ObjPack(@Nonnull ObjMod orig) {
+		private ObjPack(@Nonnull ObjMod<ObjType> orig) {
 			_objMod = orig.copy();
 
-			for (Obj obj : _objMod.getCustomObjs()) {
+			for (ObjType obj : _objMod.getCustomObjs()) {
 				_baseObjIds.put(obj.getId(), obj.getBaseId());
 			}
 		}
@@ -768,8 +772,8 @@ public abstract class ObjMod {
 
 			//if (!objId.toString().matches("[0-9A-za-z]{4}")) continue;
 
-			for (Obj.Field field : obj.getFields().values()) {
-				MetaFieldId fieldId = field.getId();
+			for (Obj.Mod mod : obj.getMods()) {
+				MetaFieldId fieldId = mod.getId();
 
 				ObjId metaObjId = ObjId.valueOf(fieldId);
 				MetaSLK.Obj metaObj = reduceMetaSlk.getObj(metaObjId);
@@ -780,57 +784,52 @@ public abstract class ObjMod {
 					String slkFieldName = metaObj.getS(FieldId.valueOf("field"));
 
 					if (slkName.equals("Profile")) {
-						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
-							int level = valEntry.getKey();
-							Obj.Field.Val val = valEntry.getValue();
+						int level = mod instanceof Obj.ExtendedMod ? ((Obj.ExtendedMod) mod).getLevel() : 0;
 
-							int index = (level == 0) ? 0 : (level - 1);
-							int metaIndex = War3Int.valueOf(metaObj.get(FieldId.valueOf("index"), War3Int.valueOf(0))).getVal();
+						DataType val = mod.getVal();
 
-							if (metaIndex > 0) {
-								index += metaIndex;
-							}
+						int index = (level == 0) ? 0 : (level - 1);
+						int metaIndex = War3Int.valueOf(metaObj.get(FieldId.valueOf("index"), War3Int.valueOf(0))).getVal();
 
-							Profile.Obj profileObj = outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
-
-							for (File necessarySlkFile : getNecessarySLKs()) {
-								SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
-
-								necessarySlk.addObj(objId);
-							}
-							
-							FieldId profileFieldId = FieldId.valueOf(slkFieldName);
-
-							Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
-							DataType profileVal = null;
-
-							if (metaObj.getS(FieldId.valueOf("type")).endsWith("List")) {
-								//split up list types like stringList
-								profileVal = val.getVal();
-
-								if (profileVal != null) {
-									String[] vals = profileVal.toString().split(",");
-
-									for (int i = 0; i < vals.length; i++) {
-										profileField.set(War3String.valueOf(vals[i]), index + i);
-									}
-								}
-							} else {
-								if (val.getType().equals(Obj.Field.ValType.INT)) {
-									profileVal = War3Int.valueOf(val.getVal());
-								} else if (val.getType().equals(Obj.Field.ValType.REAL)) {
-									profileVal = War3Real.valueOf(val.getVal());
-								} else if (val.getType().equals(Obj.Field.ValType.UNREAL)) {
-									profileVal = War3Real.valueOf(val.getVal());
-								} else {
-									profileVal = War3String.valueOf(val.getVal());
-								}
-
-								profileField.set(profileVal, index);
-							}
+						if (metaIndex > 0) {
+							index += metaIndex;
 						}
 
-						outObjMod.getObj(objId).removeField(fieldId);
+						Profile.Obj profileObj = outProfile.addObj(TXTSectionId.valueOf(objId.toString()));
+
+						for (File necessarySlkFile : getNecessarySLKs()) {
+							SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
+
+							necessarySlk.addObj(objId);
+						}
+
+						FieldId profileFieldId = FieldId.valueOf(slkFieldName);
+
+						Profile.Obj.Field profileField = profileObj.addField(profileFieldId);
+						DataType profileVal = null;
+
+						if (metaObj.getS(FieldId.valueOf("type")).endsWith("List")) {
+							//split up list types like stringList
+							profileVal = val;
+
+							if (profileVal != null) {
+								String[] vals = profileVal.toString().split(",");
+
+								for (int i = 0; i < vals.length; i++) {
+									profileField.set(War3String.valueOf(vals[i]), index + i);
+								}
+							}
+						} else {
+							profileVal = val;
+
+							profileField.set(profileVal, index);
+						}
+
+						Obj outObj = outObjMod.getObj(objId);
+
+						if (outObj != null) {
+							outObj.remove(mod);
+						}
 					} else {
 						File slkFile = CommonMetaSLK.convertSLKName(slkName);
 
@@ -838,41 +837,44 @@ public abstract class ObjMod {
 
 						SLK outSlk = outSlks.computeIfAbsent(slkFile, k -> new RawSLK());
 
-						for (Entry<Integer, Obj.Field.Val> valEntry : field.getVals().entrySet()) {
-							int level = valEntry.getKey();
-							Obj.Field.Val val = valEntry.getValue();
+						int level = mod instanceof Obj.ExtendedMod ? ((Obj.ExtendedMod) mod).getLevel() : 0;
 
-							FieldId slkFieldIdAdjusted = CommonMetaSLK.getSLKField(slkFile, metaObj, level);
+						DataType val = mod.getVal();
 
-							outSlk.addField(slkFieldIdAdjusted);
+						FieldId slkFieldIdAdjusted = CommonMetaSLK.getSLKField(slkFile, metaObj, level);
 
-							SLK.Obj slkObj = outSlk.addObj(objId);
+						outSlk.addField(slkFieldIdAdjusted);
 
-							for (File necessarySlkFile : getNecessarySLKs()) {
-								SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
+						SLK.Obj slkObj = outSlk.addObj(objId);
 
-								necessarySlk.addObj(objId);
-							}
-							
-							/*if (slkFile.equals(UnitBalanceSLK.GAME_PATH) || slkFile.equals(UnitAbilsSLK.GAME_PATH) || slkFile.equals(UnitUISLK.GAME_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_PATH)) {
-								File unitBaseSLKFile = UnitDataSLK.GAME_PATH;
+						for (File necessarySlkFile : getNecessarySLKs()) {
+							SLK necessarySlk = outSlks.computeIfAbsent(necessarySlkFile, k -> new RawSLK());
 
-								SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
+							necessarySlk.addObj(objId);
+						}
 
-								unitBaseSLK.addCamera(objId);
+						/*if (slkFile.equals(UnitBalanceSLK.GAME_PATH) || slkFile.equals(UnitAbilsSLK.GAME_PATH) || slkFile.equals(UnitUISLK.GAME_PATH) || slkFile.equals(UnitWeaponsSLK.GAME_PATH)) {
+							File unitBaseSLKFile = UnitDataSLK.GAME_PATH;
 
-								//
+							SLK unitBaseSLK = outSlks.computeIfAbsent(unitBaseSLKFile, k -> new RawSLK());
 
-								File unitAbilSLKFile = UnitAbilsSLK.GAME_PATH;
+							unitBaseSLK.addCamera(objId);
 
-								SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
+							//
 
-								unitAbilSLK.addCamera(objId);
-							}*/
+							File unitAbilSLKFile = UnitAbilsSLK.GAME_PATH;
 
-							slkObj.set(slkFieldIdAdjusted, War3String.valueOf(val));
+							SLK unitAbilSLK = outSlks.computeIfAbsent(unitAbilSLKFile, k -> new RawSLK());
 
-							outObjMod.getObj(objId).removeField(fieldId);
+							unitAbilSLK.addCamera(objId);
+						}*/
+
+						slkObj.set(slkFieldIdAdjusted, War3String.valueOf(val));
+
+						Obj outObj = outObjMod.getObj(objId);
+
+						if (outObj != null) {
+							outObj.remove(mod);
 						}
 					}
 				}
@@ -881,7 +883,7 @@ public abstract class ObjMod {
 			Obj outObj = outObjMod.getObj(objId);
 
 			if (outObj != null) {
-				outObj.removeField(MetaFieldId.valueOf("wurs"));
+				outObj.remove(MetaFieldId.valueOf("wurs"));
 
 				if (outObj.getFields().isEmpty()) {
 					outObjMod.removeObj(objId);
@@ -927,7 +929,7 @@ public abstract class ObjMod {
 		}
 	}
 
-	private void read_0x1(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+	private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
 		stream.checkFormatVersion(EncodingFormat.OBJ_0x1.getVersion(), version);
@@ -938,9 +940,9 @@ public abstract class ObjMod {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
 			ObjId id = ObjId.valueOf(stream.readId("objId"));
 			
-			Obj obj = new Obj(id, null);
+			ObjType obj = createObj(id, null);
 			
-			obj.read(stream, EncodingFormat.OBJ_0x1, extended);
+			obj.read(stream, EncodingFormat.OBJ_0x1);
 			
 			addObj(obj);
 		}
@@ -951,15 +953,18 @@ public abstract class ObjMod {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
 			ObjId id = ObjId.valueOf(stream.readId("objId"));
 			
-			Obj obj = new Obj(baseId, baseId);
+			ObjType obj = createObj(baseId, baseId);
 			
-			obj.read(stream, EncodingFormat.OBJ_0x1, extended);
+			obj.read(stream, EncodingFormat.OBJ_0x1);
 			
 			addObj(obj);
 		}
 	}
 
-	private void read_0x2(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+	@Nonnull
+	protected abstract ObjType createObj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException;
+
+	private void read_0x2(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
 		stream.checkFormatVersion(EncodingFormat.OBJ_0x2.getVersion(), version);
@@ -967,7 +972,7 @@ public abstract class ObjMod {
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 
 		for (int i = 0; i < origObjsAmount; i++) {
-			Obj obj = new Obj(stream, EncodingFormat.OBJ_0x2, extended);
+			ObjType obj = createObj(stream, EncodingFormat.OBJ_0x2);
 			
 			addObj(obj);
 		}
@@ -975,29 +980,29 @@ public abstract class ObjMod {
 		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
-			Obj obj = new Obj(stream, EncodingFormat.OBJ_0x2, extended);
+			ObjType obj = createObj(stream, EncodingFormat.OBJ_0x2);
 		
 			addObj(obj);
 		}
 	}
 	
-	private void write_0x1(@Nonnull Wc3BinOutputStream stream, boolean extended) {
+	private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		stream.writeInt32(EncodingFormat.OBJ_0x1.getVersion());
 		
 		stream.writeInt32(getOrigObjs().size());
 
 		for (Obj obj : getOrigObjs()) {
-			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
+			obj.write(stream, EncodingFormat.OBJ_0x1);
 		}
 		
 		stream.writeInt32(getCustomObjs().size());
 		
 		for (Obj obj : getCustomObjs()) {
-			obj.write(stream, EncodingFormat.OBJ_0x1, extended);
+			obj.write(stream, EncodingFormat.OBJ_0x1);
 		}
 	}
 	
-	private void write_0x2(@Nonnull Wc3BinOutputStream stream, boolean extended) {
+	private void write_0x2(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		stream.writeInt32(EncodingFormat.OBJ_0x2.getVersion());
 
 		stream.writeInt32(getOrigObjs().size());
@@ -1005,7 +1010,7 @@ public abstract class ObjMod {
 		for (int i = 0; i < getOrigObjs().size(); i++) {
 			Obj obj = getOrigObjs().get(i);
 			
-			obj.write(stream, EncodingFormat.OBJ_0x2, extended);
+			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
 		
 		stream.writeInt32(getCustomObjs().size());
@@ -1013,11 +1018,11 @@ public abstract class ObjMod {
 		for (int i = 0; i < getCustomObjs().size(); i++) {
 			Obj obj = getCustomObjs().get(i);
 			
-			obj.write(stream, EncodingFormat.OBJ_0x2, extended);
+			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
 	}
 	
-	private void read_auto(@Nonnull Wc3BinInputStream stream, boolean extended) throws BinInputStream.StreamException {
+	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 		
 		stream.rewind();
@@ -1026,65 +1031,65 @@ public abstract class ObjMod {
 
 		if (format == null) throw new IllegalArgumentException("unknown format " + version);
 
-		read(stream, format, extended);
+		read(stream, format);
 	}
 	
-	public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean extended) throws BinInputStream.StreamException {
+	public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO: {
-			read_auto(stream, extended);
+			read_auto(stream);
 			
 			break;
 		}
 		case OBJ_0x1: {
-			read_0x1(stream, extended);
+			read_0x1(stream);
 			
 			break;
 		}
 		case OBJ_0x2: {
-			read_0x2(stream, extended);
+			read_0x2(stream);
 			
 			break;
 		}
 		}
 	}
 
-	public void read(@Nonnull Wc3BinInputStream stream, boolean extended) throws IOException {
-		read(stream, EncodingFormat.AUTO, extended);
+	public void read(@Nonnull Wc3BinInputStream stream) throws IOException {
+		read(stream, EncodingFormat.AUTO);
 	}
 	
-	public void read(@Nonnull InputStream inStream, boolean extended) throws IOException {
-		read(new Wc3BinInputStream(inStream), EncodingFormat.AUTO, extended);
+	public void read(@Nonnull InputStream inStream) throws IOException {
+		read(new Wc3BinInputStream(inStream), EncodingFormat.AUTO);
 	}
 	
-	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 		switch (format.toEnum()) {
 		case AUTO:
 		case OBJ_0x2: {
-			write_0x2(stream, extended);
+			write_0x2(stream);
 			
 			break;
 		}
 		case OBJ_0x1: {
-			write_0x1(stream, extended);
+			write_0x1(stream);
 			
 			break;
 		}
 		}
 	}
 
-	public void write(@Nonnull Wc3BinOutputStream stream, boolean extended) {
-		write(stream, EncodingFormat.AUTO, extended);
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		write(stream, EncodingFormat.AUTO);
 	}
 
-	public ObjMod(@Nonnull Wc3BinInputStream stream, boolean extended) throws IOException {
-		read(stream, extended);
+	public ObjMod(@Nonnull Wc3BinInputStream stream) throws IOException {
+		read(stream);
 	}
 
-	public ObjMod(@Nonnull File file, boolean extended) throws IOException {
+	public ObjMod(@Nonnull File file) throws IOException {
 		Wc3BinInputStream inStream = new Wc3BinInputStream(file);
 
-		read(inStream, extended);
+		read(inStream);
 
 		inStream.close();
 	}
@@ -1148,5 +1153,42 @@ public abstract class ObjMod {
 		}
 		
 		return ret;
+	}
+
+	public static <T extends ObjMod> T create(@Nonnull Class<T> clazz) {
+		try {
+			return clazz.getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	@Nonnull
+	public static <T extends ObjMod> T ofMapFile(@Nonnull Class<T> clazz, @Nonnull File mapFile) throws IOException {
+		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
+
+		MpqPort.Out port = new JMpqPort.Out();
+
+		try {
+			File inFilePath = (File) clazz.getField("GAME_PATH").get(null);
+
+			port.add(inFilePath);
+
+			MpqPort.Out.Result portResult = port.commit(mapFile);
+
+			if (!portResult.getExports().containsKey(inFilePath)) throw new IOException("could not extract w3a file");
+
+			Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(inFilePath));
+
+			T objMod = create(clazz);
+
+			objMod.read(inStream);
+
+			inStream.close();
+
+			return objMod;
+		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
+			throw new AssertionError(e);
+		}
 	}
 }

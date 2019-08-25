@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Wc3LibTest {
@@ -121,6 +122,11 @@ public abstract class Wc3LibTest {
             fp.write(outByteStream.toByteArray());
 
             fp.close();*/
+
+            byte[] outBytes = outByteStream.toByteArray();
+            int maxBytes = Math.max(outBytes.length, bytes.length);
+
+            Assert.assertEquals(Arrays.copyOf(outByteStream.toByteArray(), maxBytes), Arrays.copyOf(bytes, maxBytes));
 
             Assert.assertEquals(outByteStream.toByteArray(), bytes);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {

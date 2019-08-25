@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-abstract public class State<T extends DataType> {
+abstract public class State<FieldIdType extends FieldId, T extends DataType> {
 	private final T _defVal;
 
 	@Nullable
@@ -17,10 +17,10 @@ abstract public class State<T extends DataType> {
 		return _defVal;
 	}
 
-	private final FieldId _field;
+	private final FieldIdType _field;
 
 	@Nonnull
-	public FieldId getFieldId() {
+	public FieldIdType getFieldId() {
 		return _field;
 	}
 
@@ -154,8 +154,8 @@ abstract public class State<T extends DataType> {
 		return null;
 	}
 
-	public State(@Nonnull String fieldIdS, @Nonnull DataTypeInfo info, @Nullable T defVal) {
-		_field = FieldId.valueOf(fieldIdS);
+	public State(@Nonnull FieldIdType fieldId, @Nonnull DataTypeInfo info, @Nullable T defVal) {
+		_field = fieldId;
 		_info = info;
 		_defVal = defVal;
 

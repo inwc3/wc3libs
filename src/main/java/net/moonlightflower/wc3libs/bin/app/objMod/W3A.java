@@ -1,9 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app.objMod;
 
-import net.moonlightflower.wc3libs.bin.MetaState;
-import net.moonlightflower.wc3libs.bin.ObjMod;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.DataList;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
@@ -23,9 +20,103 @@ import java.util.Collections;
 /**
  * ability modifications file for wrapping war3map.w3a
  */
-public class W3A extends ObjMod {
+public class W3A extends ObjMod<W3A.Abil> {
 	public final static File GAME_PATH = new File("war3map.w3a");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3a");
+
+	public W3A(@Nonnull Wc3BinInputStream stream) throws IOException {
+		super(stream);
+	}
+
+	public W3A(@Nonnull File file) throws Exception {
+		super(file);
+	}
+
+	public W3A() {
+		super();
+	}
+
+	@Nonnull
+	public static W3A ofMapFile(@Nonnull File mapFile) throws IOException {
+		return ofMapFile(W3A.class, mapFile);
+	}
+
+	@Override
+	protected Abil createObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
+		return new Abil(id, baseId);
+	}
+
+	@Nonnull
+	@Override
+	protected Abil createObj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		return new Abil(stream, format);
+	}
+
+	@Nonnull
+	@Override
+	public W3A copy() {
+		W3A other = new W3A();
+
+		other.merge(this);
+
+		return other;
+	}
+
+	@Override
+	public Collection<File> getSLKs() {
+		return Collections.singletonList(AbilSLK.GAME_PATH);
+	}
+
+	@Override
+	public Collection<File> getNecessarySLKs() {
+		return Collections.singletonList(AbilSLK.GAME_PATH);
+	}
+
+	@Override
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+		super.write(stream, format);
+	}
+
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		super.write(stream);
+	}
+
+	public static class Abil extends ObjMod.Obj {
+		public Abil(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
+			super(stream, format);
+		}
+
+		public Abil(@Nonnull ObjId id, @Nullable ObjId baseId) {
+			super(id, baseId);
+		}
+
+		@Override
+		public boolean isExtended() {
+			return true;
+		}
+
+		@Override
+		protected Abil copySpec() {
+			return new Abil(getId(), getBaseId());
+		}
+
+		public <T extends DataType> T get(@Nonnull W3H.State<T> state) {
+			try {
+				return state.tryCastVal(super.get(state.getFieldId()));
+			} catch (DataTypeInfo.CastException ignored) {
+			}
+
+			return null;
+		}
+
+		public <T extends DataType> void set(@Nonnull W3H.State<T> state, T val) {
+			super.set(state.getFieldId(), val);
+		}
+
+		public <T extends DataType> void remove(@Nonnull W3H.State<T> state) {
+			super.remove(state.getFieldId());
+		}
+	}
 
 	public static class State<T extends DataType> extends MetaState<T> {
 		public final static State<DataList<War3String>> ART_ANIMS = new State<>("aani", new DataTypeInfo(DataList.class, War3String.class));
@@ -116,75 +207,5 @@ public class W3A extends ObjMod {
 		public State(@Nonnull String idString, @Nonnull Class<T> type) {
 			this(idString, new DataTypeInfo(type), null);
 		}
-	}
-	
-	public static class Obj extends ObjMod.Obj {
-		public Obj(ObjId id, ObjId baseId) {
-			super(id, baseId);
-		}
-	}
-
-	@Nonnull
-	@Override
-	public ObjMod copy() {
-		ObjMod other = new W3A();
-
-		other.merge(this);
-
-		return other;
-	}
-
-	@Override
-	public Collection<File> getSLKs() {
-		return Collections.singletonList(AbilSLK.GAME_PATH);
-	}
-	
-	@Override
-	public Collection<File> getNecessarySLKs() {
-		return Collections.singletonList(AbilSLK.GAME_PATH);
-	}
-
-	@Override
-	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean extended) {
-		super.write(stream, format, true);
-	}
-
-	public void write(@Nonnull Wc3BinOutputStream stream) {
-		super.write(stream, true);
-	}
-
-	public W3A(@Nonnull Wc3BinInputStream stream) throws IOException {
-		super(stream, true);
-	}
-
-	public W3A(@Nonnull File file) throws Exception {
-		super(file, true);
-	}
-	
-	public W3A() {
-		super();
-	}
-
-	@Nonnull
-	public static W3A ofMapFile(@Nonnull File mapFile) throws IOException {
-		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
-		
-		MpqPort.Out port = new JMpqPort.Out();
-		
-		port.add(GAME_PATH);
-		
-		MpqPort.Out.Result portResult = port.commit(mapFile);
-
-		if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract w3a file");
-
-		Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(GAME_PATH));
-
-		W3A w3a = new W3A();
-
-		w3a.read(inStream, true);
-
-		inStream.close();
-
-		return w3a;
 	}
 }

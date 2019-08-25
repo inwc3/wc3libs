@@ -12,9 +12,9 @@ import net.moonlightflower.wc3libs.misc.State;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MetaState<T extends DataType> extends State<T> {
+public class MetaState<T extends DataType> extends State<MetaFieldId, T> {
 	public MetaState(@Nonnull String idS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-		super(idS, typeInfo, defVal);
+		super(MetaFieldId.valueOf(idS), typeInfo, defVal);
 	}
 	
 	public MetaState(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo) {

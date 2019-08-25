@@ -73,10 +73,10 @@ public class ObjMerger {
     private final Collection<ObjMod> _inObjMods = new LinkedHashSet<>();
     private final Map<File, ObjMod> _outObjMods = new LinkedHashMap<>();
 
-    private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod otherObjMod) throws Exception {
+    private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod<?> otherObjMod) throws Exception {
         _inObjMods.add(otherObjMod);
 
-        ObjPack pack = otherObjMod.reduce(_metaSlk, Collections.singletonList(W3D.class));
+        ObjPack<?> pack = otherObjMod.reduce(_metaSlk, Collections.singletonList(W3D.class));
 
         Map<ObjId, ObjId> baseObjIds = pack.getBaseObjIds();
 
@@ -180,10 +180,6 @@ public class ObjMerger {
         objMod.merge(pack.getObjMod());
     }
 
-    private boolean isObjModFileExtended(File inFile) {
-        return (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3D.GAME_PATH) || inFile.equals(W3Q.GAME_PATH));
-    }
-
     public interface Filter {
         Predicate<Id> calcRemovedIds(Collection<Id> allIds);
     }
@@ -191,7 +187,7 @@ public class ObjMerger {
     public Filter FILTER_MODDED_OR_CUSTOM = allIds -> {
         Collection<Id> moddedIds = new LinkedHashSet<>();
 
-        for (ObjMod objMod : _inObjMods) {
+        for (ObjMod<?> objMod : _inObjMods) {
             for (ObjMod.Obj obj : objMod.getObjsList()) {
                 moddedIds.add(obj.getId());
             }
@@ -261,22 +257,17 @@ public class ObjMerger {
                 if (objMod.containsObj((ObjId) id)) {
                     ObjMod.Obj objModObj = objMod.getObj((ObjId) id);
 
-                    for (Map.Entry<MetaFieldId, ObjMod.Obj.Field> fieldEntry : objModObj.getFields().entrySet()) {
-                        MetaFieldId fieldId = fieldEntry.getKey();
-                        ObjMod.Obj.Field field = fieldEntry.getValue();
+                    for (ObjMod.Obj.Mod mod : objModObj.getMods()) {
+                        DataType realVal = mod.getVal();
 
-                        for (ObjMod.Obj.Field.Val val : field.getVals().values()) {
-                            DataType realVal = val.getVal();
+                        if (realVal != null) {
+                            String[] vals = realVal.toString().split(",");
 
-                            if (realVal != null) {
-                                String[] vals = realVal.toString().split(",");
+                            for (String valSingle : vals) {
+                                ObjId ref = ObjId.valueOf(valSingle);
 
-                                for (String valSingle : vals) {
-                                    ObjId ref = ObjId.valueOf(valSingle);
-
-                                    if (ref.toString().length() == 4) {
-                                        refs.add(ref);
-                                    }
+                                if (ref.toString().length() == 4) {
+                                    refs.add(ref);
                                 }
                             }
                         }
@@ -883,7 +874,7 @@ public class ObjMerger {
 
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
 
-            if (!objMod.getObjs().isEmpty()) objMod.write(outStream, isObjModFileExtended(inFile));
+            if (!objMod.getObjs().isEmpty()) objMod.write(outStream);
 
             outStream.close();
         }
@@ -943,7 +934,7 @@ public class ObjMerger {
             Wc3BinOutputStream outStream = new Wc3BinOutputStream(outFile);
 
             if (!objMod.getObjs().isEmpty()) {
-                objMod.write(outStream, isObjModFileExtended(inFile));
+                objMod.write(outStream);
             }
 
             outStream.close();

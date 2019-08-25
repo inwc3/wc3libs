@@ -9,9 +9,9 @@ import net.moonlightflower.wc3libs.misc.State;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SLKState<T extends DataType> extends State<T> {
+public class SLKState<T extends DataType> extends State<FieldId, T> {
 	public SLKState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
-		super(fieldIdS, typeInfo, defVal);
+		super(FieldId.valueOf(fieldIdS), typeInfo, defVal);
 	}
 
 	public SLKState(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo) {
