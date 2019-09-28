@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.txt;
 
 import net.moonlightflower.wc3libs.port.Context;
-import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import javax.annotation.Nonnull;
@@ -91,7 +90,7 @@ public class WTS {
             int key = entry.getKey();
             String val = entry.getValue();
 
-            writer.write(String.format("STRING %s\n{\n%s\n}\n", key, val));
+            writer.write(String.format("STRING %s\r\n{\r\n%s\r\n}\r\n", key, val));
         }
 
         writer.close();
