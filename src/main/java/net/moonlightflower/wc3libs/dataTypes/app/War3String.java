@@ -13,9 +13,13 @@ public class War3String extends DataType implements Stringable {
 	public static War3String getDefVal() {
 		return EMPTY_STRING;
 	}
-	
-	private String _val;
-	
+
+  private String _val;
+
+  public void set_val(String _val) {
+    this._val = _val;
+  }
+
 	public String getVal() {
 		return _val;
 	}
@@ -24,12 +28,12 @@ public class War3String extends DataType implements Stringable {
 	public String toString() {
 		return getVal();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof War3String)
@@ -53,18 +57,18 @@ public class War3String extends DataType implements Stringable {
 	public Object toTXTVal() {
 		return toString();
 	}
-	
+
 	public War3String() {
-		
+
 	}
-	
+
 	public War3String(String val, String... aliases) {
 		_val = val;
 	}
-	
+
 	public static War3String valueOf(Object val) {
 		if (val == null) return null;
-		
+
 		return new War3String(val.toString());
 	}
 
@@ -72,7 +76,7 @@ public class War3String extends DataType implements Stringable {
 	public War3String decode(Object val) {
 		return valueOf(val);
 	}
-	
+
 	public static War3String decodeStatic(Object val) {
 		return valueOf(val);
 	}
