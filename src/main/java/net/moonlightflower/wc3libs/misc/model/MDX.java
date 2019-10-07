@@ -248,69 +248,6 @@ public class MDX {
         for (Chunk chunk : getChunks()) {
             chunk.write(stream, EncodingFormat.MDX_0x0);
         }
-        /*for (VersionChunk versionChunk : _versionChunks) {
-            versionChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (ModelInfoChunk modelInfoChunk : getModelInfoChunks()) {
-            modelInfoChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (SequenceChunk sequenceChunk : getSequenceChunks()) {
-            sequenceChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (GlobalSequenceChunk globalSequenceChunk : getGlobalSequenceChunks()) {
-            globalSequenceChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (TextureChunk textureChunk : getTextureChunks()) {
-            textureChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (SoundChunk soundChunk : getSoundChunks()) {
-            soundChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (MaterialChunk materialChunk : getMaterialChunks()) {
-            materialChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (TexAnimChunk texAnimChunk : getTextureAnimChunks()) {
-            texAnimChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (GeosetChunk geosetChunk : getGeosetChunks()) {
-            geosetChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (GeosetAnimChunk geosetAnimChunk : getGeosetAnimChunks()) {
-            geosetAnimChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (BoneChunk boneChunk : getBoneChunks()) {
-            boneChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (LightChunk lightChunk : getLightChunks()) {
-            lightChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (HelperChunk helperChunk : getHelperChunks()) {
-            helperChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (AttachmentChunk attachmentChunk : getAttachmentChunks()) {
-            attachmentChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (PivotPointChunk pivotPointChunk : getPivotPointChunks()) {
-            pivotPointChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (ParticleEmitterChunk particleEmitterChunk : getParticleEmitterChunks()) {
-            particleEmitterChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (ParticleEmitter2Chunk particleEmitter2Chunk : getParticleEmitter2Chunks()) {
-            particleEmitter2Chunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (RibbonEmitterChunk ribbonEmitterChunk : getRibbonEmitterChunks()) {
-            ribbonEmitterChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (EventObjectChunk eventObjectChunk : getEventObjectChunks()) {
-            eventObjectChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (CameraChunk cameraChunk : getCameraChunks()) {
-            cameraChunk.write(stream, EncodingFormat.MDX_0x0);
-        }
-        for (CollisionShapeChunk collisionShapeChunk : getCollisionShapeChunks()) {
-            collisionShapeChunk.write(stream, EncodingFormat.MDX_0x0);
-        }*/
     }
 
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -380,5 +317,71 @@ public class MDX {
 
     public MDX(@Nonnull File file) throws IOException {
         read(file);
+    }
+
+    public void squish() {
+        for (Chunk chunk : getChunks()) {
+            if (chunk instanceof GeosetChunk) {
+                squishGeoset((GeosetChunk)chunk);
+            } else if (chunk instanceof PivotPointChunk) {
+                squishPivot((PivotPointChunk)chunk);
+            } else if (chunk instanceof BoneChunk) {
+                squishBone((BoneChunk)chunk);
+            }
+        }
+    }
+
+    private void squishBone(BoneChunk chunk) {
+        chunk.getBones().forEach(bone -> {
+            squishNode(bone.getNode());
+        });
+    }
+
+    private void squishNode(Node node) {
+        node.getRotationTrackChunks().forEach(rotationTrackChunk -> {
+            rotationTrackChunk.getRotationTracks().forEach(rotationTrack -> {
+                rotationTrack.setRotation(rotationTrack.getRotation().squish());
+                rotationTrack.setInTanRotation(rotationTrack.getInTanRotation().squish());
+                rotationTrack.setOutTanRotation(rotationTrack.getOutTanRotation().squish());
+            });
+        });
+        node.getTranslationTrackChunks().forEach(translationTrackChunk -> {
+            translationTrackChunk.getTranslationTracks().forEach(translationTrack -> {
+                translationTrack.setTranslation(translationTrack.getTranslation().squish());
+                translationTrack.setInTanTranslation(translationTrack.getInTanTranslation().squish());
+                translationTrack.setOutTanTranslation(translationTrack.getOutTanTranslation().squish());
+            });
+        });
+        node.getScalingTrackChunks().forEach(scalingTrackChunk -> {
+            scalingTrackChunk.getScalingTracks().forEach(scalingTrack -> {
+                scalingTrack.setScaling(scalingTrack.getScaling().squish());
+                scalingTrack.setInTanScaling(scalingTrack.getInTanScaling().squish());
+                scalingTrack.setOutTanScaling(scalingTrack.getOutTanScaling().squish());
+            });
+        });
+    }
+
+    private void squishPivot(PivotPointChunk chunk) {
+        chunk.getPivotPoints().forEach(pivotPoint -> {
+            pivotPoint.setPos(pivotPoint.getPos().squish());
+        });
+    }
+
+    private void squishGeoset(GeosetChunk chunk) {
+        chunk.getGeosets().forEach(geoset -> {
+            geoset.getVertexChunk().getVertices().forEach(vertex -> {
+                vertex.setPos(vertex.getPos().squish());
+            });
+
+            geoset.getVertexNormalChunk().getVertices().forEach(vertex -> {
+                vertex.setPos(vertex.getPos().squish());
+            });
+
+            geoset.getTexCoordSetChunk().getTexCoordSets().forEach(texCoordSet -> {
+                texCoordSet.getTexCoords().forEach(texCoord -> {
+                    texCoord.setPos(texCoord.getPos().squish());
+                });
+            });
+        });
     }
 }

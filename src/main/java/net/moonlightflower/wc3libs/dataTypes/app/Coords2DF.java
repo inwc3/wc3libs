@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class Coords2DF extends DataType {
 	private final War3Real _x;
@@ -35,7 +36,7 @@ public class Coords2DF extends DataType {
 	public String toString() {
 		return String.format("%s;%s", getX(), getY());
 	}
-	
+
 	/*public Coords2D<War3Real> toReal() {
 		return new Coords2D<>(War3Real.valueOf(getX()), War3Real.valueOf(getY()));
 	}*/
@@ -44,15 +45,15 @@ public class Coords2DF extends DataType {
 	public Coords2DF scale(double factor) {
 		Double x = getX().toFloat() * factor;
 		Double y = getY().toFloat() * factor;
-		
+
 		return new Coords2DF(x.intValue(), y.intValue());
 	}
-	
+
 	public Coords2DF(float x, float y) {
 		_x = War3Real.valueOf(x);
 		_y = War3Real.valueOf(y);
 	}
-	
+
 	public Coords2DF(@Nonnull War3Real x, @Nonnull War3Real y) {
 		this(x.toFloat(), y.toFloat());
 	}
@@ -85,4 +86,9 @@ public class Coords2DF extends DataType {
 	public Object toTXTVal() {
 		return null;
 	}
+
+    public Coords2DF squish() {
+        return new Coords2DF(Objects.requireNonNull(War3Real.valueOf(Math.floor(_x.getVal() * 1000f) / 1000f)),
+            Objects.requireNonNull(War3Real.valueOf(Math.floor(_y.getVal() * 1000f) / 1000f)));
+    }
 }
