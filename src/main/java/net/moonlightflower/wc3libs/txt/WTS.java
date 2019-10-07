@@ -24,7 +24,7 @@ public class WTS {
     public final static File CAMPAIGN_PATH = new File("war3campaign.WTS");
 
     private static final Pattern KEY_PATTERN = Pattern.compile("STRING ([\\d]+)[\\n\\s]*\\{([^\\}]*)[\\n]*\\}");
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("//[^\\n]*\\n", Pattern.DOTALL);
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("(?m)^//.*");
     private static final Pattern ENTRY_PATTERN = Pattern.compile("^(.*)");
 
     private final Map<Integer, String> _vals = new LinkedHashMap<>();
