@@ -603,6 +603,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		public Obj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 			_id = id;
 			_baseId = baseId;
+
+            _newId = (_baseId != null) ? id : null;
 		}
 	}
 	
