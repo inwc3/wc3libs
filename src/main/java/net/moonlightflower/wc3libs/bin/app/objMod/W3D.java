@@ -100,7 +100,7 @@ public class W3D extends ObjMod<W3D.Dood> {
 			return new Dood(getId(), getBaseId());
 		}
 
-		public <T extends DataType> T get(@Nonnull W3H.State<T> state) {
+		public <T extends DataType> T get(@Nonnull State<T> state) {
 			try {
 				return state.tryCastVal(super.get(state.getFieldId()));
 			} catch (DataTypeInfo.CastException ignored) {
@@ -109,11 +109,11 @@ public class W3D extends ObjMod<W3D.Dood> {
 			return null;
 		}
 
-		public <T extends DataType> void set(@Nonnull W3H.State<T> state, T val) {
+		public <T extends DataType> void set(@Nonnull State<T> state, T val) {
 			super.set(state.getFieldId(), val);
 		}
 
-		public <T extends DataType> void remove(@Nonnull W3H.State<T> state) {
+		public <T extends DataType> void remove(@Nonnull State<T> state) {
 			super.remove(state.getFieldId());
 		}
 	}
