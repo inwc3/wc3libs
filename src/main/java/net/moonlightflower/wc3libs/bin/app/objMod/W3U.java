@@ -117,7 +117,7 @@ public class W3U extends ObjMod<W3U.Unit> {
 		}
 	}
 
-	static public class State<T extends DataType> extends MetaState<T> {
+	public static class State<T extends DataType> extends MetaState<T> {
 		public final static State<AbilCode> ABIL_AUTO = new State<>("udaa", AbilCode.class);
 		public final static State<DataList<AbilId>> ABIL_HERO = new State<>("uhab", new DataTypeInfo(DataList.class, AbilId.class));
 		public final static State<DataList<AbilId>> ABIL_NORMAL = new State<>("uabi", new DataTypeInfo(DataList.class, AbilId.class));

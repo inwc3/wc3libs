@@ -39,7 +39,7 @@ public class IMP {
             return _val;
         }
 
-        static public StdFlag fromVal(int val) {
+        public static StdFlag fromVal(int val) {
             return _map.get(val);
         }
 

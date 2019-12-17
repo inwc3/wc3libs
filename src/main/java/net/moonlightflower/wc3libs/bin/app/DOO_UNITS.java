@@ -18,7 +18,7 @@ import java.util.List;
 public class DOO_UNITS {
 	public final static File GAME_PATH = new File("war3mapUnits.doo");
 	
-	private static class Obj {
+	public static class Obj {
 		private ObjId _typeId;
 		
 		public ObjId getTypeId() {
@@ -139,8 +139,8 @@ public class DOO_UNITS {
 			_itemTablePtr = val;
 		}
 		
-		private class LootSet {
-			private class Item {
+		public static class LootSet {
+            public static class Item {
 				private ObjId _typeId;
 				
 				public ObjId getTypeId() {
@@ -335,7 +335,7 @@ public class DOO_UNITS {
 			_heroInt = intVal;
 		}
 		
-		private class InvItem {
+		public class InvItem {
 			private int _slot = 0;
 			
 			public int getSlot() {
@@ -410,7 +410,7 @@ public class DOO_UNITS {
 			return item;
 		}
 
-		private class AbilMod {
+		public class AbilMod {
 			private ObjId _typeId;
 			
 			public ObjId getTypeId() {
@@ -557,7 +557,7 @@ public class DOO_UNITS {
 			_randGroupPos = val;
 		}
 		
-		private class RandObj {
+		public class RandObj {
 			private ObjId _typeId;
 			
 			public ObjId getTypeId() {

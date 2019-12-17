@@ -126,7 +126,7 @@ public class Trigs {
 		_trigCats.add(val);
 	}
 	
-	private abstract class Trig {
+	public abstract class Trig {
 		private String _name;
 		
 		public String getName() {
@@ -221,7 +221,7 @@ public class Trigs {
 	}
 	
 	public class GUITrig extends Trig {
-		private abstract class ECA {
+		public abstract class ECA {
 			private String _funcName;
 			
 			public String getFuncName() {
@@ -241,8 +241,8 @@ public class Trigs {
 			public void setEnabled(boolean val) {
 				_isEnabled = val;
 			}
-			
-			private class Param {
+
+            public class Param {
 				
 			}
 			

@@ -22,7 +22,7 @@ public class W3S {
 	public final static File GAME_PATH = new File("war3map.W3S");
 
 	public static class Sound extends Bin {
-		private static class State<T extends DataType> extends BinState<T> {
+		public static class State<T extends DataType> extends BinState<T> {
 			private final static List<State> _values = new ArrayList<>();
 
 			public static List<State> values() {

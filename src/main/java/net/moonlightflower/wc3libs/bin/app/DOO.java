@@ -21,7 +21,7 @@ import java.util.*;
 public class DOO {
 	public final static File GAME_PATH = new File("war3map.doo");
 	
-	public class Dood {
+	public static class Dood {
 		private ObjId _typeId;
 		
 		public ObjId getTypeId() {
@@ -102,8 +102,8 @@ public class DOO {
 			_itemTablePtr = val;
 		}
 		
-		private class ItemSet {
-			private class Item {
+		public static class ItemSet {
+            public static class Item {
 				private ObjId _typeId;
 
 				@Nonnull
@@ -521,7 +521,7 @@ public class DOO {
 		}
 	}
 	
-	private static class EncodingFormat extends Format<EncodingFormat.Enum> {
+	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
 			DOO_0x8,

@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class ObjSLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> extends SLK<Self, ObjIdType, ObjType> {
-    static public class State<T extends DataType> extends SLKState<T> {
+    public static class State<T extends DataType> extends SLKState<T> {
         public State(@Nonnull String idString, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
             super(idString, typeInfo, defVal);
         }

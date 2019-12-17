@@ -51,7 +51,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		private final static Map<Integer, ValType> _map = new LinkedHashMap<>();
 
-		static public ValType valueOf(int val) {
+		public static ValType valueOf(int val) {
 			return _map.get(val);
 		}
 

@@ -34,7 +34,7 @@ public class TGAReader {
      * @throws IOException if the file cannot be properly read, or the 3rd byte does not indicate
      *         a valid image type.
      */
-    static public BufferedImage read(InputStream inStream) throws IOException {
+    public static BufferedImage read(InputStream inStream) throws IOException {
         ArrayList<byte[]> data = new ArrayList<>();
         boolean reading = true;
         int cumulative = 0;

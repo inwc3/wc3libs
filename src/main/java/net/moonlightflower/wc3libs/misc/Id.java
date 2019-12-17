@@ -51,7 +51,7 @@ public class Id extends War3String {
 		super(val);
 	}
 	
-	static public Id valueOf(String idString) {
+	public static Id valueOf(String idString) {
 		return new Id(idString);
 	}
 
