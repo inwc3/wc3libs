@@ -12,6 +12,7 @@ public class GameVersion implements Comparable<GameVersion> {
 
     public static final GameVersion VERSION_1_29 = new GameVersion(Arrays.asList(1, 29));
     public static final GameVersion VERSION_1_31 = new GameVersion(Arrays.asList(1, 31));
+    public static final GameVersion VERSION_1_32 = new GameVersion(Arrays.asList(1, 32));
 
     public GameVersion(@Nonnull List<Integer> versionNumList) {
         _versionNumList = new ArrayList<>(versionNumList);

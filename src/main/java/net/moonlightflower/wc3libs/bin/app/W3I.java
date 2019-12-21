@@ -472,6 +472,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19: {
                     read_0x19(stream);
@@ -489,6 +490,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19: {
                     write_0x19(stream);
@@ -721,17 +723,53 @@ public class W3I {
         _waterColor = val;
     }
 
-    public final static long SCRIPT_LANG_JASS = 0;
-    public final static long SCRIPT_LANG_LUA = 1;
+    public enum ScriptLang {
+        JASS,
+        LUA
+    }
 
-    private long _scriptLang = SCRIPT_LANG_JASS;
+    private ScriptLang _scriptLang = ScriptLang.JASS;
 
-    public long getScriptLang() {
+    @Nonnull
+    public ScriptLang getScriptLang() {
         return _scriptLang;
     }
 
-    public void setScriptLang(long val) {
+    public void setScriptLang(@Nonnull ScriptLang val) {
         _scriptLang = val;
+    }
+
+    public enum Graphics {
+        SD,
+        HD,
+        SD_AND_HD
+    }
+
+    private Graphics _graphics = Graphics.SD_AND_HD;
+
+    @Nonnull
+    public Graphics getGraphics() {
+        return _graphics;
+    }
+
+    public void setGraphics(@Nonnull Graphics val) {
+        _graphics = val;
+    }
+
+    public enum GameDataVersion {
+        ROC,
+        TFT
+    }
+
+    private GameDataVersion _gameDataVersion = GameDataVersion.TFT;
+
+    @Nonnull
+    public GameDataVersion getGameDataVersion() {
+        return _gameDataVersion;
+    }
+
+    public void setGameDataVersion(@Nonnull GameDataVersion val) {
+        _gameDataVersion = val;
     }
 
     public static class Player {
@@ -945,6 +983,96 @@ public class W3I {
             _allyHighPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), true);
         }
 
+        public static class EnemyFlags extends FlagsInt {
+            private EnemyFlags(int val) {
+                super(val);
+            }
+
+            private EnemyFlags(@Nonnull BitSet val) {
+                super(val);
+            }
+
+            public static EnemyFlags valueOf(int val) {
+                return new EnemyFlags(val);
+            }
+
+            public static EnemyFlags valueOf(@Nonnull BitSet val) {
+                return new EnemyFlags(val);
+            }
+
+            @Override
+            public DataType decode(Object val) {
+                // TODO
+                return null;
+            }
+
+            @Override
+            public Object toSLKVal() {
+                // TODO
+                return null;
+            }
+
+            @Override
+            public Object toTXTVal() {
+                // TODO
+                return null;
+            }
+        }
+
+        private FlagsInt _enemyLowPrioFlags = EnemyFlags.valueOf(new BitSet());
+
+        public int getEnemyLowPrioFlags() {
+            return _enemyLowPrioFlags.toInt();
+        }
+
+        public void setEnemyLowPrioFlags(int val) {
+            _enemyLowPrioFlags.setVal(val);
+        }
+
+        public void setEnemyLowPrioFlag(int index, boolean val) {
+            _enemyLowPrioFlags.setPos(index, val);
+        }
+
+        @Nonnull
+        public Set<Integer> getEnemyLowPrioPlayerNums() {
+            return _enemyLowPrioFlags.getPoses();
+        }
+
+        public void removeEnemyLowPrioPlayers(int... players) {
+            _enemyLowPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), false);
+        }
+
+        public void addEnemyLowPrioPlayerNums(int... players) {
+            _enemyLowPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), true);
+        }
+
+        private FlagsInt _enemyHighPrioFlags = EnemyFlags.valueOf(0);
+
+        public int getEnemyHighPrioFlags() {
+            return _enemyHighPrioFlags.toInt();
+        }
+
+        public void setEnemyHighPrioFlags(int val) {
+            _enemyHighPrioFlags.setVal(val);
+        }
+
+        public void setEnemyHighPrioFlag(int index, boolean val) {
+            _enemyHighPrioFlags.setPos(index, val);
+        }
+
+        @Nonnull
+        public Set<Integer> getEnemyHighPrioPlayerNums() {
+            return _enemyHighPrioFlags.getPoses();
+        }
+
+        public void removeEnemyHighPrioPlayers(int... players) {
+            _enemyHighPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), false);
+        }
+
+        public void addEnemyHighPrioPlayerNums(int... players) {
+            _enemyHighPrioFlags.setPoses(Arrays.stream(players).boxed().collect(Collectors.toSet()), true);
+        }
+
         @Override
         public String toString() {
             String allyLowPrioFlagsS = String.format("%12s", Integer.toBinaryString(getAllyLowPrioFlags()));
@@ -953,8 +1081,14 @@ public class W3I {
             allyLowPrioFlagsS = allyLowPrioFlagsS.substring(allyLowPrioFlagsS.length() - 12).replaceAll(" ", "0");
             allyHighPrioFlagsS = allyHighPrioFlagsS.substring(allyHighPrioFlagsS.length() - 12).replaceAll(" ", "0");
 
-            return String.format("%s [num=%d controller=%s race=%s startPosFixed=%s startPos=%s allyLowPrioFlags=%s allyHighPrioFlags=%s]", getName(), getNum
-                    (), getType(), getRace(), getStartPosFixed(), getStartPos(), allyLowPrioFlagsS, allyHighPrioFlagsS);
+            String enemyLowPrioFlagsS = String.format("%12s", Integer.toBinaryString(getEnemyLowPrioFlags()));
+            String enemyHighPrioFlagsS = String.format("%12s", Integer.toBinaryString(getEnemyHighPrioFlags()));
+
+            enemyLowPrioFlagsS = enemyLowPrioFlagsS.substring(enemyLowPrioFlagsS.length() - 12).replaceAll(" ", "0");
+            enemyHighPrioFlagsS = enemyHighPrioFlagsS.substring(enemyHighPrioFlagsS.length() - 12).replaceAll(" ", "0");
+
+            return String.format("%s [num=%d controller=%s race=%s startPosFixed=%s startPos=%s allyLowPrioFlags=%s allyHighPrioFlags=%s enemyLowPrioFlags=%s enemyHighPrioFlags=%s]", getName(), getNum
+                    (), getType(), getRace(), getStartPosFixed(), getStartPos(), allyLowPrioFlagsS, allyHighPrioFlagsS, enemyLowPrioFlagsS, enemyHighPrioFlagsS);
         }
 
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -978,6 +1112,30 @@ public class W3I {
             setAllyHighPrioFlags(stream.readInt32("allyHighPrioFlags"));
         }
 
+        private void read_0x1F(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+            setNum(stream.readInt32("playerNum"));
+
+            Controller controller = Controller.valueOf(stream.readInt32("controller"));
+
+            if (controller != null) setType(controller);
+
+            UnitRace race = UnitRace.valueOf(stream.readInt32("race"));
+
+            if (race != null) setRace(race);
+
+            setStartPosFixed(stream.readInt32("startPosFixed"));
+
+            setName(stream.readString("playerName"));
+
+            setStartPos(new Coords2DF(stream.readFloat32("startPosX"), stream.readFloat32("startPosY")));
+
+            setAllyLowPrioFlags(stream.readInt32("allyLowPrioFlags"));
+            setAllyHighPrioFlags(stream.readInt32("allyHighPrioFlags"));
+
+            setEnemyLowPrioFlags(stream.readInt32("enemyLowPrioFlags"));
+            setEnemyHighPrioFlags(stream.readInt32("enemyHighPrioFlags"));
+        }
+
         private void write_0x12(@Nonnull Wc3BinOutputStream stream) {
             stream.writeInt32(getNum());
 
@@ -997,8 +1155,34 @@ public class W3I {
             stream.writeInt32(getAllyHighPrioFlags());
         }
 
+        private void write_0x1F(@Nonnull Wc3BinOutputStream stream) {
+            stream.writeInt32(getNum());
+
+            stream.writeInt32(getType().getVal());
+            stream.writeInt32(getRace().getVal());
+
+            stream.writeInt32(getStartPosFixed());
+
+            stream.writeString(getName());
+
+            Coords2DF startPos = getStartPos();
+
+            stream.writeFloat32(startPos.getX());
+            stream.writeFloat32(startPos.getY());
+
+            stream.writeInt32(getAllyLowPrioFlags());
+            stream.writeInt32(getAllyHighPrioFlags());
+
+            stream.writeInt32(getEnemyLowPrioFlags());
+            stream.writeInt32(getEnemyHighPrioFlags());
+        }
+
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x1F:
+                    read_0x1F(stream);
+
+                    break;
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1012,6 +1196,10 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
+                    write_0x1F(stream);
+
+                    break;
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1058,7 +1246,7 @@ public class W3I {
     }
 
     public static class Force {
-        static public class Flags extends FlagsInt {
+        public static class Flags extends FlagsInt {
             @Override
             public DataType decode(Object val) {
                 // TODO
@@ -1098,7 +1286,7 @@ public class W3I {
                 super(val);
             }
 
-            static public Flags valueOf(int val) {
+            public static Flags valueOf(int val) {
                 return new Flags(val);
             }
         }
@@ -1207,6 +1395,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1220,6 +1409,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1329,6 +1519,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1342,6 +1533,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1416,6 +1608,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1429,6 +1622,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1570,6 +1764,7 @@ public class W3I {
 
             private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 switch (format.toEnum()) {
+                    case W3I_0x1F:
                     case W3I_0x1C:
                     case W3I_0x19:
                     case W3I_0x12: {
@@ -1583,6 +1778,7 @@ public class W3I {
             private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                 switch (format.toEnum()) {
                     case AUTO:
+                    case W3I_0x1F:
                     case W3I_0x1C:
                     case W3I_0x19:
                     case W3I_0x12: {
@@ -1664,6 +1860,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
             switch (format.toEnum()) {
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1677,6 +1874,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19:
                 case W3I_0x12: {
@@ -1772,6 +1970,7 @@ public class W3I {
 
             private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 switch (format.toEnum()) {
+                    case W3I_0x1F:
                     case W3I_0x1C:
                     case W3I_0x19: {
                         read_0x19(stream);
@@ -1784,6 +1983,7 @@ public class W3I {
             private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                 switch (format.toEnum()) {
                     case AUTO:
+                    case W3I_0x1F:
                     case W3I_0x1C:
                     case W3I_0x19: {
                         write_0x19(stream);
@@ -1845,6 +2045,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19: {
                     read_0x19(stream);
@@ -1857,6 +2058,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x1F:
                 case W3I_0x1C:
                 case W3I_0x19: {
                     write_0x19(stream);
@@ -1913,6 +2115,9 @@ public class W3I {
         outStream.println(String.format("loadingScreen: %s", getLoadingScreen()));
 
         outStream.println(String.format("gameDataSet: %s", getGameDataSet()));
+        outStream.println(String.format("gameDataVersion: %s", getGameDataVersion()));
+        outStream.println(String.format("scriptLang: %s", getScriptLang()));
+        outStream.println(String.format("graphics: %s", getGraphics()));
 
         outStream.println(String.format("prologueScreen: %s", getPrologueScreen()));
 
@@ -1932,12 +2137,14 @@ public class W3I {
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
         public enum Enum {
             AUTO,
+            W3I_0x1F,
             W3I_0x1C,
             W3I_0x19,
             W3I_0x12,
         }
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat W3I_0x1F = new EncodingFormat(Enum.W3I_0x1F, 0x1F);
         public final static EncodingFormat W3I_0x1C = new EncodingFormat(Enum.W3I_0x1C, 0x1C);
         public final static EncodingFormat W3I_0x19 = new EncodingFormat(Enum.W3I_0x19, 0x19);
         public final static EncodingFormat W3I_0x12 = new EncodingFormat(Enum.W3I_0x12, 0x12);
@@ -2120,7 +2327,7 @@ public class W3I {
 
         setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x19));
 
-        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameData")));
+        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
 
         setPrologueScreen(new PrologueScreen(
                 stream.readString("prologueScreenPath"),
@@ -2347,7 +2554,7 @@ public class W3I {
 
         setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x1C));
 
-        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameData")));
+        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
 
         setPrologueScreen(new PrologueScreen(
                 stream.readString("prologueScreenPath"),
@@ -2376,7 +2583,7 @@ public class W3I {
                 stream.readUByte("waterAlpha")
         ));
 
-        setScriptLang(stream.readUInt32("scriptLang"));
+        setScriptLang(stream.readUInt32("scriptLang") == 0 ? ScriptLang.JASS : ScriptLang.LUA);
 
         int playersCount = stream.readInt32("playersCount");
 
@@ -2509,7 +2716,7 @@ public class W3I {
         stream.writeUByte(waterColor.getBlue255());
         stream.writeUByte(waterColor.getAlpha255());
 
-        stream.writeUInt32(getScriptLang());
+        stream.writeUInt32(getScriptLang() == ScriptLang.LUA ? 1 : 0);
 
         stream.writeInt32(_players.size());
 
@@ -2544,6 +2751,257 @@ public class W3I {
         stream.writeInt32(0);
     }
 
+    private void read_0x1F(@Nonnull Wc3BinInputStream stream) throws Exception {
+        _fileVersion = stream.readInt32("version");
+
+        stream.checkFormatVersion(EncodingFormat.W3I_0x1F.getVersion(), _fileVersion);
+
+        set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
+        setEditorVersion(stream.readInt32("editorVersion"));
+
+        setGameVersion_major(stream.readUInt32("gameVersion_major"));
+        setGameVersion_minor(stream.readUInt32("gameVersion_minor"));
+        setGameVersion_rev(stream.readUInt32("gameVersion_rev"));
+        setGameVersion_build(stream.readUInt32("gameVersion_build"));
+
+        setMapName(stream.readString("mapName"));
+        setMapAuthor(stream.readString("mapAuthor"));
+        setMapDescription(stream.readString("mapDescription"));
+        setPlayersRecommendedAmount(stream.readString("playersRecommendedAmount"));
+
+        setCameraBounds(new Coords2DF(
+                stream.readFloat32("camA"),
+                stream.readFloat32("camB")),
+            new Coords2DF(
+                stream.readFloat32("camC"),
+                stream.readFloat32("camD")),
+            new Coords2DF(
+                stream.readFloat32("camE"),
+                stream.readFloat32("camF")),
+            new Coords2DF(stream.readFloat32("camG"),
+                stream.readFloat32("camH")
+            ));
+        setMargins(new Bounds(-stream.readInt32("marginA"), stream.readInt32("marginB"), -stream.readInt32("marginC"), stream.readInt32("marginD")));
+
+        setDimensions(stream.readInt32("width"), stream.readInt32("height"));
+
+        setFlags(Flags.valueOf(stream.readInt32("flags")));
+
+        setTileset(Tileset.valueOf(stream.readChar("tileset")));
+
+        setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x1F));
+
+        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
+
+        setPrologueScreen(new PrologueScreen(
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
+        ));
+
+        TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
+        War3Real terrainFogZStart = stream.readReal("terrainFogZStart");
+        War3Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
+        War3Real terrainFogDensity = stream.readReal("terrainFogDensity");
+        Color terrainFogColor = Color.fromRGBA255(stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"), stream.readUByte("terrainFogBlue"),
+            stream.readUByte("terrainFogAlpha"));
+
+        setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
+
+        setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
+        setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
+        setTilesetLightEnv(Tileset.valueOf(stream.readChar("tilesetLightEnv")));
+
+        setWaterColor(Color.fromRGBA255(
+            stream.readUByte("waterRed"),
+            stream.readUByte("waterGreen"),
+            stream.readUByte("waterBlue"),
+            stream.readUByte("waterAlpha")
+        ));
+
+        setScriptLang(stream.readUInt32("scriptLang") == 0 ? ScriptLang.JASS : ScriptLang.LUA);
+        setGraphics(((Function<Long, Graphics>) val -> {
+            if (val == 1L) return Graphics.SD;
+            if (val == 2L) return Graphics.HD;
+            if (val == 3L) return Graphics.SD_AND_HD;
+            return Graphics.SD;
+        }).apply(stream.readUInt32("graphics")));
+        setGameDataVersion(stream.readUInt32("gameDataVersion") == 0 ? GameDataVersion.ROC : GameDataVersion.TFT);
+
+        int playersCount = stream.readInt32("playersCount");
+
+        for (int i = 0; i < playersCount; i++) {
+            addPlayer(new Player(stream, EncodingFormat.W3I_0x1F));
+        }
+
+        if (stream.eof()) return;
+
+        int forcesCount = stream.readInt32("forcesCount");
+
+        for (int i = 0; i < forcesCount; i++) {
+            addForce(new Force(stream, EncodingFormat.W3I_0x1F));
+        }
+
+        if (stream.eof()) return;
+
+        if (stream.readUByte() == 0xFF) return;
+
+        stream.rewind(1);
+
+        int upgradeModsCount = stream.readInt32("upgradeModsCount");
+
+        for (int i = 0; i < upgradeModsCount; i++) {
+            addUpgradeMod(new UpgradeMod(stream, EncodingFormat.W3I_0x1F));
+        }
+
+        if (stream.eof()) return;
+
+        int techModsCount = stream.readInt32("techModsCount");
+
+        for (int i = 0; i < techModsCount; i++) {
+            addTechMod(new TechMod(stream, EncodingFormat.W3I_0x1F));
+        }
+
+        if (stream.eof()) return;
+
+        int unitTablesCount = stream.readInt32("unitTablesCount");
+
+        for (int i = 0; i < unitTablesCount; i++) {
+            addUnitTable(new UnitTable(stream, EncodingFormat.W3I_0x1F));
+        }
+
+        if (stream.eof()) return;
+
+        int itemTablesCount = stream.readInt32("itemTablesCount");
+
+        for (int i = 0; i < itemTablesCount; i++) {
+            addItemTable(new ItemTable(stream, EncodingFormat.W3I_0x1F));
+        }
+    }
+
+    private void write_0x1F(@Nonnull Wc3BinOutputStream stream) {
+        stream.writeInt32(EncodingFormat.W3I_0x1F.getVersion());
+
+        stream.writeInt32(getSavesAmount());
+        stream.writeInt32(getEditorVersion());
+
+        stream.writeUInt32(getGameVersion_major());
+        stream.writeUInt32(getGameVersion_minor());
+        stream.writeUInt32(getGameVersion_rev());
+        stream.writeUInt32(getGameVersion_build());
+
+        stream.writeString(getMapName());
+        stream.writeString(getMapAuthor());
+        stream.writeString(getMapDescription());
+        stream.writeString(getPlayersRecommendedAmount());
+
+        Coords2DF camBounds1 = getCameraBounds1();
+        Coords2DF camBounds2 = getCameraBounds2();
+        Coords2DF camBounds3 = getCameraBounds3();
+        Coords2DF camBounds4 = getCameraBounds4();
+
+        stream.writeFloat32(camBounds1.getX());
+        stream.writeFloat32(camBounds1.getY());
+        stream.writeFloat32(camBounds2.getX());
+        stream.writeFloat32(camBounds2.getY());
+        stream.writeFloat32(camBounds3.getX());
+        stream.writeFloat32(camBounds3.getY());
+        stream.writeFloat32(camBounds4.getX());
+        stream.writeFloat32(camBounds4.getY());
+
+        stream.writeInt32(-getMargins().getMinX());
+        stream.writeInt32(getMargins().getMaxX());
+        stream.writeInt32(-getMargins().getMinY());
+        stream.writeInt32(getMargins().getMaxY());
+
+        stream.writeInt32(getWidth());
+        stream.writeInt32(getHeight());
+
+        stream.writeInt32(getFlags().toInt());
+
+        stream.writeChar(getTileset().getChar());
+
+        getLoadingScreen().write(stream, EncodingFormat.W3I_0x1F);
+
+        stream.writeInt32(getGameDataSet().getIndex());
+
+        PrologueScreen prologueScreen = getPrologueScreen();
+
+        stream.writeString(prologueScreen != null ? prologueScreen.getPath() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getText() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getTitle() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getSubtitle() : null);
+
+        TerrainFog terrainFog = getTerrainFog();
+
+        TerrainFogType terrainFogType = terrainFog != null ? terrainFog.getType() : null;
+
+        stream.writeInt32(terrainFogType != null ? terrainFogType.getVal() : 0);
+        stream.writeReal(terrainFog != null ? terrainFog.getZStart() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getDensity() : null);
+
+        Color terrainFogColor = (terrainFog != null) ? terrainFog.getColor() : null;
+
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha255() : 0x00);
+
+        stream.writeId(getGlobalWeatherId());
+        stream.writeString(getSoundEnv());
+        stream.writeChar(getTilesetLightEnv() != null ? getTilesetLightEnv().getChar() : null);
+
+        Color waterColor = getWaterColor();
+
+        stream.writeUByte(waterColor.getRed255());
+        stream.writeUByte(waterColor.getGreen255());
+        stream.writeUByte(waterColor.getBlue255());
+        stream.writeUByte(waterColor.getAlpha255());
+
+        stream.writeUInt32(getScriptLang() == ScriptLang.LUA ? 1 : 0);
+        stream.writeUInt32(((Function<Graphics, Long>) val -> {
+            if (val == Graphics.SD) return 1L;
+            if (val == Graphics.HD) return 2L;
+            if (val == Graphics.SD_AND_HD) return 3L;
+            return 1L;
+        }).apply(getGraphics()));
+        stream.writeUInt32(getGameDataVersion() == GameDataVersion.TFT ? 1 : 0);
+
+        stream.writeInt32(_players.size());
+
+        for (Player player : _players) {
+            player.write(stream, EncodingFormat.W3I_0x1F);
+        }
+
+        stream.writeInt32(_forces.size());
+
+        for (Force force : _forces) {
+            force.write(stream, EncodingFormat.W3I_0x1F);
+        }
+
+        stream.writeInt32(_upgradeMods.size());
+
+        for (UpgradeMod upgradeMod : _upgradeMods) {
+            upgradeMod.write(stream, EncodingFormat.W3I_0x1F);
+        }
+
+        stream.writeInt32(_techMods.size());
+
+        for (TechMod techMod : _techMods) {
+            techMod.write(stream, EncodingFormat.W3I_0x1F);
+        }
+
+        stream.writeInt32(_unitTables.size());
+
+        for (UnitTable unitTable : _unitTables) {
+            unitTable.write(stream, EncodingFormat.W3I_0x1F);
+        }
+
+        stream.writeInt32(0);
+    }
+
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt32("version");
 
@@ -2566,6 +3024,9 @@ public class W3I {
             case W3I_0x1C:
                 read_0x1C(stream);
                 break;
+            case W3I_0x1F:
+                read_0x1F(stream);
+                break;
         }
     }
 
@@ -2579,6 +3040,11 @@ public class W3I {
                 write(stream, format);
 
                 break;
+            case W3I_0x1F: {
+                write_0x1F(stream);
+
+                break;
+            }
             case W3I_0x1C: {
                 write_0x1C(stream);
 
@@ -2722,45 +3188,63 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeInitAllyPriorities() {
+    public FuncImpl makeInitAllyPriorities(@Nonnull GameVersion gameVersion) {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
         for (Player player : getPlayers()) {
-            Set<Integer> lowNums = player.getAllyLowPrioPlayerNums();
-            Set<Integer> highNums = player.getAllyHighPrioPlayerNums();
-
             int playerNum = player.getNum();
 
-            stmts.add(Statement.create(String.format("call SetStartLocPrioCount(%d, %d)", playerNum, lowNums.size() + highNums.size())));
+            {
+                Set<Integer> allyLowNums = player.getAllyLowPrioPlayerNums();
+                Set<Integer> allyHighNums = player.getAllyHighPrioPlayerNums();
 
-            int c = 0;
+                stmts.add(Statement.create(String.format("call SetStartLocPrioCount(%d, %d)", playerNum, allyLowNums.size() + allyHighNums.size())));
 
-            for (Player otherPlayer : getPlayers()) {
-                int otherPlayerNum = otherPlayer.getNum();
+                int c = 0;
 
-                if (playerNum == otherPlayerNum) continue;
+                for (Player otherPlayer : getPlayers()) {
+                    int otherPlayerNum = otherPlayer.getNum();
 
-                if (lowNums.contains(otherPlayerNum)) {
-                    stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
-                } else if (highNums.contains(otherPlayerNum)) {
-                    stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
-                } else {
-                    //stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                    if (playerNum == otherPlayerNum) continue;
+
+                    if (allyLowNums.contains(otherPlayerNum)) {
+                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                    } else if (allyHighNums.contains(otherPlayerNum)) {
+                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                    } else {
+                        //stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                    }
+
+                    c++;
                 }
-
-                c++;
             }
 
-            /*for (Integer lowNum : lowNums) {
-                stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, lowNum, "MAP_LOC_PRIO_LOW")));
-                c++;
+            if (gameVersion.compareTo(GameVersion.VERSION_1_32) >= 0) {
+                Set<Integer> enemyLowNums = player.getEnemyLowPrioPlayerNums();
+                Set<Integer> enemyHighNums = player.getEnemyHighPrioPlayerNums();
+
+                stmts.add(Statement.create(String.format("call SetEnemyStartLocPrioCount(%d, %d)", playerNum, enemyLowNums.size() + enemyHighNums.size())));
+
+                int c = 0;
+
+                for (Player otherPlayer : getPlayers()) {
+                    int otherPlayerNum = otherPlayer.getNum();
+
+                    if (playerNum == otherPlayerNum) continue;
+
+                    if (enemyLowNums.contains(otherPlayerNum)) {
+                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                    } else if (enemyHighNums.contains(otherPlayerNum)) {
+                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                    } else {
+                        //stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                    }
+
+                    c++;
+                }
             }
-            for (Integer highNum : highNums) {
-                stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, highNum, "MAP_LOC_PRIO_HIGH")));
-                c++;
-            }*/
         }
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
@@ -2802,7 +3286,7 @@ public class W3I {
         return funcImpl;
     }
 
-    public void injectConfigsInJassScript(@Nonnull JassScript jassScript) {
+    public void injectConfigsInJassScript(@Nonnull JassScript jassScript, @Nonnull GameVersion gameVersion) {
         List<String> funcNames = new ArrayList<>();
 
         funcNames.add(FuncDecl.CONFIG_NAME);
@@ -2824,7 +3308,7 @@ public class W3I {
 
         FuncImpl initCustomPlayerSlots = makeInitCustomPlayerSlots();
         FuncImpl initCustomTeams = makeInitCustomTeams();
-        FuncImpl initAllyPriorities = makeInitAllyPriorities();
+        FuncImpl initAllyPriorities = makeInitAllyPriorities(gameVersion);
         FuncImpl config = makeConfig();
 
         jassScript.addFuncImpl(initCustomPlayerSlots);
@@ -2885,14 +3369,14 @@ public class W3I {
         reader.close();
     }
 
-    public void injectConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+    public void injectConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion) throws IOException {
         removeConfigsInJassScript(inStream, sw);
 
         List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
 
         toBeAddedFuncImpls.add(makeInitCustomPlayerSlots());
         toBeAddedFuncImpls.add(makeInitCustomTeams());
-        toBeAddedFuncImpls.add(makeInitAllyPriorities());
+        toBeAddedFuncImpls.add(makeInitAllyPriorities(gameVersion));
         toBeAddedFuncImpls.add(makeConfig());
 
         for (FuncImpl funcImpl : toBeAddedFuncImpls) {

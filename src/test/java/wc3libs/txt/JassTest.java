@@ -1,6 +1,7 @@
 package wc3libs.txt;
 
 import net.moonlightflower.wc3libs.bin.app.W3I;
+import net.moonlightflower.wc3libs.port.GameVersion;
 import net.moonlightflower.wc3libs.txt.app.jass.Jass;
 import net.moonlightflower.wc3libs.txt.app.jass.JassScript;
 import net.moonlightflower.wc3libs.txt.app.jass.LightJass;
@@ -87,7 +88,7 @@ public class JassTest extends Wc3LibTest {
         w3i.setMapDescription("description");
         w3i.setPlayersRecommendedAmount("playersRecommended");
 
-        w3i.injectConfigsInJassScript(script);
+        w3i.injectConfigsInJassScript(script, GameVersion.VERSION_1_32);
 
         StringWriter sw = new StringWriter();
 
