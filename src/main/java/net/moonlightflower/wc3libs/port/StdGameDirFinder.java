@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.port;
 
 import net.moonlightflower.wc3libs.port.mac.MacGameDirFinder;
+import net.moonlightflower.wc3libs.port.win.WinGameDirFinder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -12,6 +13,10 @@ public class StdGameDirFinder extends GameDirFinder {
 
     protected GameDirFinder getMacGameDirFinder() {
         return new MacGameDirFinder();
+    }
+
+    protected GameDirFinder getWinGameDirFinder() {
+        return new WinGameDirFinder();
     }
 
     @Nonnull
@@ -30,15 +35,11 @@ public class StdGameDirFinder extends GameDirFinder {
         if (Orient.isMacSystem()) {
             GameDirFinder macGameDirFinder = getMacGameDirFinder();
 
-            try {
-                return macGameDirFinder.get();
-            } catch (NotFoundException e) {
-                throw e;
-            }
+            return macGameDirFinder.get();
         } else if (Orient.isWindowsSystem()) {
+            GameDirFinder winGameDirFinder = getWinGameDirFinder();
 
-
-            throw new NotFoundException();
+            return winGameDirFinder.get();
         } else {
             throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
         }
