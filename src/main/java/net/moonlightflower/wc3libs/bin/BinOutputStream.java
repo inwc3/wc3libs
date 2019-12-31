@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class BinOutputStream extends BinStream {
+public class BinOutputStream extends BinStream implements AutoCloseable {
     private void ensureCap(long size) {
         long toAdd = size - _bytes.size();
 
@@ -54,6 +54,7 @@ public class BinOutputStream extends BinStream {
 
     private final OutputStream _outStream;
 
+    @Override
     public void close() throws IOException {
         write(_outStream);
 
