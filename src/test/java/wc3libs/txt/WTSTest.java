@@ -25,7 +25,14 @@ public class WTSTest extends Wc3LibTest {
                 WTS wts = new WTS(p.toFile());
 
                 Assert.assertEquals(wts.getEntry(1), "Player 1");
+                Assert.assertEquals(wts.getEntry(2), "Force 1");
+                Assert.assertEquals(wts.getEntry(11), "xaxaxaxaxaxa");
                 Assert.assertEquals(wts.getEntry(2224), "https://test.com");
+                Assert.assertEquals(wts.getEntry(2228), "empty");
+                Assert.assertEquals(wts.getEntry(4322), "Some\r\n" +
+                    "implicit\r\n" +
+                    "newline\r\n" +
+                    "string");
 
                 Path outPath = Paths.get("out.WTS");
                 Files.deleteIfExists(outPath);

@@ -50,3 +50,10 @@ STRING 2228
 empty
 }
 
+STRING 4322
+{
+Some
+implicit
+newline
+string
+}

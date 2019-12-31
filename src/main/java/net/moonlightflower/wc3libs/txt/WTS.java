@@ -25,7 +25,6 @@ public class WTS {
 
     private static final Pattern KEY_PATTERN = Pattern.compile("STRING ([\\d]+)[\\n\\s]*\\{([^\\}]*)[\\n]*\\}");
     private static final Pattern COMMENT_PATTERN = Pattern.compile("(?m)^//.*");
-    private static final Pattern ENTRY_PATTERN = Pattern.compile("^(.*)");
 
     private final Map<Integer, String> _vals = new LinkedHashMap<>();
 
@@ -109,17 +108,9 @@ public class WTS {
 
         while (matcher.find()) {
             int key = Integer.parseInt(matcher.group(1));
-            String val = matcher.group(2);
+            String val = matcher.group(2).trim();
 
-            val = val.replaceAll("\\p{Cntrl}", "");
-
-            Matcher entryMatcher = ENTRY_PATTERN.matcher(val);
-
-            if (entryMatcher.find()) {
-                val = entryMatcher.group(1);
-
-                addEntry(key, val != null ? val : "");
-            }
+            addEntry(key, val);
         }
     }
 
