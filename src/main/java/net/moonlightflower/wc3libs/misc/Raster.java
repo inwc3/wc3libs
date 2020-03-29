@@ -18,18 +18,18 @@ public abstract class Raster<T> implements Boundable {
 
 	@Nonnull
 	@Override
-	public Coords2DI getCenter() {
+	public Coords2DF getCenter() {
 		return _bounds.getCenter();
 	}
 
 	@Override
-	public int getCenterX() {
-		return getCenter().getX();
+	public float getCenterX() {
+		return getCenter().getX().toFloat();
 	}
 
 	@Override
-	public int getCenterY() {
-		return getCenter().getY();
+	public float getCenterY() {
+		return getCenter().getY().toFloat();
 	}
 
 	@Nonnull
@@ -96,11 +96,11 @@ public abstract class Raster<T> implements Boundable {
 		return _cells[index];
 	}
 	
-	private int coordsToIndex(Coords2DI pos) {
+	private int coordsToIndex(@Nonnull Coords2DI pos) {
 		return (pos.getY() * getWidth() + pos.getX());
 	}
 	
-	public T get(Coords2DI pos) {
+	public T get(@Nonnull Coords2DI pos) {
 		return get(coordsToIndex(pos));
 	}
 	
@@ -108,13 +108,14 @@ public abstract class Raster<T> implements Boundable {
 		_cells[index] = val;
 	}
 	
-	public void set(Coords2DI pos, T val) {
+	public void set(@Nonnull Coords2DI pos, T val) {
 		set(coordsToIndex(pos), val);
 	}
-	
+
+	@Nonnull
 	public Coords2DI worldToLocalCoords(@Nonnull Coords2DF pos) {
-		int x = ((int) (pos.getX().toFloat() - getCenterX())) / getCellSize() + getWidth() / 2;
-		int y = ((int) (pos.getY().toFloat() - getCenterY())) / getCellSize() + getHeight() / 2;
+		int x = (int) ((pos.getX().toFloat() - getCenterX()) / getCellSize() + getWidth() / 2F);
+		int y = (int) ((pos.getY().toFloat() - getCenterY()) / getCellSize() + getHeight() / 2F);
 
 		return new Coords2DI(x, y);
 	}
@@ -146,15 +147,15 @@ public abstract class Raster<T> implements Boundable {
 	}
 	
 	public void mergeCellsByPos(@Nonnull Raster<T> other, boolean... extra) {
-		Coords2DI center = getCenter();
-		Coords2DI otherCenter = other.getCenter();
+		Coords2DF center = getCenter();
+		Coords2DF otherCenter = other.getCenter();
 		
 		Size size = getSize();
 		Size otherSize = other.getSize();
 		
-		int minX = (otherCenter.getX() - otherSize.getWidth() / 2) - (center.getX() - size.getWidth() / 2);
+		int minX = (int) ((otherCenter.getX().toFloat() - otherSize.getWidth() / 2F) - (center.getX().toFloat() - size.getWidth() / 2F));
 		int maxX = minX + otherSize.getWidth() - 1;
-		int minY = (otherCenter.getY() - otherSize.getHeight() / 2) - (center.getY() - size.getHeight() / 2);
+		int minY = (int) ((otherCenter.getY().toFloat() - otherSize.getHeight() / 2F) - (center.getY().toFloat() - size.getHeight() / 2F));
 		int maxY = minY + otherSize.getHeight() - 1;
 
 		for (int y = minY; y <= maxY; y++) {

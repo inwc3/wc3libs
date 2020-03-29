@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
+import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.ShadowMap;
 import net.moonlightflower.wc3libs.misc.Size;
@@ -72,7 +73,7 @@ public class SHD {
         //TODO: long?
         int sizeI = (int) stream.size();
 
-        _shadowMap.setBounds(new Bounds(new Size(1, sizeI), new Coords2DI(0, 0)), false, false);
+        _shadowMap.setBounds(new Bounds(new Size(1, sizeI)), false, false);
 
         for (int i = 0; i < sizeI; i++) {
             Boolean val = ((stream.readByte() & 0xFF) == 0xFF);
@@ -148,7 +149,7 @@ public class SHD {
     }
 
     public SHD(@Nonnull BufferedImage img) {
-        this(new Bounds(new Size(img.getWidth(), img.getHeight()), new Coords2DI(0, 0)));
+        this(new Bounds(new Size(img.getWidth(), img.getHeight())));
 
         for (int x = 0; x < img.getWidth(); x++) {
             for (int y = 0; y < img.getHeight(); y++) {
@@ -174,7 +175,7 @@ public class SHD {
     }
 
     public SHD() {
-        _shadowMap = new ShadowMap(new Bounds(new Size(0, 0), new Coords2DI(0, 0)));
+        _shadowMap = new ShadowMap(new Bounds(new Size(0, 0)));
     }
 
     @Nonnull

@@ -42,7 +42,7 @@ public class W3I {
     }
 
     public static class State<T extends DataType> extends BinState<T> {
-        public static State<War3Int> SAVES_AMOUNT = new State<>("savesAmount", War3Int.class);
+        public static State<War3Int> SAVES_AMOUNT = new State<>("savesAmount", War3Int.class, War3Int.valueOf(0));
 
         public State(@Nonnull String fieldIdS, @Nonnull DataTypeInfo typeInfo, @Nullable T defVal) {
             super(fieldIdS, typeInfo, defVal);
@@ -232,7 +232,7 @@ public class W3I {
     public Bounds getWorldBounds() {
         Size size = new Size(getWidth() + getMargins().getMinX() + getMargins().getMaxX(), getHeight() + getMargins().getMinY() + getMargins().getMaxY());
 
-        return new Bounds(size, new Coords2DI(0, 0));
+        return new Bounds(size);
     }
 
     public void setDimensions(int width, int height) {
@@ -1232,17 +1232,8 @@ public class W3I {
         return null;
     }
 
-    private void addPlayer(@Nonnull Player val) {
+    public void addPlayer(@Nonnull Player val) {
         _players.add(val);
-    }
-
-    @Nonnull
-    public Player addPlayer() {
-        Player player = new Player();
-
-        addPlayer(player);
-
-        return player;
     }
 
     public static class Force {
@@ -1368,7 +1359,7 @@ public class W3I {
 
             playersS = playersS.substring(playersS.length() - 12).replaceAll(" ", "0");
 
-            return String.format("%s [players=%s, flags=%s]", getName(), playersS, getFlags());
+            return String.format("name=%s players=%s flags=%s", getName(), playersS, getFlags());
         }
 
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -1435,17 +1426,8 @@ public class W3I {
         return new ArrayList<>(_forces);
     }
 
-    private void addForce(@Nonnull Force val) {
+    public void addForce(@Nonnull Force val) {
         _forces.add(val);
-    }
-
-    @Nonnull
-    public Force addForce() {
-        Force force = new Force();
-
-        addForce(force);
-
-        return force;
     }
 
     public void removeForce(@Nonnull Force force) {
@@ -1495,6 +1477,11 @@ public class W3I {
 
         public void setAvail(int val) {
             _avail = val;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("avail=%s id=%s level=%s players=%s", _avail, _id, _level, _players);
         }
 
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -1559,17 +1546,8 @@ public class W3I {
         return new ArrayList<>(_upgradeMods);
     }
 
-    private void addUpgradeMod(@Nonnull UpgradeMod val) {
+    public void addUpgradeMod(@Nonnull UpgradeMod val) {
         _upgradeMods.add(val);
-    }
-
-    @Nonnull
-    public UpgradeMod addUpgradeMod() {
-        UpgradeMod upgradeMod = new UpgradeMod();
-
-        addUpgradeMod(upgradeMod);
-
-        return upgradeMod;
     }
 
     public static class TechMod {
@@ -1592,6 +1570,11 @@ public class W3I {
 
         public void setId(@Nonnull Id val) {
             _id = val;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("id=%s players=%s", _id, _players);
         }
 
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -1648,17 +1631,8 @@ public class W3I {
         return new ArrayList<>(_techMods);
     }
 
-    private void addTechMod(@Nonnull TechMod val) {
+    public void addTechMod(@Nonnull TechMod val) {
         _techMods.add(val);
-    }
-
-    @Nonnull
-    public TechMod addTechMod() {
-        TechMod techMod = new TechMod();
-
-        addTechMod(techMod);
-
-        return techMod;
     }
 
     public static class UnitTable {
@@ -1746,6 +1720,11 @@ public class W3I {
                 _typeIds.put(pos, val);
             }
 
+            @Override
+            public String toString() {
+                return String.format("chance=%s typeIds=[%s]", _chance, _typeIds.entrySet().stream().map(entry -> String.format("%s->%s", entry.getKey(), entry.getValue())).collect(Collectors.joining(" ")));
+            }
+
             private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
                 setChance(stream.readInt32("chance"));
 
@@ -1795,8 +1774,8 @@ public class W3I {
                 read(stream, format);
             }
 
-            public Set() {
-
+            public Set(int chance) {
+                _chance = chance;
             }
         }
 
@@ -1807,17 +1786,13 @@ public class W3I {
             return new ArrayList<>(_sets);
         }
 
-        private void addSet(@Nonnull Set val) {
+        public void addSet(@Nonnull Set val) {
             _sets.add(val);
         }
 
-        @Nonnull
-        public Set addSet() {
-            Set set = new Set();
-
-            addSet(set);
-
-            return set;
+        @Override
+        public String toString() {
+            return String.format("index=%s name=%s positionTypes=[%s] sets=[%s]", _index, _name, _positionTypes.entrySet().stream().map(entry -> String.format("%s->%s", entry.getKey(), entry.getValue())).collect(Collectors.joining(" ")), _sets.stream().map(Set::toString).collect(Collectors.joining(" ")));
         }
 
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws Exception {
@@ -1889,7 +1864,9 @@ public class W3I {
             read(stream, format);
         }
 
-        public UnitTable() {
+        public UnitTable(int index, @Nonnull String name) {
+            _index = index;
+            _name = name;
         }
     }
 
@@ -1900,17 +1877,8 @@ public class W3I {
         return new ArrayList<>(_unitTables);
     }
 
-    private void addUnitTable(@Nonnull UnitTable val) {
+    public void addUnitTable(@Nonnull UnitTable val) {
         _unitTables.add(val);
-    }
-
-    @Nonnull
-    public UnitTable addUnitTable() {
-        UnitTable unitTable = new UnitTable();
-
-        addUnitTable(unitTable);
-
-        return unitTable;
     }
 
     public static class ItemTable {
@@ -1935,37 +1903,110 @@ public class W3I {
         }
 
         public static class Set {
-            private int _chance = 100;
+            public static class Item {
+                private int _chance = 100;
 
-            public int getChance() {
-                return _chance;
+                public int getChance() {
+                    return _chance;
+                }
+
+                public void setChance(int val) {
+                    _chance = val;
+                }
+
+                private Id _typeId;
+
+                @Nonnull
+                public Id getTypeId() {
+                    return _typeId;
+                }
+
+                public void setTypeId(@Nonnull Id val) {
+                    _typeId = val;
+                }
+
+                @Override
+                public String toString() {
+                    return String.format("chance=%s typeId=%s", _chance, _typeId);
+                }
+
+                private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+                    setChance(stream.readInt32("chance"));
+
+                    setTypeId(stream.readId("typeId"));
+                }
+
+                private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
+                    stream.writeInt32(getChance());
+
+                    stream.writeId(getTypeId());
+                }
+
+                private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+                    switch (format.toEnum()) {
+                        case W3I_0x1F:
+                        case W3I_0x1C:
+                        case W3I_0x19: {
+                            read_0x19(stream);
+
+                            break;
+                        }
+                    }
+                }
+
+                private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+                    switch (format.toEnum()) {
+                        case AUTO:
+                        case W3I_0x1F:
+                        case W3I_0x1C:
+                        case W3I_0x19: {
+                            write_0x19(stream);
+
+                            break;
+                        }
+                    }
+                }
+
+                public Item(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+                    read(stream, format);
+                }
+
+                public Item(@Nonnull Id typeId, int chance) {
+                    _typeId = typeId;
+                    _chance = chance;
+                }
             }
 
-            public void setChance(int val) {
-                _chance = val;
-            }
-
-            private Id _id;
+            private List<Item> _items = new ArrayList<>();
 
             @Nonnull
-            public Id getTypeId() {
-                return _id;
+            public List<Item> getItems() {
+                return new ArrayList<>(_items);
             }
 
-            public void setTypeId(@Nonnull Id val) {
-                _id = val;
+            public void addItem(@Nonnull Item val) {
+                _items.add(val);
+            }
+
+            @Override
+            public String toString() {
+                return String.format("items=[%s]", _items.stream().map(Item::toString).collect(Collectors.joining(" ")));
             }
 
             private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-                setChance(stream.readInt32("chance"));
+                int itemsCount = stream.readInt32("itemsCount");
 
-                setTypeId(stream.readId("typeId"));
+                for (int i = 0; i < itemsCount; i++) {
+                    addItem(new Item(stream, EncodingFormat.W3I_0x19));
+                }
             }
 
             private void write_0x19(@Nonnull Wc3BinOutputStream stream) {
-                stream.writeInt32(getChance());
+                stream.writeInt32(_items.size());
 
-                stream.writeId(getTypeId());
+                for (Item item : _items) {
+                    item.write(stream, EncodingFormat.W3I_0x19);
+                }
             }
 
             private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -2008,17 +2049,13 @@ public class W3I {
             return new ArrayList<>(_sets);
         }
 
-        private void addSet(@Nonnull Set val) {
+        public void addSet(@Nonnull Set val) {
             _sets.add(val);
         }
 
-        @Nonnull
-        public Set addSet() {
-            Set set = new Set();
-
-            addSet(set);
-
-            return set;
+        @Override
+        public String toString() {
+            return String.format("index=%s name=%s sets=[%s]", _index, _name, _sets.stream().map(Set::toString).collect(Collectors.joining(" ")));
         }
 
         private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -2037,6 +2074,8 @@ public class W3I {
             stream.writeInt32(getIndex());
 
             stream.writeString(getName());
+
+            stream.writeInt32(_sets.size());
 
             for (Set set : _sets) {
                 set.write(stream, EncodingFormat.W3I_0x19);
@@ -2072,7 +2111,9 @@ public class W3I {
             read(stream, format);
         }
 
-        public ItemTable() {
+        public ItemTable(int index, @Nonnull String name) {
+            _index = index;
+            _name = name;
         }
     }
 
@@ -2083,17 +2124,8 @@ public class W3I {
         return new ArrayList<>(_itemTables);
     }
 
-    private void addItemTable(@Nonnull ItemTable val) {
+    public void addItemTable(@Nonnull ItemTable val) {
         _itemTables.add(val);
-    }
-
-    @Nonnull
-    public ItemTable addItemTable() {
-        ItemTable itemTable = new ItemTable();
-
-        addItemTable(itemTable);
-
-        return itemTable;
     }
 
     public void print(@Nonnull PrintStream outStream) {
@@ -2128,6 +2160,13 @@ public class W3I {
         outStream.println(String.format("tilesetLightEnv: %s", getTilesetLightEnv()));
 
         outStream.println(String.format("waterColor: %s", getWaterColor()));
+
+        outStream.println(String.format("players: [%s]", getPlayers().stream().map(Player::toString).collect(Collectors.joining(" "))));
+        outStream.println(String.format("forces: [%s]", getForces().stream().map(Force::toString).collect(Collectors.joining(" "))));
+        outStream.println(String.format("upgradeMods: [%s]", getUpgradeMods().stream().map(UpgradeMod::toString).collect(Collectors.joining(" "))));
+        outStream.println(String.format("techMods: [%s]", getTechMods().stream().map(TechMod::toString).collect(Collectors.joining(" "))));
+        outStream.println(String.format("unitTables: [%s]", getUnitTables().stream().map(UnitTable::toString).collect(Collectors.joining(" "))));
+        outStream.println(String.format("itemTables: [%s]", getItemTables().stream().map(ItemTable::toString).collect(Collectors.joining(" "))));
     }
 
     public void print() {
@@ -2511,7 +2550,11 @@ public class W3I {
             unitTable.write(stream, EncodingFormat.W3I_0x19);
         }
 
-        stream.writeInt32(0);
+        stream.writeInt32(_itemTables.size());
+
+        for (ItemTable itemTable : _itemTables) {
+            itemTable.write(stream, EncodingFormat.W3I_0x19);
+        }
     }
 
     private void read_0x1C(@Nonnull Wc3BinInputStream stream) throws Exception {
@@ -2748,7 +2791,11 @@ public class W3I {
             unitTable.write(stream, EncodingFormat.W3I_0x1C);
         }
 
-        stream.writeInt32(0);
+        stream.writeInt32(_itemTables.size());
+
+        for (ItemTable itemTable : _itemTables) {
+            itemTable.write(stream, EncodingFormat.W3I_0x1C);
+        }
     }
 
     private void read_0x1F(@Nonnull Wc3BinInputStream stream) throws Exception {
@@ -2999,7 +3046,11 @@ public class W3I {
             unitTable.write(stream, EncodingFormat.W3I_0x1F);
         }
 
-        stream.writeInt32(0);
+        stream.writeInt32(_itemTables.size());
+
+        for (ItemTable itemTable : _itemTables) {
+            itemTable.write(stream, EncodingFormat.W3I_0x1F);
+        }
     }
 
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
@@ -3080,7 +3131,9 @@ public class W3I {
     }
 
     public W3I() {
-
+        for (State state : State.values(State.class)) {
+            set(state, state.getDefVal());
+        }
     }
 
     public W3I(@Nonnull Wc3BinInputStream stream) throws Exception {

@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
+import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.*;
 
@@ -428,7 +429,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			stream.writeInt32(width);
 			stream.writeInt32(height);
 
-			Coords2DI center = getCenter();
+			Coords2DF center = getCenter();
 
 			stream.writeFloat32(center.getX());
 			stream.writeFloat32(center.getY());
@@ -531,7 +532,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 				_w3e.setCliffTile(i, stream.readId("cliffTilesUsed" + i));
 			}
 
-			_w3e.setBounds(new Bounds(new Size(stream.readInt32("width"), stream.readInt32("height")), new Coords2DI(stream.readFloat32("x").intValue(), stream.readFloat32("y").intValue())), false, false);
+			_w3e.setBounds(new Bounds(new Size(stream.readInt32("width"), stream.readInt32("height")), new Coords2DF(stream.readFloat32("x"), stream.readFloat32("y"))), false, false);
 
 			int width = _w3e.getWidth();
 			int height = _w3e.getHeight();

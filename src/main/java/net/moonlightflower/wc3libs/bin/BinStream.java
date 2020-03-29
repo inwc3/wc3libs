@@ -35,7 +35,7 @@ public class BinStream {
         }
 
         @Override
-        public String toString() {
+        public String getMessage() {
             StringBuilder sb = new StringBuilder();
 
             for (String s : _stream.getLogLines()) {
@@ -45,6 +45,11 @@ public class BinStream {
             }
 
             return sb.toString();
+        }
+
+        @Override
+        public String toString() {
+            return getMessage();
         }
 
         public StreamException(@Nonnull BinStream stream, @Nonnull String msg) {

@@ -166,15 +166,15 @@ public class PathMap extends Raster<Integer> {
 	}
 	
 	public void mergeCellsByPos(@Nonnull PathMap other, boolean additive) {
-		Coords2DI center = getCenter();
-		Coords2DI otherCenter = other.getCenter();
+		Coords2DF center = getCenter();
+		Coords2DF otherCenter = other.getCenter();
 		
 		Size size = getSize();
 		Size otherSize = other.getSize();
 		
-		int minX = (otherCenter.getX() - otherSize.getWidth() / 2) - (center.getX() - size.getWidth() / 2);
+		int minX = (int) ((otherCenter.getX().toFloat() - otherSize.getWidth() / 2) - (center.getX().toFloat() - size.getWidth() / 2));
 		int maxX = minX + otherSize.getWidth() - 1;
-		int minY = (otherCenter.getY() - otherSize.getHeight() / 2) - (center.getY() - size.getHeight() / 2);
+		int minY = (int) ((otherCenter.getY().toFloat() - otherSize.getHeight() / 2) - (center.getY().toFloat() - size.getHeight() / 2));
 		int maxY = minY + otherSize.getHeight() - 1;
 
 		for (int y = minY; y <= maxY; y++) {

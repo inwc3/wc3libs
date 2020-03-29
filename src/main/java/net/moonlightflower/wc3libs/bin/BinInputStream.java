@@ -25,7 +25,7 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 			
 			return vals;
 		} catch (IndexOutOfBoundsException e) {
-			throw new StreamException(this);
+			throw new StreamException(this, e.getMessage());
 		}
 	}
 
