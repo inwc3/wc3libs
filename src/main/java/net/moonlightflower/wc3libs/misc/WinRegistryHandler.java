@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Optional;
 
 import net.moonlightflower.wc3libs.misc.ProcCaller;
 import net.moonlightflower.wc3libs.port.Orient;
@@ -37,6 +38,8 @@ public class WinRegistryHandler {
 		}
 	}
 
+	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
+	@Deprecated
 	public static class Wc3Entry extends Entry {
 		public final static String PREFIX = "HKCU\\Software\\Blizzard Entertainment\\Warcraft III";
 
@@ -257,6 +260,23 @@ public class WinRegistryHandler {
 		}
 	}
 
+	/** A Warcraft 3 Reforged compatible registry entry. Installations as of 1.32 may be void of all `Wc3Entry`s. */
+	public static class Wc3ReforgedEntry extends Entry {
+		public final static String PREFIX = "HKLM\\Software\\WOW6432Node\\Blizzard Entertainment\\Warcraft III\\Capabilities";
+
+		public Wc3ReforgedEntry(@Nonnull String key, @Nonnull EntryType entryType) {
+			super(PREFIX, key, entryType);
+		}
+
+		/** Of the form `"C:\Program Files\Warcraft III\x86_64\Warcraft III.exe",0` */
+		public final static Wc3ReforgedEntry APPLICATION_ICON = new Wc3ReforgedEntry("ApplicationIcon", EntryType.REG_SZ);
+
+		/** Of the form `"C:\Program Files\Warcraft III\x86_64\Warcraft III.exe",0` */
+		public final static Wc3ReforgedEntry INSTALL_PATH = APPLICATION_ICON;
+	}
+
+	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
+	@Deprecated
 	public static class Wc3LocalMachineEntry extends Entry {
 		public final static String PREFIX = "HKLM\\Software\\Blizzard Entertainment\\Warcraft III";
 
@@ -269,6 +289,8 @@ public class WinRegistryHandler {
 		}
 	}
 
+	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
+	@Deprecated
 	public static class WorldEditEntry extends Entry {
 		public final static String PREFIX = "HKCU\\Software\\Blizzard Entertainment\\WorldEdit";
 
@@ -281,24 +303,32 @@ public class WinRegistryHandler {
         if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
 		ProcCaller proc = getQueryingProcCaller(dir, key);
-		
+
 		proc.exec();
-		
+
 		String result = proc.getOutString();
-		
+
 		result = result.replaceAll("\\p{Cntrl}", "");
-		
+
 		String[] splits = result.split("    ");
 
-		if (splits.length < 4) return null;//throw new IOException("entry " + dir + ";" + key + " not found");
+		if (splits.length < 4) return null;
 
 		return splits[3];
+	}
+
+	public Optional<String> maybeGet(@Nonnull String dirS, @Nonnull String key) {
+		try {
+			return Optional.ofNullable(get(dirS, key));
+		} catch (IOException e) {
+			return Optional.empty();
+		}
 	}
 
 	protected ProcCaller getQueryingProcCaller(@Nonnull File dir, @Nonnull String key) {
 		return new ProcCaller("REG", "QUERY", dir.toString(), "/v", key);
 	}
-	
+
 	public String get(@Nonnull String dirS, @Nonnull String key) throws IOException {
 		return get(new File(dirS), key);
 	}
