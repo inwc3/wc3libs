@@ -2,11 +2,8 @@ package net.moonlightflower.wc3libs.misc;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.Optional;
 
-import net.moonlightflower.wc3libs.misc.ProcCaller;
 import net.moonlightflower.wc3libs.port.Orient;
 
 import javax.annotation.Nonnull;
@@ -39,7 +36,6 @@ public class WinRegistryHandler {
 	}
 
 	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
-	@Deprecated
 	public static class Wc3Entry extends Entry {
 		public final static String PREFIX = "HKCU\\Software\\Blizzard Entertainment\\Warcraft III";
 
@@ -276,7 +272,6 @@ public class WinRegistryHandler {
 	}
 
 	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
-	@Deprecated
 	public static class Wc3LocalMachineEntry extends Entry {
 		public final static String PREFIX = "HKLM\\Software\\Blizzard Entertainment\\Warcraft III";
 
@@ -290,7 +285,6 @@ public class WinRegistryHandler {
 	}
 
 	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
-	@Deprecated
 	public static class WorldEditEntry extends Entry {
 		public final static String PREFIX = "HKCU\\Software\\Blizzard Entertainment\\WorldEdit";
 
@@ -320,7 +314,7 @@ public class WinRegistryHandler {
 	public Optional<String> maybeGet(@Nonnull String dirS, @Nonnull String key) {
 		try {
 			return Optional.ofNullable(get(dirS, key));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return Optional.empty();
 		}
 	}
