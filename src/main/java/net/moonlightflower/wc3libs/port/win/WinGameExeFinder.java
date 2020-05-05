@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.port.win;
 
 import net.moonlightflower.wc3libs.port.*;
-import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameDirFinder;
 import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameExeFinder;
 
 import javax.annotation.Nonnull;
@@ -33,7 +32,8 @@ public class WinGameExeFinder extends GameExeFinder {
     }
 
     @Nonnull
-    public static File fromDir(@Nonnull File dir, @Nonnull GameVersion version, @Nonnull Orient.WinArch arch) throws NotFoundException {
+    public static File fromDir(
+            @Nonnull File dir, @Nonnull GameVersion version, @Nonnull Orient.WinArch arch) throws NotFoundException {
         if (version.compareTo(GameVersion.VERSION_1_31) >= 0) {
             switch (arch) {
                 case X86:

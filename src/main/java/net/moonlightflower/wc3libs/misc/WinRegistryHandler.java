@@ -265,10 +265,10 @@ public class WinRegistryHandler {
 		}
 
 		/** Of the form `"C:\Program Files\Warcraft III\x86_64\Warcraft III.exe",0` */
-		public final static Wc3ReforgedEntry APPLICATION_ICON = new Wc3ReforgedEntry("ApplicationIcon", EntryType.REG_SZ);
+		public final static Wc3Entry APPLICATION_ICON = new Wc3Entry("ApplicationIcon", EntryType.REG_SZ);
 
 		/** Of the form `"C:\Program Files\Warcraft III\x86_64\Warcraft III.exe",0` */
-		public final static Wc3ReforgedEntry INSTALL_PATH = APPLICATION_ICON;
+		public final static Wc3Entry INSTALL_PATH = APPLICATION_ICON;
 	}
 
 	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */

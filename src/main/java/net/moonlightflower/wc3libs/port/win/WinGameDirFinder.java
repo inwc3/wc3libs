@@ -1,6 +1,5 @@
 package net.moonlightflower.wc3libs.port.win;
 
-import net.moonlightflower.wc3libs.port.AlreadyTriedException;
 import net.moonlightflower.wc3libs.port.GameDirFinder;
 import net.moonlightflower.wc3libs.port.NotFoundException;
 import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameDirFinder;
