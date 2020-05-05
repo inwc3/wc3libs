@@ -25,3 +25,4 @@ src/test/resources/War3x.w3x
 /bin/
 /.project
 src/main/java/net/moonlightflower/wc3libs/antlr
+.settings/
