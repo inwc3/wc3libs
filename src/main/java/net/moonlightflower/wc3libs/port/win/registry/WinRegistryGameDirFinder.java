@@ -45,7 +45,8 @@ public class WinRegistryGameDirFinder extends GameDirFinder {
                 WinRegistryHandler.Wc3Entry.INSTALL_PATH_X,
                 WinRegistryHandler.Wc3LocalMachineEntry.INSTALL_PATH,
                 WinRegistryHandler.Wc3LocalMachineEntry.INSTALL_PATH_X,
-                WinRegistryHandler.Wc3LocalMachineEntry.WAR3_INSTALL_PATH
+                WinRegistryHandler.Wc3LocalMachineEntry.WAR3_INSTALL_PATH,
+                WinRegistryHandler.Wc3ReforgedEntry.INSTALL_PATH
         );
 
         for (WinRegistryHandler.Wc3Entry entry : entries) {

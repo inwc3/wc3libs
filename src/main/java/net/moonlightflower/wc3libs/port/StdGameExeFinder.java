@@ -2,12 +2,9 @@ package net.moonlightflower.wc3libs.port;
 
 import net.moonlightflower.wc3libs.port.mac.MacGameExeFinder;
 import net.moonlightflower.wc3libs.port.win.WinGameExeFinder;
-import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameExeFinder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 public class StdGameExeFinder extends GameExeFinder {
     public StdGameExeFinder() {
