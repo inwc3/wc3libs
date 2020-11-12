@@ -54,8 +54,6 @@ public class JMpqPort extends MpqPort {
 
 	public static class In extends MpqPort.In {
 		private void commitJ(@Nonnull Vector<File> mpqFiles) throws IOException {
-			Vector<String> lines = new Vector<>();
-
 			for (File mpqFile : mpqFiles) {
 				try (JMpqEditor jmpq = new JMpqEditor(mpqFile, MPQOpenOption.FORCE_V0)) {
 
