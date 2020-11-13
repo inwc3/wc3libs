@@ -16,8 +16,16 @@ public class WinGameExeFinder extends GameExeFinder {
     public final static File X86_DIR = new File("x86");
     public final static File X64_DIR = new File("x86_64");
 
+    public final static File RETAIL_DIR = new File("_retail_");
+
+    public final static File RETAIL_X86_DIR = new File(RETAIL_DIR, "x86");
+    public final static File RETAIL_X64_DIR = new File(RETAIL_DIR, "x86_64");
+
     public final static File X86_EXE_PATH_131 = new File(X86_DIR, WARCRAFT_III_EXE_PATH.toString());
     public final static File X64_EXE_PATH_131 = new File(X64_DIR, WARCRAFT_III_EXE_PATH.toString());
+
+    public final static File X86_EXE_PATH_132 = new File(RETAIL_X86_DIR, WARCRAFT_III_EXE_PATH.toString());
+    public final static File X64_EXE_PATH_132 = new File(RETAIL_X64_DIR, WARCRAFT_III_EXE_PATH.toString());
 
     protected GameExeFinder getRegistryGameExeFinder() {
         return new WinRegistryGameExeFinder();
@@ -89,7 +97,9 @@ public class WinGameExeFinder extends GameExeFinder {
                 FROZEN_THRONE_EXE_PATH,
                 WAR3_EXE_PATH,
                 X86_EXE_PATH_131,
-                X64_EXE_PATH_131
+                X64_EXE_PATH_131,
+                X86_EXE_PATH_132,
+                X64_EXE_PATH_132
         );
 
         for (File relativeSearchPath : relativeSearchPaths) {
