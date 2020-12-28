@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class LoadingScreenBackground {
 	public static class PresetBackground extends LoadingScreenBackground {
@@ -31,6 +32,12 @@ public abstract class LoadingScreenBackground {
 		public static PresetBackground valueOf(int index) {
 			return _map.get(index);
 		}
+
+        public static PresetBackground findByName(String name) {
+		    String searchName = name.toLowerCase();
+            return _map.values().stream().filter(entry -> entry.getLabel().toLowerCase().endsWith(searchName))
+                .findFirst().orElse(null);
+        }
 		
 		private String _label;
 
