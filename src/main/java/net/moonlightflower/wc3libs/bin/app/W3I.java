@@ -593,17 +593,6 @@ public class W3I {
         _prologueScreen = val;
     }
 
-    private String _loadingScreenModel;
-
-    @Nullable
-    public String getLoadingScreenModel() {
-        return _loadingScreenModel;
-    }
-
-    public void setLoadingScreenModel(@Nullable String val) {
-        _loadingScreenModel = val;
-    }
-
     public static class GameDataSet {
         private final static Map<Integer, GameDataSet> _map = new LinkedHashMap<>();
 
