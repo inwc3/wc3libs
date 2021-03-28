@@ -35,6 +35,7 @@ dependencies {
     implementation group: 'com.dorkbox', name: 'PeParser-Dorkbox-Util', version: '2.7'
     implementation group: 'com.twelvemonkeys.imageio', name: 'imageio-jpeg', version: '3.6.4'
     implementation 'com.jcraft:jzlib:1.1.3'
+    implementation 'net.jodah:failsafe:2.4.0'
 
     // TestNG
     testImplementation 'org.testng:testng:6.14.3'
