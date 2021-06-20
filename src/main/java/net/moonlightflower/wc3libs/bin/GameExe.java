@@ -60,13 +60,15 @@ public class GameExe {
                 throw new IOException(proc.getErrString());
             }
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(tmpOut), StandardCharsets.UTF_8));
+            StringBuilder sb;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(tmpOut), StandardCharsets.UTF_8))) {
 
-            StringBuilder sb = new StringBuilder();
-            String line;
+                sb = new StringBuilder();
+                String line;
 
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
             }
 
             String versionString = sb.toString().replaceAll("[^0-9.]", "");
@@ -76,7 +78,7 @@ public class GameExe {
             if (versionString == null) {
                 throw new IOException(
                     "Version string "
-                    + sb.toString()
+                    + sb
                     + " from file produced by WMIC wasn't readable. "
                     + "This is the second failed attempt after dorkbox PE failed with exception.",
                     e);

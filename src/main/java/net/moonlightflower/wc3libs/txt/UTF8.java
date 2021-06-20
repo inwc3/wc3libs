@@ -148,23 +148,22 @@ public class UTF8 {
 	}
 
 	public UTF8(@Nonnull InputStream inStream) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
 
-		String line = reader.readLine();
+            String line = reader.readLine();
 
-		if (line != null) {
-			if (line.startsWith(BOM)) line = line.substring(BOM.length());
+            if (line != null) {
+                if (line.startsWith(BOM)) line = line.substring(BOM.length());
 
-			_lines.addElement(line);
+                _lines.addElement(line);
 
-			while ((line = reader.readLine()) != null) {
-				_lines.add(line);
-			}
-		}
-		
-		reader.close();
-		
-		_linesItr = _lines.iterator();
+                while ((line = reader.readLine()) != null) {
+                    _lines.add(line);
+                }
+            }
+        }
+
+        _linesItr = _lines.iterator();
 	}
 	
 	public UTF8() {
