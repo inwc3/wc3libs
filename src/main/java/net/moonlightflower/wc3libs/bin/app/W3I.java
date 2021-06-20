@@ -3360,55 +3360,55 @@ public class W3I {
     }
 
     public void removeConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
 
-        String line;
+            String line;
 
-        List<String> toBeRemovedFuncs = new ArrayList<>();
+            List<String> toBeRemovedFuncs = new ArrayList<>();
 
-        toBeRemovedFuncs.add(FuncDecl.CONFIG_NAME);
-        toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_PLAYER_SLOTS);
-        toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_TEAMS);
-        toBeRemovedFuncs.add(FuncDecl.INIT_ALLY_PRIORITIES);
+            toBeRemovedFuncs.add(FuncDecl.CONFIG_NAME);
+            toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_PLAYER_SLOTS);
+            toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_TEAMS);
+            toBeRemovedFuncs.add(FuncDecl.INIT_ALLY_PRIORITIES);
 
-        boolean first = true;
-        boolean skip = false;
+            boolean first = true;
+            boolean skip = false;
 
-        while ((line = reader.readLine()) != null) {
-            Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
+            while ((line = reader.readLine()) != null) {
+                Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
 
-            Matcher funcStartMatcher = funcStartPattern.matcher(line);
+                Matcher funcStartMatcher = funcStartPattern.matcher(line);
 
-            if (funcStartMatcher.find()) {
-                String funcName = funcStartMatcher.group(1);
+                if (funcStartMatcher.find()) {
+                    String funcName = funcStartMatcher.group(1);
 
-                if (toBeRemovedFuncs.contains(funcName)) {
-                    skip = true;
-                }
-            }
-
-            if (skip) {
-                Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
-
-                Matcher funcEndMatcher = funcEndPattern.matcher(line);
-
-                if (funcEndMatcher.find()) {
-                    skip = false;
+                    if (toBeRemovedFuncs.contains(funcName)) {
+                        skip = true;
+                    }
                 }
 
-                continue;
+                if (skip) {
+                    Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
+
+                    Matcher funcEndMatcher = funcEndPattern.matcher(line);
+
+                    if (funcEndMatcher.find()) {
+                        skip = false;
+                    }
+
+                    continue;
+                }
+
+                if (first) {
+                    first = false;
+                } else {
+                    sw.write("\n");
+                }
+
+                sw.write(line);
             }
 
-            if (first) {
-                first = false;
-            } else {
-                sw.write("\n");
-            }
-
-            sw.write(line);
         }
-
-        reader.close();
     }
 
     public void injectConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion) throws IOException {
