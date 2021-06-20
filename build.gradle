@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    antlr "org.antlr:antlr4:9.2"
+    antlr "org.antlr:antlr4:4.9.2"
 
     // Logging
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
