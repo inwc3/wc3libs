@@ -3359,6 +3359,9 @@ public class W3I {
         jassScript.addFuncImpl(config);
     }
 
+    private static final Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
+    private static final Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
+
     public void removeConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
 
@@ -3375,7 +3378,6 @@ public class W3I {
             boolean skip = false;
 
             while ((line = reader.readLine()) != null) {
-                Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
 
                 Matcher funcStartMatcher = funcStartPattern.matcher(line);
 
@@ -3388,8 +3390,6 @@ public class W3I {
                 }
 
                 if (skip) {
-                    Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
-
                     Matcher funcEndMatcher = funcEndPattern.matcher(line);
 
                     if (funcEndMatcher.find()) {

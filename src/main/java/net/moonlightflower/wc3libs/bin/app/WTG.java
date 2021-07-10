@@ -1649,6 +1649,7 @@ public class WTG {
 	}
 
 	private final Map<String, Var> _vars = new LinkedHashMap<>();
+	private static final Pattern categoryPattern = Pattern.compile("^_(.*)_Category$");
 	
 	public Map<String, Var> getVars() {
 		return new LinkedHashMap<>(_vars);
@@ -1705,9 +1706,9 @@ public class WTG {
 
 				if (key.toString().startsWith("_")) {					
 					if (key.toString().endsWith("_Category")) {
-						Pattern pat = Pattern.compile("^_(.*)_Category$");
+
 						
-						Matcher mat = pat.matcher(key.toString());
+						Matcher mat = categoryPattern.matcher(key.toString());
 						
 						mat.find();
 

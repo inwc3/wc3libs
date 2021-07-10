@@ -14,13 +14,13 @@ public class GameVersion implements Comparable<GameVersion> {
     public static final GameVersion VERSION_1_31 = new GameVersion(Arrays.asList(1, 31));
     public static final GameVersion VERSION_1_32 = new GameVersion(Arrays.asList(1, 32));
 
+    private static final Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
+
     public GameVersion(@Nonnull List<Integer> versionNumList) {
         _versionNumList = new ArrayList<>(versionNumList);
     }
 
     public GameVersion(@Nonnull String versionS) {
-        Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
-
         Matcher matcher = pattern.matcher(versionS);
 
         int start = 0;
