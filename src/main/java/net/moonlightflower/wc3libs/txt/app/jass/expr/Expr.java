@@ -5,7 +5,6 @@ import net.moonlightflower.wc3libs.antlr.LightJassParser;
 import net.moonlightflower.wc3libs.txt.app.jass.Jass;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.bool.BoolExpr;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.FuncCall;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.NullLiteral;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.num.*;
 
 import javax.annotation.Nonnull;

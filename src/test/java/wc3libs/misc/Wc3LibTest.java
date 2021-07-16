@@ -67,16 +67,12 @@ public abstract class Wc3LibTest {
 
             ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 
-            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream);
-
-            try {
+            try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream)) {
                 Method writeMethod = testObj.getClass().getMethod("write", Wc3BinOutputStream.class);
 
                 writeMethod.invoke(testObj, outStream);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
-            } finally {
-                outStream.close();
             }
 
             /*FileOutputStream fp = new FileOutputStream("E:\\work\\bla.mdx");
@@ -99,22 +95,18 @@ public abstract class Wc3LibTest {
         inStream.rewind();
 
         try {
-            Constructor constructor = testClass.getConstructor(Wc3BinInputStream.class);
+            Constructor<?> constructor = testClass.getConstructor(Wc3BinInputStream.class);
 
             Object testObj = constructor.newInstance(inStream);
 
             ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 
-            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream);
-
-            try {
+            try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream)) {
                 Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class);
 
                 writeMethod.invoke(testObj, outStream);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
-            } finally {
-                outStream.close();
             }
 
             /*FileOutputStream fp = new FileOutputStream("D:\\work\\bla.mdx");

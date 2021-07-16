@@ -177,7 +177,7 @@ public class Profile extends TXT implements Printable {
 	}
 	
 	public static class Obj extends TXT.Section {		
-		public class Field extends TXT.Section.Field {
+		public static class Field extends TXT.Section.Field {
 			@Override
 			public void merge(@Nonnull TXT.Section.Field otherField, boolean overwrite) {
 				super.merge(otherField, overwrite);
@@ -198,9 +198,8 @@ public class Profile extends TXT implements Printable {
 		@Override
 		@Nonnull
 		public Map<FieldId, Field> getFields() {
-			Map<FieldId, Field> ret = new LinkedHashMap<>();
-			
-			ret.putAll((Map<? extends FieldId, ? extends Field>) super.getFields());
+
+            Map<FieldId, Field> ret = new LinkedHashMap<>((Map<? extends FieldId, ? extends Field>) super.getFields());
 			
 			return ret;
 		}
@@ -264,7 +263,7 @@ public class Profile extends TXT implements Printable {
 				FieldId fieldId = fieldEntry.getKey();
 				Obj.Field field = fieldEntry.getValue();
 
-				System.out.println(String.format("%s=%s", fieldId.toTXTVal().toString(), field.getValLine(null)));
+				System.out.printf("%s=%s%n", fieldId.toTXTVal().toString(), field.getValLine(null));
 				
 				/*for (int i = 0; i < field.getVals().size(); i++) {
 					Object val = field.get(i);

@@ -3,14 +3,12 @@ package net.moonlightflower.wc3libs.txt.app.jass;
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.antlr.LightJassParser;
-import net.moonlightflower.wc3libs.txt.app.jass.statement.Statement;
 import org.antlr.v4.runtime.Vocabulary;
 
 import javax.annotation.Nonnull;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class JassScript {
     private List<TypeDecl> _typeDecls = new ArrayList<>();

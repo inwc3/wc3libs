@@ -1,6 +1,5 @@
 package wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.app.CombatSound;
 import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
 import org.testng.Assert;
 import org.testng.annotations.Test;

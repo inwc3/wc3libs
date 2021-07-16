@@ -1,6 +1,5 @@
 package wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.app.CombatTarget;
 import net.moonlightflower.wc3libs.dataTypes.app.Controller;
 import org.testng.Assert;
 import org.testng.annotations.Test;

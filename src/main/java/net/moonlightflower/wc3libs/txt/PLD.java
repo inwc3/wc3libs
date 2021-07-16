@@ -4,7 +4,6 @@ import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.txt.app.jass.FuncImpl;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.Interval;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;

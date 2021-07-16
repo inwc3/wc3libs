@@ -7,9 +7,7 @@ import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 public class CollisionShape extends MDXObject {
     private Node _node;
@@ -105,11 +103,7 @@ public class CollisionShape extends MDXObject {
         boolean hasRadius = false;
 
         switch (_type) {
-            case SPHERE: {
-                hasRadius = true;
-
-                break;
-            }
+            case SPHERE:
             case CYLINDER: {
                 hasRadius = true;
 

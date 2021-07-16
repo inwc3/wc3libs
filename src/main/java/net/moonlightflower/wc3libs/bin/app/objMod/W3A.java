@@ -6,8 +6,6 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.port.JMpqPort;
-import net.moonlightflower.wc3libs.port.MpqPort;
 import net.moonlightflower.wc3libs.slk.app.objs.AbilSLK;
 
 import javax.annotation.Nonnull;

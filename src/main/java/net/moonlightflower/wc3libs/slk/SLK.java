@@ -321,7 +321,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         _fields.entrySet().removeIf(entry -> countMap.containsKey(entry.getKey().toString()));
     }
 
-    private class RecordPart {
+    private static class RecordPart {
         private String _attr;
         private DataType _val;
 

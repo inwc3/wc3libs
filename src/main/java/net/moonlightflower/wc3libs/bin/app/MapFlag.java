@@ -3,9 +3,7 @@ package net.moonlightflower.wc3libs.bin.app;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag HIDE_MINIMAP = new MapFlag(0, "hideMinimap");

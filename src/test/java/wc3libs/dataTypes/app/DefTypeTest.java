@@ -1,6 +1,5 @@
 package wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.app.DeathType;
 import net.moonlightflower.wc3libs.dataTypes.app.DefType;
 import org.testng.Assert;
 import org.testng.annotations.Test;

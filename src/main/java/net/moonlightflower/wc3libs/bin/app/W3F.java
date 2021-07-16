@@ -385,10 +385,10 @@ public class W3F {
 		}
 
 		public void print(@Nonnull PrintStream outStream) {
-			outStream.println(String.format("isVisible: %s", isVisible()));
-			outStream.println(String.format("chapterTitle: %s", getChapterTitle()));
-			outStream.println(String.format("mapTitle: %s", getMapTitle()));
-			outStream.println(String.format("mapPath: %s", getMapPath()));
+			outStream.printf("isVisible: %s%n", isVisible());
+			outStream.printf("chapterTitle: %s%n", getChapterTitle());
+			outStream.printf("mapTitle: %s%n", getMapTitle());
+			outStream.printf("mapPath: %s%n", getMapPath());
 		}
 		
 		public void print() {
@@ -480,8 +480,8 @@ public class W3F {
 		}
 		
 		public void print(@Nonnull PrintStream outStream) {
-			outStream.println(String.format("unknown: %s", getUnknown()));
-			outStream.println(String.format("mapPath: %s", getMapPath()));
+			outStream.printf("unknown: %s%n", getUnknown());
+			outStream.printf("mapPath: %s%n", getMapPath());
 		}
 		
 		public void print() {
@@ -547,30 +547,30 @@ public class W3F {
 	}
 	
 	public void print(@Nonnull PrintStream outStream) {
-		outStream.println(String.format("savesAmount: %d", getSavesAmount()));
-		outStream.println(String.format("editorVersion: %d", getEditorVersion()));
-		outStream.println(String.format("campaignName: %s", getCampaignName()));
-		outStream.println(String.format("difficulty: %s", getDifficulty()));
-		outStream.println(String.format("author: %s", getCampaignAuthor()));
-		outStream.println(String.format("description: %s", getCampaignDescription()));
+		outStream.printf("savesAmount: %d%n", getSavesAmount());
+		outStream.printf("editorVersion: %d%n", getEditorVersion());
+		outStream.printf("campaignName: %s%n", getCampaignName());
+		outStream.printf("difficulty: %s%n", getDifficulty());
+		outStream.printf("author: %s%n", getCampaignAuthor());
+		outStream.printf("description: %s%n", getCampaignDescription());
 		
-		outStream.println(String.format("flags: %s", getFlags()));
+		outStream.printf("flags: %s%n", getFlags());
 		
-		outStream.println(String.format("campaignBackground: %s", getCampaignBackground()));
-		outStream.println(String.format("minimapPath: %s", getMinimapPath()));
+		outStream.printf("campaignBackground: %s%n", getCampaignBackground());
+		outStream.printf("minimapPath: %s%n", getMinimapPath());
 		
-		outStream.println(String.format("ambientSound: %s", getAmbientSound()));
-		outStream.println(String.format("terrainFog: %s", getTerrainFog()));
-		outStream.println(String.format("uiRace: %s", getUIRace()));
+		outStream.printf("ambientSound: %s%n", getAmbientSound());
+		outStream.printf("terrainFog: %s%n", getTerrainFog());
+		outStream.printf("uiRace: %s%n", getUIRace());
 		
 		for (int i = 0; i < _maps.size(); i++) {
-			outStream.println(String.format("mapEntry %d:", i));
+			outStream.printf("mapEntry %d:%n", i);
 			
 			_maps.get(i).print(outStream);
 		}
 		
 		for (int i = 0; i < _listedMaps.size(); i++) {
-			outStream.println(String.format("listedMapEntry %d:", i));
+			outStream.printf("listedMapEntry %d:%n", i);
 			
 			_listedMaps.get(i).print(outStream);
 		}

@@ -1,14 +1,10 @@
 package wc3libs.bin;
 
-import net.moonlightflower.wc3libs.bin.GameExe;
-import net.moonlightflower.wc3libs.port.NotFoundException;
 import net.moonlightflower.wc3libs.port.Orient;
-import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameExeFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 public class GameExeTest {

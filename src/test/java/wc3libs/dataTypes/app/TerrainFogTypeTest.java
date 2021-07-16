@@ -1,6 +1,5 @@
 package wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.app.SpellDetail;
 import net.moonlightflower.wc3libs.dataTypes.app.TerrainFogType;
 import org.testng.Assert;
 import org.testng.annotations.Test;

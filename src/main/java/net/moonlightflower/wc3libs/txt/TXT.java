@@ -267,7 +267,7 @@ public class TXT implements Printable {
 			_fieldsLower.remove(fieldId.lower());
 		}
 
-		public class FieldDoesNotExistException extends Exception {
+		public static class FieldDoesNotExistException extends Exception {
 			public FieldDoesNotExistException(@Nonnull FieldId fieldId) {
 				super(fieldId.toString());
 			}
@@ -345,7 +345,7 @@ public class TXT implements Printable {
 				FieldId fieldId = fieldEntry.getKey();
 				TXT.Section.Field field = fieldEntry.getValue();
 				
-				outStream.print(String.format("\t%s: ", fieldId.toString()));
+				outStream.printf("\t%s: ", fieldId.toString());
 				
 				int c = 0;
 				

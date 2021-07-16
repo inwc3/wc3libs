@@ -42,11 +42,9 @@ public class GamePrefetch {
 		
 		@Override
 		public int compareTo(@Nonnull Obj other) {
-			if (_prio < other._prio) return -1;
-			if (_prio > other._prio) return 1;
-			
-			return 0;
-		}
+            return Integer.compare(_prio, other._prio);
+
+        }
 		
 		public void changePriority(int prio) {
 			_prio = prio;
@@ -88,7 +86,7 @@ public class GamePrefetch {
 				throw new RuntimeException(e);
 			}
 
-			throw new AsyncTask.FinishedException();
+			throw new FinishedException();
 		}
 		
 		@Override
@@ -177,9 +175,8 @@ public class GamePrefetch {
 					final Runnable eventHandler = this;
 
 					AsyncTask task = new PortTask(procFiles, _objs, () -> {
-						List<Obj> removeObjs = new ArrayList<>();
 
-						removeObjs.addAll(_objs);
+                        List<Obj> removeObjs = new ArrayList<>(_objs);
 
 						_objs.removeAll(removeObjs);
 

@@ -3,7 +3,6 @@ package net.moonlightflower.wc3libs.txt.app.jass.expr.num;
 import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.Expr;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.CodeLiteral;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.NullLiteral;
 
 import javax.annotation.Nonnull;
 

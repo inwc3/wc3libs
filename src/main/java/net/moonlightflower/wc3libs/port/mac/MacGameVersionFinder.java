@@ -5,7 +5,6 @@ import net.moonlightflower.wc3libs.port.GameVersionFinder;
 import net.moonlightflower.wc3libs.port.NotFoundException;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 
 public class MacGameVersionFinder extends GameVersionFinder {
     @Nonnull

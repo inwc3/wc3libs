@@ -1,6 +1,5 @@
 package wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import org.testng.Assert;

@@ -1,11 +1,9 @@
 package wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinInputStream;
 import net.moonlightflower.wc3libs.bin.BinState;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.W3C;
-import net.moonlightflower.wc3libs.bin.app.W3E;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;

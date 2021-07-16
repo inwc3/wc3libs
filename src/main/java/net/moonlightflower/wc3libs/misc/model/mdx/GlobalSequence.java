@@ -7,7 +7,6 @@ import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 
 public class GlobalSequence extends MDXObject {
     private long _duration = 0;

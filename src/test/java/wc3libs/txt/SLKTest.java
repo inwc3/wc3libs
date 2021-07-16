@@ -1,5 +1,6 @@
 package wc3libs.txt;
 
+import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.RawSLK;
 import net.moonlightflower.wc3libs.slk.SLK;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class SLKTest extends Wc3LibTest {
             if (!path.getFileName().toString().startsWith("AbilityBuffMeta")) return;
 
             try {
-                SLK slk = new RawSLK(path.toFile());
+                SLK<RawSLK, ObjId, RawSLK.Obj> slk = new RawSLK(path.toFile());
             } catch (IOException e) {
                 log.error(path.toString() + ":");
 

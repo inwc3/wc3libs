@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.function.Predicate;
 

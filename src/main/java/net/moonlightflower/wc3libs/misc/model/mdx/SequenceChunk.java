@@ -9,10 +9,7 @@ import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 public class SequenceChunk extends Chunk {
     public static Id TOKEN = Id.valueOf("SEQS");

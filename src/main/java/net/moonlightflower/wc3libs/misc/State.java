@@ -2,11 +2,9 @@ package net.moonlightflower.wc3libs.misc;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
-import net.moonlightflower.wc3libs.dataTypes.Serializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 abstract public class State<FieldIdType extends FieldId, T extends DataType> {
@@ -104,9 +102,7 @@ abstract public class State<FieldIdType extends FieldId, T extends DataType> {
 			if (otherClass.isAssignableFrom(specificClass)) {
 				Collection<State> states = entry.getValue()._states.values();
 
-				for (State state : states) {
-					ret.add(state);
-				}
+                ret.addAll(states);
 			}
 		}
 

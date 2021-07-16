@@ -6,17 +6,11 @@ import net.moonlightflower.wc3libs.antlr.LightJassLexer;
 import net.moonlightflower.wc3libs.antlr.LightJassParser;
 import net.moonlightflower.wc3libs.txt.UTF8;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
 
 public class LightJass {
 	public final static File GAME_PATH = new File("war3map.j");

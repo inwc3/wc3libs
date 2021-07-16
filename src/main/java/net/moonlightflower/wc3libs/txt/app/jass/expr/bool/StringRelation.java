@@ -4,8 +4,6 @@ import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.StringExpr;
 
 import javax.annotation.Nonnull;
-import java.io.StringWriter;
-import java.util.function.Function;
 
 public class StringRelation extends Relation<StringExpr, Relation.Op> {
     public StringRelation(@Nonnull StringExpr left, @Nonnull Op op, @Nonnull StringExpr right) {

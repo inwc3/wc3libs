@@ -1,7 +1,5 @@
 package net.moonlightflower.wc3libs.port;
 
-import net.moonlightflower.wc3libs.bin.GameExe;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
@@ -39,7 +37,7 @@ public abstract class MpqPort {
 	public abstract List<File> listFiles(@Nonnull File mpqFile) throws IOException;
 
 	public static abstract class In {
-		public class FileImport {
+		public static class FileImport {
 			private File _outFile;
 			private File _inFile;
 
@@ -100,7 +98,7 @@ public abstract class MpqPort {
 	}
 
 	public static abstract class Out {
-		class DummyOutputStream extends OutputStream {
+		static class DummyOutputStream extends OutputStream {
 			private final ByteArrayOutputStream _outBytes = new ByteArrayOutputStream();
 
 			public byte[] getBytes() {
@@ -226,7 +224,7 @@ public abstract class MpqPort {
 			}
 		}
 
-		public class FileExport {
+		public static class FileExport {
 			private File _inFile;
 			private File _outDir = null;
 			private File _outFile = null;

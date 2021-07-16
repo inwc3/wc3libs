@@ -1,10 +1,7 @@
 package net.moonlightflower.wc3libs.txt.app.jass.expr;
 
 import net.moonlightflower.wc3libs.antlr.LightJassParser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;

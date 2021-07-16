@@ -1,7 +1,6 @@
 package wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.app.WCT;
-import net.moonlightflower.wc3libs.bin.app.WTG;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 

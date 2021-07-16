@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.misc;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
-import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,13 +70,11 @@ abstract public class Flag<T extends DataType> {
 			if (otherClass.isAssignableFrom(specificClass)) {
 				Collection<Flag> states = entry.getValue()._states.values();
 
-				for (Flag state : states) {
-					/*if (specificClass.isInstance(state)) {
+				/*if (specificClass.isInstance(state)) {
 						System.out.println("is instance");
 						ret.add(specificClass.cast(state));
 					}*/
-					ret.add(state);
-				}
+                ret.addAll(states);
 			}
 		}
 

@@ -11,7 +11,7 @@ import java.util.Collection;
 public class StateTest {
     @Test()
     public void test() {
-        Class c = AbilityMetaSLK.State.class;
+        Class<AbilityMetaSLK.State> c = AbilityMetaSLK.State.class;
 
         Collection<State> states = State.allValues(c);
 

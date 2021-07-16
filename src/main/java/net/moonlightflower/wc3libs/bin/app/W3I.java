@@ -528,7 +528,7 @@ public class W3I {
         _loadingScreen = val;
     }
 
-    public class PrologueScreen {
+    public static class PrologueScreen {
         private String _path;
 
         public String getPath() {
@@ -1302,9 +1302,8 @@ public class W3I {
         }
 
         public Set<Integer> getPlayerNums() {
-            Set<Integer> ret = new LinkedHashSet<>();
 
-            ret.addAll(_players.stream().boxed().collect(Collectors.toList()));
+            Set<Integer> ret = new LinkedHashSet<>(_players.stream().boxed().collect(Collectors.toList()));
 
             return ret;
         }
@@ -2118,44 +2117,44 @@ public class W3I {
     }
 
     public void print(@Nonnull PrintStream outStream) {
-        outStream.println(String.format("savesAmount: %s", getSavesAmount()));
-        outStream.println(String.format("editorVersion: %d", getEditorVersion()));
+        outStream.printf("savesAmount: %s%n", getSavesAmount());
+        outStream.printf("editorVersion: %d%n", getEditorVersion());
 
-        outStream.println(String.format("mapName: %s", getMapName()));
-        outStream.println(String.format("mapAuthor: %s", getMapAuthor()));
-        outStream.println(String.format("mapDescription: %s", getMapDescription()));
-        outStream.println(String.format("playersRecommended: %s", getPlayersRecommendedAmount()));
+        outStream.printf("mapName: %s%n", getMapName());
+        outStream.printf("mapAuthor: %s%n", getMapAuthor());
+        outStream.printf("mapDescription: %s%n", getMapDescription());
+        outStream.printf("playersRecommended: %s%n", getPlayersRecommendedAmount());
 
-        outStream.println(String.format("camBounds: [%s,%s,%s,%s]", getCameraBounds1(), getCameraBounds2(), getCameraBounds3(), getCameraBounds4()));
-        outStream.println(String.format("margins: %s", getMargins()));
-        outStream.println(String.format("dimensions: [width=%d height=%d]", getWidth(), getHeight()));
+        outStream.printf("camBounds: [%s,%s,%s,%s]%n", getCameraBounds1(), getCameraBounds2(), getCameraBounds3(), getCameraBounds4());
+        outStream.printf("margins: %s%n", getMargins());
+        outStream.printf("dimensions: [width=%d height=%d]%n", getWidth(), getHeight());
 
-        outStream.println(String.format("flags: %s", getFlags()));
-        outStream.println(String.format("tileset: %s", getTileset()));
+        outStream.printf("flags: %s%n", getFlags());
+        outStream.printf("tileset: %s%n", getTileset());
 
-        outStream.println(String.format("loadingScreen: %s", getLoadingScreen()));
+        outStream.printf("loadingScreen: %s%n", getLoadingScreen());
 
-        outStream.println(String.format("gameDataSet: %s", getGameDataSet()));
-        outStream.println(String.format("gameDataVersion: %s", getGameDataVersion()));
-        outStream.println(String.format("scriptLang: %s", getScriptLang()));
-        outStream.println(String.format("graphics: %s", getGraphics()));
+        outStream.printf("gameDataSet: %s%n", getGameDataSet());
+        outStream.printf("gameDataVersion: %s%n", getGameDataVersion());
+        outStream.printf("scriptLang: %s%n", getScriptLang());
+        outStream.printf("graphics: %s%n", getGraphics());
 
-        outStream.println(String.format("prologueScreen: %s", getPrologueScreen()));
+        outStream.printf("prologueScreen: %s%n", getPrologueScreen());
 
-        outStream.println(String.format("terrainFog: %s", getTerrainFog()));
+        outStream.printf("terrainFog: %s%n", getTerrainFog());
 
-        outStream.println(String.format("globalWeatherId: %s", getGlobalWeatherId()));
-        outStream.println(String.format("soundEnv: %s", getSoundEnv()));
-        outStream.println(String.format("tilesetLightEnv: %s", getTilesetLightEnv()));
+        outStream.printf("globalWeatherId: %s%n", getGlobalWeatherId());
+        outStream.printf("soundEnv: %s%n", getSoundEnv());
+        outStream.printf("tilesetLightEnv: %s%n", getTilesetLightEnv());
 
-        outStream.println(String.format("waterColor: %s", getWaterColor()));
+        outStream.printf("waterColor: %s%n", getWaterColor());
 
-        outStream.println(String.format("players: [%s]", getPlayers().stream().map(Player::toString).collect(Collectors.joining(" "))));
-        outStream.println(String.format("forces: [%s]", getForces().stream().map(Force::toString).collect(Collectors.joining(" "))));
-        outStream.println(String.format("upgradeMods: [%s]", getUpgradeMods().stream().map(UpgradeMod::toString).collect(Collectors.joining(" "))));
-        outStream.println(String.format("techMods: [%s]", getTechMods().stream().map(TechMod::toString).collect(Collectors.joining(" "))));
-        outStream.println(String.format("unitTables: [%s]", getUnitTables().stream().map(UnitTable::toString).collect(Collectors.joining(" "))));
-        outStream.println(String.format("itemTables: [%s]", getItemTables().stream().map(ItemTable::toString).collect(Collectors.joining(" "))));
+        outStream.printf("players: [%s]%n", getPlayers().stream().map(Player::toString).collect(Collectors.joining(" ")));
+        outStream.printf("forces: [%s]%n", getForces().stream().map(Force::toString).collect(Collectors.joining(" ")));
+        outStream.printf("upgradeMods: [%s]%n", getUpgradeMods().stream().map(UpgradeMod::toString).collect(Collectors.joining(" ")));
+        outStream.printf("techMods: [%s]%n", getTechMods().stream().map(TechMod::toString).collect(Collectors.joining(" ")));
+        outStream.printf("unitTables: [%s]%n", getUnitTables().stream().map(UnitTable::toString).collect(Collectors.joining(" ")));
+        outStream.printf("itemTables: [%s]%n", getItemTables().stream().map(ItemTable::toString).collect(Collectors.joining(" ")));
     }
 
     public void print() {
@@ -2213,7 +2212,7 @@ public class W3I {
         setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x12));
 
         setPrologueScreen(new PrologueScreen(null, stream.readString("prologueScreenText"), stream.readString("prologueScreenTitle"), stream.readString
-                ("prologueScreenSubtitle")));
+            ("prologueScreenSubtitle")));
 
         int playersCount = stream.readInt32("playersCount");
 
@@ -2358,10 +2357,10 @@ public class W3I {
         setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
 
         setPrologueScreen(new PrologueScreen(
-                stream.readString("prologueScreenPath"),
-                stream.readString("prologueScreenText"),
-                stream.readString("prologueScreenTitle"),
-                stream.readString("prologueScreenSubtitle")
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
         ));
 
         TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
@@ -2589,10 +2588,10 @@ public class W3I {
         setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
 
         setPrologueScreen(new PrologueScreen(
-                stream.readString("prologueScreenPath"),
-                stream.readString("prologueScreenText"),
-                stream.readString("prologueScreenTitle"),
-                stream.readString("prologueScreenSubtitle")
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
         ));
 
         TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
@@ -3301,7 +3300,7 @@ public class W3I {
 
         List<Statement> stmts = new ArrayList<>();
 
-        Function enquote = (Function<String, String>) s -> {
+        Function<String, String> enquote = (Function<String, String>) s -> {
             return "\"" + s + "\"";
         };
 

@@ -1,6 +1,5 @@
 package wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.app.W3I;
-import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;

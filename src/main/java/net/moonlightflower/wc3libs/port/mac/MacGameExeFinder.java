@@ -1,7 +1,6 @@
 package net.moonlightflower.wc3libs.port.mac;
 
 import net.moonlightflower.wc3libs.port.GameExeFinder;
-import net.moonlightflower.wc3libs.port.GameVersion;
 import net.moonlightflower.wc3libs.port.NotFoundException;
 
 import javax.annotation.Nonnull;

@@ -3,8 +3,6 @@ package net.moonlightflower.wc3libs.misc;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class Printer {

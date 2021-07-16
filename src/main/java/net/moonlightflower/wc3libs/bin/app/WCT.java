@@ -21,7 +21,7 @@ import java.util.*;
 public class WCT {
 	public final static File GAME_PATH = new File("war3map.wct");
 	
-	public class Trig {
+	public static class Trig {
 		private String _text;
 		
 		public String getText() {

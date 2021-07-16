@@ -8,8 +8,6 @@ import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public abstract class TrackChunk<Type> extends Chunk {

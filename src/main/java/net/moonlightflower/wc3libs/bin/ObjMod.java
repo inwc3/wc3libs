@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.function.Function;
 
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;

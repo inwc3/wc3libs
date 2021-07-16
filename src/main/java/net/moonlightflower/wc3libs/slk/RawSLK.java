@@ -8,13 +8,12 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
-import net.moonlightflower.wc3libs.misc.Printer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class RawSLK extends SLK<RawSLK, ObjId, RawSLK.Obj> {
-	public class Obj extends SLK.Obj<ObjId> {
+	public static class Obj extends SLK.Obj<ObjId> {
 		@Override
 		public Map<ObjSLK.State, DataType> getStateVals() {
 			return null;

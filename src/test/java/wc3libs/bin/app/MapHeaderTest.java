@@ -2,7 +2,6 @@ package wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.app.MapHeader;
-import net.moonlightflower.wc3libs.bin.app.WPM;
 import net.moonlightflower.wc3libs.port.Orient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -11,7 +10,6 @@ import wc3libs.misc.Wc3LibTest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class MapHeaderTest extends Wc3LibTest {
 	@Test()

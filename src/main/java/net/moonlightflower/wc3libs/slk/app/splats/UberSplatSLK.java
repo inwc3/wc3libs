@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
-import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.slk.ObjSLK;
@@ -274,7 +273,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 		for (Obj obj : getObjs().values()) {
 			ObjId id = obj.getId();
 
-			SLK.Obj slkObj = slk.addObj(id);
+			SLK.Obj<ObjId> slkObj = slk.addObj(id);
 
 			slkObj.merge(obj, true);
 		}

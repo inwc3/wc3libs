@@ -1,9 +1,7 @@
 package net.moonlightflower.wc3libs.misc.model.mdx;
 
 import net.moonlightflower.wc3libs.bin.BinStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
-import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;

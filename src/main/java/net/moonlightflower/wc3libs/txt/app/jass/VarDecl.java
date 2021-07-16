@@ -7,7 +7,6 @@ import net.moonlightflower.wc3libs.txt.app.jass.expr.Expr;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.StringWriter;
 
 public abstract class VarDecl implements Decl {
     protected boolean _isConstant;

@@ -1,9 +1,5 @@
 package net.moonlightflower.wc3libs.bin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.misc.MetaFieldId;

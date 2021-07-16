@@ -8,9 +8,7 @@ import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 public class Geoset extends MDXObject {
     private long _inclusiveSize = 0;

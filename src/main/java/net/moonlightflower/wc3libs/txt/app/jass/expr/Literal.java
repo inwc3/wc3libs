@@ -4,7 +4,6 @@ import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.num.IntLiteral;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.num.RealLiteral;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.bool.BoolLiteral;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.CodeLiteral;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.NullLiteral;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.misc_literal.StringLiteral;
 

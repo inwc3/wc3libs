@@ -3,7 +3,6 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public abstract class LoadingScreenBackground {
 	public static class PresetBackground extends LoadingScreenBackground {

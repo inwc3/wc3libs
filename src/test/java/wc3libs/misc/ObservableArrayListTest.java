@@ -1,7 +1,6 @@
 package wc3libs.misc;
 
 import net.moonlightflower.wc3libs.misc.ObservableArrayList;
-import net.moonlightflower.wc3libs.misc.Size;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

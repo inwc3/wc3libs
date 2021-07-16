@@ -1,8 +1,6 @@
 package wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.app.DOO;
-import net.moonlightflower.wc3libs.bin.app.DOO_UNITS;
-import net.moonlightflower.wc3libs.bin.app.MMP;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 

@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
-import javax.imageio.event.IIOReadWarningListener;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 import java.awt.image.BufferedImage;
@@ -24,7 +23,7 @@ import java.util.List;
 public class BLP extends Wc3RasterImg {
 	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
 
-	private class Reader {		
+	private static class Reader {
 		private byte[] _bytes;
 		private int _pos;
 		

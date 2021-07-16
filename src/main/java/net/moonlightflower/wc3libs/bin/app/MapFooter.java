@@ -1,8 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.*;
-import net.moonlightflower.wc3libs.bin.Reader;
-import net.moonlightflower.wc3libs.bin.Writer;
 import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;

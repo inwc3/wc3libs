@@ -3,11 +3,9 @@ package net.moonlightflower.wc3libs.txt.app.jass.expr.num;
 import net.moonlightflower.wc3libs.antlr.JassLexer;
 import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.misc.Math;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;
 import java.io.StringWriter;
-import java.util.function.Function;
 
 public class IntLiteral implements NumLiteral, IntExpr {
     private int _val;

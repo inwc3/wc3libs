@@ -2,7 +2,6 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 
 import java.io.File;
 
-import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.FileType;
 
 public class Icon extends FileType {

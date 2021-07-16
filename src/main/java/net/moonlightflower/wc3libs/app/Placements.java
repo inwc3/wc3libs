@@ -8,7 +8,6 @@ import net.moonlightflower.wc3libs.bin.app.DOO_UNITS;
 import net.moonlightflower.wc3libs.bin.app.W3C;
 import net.moonlightflower.wc3libs.bin.app.W3R;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
-import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 
 import javax.annotation.Nonnull;
 

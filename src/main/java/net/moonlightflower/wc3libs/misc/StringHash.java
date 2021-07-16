@@ -38,7 +38,7 @@ public class StringHash {
         int[] abc = {0x9e3779b9, 0x9e3779b9, initVal};
 
         while(len >= 12){
-            abc[0] = abc[0] + (toi(k[0 +idx]) + (toi(k[1 +idx]) << 8) + (toi(k[ 2 +idx]) << 16) + (toi(k[ 3 +idx]) << 24));
+            abc[0] = abc[0] + (toi(k[idx]) + (toi(k[1 +idx]) << 8) + (toi(k[ 2 +idx]) << 16) + (toi(k[ 3 +idx]) << 24));
             abc[1] = abc[1] + (toi(k[4 +idx]) + (toi(k[5 +idx]) << 8) + (toi(k[ 6 +idx]) << 16) + (toi(k[ 7 +idx]) << 24));
             abc[2] = abc[2] + (toi(k[8 +idx]) + (toi(k[9 +idx]) << 8) + (toi(k[10 +idx]) << 16) + (toi(k[11 +idx]) << 24));
             mix(abc);
@@ -61,7 +61,7 @@ public class StringHash {
             case 4:  abc[0] =  abc[0] + (toi(k[idx + 3]) << 24);
             case 3:  abc[0] =  abc[0] + (toi(k[idx + 2]) << 16);
             case 2:  abc[0] =  abc[0] + (toi(k[idx + 1]) <<  8);
-            case 1:  abc[0] =  abc[0] +  toi(k[idx + 0]       );
+            case 1:  abc[0] =  abc[0] +  toi(k[idx]       );
         }
 
         mix(abc);

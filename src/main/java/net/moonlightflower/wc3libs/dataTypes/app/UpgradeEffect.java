@@ -1,8 +1,6 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.Id;
-import net.moonlightflower.wc3libs.misc.ObjId;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;

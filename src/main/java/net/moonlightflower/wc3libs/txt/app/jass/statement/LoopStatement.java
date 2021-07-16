@@ -2,7 +2,6 @@ package net.moonlightflower.wc3libs.txt.app.jass.statement;
 
 import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.antlr.LightJassParser;
-import net.moonlightflower.wc3libs.misc.State;
 import net.moonlightflower.wc3libs.txt.app.jass.statement.Statement;
 
 import javax.annotation.Nonnull;

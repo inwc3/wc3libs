@@ -5,7 +5,6 @@ import net.moonlightflower.wc3libs.bin.Format;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
-import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 import net.moonlightflower.wc3libs.misc.ShadowMap;
 import net.moonlightflower.wc3libs.misc.Size;
@@ -18,10 +17,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * shadow map file file for wrapping war3map.SHD

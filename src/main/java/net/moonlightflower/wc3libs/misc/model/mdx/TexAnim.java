@@ -11,7 +11,6 @@ import net.moonlightflower.wc3libs.misc.ObservableLinkedHashSet;
 import net.moonlightflower.wc3libs.misc.model.MDX;
 
 import javax.annotation.Nonnull;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TexAnim extends MDXObject {

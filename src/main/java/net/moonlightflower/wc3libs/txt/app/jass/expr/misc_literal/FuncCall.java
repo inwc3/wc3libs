@@ -4,11 +4,6 @@ import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.antlr.LightJassParser;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.AnyTypeExpr;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.Expr;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.StringExpr;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.bool.BoolExpr;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.num.CodeExpr;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.num.HandleExpr;
-import net.moonlightflower.wc3libs.txt.app.jass.expr.num.NumExpr;
 
 import javax.annotation.Nonnull;
 import java.io.StringWriter;

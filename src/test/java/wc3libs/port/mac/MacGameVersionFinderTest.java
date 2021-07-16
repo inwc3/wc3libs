@@ -6,8 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import wc3libs.misc.Wc3LibTest;
 
-import java.io.File;
-
 public class MacGameVersionFinderTest extends Wc3LibTest {
     @Test
     public void test() throws Exception {

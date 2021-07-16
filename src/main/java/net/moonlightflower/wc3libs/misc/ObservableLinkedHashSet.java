@@ -1,6 +1,5 @@
 package net.moonlightflower.wc3libs.misc;
 
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

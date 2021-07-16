@@ -1,13 +1,9 @@
 package net.moonlightflower.wc3libs.port;
 
-import dorkbox.peParser.PE;
-import net.moonlightflower.wc3libs.bin.GameExe;
-import net.moonlightflower.wc3libs.port.mac.MacGameExeFinder;
 import net.moonlightflower.wc3libs.port.mac.MacGameVersionFinder;
 import net.moonlightflower.wc3libs.port.win.WinGameVersionFinder;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 
 public class StdGameVersionFinder extends GameVersionFinder {
     public StdGameVersionFinder() {

@@ -689,9 +689,8 @@ public class ObjMerger {
             UpgradeSLK.GAME_PATH);
 
     private static Collection<File> getProfilePaths() {
-        Collection<File> ret = new LinkedHashSet<>();
 
-        ret.addAll(Arrays.asList(Profile.getNativePaths()));
+        Collection<File> ret = new LinkedHashSet<>(Arrays.asList(Profile.getNativePaths()));
 
         ret.remove(CommandFunc.GAME_PATH);
 

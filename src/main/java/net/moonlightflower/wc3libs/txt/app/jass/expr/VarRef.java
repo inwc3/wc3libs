@@ -4,8 +4,6 @@ import net.moonlightflower.wc3libs.antlr.JassParser;
 
 import javax.annotation.Nonnull;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class VarRef implements AnyTypeExpr {
     private String _varRef;

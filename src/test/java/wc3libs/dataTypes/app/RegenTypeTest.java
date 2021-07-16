@@ -1,6 +1,5 @@
 package wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.app.PathingFlag;
 import net.moonlightflower.wc3libs.dataTypes.app.RegenType;
 import org.testng.Assert;
 import org.testng.annotations.Test;

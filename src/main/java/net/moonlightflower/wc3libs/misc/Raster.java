@@ -5,7 +5,6 @@ import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public abstract class Raster<T> implements Boundable {

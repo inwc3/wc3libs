@@ -1,6 +1,5 @@
 package wc3libs.dataTypes.app;
 
-import net.moonlightflower.wc3libs.dataTypes.app.TerrainFogType;
 import net.moonlightflower.wc3libs.dataTypes.app.Tileset;
 import org.testng.Assert;
 import org.testng.annotations.Test;

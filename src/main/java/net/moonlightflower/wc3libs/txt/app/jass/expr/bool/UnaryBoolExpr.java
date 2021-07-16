@@ -1,6 +1,5 @@
 package net.moonlightflower.wc3libs.txt.app.jass.expr.bool;
 
-import net.moonlightflower.wc3libs.txt.app.jass.expr.Expr;
 import net.moonlightflower.wc3libs.txt.app.jass.expr.Op;
 
 import javax.annotation.Nonnull;
