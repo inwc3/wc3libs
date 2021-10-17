@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class WinGameExeFinder extends GameExeFinder {
     public final static File WAR3_EXE_PATH = new File("war3.exe");
@@ -93,22 +94,17 @@ public class WinGameExeFinder extends GameExeFinder {
                 break;
         }
 
-        List<File> relativeSearchPaths = Arrays.asList(WARCRAFT_III_EXE_PATH,
+        return Stream.of(WARCRAFT_III_EXE_PATH,
                 FROZEN_THRONE_EXE_PATH,
                 WAR3_EXE_PATH,
                 X86_EXE_PATH_131,
                 X64_EXE_PATH_131,
                 X86_EXE_PATH_132,
-                X64_EXE_PATH_132
-        );
-
-        for (File relativeSearchPath : relativeSearchPaths) {
-            File inDirPath = new File(dir, relativeSearchPath.toString());
-
-            if (inDirPath.exists()) return inDirPath;
-        }
-
-        throw new NotFoundException(new Exception("tried: " + relativeSearchPaths.toString()));
+                X64_EXE_PATH_132)
+            .map(relativePath -> new File(dir, relativePath.toString()))
+            .filter(File::exists)
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("tried all known wc3 sub-paths in " + dir));
     }
 
     @Nonnull

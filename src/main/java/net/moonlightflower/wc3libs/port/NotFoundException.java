@@ -10,4 +10,8 @@ public class NotFoundException extends Exception {
     public NotFoundException(@Nonnull Exception enclosedException) {
         super(enclosedException);
     }
+
+    public NotFoundException(@Nonnull String message) {
+        super(message);
+    }
 }
