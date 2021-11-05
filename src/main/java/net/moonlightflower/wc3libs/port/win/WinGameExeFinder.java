@@ -7,17 +7,18 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class WinGameExeFinder extends GameExeFinder {
-    public final static Path WAR3_EXE_PATH = new File("war3.exe").toPath();
-    public final static Path WARCRAFT_III_EXE_PATH = new File("Warcraft III.exe").toPath();
-    public final static Path FROZEN_THRONE_EXE_PATH = new File("Frozen Throne.exe").toPath();
+    public final static Path WAR3_EXE_PATH = Paths.get("war3.exe");
+    public final static Path WARCRAFT_III_EXE_PATH = Paths.get("Warcraft III.exe");
+    public final static Path FROZEN_THRONE_EXE_PATH = Paths.get("Frozen Throne.exe");
 
-    public final static Path X86_DIR = new File("x86").toPath();
-    public final static Path X64_DIR = new File("x86_64").toPath();
+    public final static Path X86_DIR = Paths.get("x86");
+    public final static Path X64_DIR = Paths.get("x86_64");
 
-    public final static Path RETAIL_DIR = new File("_retail_").toPath();
+    public final static Path RETAIL_DIR = Paths.get("_retail_");
 
     public final static Path RETAIL_X86_DIR = RETAIL_DIR.resolve("x86");
     public final static Path RETAIL_X64_DIR = RETAIL_DIR.resolve("x86_64");
