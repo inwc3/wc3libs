@@ -243,7 +243,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				List<Mod> modsList = _modsMap.getOrDefault(fieldId, new ArrayList<>());
 
 				for (int i = 0; i < otherModsList.size(); i++) {
-					modsList.set(i, otherModsList.get(i));
+                    if (modsList.size() <= i) {
+                        modsList.add(otherModsList.get(i));
+                    } else {
+                        modsList.set(i, otherModsList.get(i));
+                    }
 				}
 			}
 		}
