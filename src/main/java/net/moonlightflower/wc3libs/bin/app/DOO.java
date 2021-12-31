@@ -144,13 +144,17 @@ public class DOO {
 				int itemsCount = stream.readInt32();
 
 				for (int i = 0; i < itemsCount; i++) {
+                    if (stream.eof()) {
+                        break;
+                    }
 					ObjId typeId = ObjId.valueOf(stream.readId("typeId"));
 
-                    if (!stream.eof()) {
-                        int chance = stream.readInt32("chance");
-
-                        Item item = addItem(typeId, chance);
+                    if (stream.eof()) {
+                        break;
                     }
+                    int chance = stream.readInt32("chance");
+
+                    Item item = addItem(typeId, chance);
 				}
 			}
 			
