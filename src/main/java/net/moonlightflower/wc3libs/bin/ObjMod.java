@@ -170,7 +170,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		@Nonnull
 		public List<Mod> getModsOfField(@Nonnull MetaFieldId fieldId) {
-			return _modsMap.getOrDefault(fieldId, Collections.emptyList());
+			return _modsMap.getOrDefault(fieldId, new ArrayList<>());
 		}
 
 		public void addMod(@Nonnull Mod mod) {
@@ -240,7 +240,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				MetaFieldId fieldId = otherModEntry.getKey();
 				List<Mod> otherModsList = otherModEntry.getValue();
 
-				List<Mod> modsList = _modsMap.getOrDefault(fieldId, Collections.emptyList());
+				List<Mod> modsList = _modsMap.getOrDefault(fieldId, new ArrayList<>());
 
 				for (int i = 0; i < otherModsList.size(); i++) {
 					modsList.set(i, otherModsList.get(i));
