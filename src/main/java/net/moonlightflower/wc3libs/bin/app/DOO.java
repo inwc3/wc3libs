@@ -72,6 +72,16 @@ public class DOO {
 			_scale = val;
 		}
 		
+		private ObjId _skinId = null;
+		
+		public ObjId getSkinId() {
+			return _skinId;
+		}
+		
+		public void setSkinId(ObjId val) {
+			_skinId = val;
+		}		
+		
 		private byte _lifePerc = 1;
 		
 		public int getLifePerc() {
@@ -231,6 +241,15 @@ public class DOO {
 			setAngle(stream.readFloat32("angle"));
 			
 			setScale(new Coords3DF(stream.readFloat32("scaleX"), stream.readFloat32("scaleY"), stream.readFloat32("scaleZ")));
+			
+			//TODO: get rid of this hacky discrimination by knowing the binary structure we want to read beforehand
+			short skinIdDiscriminator = stream.readUByte("skinIdDiscriminator");
+			
+			if (skinIdDiscriminator > 2) {
+				//possible values for flags are only 0x00, 0x01, 0x02, so > 2 must mean it is not flags, therefore assume skinId
+				stream.rewind(1); //rewind by one byte due to the discrimination effort having advanced the stream
+				setSkinId(stream.readId("skinId"));
+			}
 
 			setFlags(stream.readUByte("flags"));
 
@@ -265,6 +284,10 @@ public class DOO {
 			stream.writeFloat32(scale.getX());
 			stream.writeFloat32(scale.getY());
 			stream.writeFloat32(scale.getZ());
+			
+			if (getSkinId() != null) { //assume we want to write a DOO with SkinId per Doodad IFF the SkinId is set
+				stream.writeId(getSkinId());
+			}
 			
 			stream.writeUByte(getFlags());
 
