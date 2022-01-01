@@ -245,9 +245,10 @@ public class DOO {
 			//TODO: get rid of this hacky discrimination by knowing the binary structure we want to read beforehand
 			short skinIdDiscriminator = stream.readUByte("skinIdDiscriminator");
 			
+			stream.rewind(1); //rewind by one byte due to the discrimination effort having advanced the stream
+			
 			if (skinIdDiscriminator > 2) {
 				//possible values for flags are only 0x00, 0x01, 0x02, so > 2 must mean it is not flags, therefore assume skinId
-				stream.rewind(1); //rewind by one byte due to the discrimination effort having advanced the stream
 				setSkinId(ObjId.valueOf(stream.readId("skinId")));
 			}
 
