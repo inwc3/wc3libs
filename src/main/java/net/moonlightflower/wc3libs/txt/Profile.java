@@ -404,10 +404,12 @@ public class Profile extends TXT implements Printable {
 	@Override
 	public void write(@Nonnull BufferedWriter writer, @Nullable Translator translator) throws IOException {
 		for (Entry<TXTSectionId, Obj> objEntry : getObjs().entrySet()) {
-			TXTSectionId objId = objEntry.getKey();
 			Obj obj = objEntry.getValue();
 
-			obj.write(writer, translator);
+            if (!obj._fields.isEmpty()) {
+                obj.write(writer, translator);
+            }
+
 		}
 	}
 	
