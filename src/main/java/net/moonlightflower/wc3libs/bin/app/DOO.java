@@ -248,7 +248,7 @@ public class DOO {
 			if (skinIdDiscriminator > 2) {
 				//possible values for flags are only 0x00, 0x01, 0x02, so > 2 must mean it is not flags, therefore assume skinId
 				stream.rewind(1); //rewind by one byte due to the discrimination effort having advanced the stream
-				setSkinId(stream.readId("skinId"));
+				setSkinId(ObjId.valueOf(stream.readId("skinId")));
 			}
 
 			setFlags(stream.readUByte("flags"));
