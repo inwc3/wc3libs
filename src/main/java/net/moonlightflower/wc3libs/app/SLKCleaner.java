@@ -67,6 +67,7 @@ public class SLKCleaner {
     public static void clean(UnitBalanceSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(UnitBalanceSLK.State.EDITOR_COMMENT, new War3String(""));
+            val.set(UnitBalanceSLK.State.DATA_NEUTRAL_STRUCTURE_RANDOMED, new War3String(""));
         });
     }
 

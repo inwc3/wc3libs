@@ -1067,6 +1067,51 @@ public class ObjMerger {
         exportFiles(outDir, outFiles);
     }
 
+    public void exportMapOnly(@Nonnull File mapFile, @Nonnull File outDir) throws Exception {
+        log.info("Exporting map: " + mapFile.getAbsolutePath());
+        Collection<File> filesToExport = new LinkedHashSet<>();
+
+        filesToExport.addAll(_objModInFiles);
+        filesToExport.add(WTS.GAME_PATH);
+        filesToExport.add(Jass.GAME_PATH);
+        filesToExport.add(DOO.GAME_PATH);
+
+        log.info("try export from map (" + filesToExport + ")");
+        Map<File, File> redirectMap = new LinkedHashMap<>();
+        Map<File, File> outFiles = new LinkedHashMap<>();
+
+        MpqPort.Out portOut = new JMpqPort.Out();
+
+        for (File inFile : filesToExport) {
+            File redirectFile = inFile;
+
+            redirectMap.put(redirectFile, inFile);
+            portOut.add(redirectFile);
+        }
+
+        MpqPort.Out.Result portResult = portOut.commit(mapFile);
+
+        portOut.clear();
+
+        for (Map.Entry<File, MpqPort.Out.Result.Segment> segmentEntry : portResult.getExports().entrySet()) {
+            File redirectedFile = segmentEntry.getKey();
+
+            try {
+                File outFile = portResult.getFile(redirectedFile);
+
+                File inFile = redirectMap.get(redirectedFile);
+
+                filesToExport.remove(inFile);
+                outFiles.put(inFile, outFile);
+            } catch (NoSuchFileException ignored) {
+            }
+        }
+
+        log.info("Extracting following files: " + Arrays.toString(outFiles.values().toArray()));
+
+        exportFiles(outDir, outFiles);
+    }
+
     public void exportMap(File mapFile, File outDir) throws Exception {
         exportMap(mapFile, true, Context.getService(GameDirFinder.class).get(), outDir);
     }
