@@ -3160,6 +3160,19 @@ public class W3I {
         return w3i;
     }
 
+    @Nonnull
+    public static W3I ofByteArray(@Nonnull byte[] mapFile) throws Exception {
+        Wc3BinInputStream inStream = new Wc3BinInputStream(new ByteArrayInputStream(mapFile));
+
+        W3I w3i = new W3I();
+
+        w3i.read(inStream);
+
+        inStream.close();
+
+        return w3i;
+    }
+
     public FuncImpl makeInitCustomPlayerSlots() {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null);
 
