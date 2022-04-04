@@ -88,16 +88,14 @@ public class FuncImpl implements Decl {
     }
 
     private Body _body;
-    private boolean _isLua;
 
-    public FuncImpl(@Nonnull FuncDecl decl, @Nonnull Body body, boolean isLua) {
+    public FuncImpl(@Nonnull FuncDecl decl, @Nonnull Body body) {
         _decl = decl;
         _body = body;
-        _isLua = isLua;
     }
 
     public static FuncImpl create(@Nonnull LightJassParser.Func_implContext func_implContext) {
-        return new FuncImpl(FuncDecl.create(func_implContext.func_decl()), Body.create(func_implContext.func_body()), false);
+        return new FuncImpl(FuncDecl.create(func_implContext.func_decl()), Body.create(func_implContext.func_body()));
     }
 
     public void write(@Nonnull StringWriter sw, boolean isLua) {
@@ -109,7 +107,7 @@ public class FuncImpl implements Decl {
 
         sw.write("\n");
 
-        if (_isLua) {
+        if (isLua) {
             sw.write("end");
         } else {
             sw.write("endfunction");

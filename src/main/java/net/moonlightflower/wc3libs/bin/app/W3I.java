@@ -3178,7 +3178,7 @@ public class W3I {
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
 
-        FuncImpl funcImpl = new FuncImpl(funcDecl, body, isLua);
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
 
         return funcImpl;
     }
@@ -3225,7 +3225,7 @@ public class W3I {
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
 
-        FuncImpl funcImpl = new FuncImpl(funcDecl, body, isLua);
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
 
         return funcImpl;
     }
@@ -3291,7 +3291,7 @@ public class W3I {
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
 
-        FuncImpl funcImpl = new FuncImpl(funcDecl, body, isLua);
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
 
         return funcImpl;
     }
@@ -3321,7 +3321,7 @@ public class W3I {
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
 
-        FuncImpl funcImpl = new FuncImpl(funcDecl, body, isLua);
+        FuncImpl funcImpl = new FuncImpl(funcDecl, body);
 
         return funcImpl;
     }
@@ -3417,7 +3417,7 @@ public class W3I {
     }
 
     public void injectConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion) throws IOException {
-        injectConfigsInScript(inStream, sw, gameVersion, true);
+        injectConfigsInScript(inStream, sw, gameVersion, false);
     }
 
     public void injectConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion, boolean isLua) throws IOException {
