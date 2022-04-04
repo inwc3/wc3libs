@@ -20,10 +20,16 @@ public class Param {
     }
 
     public void write(@Nonnull StringWriter sw) {
-        sw.write(_type);
+        write(sw, false);
+    }
 
-        sw.write(" ");
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
+        if (!isLua) {
+            sw.write(_type);
 
+            sw.write(" ");
+
+        }
         sw.write(_name);
     }
 }

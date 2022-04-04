@@ -22,17 +22,23 @@ public class FuncDecl implements Decl {
     private List<Param> _params;
     private String _returnType;
     private boolean _isNative;
+    private boolean _isLua;
 
     public String getName() {
         return _name;
     }
 
-    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative) {
+    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative, boolean isLua) {
         _isConstant = isConstant;
         _name = name;
         _params = params;
         _returnType = returnType;
         _isNative = isNative;
+        _isLua = isLua;
+    }
+
+    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative) {
+        this(isConstant, name, params, returnType, isNative, false);
     }
 
     public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType) {
@@ -76,11 +82,15 @@ public class FuncDecl implements Decl {
 
         sw.write(_name);
 
-        sw.write(" ");
+        if (_isLua) {
+            sw.write("(");
+        } else {
+            sw.write(" ");
 
-        sw.write(JassScript.getPrimaryLiteral(JassLexer.TAKES));
+            sw.write(JassScript.getPrimaryLiteral(JassLexer.TAKES));
 
-        sw.write(" ");
+            sw.write(" ");
+        }
 
         if (_params.isEmpty()) {
             sw.write(JassScript.getPrimaryLiteral(JassLexer.NOTHING));
@@ -94,16 +104,20 @@ public class FuncDecl implements Decl {
                     sw.write(JassScript.getPrimaryLiteral(JassLexer.COMMA) + " ");
                 }
 
-                param.write(sw);
+                param.write(sw, _isLua);
             }
         }
 
-        sw.write(" ");
+        if (_isLua) {
+            sw.write(")");
+        } else {
+            sw.write(" ");
 
-        sw.write(JassScript.getPrimaryLiteral(JassLexer.RETURNS));
+            sw.write(JassScript.getPrimaryLiteral(JassLexer.RETURNS));
 
-        sw.write(" ");
+            sw.write(" ");
 
-        sw.write(_returnType == null ? JassScript.getPrimaryLiteral(JassLexer.NOTHING) : _returnType);
+            sw.write(_returnType == null ? JassScript.getPrimaryLiteral(JassLexer.NOTHING) : _returnType);
+        }
     }
 }
