@@ -3305,7 +3305,7 @@ public class W3I {
 
         stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
         if (isLua) {
-            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(("" + getMapDescription()).replaceAll("\n", "\\n")) + ")"));
+            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(("" + getMapDescription()).replaceAll("\n", "\\\\n")) + ")"));
         } else {
             stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
         }
