@@ -3315,9 +3315,9 @@ public class W3I {
             stmts.add(Statement.create("call DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
         }
 
-        stmts.add(Statement.create((isLua ? "" : "call ") + FuncDecl.INIT_CUSTOM_PLAYER_SLOTS + "()"));
-        stmts.add(Statement.create((isLua ? "" : "call ") + FuncDecl.INIT_CUSTOM_TEAMS + "()"));
-        stmts.add(Statement.create((isLua ? "" : "call ") + FuncDecl.INIT_ALLY_PRIORITIES + "()"));
+        stmts.add(Statement.create("call " + FuncDecl.INIT_CUSTOM_PLAYER_SLOTS + "()"));
+        stmts.add(Statement.create("call " + FuncDecl.INIT_CUSTOM_TEAMS + "()"));
+        stmts.add(Statement.create("call " + FuncDecl.INIT_ALLY_PRIORITIES + "()"));
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
 
