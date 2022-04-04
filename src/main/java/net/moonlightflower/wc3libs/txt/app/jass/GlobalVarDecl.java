@@ -20,7 +20,7 @@ public class GlobalVarDecl extends VarDecl {
     }
 
     @Override
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         if (_isConstant) {
             sw.write(JassScript.getPrimaryLiteral(JassLexer.CONST_DECL));
 

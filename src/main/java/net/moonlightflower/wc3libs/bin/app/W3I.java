@@ -3161,19 +3161,19 @@ public class W3I {
     }
 
     public FuncImpl makeInitCustomPlayerSlots(boolean isLua) {
-        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null, false, isLua);
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
         for (Player player : getPlayers()) {
-            stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
             if (player.getStartPosFixed() == 1) {
-                stmts.add(Statement.create((isLua ? "" : "call ") + "ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
+                stmts.add(Statement.create("call ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
             }
-            stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
-            stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
-            stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
-            stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType().getJassExpr() + ")"));
+            stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
+            stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
+            stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
+            stmts.add(Statement.create("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType().getJassExpr() + ")"));
         }
 
         FuncImpl.Body body = new FuncImpl.Body(new ArrayList<>(), stmts);
@@ -3184,7 +3184,7 @@ public class W3I {
     }
 
     public FuncImpl makeInitCustomTeams(boolean isLua) {
-        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_TEAMS, new ArrayList<>(), null, false, isLua);
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_TEAMS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
@@ -3198,7 +3198,7 @@ public class W3I {
             for (Integer playerNum : force.getPlayerNums(getPlayers())) {
                 Player player = numToPlayerMap.get(playerNum);
 
-                stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
+                stmts.add(Statement.create("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
             }
         }
 
@@ -3210,14 +3210,14 @@ public class W3I {
                     for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
                         if (playerNum.equals(playerNum2)) continue;
 
-                        stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
+                        stmts.add(Statement.create("call SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
                     }
                 }
                 if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
                     for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
                         if (playerNum.equals(playerNum2)) continue;
 
-                        stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
+                        stmts.add(Statement.create("call SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
                     }
                 }
             }
@@ -3231,7 +3231,7 @@ public class W3I {
     }
 
     public FuncImpl makeInitAllyPriorities(@Nonnull GameVersion gameVersion, boolean isLua) {
-        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null, false, isLua);
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
@@ -3242,7 +3242,7 @@ public class W3I {
                 Set<Integer> allyLowNums = player.getAllyLowPrioPlayerNums();
                 Set<Integer> allyHighNums = player.getAllyHighPrioPlayerNums();
 
-                stmts.add(Statement.create(String.format((isLua ? "" : "call ") + "SetStartLocPrioCount(%d, %d)", playerNum, allyLowNums.size() + allyHighNums.size())));
+                stmts.add(Statement.create(String.format("call SetStartLocPrioCount(%d, %d)", playerNum, allyLowNums.size() + allyHighNums.size())));
 
                 int c = 0;
 
@@ -3252,9 +3252,9 @@ public class W3I {
                     if (playerNum == otherPlayerNum) continue;
 
                     if (allyLowNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format((isLua ? "" : "call ") + "SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
                     } else if (allyHighNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format((isLua ? "" : "call ") + "SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
                     } else {
                         //stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
                     }
@@ -3267,7 +3267,7 @@ public class W3I {
                 Set<Integer> enemyLowNums = player.getEnemyLowPrioPlayerNums();
                 Set<Integer> enemyHighNums = player.getEnemyHighPrioPlayerNums();
 
-                stmts.add(Statement.create(String.format((isLua ? "" : "call ") + "SetEnemyStartLocPrioCount(%d, %d)", playerNum, enemyLowNums.size() + enemyHighNums.size())));
+                stmts.add(Statement.create(String.format("call SetEnemyStartLocPrioCount(%d, %d)", playerNum, enemyLowNums.size() + enemyHighNums.size())));
 
                 int c = 0;
 
@@ -3277,9 +3277,9 @@ public class W3I {
                     if (playerNum == otherPlayerNum) continue;
 
                     if (enemyLowNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format((isLua ? "" : "call ") + "SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
                     } else if (enemyHighNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format((isLua ? "" : "call ") + "SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
                     } else {
                         //stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
                     }
@@ -3297,22 +3297,22 @@ public class W3I {
     }
 
     public FuncImpl makeConfig(boolean isLua) {
-        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.CONFIG_NAME, new ArrayList<>(), null, false, isLua);
+        FuncDecl funcDecl = new FuncDecl(false, FuncDecl.CONFIG_NAME, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
         Function enquote = (Function<String, String>) s -> "\"" + s + "\"";
 
-        stmts.add(Statement.create((isLua ? "" : "call ") + "SetMapName(" + enquote.apply(getMapName()) + ")"));
-        stmts.add(Statement.create((isLua ? "" : "call ") + "SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
+        stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
+        stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
 
-        stmts.add(Statement.create((isLua ? "" : "call ") + "SetPlayers(" + getPlayers().size() + ")"));
-        stmts.add(Statement.create((isLua ? "" : "call ") + "SetTeams(" + getForces().size() + ")"));
+        stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
+        stmts.add(Statement.create("call SetTeams(" + getForces().size() + ")"));
 
-        stmts.add(Statement.create((isLua ? "" : "call ") + "SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
+        stmts.add(Statement.create("call SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
 
         for (Player player : getPlayers()) {
-            stmts.add(Statement.create((isLua ? "" : "call ") + "DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
+            stmts.add(Statement.create("call DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
         }
 
         stmts.add(Statement.create((isLua ? "" : "call ") + FuncDecl.INIT_CUSTOM_PLAYER_SLOTS + "()"));
@@ -3358,9 +3358,11 @@ public class W3I {
     }
 
     private static final Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
+    private static final Pattern funcStartPatternLua = Pattern.compile("^\\s*function\\(");
+    private static final Pattern funcEndPatternLua = Pattern.compile("^\\s*end");
     private static final Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
 
-    public void removeConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+    public void removeConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, boolean isLua) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
 
             String line;
@@ -3377,7 +3379,7 @@ public class W3I {
 
             while ((line = reader.readLine()) != null) {
 
-                Matcher funcStartMatcher = funcStartPattern.matcher(line);
+                Matcher funcStartMatcher = (isLua ? funcStartPatternLua : funcStartPattern).matcher(line);
 
                 if (funcStartMatcher.find()) {
                     String funcName = funcStartMatcher.group(1);
@@ -3388,7 +3390,7 @@ public class W3I {
                 }
 
                 if (skip) {
-                    Matcher funcEndMatcher = funcEndPattern.matcher(line);
+                    Matcher funcEndMatcher = (isLua ? funcEndPatternLua : funcEndPattern).matcher(line);
 
                     if (funcEndMatcher.find()) {
                         skip = false;
@@ -3419,7 +3421,7 @@ public class W3I {
     }
 
     public void injectConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion, boolean isLua) throws IOException {
-        removeConfigsInJassScript(inStream, sw);
+        removeConfigsInScript(inStream, sw, isLua);
 
         List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
 
@@ -3430,7 +3432,7 @@ public class W3I {
 
         for (FuncImpl funcImpl : toBeAddedFuncImpls) {
             sw.write("\n");
-            funcImpl.write(sw);
+            funcImpl.write(sw, isLua);
         }
     }
 }

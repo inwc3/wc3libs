@@ -22,23 +22,17 @@ public class FuncDecl implements Decl {
     private List<Param> _params;
     private String _returnType;
     private boolean _isNative;
-    private boolean _isLua;
 
     public String getName() {
         return _name;
     }
 
-    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative, boolean isLua) {
+    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative) {
         _isConstant = isConstant;
         _name = name;
         _params = params;
         _returnType = returnType;
         _isNative = isNative;
-        _isLua = isLua;
-    }
-
-    public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType, boolean isNative) {
-        this(isConstant, name, params, returnType, isNative, false);
     }
 
     public FuncDecl(boolean isConstant, @Nonnull String name, List<Param> params, @Nullable String returnType) {
@@ -69,7 +63,7 @@ public class FuncDecl implements Decl {
         return new FuncDecl(func_declContext.CONST_DECL() != null, func_declContext.func_name().getText(), params, func_declContext.func_return_type().getText(), false);
     }
 
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         if (_isConstant) sw.write(JassScript.getPrimaryLiteral(JassLexer.CONST_DECL) + " ");
 
         if (_isNative) {
@@ -82,7 +76,7 @@ public class FuncDecl implements Decl {
 
         sw.write(_name);
 
-        if (_isLua) {
+        if (isLua) {
             sw.write("(");
         } else {
             sw.write(" ");
@@ -104,11 +98,11 @@ public class FuncDecl implements Decl {
                     sw.write(JassScript.getPrimaryLiteral(JassLexer.COMMA) + " ");
                 }
 
-                param.write(sw, _isLua);
+                param.write(sw, isLua);
             }
         }
 
-        if (_isLua) {
+        if (isLua) {
             sw.write(")");
         } else {
             sw.write(" ");

@@ -19,23 +19,25 @@ public class LocalVarDecl extends VarDecl {
         return new LocalVarDecl(false, local_var_declContext.type_ref().getText(), local_var_declContext.ARRAY_DECL() != null, local_var_declContext.var_name().getText(), val);
     }
 
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         sw.write("local ");
 
-        if (_isConstant) {
-            sw.write(JassScript.getPrimaryLiteral(JassLexer.CONST_DECL));
+        if (!isLua) {
+            if (_isConstant) {
+                sw.write(JassScript.getPrimaryLiteral(JassLexer.CONST_DECL));
+
+                sw.write(" ");
+            }
+
+            sw.write(_type);
 
             sw.write(" ");
-        }
 
-        sw.write(_type);
+            if (_isArray) {
+                sw.write(JassScript.getPrimaryLiteral(JassLexer.ARRAY_DECL));
 
-        sw.write(" ");
-
-        if (_isArray) {
-            sw.write(JassScript.getPrimaryLiteral(JassLexer.ARRAY_DECL));
-
-            sw.write(" ");
+                sw.write(" ");
+            }
         }
 
         sw.write(_name);

@@ -19,10 +19,12 @@ public class CallStatement extends Statement {
     }
 
     @Override
-    public void write(@Nonnull StringWriter sw) {
-        super.write(sw);
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
+        super.write(sw, isLua);
 
-        sw.write("call ");
+        if (!isLua) {
+            sw.write("call ");
+        }
 
         _funcCall.write(sw);
     }

@@ -45,7 +45,7 @@ public class JassTest extends Wc3LibTest {
 
         StringWriter sw = new StringWriter();
 
-        script.write(sw);
+        script.write(sw, false);
 
         //System.out.println(sw.toString());
 
@@ -66,7 +66,7 @@ public class JassTest extends Wc3LibTest {
 
         StringWriter sw = new StringWriter();
 
-        script.write(sw);
+        script.write(sw, false);
 
         Jass newJass = new Jass(sw.toString());
     }
@@ -92,7 +92,7 @@ public class JassTest extends Wc3LibTest {
 
         StringWriter sw = new StringWriter();
 
-        script.write(sw);
+        script.write(sw, false);
 
         Jass newJass = new Jass(sw.toString());
     }
