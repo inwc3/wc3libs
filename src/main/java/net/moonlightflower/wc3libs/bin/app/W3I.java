@@ -3301,10 +3301,14 @@ public class W3I {
 
         List<Statement> stmts = new ArrayList<>();
 
-        Function enquote = (Function<String, String>) s -> "\"" + s + "\"";
+        Function<String, String> enquote = s -> "\"" + s + "\"";
 
         stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
-        stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
+        if (isLua) {
+            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(("" + getMapDescription()).replaceAll("\n", "\\n")) + ")"));
+        } else {
+            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
+        }
 
         stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
         stmts.add(Statement.create("call SetTeams(" + getForces().size() + ")"));
