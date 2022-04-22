@@ -327,8 +327,14 @@ public class MDX {
                 squishPivot((PivotPointChunk)chunk);
             } else if (chunk instanceof BoneChunk) {
                 squishBone((BoneChunk)chunk);
+            } else if (chunk instanceof ModelInfoChunk) {
+                squishModelInfo((ModelInfoChunk)chunk);
             }
         }
+    }
+
+    private void squishModelInfo(ModelInfoChunk chunk) {
+        chunk.setName("");
     }
 
     private void squishBone(BoneChunk chunk) {
