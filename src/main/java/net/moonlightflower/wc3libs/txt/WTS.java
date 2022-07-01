@@ -130,16 +130,21 @@ public class WTS {
     }
 
     @Nonnull
-    public static WTS ofMapFile(@Nonnull File mapFile) throws Exception {
+    public static WTS ofAnyFile(@Nonnull File mapFile, boolean isCampaign) throws Exception {
         MpqPort.Out portOut = Context.getService(MpqPort.class).createOut();
+        File path;
+        if (!isCampaign)
+            path = GAME_PATH;
+        else
+            path = CAMPAIGN_PATH;
 
-        portOut.add(WTS.GAME_PATH);
+        portOut.add(path);
 
         MpqPort.Out.Result portResult = portOut.commit(mapFile);
 
-        if (!portResult.getExports().containsKey(GAME_PATH)) throw new IOException("could not extract WTS file");
+        if (!portResult.getExports().containsKey(path)) throw new IOException("could not extract WTS file");
 
-        byte[] bytes = portResult.getExports().get(GAME_PATH).getOutBytes();
+        byte[] bytes = portResult.getExports().get(path).getOutBytes();
 
         InputStream inStream = new ByteArrayInputStream(bytes);
 
@@ -148,6 +153,14 @@ public class WTS {
         inStream.close();
 
         return wts;
+    }
+
+    public static WTS ofMapFile(@Nonnull File mapFile) throws Exception {
+        return ofAnyFile(mapFile, false);
+    }
+
+    public static WTS ofCampaignFile(@Nonnull File mapFile) throws Exception {
+        return ofAnyFile(mapFile, true);
     }
 
     @Override

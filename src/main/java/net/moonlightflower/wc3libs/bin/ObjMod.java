@@ -94,7 +94,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			public String toString() {
 				return getId().toString();
 			}
-			
+
 			public Mod(@Nonnull MetaFieldId id, @Nonnull ValType valType, @Nullable DataType val) {
 				_id = id;
 				_valType = valType;
@@ -206,7 +206,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			Mod mod = new Mod(id, val);
 
 			if (_modsMap.containsKey(id)) {
-				_mods.removeIf((Mod filterMod) -> {return filterMod._id.equals(id);});
+				_mods.removeIf((Mod filterMod) -> {
+					return filterMod._id.equals(id);
+				});
 				_modsMap.remove(id);
 			}
 
@@ -214,9 +216,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			_modsMap.put(id, new ArrayList<>());
 
 			_modsMap.get(id).add(mod);
- 		}
+		}
 
- 		public void remove(@Nonnull Mod mod) {
+		public void remove(@Nonnull Mod mod) {
 			_mods.remove(mod);
 
 			List<Mod> modsMapList = _modsMap.get(mod.getId());
@@ -229,12 +231,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				}
 			}
 		}
-		
+
 		public void remove(@Nonnull MetaFieldId id) {
-			_mods.removeIf((Mod mod) -> {return mod.getId().equals(id);});
+			_mods.removeIf((Mod mod) -> {
+				return mod.getId().equals(id);
+			});
 			_modsMap.remove(id);
 		}
-		
+
 		public void merge(@Nonnull Obj otherObj) {
 			for (Map.Entry<MetaFieldId, List<Mod>> otherModEntry : otherObj.getModsMapByField().entrySet()) {
 				MetaFieldId fieldId = otherModEntry.getKey();
@@ -247,14 +251,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				}
 			}
 		}
-		
+
 		private ObjId _id;
 
 		@Nonnull
 		public ObjId getId() {
 			return _id;
 		}
-		
+
 		private ObjId _baseId;
 
 		@Nullable
@@ -268,11 +272,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		public ObjId getNewId() {
 			return _newId;
 		}
-		
+
 		@Override
 		public String toString() {
 			if (getBaseId() == null) return String.format("%s", getId().toString());
-			
+
 			return String.format("%s (%s)", getId().toString(), getBaseId().toString());
 		}
 
@@ -295,7 +299,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 			printer.endGroup();
 		}
-		
+
 		private void read_0x1(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			_baseId = ObjId.valueOf(stream.readId("baseId"));
 			_newId = ((Function<Id, ObjId>) id -> {
@@ -307,14 +311,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			_id = (_newId == null) ? _baseId : _newId;
 
 			int modsAmount = stream.readInt32("modsAmount");
-			
+
 			for (int i = 0; i < modsAmount; i++) {
 				MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
-				
+
 				int varTypeI = stream.readInt32("varType");
 
 				ValType varType = ValType.valueOf(varTypeI);
-				
+
 				int level = 0;
 				int dataPt = 0;
 
@@ -326,35 +330,35 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				DataType val;
 
 				switch (varType) {
-				case INT: {
-					val = War3Int.valueOf(stream.readInt32("val (int)"));
-					
-					break;
-				}
-				case REAL: {
-					val = War3Real.valueOf(stream.readFloat32("val (real)"));
-					
-					break;
-				}
-				case UNREAL: {
-					val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
-					
-					break;
-				}
-				case STRING: {
-					val = War3String.valueOf(stream.readString("val (string) "));
-					
-					break;
-				}
-				default: {
-					val = War3String.valueOf(stream.readString("val (string default)"));
-				}
+					case INT: {
+						val = War3Int.valueOf(stream.readInt32("val (int)"));
+
+						break;
+					}
+					case REAL: {
+						val = War3Real.valueOf(stream.readFloat32("val (real)"));
+
+						break;
+					}
+					case UNREAL: {
+						val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
+
+						break;
+					}
+					case STRING: {
+						val = War3String.valueOf(stream.readString("val (string) "));
+
+						break;
+					}
+					default: {
+						val = War3String.valueOf(stream.readString("val (string default)"));
+					}
 				}
 
 				Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
 
 				addMod(mod);
-				
+
 				stream.readId("endToken");
 			}
 		}
@@ -377,7 +381,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				int varTypeI = stream.readInt32("varType");
 
 				ValType varType = ValType.valueOf(varTypeI);
-				
+
 				int level = 0;
 				int dataPt = 0;
 
@@ -387,31 +391,31 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				}
 
 				DataType val;
-				
+
 				switch (varType) {
-				case INT: {
-					val = War3Int.valueOf(stream.readInt32("val (int)"));
-					
-					break;
-				}
-				case REAL: {
-					val = War3Real.valueOf(stream.readFloat32("val (real)"));
-					
-					break;
-				}
-				case UNREAL: {
-					val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
-					
-					break;
-				}
-				case STRING: {
-					val = War3String.valueOf(stream.readString("val (string)"));
-					
-					break;
-				}
-				default: {
-					val = War3String.valueOf(stream.readString("val (string default)"));
-				}
+					case INT: {
+						val = War3Int.valueOf(stream.readInt32("val (int)"));
+
+						break;
+					}
+					case REAL: {
+						val = War3Real.valueOf(stream.readFloat32("val (real)"));
+
+						break;
+					}
+					case UNREAL: {
+						val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
+
+						break;
+					}
+					case STRING: {
+						val = War3String.valueOf(stream.readString("val (string)"));
+
+						break;
+					}
+					default: {
+						val = War3String.valueOf(stream.readString("val (string default)"));
+					}
 				}
 
 				Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
@@ -421,7 +425,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				stream.readId("endToken");
 			}
 		}
-		
+
 		private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 			stream.writeId((_baseId == null) ? _id : _baseId);
 			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
@@ -484,7 +488,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				stream.writeId(null); //endToken
 			}
 		}
-		
+
 		private void write_0x2(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 			stream.writeId((_baseId == null) ? _id : _baseId);
 			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
@@ -547,39 +551,39 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				stream.writeId(null); //endToken
 			}
 		}
-		
+
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			try {
 				switch (format.toEnum()) {
-				case OBJ_0x1: {
-					read_0x1(stream);
-					
-					break;
-				}
-				case OBJ_0x2: {
-					read_0x2(stream);
-					
-					break;
-				}
+					case OBJ_0x1: {
+						read_0x1(stream);
+
+						break;
+					}
+					case OBJ_0x2: {
+						read_0x2(stream);
+
+						break;
+					}
 				}
 			} catch (RuntimeException e) {
 				throw new BinInputStream.StreamException(stream);
 			}
 		}
-		
+
 		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 			switch (format.toEnum()) {
-			case AUTO:
-			case OBJ_0x2: {
-				write_0x2(stream);
-				
-				break;
-			}
-			case OBJ_0x1: {
-				write_0x1(stream);
-				
-				break;
-			}
+				case AUTO:
+				case OBJ_0x2: {
+					write_0x2(stream);
+
+					break;
+				}
+				case OBJ_0x1: {
+					write_0x1(stream);
+
+					break;
+				}
 			}
 		}
 
@@ -595,19 +599,19 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 			return (T) ret;
 		}
-		
+
 		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			read(stream, format);
 		}
-		
+
 		public Obj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 			_id = id;
 			_baseId = baseId;
 
-            _newId = (_baseId != null) ? id : null;
+			_newId = (_baseId != null) ? id : null;
 		}
 	}
-	
+
 	protected final Map<ObjId, ObjType> _objs = new LinkedHashMap<>();
 	private final List<ObjType> _objsList = new ArrayList<>();
 
@@ -624,15 +628,15 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	@Nonnull
 	public List<ObjType> getOrigObjs() {
 		List<ObjType> ret = new ArrayList<>();
-		
+
 		for (int i = 0; i < getObjsList().size(); i++) {
 			ObjType obj = getObjsList().get(i);
-			
+
 			if (obj.getNewId() == null) {
 				ret.add(obj);
 			}
 		}
-		
+
 		return ret;
 	}
 
@@ -659,12 +663,12 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public ObjType getObj(@Nonnull ObjId id) {
 		return getObjs().get(id);
 	}
-	
+
 	private void addObj(@Nonnull ObjType val) {
 		_objs.put(val.getId(), val);
 		_objsList.add(val);
 	}
-	
+
 	public void removeObj(@Nonnull ObjType val) {
 		_objs.remove(val.getId());
 		_objsList.remove(val);
@@ -672,29 +676,29 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 	public void removeObj(@Nonnull ObjId id) {
 		ObjType obj = getObj(id);
-		
+
 		if (obj != null) {
 			removeObj(obj);
 		}
 	}
-	
+
 	public void clearObjs() {
 		_objs.clear();
 		_objsList.clear();
 	}
 
 	protected abstract ObjType createObj(@Nonnull ObjId id, @Nullable ObjId baseId);
-	
+
 	public Obj addObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 		if (getObjs().containsKey(id)) return getObjs().get(id);
-		
+
 		ObjType obj = createObj(id, baseId);
-	
+
 		addObj(obj);
-		
+
 		return obj;
 	}
-	
+
 	public void merge(@Nonnull ObjMod<ObjType> other) {
 		for (ObjType otherObj : other.getObjs().values()) {
 			ObjType obj = otherObj.copy();
@@ -716,32 +720,32 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		printer.endGroup();
 	}
-	
+
 	public static class ObjPack<ObjType extends ObjMod.Obj> {
 		private Map<ObjId, ObjId> _baseObjIds = new LinkedHashMap<>();
-		
+
 		public Map<ObjId, ObjId> getBaseObjIds() {
 			return _baseObjIds;
 		}
-		
+
 		private Map<File, SLK> _slks = new LinkedHashMap<>();
-		
+
 		public Map<File, SLK> getSlks() {
 			return _slks;
 		}
-		
+
 		private Profile _profile = new Profile();
-		
+
 		public Profile getProfile() {
 			return _profile;
 		}
-		
+
 		private ObjMod<ObjType> _objMod;
-		
+
 		public ObjMod<ObjType> getObjMod() {
 			return _objMod;
 		}
-		
+
 		private ObjPack(@Nonnull ObjMod<ObjType> orig) {
 			_objMod = orig.copy();
 
@@ -752,6 +756,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	}
 
 	public abstract Collection<File> getSLKs();
+
 	public abstract Collection<File> getNecessarySLKs();
 
 	@Nonnull
@@ -759,11 +764,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		ObjPack pack = new ObjPack(this);
 
 		if (excludedClasses.contains(getClass())) return pack;
-		
+
 		Map<File, SLK> outSlks = pack.getSlks();
 		Profile outProfile = pack.getProfile();
 		ObjMod outObjMod = pack.getObjMod();
-		
+
 		for (Obj obj : getObjs().values()) {
 			ObjId objId = obj.getId();
 			/*if(objId.toString().equals("n01M")) {
@@ -835,7 +840,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 					} else {
 						File slkFile = CommonMetaSLK.convertSLKName(slkName);
 
-						if (slkFile == null) throw new RuntimeException("no slkFile for name " + slkName);
+						if (slkFile == null)
+							throw new RuntimeException("no slkFile for name " + slkName);
 
 						SLK outSlk = outSlks.computeIfAbsent(slkFile, k -> new RawSLK());
 
@@ -905,7 +911,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		return pack;
 	}
-	
+
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
@@ -937,28 +943,28 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		stream.checkFormatVersion(EncodingFormat.OBJ_0x1.getVersion(), version);
 
 		int origObjsAmount = stream.readInt32("origObjsAmount");
-		
+
 		for (int i = 0; i < origObjsAmount; i++) {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
 			ObjId id = ObjId.valueOf(stream.readId("objId"));
-			
+
 			ObjType obj = createObj(id, null);
-			
+
 			obj.read(stream, EncodingFormat.OBJ_0x1);
-			
+
 			addObj(obj);
 		}
-		
+
 		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
 			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
 			ObjId id = ObjId.valueOf(stream.readId("objId"));
-			
+
 			ObjType obj = createObj(baseId, baseId);
-			
+
 			obj.read(stream, EncodingFormat.OBJ_0x1);
-			
+
 			addObj(obj);
 		}
 	}
@@ -975,58 +981,58 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		for (int i = 0; i < origObjsAmount; i++) {
 			ObjType obj = createObj(stream, EncodingFormat.OBJ_0x2);
-			
+
 			addObj(obj);
 		}
-		
+
 		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
 			ObjType obj = createObj(stream, EncodingFormat.OBJ_0x2);
-		
+
 			addObj(obj);
 		}
 	}
-	
+
 	private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		stream.writeInt32(EncodingFormat.OBJ_0x1.getVersion());
-		
+
 		stream.writeInt32(getOrigObjs().size());
 
 		for (Obj obj : getOrigObjs()) {
 			obj.write(stream, EncodingFormat.OBJ_0x1);
 		}
-		
+
 		stream.writeInt32(getCustomObjs().size());
-		
+
 		for (Obj obj : getCustomObjs()) {
 			obj.write(stream, EncodingFormat.OBJ_0x1);
 		}
 	}
-	
+
 	private void write_0x2(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		stream.writeInt32(EncodingFormat.OBJ_0x2.getVersion());
 
 		stream.writeInt32(getOrigObjs().size());
-		
+
 		for (int i = 0; i < getOrigObjs().size(); i++) {
 			Obj obj = getOrigObjs().get(i);
-			
+
 			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
-		
+
 		stream.writeInt32(getCustomObjs().size());
-		
+
 		for (int i = 0; i < getCustomObjs().size(); i++) {
 			Obj obj = getCustomObjs().get(i);
-			
+
 			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
 	}
-	
+
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
-		
+
 		stream.rewind();
 
 		EncodingFormat format = EncodingFormat.valueOf(version);
@@ -1035,48 +1041,48 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		read(stream, format);
 	}
-	
+
 	public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
-		case AUTO: {
-			read_auto(stream);
-			
-			break;
-		}
-		case OBJ_0x1: {
-			read_0x1(stream);
-			
-			break;
-		}
-		case OBJ_0x2: {
-			read_0x2(stream);
-			
-			break;
-		}
+			case AUTO: {
+				read_auto(stream);
+
+				break;
+			}
+			case OBJ_0x1: {
+				read_0x1(stream);
+
+				break;
+			}
+			case OBJ_0x2: {
+				read_0x2(stream);
+
+				break;
+			}
 		}
 	}
 
 	public void read(@Nonnull Wc3BinInputStream stream) throws IOException {
 		read(stream, EncodingFormat.AUTO);
 	}
-	
+
 	public void read(@Nonnull InputStream inStream) throws IOException {
 		read(new Wc3BinInputStream(inStream), EncodingFormat.AUTO);
 	}
-	
+
 	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 		switch (format.toEnum()) {
-		case AUTO:
-		case OBJ_0x2: {
-			write_0x2(stream);
-			
-			break;
-		}
-		case OBJ_0x1: {
-			write_0x1(stream);
-			
-			break;
-		}
+			case AUTO:
+			case OBJ_0x2: {
+				write_0x2(stream);
+
+				break;
+			}
+			case OBJ_0x1: {
+				write_0x1(stream);
+
+				break;
+			}
 		}
 	}
 
@@ -1095,7 +1101,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		inStream.close();
 	}
-	
+
 	public ObjMod() {
 	}
 
@@ -1103,28 +1109,28 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public static ObjMod createFromInFile(@Nonnull File inFile, @Nonnull File outFile) throws Exception {
 		ObjMod ret = null;
 
-		if (inFile.equals(W3A.GAME_PATH)) {
+		if (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3A.CAMPAIGN_PATH)) {
 			ret = new W3A(outFile);
 		}
-		if (inFile.equals(W3B.GAME_PATH)) {
+		if (inFile.equals(W3B.GAME_PATH) || inFile.equals(W3B.CAMPAIGN_PATH)) {
 			ret = new W3B(outFile);
 		}
-		if (inFile.equals(W3D.GAME_PATH)) {
+		if (inFile.equals(W3D.GAME_PATH) || inFile.equals(W3D.CAMPAIGN_PATH)) {
 			ret = new W3D(outFile);
 		}
-		if (inFile.equals(W3H.GAME_PATH)) {
+		if (inFile.equals(W3H.GAME_PATH) || inFile.equals(W3H.CAMPAIGN_PATH)) {
 			ret = new W3H(outFile);
 		}
-		if (inFile.equals(W3Q.GAME_PATH)) {
+		if (inFile.equals(W3Q.GAME_PATH) || inFile.equals(W3Q.CAMPAIGN_PATH)) {
 			ret = new W3Q(outFile);
 		}
-		if (inFile.equals(W3T.GAME_PATH)) {
+		if (inFile.equals(W3T.GAME_PATH) || inFile.equals(W3T.CAMPAIGN_PATH)) {
 			ret = new W3T(outFile);
 		}
-		if (inFile.equals(W3U.GAME_PATH)) {
+		if (inFile.equals(W3U.GAME_PATH) || inFile.equals(W3U.CAMPAIGN_PATH)) {
 			ret = new W3U(outFile);
 		}
-		
+
 		return ret;
 	}
 
@@ -1132,28 +1138,28 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public static ObjMod createFromInFile(@Nonnull File inFile) {
 		ObjMod ret = null;
 
-		if (inFile.equals(W3A.GAME_PATH)) {
+		if (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3A.CAMPAIGN_PATH)) {
 			ret = new W3A();
 		}
-		if (inFile.equals(W3B.GAME_PATH)) {
+		if (inFile.equals(W3B.GAME_PATH) || inFile.equals(W3B.CAMPAIGN_PATH)) {
 			ret = new W3B();
 		}
-		if (inFile.equals(W3D.GAME_PATH)) {
+		if (inFile.equals(W3D.GAME_PATH) || inFile.equals(W3D.CAMPAIGN_PATH)) {
 			ret = new W3D();
 		}
-		if (inFile.equals(W3H.GAME_PATH)) {
+		if (inFile.equals(W3H.GAME_PATH) || inFile.equals(W3H.CAMPAIGN_PATH)) {
 			ret = new W3H();
 		}
-		if (inFile.equals(W3Q.GAME_PATH)) {
+		if (inFile.equals(W3Q.GAME_PATH) || inFile.equals(W3Q.CAMPAIGN_PATH)) {
 			ret = new W3Q();
 		}
-		if (inFile.equals(W3T.GAME_PATH)) {
+		if (inFile.equals(W3T.GAME_PATH) || inFile.equals(W3T.CAMPAIGN_PATH)) {
 			ret = new W3T();
 		}
-		if (inFile.equals(W3U.GAME_PATH)) {
+		if (inFile.equals(W3U.GAME_PATH) || inFile.equals(W3U.CAMPAIGN_PATH)) {
 			ret = new W3U();
 		}
-		
+
 		return ret;
 	}
 
@@ -1166,19 +1172,25 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	}
 
 	@Nonnull
-	public static <T extends ObjMod> T ofMapFile(@Nonnull Class<T> clazz, @Nonnull File mapFile) throws IOException {
-		if (!mapFile.exists()) throw new IOException(String.format("file %s does not exist", mapFile));
+	public static <T extends ObjMod> T ofAnyFile(@Nonnull Class<T> clazz, @Nonnull File mapFile, boolean isCampaign) throws IOException {
+		if (!mapFile.exists())
+			throw new IOException(String.format("file %s does not exist", mapFile));
 
 		MpqPort.Out port = new JMpqPort.Out();
 
 		try {
-			File inFilePath = (File) clazz.getField("GAME_PATH").get(null);
+			File inFilePath;
+			if (!isCampaign)
+				inFilePath = (File) clazz.getField("GAME_PATH").get(null);
+			else
+				inFilePath = (File) clazz.getField("CAMPAIGN_PATH").get(null);
 
 			port.add(inFilePath);
 
 			MpqPort.Out.Result portResult = port.commit(mapFile);
 
-			if (!portResult.getExports().containsKey(inFilePath)) throw new IOException("could not extract w3a file");
+			if (!portResult.getExports().containsKey(inFilePath))
+				throw new IOException("could not extract w3a file");
 
 			Wc3BinInputStream inStream = new Wc3BinInputStream(portResult.getInputStream(inFilePath));
 
@@ -1192,5 +1204,13 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
 			throw new AssertionError(e);
 		}
+	}
+
+	public static <T extends ObjMod> T ofMapFile(@Nonnull Class<T> clazz, @Nonnull File mapFile) throws IOException {
+		return  ofAnyFile(clazz, mapFile, false);
+	}
+
+	public static <T extends ObjMod> T ofCampaignFile(@Nonnull Class<T> clazz, @Nonnull File mapFile) throws IOException {
+		return  ofAnyFile(clazz, mapFile, true);
 	}
 }

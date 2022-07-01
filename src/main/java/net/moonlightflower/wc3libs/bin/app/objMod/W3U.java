@@ -40,6 +40,11 @@ public class W3U extends ObjMod<W3U.Unit> {
 		return ofMapFile(W3U.class, mapFile);
 	}
 
+	@Nonnull
+	public static W3U ofCampaignFile(@Nonnull File mapFile) throws IOException {
+		return ofCampaignFile(W3U.class, mapFile);
+	}
+
 	@Override
 	protected Unit createObj(@Nonnull ObjId id, @Nullable ObjId baseId) {
 		return new Unit(id, baseId);
