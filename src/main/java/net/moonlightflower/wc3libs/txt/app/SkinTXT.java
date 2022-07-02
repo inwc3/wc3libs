@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 
 public class SkinTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapSkin.txt");
+	public final static File CAMPAIGN_PATH = new File("war3campaignSkin.txt");
 	
 	public static class States {
 		public static class Section extends TXT.Section {

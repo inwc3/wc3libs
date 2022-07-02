@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 
 public class MiscTXT extends TXT {
 	public final static File GAME_PATH = new File("war3mapMisc.txt");
+	public final static File CAMPAIGN_PATH = new File("war3campaignMisc.txt");
 
 	public static class Section extends TXT.Section {
 		public final static Section HERO = new Section("HERO");
