@@ -1,12 +1,9 @@
-package misc;
+package net.xetanth87.campaignsplitter;
 
 import javafx.application.Application;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
-import net.moonlightflower.wc3libs.bin.Writer;
-import net.moonlightflower.wc3libs.bin.app.W3F;
-import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -26,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -43,7 +41,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
-public class SplitCampaign<T> {
+public class CampaignSplitter<T> {
 	public static final String IMPORT_DELIM = "\r";
 	public static final String DATA_DELIM = "\n";
 	public static final String STRING_PREFIX = "TRIGSTR_";
@@ -354,7 +352,12 @@ public class SplitCampaign<T> {
 		campEditor.close();
 	}
 
-	public static void splitCampaign(File campaignFile) throws Exception {
+	public static void splitCampaign(String filePath) throws Exception {
+		if (!filePath.endsWith(".w3n"))
+			throw new IllegalArgumentException("Argument must be a campaign file!");
+		File campaignFile = new File(filePath);
+		if (!campaignFile.exists())
+			throw  new FileNotFoundException();
 		System.out.println(campaignFile.getAbsolutePath());
 		JMpqEditor campaignEditor = new JMpqEditor(campaignFile, MPQOpenOption.READ_ONLY);
 		WTS wtsC = WTS.ofCampaignFile(campaignFile);
@@ -375,17 +378,26 @@ public class SplitCampaign<T> {
 	}
 
 	public static void main(String args[]) {
-		String[] a = new String[]{"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate0 - Prologue.w3n",
-				"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate1 - Undead.w3n",
-				"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate1 - UndeadBonus.w3n",
-				"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate4 - Horde.w3n",
-				"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate4 - HordeSimple.w3n"
-		};
-		String filePath = a[4].replace("\\", "/");
+		String filePath = null;
+		boolean acceptZeroParam = false;
+		int acceptedArgsLength = 1;
+		if (args.length != acceptedArgsLength && (args.length != 0 || !acceptZeroParam))
+			throw new IllegalArgumentException("Wrong number of arguments! Expected: " + acceptedArgsLength + ", Got: " + args.length);
+		if (args.length == 0) {
+			String[] a = new String[]{"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate0 - Prologue.w3n",
+					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate1 - Undead.w3n",
+					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate1 - UndeadBonus.w3n",
+					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate4 - Horde.w3n",
+					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate4 - HordeSimple.w3n",
+					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate3 - AllianceSimple.w3n"
+			};
+			filePath = a[5].replace("\\", "/");
+		}
+		else {
+			filePath = args[0];
+		}
 		try {
-			if (!filePath.endsWith(".w3n"))
-				throw new IOException("Argument must be a campaign file!");
-			splitCampaign(new File(filePath));
+			splitCampaign(filePath);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
