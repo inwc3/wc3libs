@@ -357,7 +357,7 @@ public class CampaignSplitter<T> {
 			throw new IllegalArgumentException("Argument must be a campaign file!");
 		File campaignFile = new File(filePath);
 		if (!campaignFile.exists())
-			throw  new FileNotFoundException();
+			throw  new FileNotFoundException("Campaign file not found!");
 		System.out.println(campaignFile.getAbsolutePath());
 		JMpqEditor campaignEditor = new JMpqEditor(campaignFile, MPQOpenOption.READ_ONLY);
 		WTS wtsC = WTS.ofCampaignFile(campaignFile);
