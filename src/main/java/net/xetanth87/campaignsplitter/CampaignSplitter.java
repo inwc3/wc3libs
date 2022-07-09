@@ -4,6 +4,7 @@ import javafx.application.Application;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.app.W3F;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -112,16 +113,24 @@ public class CampaignSplitter<T> {
 			if (mapData == null)
 				throw new IOException();
 			List<ObjMod.Obj> campaignList = data.getObjsList();
-			boolean found = false;
+			List<ObjMod.Obj> tempList = new ArrayList<>(campaignList);
+			boolean found;
 			for (Object object : mapData.getObjsList()) {
+				found = false;
 				ObjMod.Obj obj = (ObjMod.Obj)object;
-				for (int i = 0; i < campaignList.size(); i++) {
-					ObjMod.Obj campaignObj = (ObjMod.Obj)campaignList.get(i);
+				for (int i = 0; i < tempList.size(); i++) {
+					ObjMod.Obj campaignObj = (ObjMod.Obj)tempList.get(i);
 					if (!campaignObj.getId().equals(obj.getId()))
 						continue;
 					found = true;
-					for (ObjMod.Obj.Mod mod : obj.getMods())
+					for (ObjMod.Obj.Mod mod : obj.getMods()) {
+						for (ObjMod.Obj.Mod cmod : campaignObj.getMods())
+							if (cmod.getId().equals(mod.getId())) {
+								campaignObj.getMods().remove(cmod);
+								break;
+							}
 						campaignObj.addMod(mod);
+					}
 					break;
 				}
 				if (!found)
@@ -153,7 +162,9 @@ public class CampaignSplitter<T> {
 		String x = s
 				.replaceAll("\t", IMPORT_DELIM)
 				.replaceAll("\b", IMPORT_DELIM)
-				.replaceAll("\u0015", IMPORT_DELIM);
+				.replaceAll("\u0015", IMPORT_DELIM)
+				.replaceAll("\u001D", IMPORT_DELIM)
+				;
 		writer.append(x);
 		writer.close();
 	}
@@ -317,7 +328,7 @@ public class CampaignSplitter<T> {
 		}
 	}
 
-	public static void addCampaignData(File mapFile, File campaignFile) throws IOException, NoSuchFieldException, IllegalAccessException {
+	public static void addCampaignData(File mapFile, File campaignFile) throws Exception {
 		JMpqEditor mapEditor = new JMpqEditor(mapFile);
 		String tempPath = mapFile.getParentFile().getAbsolutePath() + "/"
 				+ getWithoutExtension(mapFile);
@@ -348,6 +359,9 @@ public class CampaignSplitter<T> {
 		// upgrades
 		mergeData(new W3Q(), mapFile, mapEditor, campEditor, tempPath, campaignKeyOffset);
 		// campaign data (W3F) is not needed
+
+		W3F campaignData = W3F.ofCampaignFile(campaignFile);
+
 		mapEditor.close();
 		campEditor.close();
 	}
