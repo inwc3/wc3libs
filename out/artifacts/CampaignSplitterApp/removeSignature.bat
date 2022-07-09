@@ -1,0 +1,1 @@
+wsl bash removeSignature.sh

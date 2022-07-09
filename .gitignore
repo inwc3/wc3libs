@@ -17,7 +17,13 @@ gradle-wc3libs.app.setting
 src/test/resources/mpqs/war3.w3x
 src/test/resources/war3.w3x
 
-out/
+out/*
+!out/artifacts/
+out/artifacts/*
+!out/artifacts/CampaignSplitterApp
+out/artifacts/CampaignSplitterApp/*
+!out/artifacts/CampaignSplitterApp/removeSignature.bat
+!out/artifacts/CampaignSplitterApp/removeSignature.sh
 src/test/resources/mpqs/War3x.w3x
 src/test/resources/War3x.w3x
 *.iml
