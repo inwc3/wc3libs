@@ -160,9 +160,10 @@ public class CampaignSplitter<T> {
 		FileWriter writer = new FileWriter(extractedFile);
 		//String s = new String(encoded, StandardCharsets.US_ASCII);
 		String x = s
+				.replaceAll("\0\b", "\0" + IMPORT_DELIM + "war3campImported\\\\")
 				.replaceAll("\t", IMPORT_DELIM)
-				.replaceAll("\b", IMPORT_DELIM)
 				.replaceAll("\u0015", IMPORT_DELIM)
+				.replaceAll("\u001D", IMPORT_DELIM)
 				.replaceAll("\u001D", IMPORT_DELIM)
 				;
 		writer.append(x);
