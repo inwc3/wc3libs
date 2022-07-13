@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.W3F;
+import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -225,7 +226,21 @@ public class CampaignSplitter<T> {
 		insertedFile.delete();
 	}
 
-	public static int mergeStrings(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
+	public static int stringIndexToInt(String s)
+	{
+		return Integer.parseInt(s.replaceFirst(STRING_PREFIX, ""));
+	}
+
+	public static String buttonText(int buttonIndex, int buttonCount)
+	{
+		String buttonIndexText = (buttonIndex + 1) + "";
+		int addedZeroes = Math.max((buttonCount + "").length() - buttonIndexText.length(), 0);
+		for (int i = 0; i < addedZeroes; i ++)
+			buttonIndexText = "0" + buttonIndexText;
+		return buttonIndexText + ". ";
+	}
+
+	public static int mergeStrings(File mapFile, JMpqEditor mapEditor, File campaignFile, JMpqEditor campEditor, int buttonIndex, int buttonCount, String tempPath) throws Exception {
 		File extractedFile = new File(tempPath + "_" + WTS.GAME_PATH);
 		extractedFile.createNewFile();
 		WTS strings = null;
@@ -239,15 +254,37 @@ public class CampaignSplitter<T> {
 		} finally {
 			//extractedFile.delete();
 		}
+
 		try {
 			campEditor.extractFile(WTS.CAMPAIGN_PATH.getName(), extractedFile);
+			WTS campStrings = new WTS(extractedFile);
 			if (strings == null)
-				strings = new WTS(extractedFile);
+				strings = campStrings;
 			else {
-				WTS campStrings = new WTS(extractedFile);
 				for (int i : campStrings.getKeyedEntries().keySet())
 					strings.addEntry(campaignKeyOffset + i, campStrings.getEntry(i));
 			}
+
+			if (buttonIndex >= 0) {
+				W3F campaignData = W3F.ofCampaignFile(campaignFile);
+				W3F.MapEntry mapEntry = campaignData.getMaps().get(buttonIndex);
+				int chapterTitleIndex = stringIndexToInt(mapEntry.getChapterTitle());
+				int mapTitleIndex = stringIndexToInt(mapEntry.getMapTitle());
+				String buttonTitle = buttonText(buttonIndex, buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
+				System.out.println(buttonTitle);
+				W3I info = W3I.ofMapFile(mapFile);
+				String mapNameStringIndex = info.getMapName();
+				if (mapNameStringIndex != null && !mapNameStringIndex.isEmpty())
+					strings.addEntry(stringIndexToInt(mapNameStringIndex), buttonTitle);
+				else
+				{
+					info.setMapName(mapEntry.getChapterTitle());
+					strings.addEntry(chapterTitleIndex, buttonTitle);
+					System.out.println("AAAA " + mapEntry.getChapterTitle() + " " + buttonTitle);
+					insertInfo(info, W3I.GAME_PATH.getName(), mapEditor, tempPath);
+				}
+			}
+
 			insertStrings(strings, WTS.GAME_PATH.getName(), mapEditor, tempPath);
 		} catch (Exception e) {
 			//extractedFile.delete();
@@ -255,6 +292,14 @@ public class CampaignSplitter<T> {
 			//extractedFile.delete();
 			return campaignKeyOffset;
 		}
+	}
+
+	public static void insertInfo(W3I info, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
+		File insertedFile = new File(tempPath + "_" + fileName);
+		insertedFile.createNewFile();
+		info.write(insertedFile);
+		mapEditor.insertFile(fileName, insertedFile, false, true);
+		insertedFile.delete();
 	}
 
 	public static void insertTxt(TXT txt, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
@@ -329,7 +374,7 @@ public class CampaignSplitter<T> {
 		}
 	}
 
-	public static void addCampaignData(File mapFile, File campaignFile) throws Exception {
+	public static void addCampaignData(File mapFile, File campaignFile, int buttonIndex, int buttonCount) throws Exception {
 		JMpqEditor mapEditor = new JMpqEditor(mapFile);
 		String tempPath = mapFile.getParentFile().getAbsolutePath() + "/"
 				+ getWithoutExtension(mapFile);
@@ -339,7 +384,7 @@ public class CampaignSplitter<T> {
 		// imports
 		mergeImports(mapEditor, campEditor, tempPath);
 		// strings
-		int campaignKeyOffset = mergeStrings(mapEditor, campEditor, tempPath);
+		int campaignKeyOffset = mergeStrings(mapFile, mapEditor, campaignFile, campEditor, buttonIndex, buttonCount, tempPath);
 		// misc / constants
 		mergeMisc(mapEditor, campEditor, tempPath);
 		// skin / interface
@@ -359,9 +404,6 @@ public class CampaignSplitter<T> {
 		mergeData(new W3H(), mapFile, mapEditor, campEditor, tempPath, campaignKeyOffset);
 		// upgrades
 		mergeData(new W3Q(), mapFile, mapEditor, campEditor, tempPath, campaignKeyOffset);
-		// campaign data (W3F) is not needed
-
-		W3F campaignData = W3F.ofCampaignFile(campaignFile);
 
 		mapEditor.close();
 		campEditor.close();
@@ -380,15 +422,17 @@ public class CampaignSplitter<T> {
 		File splitDir = new File(splitPath);
 		if (!splitDir.exists())
 			splitDir.mkdirs();
-		for (String fileName : campaignEditor.getFileNames()) {
-			if (fileName.endsWith(".w3m") || fileName.endsWith(".w3x")) {
-				String mapPath = splitPath + "/" + fileName;
-				System.out.println(mapPath);
-				File mapFile = new File(mapPath);
-				mapFile.createNewFile();
-				campaignEditor.extractFile(fileName, mapFile);
-				addCampaignData(mapFile, campaignFile);
-			}
+		W3F campaignData = W3F.ofCampaignFile(campaignFile);
+		int buttonCount = campaignData.getMaps().size();
+		for (int i = 0; i < buttonCount; i++) {
+			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
+			String fileName = mapEntry.getMapPath();
+			String mapPath = splitPath + "/" + fileName;
+			System.out.println(mapPath);
+			File mapFile = new File(mapPath);
+			mapFile.createNewFile();
+			campaignEditor.extractFile(fileName, mapFile);
+			addCampaignData(mapFile, campaignFile, i, buttonCount);
 		}
 	}
 
