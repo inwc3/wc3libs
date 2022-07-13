@@ -72,7 +72,7 @@ public class SplitterFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			String filename = new File(filePathField.getText()).getName();
 			try {
-				CampaignSplitter.splitCampaign(filePathField.getText());
+				CampaignSplitter.splitCampaign(filePathField.getText(), true);
 				JOptionPane.showMessageDialog(null,"Campaign \"" + filename + "\" has been split successfully!", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception ex) {
 				ex.printStackTrace();
