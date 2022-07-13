@@ -338,7 +338,7 @@ public class MDX {
 
     private void squishParticleEmitter2(ParticleEmitter2Chunk chunk) {
         for (ParticleEmitter2 particleEmitter2 : chunk.getParticleEmitter2s()) {
-            particleEmitter2.squish()
+            particleEmitter2.squish();
         }
     }
 
