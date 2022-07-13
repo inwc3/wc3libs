@@ -36,7 +36,7 @@ public class MDX {
     }
 
     private final LinkedHashSet<GlobalSequenceChunk> _globalSequenceChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
-            GlobalSequenceChunk);
+        GlobalSequenceChunk);
 
     @Nonnull
     public LinkedHashSet<GlobalSequenceChunk> getGlobalSequenceChunks() {
@@ -121,7 +121,7 @@ public class MDX {
     }
 
     private final LinkedHashSet<ParticleEmitterChunk> _particleEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
-            ParticleEmitterChunk);
+        ParticleEmitterChunk);
 
     @Nonnull
     public LinkedHashSet<ParticleEmitterChunk> getParticleEmitterChunks() {
@@ -129,7 +129,7 @@ public class MDX {
     }
 
     private final LinkedHashSet<ParticleEmitter2Chunk> _particleEmitter2Chunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
-            ParticleEmitter2Chunk);
+        ParticleEmitter2Chunk);
 
     @Nonnull
     public LinkedHashSet<ParticleEmitter2Chunk> getParticleEmitter2Chunks() {
@@ -137,7 +137,7 @@ public class MDX {
     }
 
     private final LinkedHashSet<RibbonEmitterChunk> _ribbonEmitterChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
-            RibbonEmitterChunk);
+        RibbonEmitterChunk);
 
     @Nonnull
     public LinkedHashSet<RibbonEmitterChunk> getRibbonEmitterChunks() {
@@ -159,7 +159,7 @@ public class MDX {
     }
 
     private final LinkedHashSet<CollisionShapeChunk> _collisionShapeChunks = new ObservableLinkedHashSetView<>(_chunks, chunk -> chunk instanceof
-            CollisionShapeChunk);
+        CollisionShapeChunk);
 
     @Nonnull
     public LinkedHashSet<CollisionShapeChunk> getCollisionShapeChunks() {
@@ -197,7 +197,8 @@ public class MDX {
     private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
         Id startToken = stream.readId("startToken");
 
-        if (!startToken.equals(TOKEN)) throw new IllegalArgumentException("invalid " + TOKEN + " startToken (" + startToken + ")");
+        if (!startToken.equals(TOKEN))
+            throw new IllegalArgumentException("invalid " + TOKEN + " startToken (" + startToken + ")");
 
         Map<Id, TokenHandler> _tokenMap = new LinkedHashMap<>();
 
@@ -322,19 +323,28 @@ public class MDX {
     public void squish() {
         for (Chunk chunk : getChunks()) {
             if (chunk instanceof GeosetChunk) {
-                squishGeoset((GeosetChunk)chunk);
+                squishGeoset((GeosetChunk) chunk);
             } else if (chunk instanceof PivotPointChunk) {
-                squishPivot((PivotPointChunk)chunk);
+                squishPivot((PivotPointChunk) chunk);
             } else if (chunk instanceof BoneChunk) {
-                squishBone((BoneChunk)chunk);
+                squishBone((BoneChunk) chunk);
             } else if (chunk instanceof ModelInfoChunk) {
-                squishModelInfo((ModelInfoChunk)chunk);
+                squishModelInfo((ModelInfoChunk) chunk);
+            } else if (chunk instanceof ParticleEmitter2Chunk) {
+                squishParticleEmitter2((ParticleEmitter2Chunk) chunk);
             }
+        }
+    }
+
+    private void squishParticleEmitter2(ParticleEmitter2Chunk chunk) {
+        for (ParticleEmitter2 particleEmitter2 : chunk.getParticleEmitter2s()) {
+            particleEmitter2.squish()
         }
     }
 
     private void squishModelInfo(ModelInfoChunk chunk) {
         chunk.setName("");
+        chunk.getExtent().squish();
     }
 
     private void squishBone(BoneChunk chunk) {
