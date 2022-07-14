@@ -14,6 +14,7 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.IMP;
+import net.moonlightflower.wc3libs.dataTypes.app.Controller;
 import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.MiscTXT;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class CampaignSplitter<T> {
 	public static final String IMPORT_DELIM = "\r";
@@ -46,7 +49,7 @@ public class CampaignSplitter<T> {
 
 	public static void insertData(ObjMod mapData, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
 		File insertedFile = new File(tempPath + "_" + fileName);
-		insertedFile.createNewFile();
+		XT87Utils.createNewFile(insertedFile);
 		Wc3BinOutputStream bos = new Wc3BinOutputStream(insertedFile);
 		mapData.write(bos);
 		bos.close();
@@ -83,7 +86,7 @@ public class CampaignSplitter<T> {
 		String gamePath = ((File) data.getClass().getField("GAME_PATH").get(null)).getName();
 		String campaignPath = ((File) data.getClass().getField("CAMPAIGN_PATH").get(null)).getName();
 		File extractedFile = new File(tempPath + "_" + gamePath);
-		extractedFile.createNewFile();
+		XT87Utils.createNewFile(extractedFile);
 		ObjMod mapData = null;
 		Wc3BinInputStream bis = null;
 		try {
@@ -165,7 +168,7 @@ public class CampaignSplitter<T> {
 
 	public static void insertImports(IMP imports, String fileName, JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
 		File insertedFile = new File(tempPath + "_" + fileName);
-		insertedFile.createNewFile();
+		XT87Utils.createNewFile(insertedFile);
 		Wc3BinOutputStream bos = new Wc3BinOutputStream(insertedFile);
 		imports.write(bos);
 		bos.close();
@@ -183,7 +186,7 @@ public class CampaignSplitter<T> {
 
 	public static void mergeImports(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
 		File extractedFile = new File(tempPath + "_" + IMP.GAME_PATH);
-		extractedFile.createNewFile();
+		XT87Utils.createNewFile(extractedFile);
 		IMP imports;
 		try {
 			campEditor.extractFile(IMP.CAMPAIGN_PATH.getName(), extractedFile);
@@ -212,7 +215,7 @@ public class CampaignSplitter<T> {
 
 	public static void insertStrings(WTS strings, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
 		File insertedFile = new File(tempPath + "_" + fileName);
-		insertedFile.createNewFile();
+		XT87Utils.createNewFile(insertedFile);
 		strings.write(insertedFile);
 		mapEditor.insertFile(fileName, insertedFile, false, true);
 		insertedFile.delete();
@@ -220,7 +223,7 @@ public class CampaignSplitter<T> {
 
 	public static void insertInfo(W3I info, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
 		File insertedFile = new File(tempPath + "_" + fileName);
-		insertedFile.createNewFile();
+		XT87Utils.createNewFile(insertedFile);
 		info.write(insertedFile);
 		mapEditor.insertFile(fileName, insertedFile, false, true);
 		insertedFile.delete();
@@ -238,9 +241,9 @@ public class CampaignSplitter<T> {
 
 	public static Pair<Integer, Integer> mergeStrings(File mapFile, JMpqEditor mapEditor, File campaignFile,
 	                                                  JMpqEditor campEditor, int buttonIndex, int buttonCount,
-	                                                  String tempPath, boolean withDificultySelection) throws Exception {
+	                                                  String tempPath, boolean withDifficultySelection) throws Exception {
 		File extractedFile = new File(tempPath + "_" + WTS.GAME_PATH);
-		extractedFile.createNewFile();
+		XT87Utils.createNewFile(extractedFile);
 		WTS strings = null;
 		int campaignKeyOffset = 0, difficultyStringOffset = 0;
 		try {
@@ -278,12 +281,11 @@ public class CampaignSplitter<T> {
 				{
 					info.setMapName(mapEntry.getChapterTitle());
 					strings.addEntry(chapterTitleIndex, buttonTitle);
-					System.out.println("AAAA " + mapEntry.getChapterTitle() + " " + buttonTitle);
 					insertInfo(info, W3I.GAME_PATH.getName(), mapEditor, tempPath);
 				}
 			}
 
-			if (withDificultySelection)
+			if (withDifficultySelection)
 			{
 				difficultyStringOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
 				strings.addEntry(difficultyStringOffset, "Choose Difficulty");
@@ -303,7 +305,7 @@ public class CampaignSplitter<T> {
 
 	public static void insertTxt(TXT txt, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
 		File insertedFile = new File(tempPath + "_" + fileName);
-		insertedFile.createNewFile();
+		XT87Utils.createNewFile(insertedFile);
 		txt.write(insertedFile);
 		mapEditor.insertFile(fileName, insertedFile, false, true);
 		insertedFile.delete();
@@ -311,7 +313,7 @@ public class CampaignSplitter<T> {
 
 	public static void mergeMisc(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
 		File extractedFile = new File(tempPath + "_" + MiscTXT.GAME_PATH);
-		extractedFile.createNewFile();
+		XT87Utils.createNewFile(extractedFile);
 		MiscTXT txt = null;
 		try {
 			campEditor.extractFile(MiscTXT.CAMPAIGN_PATH.getName(), extractedFile);
@@ -343,7 +345,7 @@ public class CampaignSplitter<T> {
 
 	public static void mergeSkin(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
 		File extractedFile = new File(tempPath + "_" + SkinTXT.GAME_PATH);
-		extractedFile.createNewFile();
+		XT87Utils.createNewFile(extractedFile);
 		SkinTXT txt = null;
 		try {
 			campEditor.extractFile(SkinTXT.CAMPAIGN_PATH.getName(), extractedFile);
@@ -373,7 +375,10 @@ public class CampaignSplitter<T> {
 		}
 	}
 
-	public static void addCampaignData(File mapFile, File campaignFile, int buttonIndex, int buttonCount, boolean withDificultySelection) throws Exception {
+	public static ReentrantLock rl = new ReentrantLock();
+
+	public static void addCampaignData(File mapFile, File campaignFile, int buttonIndex, int buttonCount, boolean withDifficultySelection) throws Exception {
+		rl.lock();
 		JMpqEditor mapEditor = new JMpqEditor(mapFile);
 		String tempPath = mapFile.getParentFile().getAbsolutePath() + "/"
 				+ getWithoutExtension(mapFile);
@@ -383,7 +388,8 @@ public class CampaignSplitter<T> {
 		// imports
 		mergeImports(mapEditor, campEditor, tempPath);
 		// strings
-		Pair<Integer, Integer> offsets = mergeStrings(mapFile, mapEditor, campaignFile, campEditor, buttonIndex, buttonCount, tempPath, withDificultySelection);
+		Pair<Integer, Integer> offsets = mergeStrings(mapFile, mapEditor, campaignFile, campEditor, buttonIndex, buttonCount, tempPath, withDifficultySelection);
+		rl.unlock();
 		// misc / constants
 		mergeMisc(mapEditor, campEditor, tempPath);
 		// skin / interface
@@ -404,11 +410,51 @@ public class CampaignSplitter<T> {
 		// upgrades
 		mergeData(new W3Q(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
 
-		if (withDificultySelection)
-			DifficultySelector.addDifficultySelection(mapEditor, tempPath, offsets.getValue());
+		if (withDifficultySelection) {
+			int playerId = 0;
+			W3I info = W3I.ofMapFile(mapFile);
+			for (W3I.Player p : info.getPlayers())
+				if (p.getType().equals(Controller.USER))
+				{
+					playerId = p.getNum();
+					break;
+				}
+			DifficultySelector.addDifficultySelection(mapEditor, tempPath, offsets.getValue(), playerId);
+		}
 
 		mapEditor.close();
 		campEditor.close();
+	}
+
+	static class MapThread extends Thread {
+		//static Semaphore mapSemaphore = new Semaphore(Runtime.getRuntime().availableProcessors());
+		File mapFile;
+		File campaignFile;
+		int buttonIndex;
+		int buttonCount;
+		boolean withDifficultySelection;
+
+		public MapThread(File mapFile, File campaignFile, int buttonIndex, int buttonCount, boolean withDifficultySelection) {
+			this.mapFile = mapFile;
+			this.campaignFile = campaignFile;
+			this.buttonIndex = buttonIndex;
+			this.buttonCount = buttonCount;
+			this.withDifficultySelection = withDifficultySelection;
+		}
+
+		public void run()
+		{
+			try {
+				//mapSemaphore.acquire();
+				System.out.println(mapFile.getName());
+				addCampaignData(mapFile, campaignFile, buttonIndex, buttonCount, withDifficultySelection);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+				//mapSemaphore.release();
+			}
+		}
 	}
 
 	public static void splitCampaign(String filePath, boolean withDifficultySelection) throws Exception {
@@ -426,18 +472,24 @@ public class CampaignSplitter<T> {
 			splitDir.mkdirs();
 		W3F campaignData = W3F.ofCampaignFile(campaignFile);
 		int buttonCount = campaignData.getMaps().size();
+		List<Thread> mapThreads = new ArrayList<>();
 		for (int i = 0; i < buttonCount; i++) {
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
 			String fileName = mapEntry.getMapPath();
 			String mapPath = splitPath + "/" + fileName;
-			System.out.println(mapPath);
 			if (!campaignEditor.hasFile(fileName))
 				continue;
 			File mapFile = new File(mapPath);
 			mapFile.createNewFile();
 			campaignEditor.extractFile(fileName, mapFile);
 			addCampaignData(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
+//			Thread thread = new MapThread(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
+//			thread.start();
+//			mapThreads.add(thread);
 		}
+//		for (Thread thread : mapThreads)
+//			thread.join();
+		XT87Utils.deleteNewFiles();
 	}
 
 	public static void main(String args[]) {
@@ -447,14 +499,6 @@ public class CampaignSplitter<T> {
 		if (args.length != acceptedArgsLength && (args.length != 0 || !acceptZeroParam))
 			throw new IllegalArgumentException("Wrong number of arguments! Expected: " + acceptedArgsLength + ", Got: " + args.length);
 		if (args.length == 0) {
-			String[] a = new String[]{"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate0 - Prologue.w3n",
-					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate1 - Undead.w3n",
-					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate1 - UndeadBonus.w3n",
-					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate4 - Horde.w3n",
-					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate4 - HordeSimple.w3n",
-					"D:\\C\\Documents\\Warcraft III\\Maps\\Hobby\\War3Alternate3 - AllianceSimple.w3n"
-			};
-			filePath = a[5].replace("\\", "/");
 		}
 		else {
 			filePath = args[0];

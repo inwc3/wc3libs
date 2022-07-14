@@ -1,5 +1,6 @@
 package net.xetanth87.campaignsplitter;
 
+import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.txt.app.jass.Jass;
 import systems.crigges.jmpq3.JMpqEditor;
 
@@ -48,7 +49,7 @@ public class DifficultySelector {
 		return initializationTriggers;
 	}
 
-	public static void addDifficultySelectionToFile(File extractedFile, int difficultyStringOffset) throws IOException {
+	public static void addDifficultySelectionToFile(File extractedFile, int difficultyStringOffset, int playerId) throws IOException {
 		Scanner sc = new Scanner(extractedFile);
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
@@ -65,7 +66,7 @@ public class DifficultySelector {
 		sc = new Scanner(s);
 		sb = new StringBuffer();
 		first = true;
-		boolean triggersAdded = false, insideInitialization = false;
+		boolean triggersAdded = false, insideInitialization = false, insideInitGlobals = false;
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			if (insideInitialization)
@@ -74,6 +75,15 @@ public class DifficultySelector {
 					insideInitialization = false;
 				else if (line.contains(INIT_CALL))
 					continue;
+			}
+			else if (insideInitGlobals)
+			{
+				if (line.equals(END_FUNCTION)) {
+					insideInitGlobals = false;
+					sb.append(JASS_DELIM +
+							"    set udg_XT87CSDifDiag=DialogCreate()" + JASS_DELIM +
+							"    set udg_XT87CSMeleeInitialization=CreateTimer()");
+				}
 			}
 			if (!triggersAdded && line.contains("function Trig"))
 			{
@@ -86,7 +96,7 @@ public class DifficultySelector {
 						"    set udg_XT87CSDifDiagNormal=GetLastCreatedButtonBJ()" + JASS_DELIM +
 						"    call DialogAddButtonBJ(udg_XT87CSDifDiag, \"" + XT87Utils.STRING_PREFIX + XT87Utils.zeroedNumber(difficultyStringOffset + 3, 3) + "\")" + JASS_DELIM +
 						"    set udg_XT87CSDifDiagHard=GetLastCreatedButtonBJ()" + JASS_DELIM +
-						"    call DialogDisplayBJ(true, udg_XT87CSDifDiag, Player(1))" + JASS_DELIM +
+						"    call DialogDisplayBJ(true, udg_XT87CSDifDiag, Player(" + playerId + "))" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"" + JASS_DELIM +
 						"//===========================================================================" + JASS_DELIM +
@@ -165,9 +175,7 @@ public class DifficultySelector {
 			}
 			else if (line.contains("function InitGlobals takes"))
 			{
-				sb.append(JASS_DELIM +
-						"    set udg_XT87CSDifDiag=DialogCreate()" + JASS_DELIM +
-						"    set udg_XT87CSMeleeInitialization=CreateTimer()");
+				insideInitGlobals = true;
 			}
 			else if (line.contains("function InitCustomTriggers takes"))
 			{
@@ -199,13 +207,13 @@ public class DifficultySelector {
 		writer.close();
 	}
 
-	public static void addDifficultySelection(JMpqEditor mapEditor, String tempPath, int difficultyStringOffset) throws IOException {
+	public static void addDifficultySelection(JMpqEditor mapEditor, String tempPath, int difficultyStringOffset, int playerId) throws IOException {
 		File extractedFile = new File(tempPath + "_" + Jass.GAME_PATH);
-		extractedFile.createNewFile();
+		XT87Utils.createNewFile(extractedFile);
 		Jass jass;
 		try {
 			mapEditor.extractFile(Jass.GAME_PATH.getName(), extractedFile);
-			addDifficultySelectionToFile(extractedFile, difficultyStringOffset);
+			addDifficultySelectionToFile(extractedFile, difficultyStringOffset, playerId);
 			mapEditor.insertFile(Jass.GAME_PATH.getName(), extractedFile, false, true);
 		} catch (Exception e) {
 		} finally {
