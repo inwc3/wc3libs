@@ -1,6 +1,5 @@
 package net.xetanth87.campaignsplitter;
 
-import javafx.util.Pair;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CampaignSplitter<T> {
@@ -173,15 +171,13 @@ public class CampaignSplitter<T> {
 		imports.write(bos);
 		bos.close();
 		mapEditor.insertFile(fileName, insertedFile, false, true);
-		insertedFile.delete();
 		for (IMP.Obj o : imports.getObjs()) {
 			if (mapEditor.hasFile(o.getPath()) || !campEditor.hasFile(o.getPath()))
 				continue;
-			insertedFile = new File(tempPath + "_i_" + fileName);
 			campEditor.extractFile(o.getPath(), insertedFile);
-			mapEditor.insertFile(o.getPath(), insertedFile, false, false);
-			insertedFile.delete();
+			mapEditor.insertFile(o.getPath(), insertedFile, false, true);
 		}
+		insertedFile.delete();
 	}
 
 	public static void mergeImports(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
@@ -239,17 +235,22 @@ public class CampaignSplitter<T> {
 		return XT87Utils.zeroedNumber(buttonIndex + 1, (buttonCount + "").length()) + ". ";
 	}
 
-	public static Pair<Integer, Integer> mergeStrings(File mapFile, JMpqEditor mapEditor, File campaignFile,
+	static class StringOffsets {
+		int campaignKeyOffset = 0;
+		int difficultyStringOffset = 0;
+	}
+
+	public static StringOffsets mergeStrings(File mapFile, JMpqEditor mapEditor, File campaignFile,
 	                                                  JMpqEditor campEditor, int buttonIndex, int buttonCount,
 	                                                  String tempPath, boolean withDifficultySelection) throws Exception {
 		File extractedFile = new File(tempPath + "_" + WTS.GAME_PATH);
 		XT87Utils.createNewFile(extractedFile);
 		WTS strings = null;
-		int campaignKeyOffset = 0, difficultyStringOffset = 0;
+		StringOffsets offsets = new StringOffsets();
 		try {
 			mapEditor.extractFile(WTS.GAME_PATH.getName(), extractedFile);
 			strings = new WTS(extractedFile);
-			campaignKeyOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
+			offsets.campaignKeyOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
 		} catch (Exception e) {
 
 		} finally {
@@ -263,7 +264,7 @@ public class CampaignSplitter<T> {
 				strings = campStrings;
 			else {
 				for (int i : campStrings.getKeyedEntries().keySet())
-					strings.addEntry(campaignKeyOffset + i, campStrings.getEntry(i));
+					strings.addEntry(offsets.campaignKeyOffset + i, campStrings.getEntry(i));
 			}
 
 			if (buttonIndex >= 0) {
@@ -287,11 +288,11 @@ public class CampaignSplitter<T> {
 
 			if (withDifficultySelection)
 			{
-				difficultyStringOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
-				strings.addEntry(difficultyStringOffset, "Choose Difficulty");
-				strings.addEntry(difficultyStringOffset + 1, "|cff00ff00Easy|r");
-				strings.addEntry(difficultyStringOffset + 2, "|cffffff00Normal|r");
-				strings.addEntry(difficultyStringOffset + 3, "|cffff0000Hard|r");
+				offsets.difficultyStringOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
+				strings.addEntry(offsets.difficultyStringOffset, "Choose Difficulty");
+				strings.addEntry(offsets.difficultyStringOffset + 1, "|cff00ff00Easy|r");
+				strings.addEntry(offsets.difficultyStringOffset + 2, "|cffffff00Normal|r");
+				strings.addEntry(offsets.difficultyStringOffset + 3, "|cffff0000Hard|r");
 			}
 
 			insertStrings(strings, WTS.GAME_PATH.getName(), mapEditor, tempPath);
@@ -299,7 +300,7 @@ public class CampaignSplitter<T> {
 			//extractedFile.delete();
 		} finally {
 			//extractedFile.delete();
-			return new Pair<>(campaignKeyOffset, difficultyStringOffset);
+			return offsets;
 		}
 	}
 
@@ -388,7 +389,7 @@ public class CampaignSplitter<T> {
 		// imports
 		mergeImports(mapEditor, campEditor, tempPath);
 		// strings
-		Pair<Integer, Integer> offsets = mergeStrings(mapFile, mapEditor, campaignFile, campEditor, buttonIndex, buttonCount, tempPath, withDifficultySelection);
+		StringOffsets offsets = mergeStrings(mapFile, mapEditor, campaignFile, campEditor, buttonIndex, buttonCount, tempPath, withDifficultySelection);
 		rl.unlock();
 		// misc / constants
 		mergeMisc(mapEditor, campEditor, tempPath);
@@ -396,19 +397,19 @@ public class CampaignSplitter<T> {
 		mergeSkin(mapEditor, campEditor, tempPath);
 
 		// units
-		mergeData(new W3U(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3U(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 		// items
-		mergeData(new W3T(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3T(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 		// destructibles
-		mergeData(new W3B(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3B(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 		// doodads
-		mergeData(new W3D(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3D(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 		// abilities
-		mergeData(new W3A(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3A(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 		// buffs
-		mergeData(new W3H(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3H(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 		// upgrades
-		mergeData(new W3Q(), mapFile, mapEditor, campEditor, tempPath, offsets.getKey());
+		mergeData(new W3Q(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
 
 		if (withDifficultySelection) {
 			int playerId = 0;
@@ -419,7 +420,7 @@ public class CampaignSplitter<T> {
 					playerId = p.getNum();
 					break;
 				}
-			DifficultySelector.addDifficultySelection(mapEditor, tempPath, offsets.getValue(), playerId);
+			DifficultySelector.addDifficultySelection(mapEditor, tempPath, offsets.difficultyStringOffset, playerId);
 		}
 
 		mapEditor.close();
