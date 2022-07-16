@@ -6,6 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.time.Duration;
+import java.time.Instant;
 
 public class SplitterFrame extends JFrame {
 	public static final String AUTHOR = "Xetanth87";
@@ -16,31 +21,61 @@ public class SplitterFrame extends JFrame {
 	private JCheckBox difficultySelectorCheckbox = new JCheckBox("Add difficulty selector", true);
 	private boolean running = false;
 	private Thread splitterThread = null;
+	private JProgressBar bar;
+	private JTextArea taskOutput;
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
+		setSize(600, 500);
+		setResizable(false);
+		JPanel container = new JPanel();
 		setLayout(new FlowLayout());
-		add(new Label("Click \"" + browse.getText() + "\" to select a Warcraft III Custom Campaign file (\".w3n\")."));
+		add(new Label("Click \"" + browse.getText() + "\" to select a Warcraft III Custom Campaign file (\"*.w3n\")."));
 		add(new Label("Click \"" + split.getText() + "\" to split the campaign (the campaign file will not be altered)."));
 		add(new Label("A folder with the same name as the campaign will be created in the same location."));
 		add(new Label("This folder will contain all extracted maps, merged with campaign data."));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
-		JPanel p = new JPanel();
-		p.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		p.add(filePathField);
-		p.add(browse);
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.add(filePathField);
+		panel.add(browse);
 		browse.setFocusPainted(false);
 		browse.setBackground(new Color(100, 200, 255));
-		p.add(split);
+		panel.add(split);
 		split.setFocusPainted(false);
 		split.setBackground(Color.ORANGE);
-		add(p);
-		p = new JPanel();
-		p.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		p.add(difficultySelectorCheckbox);
-		add(p);
+		add(panel);
+
+		panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.add(difficultySelectorCheckbox);
+		add(panel);
+
+		panel = new JPanel();
+		bar = new JProgressBar();
+		bar.setValue(0);
+		bar.setMaximum(100);
+		bar.setStringPainted(true);
+		bar.setPreferredSize(new Dimension((int) (0.9f * getWidth()), bar.getPreferredSize().height));
+
+		panel.add(bar);
+		add(panel);
+
+		panel = new JPanel();
+		taskOutput = new JTextArea(12, 50);
+		taskOutput.setMargin(new Insets(5,5,5,5));
+		taskOutput.setEditable(false);
+		panel.add(new JScrollPane(taskOutput), BorderLayout.CENTER);
+		add(panel);
+
+		new ProgressMonitor(this,
+				"Running a Long Task",
+				"", 0, 33);
+
+		//add(container);
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception ex) {
@@ -50,8 +85,6 @@ public class SplitterFrame extends JFrame {
 		//ImageIcon icon = new ImageIcon(iconURL);
 		ImageIcon icon = new ImageIcon(getClass().getResource("Icon.png"));
 		setIconImage(icon.getImage());
-		setSize(520, 225);
-		setResizable(false);
 		setVisible(true);
 	}
 
@@ -95,17 +128,81 @@ public class SplitterFrame extends JFrame {
 		}
 	}
 
+	private static String formatDuration(Duration duration) {
+		long s = duration.getSeconds();
+		return String.format("%d:%02d:%02d", s/3600, (s%3600)/60, (s%60));
+	}
+
+	private class FrameCampaignSplitter extends CampaignSplitter {
+		public FrameCampaignSplitter(File campFile, boolean withDifficultySelection) throws IOException {
+			super(campFile, withDifficultySelection);
+		}
+
+		@Override
+		public void InitializeProgressBar(int i) {
+			super.InitializeProgressBar(i);
+			bar.setMaximum(i);
+			bar.setValue(0);
+		}
+
+		@Override
+		public void SetValueProgressBar(int i) {
+			super.SetValueProgressBar(i);
+			bar.setValue(i);
+		}
+
+		@Override
+		public void IncrementValueProgressBar(int i) {
+			super.IncrementValueProgressBar(i);
+			if (initializedProgressBar)
+				bar.setValue(bar.getValue() + i);
+		}
+
+		@Override
+		public void CompleteProgressBar() {
+			super.CompleteProgressBar();
+			bar.setValue(bar.getMaximum());
+		}
+	}
+
+	private static class AreaPrintStream extends PrintStream {
+		private SplitterFrame frame;
+		private String prefix;
+
+		public AreaPrintStream(OutputStream out, SplitterFrame frame, String prefix) {
+			super(out, true);
+			this.frame = frame;
+			this.prefix = prefix;
+		}
+
+		@Override
+		public void println(String s)
+		{
+			super.println(s);
+			frame.taskOutput.append(prefix + s + "\n");
+		}
+	}
+
 	class CampaignSplitterThread extends Thread {
+		public final Instant startTime;
+
+		CampaignSplitterThread() {
+			this.startTime = Instant.now();
+		}
+
 		public void run() {
-			String filename = new File(filePathField.getText()).getName();
+			File file = new File(filePathField.getText());
 			try {
-				CampaignSplitter.splitCampaign(filePathField.getText(), difficultySelectorCheckbox.isSelected());
-				JOptionPane.showMessageDialog(null, "Campaign \"" + filename + "\" has been split successfully!", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
+				CampaignSplitter cs = new FrameCampaignSplitter(file, difficultySelectorCheckbox.isSelected());
+				cs.splitCampaign();
+				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
+				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			} catch (InterruptedException ex) {
 			} catch (Exception ex) {
 				if (!isInterrupted()) {
 					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "An error has been encountered when splitting \"" + filename + "\":\n" + ex.getMessage(), APP_TITLE, JOptionPane.ERROR_MESSAGE);
+					String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
+					JOptionPane.showMessageDialog(null, "An error has been encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + ex.getMessage(), APP_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			finally {
@@ -124,6 +221,7 @@ public class SplitterFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, "The splitting has stopped!", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
+				taskOutput.setText("");
 				setButtonStates(true);
 				splitterThread = new CampaignSplitterThread();
 				splitterThread.start();
@@ -132,6 +230,12 @@ public class SplitterFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new SplitterFrame();
+		SplitterFrame frame = new SplitterFrame();
+		PrintStream origOut = System.out;
+		PrintStream areaOut = new AreaPrintStream(origOut, frame, "");
+		System.setOut(areaOut);
+		PrintStream origErr = System.err;
+		PrintStream areaErr = new AreaPrintStream(origErr, frame, "ERR: ");
+		System.setErr(areaErr);
 	}
 }

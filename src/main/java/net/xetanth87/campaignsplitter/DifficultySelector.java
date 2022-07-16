@@ -207,17 +207,14 @@ public class DifficultySelector {
 		writer.close();
 	}
 
-	public static void addDifficultySelection(JMpqEditor mapEditor, String tempPath, int difficultyStringOffset, int playerId) throws IOException {
-		File extractedFile = new File(tempPath + "_" + Jass.GAME_PATH);
-		XT87Utils.createNewFile(extractedFile);
+	public static void addDifficultySelection(MapInjector mi, int difficultyStringOffset, int playerId) throws IOException {
 		Jass jass;
 		try {
-			mapEditor.extractFile(Jass.GAME_PATH.getName(), extractedFile);
-			addDifficultySelectionToFile(extractedFile, difficultyStringOffset, playerId);
-			mapEditor.insertFile(Jass.GAME_PATH.getName(), extractedFile, false, true);
+			mi.mapEditor.extractFile(Jass.GAME_PATH.getName(), mi.tempFile);
+			addDifficultySelectionToFile(mi.tempFile, difficultyStringOffset, playerId);
+			mi.mapEditor.insertFile(Jass.GAME_PATH.getName(), mi.tempFile, false, true);
 		} catch (Exception e) {
 		} finally {
-			extractedFile.delete();
 		}
 	}
 }

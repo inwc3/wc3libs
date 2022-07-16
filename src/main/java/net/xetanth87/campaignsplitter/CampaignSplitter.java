@@ -32,458 +32,170 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
+import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
+import static net.xetanth87.campaignsplitter.XT87Utils.stringIndexToInt;
+
 public class CampaignSplitter<T> {
-	public static final String IMPORT_DELIM = "\r";
-	public static final String DATA_DELIM = "\n";
+	public static final String TEMP_DIR_NAME = "temp";
+	public static final String IMPORTS_DIR_NAME = "imports";
+	public final File campFile;
+	public final String splitPath;
+	public int buttonCount;
+	public final boolean withDifficultySelection;
+	public JMpqEditor campEditor;
+	public W3F campaignData;
+	protected boolean initializedProgressBar = false;
+	private int stepsPerMap = 0;
 
-	private static String getWithoutExtension(File file) {
-		return file.getName().replaceFirst("[.][^.]+$", "");
+	public void InitializeProgressBar(int i) {
+		initializedProgressBar = true;
 	}
 
-	public static void insertData(ObjMod mapData, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
-		File insertedFile = new File(tempPath + "_" + fileName);
-		XT87Utils.createNewFile(insertedFile);
-		Wc3BinOutputStream bos = new Wc3BinOutputStream(insertedFile);
-		mapData.write(bos);
-		bos.close();
-		mapEditor.insertFile(fileName, insertedFile, false, true);
-		insertedFile.delete();
+	public void SetValueProgressBar(int i) {
 	}
 
-	public static String offsetCampaignDataString(String string, int campaignKeyOffset) {
-		int nullPos = string.indexOf(0);
-		return XT87Utils.STRING_PREFIX + (Integer.parseInt(string.substring(0, nullPos)) + campaignKeyOffset) + string.substring(nullPos);
+	public void IncrementValueProgressBar(int i) {
+		if (!initializedProgressBar)
+			stepsPerMap++;
 	}
 
-	public static void offsetCampaignDataStrings(File extractedFile, int campaignKeyOffset) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(extractedFile), StandardCharsets.ISO_8859_1));
-		StringBuffer sb = new StringBuffer();
-		int s1 = 0;
-		while ((s1 = br.read()) != -1) {
-			sb.append((char) s1);
-		}
-		br.close();
-		String s = sb.toString();
-
-		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(extractedFile), StandardCharsets.ISO_8859_1);
-		String[] splitStrings = s.split(XT87Utils.STRING_PREFIX);
-		if (s.startsWith(XT87Utils.STRING_PREFIX))
-			splitStrings[0] = offsetCampaignDataString(splitStrings[0], campaignKeyOffset);
-		for (int i = 1; i < splitStrings.length; i++)
-			splitStrings[i] = offsetCampaignDataString(splitStrings[i], campaignKeyOffset);
-		writer.append(String.join("", splitStrings));
-		writer.close();
+	public void CompleteProgressBar() {
 	}
 
-	public static void mergeData(ObjMod data, File mapFile, JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath, int campaignKeyOffset) throws IOException, NoSuchFieldException, IllegalAccessException {
-		String gamePath = ((File) data.getClass().getField("GAME_PATH").get(null)).getName();
-		String campaignPath = ((File) data.getClass().getField("CAMPAIGN_PATH").get(null)).getName();
-		File extractedFile = new File(tempPath + "_" + gamePath);
-		XT87Utils.createNewFile(extractedFile);
-		ObjMod mapData = null;
-		Wc3BinInputStream bis = null;
-		try {
-			campEditor.extractFile(campaignPath, extractedFile);
-			offsetCampaignDataStrings(extractedFile, campaignKeyOffset);
-			bis = new Wc3BinInputStream(extractedFile);
-			data.read(bis);
-			bis.close();
-			if (data == null)
-				throw new IOException();
-			extractedFile.delete();
-		} catch (Exception e) {
-			extractedFile.delete();
-			if (bis != null)
-				bis.close();
-			return;
-		}
-		try {
-			mapData = data.ofMapFile(data.getClass(), mapFile);
-			if (mapData == null)
-				throw new IOException();
-			List<ObjMod.Obj> campaignList = data.getObjsList();
-			List<ObjMod.Obj> tempList = new ArrayList<>(campaignList);
-			boolean found;
-			for (Object object : mapData.getObjsList()) {
-				found = false;
-				ObjMod.Obj obj = (ObjMod.Obj)object;
-				for (int i = 0; i < tempList.size(); i++) {
-					ObjMod.Obj campaignObj = (ObjMod.Obj)tempList.get(i);
-					if (!campaignObj.getId().equals(obj.getId()))
-						continue;
-					found = true;
-					for (ObjMod.Obj.Mod mod : obj.getMods()) {
-						for (ObjMod.Obj.Mod cmod : campaignObj.getMods())
-							if (cmod.getId().equals(mod.getId())) {
-								campaignObj.getMods().remove(cmod);
-								break;
-							}
-						campaignObj.addMod(mod);
-					}
-					break;
-				}
-				if (!found)
-					campaignList.add(obj);
-			}
-		} catch (Exception e) {
-		}
-
-		insertData(data, gamePath, mapEditor, tempPath);
+	public String getTempPath() {
+		return splitPath + "/" + TEMP_DIR_NAME;
 	}
 
-	public static void fixImportFile(File extractedFile) throws IOException {
-		Scanner sc = new Scanner(extractedFile);
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		while (sc.hasNextLine()) {
-			if (first)
-				first = false;
-			else
-				sb.append(IMPORT_DELIM);
-			sb.append(sc.nextLine());
-		}
-		sc.close();
-		String s = sb.toString();
-
-		//byte[] encoded = Files.readAllBytes(Paths.get(extractedFile.getAbsolutePath().toString()));
-		FileWriter writer = new FileWriter(extractedFile);
-		//String s = new String(encoded, StandardCharsets.US_ASCII);
-		String x = s
-				.replaceAll("\0\b", "\0" + IMPORT_DELIM + "war3campImported\\\\")
-				.replaceAll("\t", IMPORT_DELIM)
-				.replaceAll("\u0015", IMPORT_DELIM)
-				.replaceAll("\u001D", IMPORT_DELIM)
-				.replaceAll("\u001D", IMPORT_DELIM)
-				;
-		writer.append(x);
-		writer.close();
+	public String getTempPath(String filename) {
+		return getTempPath() + "/" + filename;
 	}
 
-	public static void insertImports(IMP imports, String fileName, JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
-		File insertedFile = new File(tempPath + "_" + fileName);
-		XT87Utils.createNewFile(insertedFile);
-		Wc3BinOutputStream bos = new Wc3BinOutputStream(insertedFile);
-		imports.write(bos);
-		bos.close();
-		mapEditor.insertFile(fileName, insertedFile, false, true);
-		for (IMP.Obj o : imports.getObjs()) {
-			if (mapEditor.hasFile(o.getPath()) || !campEditor.hasFile(o.getPath()))
-				continue;
-			campEditor.extractFile(o.getPath(), insertedFile);
-			mapEditor.insertFile(o.getPath(), insertedFile, false, true);
-		}
-		insertedFile.delete();
+	public String getImportsPath() {
+		return getTempPath() + "/" + IMPORTS_DIR_NAME;
 	}
 
-	public static void mergeImports(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
-		File extractedFile = new File(tempPath + "_" + IMP.GAME_PATH);
-		XT87Utils.createNewFile(extractedFile);
-		IMP imports;
-		try {
-			campEditor.extractFile(IMP.CAMPAIGN_PATH.getName(), extractedFile);
-			fixImportFile(extractedFile);
-			imports = new IMP(extractedFile);
-			extractedFile.delete();
-		} catch (Exception e) {
-			extractedFile.delete();
-			return;
-		} finally {
-		}
-		try {
-			mapEditor.extractFile(IMP.GAME_PATH, extractedFile);
-			fixImportFile(extractedFile);
-			IMP mapImports = new IMP(extractedFile);
-			extractedFile.delete();
-			for (IMP.Obj o : mapImports.getObjs())
-				imports.addObj(o);
-		} catch (Exception e) {
-			extractedFile.delete();
-		} finally {
-		}
-
-		insertImports(imports, IMP.GAME_PATH, mapEditor, campEditor, tempPath);
+	public String getImportsPath(String filename) {
+		return getImportsPath() + "/" + filename;
 	}
 
-	public static void insertStrings(WTS strings, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
-		File insertedFile = new File(tempPath + "_" + fileName);
-		XT87Utils.createNewFile(insertedFile);
-		strings.write(insertedFile);
-		mapEditor.insertFile(fileName, insertedFile, false, true);
-		insertedFile.delete();
-	}
-
-	public static void insertInfo(W3I info, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
-		File insertedFile = new File(tempPath + "_" + fileName);
-		XT87Utils.createNewFile(insertedFile);
-		info.write(insertedFile);
-		mapEditor.insertFile(fileName, insertedFile, false, true);
-		insertedFile.delete();
-	}
-
-	public static int stringIndexToInt(String s)
-	{
-		return Integer.parseInt(s.replaceFirst(XT87Utils.STRING_PREFIX, ""));
-	}
-
-	public static String buttonText(int buttonIndex, int buttonCount)
-	{
-		return XT87Utils.zeroedNumber(buttonIndex + 1, (buttonCount + "").length()) + ". ";
-	}
-
-	static class StringOffsets {
-		int campaignKeyOffset = 0;
-		int difficultyStringOffset = 0;
-	}
-
-	public static StringOffsets mergeStrings(File mapFile, JMpqEditor mapEditor, File campaignFile,
-	                                                  JMpqEditor campEditor, int buttonIndex, int buttonCount,
-	                                                  String tempPath, boolean withDifficultySelection) throws Exception {
-		File extractedFile = new File(tempPath + "_" + WTS.GAME_PATH);
-		XT87Utils.createNewFile(extractedFile);
-		WTS strings = null;
-		StringOffsets offsets = new StringOffsets();
-		try {
-			mapEditor.extractFile(WTS.GAME_PATH.getName(), extractedFile);
-			strings = new WTS(extractedFile);
-			offsets.campaignKeyOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
-		} catch (Exception e) {
-
-		} finally {
-			//extractedFile.delete();
-		}
-
-		try {
-			campEditor.extractFile(WTS.CAMPAIGN_PATH.getName(), extractedFile);
-			WTS campStrings = new WTS(extractedFile);
-			if (strings == null)
-				strings = campStrings;
-			else {
-				for (int i : campStrings.getKeyedEntries().keySet())
-					strings.addEntry(offsets.campaignKeyOffset + i, campStrings.getEntry(i));
-			}
-
-			if (buttonIndex >= 0) {
-				W3F campaignData = W3F.ofCampaignFile(campaignFile);
-				W3F.MapEntry mapEntry = campaignData.getMaps().get(buttonIndex);
-				int chapterTitleIndex = stringIndexToInt(mapEntry.getChapterTitle());
-				int mapTitleIndex = stringIndexToInt(mapEntry.getMapTitle());
-				String buttonTitle = buttonText(buttonIndex, buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
-				System.out.println(buttonTitle);
-				W3I info = W3I.ofMapFile(mapFile);
-				String mapNameStringIndex = info.getMapName();
-				if (mapNameStringIndex != null && !mapNameStringIndex.isEmpty())
-					strings.addEntry(stringIndexToInt(mapNameStringIndex), buttonTitle);
-				else
-				{
-					info.setMapName(mapEntry.getChapterTitle());
-					strings.addEntry(chapterTitleIndex, buttonTitle);
-					insertInfo(info, W3I.GAME_PATH.getName(), mapEditor, tempPath);
-				}
-			}
-
-			if (withDifficultySelection)
-			{
-				offsets.difficultyStringOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
-				strings.addEntry(offsets.difficultyStringOffset, "Choose Difficulty");
-				strings.addEntry(offsets.difficultyStringOffset + 1, "|cff00ff00Easy|r");
-				strings.addEntry(offsets.difficultyStringOffset + 2, "|cffffff00Normal|r");
-				strings.addEntry(offsets.difficultyStringOffset + 3, "|cffff0000Hard|r");
-			}
-
-			insertStrings(strings, WTS.GAME_PATH.getName(), mapEditor, tempPath);
-		} catch (Exception e) {
-			//extractedFile.delete();
-		} finally {
-			//extractedFile.delete();
-			return offsets;
-		}
-	}
-
-	public static void insertTxt(TXT txt, String fileName, JMpqEditor mapEditor, String tempPath) throws IOException {
-		File insertedFile = new File(tempPath + "_" + fileName);
-		XT87Utils.createNewFile(insertedFile);
-		txt.write(insertedFile);
-		mapEditor.insertFile(fileName, insertedFile, false, true);
-		insertedFile.delete();
-	}
-
-	public static void mergeMisc(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
-		File extractedFile = new File(tempPath + "_" + MiscTXT.GAME_PATH);
-		XT87Utils.createNewFile(extractedFile);
-		MiscTXT txt = null;
-		try {
-			campEditor.extractFile(MiscTXT.CAMPAIGN_PATH.getName(), extractedFile);
-			txt = new MiscTXT();
-			txt.read(extractedFile);
-		} catch (Exception e) {
-			extractedFile.delete();
-			return;
-		} finally {
-		}
-		try {
-			mapEditor.extractFile(MiscTXT.GAME_PATH.getName(), extractedFile);
-			if (txt == null) {
-				txt = new MiscTXT();
-				txt.read(extractedFile);
-			}
-			else {
-				MiscTXT mapTxt = new MiscTXT();
-				mapTxt.read(extractedFile);
-				txt.merge(mapTxt, true);
-			}
-		} catch (Exception e) {
-			//extractedFile.delete();
-		} finally {
-			insertTxt(txt, MiscTXT.GAME_PATH.getName(), mapEditor, tempPath);
-			extractedFile.delete();
-		}
-	}
-
-	public static void mergeSkin(JMpqEditor mapEditor, JMpqEditor campEditor, String tempPath) throws IOException {
-		File extractedFile = new File(tempPath + "_" + SkinTXT.GAME_PATH);
-		XT87Utils.createNewFile(extractedFile);
-		SkinTXT txt = null;
-		try {
-			campEditor.extractFile(SkinTXT.CAMPAIGN_PATH.getName(), extractedFile);
-			txt = new SkinTXT();
-			txt.read(extractedFile);
-		} catch (Exception e) {
-			extractedFile.delete();
-			return;
-		} finally {
-		}
-		try {
-			mapEditor.extractFile(SkinTXT.GAME_PATH.getName(), extractedFile);
-			if (txt == null) {
-				txt = new SkinTXT();
-				txt.read(extractedFile);
-			}
-			else {
-				SkinTXT mapTxt = new SkinTXT();
-				mapTxt.read(extractedFile);
-				txt.merge(mapTxt, true);
-			}
-		} catch (Exception e) {
-			//extractedFile.delete();
-		} finally {
-			insertTxt(txt, SkinTXT.GAME_PATH.getName(), mapEditor, tempPath);
-			extractedFile.delete();
-		}
-	}
-
-	public static ReentrantLock rl = new ReentrantLock();
-
-	public static void addCampaignData(File mapFile, File campaignFile, int buttonIndex, int buttonCount, boolean withDifficultySelection) throws Exception {
-		rl.lock();
-		JMpqEditor mapEditor = new JMpqEditor(mapFile);
-		String tempPath = mapFile.getParentFile().getAbsolutePath() + "/"
-				+ getWithoutExtension(mapFile);
-
-		JMpqEditor campEditor = new JMpqEditor(campaignFile, MPQOpenOption.READ_ONLY);
-
-		// imports
-		mergeImports(mapEditor, campEditor, tempPath);
-		// strings
-		StringOffsets offsets = mergeStrings(mapFile, mapEditor, campaignFile, campEditor, buttonIndex, buttonCount, tempPath, withDifficultySelection);
-		rl.unlock();
-		// misc / constants
-		mergeMisc(mapEditor, campEditor, tempPath);
-		// skin / interface
-		mergeSkin(mapEditor, campEditor, tempPath);
-
-		// units
-		mergeData(new W3U(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-		// items
-		mergeData(new W3T(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-		// destructibles
-		mergeData(new W3B(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-		// doodads
-		mergeData(new W3D(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-		// abilities
-		mergeData(new W3A(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-		// buffs
-		mergeData(new W3H(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-		// upgrades
-		mergeData(new W3Q(), mapFile, mapEditor, campEditor, tempPath, offsets.campaignKeyOffset);
-
-		if (withDifficultySelection) {
-			int playerId = 0;
-			W3I info = W3I.ofMapFile(mapFile);
-			for (W3I.Player p : info.getPlayers())
-				if (p.getType().equals(Controller.USER))
-				{
-					playerId = p.getNum();
-					break;
-				}
-			DifficultySelector.addDifficultySelection(mapEditor, tempPath, offsets.difficultyStringOffset, playerId);
-		}
-
-		mapEditor.close();
-		campEditor.close();
+	public CampaignSplitter(File campFile, boolean withDifficultySelection) throws IOException {
+		if (!campFile.getName().endsWith(".w3n"))
+			throw new IllegalArgumentException("Argument must be a campaign file!");
+		this.campFile = campFile;
+		if (!campFile.exists())
+			throw new FileNotFoundException("Campaign file not found!");
+		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile);
+		this.withDifficultySelection = withDifficultySelection;
 	}
 
 	static class MapThread extends Thread {
 		//static Semaphore mapSemaphore = new Semaphore(Runtime.getRuntime().availableProcessors());
+		CampaignSplitter cs;
 		File mapFile;
-		File campaignFile;
 		int buttonIndex;
 		int buttonCount;
-		boolean withDifficultySelection;
 
-		public MapThread(File mapFile, File campaignFile, int buttonIndex, int buttonCount, boolean withDifficultySelection) {
+		public MapThread(CampaignSplitter cs, File mapFile, int buttonIndex, int buttonCount) {
 			this.mapFile = mapFile;
-			this.campaignFile = campaignFile;
+			this.cs = cs;
 			this.buttonIndex = buttonIndex;
 			this.buttonCount = buttonCount;
-			this.withDifficultySelection = withDifficultySelection;
 		}
 
-		public void run()
-		{
+		public void run() {
 			try {
 				//mapSemaphore.acquire();
 				System.out.println(mapFile.getName());
-				addCampaignData(mapFile, campaignFile, buttonIndex, buttonCount, withDifficultySelection);
+				//MapInjector mi = new MapInjector(mapFile, buttonIndex, cs.withDifficultySelection);
+				//mi.addCampaignData();
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-			finally {
+			} finally {
 				//mapSemaphore.release();
 			}
 		}
 	}
 
-	public static void splitCampaign(String filePath, boolean withDifficultySelection) throws Exception {
-		if (!filePath.endsWith(".w3n"))
-			throw new IllegalArgumentException("Argument must be a campaign file!");
-		File campaignFile = new File(filePath);
-		if (!campaignFile.exists())
-			throw  new FileNotFoundException("Campaign file not found!");
-		System.out.println(campaignFile.getAbsolutePath());
-		JMpqEditor campaignEditor = new JMpqEditor(campaignFile, MPQOpenOption.READ_ONLY);
-		WTS wtsC = WTS.ofCampaignFile(campaignFile);
-		String splitPath = campaignFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campaignFile);
+	public void removeTemporaryFiles() {
+		try {
+			String importsPath = splitPath + "/" + TEMP_DIR_NAME;
+			File importsDir = new File(importsPath);
+			if (importsDir.exists())
+				XT87Utils.deleteDirectory(importsDir);
+		} catch (Exception e) {
+		}
+	}
+
+	public void extractCampaignFiles() throws IOException {
+		File importsDir = new File(getImportsPath());
+		importsDir.mkdirs();
+		List<File> extractedFiles = Arrays.asList(WTS.CAMPAIGN_PATH, MiscTXT.CAMPAIGN_PATH,
+				SkinTXT.CAMPAIGN_PATH, W3U.CAMPAIGN_PATH, W3T.CAMPAIGN_PATH, W3B.CAMPAIGN_PATH,
+				W3D.CAMPAIGN_PATH, W3A.CAMPAIGN_PATH, W3H.CAMPAIGN_PATH, W3Q.CAMPAIGN_PATH);
+		System.out.println("Extracting campaign configuration files.");
+		for (File file : extractedFiles) {
+			if (!campEditor.hasFile(file.getName()))
+				continue;
+			File extractedFile = new File(getTempPath() + "/" + file);
+			extractedFile.createNewFile();
+			campEditor.extractFile(file.getName(), extractedFile);
+		}
+		if (campEditor.hasFile(IMP.CAMPAIGN_PATH.getName())) {
+			File importsListFile = new File(getTempPath() + "/" + IMP.CAMPAIGN_PATH);
+			importsListFile.createNewFile();
+			campEditor.extractFile(IMP.CAMPAIGN_PATH.getName(), importsListFile);
+			XT87Utils.fixImportFile(importsListFile, true);
+			IMP imports = new IMP(importsListFile);
+			System.out.println("Extracting campaign imported files.");
+			for (IMP.Obj o : imports.getObjs()) {
+				if (!campEditor.hasFile(o.getPath()))
+				{
+					System.err.println("Missing campaign import with path \"" + o.getPath() + "\"!");
+					continue;
+				}
+				File importedFile = new File(getImportsPath() + "/" + o.getPath());
+				importedFile.getParentFile().mkdirs();
+				importedFile.createNewFile();
+				campEditor.extractFile(o.getPath(), importedFile);
+			}
+		}
+	}
+
+	public void splitCampaign() throws Exception {
+		System.out.println(campFile.getAbsolutePath());
+		campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
+		campaignData = W3F.ofCampaignFile(campFile);
+		buttonCount = campaignData.getMaps().size();
+		SetValueProgressBar(0);
 		File splitDir = new File(splitPath);
-		if (!splitDir.exists())
-			splitDir.mkdirs();
-		W3F campaignData = W3F.ofCampaignFile(campaignFile);
-		int buttonCount = campaignData.getMaps().size();
+		splitDir.mkdirs();
+		extractCampaignFiles();
 		List<Thread> mapThreads = new ArrayList<>();
 		for (int i = 0; i < buttonCount; i++) {
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
 			String fileName = mapEntry.getMapPath();
 			String mapPath = splitPath + "/" + fileName;
-			if (!campaignEditor.hasFile(fileName))
+			if (!campEditor.hasFile(fileName))
 				continue;
 			File mapFile = new File(mapPath);
 			mapFile.createNewFile();
-			campaignEditor.extractFile(fileName, mapFile);
-			addCampaignData(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
+			System.out.println("Extracting map \"" + mapFile.getName() + "\".");
+			campEditor.extractFile(fileName, mapFile);
+			MapInjector mi = new MapInjector(this, mapFile, i, withDifficultySelection);
+			mi.addCampaignData();
+			if (i == 0) {
+				InitializeProgressBar(1 + stepsPerMap * buttonCount);
+				SetValueProgressBar(1 + stepsPerMap);
+				System.err.println("SAOS " + stepsPerMap + " " + (1 + stepsPerMap) + "/" + (1 + stepsPerMap * buttonCount));
+			}
 //			Thread thread = new MapThread(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
 //			thread.start();
 //			mapThreads.add(thread);
@@ -491,23 +203,29 @@ public class CampaignSplitter<T> {
 //		for (Thread thread : mapThreads)
 //			thread.join();
 		XT87Utils.deleteNewFiles();
+		removeTemporaryFiles();
+		campEditor.close();
+		CompleteProgressBar();
 	}
 
 	public static void main(String args[]) {
-		String filePath = null;
+		String campaignPath = null;
 		boolean acceptZeroParam = false;
 		int acceptedArgsLength = 1;
 		if (args.length != acceptedArgsLength && (args.length != 0 || !acceptZeroParam))
 			throw new IllegalArgumentException("Wrong number of arguments! Expected: " + acceptedArgsLength + ", Got: " + args.length);
 		if (args.length == 0) {
+		} else {
+			campaignPath = args[0];
 		}
-		else {
-			filePath = args[0];
-		}
+		CampaignSplitter cs = null;
 		try {
-			splitCampaign(filePath, true);
+			cs = new CampaignSplitter(new File(campaignPath), true);
+			cs.splitCampaign();
 		} catch (Exception e) {
 			e.printStackTrace();
+			XT87Utils.deleteNewFiles();
+			cs.removeTemporaryFiles();
 		}
 	}
 }
