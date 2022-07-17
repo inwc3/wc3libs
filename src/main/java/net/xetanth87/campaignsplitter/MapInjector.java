@@ -198,7 +198,7 @@ public class MapInjector {
 		String s = sb.toString();
 
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.ISO_8859_1);
-		writer.append(s.replace(originalMapName, newMapName));
+		writer.append(s.replaceFirst(originalMapName, newMapName));
 		writer.close();
 	}
 
@@ -386,7 +386,7 @@ public class MapInjector {
 		tempFile.delete();
 		System.out.println("Saving map \"" + mapFile.getName() + "\".");
 		mapEditor.close();
-		cs.IncrementValueProgressBar(1);
+		cs.IncrementValueProgressBar(10);
 		System.out.println("Finished saving map \"" + mapFile.getName() + "\".");
 	}
 }

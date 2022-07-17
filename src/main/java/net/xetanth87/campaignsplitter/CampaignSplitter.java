@@ -35,6 +35,7 @@ public class CampaignSplitter {
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
 	private int stepsPerMap = 0;
+	private final int STEPS_CAMP_DATA = 4;
 
 	public void InitializeProgressBar(int i) {
 		initializedProgressBar = true;
@@ -45,7 +46,7 @@ public class CampaignSplitter {
 
 	public void IncrementValueProgressBar(int i) {
 		if (!initializedProgressBar)
-			stepsPerMap++;
+			stepsPerMap += i;
 	}
 
 	public void CompleteProgressBar() {
@@ -176,8 +177,8 @@ public class CampaignSplitter {
 			MapInjector mi = new MapInjector(this, mapFile, i, withDifficultySelection);
 			mi.addCampaignData();
 			if (i == 0) {
-				InitializeProgressBar(1 + stepsPerMap * buttonCount);
-				SetValueProgressBar(1 + stepsPerMap);
+				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);
+				SetValueProgressBar(STEPS_CAMP_DATA + stepsPerMap);
 			}
 //			Thread thread = new MapThread(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
 //			thread.start();
