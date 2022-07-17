@@ -204,6 +204,13 @@ public class SplitterFrame extends JFrame {
 					String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 					JOptionPane.showMessageDialog(null, "An error has been encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + ex.getMessage(), APP_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
+				else {
+					try {
+						new CampaignSplitter(file, false).removeTemporaryFiles();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			finally {
 				setButtonStates(false);

@@ -24,7 +24,7 @@ import java.util.List;
 
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
 
-public class CampaignSplitter<T> {
+public class CampaignSplitter {
 	public static final String TEMP_DIR_NAME = "temp";
 	public static final String IMPORTS_DIR_NAME = "imports";
 	public final File campFile;

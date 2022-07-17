@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static net.xetanth87.campaignsplitter.XT87Utils.STRING_PREFIX;
 import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
 import static net.xetanth87.campaignsplitter.XT87Utils.offsetCampaignDataString;
@@ -60,17 +61,17 @@ public class MapInjector {
 	}
 
 	public void insertDataFile(Object data, String fileName) throws IOException {
-		if (data instanceof  WTS)
-			((WTS)data).write(tempFile);
-		else if (data instanceof  IMP)
-			((IMP)data).write(tempFile);
-		else if (data instanceof  TXT)
-			((TXT)data).write(tempFile);
-		else if (data instanceof  W3I)
-			((W3I)data).write(tempFile);
-		else if (data instanceof  ObjMod) {
+		if (data instanceof WTS)
+			((WTS) data).write(tempFile);
+		else if (data instanceof IMP)
+			((IMP) data).write(tempFile);
+		else if (data instanceof TXT)
+			((TXT) data).write(tempFile);
+		else if (data instanceof W3I)
+			((W3I) data).write(tempFile);
+		else if (data instanceof ObjMod) {
 			Wc3BinOutputStream bos = new Wc3BinOutputStream(tempFile);
-			((ObjMod)data).write(bos);
+			((ObjMod) data).write(bos);
 			bos.close();
 		}
 		mapEditor.insertFile(fileName, tempFile, false, true);
@@ -223,13 +224,11 @@ public class MapInjector {
 				System.out.println("Created button title: \"" + buttonTitle + "\"");
 				W3I info = W3I.ofMapFile(mapFile);
 				String mapNameStringIndex = info.getMapName();
-				if (mapNameStringIndex != null && !mapNameStringIndex.isEmpty())
-					strings.addEntry(stringIndexToInt(mapNameStringIndex), buttonTitle);
-				else {
-					info.setMapName(mapEntry.getChapterTitle());
-					strings.addEntry(chapterTitleIndex, buttonTitle);
-					insertDataFile(info, W3I.GAME_PATH.getName());
-				}
+				// save the new map name at the index of the button chapter title
+				int buttonStringIndex = chapterTitleIndex + offsets.campaignKeyOffset;
+				info.setMapName(STRING_PREFIX + buttonStringIndex);
+				strings.addEntry(buttonStringIndex, buttonTitle);
+				insertDataFile(info, W3I.GAME_PATH.getName());
 			}
 
 			if (withDifficultySelection) {
@@ -372,6 +371,9 @@ public class MapInjector {
 		}
 
 		tempFile.delete();
+		System.out.println("Saving map \"" + mapFile.getName() + "\".");
 		mapEditor.close();
+		cs.IncrementValueProgressBar(1);
+		System.out.println("Finished saving map \"" + mapFile.getName() + "\".");
 	}
 }
