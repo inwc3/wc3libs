@@ -206,12 +206,21 @@ public class DifficultySelector {
 	}
 
 	public static void addDifficultySelection(MapInjector mi, int difficultyStringOffset, int playerId) throws IOException {
-		Jass jass;
 		try {
-			mi.mapEditor.extractFile(Jass.GAME_PATH.getName(), mi.tempFile);
+			String path = null, tempPath, scriptsPath = "scripts\\", luaName = "war3map.lua";
+			if (mi.mapEditor.hasFile(tempPath = Jass.GAME_PATH.getName()))
+				path = tempPath;
+			else if (mi.mapEditor.hasFile(tempPath = scriptsPath + Jass.GAME_PATH.getName()))
+				path = tempPath;
+			else if (mi.mapEditor.hasFile(luaName) || mi.mapEditor.hasFile(scriptsPath + luaName))
+				throw new Exception("Difficulty selection won't be added to the map with lua script \"" + mi.mapFile.getName() + "\".");
+			else
+				throw new Exception("No JASS script found for map \"" + mi.mapFile.getName() + "\".");
+			mi.mapEditor.extractFile(path, mi.tempFile);
 			addDifficultySelectionToFile(mi.tempFile, difficultyStringOffset, playerId);
-			mi.mapEditor.insertFile(Jass.GAME_PATH.getName(), mi.tempFile, false, true);
+			mi.mapEditor.insertFile(path, mi.tempFile, false, true);
 		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		} finally {
 		}
 	}
