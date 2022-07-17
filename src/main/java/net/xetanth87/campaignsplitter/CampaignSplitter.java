@@ -1,10 +1,6 @@
 package net.xetanth87.campaignsplitter;
 
-import net.moonlightflower.wc3libs.bin.ObjMod;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.W3F;
-import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -13,35 +9,20 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.IMP;
-import net.moonlightflower.wc3libs.dataTypes.app.Controller;
-import net.moonlightflower.wc3libs.txt.TXT;
 import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.MiscTXT;
 import net.moonlightflower.wc3libs.txt.app.SkinTXT;
 import systems.crigges.jmpq3.JMpqEditor;
 import systems.crigges.jmpq3.MPQOpenOption;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.concurrent.locks.ReentrantLock;
 
-import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
-import static net.xetanth87.campaignsplitter.XT87Utils.stringIndexToInt;
 
 public class CampaignSplitter<T> {
 	public static final String TEMP_DIR_NAME = "temp";
@@ -183,18 +164,20 @@ public class CampaignSplitter<T> {
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
 			String fileName = mapEntry.getMapPath();
 			String mapPath = splitPath + "/" + fileName;
+			if (i != 0)
+				campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
 			if (!campEditor.hasFile(fileName))
 				continue;
 			File mapFile = new File(mapPath);
 			mapFile.createNewFile();
 			System.out.println("Extracting map \"" + mapFile.getName() + "\".");
 			campEditor.extractFile(fileName, mapFile);
+			campEditor.close();
 			MapInjector mi = new MapInjector(this, mapFile, i, withDifficultySelection);
 			mi.addCampaignData();
 			if (i == 0) {
 				InitializeProgressBar(1 + stepsPerMap * buttonCount);
 				SetValueProgressBar(1 + stepsPerMap);
-				System.err.println("SAOS " + stepsPerMap + " " + (1 + stepsPerMap) + "/" + (1 + stepsPerMap * buttonCount));
 			}
 //			Thread thread = new MapThread(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
 //			thread.start();

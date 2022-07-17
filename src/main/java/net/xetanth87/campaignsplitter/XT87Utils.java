@@ -91,8 +91,10 @@ public class XT87Utils {
 		return file.getName().replaceFirst("[.][^.]+$", "");
 	}
 
-	public static String offsetCampaignDataString(String string, int campaignKeyOffset) {
-		int nullPos = string.indexOf(0);
-		return XT87Utils.STRING_PREFIX + (Integer.parseInt(string.substring(0, nullPos)) + campaignKeyOffset) + string.substring(nullPos);
+	public static String offsetCampaignDataString(String string, int campaignKeyOffset, char delim) {
+		int delimPos = 0;
+		while (Character.isDigit(string.charAt(delimPos)))
+			delimPos++;
+		return XT87Utils.STRING_PREFIX + (Integer.parseInt(string.substring(0, delimPos)) + campaignKeyOffset) + string.substring(delimPos);
 	}
 }

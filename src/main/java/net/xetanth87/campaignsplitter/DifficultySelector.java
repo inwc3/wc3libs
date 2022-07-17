@@ -1,8 +1,6 @@
 package net.xetanth87.campaignsplitter;
 
-import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.txt.app.jass.Jass;
-import systems.crigges.jmpq3.JMpqEditor;
 
 import java.io.File;
 import java.io.FileWriter;

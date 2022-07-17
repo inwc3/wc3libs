@@ -87,7 +87,7 @@ public class MapInjector {
 		}
 	}
 
-	public void offsetCampaignDataStrings(File extractedFile, int campaignKeyOffset) throws IOException {
+	public void offsetCampaignStrings(File extractedFile, int campaignKeyOffset, char delim) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(extractedFile), StandardCharsets.ISO_8859_1));
 		StringBuffer sb = new StringBuffer();
 		int s1 = 0;
@@ -100,9 +100,9 @@ public class MapInjector {
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.ISO_8859_1);
 		String[] splitStrings = s.split(XT87Utils.STRING_PREFIX);
 		if (s.startsWith(XT87Utils.STRING_PREFIX))
-			splitStrings[0] = offsetCampaignDataString(splitStrings[0], campaignKeyOffset);
+			splitStrings[0] = offsetCampaignDataString(splitStrings[0], campaignKeyOffset, delim);
 		for (int i = 1; i < splitStrings.length; i++)
-			splitStrings[i] = offsetCampaignDataString(splitStrings[i], campaignKeyOffset);
+			splitStrings[i] = offsetCampaignDataString(splitStrings[i], campaignKeyOffset, delim);
 		writer.append(String.join("", splitStrings));
 		writer.close();
 	}
@@ -113,7 +113,7 @@ public class MapInjector {
 		ObjMod mapData = null;
 		Wc3BinInputStream bis = null;
 		try {
-			offsetCampaignDataStrings(new File(cs.getTempPath(campaignPath)), campaignKeyOffset);
+			offsetCampaignStrings(new File(cs.getTempPath(campaignPath)), campaignKeyOffset, '\0');
 			bis = new Wc3BinInputStream(tempFile);
 			data.read(bis);
 			bis.close();
@@ -122,6 +122,8 @@ public class MapInjector {
 		} catch (Exception e) {
 			if (bis != null)
 				bis.close();
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 			return;
 		}
 		try {
@@ -153,6 +155,8 @@ public class MapInjector {
 					campaignList.add(obj);
 			}
 		} catch (Exception e) {
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 		}
 
 		insertDataFile(data, gamePath);
@@ -163,8 +167,9 @@ public class MapInjector {
 		try {
 			imports = new IMP(new File(cs.getTempPath() + "/" + IMP.CAMPAIGN_PATH));
 		} catch (Exception e) {
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 			return;
-		} finally {
 		}
 		try {
 			mapEditor.extractFile(IMP.GAME_PATH, tempFile);
@@ -174,7 +179,8 @@ public class MapInjector {
 				if (o.getPath() != null && !o.getPath().isEmpty() && o.getStdFlag() != null)
 					imports.addObj(o);
 		} catch (Exception e) {
-		} finally {
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 		}
 
 		insertImports(imports, IMP.GAME_PATH);
@@ -194,8 +200,10 @@ public class MapInjector {
 			strings = new WTS(tempFile);
 			offsets.campaignKeyOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
 		} catch (Exception e) {
-
-		} finally {
+			strings = null;
+			offsets.campaignKeyOffset = 0;
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 		}
 
 		try {
@@ -234,7 +242,8 @@ public class MapInjector {
 
 			insertDataFile(strings, WTS.GAME_PATH.getName());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 		} finally {
 			return offsets;
 		}
@@ -247,6 +256,7 @@ public class MapInjector {
 			txt = new MiscTXT();
 			txt.read(new File(cs.getTempPath(MiscTXT.CAMPAIGN_PATH.getName())));
 		} catch (Exception e) {
+			System.err.println(e.getMessage());
 			return;
 		} finally {
 		}
@@ -261,20 +271,22 @@ public class MapInjector {
 				txt.merge(mapTxt, true);
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 		} finally {
 			insertDataFile(txt, MiscTXT.GAME_PATH.getName());
 		}
 	}
 
-	public void mergeSkin() throws IOException {
+	public void mergeSkin(int campaignKeyOffset) throws IOException {
 		SkinTXT txt = null;
 		try {
 			txt = new SkinTXT();
-			txt.read(new File(cs.getTempPath(SkinTXT.CAMPAIGN_PATH.getName())));
+			offsetCampaignStrings(new File(cs.getTempPath(SkinTXT.CAMPAIGN_PATH.getName())), campaignKeyOffset, '\r');
+			txt.read(tempFile);
 		} catch (Exception e) {
+			System.err.println(e.getMessage());
 			return;
-		} finally {
 		}
 		try {
 			mapEditor.extractFile(SkinTXT.GAME_PATH.getName(), tempFile);
@@ -287,7 +299,8 @@ public class MapInjector {
 				txt.merge(mapTxt, true);
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 		} finally {
 			insertDataFile(txt, SkinTXT.GAME_PATH.getName());
 		}
@@ -317,7 +330,7 @@ public class MapInjector {
 		cs.IncrementValueProgressBar(1);
 		// skin/interface
 		System.out.println("Adding skin/interface to map \"" + mapFile.getName() + "\".");
-		mergeSkin();
+		mergeSkin(offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
 		System.out.println("Adding data to map \"" + mapFile.getName() + "\".");
