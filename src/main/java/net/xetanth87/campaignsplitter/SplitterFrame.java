@@ -199,17 +199,15 @@ public class SplitterFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			} catch (InterruptedException ex) {
 			} catch (Exception ex) {
+				try {
+					new CampaignSplitter(file, false).removeTemporaryFiles();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				if (!isInterrupted()) {
 					ex.printStackTrace();
 					String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 					JOptionPane.showMessageDialog(null, "An error has been encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + ex.getMessage(), APP_TITLE, JOptionPane.ERROR_MESSAGE);
-				}
-				else {
-					try {
-						new CampaignSplitter(file, false).removeTemporaryFiles();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
 			}
 			finally {
