@@ -91,7 +91,7 @@ public class XT87Utils {
 		return file.getName().replaceFirst("[.][^.]+$", "");
 	}
 
-	public static String offsetCampaignDataString(String string, int campaignKeyOffset, char delim) {
+	public static String offsetCampaignDataString(String string, int campaignKeyOffset) {
 		int delimPos = 0;
 		while (Character.isDigit(string.charAt(delimPos)))
 			delimPos++;
