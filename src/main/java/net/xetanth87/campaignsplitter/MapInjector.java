@@ -49,7 +49,7 @@ public class MapInjector {
 	public JMpqEditor mapEditor;
 	public File tempFile;
 
-	public MapInjector(CampaignSplitter cs, File mapFile, int buttonIndex, boolean withDifficultySelection) throws IOException {
+	public MapInjector(CampaignSplitter cs, File mapFile, int buttonIndex, boolean withDifficultySelector) throws IOException {
 		if (!mapFile.getName().endsWith(".w3m") && !mapFile.getName().endsWith(".w3x"))
 			throw new IllegalArgumentException("Argument must be a map file!");
 		this.mapFile = mapFile;
@@ -57,7 +57,7 @@ public class MapInjector {
 			throw new FileNotFoundException("Map file not found!");
 		this.cs = cs;
 		this.buttonIndex = buttonIndex;
-		this.withDifficultySelection = withDifficultySelection;
+		this.withDifficultySelection = withDifficultySelector;
 	}
 
 	public void insertDataFile(Object data, String fileName) throws IOException {

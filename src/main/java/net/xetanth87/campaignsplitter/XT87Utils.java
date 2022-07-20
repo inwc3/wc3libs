@@ -12,6 +12,12 @@ public class XT87Utils {
 	public static final String DATA_DELIM = "\n";
 	public static Stack<File> createdFiles = new Stack<>();
 
+	public enum TriOption {
+		NO,
+		DEFAULT,
+		YES
+	}
+
 	public static void createNewFile(File file) throws IOException {
 		file.createNewFile();
 		createdFiles.push(file);

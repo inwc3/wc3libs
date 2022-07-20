@@ -18,26 +18,43 @@ public class SplitterFrame extends JFrame {
 	private JTextField filePathField = new JTextField(30);
 	private JButton browse = new JButton("Browse");
 	private JButton split = new JButton("Split");
-	private JCheckBox difficultySelectorCheckbox = new JCheckBox("Add difficulty selector", true);
+	//"Add difficulty selector",
+	//private JComboBox difficultySelectorOption = new JComboBox(new String[]{""});
 	private boolean running = false;
 	private Thread splitterThread = null;
 	private JProgressBar bar;
 	private JTextArea taskOutput;
+	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
 		setSize(600, 500);
 		setResizable(false);
-		JPanel container = new JPanel();
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		JPanel panel = new JPanel();
 		setLayout(new FlowLayout());
 		add(new Label("Click \"" + browse.getText() + "\" to select a Warcraft III Custom Campaign file (\"*.w3n\")."));
 		add(new Label("Click \"" + split.getText() + "\" to split the campaign (the campaign file will not be altered)."));
 		add(new Label("A folder with the same name as the campaign will be created in the same location."));
 		add(new Label("This folder will contain all extracted maps, merged with campaign data."));
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		ButtonGroup group = new ButtonGroup();
+		JRadioButton radioButton;
+		for (XT87Utils.TriOption option : XT87Utils.TriOption.values()) {
+			radioButton = new JRadioButton(option.toString().toLowerCase());
+			radioButton.setActionCommand(option.toString());
+			radioButton.setSelected(true);
+			//radioButton.addActionListener(this);
+			panel.add(radioButton);
+			group.add(radioButton);
+		}
+		add(panel);
+
+
+
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel.add(filePathField);
 		panel.add(browse);
@@ -50,8 +67,6 @@ public class SplitterFrame extends JFrame {
 
 		panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		panel.add(difficultySelectorCheckbox);
-		add(panel);
 
 		panel = new JPanel();
 		bar = new JProgressBar();
@@ -115,7 +130,7 @@ public class SplitterFrame extends JFrame {
 		this.running = running;
 		browse.setEnabled(!running);
 		filePathField.setEditable(!running);
-		difficultySelectorCheckbox.setEnabled(!running);
+		//difficultySelectorOption.setEnabled(!running);
 		if (running) {
 			browse.setBackground(Color.GRAY);
 			split.setText("Stop");
@@ -134,8 +149,8 @@ public class SplitterFrame extends JFrame {
 	}
 
 	private class FrameCampaignSplitter extends CampaignSplitter {
-		public FrameCampaignSplitter(File campFile, boolean withDifficultySelection) throws IOException {
-			super(campFile, withDifficultySelection);
+		public FrameCampaignSplitter(File campFile, XT87Utils.TriOption difficultySelectorOption) throws IOException {
+			super(campFile, difficultySelectorOption);
 		}
 
 		@Override
@@ -193,14 +208,18 @@ public class SplitterFrame extends JFrame {
 		public void run() {
 			File file = new File(filePathField.getText());
 			try {
-				CampaignSplitter cs = new FrameCampaignSplitter(file, difficultySelectorCheckbox.isSelected());
+				CampaignSplitter cs = new FrameCampaignSplitter(file, XT87Utils.TriOption.DEFAULT
+//						difficultySelectorOption.isSelected()
+//								? XT87Utils.TriOption.DEFAULT
+//								: XT87Utils.TriOption.NO
+				);
 				cs.splitCampaign();
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			} catch (InterruptedException ex) {
 			} catch (Exception ex) {
 				try {
-					new CampaignSplitter(file, false).removeTemporaryFiles();
+					new CampaignSplitter(file, XT87Utils.TriOption.NO).removeTemporaryFiles();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

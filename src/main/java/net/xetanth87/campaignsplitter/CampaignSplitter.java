@@ -18,6 +18,7 @@ import systems.crigges.jmpq3.MPQOpenOption;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,15 +28,16 @@ import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
 public class CampaignSplitter {
 	public static final String TEMP_DIR_NAME = "temp";
 	public static final String IMPORTS_DIR_NAME = "imports";
+	private final int STEPS_CAMP_DATA = 4;
+	public static final String MAP_COUNT_FORMAT = "Maps converted: {0}/{1}.";
 	public final File campFile;
 	public final String splitPath;
 	public int buttonCount;
-	public final boolean withDifficultySelection;
+	public final XT87Utils.TriOption difficultySelectorOption;
 	public JMpqEditor campEditor;
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
 	private int stepsPerMap = 0;
-	private final int STEPS_CAMP_DATA = 4;
 
 	public void InitializeProgressBar(int i) {
 		initializedProgressBar = true;
@@ -68,14 +70,14 @@ public class CampaignSplitter {
 		return getImportsPath() + "/" + filename;
 	}
 
-	public CampaignSplitter(File campFile, boolean withDifficultySelection) throws IOException {
+	public CampaignSplitter(File campFile, XT87Utils.TriOption difficultySelectorOption) throws IOException {
 		if (!campFile.getName().endsWith(".w3n"))
 			throw new IllegalArgumentException("Argument must be a campaign file!");
 		this.campFile = campFile;
 		if (!campFile.exists())
 			throw new FileNotFoundException("Campaign file not found!");
 		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile);
-		this.withDifficultySelection = withDifficultySelection;
+		this.difficultySelectorOption = difficultySelectorOption;
 	}
 
 	static class MapThread extends Thread {
@@ -161,7 +163,10 @@ public class CampaignSplitter {
 		splitDir.mkdirs();
 		extractCampaignFiles();
 		List<Thread> mapThreads = new ArrayList<>();
+		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
+				(difficultySelectorOption.equals(XT87Utils.TriOption.DEFAULT) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
 		for (int i = 0; i < buttonCount; i++) {
+			System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i, buttonCount));
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
 			String fileName = mapEntry.getMapPath();
 			String mapPath = splitPath + "/" + fileName;
@@ -174,7 +179,7 @@ public class CampaignSplitter {
 			System.out.println("Extracting map \"" + mapFile.getName() + "\".");
 			campEditor.extractFile(fileName, mapFile);
 			campEditor.close();
-			MapInjector mi = new MapInjector(this, mapFile, i, withDifficultySelection);
+			MapInjector mi = new MapInjector(this, mapFile, i, withDifficultySelector);
 			mi.addCampaignData();
 			if (i == 0) {
 				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);
@@ -184,6 +189,7 @@ public class CampaignSplitter {
 //			thread.start();
 //			mapThreads.add(thread);
 		}
+		System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, buttonCount, buttonCount));
 //		for (Thread thread : mapThreads)
 //			thread.join();
 		XT87Utils.deleteNewFiles();
@@ -204,7 +210,7 @@ public class CampaignSplitter {
 		}
 		CampaignSplitter cs = null;
 		try {
-			cs = new CampaignSplitter(new File(campaignPath), true);
+			cs = new CampaignSplitter(new File(campaignPath), XT87Utils.TriOption.DEFAULT);
 			cs.splitCampaign();
 		} catch (Exception e) {
 			e.printStackTrace();
