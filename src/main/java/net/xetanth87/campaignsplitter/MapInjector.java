@@ -273,6 +273,8 @@ public class MapInjector {
 		} finally {
 		}
 		try {
+			if (!mapEditor.hasFile(MiscTXT.GAME_PATH.getPath()))
+				throw new IOException();
 			mapEditor.extractFile(MiscTXT.GAME_PATH.getPath(), tempFile);
 			if (txt == null) {
 				txt = new MiscTXT();
@@ -297,10 +299,13 @@ public class MapInjector {
 			offsetCampaignStrings(new File(cs.getTempPath(SkinTXT.CAMPAIGN_PATH.getName())), campaignKeyOffset);
 			txt.read(tempFile);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
 			return;
 		}
 		try {
+			if (!mapEditor.hasFile(SkinTXT.GAME_PATH.getPath()))
+				throw new IOException();
 			mapEditor.extractFile(SkinTXT.GAME_PATH.getPath(), tempFile);
 			if (txt == null) {
 				txt = new SkinTXT();
@@ -377,9 +382,9 @@ public class MapInjector {
 					break;
 				}
 
-			System.out.println("Adding difficulty selection to map \"" + mapFile.getName() + "\".");
+			System.out.println("Adding Difficulty Slector to map \"" + mapFile.getName() + "\".");
 			DifficultySelector.addDifficultySelection(this, offsets.difficultyStringOffset, playerId);
-			System.out.println("Finished adding difficulty selection to map \"" + mapFile.getName() + "\".");
+			System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
 			cs.IncrementValueProgressBar(1);
 		}
 

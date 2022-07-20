@@ -3,6 +3,7 @@ package net.xetanth87.campaignsplitter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -16,6 +17,11 @@ public class XT87Utils {
 		NO,
 		DEFAULT,
 		YES
+	}
+
+	public static String beautifyEnum(Enum e) {
+		String s = e.toString().replace("_", " ");
+		return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
 	}
 
 	public static void createNewFile(File file) throws IOException {

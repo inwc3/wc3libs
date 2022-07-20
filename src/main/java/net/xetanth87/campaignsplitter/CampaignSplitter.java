@@ -165,6 +165,7 @@ public class CampaignSplitter {
 		List<Thread> mapThreads = new ArrayList<>();
 		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
 				(difficultySelectorOption.equals(XT87Utils.TriOption.DEFAULT) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
+		System.out.println("Difficulty selector: " + (withDifficultySelector ? "enabled" : "disabled") + ".");
 		for (int i = 0; i < buttonCount; i++) {
 			System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i, buttonCount));
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
