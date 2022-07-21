@@ -69,8 +69,11 @@ public class DifficultySelector {
 			String line = sc.nextLine();
 			if (insideInitialization)
 			{
-				if (line.equals(END_FUNCTION))
+				if (line.equals(END_FUNCTION)) {
+					sb.append(JASS_DELIM +
+							"    call CinematicFadeBJ(bj_CINEFADETYPE_FADEOUT, 0.00, \"ReplaceableTextures\\\\CameraMasks\\\\Black_mask.blp\", 0, 0, 0, 0)");
 					insideInitialization = false;
+				}
 				else if (line.contains(INIT_CALL))
 					continue;
 			}
@@ -87,6 +90,7 @@ public class DifficultySelector {
 			{
 				sb.append(JASS_DELIM +
 						"function Trig_XT87CS_Dif_Init_Actions takes nothing returns nothing" + JASS_DELIM +
+						"    call PauseGameOn()" + JASS_DELIM +
 						"    call DialogSetMessageBJ(udg_XT87CSDifDiag, \"" + XT87Utils.STRING_PREFIX + XT87Utils.zeroedNumber(difficultyStringOffset, 3) + "\")" + JASS_DELIM +
 						"    call DialogAddButtonBJ(udg_XT87CSDifDiag, \"" + XT87Utils.STRING_PREFIX + XT87Utils.zeroedNumber(difficultyStringOffset + 1, 3) + "\")" + JASS_DELIM +
 						"    set udg_XT87CSDifDiagEasy=GetLastCreatedButtonBJ()" + JASS_DELIM +
@@ -142,6 +146,8 @@ public class DifficultySelector {
 						"            endif" + JASS_DELIM +
 						"        endif" + JASS_DELIM +
 						"    endif" + JASS_DELIM +
+						"    call PauseGameOff()" + JASS_DELIM +
+						"    call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 0.00, \"ReplaceableTextures\\\\CameraMasks\\\\Black_mask.blp\", 0, 0, 0, 0)" + JASS_DELIM +
 						"    call StartTimerBJ(udg_XT87CSMeleeInitialization, false, 0.00)" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"" + JASS_DELIM +
