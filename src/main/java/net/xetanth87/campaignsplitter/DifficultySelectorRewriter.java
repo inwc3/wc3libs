@@ -1,42 +1,18 @@
 package net.xetanth87.campaignsplitter;
 
-import net.moonlightflower.wc3libs.txt.app.jass.Jass;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
-public class DifficultySelector extends JassRewritter {
+public class DifficultySelectorRewriter extends ScriptRewriter {
 	public int difficultyStringOffset;
 	public int playerId;
 	public Set<String> initializationTriggers = null;
 	public boolean first, triggersAdded, insideInitialization, insideInitGlobals;
 
-	public DifficultySelector(File extractedFile, int difficultyStringOffset, int playerId)
+	public DifficultySelectorRewriter(MapInjector mi, int difficultyStringOffset, int playerId)
 	{
-		super(extractedFile);
+		super(mi);
 		this.difficultyStringOffset = difficultyStringOffset;
 		this.playerId = playerId;
-	}
-
-	public static void rewrite(MapInjector mi, int difficultyStringOffset, int playerId) throws IOException {
-		try {
-			String path = null, tempPath, scriptsPath = "scripts\\", luaName = "war3map.lua";
-			if (mi.mapEditor.hasFile(tempPath = Jass.GAME_PATH.getName()))
-				path = tempPath;
-			else if (mi.mapEditor.hasFile(tempPath = scriptsPath + Jass.GAME_PATH.getName()))
-				path = tempPath;
-			else if (mi.mapEditor.hasFile(luaName) || mi.mapEditor.hasFile(scriptsPath + luaName))
-				throw new Exception("Difficulty selection won't be added to the map with lua script \"" + mi.mapFile.getName() + "\".");
-			else
-				throw new Exception("No JASS script found for map \"" + mi.mapFile.getName() + "\".");
-			mi.mapEditor.extractFile(path, mi.tempFile);
-			new DifficultySelector(mi.tempFile, difficultyStringOffset, playerId).rewriteFile();
-			mi.mapEditor.insertFile(path, mi.tempFile, false, true);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		} finally {
-		}
 	}
 
 	@Override

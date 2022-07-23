@@ -382,8 +382,8 @@ public class MapInjector {
 					break;
 				}
 
-			System.out.println("Adding Difficulty Slector to map \"" + mapFile.getName() + "\".");
-			DifficultySelector.rewrite(this, offsets.difficultyStringOffset, playerId);
+			System.out.println("Adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
+			ScriptRewriter.rewrite(new DifficultySelectorRewriter(this, offsets.difficultyStringOffset, playerId));
 			System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
 			cs.IncrementValueProgressBar(1);
 		}
