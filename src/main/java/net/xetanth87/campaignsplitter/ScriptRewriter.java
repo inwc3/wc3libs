@@ -13,6 +13,7 @@ public abstract class ScriptRewriter {
 	public static final String END_FUNCTION = "endfunction";
 	public static final String INIT_CALL = "call ConditionalTriggerExecute(";
 	public MapInjector mi;
+	public boolean first = true;
 
 	public ScriptRewriter(MapInjector mi) {
 		this.mi = mi;
@@ -24,24 +25,6 @@ public abstract class ScriptRewriter {
 		return s;
 	}
 
-	public Set<String> findInitializationTriggers(String s) {
-		Scanner sc = new Scanner(s);
-		Set<String> initializationTriggers = new HashSet<>();
-		boolean insideInitialization = false;
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			if (insideInitialization) {
-				if (line.equals(END_FUNCTION))
-					insideInitialization = false;
-				else if (line.contains(INIT_CALL))
-					initializationTriggers.add(initializationTriggerFromCall(line));
-			} else if (isInitFunction(line))
-				insideInitialization = true;
-		}
-		sc.close();
-		return initializationTriggers;
-	}
-
 	public static boolean isInitFunction(String line) {
 		return line.contains("function RunInitializationTriggers takes") || line.contains("function main takes");
 	}
@@ -49,6 +32,15 @@ public abstract class ScriptRewriter {
 	public abstract void onStartRead(String text, StringBuffer sb);
 
 	public abstract void onReadLine(String line, StringBuffer sb);
+
+	public void append(String line, StringBuffer sb)
+	{
+		if (first)
+			first = false;
+		else
+			sb.append(JASS_DELIM);
+		sb.append(line);
+	}
 
 	public void rewriteFile(boolean isLua) throws IOException {
 		Scanner sc = new Scanner(mi.tempFile);
@@ -66,6 +58,7 @@ public abstract class ScriptRewriter {
 		sc = new Scanner(text);
 		sb = new StringBuffer();
 		onStartRead(text, sb);
+		first = true;
 		while (sc.hasNextLine()) {
 			onReadLine(sc.nextLine(), sb);
 		}

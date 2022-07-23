@@ -1,9 +1,11 @@
 package net.xetanth87.campaignsplitter;
 
+import net.moonlightflower.wc3libs.app.Minimap;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.IMP;
+import net.moonlightflower.wc3libs.bin.app.MMP;
 import net.moonlightflower.wc3libs.bin.app.W3F;
 import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
@@ -45,11 +47,12 @@ public class MapInjector {
 	public CampaignSplitter cs;
 	public final File mapFile;
 	public final int buttonIndex;
-	public final boolean withDifficultySelection;
+	public boolean withDifficultySelector = false;
+	public boolean withCampaignPreview = false;
 	public JMpqEditor mapEditor;
 	public File tempFile;
 
-	public MapInjector(CampaignSplitter cs, File mapFile, int buttonIndex, boolean withDifficultySelector) throws IOException {
+	public MapInjector(CampaignSplitter cs, File mapFile, int buttonIndex) throws IOException {
 		if (!mapFile.getName().endsWith(".w3m") && !mapFile.getName().endsWith(".w3x"))
 			throw new IllegalArgumentException("Argument must be a map file!");
 		this.mapFile = mapFile;
@@ -57,7 +60,6 @@ public class MapInjector {
 			throw new FileNotFoundException("Map file not found!");
 		this.cs = cs;
 		this.buttonIndex = buttonIndex;
-		this.withDifficultySelection = withDifficultySelector;
 	}
 
 	public void insertDataFile(Object data, String fileName) throws IOException {
@@ -244,7 +246,7 @@ public class MapInjector {
 				insertDataFile(tempFile, W3I.GAME_PATH.getPath());
 			}
 
-			if (withDifficultySelection) {
+			if (withDifficultySelector) {
 				offsets.difficultyStringOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
 				strings.addEntry(offsets.difficultyStringOffset, "Choose Difficulty");
 				strings.addEntry(offsets.difficultyStringOffset + 1, "|cff00ff00Easy|r");
@@ -323,12 +325,38 @@ public class MapInjector {
 		}
 	}
 
+	public void changePreview() throws IOException {
+		String campaignPreviewPath = cs.campaignData.getMinimapPath().getPath();
+		if (campaignPreviewPath != null) {
+			String minimapImagePath = null;
+			boolean hasMinimapImage = false, isTGA = false;
+			if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_BLP_GAME_PATH.getPath())) {
+				hasMinimapImage = true;
+			} else if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_TGA_GAME_PATH.getPath())) {
+				hasMinimapImage = true;
+				isTGA = true;
+			}
+			String mmpPath = MMP.GAME_PATH.getPath();
+			if (mapEditor.hasFile(mmpPath))
+				mapEditor.deleteFile(mmpPath);
+			if (hasMinimapImage) {
+				mapEditor.extractFile(minimapImagePath, tempFile);
+				mapEditor.deleteFile(minimapImagePath);
+				String newPath = XT87Utils.PATH_PREFIX + "/" + minimapImagePath;
+				mapEditor.insertFile(newPath, tempFile, false, true);
+				ScriptRewriter.rewrite(new MinimapRewriter(this, newPath));
+			}
+			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
+			mapEditor.insertFile(minimapImagePath, new File(cs.getImportsPath() + "/" + campaignPreviewPath), false, true);
+		}
+	}
+
 	public ReentrantLock rl = new ReentrantLock();
 
 	public void addCampaignData() throws Exception {
 		//rl.lock();
 		mapEditor = new JMpqEditor(mapFile, MPQOpenOption.FORCE_V0);
-		tempFile = new File(cs.getTempPath() + "/" + getWithoutExtension(mapFile) + ".txt");
+		tempFile = new File(cs.getTempPath() + "/" + getWithoutExtension(mapFile.getName()) + ".temp.txt");
 		tempFile.getParentFile().mkdirs();
 		tempFile.createNewFile();
 
@@ -373,7 +401,7 @@ public class MapInjector {
 		mergeData(new W3Q(), offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
-		if (withDifficultySelection) {
+		if (withDifficultySelector) {
 			int playerId = 0;
 			W3I info = W3I.ofMapFile(mapFile);
 			for (W3I.Player p : info.getPlayers())
@@ -387,6 +415,12 @@ public class MapInjector {
 			System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
 			cs.IncrementValueProgressBar(1);
 		}
+
+		System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
+		if (withCampaignPreview)
+		changePreview();
+		System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
+		cs.IncrementValueProgressBar(1);
 
 		tempFile.delete();
 		System.out.println("Saving map \"" + mapFile.getName() + "\".");

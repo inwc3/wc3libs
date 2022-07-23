@@ -11,6 +11,7 @@ public class XT87Utils {
 	public static final String STRING_PREFIX = "TRIGSTR_";
 	public static final String IMPORT_DELIM = "\r";
 	public static final String DATA_DELIM = "\n";
+	public static final String PATH_PREFIX = "XT87CampaignSplitter";
 	public static Stack<File> createdFiles = new Stack<>();
 
 	public enum TriOption {
@@ -99,8 +100,12 @@ public class XT87Utils {
 		return zeroedNumber(buttonIndex + 1, (buttonCount + "").length()) + ". ";
 	}
 
-	public static String getWithoutExtension(File file) {
-		return file.getName().replaceFirst("[.][^.]+$", "");
+	public static String getWithoutExtension(String path) {
+		return path.replaceFirst("[.][^.]+$", "");
+	}
+
+	public static String getExtension(String path) {
+		return path.substring(path.lastIndexOf('.') + 1);
 	}
 
 	public static String offsetCampaignDataString(String string, int campaignKeyOffset) {

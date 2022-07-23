@@ -76,7 +76,7 @@ public class CampaignSplitter {
 		this.campFile = campFile;
 		if (!campFile.exists())
 			throw new FileNotFoundException("Campaign file not found!");
-		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile);
+		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile.getName());
 		this.difficultySelectorOption = difficultySelectorOption;
 	}
 
@@ -180,7 +180,9 @@ public class CampaignSplitter {
 			System.out.println("Extracting map \"" + mapFile.getName() + "\".");
 			campEditor.extractFile(fileName, mapFile);
 			campEditor.close();
-			MapInjector mi = new MapInjector(this, mapFile, i, withDifficultySelector);
+			MapInjector mi = new MapInjector(this, mapFile, i);
+			mi.withDifficultySelector = withDifficultySelector;
+			mi.withCampaignPreview = true;
 			mi.addCampaignData();
 			if (i == 0) {
 				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);

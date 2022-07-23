@@ -1,12 +1,14 @@
 package net.xetanth87.campaignsplitter;
 
+import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 public class DifficultySelectorRewriter extends ScriptRewriter {
 	public int difficultyStringOffset;
 	public int playerId;
 	public Set<String> initializationTriggers = null;
-	public boolean first, triggersAdded, insideInitialization, insideInitGlobals;
+	public boolean triggersAdded, insideInitialization, insideInitGlobals;
 
 	public DifficultySelectorRewriter(MapInjector mi, int difficultyStringOffset, int playerId)
 	{
@@ -15,10 +17,27 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 		this.playerId = playerId;
 	}
 
+	public Set<String> findInitializationTriggers(String s) {
+		Scanner sc = new Scanner(s);
+		Set<String> initializationTriggers = new HashSet<>();
+		boolean insideInitialization = false;
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			if (insideInitialization) {
+				if (line.equals(END_FUNCTION))
+					insideInitialization = false;
+				else if (line.contains(INIT_CALL))
+					initializationTriggers.add(initializationTriggerFromCall(line));
+			} else if (isInitFunction(line))
+				insideInitialization = true;
+		}
+		sc.close();
+		return initializationTriggers;
+	}
+
 	@Override
 	public void onStartRead(String text, StringBuffer sb) {
 		initializationTriggers = findInitializationTriggers(text);
-		first = true;
 		triggersAdded = false;
 		insideInitialization = false;
 		insideInitGlobals = false;
@@ -120,11 +139,7 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 					"//===========================================================================");
 			triggersAdded = true;
 		}
-		if (first)
-			first = false;
-		else
-			sb.append(JASS_DELIM);
-		sb.append(line);
+		append(line, sb);
 		if (line.equals("globals"))
 		{
 			sb.append(JASS_DELIM +
