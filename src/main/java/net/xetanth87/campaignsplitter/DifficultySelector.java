@@ -19,7 +19,7 @@ public class DifficultySelector extends JassRewritter {
 		this.playerId = playerId;
 	}
 
-	public static void addDifficultySelection(MapInjector mi, int difficultyStringOffset, int playerId) throws IOException {
+	public static void rewrite(MapInjector mi, int difficultyStringOffset, int playerId) throws IOException {
 		try {
 			String path = null, tempPath, scriptsPath = "scripts\\", luaName = "war3map.lua";
 			if (mi.mapEditor.hasFile(tempPath = Jass.GAME_PATH.getName()))
