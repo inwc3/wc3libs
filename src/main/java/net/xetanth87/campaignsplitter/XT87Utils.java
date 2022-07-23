@@ -3,7 +3,6 @@ package net.xetanth87.campaignsplitter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.Stack;
 

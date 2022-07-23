@@ -3,13 +3,18 @@ package net.xetanth87.campaignsplitter;
 import net.moonlightflower.wc3libs.app.Minimap;
 
 public class MinimapRewriter extends ScriptRewriter {
-	public final String newPath;
+	public final String oldPath;
 	public boolean insideInitialization;
 
-	public MinimapRewriter(MapInjector mi, String newPath)
+	public MinimapRewriter(MapInjector mi, String oldPath)
 	{
 		super(mi);
-		this.newPath = newPath;
+		this.oldPath = oldPath;
+	}
+
+	public static String getNewPath(String oldPath)
+	{
+		return XT87Utils.PATH_PREFIX + "/" + oldPath;
 	}
 
 	@Override
@@ -23,7 +28,7 @@ public class MinimapRewriter extends ScriptRewriter {
 		{
 			if (line.equals(END_FUNCTION)) {
 				append(JASS_DELIM +
-						"    call BlzChangeMinimapTerrainTex(\"" + newPath + "\")", sb);
+						"    call BlzChangeMinimapTerrainTex(\"" + getNewPath(oldPath) + "\")", sb);
 				insideInitialization = false;
 			}
 		}
@@ -31,6 +36,7 @@ public class MinimapRewriter extends ScriptRewriter {
 		{
 			insideInitialization = true;
 		}
-		append(line, sb);
+		// replaces the path to the original image with its new path
+		append(line.replace(oldPath, getNewPath(oldPath)), sb);
 	}
 }

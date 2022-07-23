@@ -51,6 +51,9 @@ public class MapInjector {
 	public boolean withCampaignPreview = false;
 	public JMpqEditor mapEditor;
 	public File tempFile;
+	public StringBuffer scriptBuffer = null;
+	public String scriptPath;
+	public boolean isLua;
 
 	public MapInjector(CampaignSplitter cs, File mapFile, int buttonIndex) throws IOException {
 		if (!mapFile.getName().endsWith(".w3m") && !mapFile.getName().endsWith(".w3x"))
@@ -342,9 +345,8 @@ public class MapInjector {
 			if (hasMinimapImage) {
 				mapEditor.extractFile(minimapImagePath, tempFile);
 				mapEditor.deleteFile(minimapImagePath);
-				String newPath = XT87Utils.PATH_PREFIX + "/" + minimapImagePath;
-				mapEditor.insertFile(newPath, tempFile, false, true);
-				ScriptRewriter.rewrite(new MinimapRewriter(this, newPath));
+				mapEditor.insertFile(MinimapRewriter.getNewPath(minimapImagePath), tempFile, false, true);
+				new MinimapRewriter(this, minimapImagePath).modifyScript();
 			}
 			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
 			mapEditor.insertFile(minimapImagePath, new File(cs.getImportsPath() + "/" + campaignPreviewPath), false, true);
@@ -401,27 +403,35 @@ public class MapInjector {
 		mergeData(new W3Q(), offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
-		if (withDifficultySelector) {
-			int playerId = 0;
-			W3I info = W3I.ofMapFile(mapFile);
-			for (W3I.Player p : info.getPlayers())
-				if (p.getType().equals(Controller.USER)) {
-					playerId = p.getNum();
-					break;
-				}
+		boolean editScript = withDifficultySelector || withCampaignPreview;
 
-			System.out.println("Adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
-			ScriptRewriter.rewrite(new DifficultySelectorRewriter(this, offsets.difficultyStringOffset, playerId));
-			System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
-			cs.IncrementValueProgressBar(1);
-		}
+		if (editScript) {
+			ScriptRewriter.readScript(this);
 
-		if (withCampaignPreview) {
-			System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
-			if (withCampaignPreview)
-				changePreview();
-			System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
-			cs.IncrementValueProgressBar(1);
+			if (withDifficultySelector) {
+				int playerId = 0;
+				W3I info = W3I.ofMapFile(mapFile);
+				for (W3I.Player p : info.getPlayers())
+					if (p.getType().equals(Controller.USER)) {
+						playerId = p.getNum();
+						break;
+					}
+
+				System.out.println("Adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
+				new DifficultySelectorRewriter(this, offsets.difficultyStringOffset, playerId).modifyScript();
+				System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
+				cs.IncrementValueProgressBar(1);
+			}
+
+			if (withCampaignPreview) {
+				System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
+				if (withCampaignPreview)
+					changePreview();
+				System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
+				cs.IncrementValueProgressBar(1);
+			}
+
+			ScriptRewriter.insertScript(this);
 		}
 
 		tempFile.delete();

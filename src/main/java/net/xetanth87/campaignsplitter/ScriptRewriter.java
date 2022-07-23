@@ -42,49 +42,48 @@ public abstract class ScriptRewriter {
 		sb.append(line);
 	}
 
-	public void rewriteFile(boolean isLua) throws IOException {
+	public static void readScript(MapInjector mi) throws Exception {
+		String tempPath, scriptsPath = "scripts\\", luaName = "war3map.lua";
+		mi.scriptPath = null;
+		if (mi.mapEditor.hasFile(tempPath = Jass.GAME_PATH.getName()))
+			mi.scriptPath = tempPath;
+		else if (mi.mapEditor.hasFile(tempPath = scriptsPath + Jass.GAME_PATH.getName()))
+			mi.scriptPath = tempPath;
+		else if (mi.mapEditor.hasFile(luaName) || mi.mapEditor.hasFile(scriptsPath + luaName))
+			throw new Exception("Difficulty selection won't be added to the map with lua script \"" + mi.mapFile.getName() + "\".");
+		else
+			throw new Exception("No JASS script found for map \"" + mi.mapFile.getName() + "\".");
+		mi.mapEditor.extractFile(mi.scriptPath, mi.tempFile);
 		Scanner sc = new Scanner(mi.tempFile);
-		StringBuffer sb = new StringBuffer();
+		mi.scriptBuffer = new StringBuffer();
 		boolean first = true;
 		while (sc.hasNextLine()) {
 			if (first)
 				first = false;
 			else
-				sb.append(JASS_DELIM);
-			sb.append(sc.nextLine());
+				mi.scriptBuffer.append(JASS_DELIM);
+			mi.scriptBuffer.append(sc.nextLine());
 		}
 		sc.close();
-		String text = sb.toString();
-		sc = new Scanner(text);
-		sb = new StringBuffer();
+	}
+
+	public static void insertScript(MapInjector mi) throws IOException {
+		FileWriter writer = new FileWriter(mi.tempFile);
+		writer.append(mi.scriptBuffer.toString());
+		writer.close();
+		mi.mapEditor.insertFile(mi.scriptPath, mi.tempFile, false, true);
+	}
+
+	public void modifyScript() throws IOException {
+		String text = mi.scriptBuffer.toString();
+		Scanner sc = new Scanner(text);
+		StringBuffer sb = new StringBuffer();
 		onStartRead(text, sb);
 		first = true;
 		while (sc.hasNextLine()) {
 			onReadLine(sc.nextLine(), sb);
 		}
 
-		FileWriter writer = new FileWriter(mi.tempFile);
-		writer.append(sb.toString());
-		writer.close();
-	}
-
-	public static void rewrite(ScriptRewriter rewriter) {
-		try {
-			String path = null, tempPath, scriptsPath = "scripts\\", luaName = "war3map.lua";
-			MapInjector mi = rewriter.mi;
-			if (mi.mapEditor.hasFile(tempPath = Jass.GAME_PATH.getName()))
-				path = tempPath;
-			else if (mi.mapEditor.hasFile(tempPath = scriptsPath + Jass.GAME_PATH.getName()))
-				path = tempPath;
-			else if (mi.mapEditor.hasFile(luaName) || mi.mapEditor.hasFile(scriptsPath + luaName))
-				throw new Exception("Difficulty selection won't be added to the map with lua script \"" + mi.mapFile.getName() + "\".");
-			else
-				throw new Exception("No JASS script found for map \"" + mi.mapFile.getName() + "\".");
-			mi.mapEditor.extractFile(path, mi.tempFile);
-			rewriter.rewriteFile(false);
-			mi.mapEditor.insertFile(path, mi.tempFile, false, true);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+		mi.scriptBuffer = sb;
 	}
 }
