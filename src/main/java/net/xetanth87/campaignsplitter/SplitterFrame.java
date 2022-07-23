@@ -25,6 +25,7 @@ public class SplitterFrame extends JFrame {
 	private JTextArea taskOutput;
 	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
 	private ButtonGroup difficultySelectorGroup;
+	private JCheckBox campaignPreviewCheck = new JCheckBox();
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
@@ -32,13 +33,19 @@ public class SplitterFrame extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
+
 		JPanel panel = new JPanel(new GridLayout(0, 1));
+		add(panel);
 		panel.add(new Label("Click \"" + browse.getText() + "\" to select a Warcraft III Custom Campaign file (\"*.w3n\").", Label.CENTER));
 		panel.add(new Label("Click \"" + split.getText() + "\" to split the campaign (the campaign file will not be altered).", Label.CENTER));
 		panel.add(new Label("A folder with the same name as the campaign will be created in the same location.", Label.CENTER));
 		panel.add(new Label("This folder will contain all extracted maps, merged with campaign data.", Label.CENTER));
-		add(panel);
+
+		JPanel optionsPanel = new JPanel(new GridLayout(0, 1));
+		add(optionsPanel);
+
 		panel = new JPanel();
+		optionsPanel.add(panel);
 		panel.add(new JLabel("Add Difficulty Selector?"));
 		difficultySelectorGroup = new ButtonGroup();
 		JRadioButton radioButton;
@@ -65,11 +72,20 @@ public class SplitterFrame extends JFrame {
 			panel.add(radioButton);
 			difficultySelectorGroup.add(radioButton);
 		}
-		add(panel);
+
+		panel = new JPanel();
+		optionsPanel.add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.add(new JLabel("Add campaign preview?"));
+		campaignPreviewCheck.setSelected(true);
+		panel.add(campaignPreviewCheck);
+		campaignPreviewCheck.setToolTipText("Changes each map's preview to the campaign preview, hiding the minimap. (Recommended)");
+		optionsPanel.add(panel);
 
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
 		panel = new JPanel();
+		add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel.add(filePathField);
 		panel.add(browse);
@@ -78,27 +94,22 @@ public class SplitterFrame extends JFrame {
 		panel.add(split);
 		split.setFocusPainted(false);
 		split.setBackground(Color.ORANGE);
+
+		panel = new JPanel();
 		add(panel);
-
-		panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-		panel = new JPanel();
 		bar = new JProgressBar();
 		bar.setValue(0);
 		bar.setMaximum(100);
 		bar.setStringPainted(true);
 		bar.setPreferredSize(new Dimension((int) (0.9f * getWidth()), bar.getPreferredSize().height));
-
 		panel.add(bar);
-		add(panel);
 
 		panel = new JPanel();
+		add(panel);
 		taskOutput = new JTextArea(12, 50);
 		taskOutput.setMargin(new Insets(5,5,5,5));
 		taskOutput.setEditable(false);
 		panel.add(new JScrollPane(taskOutput), BorderLayout.CENTER);
-		add(panel);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -151,6 +162,7 @@ public class SplitterFrame extends JFrame {
 		browse.setEnabled(!running);
 		filePathField.setEditable(!running);
 		Enumeration<AbstractButton> e = difficultySelectorGroup.getElements();
+		campaignPreviewCheck.setEnabled(!running);
 		while (e.hasMoreElements()) {
 			e.nextElement().setEnabled(!running);
 		}
@@ -172,8 +184,8 @@ public class SplitterFrame extends JFrame {
 	}
 
 	private class FrameCampaignSplitter extends CampaignSplitter {
-		public FrameCampaignSplitter(File campFile, XT87Utils.TriOption difficultySelectorOption) throws IOException {
-			super(campFile, difficultySelectorOption);
+		public FrameCampaignSplitter(File campFile) throws IOException {
+			super(campFile);
 		}
 
 		@Override
@@ -231,14 +243,18 @@ public class SplitterFrame extends JFrame {
 		public void run() {
 			File file = new File(filePathField.getText());
 			try {
-				CampaignSplitter cs = new FrameCampaignSplitter(file, difficultySelectorOption);
+				CampaignSplitter cs = new FrameCampaignSplitter(file);
+				cs.difficultySelectorOption = difficultySelectorOption;
+				cs.campaignPreviewOption = campaignPreviewCheck.isSelected();
 				cs.splitCampaign();
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			} catch (InterruptedException ex) {
 			} catch (Exception ex) {
 				try {
-					new CampaignSplitter(file, XT87Utils.TriOption.NO).removeTemporaryFiles();
+					CampaignSplitter cs = new CampaignSplitter(file);
+					cs.difficultySelectorOption = XT87Utils.TriOption.NO;
+					cs.removeTemporaryFiles();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

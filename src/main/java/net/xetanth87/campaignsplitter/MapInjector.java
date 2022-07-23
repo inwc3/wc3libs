@@ -416,11 +416,13 @@ public class MapInjector {
 			cs.IncrementValueProgressBar(1);
 		}
 
-		System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
-		if (withCampaignPreview)
-		changePreview();
-		System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
-		cs.IncrementValueProgressBar(1);
+		if (withCampaignPreview) {
+			System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
+			if (withCampaignPreview)
+				changePreview();
+			System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
+			cs.IncrementValueProgressBar(1);
+		}
 
 		tempFile.delete();
 		System.out.println("Saving map \"" + mapFile.getName() + "\".");

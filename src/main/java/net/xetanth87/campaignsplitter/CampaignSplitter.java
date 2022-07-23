@@ -33,7 +33,8 @@ public class CampaignSplitter {
 	public final File campFile;
 	public final String splitPath;
 	public int buttonCount;
-	public final XT87Utils.TriOption difficultySelectorOption;
+	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
+	public boolean campaignPreviewOption = false;
 	public JMpqEditor campEditor;
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
@@ -70,14 +71,13 @@ public class CampaignSplitter {
 		return getImportsPath() + "/" + filename;
 	}
 
-	public CampaignSplitter(File campFile, XT87Utils.TriOption difficultySelectorOption) throws IOException {
+	public CampaignSplitter(File campFile) throws IOException {
 		if (!campFile.getName().endsWith(".w3n"))
 			throw new IllegalArgumentException("Argument must be a campaign file!");
 		this.campFile = campFile;
 		if (!campFile.exists())
 			throw new FileNotFoundException("Campaign file not found!");
 		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile.getName());
-		this.difficultySelectorOption = difficultySelectorOption;
 	}
 
 	static class MapThread extends Thread {
@@ -182,7 +182,7 @@ public class CampaignSplitter {
 			campEditor.close();
 			MapInjector mi = new MapInjector(this, mapFile, i);
 			mi.withDifficultySelector = withDifficultySelector;
-			mi.withCampaignPreview = true;
+			mi.withCampaignPreview = campaignPreviewOption;
 			mi.addCampaignData();
 			if (i == 0) {
 				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);
@@ -213,7 +213,7 @@ public class CampaignSplitter {
 		}
 		CampaignSplitter cs = null;
 		try {
-			cs = new CampaignSplitter(new File(campaignPath), XT87Utils.TriOption.DEFAULT);
+			cs = new CampaignSplitter(new File(campaignPath));
 			cs.splitCampaign();
 		} catch (Exception e) {
 			e.printStackTrace();
