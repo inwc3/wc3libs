@@ -34,7 +34,7 @@ public class CampaignSplitter {
 	public final String splitPath;
 	public int buttonCount;
 	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
-	public boolean campaignPreviewOption = false;
+	public boolean withCampaignPreview = false, withUpkeepRemoval = false;
 	public JMpqEditor campEditor;
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
@@ -182,7 +182,6 @@ public class CampaignSplitter {
 			campEditor.close();
 			MapInjector mi = new MapInjector(this, mapFile, i);
 			mi.withDifficultySelector = withDifficultySelector;
-			mi.withCampaignPreview = campaignPreviewOption;
 			mi.addCampaignData();
 			if (i == 0) {
 				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);

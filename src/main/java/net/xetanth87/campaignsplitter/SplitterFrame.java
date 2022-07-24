@@ -26,6 +26,7 @@ public class SplitterFrame extends JFrame {
 	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
 	private ButtonGroup difficultySelectorGroup;
 	private JCheckBox campaignPreviewCheck = new JCheckBox();
+	private JCheckBox upkeepRemovalCheck = new JCheckBox();
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
@@ -80,7 +81,10 @@ public class SplitterFrame extends JFrame {
 		campaignPreviewCheck.setSelected(true);
 		panel.add(campaignPreviewCheck);
 		campaignPreviewCheck.setToolTipText("Changes each map's preview to the campaign preview, hiding the minimap. (Recommended)");
-		optionsPanel.add(panel);
+		panel.add(new JLabel("Remove Upkeep?"));
+		upkeepRemovalCheck.setSelected(false);
+		panel.add(upkeepRemovalCheck);
+		upkeepRemovalCheck.setToolTipText("Removes Upkeep from each map. May lead to unforeseen consequences. (Not recommended)");
 
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
@@ -163,6 +167,7 @@ public class SplitterFrame extends JFrame {
 		filePathField.setEditable(!running);
 		Enumeration<AbstractButton> e = difficultySelectorGroup.getElements();
 		campaignPreviewCheck.setEnabled(!running);
+		upkeepRemovalCheck.setEnabled(!running);
 		while (e.hasMoreElements()) {
 			e.nextElement().setEnabled(!running);
 		}
@@ -245,7 +250,8 @@ public class SplitterFrame extends JFrame {
 			try {
 				CampaignSplitter cs = new FrameCampaignSplitter(file);
 				cs.difficultySelectorOption = difficultySelectorOption;
-				cs.campaignPreviewOption = campaignPreviewCheck.isSelected();
+				cs.withCampaignPreview = campaignPreviewCheck.isSelected();
+				cs.withUpkeepRemoval = upkeepRemovalCheck.isSelected();
 				cs.splitCampaign();
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);

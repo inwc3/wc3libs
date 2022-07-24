@@ -16,7 +16,9 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.dataTypes.app.Controller;
+import net.moonlightflower.wc3libs.misc.FieldId;
 import net.moonlightflower.wc3libs.txt.TXT;
+import net.moonlightflower.wc3libs.txt.TXTSectionId;
 import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.MiscTXT;
 import net.moonlightflower.wc3libs.txt.app.SkinTXT;
@@ -48,7 +50,6 @@ public class MapInjector {
 	public final File mapFile;
 	public final int buttonIndex;
 	public boolean withDifficultySelector = false;
-	public boolean withCampaignPreview = false;
 	public JMpqEditor mapEditor;
 	public File tempFile;
 	public StringBuffer scriptBuffer = null;
@@ -274,7 +275,8 @@ public class MapInjector {
 		} catch (Exception e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
-			return;
+			if (!cs.withUpkeepRemoval)
+				return;
 		} finally {
 		}
 		try {
@@ -293,7 +295,25 @@ public class MapInjector {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 		} finally {
-			insertDataFile(txt, MiscTXT.GAME_PATH.getPath());
+			try {
+				if (cs.withUpkeepRemoval) {
+					if (txt == null)
+						txt = new MiscTXT();
+					final TXTSectionId sectionId = TXTSectionId.valueOf("Misc");
+					TXT.Section section = txt.getSection(sectionId);
+					if (section == null)
+						section = txt.addSection(sectionId);
+					String tax = "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+					String usage = "10000,10000,10000,10000,10000,10000,10000,10000,10000,10000";
+					section.setLine(FieldId.valueOf("UpkeepGoldTax"), tax);
+					section.setLine(FieldId.valueOf("UpkeepLumberTax"), tax);
+					section.setLine(FieldId.valueOf("UpkeepUsage"), usage);
+				}
+				insertDataFile(txt, MiscTXT.GAME_PATH.getPath());
+			} catch (Exception e) {
+				if (!(e instanceof IOException))
+					System.err.println(e.getMessage());
+			}
 		}
 	}
 
@@ -403,7 +423,7 @@ public class MapInjector {
 		mergeData(new W3Q(), offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
-		boolean editScript = withDifficultySelector || withCampaignPreview;
+		boolean editScript = withDifficultySelector || cs.withCampaignPreview;
 
 		if (editScript) {
 			ScriptRewriter.readScript(this);
@@ -423,10 +443,9 @@ public class MapInjector {
 				cs.IncrementValueProgressBar(1);
 			}
 
-			if (withCampaignPreview) {
+			if (cs.withCampaignPreview) {
 				System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
-				if (withCampaignPreview)
-					changePreview();
+				changePreview();
 				System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}
