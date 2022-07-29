@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Enumeration;
@@ -262,10 +264,14 @@ public class SplitterFrame extends JFrame {
 					cs.difficultySelectorOption = XT87Utils.TriOption.NO;
 					cs.removeTemporaryFiles();
 				} catch (IOException e) {
-					e.printStackTrace();
+					StringWriter sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					System.out.println("An exception was encountered:\n" + sw.toString());
 				}
 				if (!isInterrupted()) {
-					ex.printStackTrace();
+					StringWriter sw = new StringWriter();
+					ex.printStackTrace(new PrintWriter(sw));
+					System.out.println("An exception was encountered:\n" + sw.toString());
 					String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 					JOptionPane.showMessageDialog(null, "An error has been encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + ex.getMessage(), APP_TITLE, JOptionPane.ERROR_MESSAGE);
 				}

@@ -18,6 +18,7 @@ import systems.crigges.jmpq3.MPQOpenOption;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.NonWritableChannelException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,7 +183,13 @@ public class CampaignSplitter {
 			campEditor.close();
 			MapInjector mi = new MapInjector(this, mapFile, i);
 			mi.withDifficultySelector = withDifficultySelector;
-			mi.addCampaignData();
+			try {
+				mi.addCampaignData();
+			}
+			catch (NonWritableChannelException e)
+			{
+				throw new Exception("Map \"" + mapFile.getName() + "\" is set to readonly/protected and cannot be edited.");
+			}
 			if (i == 0) {
 				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);
 				SetValueProgressBar(STEPS_CAMP_DATA + stepsPerMap);
