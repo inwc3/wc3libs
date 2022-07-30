@@ -13,7 +13,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 
 public class SplitterFrame extends JFrame {
 	public static final String AUTHOR = "Xetanth87";
@@ -29,10 +31,12 @@ public class SplitterFrame extends JFrame {
 	private ButtonGroup difficultySelectorGroup;
 	private JCheckBox campaignPreviewCheck = new JCheckBox();
 	private JCheckBox upkeepRemovalCheck = new JCheckBox();
+	private JCheckBox legacyAssetsCheck = new JCheckBox();
+	private List<? extends JComponent> componentList = Arrays.asList(browse, campaignPreviewCheck, upkeepRemovalCheck, legacyAssetsCheck);
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
-		setSize(600, 510);
+		setSize(600, 540);
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
@@ -87,6 +91,14 @@ public class SplitterFrame extends JFrame {
 		upkeepRemovalCheck.setSelected(false);
 		panel.add(upkeepRemovalCheck);
 		upkeepRemovalCheck.setToolTipText("Removes Upkeep from each map. May lead to unforeseen consequences. (Not recommended)");
+
+		panel = new JPanel();
+		optionsPanel.add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.add(new JLabel("Add legacy assets?"));
+		legacyAssetsCheck.setSelected(true);
+		panel.add(legacyAssetsCheck);
+		legacyAssetsCheck.setToolTipText("Adds Reign of Chaos models and icons that were removed in Reforged. (Recommended, requires \"legacy.zip\")");
 
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
@@ -165,11 +177,10 @@ public class SplitterFrame extends JFrame {
 	public void setButtonStates(boolean running)
 	{
 		this.running = running;
-		browse.setEnabled(!running);
 		filePathField.setEditable(!running);
 		Enumeration<AbstractButton> e = difficultySelectorGroup.getElements();
-		campaignPreviewCheck.setEnabled(!running);
-		upkeepRemovalCheck.setEnabled(!running);
+		for (Component c : componentList)
+			c.setEnabled(!running);
 		while (e.hasMoreElements()) {
 			e.nextElement().setEnabled(!running);
 		}
@@ -254,6 +265,7 @@ public class SplitterFrame extends JFrame {
 				cs.difficultySelectorOption = difficultySelectorOption;
 				cs.withCampaignPreview = campaignPreviewCheck.isSelected();
 				cs.withUpkeepRemoval = upkeepRemovalCheck.isSelected();
+				cs.withLegacyAssets = legacyAssetsCheck.isSelected();
 				cs.splitCampaign();
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);

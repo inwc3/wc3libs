@@ -19,10 +19,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.channels.NonWritableChannelException;
+import java.security.CodeSource;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
 
@@ -35,7 +39,7 @@ public class CampaignSplitter {
 	public final String splitPath;
 	public int buttonCount;
 	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
-	public boolean withCampaignPreview = false, withUpkeepRemoval = false;
+	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true;
 	public JMpqEditor campEditor;
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
@@ -133,12 +137,14 @@ public class CampaignSplitter {
 			extractedFile.createNewFile();
 			campEditor.extractFile(file.getName(), extractedFile);
 		}
+		File importsListFile = null;
+		IMP imports = null;
 		if (campEditor.hasFile(IMP.CAMPAIGN_PATH.getName())) {
-			File importsListFile = new File(getTempPath() + "/" + IMP.CAMPAIGN_PATH);
+			importsListFile = new File(getTempPath() + "/" + IMP.CAMPAIGN_PATH);
 			importsListFile.createNewFile();
 			campEditor.extractFile(IMP.CAMPAIGN_PATH.getName(), importsListFile);
 			XT87Utils.fixImportFile(importsListFile, true);
-			IMP imports = new IMP(importsListFile);
+			imports = new IMP(importsListFile);
 			System.out.println("Extracting campaign imported files.");
 			for (IMP.Obj o : imports.getObjs()) {
 				if (!campEditor.hasFile(o.getPath()))
@@ -150,6 +156,27 @@ public class CampaignSplitter {
 				importedFile.getParentFile().mkdirs();
 				importedFile.createNewFile();
 				campEditor.extractFile(o.getPath(), importedFile);
+			}
+			System.out.println("Finished extracting campaign imported files.");
+		}
+
+		if (withLegacyAssets) {
+			System.out.println("Extracting legacy asset files.");
+			if (importsListFile == null) {
+				importsListFile = new File(getTempPath() + "/" + IMP.CAMPAIGN_PATH);
+				importsListFile.createNewFile();
+			}
+
+			boolean noCampaignImports = imports == null;
+			if (noCampaignImports)
+				imports = new IMP();
+
+			if (LegacyMerger.AddLegacyAssets(this, imports)) {
+				System.out.println("Finished extracting legacy asset files.");
+				imports.write(importsListFile);
+			}
+			else if (noCampaignImports) {
+				importsListFile.delete();
 			}
 		}
 	}

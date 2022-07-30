@@ -350,7 +350,11 @@ public class MapInjector {
 
 	public void changePreview() throws IOException {
 		String campaignPreviewPath = cs.campaignData.getMinimapPath().getPath();
-		if (campaignPreviewPath != null) {
+		if (campaignPreviewPath == null || campaignPreviewPath.isEmpty())
+			return;
+		File campaignPreviewFile = new File(cs.getImportsPath() + "/" + campaignPreviewPath);
+		if (campaignPreviewFile.exists()) {
+			System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
 			String minimapImagePath = null;
 			boolean hasMinimapImage = false, isTGA = false;
 			if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_BLP_GAME_PATH.getPath())) {
@@ -369,7 +373,9 @@ public class MapInjector {
 				new MinimapRewriter(this, minimapImagePath).modifyScript();
 			}
 			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
-			mapEditor.insertFile(minimapImagePath, new File(cs.getImportsPath() + "/" + campaignPreviewPath), false, true);
+			mapEditor.insertFile(minimapImagePath, campaignPreviewFile, false, true);
+			System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
+			cs.IncrementValueProgressBar(1);
 		}
 	}
 
@@ -423,7 +429,7 @@ public class MapInjector {
 		mergeData(new W3Q(), offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
-		boolean editScript = withDifficultySelector || cs.withCampaignPreview;
+		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets;
 
 		if (editScript) {
 			ScriptRewriter.readScript(this);
@@ -444,10 +450,7 @@ public class MapInjector {
 			}
 
 			if (cs.withCampaignPreview) {
-				System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
 				changePreview();
-				System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
-				cs.IncrementValueProgressBar(1);
 			}
 
 			ScriptRewriter.insertScript(this);
