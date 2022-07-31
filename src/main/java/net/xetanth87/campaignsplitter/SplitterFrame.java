@@ -36,7 +36,7 @@ public class SplitterFrame extends JFrame {
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
-		setSize(600, 540);
+		setSize(600, 560);
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
