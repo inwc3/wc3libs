@@ -67,6 +67,9 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 		if (!triggersAdded && line.contains("function Trig"))
 		{
 			sb.append(JASS_DELIM +
+					"//===========================================================================" + JASS_DELIM +
+					"// Trigger: XT87CS Dif Init" + JASS_DELIM +
+					"//===========================================================================" + JASS_DELIM +
 					"function Trig_XT87CS_Dif_Init_Actions takes nothing returns nothing" + JASS_DELIM +
 					"    call PauseGameOn()" + JASS_DELIM +
 					"    call DialogSetMessageBJ(udg_XT87CSDifDiag, \"" + XT87Utils.STRING_PREFIX + XT87Utils.zeroedNumber(difficultyStringOffset, 3) + "\")" + JASS_DELIM +
@@ -78,14 +81,14 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 					"    set udg_XT87CSDifDiagHard=GetLastCreatedButtonBJ()" + JASS_DELIM +
 					"    call DialogDisplayBJ(true, udg_XT87CSDifDiag, Player(" + playerId + "))" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"//===========================================================================" + JASS_DELIM +
 					"function InitTrig_XT87CS_Dif_Init takes nothing returns nothing" + JASS_DELIM +
 					"    set gg_trg_XT87CS_Dif_Init=CreateTrigger()" + JASS_DELIM +
 					"    call TriggerRegisterTimerEventSingle(gg_trg_XT87CS_Dif_Init, 0.00)" + JASS_DELIM +
 					"    call TriggerAddAction(gg_trg_XT87CS_Dif_Init, function Trig_XT87CS_Dif_Init_Actions)" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"//===========================================================================" + JASS_DELIM +
 					"// Trigger: XT87CS Dif Click" + JASS_DELIM +
 					"//===========================================================================" + JASS_DELIM +
@@ -95,21 +98,21 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 					"    endif" + JASS_DELIM +
 					"    return true" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"function Trig_XT87CS_Dif_Click_Func001Func001C takes nothing returns boolean" + JASS_DELIM +
 					"    if ( not ( GetClickedButtonBJ() == udg_XT87CSDifDiagNormal ) ) then" + JASS_DELIM +
 					"        return false" + JASS_DELIM +
 					"    endif" + JASS_DELIM +
 					"    return true" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"function Trig_XT87CS_Dif_Click_Func001C takes nothing returns boolean" + JASS_DELIM +
 					"    if ( not ( GetClickedButtonBJ() == udg_XT87CSDifDiagEasy ) ) then" + JASS_DELIM +
 					"        return false" + JASS_DELIM +
 					"    endif" + JASS_DELIM +
 					"    return true" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"function Trig_XT87CS_Dif_Click_Actions takes nothing returns nothing" + JASS_DELIM +
 					"    if ( Trig_XT87CS_Dif_Click_Func001C() ) then" + JASS_DELIM +
 					"        call SetGameDifficulty(MAP_DIFFICULTY_EASY)" + JASS_DELIM +
@@ -128,14 +131,14 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 					"    call CinematicFadeBJ(bj_CINEFADETYPE_FADEIN, 0.00, \"ReplaceableTextures\\\\CameraMasks\\\\Black_mask.blp\", 0, 0, 0, 0)" + JASS_DELIM +
 					"    call StartTimerBJ(udg_XT87CSMeleeInitialization, false, 0.00)" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"//===========================================================================" + JASS_DELIM +
 					"function InitTrig_XT87CS_Dif_Click takes nothing returns nothing" + JASS_DELIM +
 					"    set gg_trg_XT87CS_Dif_Click=CreateTrigger()" + JASS_DELIM +
 					"    call TriggerRegisterDialogEventBJ(gg_trg_XT87CS_Dif_Click, udg_XT87CSDifDiag)" + JASS_DELIM +
 					"    call TriggerAddAction(gg_trg_XT87CS_Dif_Click, function Trig_XT87CS_Dif_Click_Actions)" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"" + JASS_DELIM +
+					JASS_DELIM +
 					"//===========================================================================");
 			triggersAdded = true;
 		}

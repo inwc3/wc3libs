@@ -19,16 +19,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.channels.NonWritableChannelException;
-import java.security.CodeSource;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.Map;
 
+import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
+import static net.xetanth87.campaignsplitter.XT87Utils.stringIndexToInt;
 
 public class CampaignSplitter {
 	public static final String TEMP_DIR_NAME = "temp";
@@ -39,10 +40,12 @@ public class CampaignSplitter {
 	public final String splitPath;
 	public int buttonCount;
 	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
-	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true;
+	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true, withNextLevel = true;
 	public JMpqEditor campEditor;
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
+	public WTS campStrings = null;
+	public Map<String, String> buttonNameMap = new HashMap<>();
 	private int stepsPerMap = 0;
 
 	public void InitializeProgressBar(int i) {
@@ -139,6 +142,13 @@ public class CampaignSplitter {
 		}
 		File importsListFile = null;
 		IMP imports = null;
+
+		File wtsFile = new File(getTempPath(WTS.CAMPAIGN_PATH.getName()));
+		if (wtsFile.exists()) {
+			campStrings = new WTS(wtsFile);
+			wtsFile.delete();
+		}
+
 		if (campEditor.hasFile(IMP.CAMPAIGN_PATH.getName())) {
 			importsListFile = new File(getTempPath() + "/" + IMP.CAMPAIGN_PATH);
 			importsListFile.createNewFile();
@@ -194,6 +204,14 @@ public class CampaignSplitter {
 		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
 				(difficultySelectorOption.equals(XT87Utils.TriOption.DEFAULT) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
 		System.out.println("Difficulty selector: " + (withDifficultySelector ? "enabled" : "disabled") + ".");
+		for (int i = 0; i < buttonCount; i++) {
+			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
+			int chapterTitleIndex = stringIndexToInt(mapEntry.getChapterTitle());
+			int mapTitleIndex = stringIndexToInt(mapEntry.getMapTitle());
+			String buttonTitle = buttonText(i, buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
+			campStrings.addEntry(mapTitleIndex, buttonTitle);
+			buttonNameMap.put(mapEntry.getMapPath().toLowerCase(), buttonTitle);
+		}
 		for (int i = 0; i < buttonCount; i++) {
 			System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i, buttonCount));
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);

@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static net.xetanth87.campaignsplitter.XT87Utils.STRING_PREFIX;
-import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
 import static net.xetanth87.campaignsplitter.XT87Utils.offsetCampaignDataString;
 import static net.xetanth87.campaignsplitter.XT87Utils.stringIndexToInt;
@@ -228,25 +227,19 @@ public class MapInjector {
 		}
 
 		try {
-			WTS campStrings = new WTS(new File(cs.getTempPath(WTS.CAMPAIGN_PATH.getName())));
 			if (strings == null)
-				strings = campStrings;
+				strings = cs.campStrings;
 			else {
-				for (int i : campStrings.getKeyedEntries().keySet())
-					strings.addEntry(offsets.campaignKeyOffset + i, campStrings.getEntry(i));
+				for (int i : cs.campStrings.getKeyedEntries().keySet())
+					strings.addEntry(offsets.campaignKeyOffset + i, cs.campStrings.getEntry(i));
 			}
 
 			if (buttonIndex >= 0) {
 				W3F.MapEntry mapEntry = cs.campaignData.getMaps().get(buttonIndex);
-				int chapterTitleIndex = stringIndexToInt(mapEntry.getChapterTitle());
 				int mapTitleIndex = stringIndexToInt(mapEntry.getMapTitle());
-				String buttonTitle = buttonText(buttonIndex, cs.buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
-				System.out.println("Created button title: \"" + buttonTitle + "\"");
 				mapEditor.extractFile(W3I.GAME_PATH.getPath(), tempFile);
-				int buttonStringIndex = chapterTitleIndex + offsets.campaignKeyOffset;
-				// save the new map name at the index of the button chapter title
+				int buttonStringIndex = mapTitleIndex + offsets.campaignKeyOffset;
 				changeMapName(tempFile, W3I.ofMapFile(mapFile).getMapName(), STRING_PREFIX + buttonStringIndex);
-				strings.addEntry(buttonStringIndex, buttonTitle);
 				insertDataFile(tempFile, W3I.GAME_PATH.getPath());
 			}
 
@@ -429,7 +422,7 @@ public class MapInjector {
 		mergeData(new W3Q(), offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
-		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets;
+		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets || cs.withNextLevel;
 
 		if (editScript) {
 			ScriptRewriter.readScript(this);
@@ -451,6 +444,13 @@ public class MapInjector {
 
 			if (cs.withCampaignPreview) {
 				changePreview();
+			}
+
+			if (cs.withNextLevel) {
+				System.out.println("Adding next level message to map \"" + mapFile.getName() + "\".");
+				new NextLevelRewriter(this, offsets.campaignKeyOffset).modifyScript();
+				System.out.println("Finished adding next level message to map \"" + mapFile.getName() + "\".");
+				cs.IncrementValueProgressBar(1);
 			}
 
 			ScriptRewriter.insertScript(this);
