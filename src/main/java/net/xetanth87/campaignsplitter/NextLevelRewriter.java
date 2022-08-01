@@ -36,7 +36,7 @@ public class NextLevelRewriter extends ScriptRewriter {
 			sb.append(JASS_DELIM +
 					"    " + VICTORY_CALL + words[0] + ", true," + words[2] +  ")" + JASS_DELIM +
 							"    if ( udg_XT87CSNextLevel != \"\" ) then" + JASS_DELIM +
-							"        call DisplayTimedTextToForce( GetForceOfPlayer(" + words[0] + "), 0.00, \"The next map is:\\n|cffffcc00\" + udg_XT87CSNextLevel + \"|r\" )" + JASS_DELIM +
+							"        call DisplayTimedTextToForce( GetForceOfPlayer(" + words[0] + "), 0.00, \"The next map is:\\n|cffffcc00\" + udg_XT87CSNextLevel + \"|r\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\" )" + JASS_DELIM +
 							"    else" + JASS_DELIM +
 							"    endif");
 			return;
