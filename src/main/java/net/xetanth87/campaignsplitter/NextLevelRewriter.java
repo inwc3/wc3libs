@@ -50,7 +50,7 @@ public class NextLevelRewriter extends ScriptRewriter {
 		} else if (line.contains(SET_LEVEL_CALL)) {
 			line = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")).toLowerCase();
 			sb.append(JASS_DELIM +
-							"set udg_XT87CSNextLevel=\"" + mi.cs.buttonNameMap.get(line) + "\"");
+							"    set udg_XT87CSNextLevel=\"" + mi.cs.buttonNameMap.get(line) + "\"");
 		}
 	}
 }
