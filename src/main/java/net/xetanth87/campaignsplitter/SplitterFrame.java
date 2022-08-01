@@ -30,9 +30,10 @@ public class SplitterFrame extends JFrame {
 	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
 	private ButtonGroup difficultySelectorGroup;
 	private JCheckBox campaignPreviewCheck = new JCheckBox();
-	private JCheckBox upkeepRemovalCheck = new JCheckBox();
+	private JCheckBox nextLevelCheck = new JCheckBox();
 	private JCheckBox legacyAssetsCheck = new JCheckBox();
-	private List<? extends JComponent> componentList = Arrays.asList(browse, campaignPreviewCheck, upkeepRemovalCheck, legacyAssetsCheck);
+	private JCheckBox upkeepRemovalCheck = new JCheckBox();
+	private List<? extends JComponent> componentList = Arrays.asList(browse, campaignPreviewCheck, nextLevelCheck, legacyAssetsCheck, upkeepRemovalCheck);
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
@@ -87,10 +88,10 @@ public class SplitterFrame extends JFrame {
 		campaignPreviewCheck.setSelected(true);
 		panel.add(campaignPreviewCheck);
 		campaignPreviewCheck.setToolTipText("Changes each map's preview to the campaign preview, hiding the minimap. (Recommended)");
-		panel.add(new JLabel("Remove Upkeep?"));
-		upkeepRemovalCheck.setSelected(false);
-		panel.add(upkeepRemovalCheck);
-		upkeepRemovalCheck.setToolTipText("Removes Upkeep from each map. May lead to unforeseen consequences. (Not recommended)");
+		panel.add(new JLabel("Show next level name?"));
+		nextLevelCheck.setSelected(true);
+		panel.add(nextLevelCheck);
+		nextLevelCheck.setToolTipText("Shows the name of the next level upon victory. Especially useful for campaigns with branching paths. (Recommended)");
 
 		panel = new JPanel();
 		optionsPanel.add(panel);
@@ -99,6 +100,10 @@ public class SplitterFrame extends JFrame {
 		legacyAssetsCheck.setSelected(true);
 		panel.add(legacyAssetsCheck);
 		legacyAssetsCheck.setToolTipText("Adds Reign of Chaos models and icons that were removed in Reforged. (Recommended, requires \"legacy.zip\")");
+		panel.add(new JLabel("Remove Upkeep?"));
+		upkeepRemovalCheck.setSelected(false);
+		panel.add(upkeepRemovalCheck);
+		upkeepRemovalCheck.setToolTipText("Removes Upkeep from each map. May lead to unforeseen consequences. (Not recommended)");
 
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
@@ -264,6 +269,7 @@ public class SplitterFrame extends JFrame {
 				CampaignSplitter cs = new FrameCampaignSplitter(file);
 				cs.difficultySelectorOption = difficultySelectorOption;
 				cs.withCampaignPreview = campaignPreviewCheck.isSelected();
+				cs.withNextLevel = nextLevelCheck.isSelected();
 				cs.withUpkeepRemoval = upkeepRemovalCheck.isSelected();
 				cs.withLegacyAssets = legacyAssetsCheck.isSelected();
 				cs.splitCampaign();
