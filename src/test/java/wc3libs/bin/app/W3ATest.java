@@ -11,5 +11,6 @@ public class W3ATest extends Wc3LibTest {
 	@Test()
 	public void readWriteCycle() throws IOException {
 		readWriteCycle(W3A.class, getFile("wc3data/W3A/war3map.w3a"));
+        readWriteCycle(W3A.class, getFile("wc3data/W3A/war3mapNew.w3a"));
 	}
 }
