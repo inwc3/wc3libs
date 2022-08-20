@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.function.Function;
 
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
@@ -37,7 +36,17 @@ import javax.annotation.Nullable;
  * base class for object modification files
  */
 public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
-	public enum ValType {
+    private EncodingFormat _format;
+
+    public EncodingFormat getFormat() {
+        return _format;
+    }
+
+    public void setFormat(@Nonnull EncodingFormat format) {
+        this._format = format;
+    }
+
+    public enum ValType {
 		INT(0),
 		REAL(1),
 		UNREAL(2),
@@ -272,7 +281,27 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		public ObjId getNewId() {
 			return _newId;
 		}
-		
+
+        private int[] _unknown;
+
+        public int[] getUnknown() {
+            return _unknown;
+        }
+
+        public void setUnknown(int[] value) {
+            _unknown = value;
+        }
+
+        private Id _endToken;
+
+        public Id getEndToken() {
+            return _endToken;
+        }
+
+        public void setEndToken(Id value) {
+            _endToken = value;
+        }
+
 		@Override
 		public String toString() {
 			if (getBaseId() == null) return String.format("%s", getId().toString());
@@ -359,7 +388,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 				addMod(mod);
 				
-				stream.readId("endToken");
+				_endToken = stream.readId("endToken");
 			}
 		}
 
@@ -422,10 +451,82 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 				addMod(mod);
 
-				stream.readId("endToken");
+				_endToken = stream.readId("endToken");
 			}
 		}
-		
+
+        private void read_0x3(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+            _baseId = ObjId.valueOf(stream.readId("baseId"));
+            _newId = ((Function<Id, ObjId>) id -> {
+                if (id.equals(Id.valueOf("\0\0\0\0"))) return null;
+
+                return ObjId.valueOf(id);
+            }).apply(stream.readId("newId"));
+
+            _id = (_newId == null) ? _baseId : _newId;
+
+            int unknownAmount = stream.readInt32("unknownAmount");
+            int[] unknown = new int[unknownAmount];
+
+            for (int i = 0; i < unknownAmount; i++) {
+                unknown[i] = stream.readInt32("unknown" + i);
+            }
+
+            _unknown = unknown;
+
+            int modsAmount = stream.readInt32("modsAmount");
+
+            for (int i = 0; i < modsAmount; i++) {
+                MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
+
+                int varTypeI = stream.readInt32("varType");
+
+                ValType varType = ValType.valueOf(varTypeI);
+
+                int level = 0;
+                int dataPt = 0;
+
+                if (isExtended()) {
+                    level = stream.readInt32("level/variation");
+                    dataPt = stream.readInt32("dataPt");
+                }
+
+                DataType val;
+
+                switch (varType) {
+                    case INT: {
+                        val = War3Int.valueOf(stream.readInt32("val (int)"));
+
+                        break;
+                    }
+                    case REAL: {
+                        val = War3Real.valueOf(stream.readFloat32("val (real)"));
+
+                        break;
+                    }
+                    case UNREAL: {
+                        val = War3Real.valueOf(stream.readFloat32("val (unreal)"));
+
+                        break;
+                    }
+                    case STRING: {
+                        val = War3String.valueOf(stream.readString("val (string)"));
+
+                        break;
+                    }
+                    default: {
+                        val = War3String.valueOf(stream.readString("val (string default)"));
+                    }
+                }
+
+                Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
+
+                addMod(mod);
+
+                _endToken = stream.readId("endToken");
+            }
+        }
+
 		private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 			stream.writeId((_baseId == null) ? _id : _baseId);
 			stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
@@ -485,7 +586,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 					}
 				}
 
-				stream.writeId(null); //endToken
+				stream.writeId(_endToken); //endToken
 			}
 		}
 		
@@ -548,10 +649,79 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 					}
 				}
 
-				stream.writeId(null); //endToken
+				stream.writeId(_endToken); //endToken
 			}
 		}
-		
+
+        private void write_0x3(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+            stream.writeId((_baseId == null) ? _id : _baseId);
+            stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
+
+            stream.writeInt32(_unknown.length);
+
+            for (int val : _unknown) {
+                stream.writeInt32(val);
+            }
+
+            int modsAmount = _mods.size();
+
+            stream.writeInt32(modsAmount);
+
+            for (Mod mod : _mods) {
+                MetaFieldId id = mod.getId();
+                int dataPt = mod instanceof ExtendedMod ? ((ExtendedMod) mod).getDataPt() : 0;
+                int level = mod instanceof ExtendedMod ? ((ExtendedMod) mod).getLevel() : 0;
+
+                ValType valType = mod.getValType() == null ? ValType.STRING : mod.getValType();
+                DataType val = mod.getVal();
+
+                stream.writeId(id);
+
+                stream.writeInt32(valType.getVal());
+
+                if (isExtended()) {
+                    stream.writeInt32(level);
+                    stream.writeInt32(dataPt);
+                }
+
+                switch (valType) {
+                    case INT: {
+                        if (!(val instanceof War3Int)) {
+                            throw new BinStream.StreamException(stream, "no int: " + val);
+                        }
+
+                        stream.writeInt32(((War3Int) val).toInt());
+
+                        break;
+                    }
+                    case REAL:
+                    case UNREAL: {
+                        if (!(val instanceof War3Num)) {
+                            throw new BinStream.StreamException(stream, "no real: " + val);
+                        }
+
+                        stream.writeFloat32(((War3Num) val).toFloat());
+
+                        break;
+                    }
+                    case STRING: {
+                        String valS = val == null ? "" : val.toString();
+
+                        stream.writeString(valS);
+
+                        break;
+                    }
+                    default: {
+                        String valS = val == null ? "" : val.toString();
+
+                        stream.writeString(valS);
+                    }
+                }
+
+                stream.writeId(_endToken); //endToken
+            }
+        }
+
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			try {
 				switch (format.toEnum()) {
@@ -565,6 +735,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 					
 					break;
 				}
+                case OBJ_0x3: {
+                    read_0x3(stream);
+
+                    break;
+                }
 				}
 			} catch (RuntimeException e) {
 				throw new BinInputStream.StreamException(stream);
@@ -574,6 +749,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 			switch (format.toEnum()) {
 			case AUTO:
+            case OBJ_0x3: {
+                write_0x3(stream);
+
+                break;
+            }
 			case OBJ_0x2: {
 				write_0x2(stream);
 				
@@ -913,25 +1093,31 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
+            AS_DEFINED,
 			OBJ_0x1,
-			OBJ_0x2
+			OBJ_0x2,
+            OBJ_0x3
 		}
 
 		private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat AS_DEFINED = new EncodingFormat(Enum.AS_DEFINED, null);
 		public final static EncodingFormat OBJ_0x1 = new EncodingFormat(Enum.OBJ_0x1, 0x1);
 		public final static EncodingFormat OBJ_0x2 = new EncodingFormat(Enum.OBJ_0x2, 0x2);
+        public final static EncodingFormat OBJ_0x3 = new EncodingFormat(Enum.OBJ_0x3, 0x3);
 
 		@Nullable
 		public static EncodingFormat valueOf(int version) {
 			return _map.get(version);
 		}
 
-		private EncodingFormat(@Nonnull Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, @Nullable Integer version) {
 			super(enumVal, version);
 
-			_map.put(version, this);
+            if (version != null) {
+                _map.put(version, this);
+            }
 		}
 	}
 
@@ -939,6 +1125,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		int version = stream.readInt32("version");
 
 		stream.checkFormatVersion(EncodingFormat.OBJ_0x1.getVersion(), version);
+
+        _format = EncodingFormat.valueOf(version);
 
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 		
@@ -975,6 +1163,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		stream.checkFormatVersion(EncodingFormat.OBJ_0x2.getVersion(), version);
 
+        _format = EncodingFormat.valueOf(version);
+
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 
 		for (int i = 0; i < origObjsAmount; i++) {
@@ -991,7 +1181,31 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			addObj(obj);
 		}
 	}
-	
+
+    private void read_0x3(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+        int version = stream.readInt32("version");
+
+        stream.checkFormatVersion(EncodingFormat.OBJ_0x3.getVersion(), version);
+
+        _format = EncodingFormat.valueOf(version);
+
+        int origObjsAmount = stream.readInt32("origObjsAmount");
+
+        for (int i = 0; i < origObjsAmount; i++) {
+            ObjType obj = createObj(stream, EncodingFormat.OBJ_0x3);
+
+            addObj(obj);
+        }
+
+        int customObjsAmount = stream.readInt32("customObjsAmount");
+
+        for (int i = 0; i < customObjsAmount; i++) {
+            ObjType obj = createObj(stream, EncodingFormat.OBJ_0x3);
+
+            addObj(obj);
+        }
+    }
+
 	private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		stream.writeInt32(EncodingFormat.OBJ_0x1.getVersion());
 		
@@ -1027,8 +1241,48 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
 	}
-	
-	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+
+    private void write_0x3(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        stream.writeInt32(EncodingFormat.OBJ_0x3.getVersion());
+
+        stream.writeInt32(getOrigObjs().size());
+
+        for (int i = 0; i < getOrigObjs().size(); i++) {
+            Obj obj = getOrigObjs().get(i);
+
+            obj.write(stream, EncodingFormat.OBJ_0x3);
+        }
+
+        stream.writeInt32(getCustomObjs().size());
+
+        for (int i = 0; i < getCustomObjs().size(); i++) {
+            Obj obj = getCustomObjs().get(i);
+
+            obj.write(stream, EncodingFormat.OBJ_0x3);
+        }
+    }
+
+    private void write_as_defined(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        switch (_format.toEnum()) {
+            case OBJ_0x1: {
+                write_0x1(stream);
+
+                break;
+            }
+            case OBJ_0x2: {
+                write_0x2(stream);
+
+                break;
+            }
+            case OBJ_0x3: {
+                write_0x3(stream);
+
+                break;
+            }
+        }
+    }
+
+	private void read_as_defined(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 		
 		stream.rewind();
@@ -1042,8 +1296,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	
 	public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		switch (format.toEnum()) {
-		case AUTO: {
-			read_auto(stream);
+        case AUTO:
+        case AS_DEFINED: {
+			read_as_defined(stream);
 			
 			break;
 		}
@@ -1057,6 +1312,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			
 			break;
 		}
+        case OBJ_0x3: {
+            read_0x3(stream);
+
+            break;
+        }
 		}
 	}
 
@@ -1070,7 +1330,17 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	
 	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 		switch (format.toEnum()) {
+        case AS_DEFINED: {
+            write_as_defined(stream);
+
+            break;
+        }
 		case AUTO:
+        case OBJ_0x3: {
+            write_0x3(stream);
+
+            break;
+        }
 		case OBJ_0x2: {
 			write_0x2(stream);
 			
