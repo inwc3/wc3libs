@@ -689,13 +689,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
             stream.writeId((_baseId == null) ? _id : _baseId);
             stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
 
-            if (_unknown != null) {
+            if (_unknown != null && _unknown.length > 0) {
                 stream.writeInt32(_unknown.length);
 
                 for (int val : _unknown) {
                     stream.writeInt32(val);
                 }
             } else {
+                stream.writeInt32(1);
                 stream.writeInt32(0);
             }
 
