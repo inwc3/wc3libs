@@ -16,6 +16,7 @@ import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.War3Num;
+import net.moonlightflower.wc3libs.dataTypes.app.War3Bool;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
@@ -92,12 +93,39 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				return _valType;
 			}
 
-			protected final DataType _val;
+            public void setVal(ValType valType) {
+                _valType = valType;
+            }
+
+			protected DataType _val;
 
 			@Nullable
 			public DataType getVal() {
 				return _val;
 			}
+
+            public void setVal(DataType value, ValType valType) {
+                _val = value;
+                _valType = valType;
+            }
+
+            public void setVal(DataType val) {
+                setVal(val, getValTypeFromVal(val));
+            }
+
+            private ValType getValTypeFromVal(DataType val) {
+                if (val == null || val instanceof War3Int) {
+                    return ValType.INT;
+                } else if (val instanceof War3Real) {
+                    if (ValType.UNREAL.equals(_valType)) {
+                        return ValType.UNREAL;
+                    } else {
+                        return ValType.REAL;
+                    }
+                }
+
+                return ValType.STRING;
+            }
 
 			@Override
 			public String toString() {
@@ -128,6 +156,10 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			public int getLevel() {
 				return _level;
 			}
+
+            public void setLevel(int value) {
+                _level = value;
+            }
 
 			private int _dataPt;
 
@@ -657,10 +689,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
             stream.writeId((_baseId == null) ? _id : _baseId);
             stream.writeId((_newId == null) ? Id.valueOf("\0\0\0\0") : _newId);
 
-            stream.writeInt32(_unknown.length);
+            if (_unknown != null) {
+                stream.writeInt32(_unknown.length);
 
-            for (int val : _unknown) {
-                stream.writeInt32(val);
+                for (int val : _unknown) {
+                    stream.writeInt32(val);
+                }
+            } else {
+                stream.writeInt32(0);
             }
 
             int modsAmount = _mods.size();
