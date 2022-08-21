@@ -69,7 +69,7 @@ public abstract class Format<T> {
 		if (_version != null) {
 			if (!_instanceMap.containsKey(getClass())) _instanceMap.put(getClass(), new LinkedHashMap<>());
 
-			if (_instanceMap.get(getClass()).containsKey(_version)) throw new RuntimeException(_version + "already used");
+			if (_instanceMap.get(getClass()).containsKey(_version)) throw new RuntimeException(_version + " already used");
 
 			_instanceMap.get(getClass()).put(_version, this);
 		}

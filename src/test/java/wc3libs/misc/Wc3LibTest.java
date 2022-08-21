@@ -1,5 +1,6 @@
 package wc3libs.misc;
 
+import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import org.slf4j.Logger;
@@ -105,23 +106,19 @@ public abstract class Wc3LibTest {
 
             ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 
-            Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream);
+            try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(outByteStream)) {
+                if (ObjMod.class.isAssignableFrom(testClass)) {
+                    Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class, ObjMod.EncodingFormat.class);
 
-            try {
-                Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class);
+                    writeMethod.invoke(testObj, outStream, ObjMod.EncodingFormat.AS_DEFINED);
+                } else {
+                    Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class);
 
-                writeMethod.invoke(testObj, outStream);
+                    writeMethod.invoke(testObj, outStream);
+                }
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
-            } finally {
-                outStream.close();
             }
-
-            /*FileOutputStream fp = new FileOutputStream("D:\\work\\bla.mdx");
-
-            fp.write(outByteStream.toByteArray());
-
-            fp.close();*/
 
             byte[] outBytes = outByteStream.toByteArray();
             int maxBytes = Math.max(outBytes.length, bytes.length);
