@@ -326,11 +326,15 @@ public class Wc3BinInputStream extends BinInputStream {
 		try {
 			byte[] sub = readBytes(4);
 
-			return Id.valueOf(new String(sub, StandardCharsets.US_ASCII));
+			return Id.valueOf(trimZeroes(new String(sub, StandardCharsets.US_ASCII)));
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
 	}
+
+    private String trimZeroes(@Nonnull final String input) {
+        return input.replaceFirst("^\0+", "").replaceFirst("\0+$", "");
+    }
 
 	@Nonnull
 	public Id readId(@Nullable String label) throws StreamException {

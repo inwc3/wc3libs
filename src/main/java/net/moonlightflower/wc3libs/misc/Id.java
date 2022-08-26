@@ -5,7 +5,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 public class Id extends War3String {
 	@Override
 	public int hashCode() {
-		if (getVal().length() != 4) return super.hashCode();
+		//if (getVal().length() != 4) return super.hashCode();
 
 		return Math.decode(getVal(), Math.CODE_ASCII);
 	}
