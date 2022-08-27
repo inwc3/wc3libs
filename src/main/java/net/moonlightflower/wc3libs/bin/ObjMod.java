@@ -127,6 +127,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
                 return ValType.STRING;
             }
 
+            private Id _endToken;
+
+            public Id getEndToken() {
+                return _endToken;
+            }
+
+            public void setEndToken(Id value) {
+                _endToken = value;
+            }
+
 			@Override
 			public String toString() {
 				return getId().toString();
@@ -324,16 +334,6 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
             _unknown = value;
         }
 
-        private Id _endToken;
-
-        public Id getEndToken() {
-            return _endToken;
-        }
-
-        public void setEndToken(Id value) {
-            _endToken = value;
-        }
-
 		@Override
 		public String toString() {
 			if (getBaseId() == null) return String.format("%s", getId().toString());
@@ -418,9 +418,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 				Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
 
+                mod._endToken = stream.readId("endToken");
+
 				addMod(mod);
-				
-				_endToken = stream.readId("endToken");
 			}
 		}
 
@@ -481,9 +481,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 				Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
 
-				addMod(mod);
+                mod._endToken = stream.readId("endToken");
 
-				_endToken = stream.readId("endToken");
+				addMod(mod);
 			}
 		}
 
@@ -553,9 +553,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
                 Mod mod = isExtended() ? new ExtendedMod(fieldId, varType, val, level, dataPt) : new Mod(fieldId, varType, val);
 
-                addMod(mod);
+                mod._endToken = stream.readId("endToken");
 
-                _endToken = stream.readId("endToken");
+                addMod(mod);
             }
         }
 
@@ -618,7 +618,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 					}
 				}
 
-				stream.writeId(_endToken); //endToken
+				stream.writeId(mod.getEndToken());
 			}
 		}
 		
@@ -681,7 +681,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 					}
 				}
 
-				stream.writeId(_endToken); //endToken
+				stream.writeId(mod.getEndToken());
 			}
 		}
 
@@ -755,7 +755,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
                     }
                 }
 
-                stream.writeId(_endToken); //endToken
+                stream.writeId(mod.getEndToken());
             }
         }
 
