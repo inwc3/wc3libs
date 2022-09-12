@@ -915,14 +915,20 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		
 		return obj;
 	}
-	
-	public void merge(@Nonnull ObjMod<ObjType> other) {
-		for (ObjType otherObj : other.getObjs().values()) {
-			ObjType obj = otherObj.copy();
 
-			addObj(obj);
-		}
-	}
+    public void merge(@Nonnull ObjMod<ObjType> other) {
+        for (Map.Entry<ObjId, ObjType> entry : other.getObjs().entrySet()) {
+            if (_objs.containsKey(entry.getKey())) {
+                ObjType obj = _objs.get(entry.getKey());
+                entry.getValue().getMods().forEach(obj::addMod);
+            } else {
+                ObjType obj = entry.getValue().copy();
+
+                addObj(obj);
+            }
+
+        }
+    }
 
 	@Nonnull
 	public abstract ObjMod<ObjType> copy();
