@@ -20,6 +20,7 @@ import java.util.Collections;
  */
 public class W3T extends ObjMod<W3T.Item> {
 	public final static File GAME_PATH = new File("war3map.w3t");
+	public final static File SKIN_PATH = new File("war3mapSkin.w3t");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3t");
 
 	public W3T(@Nonnull Wc3BinInputStream stream) throws IOException {

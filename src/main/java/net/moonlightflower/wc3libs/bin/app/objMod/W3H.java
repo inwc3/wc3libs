@@ -22,6 +22,7 @@ import java.util.Collections;
  */
 public class W3H extends ObjMod<W3H.Buff> {
 	public final static File GAME_PATH = new File("war3map.w3h");
+	public final static File SKIN_PATH = new File("war3mapSkin.w3h");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3h");
 
 	public W3H(@Nonnull Wc3BinInputStream stream) throws IOException {

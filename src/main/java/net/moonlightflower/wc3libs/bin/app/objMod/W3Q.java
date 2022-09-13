@@ -22,6 +22,7 @@ import java.util.Collections;
  */
 public class W3Q extends ObjMod<W3Q.Upgr> {
 	public final static File GAME_PATH = new File("war3map.w3q");
+	public final static File SKIN_PATH = new File("war3mapSkin.w3q");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3q");
 
 	public W3Q(@Nonnull Wc3BinInputStream stream) throws IOException {
