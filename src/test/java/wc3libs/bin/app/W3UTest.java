@@ -11,5 +11,7 @@ public class W3UTest extends Wc3LibTest {
 	@Test()
 	public void readWriteCycle() throws IOException {
 		readWriteCycle(W3U.class, getFile("wc3data/W3U/war3map.w3u"));
+        readWriteCycle(W3U.class, getFile("wc3data/W3U/war3mapReforged.w3u"));
+        readWriteCycle(W3U.class, getFile("wc3data/W3U/war3mapBorked.w3u"));
 	}
 }
