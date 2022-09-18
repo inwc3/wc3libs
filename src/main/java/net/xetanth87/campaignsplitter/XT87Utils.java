@@ -1,8 +1,12 @@
 package net.xetanth87.campaignsplitter;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -63,21 +67,12 @@ public class XT87Utils {
 	}
 
 	public static void fixImportFile(File extractedFile, boolean isCampaignFile) throws IOException {
-		Scanner sc = new Scanner(extractedFile);
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		while (sc.hasNextLine()) {
-			if (first)
-				first = false;
-			else
-				sb.append(IMPORT_DELIM);
-			sb.append(sc.nextLine());
-		}
-		sc.close();
-
 		String defaultPath = isCampaignFile ? "war3campImported\\" : "war3mapImported\\";
-		String s = sb.toString();
-		String x = s.substring(0, 8) + s.substring(8)
+		byte[] bytes = Files.readAllBytes(extractedFile.toPath());
+		byte[] content = new byte[bytes.length - 8];
+		for (int i = 0; i < content.length; i++)
+			content[i] = bytes[i + 8];
+		String s = new String(content, StandardCharsets.US_ASCII)
 				.replace("\u0005", IMPORT_DELIM)
 				.replace("\b" + defaultPath, IMPORT_DELIM + defaultPath)
 				.replace("\b", IMPORT_DELIM + defaultPath)
@@ -86,8 +81,12 @@ public class XT87Utils {
 				.replace("\u0015", IMPORT_DELIM)
 				.replace("\u001D", IMPORT_DELIM);
 
-		FileWriter writer = new FileWriter(extractedFile);
-		writer.append(x);
+		try (FileOutputStream output = new FileOutputStream(extractedFile)) {
+			output.write(Arrays.copyOf(bytes, 8));
+		}
+
+		FileWriter writer = new FileWriter(extractedFile, true);
+		writer.append(s);
 		writer.close();
 	}
 
