@@ -2,6 +2,7 @@ package net.xetanth87.campaignsplitter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +28,7 @@ public class SplitterFrame extends JFrame {
 	private Thread splitterThread = null;
 	private JProgressBar bar;
 	private JTextArea taskOutput;
-	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
+	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.SMART;
 	private ButtonGroup difficultySelectorGroup;
 	private JCheckBox campaignPreviewCheck = new JCheckBox();
 	private JCheckBox nextLevelCheck = new JCheckBox();
@@ -68,7 +69,7 @@ public class SplitterFrame extends JFrame {
 				case NO:
 					tooltipText = "Don't add a Difficulty Selector at the start of each map.";
 					break;
-				case DEFAULT:
+				case SMART:
 					tooltipText = "Add a Difficulty Selector at the start of each map, only if the campaign has the \"Variable Difficulty\" setting. (Recommended)";
 					break;
 				case YES:
@@ -161,7 +162,11 @@ public class SplitterFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser c = new JFileChooser();
 			try {
-				File directory = new File(filePathField.getText());
+				File directory;
+				if (filePathField.getText().isEmpty())
+					directory = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() + "/Warcraft III/Maps");
+				else
+					directory = new File(filePathField.getText());
 				if (!directory.isDirectory())
 					directory = directory.getParentFile();
 				if (directory != null)
@@ -252,7 +257,9 @@ public class SplitterFrame extends JFrame {
 		public void println(String s)
 		{
 			super.println(s);
-			frame.taskOutput.append(prefix + s + "\n");
+			if (!frame.taskOutput.getText().isEmpty())
+				frame.taskOutput.append("\n");
+			frame.taskOutput.append(prefix + s);
 		}
 	}
 

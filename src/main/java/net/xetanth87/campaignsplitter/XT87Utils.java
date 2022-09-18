@@ -15,7 +15,7 @@ public class XT87Utils {
 
 	public enum TriOption {
 		NO,
-		DEFAULT,
+		SMART,
 		YES
 	}
 
@@ -74,19 +74,19 @@ public class XT87Utils {
 			sb.append(sc.nextLine());
 		}
 		sc.close();
-		String s = sb.toString();
 
 		String defaultPath = isCampaignFile ? "war3campImported\\" : "war3mapImported\\";
+		String s = sb.toString();
+		String x = s.substring(0, 8) + s.substring(8)
+				.replace("\u0005", IMPORT_DELIM)
+				.replace("\b" + defaultPath, IMPORT_DELIM + defaultPath)
+				.replace("\b", IMPORT_DELIM + defaultPath)
+				.replace("\0\0", "\0" + IMPORT_DELIM + defaultPath)
+				.replace(defaultPath + "\0", "\b\0")
+				.replace("\u0015", IMPORT_DELIM)
+				.replace("\u001D", IMPORT_DELIM);
 
 		FileWriter writer = new FileWriter(extractedFile);
-		String x = s
-				.replace("\0\b" + defaultPath, "\0" + IMPORT_DELIM + defaultPath)
-				.replace("\0\b", "\0" + IMPORT_DELIM + defaultPath)
-				.replace(defaultPath + "\0", "\b\0")
-				//.replace("\t", IMPORT_DELIM)
-				.replace("\u0015", IMPORT_DELIM)
-				.replace("\u001D", IMPORT_DELIM)
-				.replace("\u001D", IMPORT_DELIM);
 		writer.append(x);
 		writer.close();
 	}

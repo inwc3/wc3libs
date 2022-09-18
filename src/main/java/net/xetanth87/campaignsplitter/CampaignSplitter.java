@@ -23,7 +23,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ public class CampaignSplitter {
 	public final File campFile;
 	public final String splitPath;
 	public int buttonCount;
-	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.DEFAULT;
+	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.SMART;
 	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true, withNextLevel = true;
 	public JMpqEditor campEditor;
 	public W3F campaignData;
@@ -157,12 +156,14 @@ public class CampaignSplitter {
 			imports = new IMP(importsListFile);
 			System.out.println("Extracting campaign imported files.");
 			for (IMP.Obj o : imports.getObjs()) {
+				if (o.getPath().isEmpty())
+					continue;
 				if (!campEditor.hasFile(o.getPath()))
 				{
 					System.err.println("Missing campaign import with path \"" + o.getPath() + "\"!");
 					continue;
 				}
-				File importedFile = new File(getImportsPath() + "/" + o.getPath());
+				File importedFile = new File(getImportsPath() + "/" + o.getPath().trim());
 				importedFile.getParentFile().mkdirs();
 				importedFile.createNewFile();
 				campEditor.extractFile(o.getPath(), importedFile);
@@ -202,7 +203,7 @@ public class CampaignSplitter {
 		extractCampaignFiles();
 		List<Thread> mapThreads = new ArrayList<>();
 		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
-				(difficultySelectorOption.equals(XT87Utils.TriOption.DEFAULT) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
+				(difficultySelectorOption.equals(XT87Utils.TriOption.SMART) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
 		System.out.println("Difficulty selector: " + (withDifficultySelector ? "enabled" : "disabled") + ".");
 		for (int i = 0; i < buttonCount; i++) {
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);

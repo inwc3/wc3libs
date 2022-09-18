@@ -85,11 +85,14 @@ public class MapInjector {
 	public void insertImports(IMP imports, String fileName) throws IOException {
 		insertDataFile(imports, fileName);
 		for (IMP.Obj o : imports.getObjs()) {
-			String importPath = cs.getImportsPath() + "/" + o.getPath();
-			File importedFile = new File(importPath);
-			if (mapEditor.hasFile(o.getPath()) || !importedFile.exists())
+			String importPath = o.getPath().trim();
+			if (importPath.isEmpty())
 				continue;
-			mapEditor.insertFile(o.getPath(), importedFile, false, true);
+			String localPath = cs.getImportsPath() + "/" + importPath;
+			File importedFile = new File(localPath);
+			if (mapEditor.hasFile(importPath) || !importedFile.exists())
+				continue;
+			mapEditor.insertFile(importPath, importedFile, false, true);
 		}
 	}
 
@@ -209,7 +212,6 @@ public class MapInjector {
 
 	static class StringOffsets {
 		int campaignKeyOffset = 0;
-		int difficultyStringOffset = 0;
 	}
 
 	public StringOffsets mergeStrings() throws Exception {
@@ -241,14 +243,6 @@ public class MapInjector {
 				int buttonStringIndex = mapTitleIndex + offsets.campaignKeyOffset;
 				changeMapName(tempFile, W3I.ofMapFile(mapFile).getMapName(), STRING_PREFIX + buttonStringIndex);
 				insertDataFile(tempFile, W3I.GAME_PATH.getPath());
-			}
-
-			if (withDifficultySelector) {
-				offsets.difficultyStringOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
-				strings.addEntry(offsets.difficultyStringOffset, "Choose Difficulty");
-				strings.addEntry(offsets.difficultyStringOffset + 1, "|cff00ff00Easy|r");
-				strings.addEntry(offsets.difficultyStringOffset + 2, "|cffffff00Normal|r");
-				strings.addEntry(offsets.difficultyStringOffset + 3, "|cffff0000Hard|r");
 			}
 
 			insertDataFile(strings, WTS.GAME_PATH.getPath());
@@ -350,12 +344,10 @@ public class MapInjector {
 			System.out.println("Changing preview for map \"" + mapFile.getName() + "\".");
 			String minimapImagePath = null;
 			boolean hasMinimapImage = false, isTGA = false;
-			if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_BLP_GAME_PATH.getPath())) {
+			if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_BLP_GAME_PATH.getPath()))
 				hasMinimapImage = true;
-			} else if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_TGA_GAME_PATH.getPath())) {
+			else if (mapEditor.hasFile(minimapImagePath = Minimap.BACKGROUND_TGA_GAME_PATH.getPath()))
 				hasMinimapImage = true;
-				isTGA = true;
-			}
 			String mmpPath = MMP.GAME_PATH.getPath();
 			if (mapEditor.hasFile(mmpPath))
 				mapEditor.deleteFile(mmpPath);
@@ -365,6 +357,8 @@ public class MapInjector {
 				mapEditor.insertFile(MinimapRewriter.getNewPath(minimapImagePath), tempFile, false, true);
 				new MinimapRewriter(this, minimapImagePath).modifyScript();
 			}
+			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
+			mapEditor.insertFile(minimapImagePath, campaignPreviewFile, false, true);
 			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
 			mapEditor.insertFile(minimapImagePath, campaignPreviewFile, false, true);
 			System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
@@ -437,7 +431,7 @@ public class MapInjector {
 					}
 
 				System.out.println("Adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
-				new DifficultySelectorRewriter(this, offsets.difficultyStringOffset, playerId).modifyScript();
+				new DifficultySelectorRewriter(this, playerId).modifyScript();
 				System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}

@@ -1,10 +1,5 @@
 package net.xetanth87.campaignsplitter;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-
 public class NextLevelRewriter extends ScriptRewriter {
 	public int campaignKeyOffset;
 	public boolean insideInitGlobals;
@@ -36,7 +31,7 @@ public class NextLevelRewriter extends ScriptRewriter {
 			sb.append(JASS_DELIM +
 					"    " + VICTORY_CALL + words[0] + ", true," + words[2] +  ")" + JASS_DELIM +
 							"    if ( udg_XT87CSNextLevel != \"\" ) then" + JASS_DELIM +
-							"        call DisplayTimedTextToForce( GetForceOfPlayer(" + words[0] + "), 0.00, \"The next map is:\\n|cffffcc00\" + udg_XT87CSNextLevel + \"|r\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\" )" + JASS_DELIM +
+							"        call DisplayTimedTextToForce( GetForceOfPlayer(" + words[0] + "), 0.00, GetLocalizedString(\"CONTINUE_PLAYING\") + \":\\n|cffffcc00\" + udg_XT87CSNextLevel + \"|r\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\" )" + JASS_DELIM +
 							"    else" + JASS_DELIM +
 							"    endif");
 			return;
