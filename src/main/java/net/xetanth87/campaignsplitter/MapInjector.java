@@ -359,8 +359,6 @@ public class MapInjector {
 			}
 			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
 			mapEditor.insertFile(minimapImagePath, campaignPreviewFile, false, true);
-			minimapImagePath = XT87Utils.getExtension(campaignPreviewPath).equals("tga") ? Minimap.BACKGROUND_TGA_GAME_PATH.getPath() : Minimap.BACKGROUND_BLP_GAME_PATH.getPath();
-			mapEditor.insertFile(minimapImagePath, campaignPreviewFile, false, true);
 			System.out.println("Finished changing preview for map \"" + mapFile.getName() + "\".");
 			cs.IncrementValueProgressBar(1);
 		}
