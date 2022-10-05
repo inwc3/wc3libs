@@ -2,6 +2,7 @@ package net.moonlightflower.wc3libs.misc.exeversion;
 
 import dorkbox.peParser.PE;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,7 @@ public class ExeVersionPe implements ExeVersion {
      * @throws VersionExtractionException An exception is thrown when extraction fails.
      */
     public static String getVersion(String executablePath) throws VersionExtractionException {
+        Objects.requireNonNull(executablePath);
         try {
             // The dorkbox PE version will return more than just the version if available:
             // dorkbox: "6.1.7601.23403 (win7sp1_ldr.160325-0600)" for cmd.exe

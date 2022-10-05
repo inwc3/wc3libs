@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.misc.exeversion;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -54,6 +55,7 @@ public class ExeVersionWmic implements ExeVersion {
         No Instance(s) Available.
         */
         // Must give double-backslash paths to wmic
+        Objects.requireNonNull(exePath);
         String exePathForWmic = exePath.replaceAll("[/\\\\]", "\\\\\\\\");
 
         ProcessBuilder wmicBuilder = new ProcessBuilder("wmic",
