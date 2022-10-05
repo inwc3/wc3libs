@@ -3,6 +3,7 @@ package wc3libs.bin;
 import net.moonlightflower.wc3libs.misc.exeversion.ExeVersionPe;
 import net.moonlightflower.wc3libs.misc.exeversion.ExeVersionWmic;
 import net.moonlightflower.wc3libs.misc.exeversion.VersionExtractionException;
+import net.moonlightflower.wc3libs.port.Orient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
@@ -20,6 +21,11 @@ public class ExeVersionTest {
         // These tests need some static .exe files we don't carry around currently.
         // Instead test java.exe and cmd.exe on current system.
         // Hopefully these won't fail and be /sufficient/
+        if (!Orient.isWindowsSystem()) {
+            log.info("not a windows system (" + Orient.getSystem() + "), skip extract PE version tests");
+
+            return;
+        }
 
         String javahome = System.getProperty("java.home"); // ends without backslash
         String javaExe = Paths.get(javahome, "bin", "java.exe").toAbsolutePath().toString();
