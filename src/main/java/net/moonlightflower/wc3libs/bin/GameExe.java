@@ -1,90 +1,49 @@
 package net.moonlightflower.wc3libs.bin;
 
-import dorkbox.peParser.PE;
-import net.moonlightflower.wc3libs.misc.ProcCaller;
+import net.moonlightflower.wc3libs.misc.exeversion.ExeVersionPe;
+import net.moonlightflower.wc3libs.misc.exeversion.ExeVersionWmic;
+import net.moonlightflower.wc3libs.misc.exeversion.VersionExtractionException;
 import net.moonlightflower.wc3libs.port.GameVersion;
-
-import javax.annotation.Nonnull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
 
 public class GameExe {
     private static final Logger log = LoggerFactory.getLogger(GameExe.class.getName());
 
     @Nonnull
     public static String getVersionString(@Nonnull File file) throws IOException {
+        String exePath = file.getAbsolutePath();
         try {
-            String s = file.getAbsolutePath();
-            log.info("Querying {} with dorkbox PE", s);
-
-            return PE.getVersion(s);
+            log.info("Querying exe file '{}' for version with dorkbox PE", exePath);
+            String version = ExeVersionPe.getVersion(exePath);
+            if (!version.isEmpty()) {
+                return version;
+            }
         } catch (Exception e) {
-            log.info("Falling back to WMIC due to {}", e);
+            log.warn("Falling back to WMIC due to {}", e.getMessage());
+            e.printStackTrace();
+        }
 
-            File tmpBat = File.createTempFile("getVersionString", "tmp_proxy.bat");
+        String version;
+        try {
+            version = ExeVersionWmic.getVersion(exePath);
+        } catch (VersionExtractionException e) {
+            log.error("WMIC extraction of file version failed due to {}", e.getMessage());
 
-            tmpBat.deleteOnExit();
+            throw new IOException("WMIC extraction of file version failed", e);
+        }
 
-            File tmpOut = File.createTempFile("getVersionString", "tmp_out.txt");
-
-            tmpOut.deleteOnExit();
-
-            String query = "\"%SystemRoot%\\System32\\Wbem\\wmic.exe\""+
-                    " datafile"+
-                    " where"+
-                    String.format(" name=\"%s\"", file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"))+
-                    " get"+
-                    " Version"+
-                    " /value"+
-                    String.format(" 1>\"%s\"", tmpOut.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"));
-
-            //System.out.println("load " + query);
-
-            Files.write(tmpBat.toPath(), Arrays.asList("chcp 65001", query, "EXIT /B %ERRORLEVEL%"));
-
-            ProcCaller proc = new ProcCaller(tmpBat.getAbsolutePath());
-
-            proc.exec();
-
-            if (proc.exitVal() != 0) {
-                throw new IOException(proc.getErrString());
-            }
-
-            StringBuilder sb;
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(tmpOut), StandardCharsets.UTF_8))) {
-
-                sb = new StringBuilder();
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            }
-
-            String versionString = sb.toString().replaceAll("[^0-9.]", "");
-
-            if (versionString.isEmpty()) versionString = null;
-
-            if (versionString == null) {
-                throw new IOException(
-                    "Version string "
-                    + sb
-                    + " from file produced by WMIC wasn't readable. "
-                    + "This is the second failed attempt after dorkbox PE failed with exception.",
-                    e);
-            }
-
-            return versionString;
+        if (!version.isEmpty()) {
+            return version;
+        } else {
+            throw new IOException(
+                "Version string returned by WMIC is empty. Does this file have a version? " +
+                exePath
+            );
         }
     }
 
