@@ -18,14 +18,15 @@ import systems.crigges.jmpq3.MPQOpenOption;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.NonReadableChannelException;
 import java.nio.channels.NonWritableChannelException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.xetanth87.campaignsplitter.XT87Utils.STRING_PREFIX;
 import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
 import static net.xetanth87.campaignsplitter.XT87Utils.stringIndexToInt;
@@ -33,7 +34,7 @@ import static net.xetanth87.campaignsplitter.XT87Utils.stringIndexToInt;
 public class CampaignSplitter {
 	public static final String TEMP_DIR_NAME = "temp";
 	public static final String IMPORTS_DIR_NAME = "imports";
-	private final int STEPS_CAMP_DATA = 4;
+	private static final int STEPS_CAMP_DATA = 4;
 	public static final String MAP_COUNT_FORMAT = "Maps converted: {0}/{1}.";
 	public final File campFile;
 	public final String splitPath;
@@ -85,34 +86,6 @@ public class CampaignSplitter {
 		if (!campFile.exists())
 			throw new FileNotFoundException("Campaign file not found!");
 		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile.getName());
-	}
-
-	static class MapThread extends Thread {
-		//static Semaphore mapSemaphore = new Semaphore(Runtime.getRuntime().availableProcessors());
-		CampaignSplitter cs;
-		File mapFile;
-		int buttonIndex;
-		int buttonCount;
-
-		public MapThread(CampaignSplitter cs, File mapFile, int buttonIndex, int buttonCount) {
-			this.mapFile = mapFile;
-			this.cs = cs;
-			this.buttonIndex = buttonIndex;
-			this.buttonCount = buttonCount;
-		}
-
-		public void run() {
-			try {
-				//mapSemaphore.acquire();
-				System.out.println(mapFile.getName());
-				//MapInjector mi = new MapInjector(mapFile, buttonIndex, cs.withDifficultySelection);
-				//mi.addCampaignData();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				//mapSemaphore.release();
-			}
-		}
 	}
 
 	public void removeTemporaryFiles() {
@@ -201,14 +174,19 @@ public class CampaignSplitter {
 		File splitDir = new File(splitPath);
 		splitDir.mkdirs();
 		extractCampaignFiles();
-		List<Thread> mapThreads = new ArrayList<>();
 		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
 				(difficultySelectorOption.equals(XT87Utils.TriOption.SMART) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
 		System.out.println("Difficulty selector: " + (withDifficultySelector ? "enabled" : "disabled") + ".");
 		for (int i = 0; i < buttonCount; i++) {
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
-			int chapterTitleIndex = stringIndexToInt(mapEntry.getChapterTitle());
-			int mapTitleIndex = stringIndexToInt(mapEntry.getMapTitle());
+			String title = mapEntry.getChapterTitle();
+			if (title == null || !title.contains(STRING_PREFIX))
+				throw new Exception("Invalid chapter title for map " + mapEntry.getMapPath() + ": \"" + title + "\" (Broken campaign)");
+			int chapterTitleIndex = stringIndexToInt(title);
+			title = mapEntry.getMapTitle();
+			if (title == null || !title.contains(STRING_PREFIX))
+				throw new Exception("Invalid map title for map " + mapEntry.getMapPath() + ": \"" + title + "\" (Broken campaign)");
+			int mapTitleIndex = stringIndexToInt(title);
 			String buttonTitle = buttonText(i, buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
 			campStrings.addEntry(mapTitleIndex, buttonTitle);
 			buttonNameMap.put(mapEntry.getMapPath().toLowerCase(), buttonTitle);
@@ -232,21 +210,16 @@ public class CampaignSplitter {
 			try {
 				mi.addCampaignData();
 			}
-			catch (NonWritableChannelException e)
+			catch (NonReadableChannelException | NonWritableChannelException e)
 			{
-				throw new Exception("Map \"" + mapFile.getName() + "\" is set to readonly/protected and cannot be edited.");
+				throw new Exception("Map \"" + mapFile.getName() + "\" is protected and cannot be read/edited.");
 			}
 			if (i == 0) {
 				InitializeProgressBar(STEPS_CAMP_DATA + stepsPerMap * buttonCount);
 				SetValueProgressBar(STEPS_CAMP_DATA + stepsPerMap);
 			}
-//			Thread thread = new MapThread(mapFile, campaignFile, i, buttonCount, withDifficultySelection);
-//			thread.start();
-//			mapThreads.add(thread);
 		}
 		System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, buttonCount, buttonCount));
-//		for (Thread thread : mapThreads)
-//			thread.join();
 		XT87Utils.deleteNewFiles();
 		removeTemporaryFiles();
 		campEditor.close();

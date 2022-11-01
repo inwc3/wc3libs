@@ -23,6 +23,7 @@ import net.moonlightflower.wc3libs.txt.WTS;
 import net.moonlightflower.wc3libs.txt.app.MiscTXT;
 import net.moonlightflower.wc3libs.txt.app.SkinTXT;
 import systems.crigges.jmpq3.JMpqEditor;
+import systems.crigges.jmpq3.JMpqException;
 import systems.crigges.jmpq3.MPQOpenOption;
 
 import java.io.BufferedReader;
@@ -33,6 +34,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.channels.NonReadableChannelException;
+import java.nio.channels.NonWritableChannelException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,7 +131,7 @@ public class MapInjector {
 			bis.close();
 			if (data == null)
 				throw new IOException();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (bis != null)
 				bis.close();
 			if (!(e instanceof IOException))
@@ -163,9 +166,14 @@ public class MapInjector {
 				if (!found)
 					campaignList.add(obj);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
+			if (e instanceof JMpqException) {
+				String message = e.getMessage();
+				if (message != null && message.contains("Bad header"))
+					throw new NonReadableChannelException();
+			}
 		}
 
 		insertDataFile(data, gamePath);
@@ -175,7 +183,7 @@ public class MapInjector {
 		IMP imports;
 		try {
 			imports = new IMP(new File(cs.getTempPath() + "/" + IMP.CAMPAIGN_PATH));
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 			return;
@@ -187,7 +195,7 @@ public class MapInjector {
 			for (IMP.Obj o : mapImports.getObjs())
 				if (o.getPath() != null && !o.getPath().isEmpty() && o.getStdFlag() != null)
 					imports.addObj(o);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 		}
@@ -221,7 +229,7 @@ public class MapInjector {
 			mapEditor.extractFile(WTS.GAME_PATH.getPath(), tempFile);
 			strings = new WTS(tempFile);
 			offsets.campaignKeyOffset = Collections.max(strings.getKeyedEntries().keySet()) + 1;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			strings = null;
 			offsets.campaignKeyOffset = 0;
 			if (!(e instanceof IOException))
@@ -246,7 +254,7 @@ public class MapInjector {
 			}
 
 			insertDataFile(strings, WTS.GAME_PATH.getPath());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 		} finally {
@@ -259,7 +267,7 @@ public class MapInjector {
 		try {
 			txt = new MiscTXT();
 			txt.read(new File(cs.getTempPath(MiscTXT.CAMPAIGN_PATH.getName())));
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 			if (!cs.withUpkeepRemoval)
@@ -278,7 +286,7 @@ public class MapInjector {
 				mapTxt.read(tempFile);
 				txt.merge(mapTxt, true);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 		} finally {
@@ -297,7 +305,7 @@ public class MapInjector {
 					section.setLine(FieldId.valueOf("UpkeepUsage"), usage);
 				}
 				insertDataFile(txt, MiscTXT.GAME_PATH.getPath());
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				if (!(e instanceof IOException))
 					System.err.println(e.getMessage());
 			}
@@ -310,7 +318,7 @@ public class MapInjector {
 			txt = new SkinTXT();
 			offsetCampaignStrings(new File(cs.getTempPath(SkinTXT.CAMPAIGN_PATH.getName())), campaignKeyOffset);
 			txt.read(tempFile);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 			return;
@@ -327,7 +335,7 @@ public class MapInjector {
 				mapTxt.read(tempFile);
 				txt.merge(mapTxt, true);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
 		} finally {

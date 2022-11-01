@@ -283,7 +283,7 @@ public class SplitterFrame extends JFrame {
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
 			} catch (InterruptedException ex) {
-			} catch (Exception ex) {
+			} catch (Throwable ex) {
 				try {
 					CampaignSplitter cs = new CampaignSplitter(file);
 					cs.difficultySelectorOption = XT87Utils.TriOption.NO;
@@ -291,14 +291,17 @@ public class SplitterFrame extends JFrame {
 				} catch (IOException e) {
 					StringWriter sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
-					System.out.println("An exception was encountered:\n" + sw.toString());
+					System.out.println("A problem was encountered:\n" + sw.toString().replaceAll("[\n\r](\0)*$", ""));
 				}
 				if (!isInterrupted()) {
 					StringWriter sw = new StringWriter();
 					ex.printStackTrace(new PrintWriter(sw));
-					System.out.println("An exception was encountered:\n" + sw.toString());
+					System.out.println("A problem was encountered:\n" + sw.toString().replaceAll("[\n\r](\0)*$", ""));
 					String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
-					JOptionPane.showMessageDialog(null, "An error has been encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + ex.getMessage(), APP_TITLE, JOptionPane.ERROR_MESSAGE);
+					String message = ex.getMessage();
+					if (message == null)
+						message = ex.toString();
+					JOptionPane.showMessageDialog(null, "A problem was encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + message, APP_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			finally {
