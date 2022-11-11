@@ -15,11 +15,17 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class LegacyMerger {
-	private static List<String> assetList = Arrays.asList(
+	private static List<String> assetList;
+	private static List<String> hdAssetList;
+	private static String portraitSufix = "_portrait";
+	private static String hdPrefix = "_hd.w3mod\\";
+	private static String sdArchiveName = "legacy.zip";
+	private static String hdArchiveName = "legacyHD.zip";
+
+	static {
+		assetList = Arrays.asList(
 			"replaceabletextures\\commandbuttons\\btnsteamtank.blp",
 			"replaceabletextures\\commandbuttonsdisabled\\disbtnsteamtank.blp",
-			"replaceabletextures\\commandbuttons\\btngyrocopter.blp",
-			"replaceabletextures\\commandbuttonsdisabled\\disbtngyrocopter.blp",
 			"replaceabletextures\\commandbuttons\\btncatapult.blp",
 			"replaceabletextures\\commandbuttonsdisabled\\disbtncatapult.blp",
 			"replaceabletextures\\commandbuttons\\btnballista.blp",
@@ -31,25 +37,41 @@ public class LegacyMerger {
 			"units\\human\\gyrocopter\\gyrocopter.mdx",
 			"units\\human\\gyrocopter\\gyrocopter_portrait.mdx",
 			"units\\orc\\catapult\\catapult.mdx",
+			"units\\orc\\catapult\\catapult_portrait.mdx",
 			"units\\nightelf\\ballista\\ballista.mdx",
 			"units\\nightelf\\ballista\\ballista_portrait.mdx",
 			"units\\critters\\chaosspaceorc\\chaosspaceorc.mdx"
 	);
-
-	static {
+		hdAssetList = new ArrayList<>();
+		for (String path : assetList) {
+			if (path.endsWith(".blp"))
+				path = path.substring(0, path.length() - 3) + "dds";
+			hdAssetList.add(path);
+		}
 		assetList.sort(Comparator.comparing(o -> new File(o).getName()));
 	}
 
-	public static List<String> newAssetList() {
-		return new ArrayList<>(assetList);
+	public static List<String> newAssetList(boolean isHd) {
+		return new ArrayList<>(isHd ? hdAssetList : assetList);
 	}
 
-	public static boolean AddLegacyAssets(CampaignSplitter cs, IMP imports) {
+	public static boolean AddLegacyAssets(CampaignSplitter cs, IMP imports)
+	{
+		List<String> originalImportList = new ArrayList<>();
+		for (IMP.Obj o : imports.getObjs()) {
+			originalImportList.add(o.getPath());
+		}
+		boolean sdValue = AddLegacyAssets(cs, imports, originalImportList, false);
+		boolean hdValue = AddLegacyAssets(cs, imports, originalImportList, true);
+		return sdValue || hdValue;
+	}
+
+	public static boolean AddLegacyAssets(CampaignSplitter cs, IMP imports, List<String> originalImportList, boolean isHd) {
 		ZipFile zipFile = null;
 		try {
 			CodeSource codeSource = CampaignSplitter.class.getProtectionDomain().getCodeSource();
 			File jarFile = new File(codeSource.getLocation().toURI().getPath());
-			String zipDirPath = jarFile.getParentFile().getPath() + "/legacy.zip";
+			String zipDirPath = jarFile.getParentFile().getPath() + "/" + (isHd ? hdArchiveName : sdArchiveName);
 			try {
 				zipFile = new ZipFile(zipDirPath);
 			}
@@ -57,22 +79,31 @@ public class LegacyMerger {
 				zipFile = null;
 			}
 			if (zipFile == null) {
-				System.out.println("Legacy asset archive was not found at expected path: " + zipDirPath);
+				System.out.println("Legacy" + (isHd ? "HD" : "") + " asset archive was not found at expected path: " + zipDirPath);
 				return false;
 			}
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
-			List<String> checkList = newAssetList();
-			for (IMP.Obj o : imports.getObjs()) {
-				checkList.remove(o.getPath());
+			List<String> checkList = newAssetList(isHd);
+			for (String path : originalImportList) {
+				if (path.startsWith(hdPrefix))
+					path = path.substring(hdPrefix.length());
+				if (path.endsWith(".mdl") || path.endsWith(".mdx")) {
+					String name = path.substring(0, path.length() - 3);
+					checkList.remove(name + ".mdx");
+					checkList.remove(name + portraitSufix + ".mdx");
+				}
+				else
+					checkList.remove(path);
 			}
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 				String entryName = entry.getName();
 				for (String assetPath : checkList) {
-					if (new File(assetPath).getName().equals(entryName)) {
+					String realAssetPath = isHd ? hdPrefix + assetPath : assetPath;
+					if (new File(realAssetPath).getName().equals(entryName)) {
 						checkList.remove(assetPath);
 						IMP.Obj o = new IMP.Obj();
-						o.setPath(assetPath);
+						o.setPath(realAssetPath);
 						imports.addObj(o);
 						File importedFile = new File(cs.getImportsPath() + "/" + o.getPath());
 						importedFile.getParentFile().mkdirs();
@@ -84,9 +115,9 @@ public class LegacyMerger {
 					}
 				}
 			}
-			for (String assetPath : checkList) {
-				System.err.println("Legacy asset not found in legacy archive: " + new File(assetPath).getName());
-			}
+//			for (String assetPath : checkList) {
+//				System.err.println("Legacy" + (isHd ? "HD" : "") + " asset not found in legacy" + (isHd ? "HD" : "") + " archive: " + new File(assetPath).getName());
+//			}
 			zipFile.close();
 			return true;
 		} catch (Exception e) {

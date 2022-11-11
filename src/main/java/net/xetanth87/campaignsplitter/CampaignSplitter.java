@@ -79,12 +79,12 @@ public class CampaignSplitter {
 		return getImportsPath() + "/" + filename;
 	}
 
-	public CampaignSplitter(File campFile) throws IOException {
+	public CampaignSplitter(File campFile) throws IOException, IllegalArgumentException {
 		if (!campFile.getName().endsWith(".w3n"))
 			throw new IllegalArgumentException("Argument must be a campaign file!");
-		this.campFile = campFile;
 		if (!campFile.exists())
 			throw new FileNotFoundException("Campaign file not found!");
+		this.campFile = campFile;
 		splitPath = campFile.getParentFile().getAbsolutePath() + "/" + getWithoutExtension(campFile.getName());
 	}
 

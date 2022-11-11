@@ -100,7 +100,7 @@ public class SplitterFrame extends JFrame {
 		panel.add(new JLabel("Add legacy assets?"));
 		legacyAssetsCheck.setSelected(true);
 		panel.add(legacyAssetsCheck);
-		legacyAssetsCheck.setToolTipText("Adds Reign of Chaos models and icons that were removed in Reforged. (Recommended, requires \"legacy.zip\")");
+		legacyAssetsCheck.setToolTipText("Adds Reign of Chaos models and icons that were removed in Reforged. (Recommended, requires \"legacy.zip\" for SD or \"legacyHD.zip\" for HD)");
 		panel.add(new JLabel("Remove Upkeep?"));
 		upkeepRemovalCheck.setSelected(false);
 		panel.add(upkeepRemovalCheck);
@@ -282,12 +282,14 @@ public class SplitterFrame extends JFrame {
 				cs.splitCampaign();
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
-			} catch (InterruptedException ex) {
+			} catch (InterruptedException ignored) {
 			} catch (Throwable ex) {
 				try {
-					CampaignSplitter cs = new CampaignSplitter(file);
-					cs.difficultySelectorOption = XT87Utils.TriOption.NO;
-					cs.removeTemporaryFiles();
+					if (file.exists()) {
+						CampaignSplitter cs = new CampaignSplitter(file);
+						cs.difficultySelectorOption = XT87Utils.TriOption.NO;
+						cs.removeTemporaryFiles();
+					}
 				} catch (IOException e) {
 					StringWriter sw = new StringWriter();
 					e.printStackTrace(new PrintWriter(sw));
