@@ -14,8 +14,6 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 	public static final String ELAPSED_TIME_REGISTER = "call TriggerRegisterTimerEventSingle(";
 	public static final String ELAPSED_TIMER_PREFIX = "XT87CSElapsedTimer_";
 	public static final String PERIODIC_TIME_REGISTER = "call TriggerRegisterTimerEventPeriodic(";
-	public static final String DISABLE_TRIGGER = "call DisableTrigger(";
-	public static final String ENABLE_TRIGGER = "call EnableTrigger(";
 
 	public DifficultySelectorRewriter(MapInjector mi, int playerId) {
 		super(mi);
@@ -23,10 +21,7 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 	}
 
 	public String[] timeParams(String line, String call) {
-		String s = line.trim().replace(call, "");
-		s = s.substring(0, s.indexOf(')')).trim();
-		String[] params = s.split(",");
-		params[1] = params[1].trim();
+		String[] params = getParams(line, call);
 		return params;
 	}
 
@@ -64,7 +59,7 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 					if (!elapsedTimeIndices.containsKey(params[1]))
 						elapsedTimeIndices.put(params[1], elapsedTimeIndices.size());
 				}
-				else if (line.contains(DISABLE_TRIGGER))
+				else if (line.contains(XT87Utils.DISABLE_TRIGGER))
 					disabledTrigger = true;
 				else if (!disabledTrigger && line.contains(PERIODIC_TIME_REGISTER)) {
 					String[] params = periodicTimeParams(line);
@@ -113,7 +108,7 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 			String[] params = periodicTimeParams(line);
 			if (periodicTimeTriggers.contains(params[0]))
 				sb.append(JASS_DELIM +
-						"    " + DISABLE_TRIGGER + params[0] + ")");
+						"    " + XT87Utils.DISABLE_TRIGGER + params[0] + ")");
 		}
 		else if (!triggersAdded && line.contains("function Trig")) {
 			sb.append(JASS_DELIM +
@@ -194,7 +189,7 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 						"    call StartTimerBJ(udg_" + ELAPSED_TIMER_PREFIX + elapsedTimeIndices.get(elapsedTime) + ", false, " + elapsedTime + ")");
 			for (String periodicTimeTrigger : periodicTimeTriggers)
 				sb.append(JASS_DELIM +
-						"    " + ENABLE_TRIGGER + periodicTimeTrigger + ")");
+						"    " + XT87Utils.ENABLE_TRIGGER + periodicTimeTrigger + ")");
 			sb.append(JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
 					JASS_DELIM +

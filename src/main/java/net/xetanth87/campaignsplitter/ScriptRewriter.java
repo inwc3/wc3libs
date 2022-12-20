@@ -11,6 +11,7 @@ import java.util.Set;
 public abstract class ScriptRewriter {
 	public static final String JASS_DELIM = "\r\n";
 	public static final String END_FUNCTION = "endfunction";
+	public static final String END_IF = "endif";
 	public static final String INIT_CALL = "call ConditionalTriggerExecute(";
 	public MapInjector mi;
 	public boolean first = true;
@@ -33,8 +34,7 @@ public abstract class ScriptRewriter {
 
 	public abstract void onReadLine(String line, StringBuffer sb);
 
-	public void append(String line, StringBuffer sb)
-	{
+	public void append(String line, StringBuffer sb) {
 		if (first)
 			first = false;
 		else
@@ -85,5 +85,33 @@ public abstract class ScriptRewriter {
 		}
 
 		mi.scriptBuffer = sb;
+	}
+
+	private static String[] getParamsAux(String s) {
+		try {
+			String[] params = s.split(",");
+			for (int i = 0; i < params.length; i++)
+				params[i] = params[i].trim();
+			return params;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String[] getParams(String line, String call) {
+		try {
+			String s = line.trim().replace(call, "");
+			return getParamsAux(s.substring(0, s.lastIndexOf(')')));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String[] getParams(String line) {
+		try {
+			return getParamsAux(line.substring(line.indexOf('(') + 1, line.lastIndexOf(')')));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

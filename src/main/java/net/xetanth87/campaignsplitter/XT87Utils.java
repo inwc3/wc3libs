@@ -1,5 +1,7 @@
 package net.xetanth87.campaignsplitter;
 
+import net.moonlightflower.wc3libs.bin.app.W3I;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -15,6 +17,10 @@ public class XT87Utils {
 	public static final String IMPORT_DELIM = "\r";
 	public static final String DATA_DELIM = "\n";
 	public static final String PATH_PREFIX = "XT87CampaignSplitter";
+	public static final String DISABLE_TRIGGER = "call DisableTrigger(";
+	public static final String ENABLE_TRIGGER = "call EnableTrigger(";
+	public static final String THIS_TRIGGER = "GetTriggeringTrigger()";
+	public static final int MAX_PLAYER_COUNT = 24;
 	public static Stack<File> createdFiles = new Stack<>();
 
 	public enum TriOption {
@@ -111,5 +117,20 @@ public class XT87Utils {
 		while (Character.isDigit(string.charAt(delimPos)))
 			delimPos++;
 		return XT87Utils.STRING_PREFIX + (Integer.parseInt(string.substring(0, delimPos)) + campaignKeyOffset) + string.substring(delimPos);
+	}
+
+	public static W3I.Player clonePlayer(W3I.Player player, int number) {
+		W3I.Player result = new W3I.Player();
+		result.setNum(number);
+		result.setName(player.getName());
+		result.setRace(player.getRace());
+		result.setType(player.getType());
+		result.setAllyHighPrioFlags(player.getAllyHighPrioFlags());
+		result.setAllyLowPrioFlags(player.getAllyLowPrioFlags());
+		result.setEnemyHighPrioFlags(player.getEnemyHighPrioFlags());
+		result.setEnemyLowPrioFlags(player.getEnemyLowPrioFlags());
+		result.setStartPos(player.getStartPos());
+		result.setStartPosFixed(player.getStartPosFixed());
+		return result;
 	}
 }

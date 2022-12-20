@@ -1,6 +1,7 @@
 package net.xetanth87.campaignsplitter;
 
 import net.moonlightflower.wc3libs.bin.app.W3F;
+import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.nio.channels.NonReadableChannelException;
 import java.nio.channels.NonWritableChannelException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +40,7 @@ public class CampaignSplitter {
 	public static final String MAP_COUNT_FORMAT = "Maps converted: {0}/{1}.";
 	public final File campFile;
 	public final String splitPath;
-	public int buttonCount;
+	public int buttonCount, addedCoopPlayers = 23;
 	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.SMART;
 	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true, withNextLevel = true;
 	public JMpqEditor campEditor;
@@ -191,8 +193,9 @@ public class CampaignSplitter {
 			campStrings.addEntry(mapTitleIndex, buttonTitle);
 			buttonNameMap.put(mapEntry.getMapPath().toLowerCase(), buttonTitle);
 		}
+		int maximumAddedCoopPlayers = addedCoopPlayers;
+		List<File> mapFiles = new ArrayList<>();
 		for (int i = 0; i < buttonCount; i++) {
-			System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i, buttonCount));
 			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
 			String fileName = mapEntry.getMapPath();
 			String mapPath = splitPath + "/" + fileName;
@@ -202,13 +205,22 @@ public class CampaignSplitter {
 				continue;
 			File mapFile = new File(mapPath);
 			mapFile.createNewFile();
-			System.out.println("Extracting map \"" + mapFile.getName() + "\".");
 			campEditor.extractFile(fileName, mapFile);
-			campEditor.close();
+			mapFiles.add(mapFile);
+			System.out.println("Extracted map \"" + mapFile.getName() + "\".");
+			W3I info = W3I.ofMapFile(mapFile);
+			maximumAddedCoopPlayers = Math.min(maximumAddedCoopPlayers, XT87Utils.MAX_PLAYER_COUNT - info.getPlayers().size());
+		}
+		if (addedCoopPlayers > 0)
+			System.out.println("Number of coop slots to be added: " + maximumAddedCoopPlayers + " (" + (maximumAddedCoopPlayers + 1) +  " slots).");
+		for (int i = 0; i < buttonCount; i++) {
+			File mapFile = mapFiles.get(i);
 			MapInjector mi = new MapInjector(this, mapFile, i);
 			mi.withDifficultySelector = withDifficultySelector;
+			mi.addedCoopPlayers = maximumAddedCoopPlayers;
 			try {
 				mi.addCampaignData();
+				System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i, buttonCount));
 			}
 			catch (NonReadableChannelException | NonWritableChannelException e)
 			{

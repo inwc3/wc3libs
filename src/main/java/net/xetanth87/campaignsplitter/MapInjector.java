@@ -52,6 +52,7 @@ public class MapInjector {
 	public final File mapFile;
 	public final int buttonIndex;
 	public boolean withDifficultySelector = false;
+	public int addedCoopPlayers = 0;
 	public JMpqEditor mapEditor;
 	public File tempFile;
 	public StringBuffer scriptBuffer = null;
@@ -343,6 +344,37 @@ public class MapInjector {
 		}
 	}
 
+	public void addSecondaryPlayers(int campaignKeyOffset) throws IOException {
+		SkinTXT txt = null;
+		try {
+			txt = new SkinTXT();
+			offsetCampaignStrings(new File(cs.getTempPath(SkinTXT.CAMPAIGN_PATH.getName())), campaignKeyOffset);
+			txt.read(tempFile);
+		} catch (Throwable e) {
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
+			return;
+		}
+		try {
+			if (!mapEditor.hasFile(SkinTXT.GAME_PATH.getPath()))
+				throw new IOException();
+			mapEditor.extractFile(SkinTXT.GAME_PATH.getPath(), tempFile);
+			if (txt == null) {
+				txt = new SkinTXT();
+				txt.read(tempFile);
+			} else {
+				SkinTXT mapTxt = new SkinTXT();
+				mapTxt.read(tempFile);
+				txt.merge(mapTxt, true);
+			}
+		} catch (Throwable e) {
+			if (!(e instanceof IOException))
+				System.err.println(e.getMessage());
+		} finally {
+			insertDataFile(txt, SkinTXT.GAME_PATH.getPath());
+		}
+	}
+
 	public void changePreview() throws IOException {
 		String campaignPreviewPath = cs.campaignData.getMinimapPath().getPath();
 		if (campaignPreviewPath == null || campaignPreviewPath.isEmpty())
@@ -422,22 +454,58 @@ public class MapInjector {
 		mergeData(new W3Q(), offsets.campaignKeyOffset);
 		cs.IncrementValueProgressBar(1);
 
-		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets || cs.withNextLevel;
+		W3I.Player mainPlayer = null;
+		W3I info = W3I.ofMapFile(mapFile);
+		for (W3I.Player p : info.getPlayers())
+			if (p.getType().equals(Controller.USER)) {
+				mainPlayer = p;
+				break;
+			}
+
+		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets
+				|| cs.withNextLevel || addedCoopPlayers > 0;
+
+		List<W3I.Player> secondaryPlayers = null;
+		if (addedCoopPlayers > 0) {
+			W3I.Player finalMainPlayer = mainPlayer;
+			W3I.Force force = info.getForces().stream().filter(x -> x.getPlayerNums().contains(finalMainPlayer.getNum())).findFirst().get();
+			List<Integer> unusedPlayerNumbers = new ArrayList<>();
+			for (int i = mainPlayer.getNum() + 1; i < XT87Utils.MAX_PLAYER_COUNT; i++)
+				unusedPlayerNumbers.add(i);
+			for (int i = 0; i < mainPlayer.getNum(); i++)
+				unusedPlayerNumbers.add(i);
+			for (W3I.Player p : info.getPlayers())
+				unusedPlayerNumbers.remove((Object) p.getNum());
+			unusedPlayerNumbers = unusedPlayerNumbers.subList(0, addedCoopPlayers);
+			secondaryPlayers = new ArrayList<>();
+			for (int i : unusedPlayerNumbers) {
+				W3I.Player secondaryPlayer = XT87Utils.clonePlayer(mainPlayer, i);
+				force.addPlayerNums(i);
+				secondaryPlayers.add(secondaryPlayer);
+				info.getPlayers().add(secondaryPlayer);
+				for (W3I.TechMod techMod : info.getTechMods()) {
+					int players = techMod.getPlayers();
+					if (players >> mainPlayer.getNum() == 1) {
+						techMod.setPlayers(players | 1 << i);
+					}
+				}
+				for (W3I.UpgradeMod upgradeMod : info.getUpgradeMods()) {
+					int players = upgradeMod.getPlayers();
+					if (players >> mainPlayer.getNum() == 1) {
+						upgradeMod.setPlayers(players | 1 << i);
+					}
+				}
+			}
+			insertDataFile(info, W3I.GAME_PATH.getPath());
+		}
 
 		if (editScript) {
 			ScriptRewriter.readScript(this);
 
 			if (withDifficultySelector) {
-				int playerId = 0;
-				W3I info = W3I.ofMapFile(mapFile);
-				for (W3I.Player p : info.getPlayers())
-					if (p.getType().equals(Controller.USER)) {
-						playerId = p.getNum();
-						break;
-					}
 
 				System.out.println("Adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
-				new DifficultySelectorRewriter(this, playerId).modifyScript();
+				new DifficultySelectorRewriter(this, mainPlayer.getNum()).modifyScript();
 				System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}
@@ -450,6 +518,13 @@ public class MapInjector {
 				System.out.println("Adding next level message to map \"" + mapFile.getName() + "\".");
 				new NextLevelRewriter(this, offsets.campaignKeyOffset).modifyScript();
 				System.out.println("Finished adding next level message to map \"" + mapFile.getName() + "\".");
+				cs.IncrementValueProgressBar(1);
+			}
+
+			if (addedCoopPlayers > 0) {
+				System.out.println("Adding coop support to map \"" + mapFile.getName() + "\".");
+				new CoopRewriter(this, info, mainPlayer, secondaryPlayers).modifyScript();
+				System.out.println("Finished adding coop support to map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}
 
