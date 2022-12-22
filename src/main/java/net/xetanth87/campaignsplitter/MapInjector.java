@@ -514,17 +514,17 @@ public class MapInjector {
 				changePreview();
 			}
 
-			if (cs.withNextLevel) {
-				System.out.println("Adding next level message to map \"" + mapFile.getName() + "\".");
-				new NextLevelRewriter(this, offsets.campaignKeyOffset).modifyScript();
-				System.out.println("Finished adding next level message to map \"" + mapFile.getName() + "\".");
-				cs.IncrementValueProgressBar(1);
-			}
-
 			if (addedCoopPlayers > 0) {
 				System.out.println("Adding coop support to map \"" + mapFile.getName() + "\".");
 				new CoopRewriter(this, info, mainPlayer, secondaryPlayers).modifyScript();
 				System.out.println("Finished adding coop support to map \"" + mapFile.getName() + "\".");
+				cs.IncrementValueProgressBar(1);
+			}
+
+			if (cs.withNextLevel) {
+				System.out.println("Adding next level message to map \"" + mapFile.getName() + "\".");
+				new NextLevelRewriter(this, offsets.campaignKeyOffset).modifyScript();
+				System.out.println("Finished adding next level message to map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}
 

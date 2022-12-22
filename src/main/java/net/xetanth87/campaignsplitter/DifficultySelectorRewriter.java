@@ -21,7 +21,7 @@ public class DifficultySelectorRewriter extends ScriptRewriter {
 	}
 
 	public String[] timeParams(String line, String call) {
-		String[] params = getParams(line, call);
+		String[] params = getParamsFromLine(line, call);
 		return params;
 	}
 

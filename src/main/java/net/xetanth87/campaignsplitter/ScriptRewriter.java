@@ -98,7 +98,7 @@ public abstract class ScriptRewriter {
 		}
 	}
 
-	public static String[] getParams(String line, String call) {
+	public static String[] getParamsFromLine(String line, String call) {
 		try {
 			String s = line.trim().replace(call, "");
 			return getParamsAux(s.substring(0, s.lastIndexOf(')')));
@@ -107,9 +107,17 @@ public abstract class ScriptRewriter {
 		}
 	}
 
-	public static String[] getParams(String line) {
+	public static String[] getParamsFromLine(String line) {
 		try {
 			return getParamsAux(line.substring(line.indexOf('(') + 1, line.lastIndexOf(')')));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String getCallFromLine(String line) {
+		try {
+			return line.substring(line.indexOf("call "), line.indexOf("(") + 1);
 		} catch (Exception e) {
 			return null;
 		}
