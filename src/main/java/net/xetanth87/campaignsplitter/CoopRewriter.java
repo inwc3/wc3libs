@@ -14,12 +14,34 @@ public class CoopRewriter extends ScriptRewriter {
 	public static final String SETPLAYERCOLORBJ = "call SetPlayerColorBJ(";
 	public static final String CONVERTPLAYERCOLOR = "ConvertPlayerColor(";
 	public static final String CUSTOM_PREFIX = "XT87CS_Coop";
-	public static final String FORCE_NAME = "udg_XT87CSCoopForce";
+	public static final String FORCE_NAME = "XT87CSCoopForce";
 	public static final String LAST_CREATED_COOP_CACHE = "XT87CSCoop_lastCreatedGameCache";
-	public static final String CAMPAIGNFILE_KEY = "XT87CSCoopCampaignFile";
-	public static final String VALUE_PREFIX = "v";
+	public static final String GENERAL_HASHTABLE = CUSTOM_PREFIX + "Hashtable";
+	public static final String GH_HAS_ABILITY = "hasAbility";
+	public static final String ABILITY_ARRAY = "XT87CSCoopAbilityArray";
+	public static final String ABILITY_ARRAY_SIZE = ABILITY_ARRAY + "SIZE";
+
+	public static final String CACHE_VALUE_PREFIX = "v";
+	public static final String CACHE_UNIT_PREFIX = "u";
+	public static final String CACHE_OTHER_PREFIX = "o";
+
+	public static final String CAMPAIGNFILE_KEY = CACHE_OTHER_PREFIX + "campaignFile";
+
+	public static final String CACHE_ID_SUFIX = "id";
+	public static final String CACHE_XP_SUFIX = "xp";
+	public static final String CACHE_STR_SUFIX = "aS";
+	public static final String CACHE_AGI_SUFIX = "aA";
+	public static final String CACHE_INT_SUFIX = "aI";
+	public static final String CACHE_HEALTH_MAX_SUFIX = "hp";
+	public static final String CACHE_MANA_MAX_SUFIX = "mp";
+	public static final String CACHE_ABILITY_ID_SUFIX = "A";
+	public static final String CACHE_ABILITY_LVL_SUFIX = "L";
+	public static final String CACHE_ABILITY_COUNT_SUFIX = "Ac";
+	public static final String CACHE_ITEM_ID_SUFIX = "I";
+	public static final String CACHE_ITEM_CHARGE_SUFIX = "C";
+
 	public static final List<String> ALL_RESOURCE_NAMES = Arrays.asList("Gold", "Lumber", "FoodUsed", "FoodCap", "FoodCeiling");
-	public boolean triggersAdded, globalsAdded, insideInitialization, insideInitGlobals, insideInitPlayers, withCustomGameCache;
+	public boolean triggersAdded, initGlobalsAdded, insideInitialization, insideInitGlobals, insideInitPlayers, withCustomGameCache;
 	public W3I info;
 	public W3I.Player mainPlayer;
 	public List<W3I.Player> secondaryPlayers;
@@ -43,7 +65,7 @@ public class CoopRewriter extends ScriptRewriter {
 	@Override
 	public void onStartRead(String text, StringBuffer sb) {
 		triggersAdded = false;
-		globalsAdded = false;
+		initGlobalsAdded = false;
 		insideInitialization = false;
 		insideInitGlobals = false;
 		insideInitPlayers = false;
@@ -126,9 +148,16 @@ public class CoopRewriter extends ScriptRewriter {
 					"call RestoreUnitLocFacingAngleBJ(",
 					"call RestoreUnitLocFacingPointBJ(");
 			// endregion
-			for (String call : gameCacheCalls) {
-				if (line.contains(call))
-					line = line.replace("call ", "call " + CUSTOM_PREFIX);
+			String call = getCallFromLine(line);
+			if (call != null) {
+				String[] params = getParamsFromLine(line);
+				for (String gameCacheCall : gameCacheCalls) {
+					if (call.equals(gameCacheCall))
+						line = line.replace("call ", "call " + CUSTOM_PREFIX);
+				}
+				if (call.equals("call SelectHeroSkill(")) {
+					append("    call " + CUSTOM_PREFIX + "WatchSkill(" + params[1] + ")", sb);
+				}
 			}
 		}
 
@@ -155,11 +184,11 @@ public class CoopRewriter extends ScriptRewriter {
 		} else if (insideInitGlobals) {
 			if (line.contains(END_FUNCTION)) {
 				insideInitGlobals = false;
-			} else if (!globalsAdded && line.contains("set ")) {
+			} else if (!initGlobalsAdded && line.contains("set ")) {
 				append("    set " + FORCE_NAME + "=CreateForce()", sb);
 				for (int playerNumber : allPlayerNumbers)
 					append("    call ForceAddPlayer(" + FORCE_NAME + "," + toPlayerFunc(playerNumber) + ")", sb);
-				globalsAdded = true;
+				initGlobalsAdded = true;
 			} else if (line.trim().startsWith("cache ")) {
 				line = line.replaceFirst("cache ", "hashtable ");
 			}
@@ -200,46 +229,64 @@ public class CoopRewriter extends ScriptRewriter {
 				// region store natives
 				append("function " + CUSTOM_PREFIX + "StoreReal takes hashtable coopCache,string k0,string k1,real val returns nothing" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"StoreReal \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\"+k0+\"|\"+k1)" + JASS_DELIM +
-						"    call SaveReal(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
+						"    call SaveReal(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "StoreInteger takes hashtable coopCache,string k0,string k1,integer val returns nothing" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"StoreInteger \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1)" + JASS_DELIM +
-						"    call SaveInteger(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
+						"    call SaveInteger(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "StoreBoolean takes hashtable coopCache,string k0,string k1,boolean val returns nothing" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"StoreBoolean \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1)" + JASS_DELIM +
-						"    call SaveBoolean(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
+						"    call SaveBoolean(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "StoreString takes hashtable coopCache,string k0,string k1,string val returns boolean" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"StoreString \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1 + \" > \" + val)" + JASS_DELIM +
-						"    return SaveStr(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
+						"    return SaveStr(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1), val)" + JASS_DELIM +
 						END_FUNCTION, sb);
 				// endregion
 				// region save unit native
 				append(JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "StoreUnit takes hashtable coopCache,string k0,string k1, unit u returns boolean" + JASS_DELIM +
-						"    local integer i = 0" + JASS_DELIM +
-						"    local item tempItem = null" + JASS_DELIM +
-						"    local string k2 = \"u\" + k1" + JASS_DELIM +
+						"    local integer i" + JASS_DELIM +
+						"    local item tempItem=null" + JASS_DELIM +
+						"    local integer a" + JASS_DELIM +
+						"    local integer l" + JASS_DELIM +
+						"    local integer c=0" + JASS_DELIM +
+						"    local integer k0h=StringHash(k0)" + JASS_DELIM +
+						"    local string k2=\"" + CACHE_UNIT_PREFIX + "\"+k1" + JASS_DELIM +
 						"    if (u == null) then" + JASS_DELIM +
 						"        return false" + JASS_DELIM +
 						"    endif" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"StoreUnit \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1  + \" > \" + GetUnitName(u))" + JASS_DELIM +
-						"    call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"id\"),GetUnitTypeId(u))" + JASS_DELIM +
+						"    call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ID_SUFIX + "\"),GetUnitTypeId(u))" + JASS_DELIM +
 						"    if (IsUnitType(u,UNIT_TYPE_HERO)) then" + JASS_DELIM +
-						"        call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"xp\"),GetHeroXP(u))" + JASS_DELIM +
-						"        call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"as\"),GetHeroStr(u,false))" + JASS_DELIM +
-						"        call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"aa\"),GetHeroAgi(u,false))" + JASS_DELIM +
-						"        call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"ai\"),GetHeroInt(u,false))" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_XP_SUFIX + "\"),GetHeroXP(u))" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_STR_SUFIX + "\"),GetHeroStr(u,false))" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_AGI_SUFIX + "\"),GetHeroAgi(u,false))" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_INT_SUFIX + "\"),GetHeroInt(u,false))" + JASS_DELIM +
 						"        call SaveReal(coopCache,StringHash(k0),StringHash(k2+\"hp\"),GetUnitState(u,UNIT_STATE_MAX_LIFE))" + JASS_DELIM +
 						"        call SaveReal(coopCache,StringHash(k0),StringHash(k2+\"mp\"),GetUnitState(u,UNIT_STATE_MAX_MANA))" + JASS_DELIM +
+						"        set i=0" + JASS_DELIM +
+						"        loop" + JASS_DELIM +
+						"            exitwhen i>=" + ABILITY_ARRAY_SIZE + JASS_DELIM +
+						"            set a = " + ABILITY_ARRAY + "[i]" + JASS_DELIM +
+						"            set l = GetUnitAbilityLevel(u,a)" + JASS_DELIM +
+						"            if l>0 then" + JASS_DELIM +
+						"               call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ABILITY_ID_SUFIX + "\"+I2S(c)),a)" + JASS_DELIM +
+						"               call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ABILITY_LVL_SUFIX + "\"+I2S(c)),l)" + JASS_DELIM +
+						"               set c = c+1" + JASS_DELIM +
+						"            " + END_IF + JASS_DELIM +
+						"            set i = i+1" + JASS_DELIM +
+						"        endloop" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ABILITY_COUNT_SUFIX + "\"),c)" + JASS_DELIM +
 						"    endif" + JASS_DELIM +
+						"    set i=0" + JASS_DELIM +
 						"    loop" + JASS_DELIM +
-						"        exitwhen i > 5" + JASS_DELIM +
+						"        exitwhen i>5" + JASS_DELIM +
 						"        set tempItem = UnitItemInSlot(u, i)" + JASS_DELIM +
-						"        call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"i\"+I2S(i)),GetItemTypeId(tempItem))" + JASS_DELIM +
-						"        call SaveInteger(coopCache,StringHash(k0),StringHash(k2+\"c\"+I2S(i)),GetItemCharges(tempItem))" + JASS_DELIM +
-						"        set i = i + 1" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ITEM_ID_SUFIX + "\"+I2S(i)),GetItemTypeId(tempItem))" + JASS_DELIM +
+						"        call SaveInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ITEM_CHARGE_SUFIX + "\"+I2S(i)),GetItemCharges(tempItem))" + JASS_DELIM +
+						"        set i = i+1" + JASS_DELIM +
 						"    endloop" + JASS_DELIM +
 						"    return true" + JASS_DELIM +
 						END_FUNCTION, sb);
@@ -247,39 +294,64 @@ public class CoopRewriter extends ScriptRewriter {
 				// region load natives
 				append("function " + CUSTOM_PREFIX + "GetStoredReal takes hashtable coopCache,string k0,string k1 returns real" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"GetStoredReal \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1)" + JASS_DELIM +
-						"    return LoadReal(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
+						"    return LoadReal(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "GetStoredInteger takes hashtable coopCache,string k0,string k1 returns integer" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"GetStoredInteger \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1)" + JASS_DELIM +
-						"    return LoadInteger(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
+						"    return LoadInteger(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "GetStoredBoolean takes hashtable coopCache,string k0,string k1 returns boolean" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"GetStoredBoolean \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1)" + JASS_DELIM +
-						"    return LoadBoolean(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
+						"    return LoadBoolean(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "GetStoredString takes hashtable coopCache,string k0,string k1 returns string" + JASS_DELIM +
 						"    call DisplayTextToForce(GetPlayersAll(),\"GetStoredString \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1)" + JASS_DELIM +
-						"    return LoadStr(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
+						"    return LoadStr(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1))" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"function " + CUSTOM_PREFIX + "RestoreUnit takes hashtable coopCache,string k0,string k1,player owner,real x,real y,real facing returns unit" + JASS_DELIM +
-						"    local integer i = 0" + JASS_DELIM +
-						"    local unit u = null" + JASS_DELIM +
-						"    local string k2 = \"u\" + k1" + JASS_DELIM +
-						"    call DisplayTextToForce(GetPlayersAll(),\"RestoreUnit \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1 + \" > \" + LoadStr(coopCache, StringHashBJ(k0), StringHashBJ(\"" + VALUE_PREFIX + "\"+k1)))" + JASS_DELIM +
-						"    set u =  CreateUnit(owner,LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"id\")),x,y,facing)" + JASS_DELIM +
+						"    local integer i" + JASS_DELIM +
+						"    local integer j" + JASS_DELIM +
+						"    local integer a" + JASS_DELIM +
+						"    local integer l" + JASS_DELIM +
+						"    local integer c" + JASS_DELIM +
+						"    local unit u=null" + JASS_DELIM +
+						"    local integer k0h=StringHash(k0)" + JASS_DELIM +
+						"    local string k2=\"" + CACHE_UNIT_PREFIX + "\"+k1" + JASS_DELIM +
+						"    call DisplayTextToForce(GetPlayersAll(),\"RestoreUnit \"+LoadStringBJ(StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),StringHashBJ(\"" + CAMPAIGNFILE_KEY + "\"),coopCache)+\"|\" + k0 + \"|\" + k1 + \" > \" + LoadStr(coopCache, StringHashBJ(k0), StringHashBJ(\"" + CACHE_VALUE_PREFIX + "\"+k1)))" + JASS_DELIM +
+						"    set u=CreateUnit(owner,LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ID_SUFIX + "\")),x,y,facing)" + JASS_DELIM +
 						"    if (IsUnitType(u,UNIT_TYPE_HERO)) then" + JASS_DELIM +
-						"        call SetHeroXP(u,LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"xp\")),false)" + JASS_DELIM +
-						"        call SetHeroStr(u,LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"as\")),true)" + JASS_DELIM +
-						"        call SetHeroAgi(u,LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"aa\")),true)" + JASS_DELIM +
-						"        call SetHeroInt(u,LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"ai\")),true)" + JASS_DELIM +
-						"        call SetUnitState(u,UNIT_STATE_MAX_LIFE,LoadReal(coopCache,StringHash(k0),StringHash(k2+\"hp\")))" + JASS_DELIM +
-						"        call SetUnitState(u,UNIT_STATE_MAX_MANA,LoadReal(coopCache,StringHash(k0),StringHash(k2+\"mp\")))" + JASS_DELIM +
-						"    endif" + JASS_DELIM +
+						"        call SetHeroXP(u,LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_XP_SUFIX + "\")),false)" + JASS_DELIM +
+						"        call SetHeroStr(u,LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_STR_SUFIX + "\")),true)" + JASS_DELIM +
+						"        call SetHeroAgi(u,LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_AGI_SUFIX + "\")),true)" + JASS_DELIM +
+						"        call SetHeroInt(u,LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_INT_SUFIX + "\")),true)" + JASS_DELIM +
+						"        call BlzSetUnitMaxHP(u,R2I(LoadReal(coopCache,k0h,StringHash(k2+\"" + CACHE_HEALTH_MAX_SUFIX + "\"))))" + JASS_DELIM +
+						"        call BlzSetUnitMaxMana(u,R2I(LoadReal(coopCache,k0h,StringHash(k2+\"" + CACHE_MANA_MAX_SUFIX + "\"))))" + JASS_DELIM +
+						"        set c=LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ABILITY_COUNT_SUFIX + "\"))" + JASS_DELIM +
+						"        set i=0" + JASS_DELIM +
+						//"        call DisplayTextToForce(GetPlayersAll(),\"AUX i \"+I2S(i)+\" c \"+I2S(c))" + JASS_DELIM +
+						"        loop" + JASS_DELIM +
+						"            exitwhen i>=c" + JASS_DELIM +
+						"            set a=LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ABILITY_ID_SUFIX + "\"+I2S(i)))" + JASS_DELIM +
+						"            set l=LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ABILITY_LVL_SUFIX + "\"+I2S(i)))" + JASS_DELIM +
+						"            call " + CUSTOM_PREFIX + "WatchSkill(a)" + JASS_DELIM +
+						//"            call DisplayTextToForce(GetPlayersAll(),\"AUX i \"+I2S(i)+\" l \"+I2S(l))" + JASS_DELIM +
+						"            set j=0" + JASS_DELIM +
+						"            loop" + JASS_DELIM +
+						"                exitwhen j>=l" + JASS_DELIM +
+						//"                call DisplayTextToForce(GetPlayersAll(),\"AUX i \"+I2S(i)+\" j \"+I2S(j))" + JASS_DELIM +
+						//"                call DisplayTextToForce(GetPlayersAll(),\"AUX i \"+I2S(i)+\" a \"+I2S(a))" + JASS_DELIM +
+						"                call SelectHeroSkill(u,a)" + JASS_DELIM +
+						"                set j=j+1" + JASS_DELIM +
+						"            endloop" + JASS_DELIM +
+						"            set i=i+1" + JASS_DELIM +
+						"        endloop" + JASS_DELIM +
+						"    " + END_IF + JASS_DELIM +
+						"    set i=0" + JASS_DELIM +
 						"    loop" + JASS_DELIM +
-						"        exitwhen i > 5" + JASS_DELIM +
-						"        call UnitAddItemToSlotById(u,LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"i\"+I2S(i))),i)" + JASS_DELIM +
-						"        call SetItemCharges(UnitItemInSlot(u,i),LoadInteger(coopCache,StringHash(k0),StringHash(k2+\"c\"+I2S(i))))" + JASS_DELIM +
-						"        set i = i + 1" + JASS_DELIM +
+						"        exitwhen i>5" + JASS_DELIM +
+						"        call UnitAddItemToSlotById(u,LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ITEM_ID_SUFIX + "\"+I2S(i))),i)" + JASS_DELIM +
+						"        call SetItemCharges(UnitItemInSlot(u,i),LoadInteger(coopCache,k0h,StringHash(k2+\"" + CACHE_ITEM_CHARGE_SUFIX + "\"+I2S(i))))" + JASS_DELIM +
+						"        set i=i+1" + JASS_DELIM +
 						"    endloop" + JASS_DELIM +
 						"    return u" + JASS_DELIM +
 						END_FUNCTION, sb);
@@ -339,14 +411,14 @@ public class CoopRewriter extends ScriptRewriter {
 						END_FUNCTION, sb);
 				// endregion
 			}
-			// gold and lumber synchronization
+			// region gold and lumber synchronization
 			List<String> resourceTypes = Arrays.asList("PLAYER_STATE_RESOURCE_GOLD", "PLAYER_STATE_RESOURCE_LUMBER");
 			List<String> resourceNames = ALL_RESOURCE_NAMES.subList(0, 2);
 			for (int i = 0; i < resourceTypes.size(); i++) {
 				String resourceType = resourceTypes.get(i);
 				String resourceName = resourceNames.get(i);
-				append("// Trigger: XT87CS_Coop" + resourceName + "Sync" + JASS_DELIM +
-						"function Trig_XT87CS_Coop" + resourceName + "Sync_Actions takes nothing returns nothing" + JASS_DELIM +
+				append("// Trigger: " + CUSTOM_PREFIX + resourceName + "Sync" + JASS_DELIM +
+						"function Trig_" + CUSTOM_PREFIX + resourceName + "Sync_Actions takes nothing returns nothing" + JASS_DELIM +
 						"    local integer resourceSyncValue=GetPlayerState(GetTriggerPlayer()," + resourceType + ")" + JASS_DELIM +
 						"    " + XT87Utils.DISABLE_TRIGGER + XT87Utils.THIS_TRIGGER + ")", sb);
 				for (int playerNumber : allPlayerNumbers) {
@@ -357,22 +429,23 @@ public class CoopRewriter extends ScriptRewriter {
 				}
 				append("    " + XT87Utils.ENABLE_TRIGGER + XT87Utils.THIS_TRIGGER + ")" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
-						"function InitTrig_XT87CS_Coop" + resourceName + "Sync takes nothing returns nothing" + JASS_DELIM +
-						"    set gg_trg_XT87CS_Coop" + resourceName + "Sync=CreateTrigger()", sb);
+						"function InitTrig_" + CUSTOM_PREFIX + resourceName + "Sync takes nothing returns nothing" + JASS_DELIM +
+						"    set tr_" + CUSTOM_PREFIX + resourceName + "Sync=CreateTrigger()", sb);
 				for (int playerNumber : allPlayerNumbers)
-					append("    call TriggerRegisterPlayerStateEvent(gg_trg_XT87CS_Coop" + resourceName + "Sync," + toPlayerFunc(playerNumber) + "," + resourceType + ", GREATER_THAN_OR_EQUAL, 0.00)", sb);
-				append("    call TriggerAddAction(gg_trg_XT87CS_Coop" + resourceName + "Sync,function Trig_XT87CS_Coop" + resourceName + "Sync_Actions)" + JASS_DELIM +
+					append("    call TriggerRegisterPlayerStateEvent(tr_" + CUSTOM_PREFIX + resourceName + "Sync," + toPlayerFunc(playerNumber) + "," + resourceType + ", GREATER_THAN_OR_EQUAL, 0.00)", sb);
+				append("    call TriggerAddAction(tr_" + CUSTOM_PREFIX + resourceName + "Sync,function Trig_" + CUSTOM_PREFIX + resourceName + "Sync_Actions)" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM, sb);
 			}
+			// endregion
 
-			// food and population cap synchronization
+			// region food and population cap synchronization
 			resourceTypes = Arrays.asList("PLAYER_STATE_RESOURCE_FOOD_USED", "PLAYER_STATE_RESOURCE_FOOD_CAP", "PLAYER_STATE_FOOD_CAP_CEILING");
 			resourceNames = ALL_RESOURCE_NAMES.subList(resourceNames.size(), resourceNames.size() + 3);
 			for (int i = 0; i < resourceTypes.size(); i++) {
 				String resourceType = resourceTypes.get(i);
 				String resourceName = resourceNames.get(i);
-				append("// Trigger: XT87CS_Coop" + resourceName + "Sync" + JASS_DELIM +
-						"function Trig_XT87CS_Coop" + resourceName + "Sync_Actions takes nothing returns nothing" + JASS_DELIM +
+				append("// Trigger: " + CUSTOM_PREFIX + resourceName + "Sync" + JASS_DELIM +
+						"function Trig_" + CUSTOM_PREFIX + resourceName + "Sync_Actions takes nothing returns nothing" + JASS_DELIM +
 						"    local integer resourceSyncValue=GetPlayerState(GetTriggerPlayer()," + resourceType + ")" + JASS_DELIM +
 						"    " + XT87Utils.DISABLE_TRIGGER + XT87Utils.THIS_TRIGGER + ")", sb);
 				for (int playerNumber : allPlayerNumbers) {
@@ -384,18 +457,19 @@ public class CoopRewriter extends ScriptRewriter {
 				append("    " + XT87Utils.ENABLE_TRIGGER + XT87Utils.THIS_TRIGGER + ")" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
 						"//===========================================================================" + JASS_DELIM +
-						"function InitTrig_XT87CS_Coop" + resourceName + "Sync takes nothing returns nothing" + JASS_DELIM +
-						"    set gg_trg_XT87CS_Coop" + resourceName + "Sync=CreateTrigger()", sb);
-				append("    call TriggerRegisterPlayerStateEvent(gg_trg_XT87CS_Coop" + resourceName + "Sync," + toMainPlayerFunc() + "," + resourceType + ", GREATER_THAN_OR_EQUAL, 0.00)", sb);
-				append("    call TriggerAddAction(gg_trg_XT87CS_Coop" + resourceName + "Sync,function Trig_XT87CS_Coop" + resourceName + "Sync_Actions)" + JASS_DELIM +
+						"function InitTrig_" + CUSTOM_PREFIX + resourceName + "Sync takes nothing returns nothing" + JASS_DELIM +
+						"    set tr_" + CUSTOM_PREFIX + resourceName + "Sync=CreateTrigger()", sb);
+				append("    call TriggerRegisterPlayerStateEvent(tr_" + CUSTOM_PREFIX + resourceName + "Sync," + toMainPlayerFunc() + "," + resourceType + ", GREATER_THAN_OR_EQUAL, 0.00)", sb);
+				append("    call TriggerAddAction(tr_" + CUSTOM_PREFIX + resourceName + "Sync,function Trig_" + CUSTOM_PREFIX + resourceName + "Sync_Actions)" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM, sb);
 			}
+			// endregion
 
-			// give units to main player
+			// region give units to main player
 			append("//===========================================================================" + JASS_DELIM +
-					"// Trigger: XT87CS_CoopUnitShare" + JASS_DELIM +
+					"// Trigger: " + CUSTOM_PREFIX + "UnitShare" + JASS_DELIM +
 					"//===========================================================================" + JASS_DELIM +
-					"function Trig_XT87CS_CoopUnitShare_Conditions takes nothing returns boolean", sb);
+					"function Trig_" + CUSTOM_PREFIX + "UnitShare_Conditions takes nothing returns boolean", sb);
 			for (int playerNumber : allPlayerNumbers) {
 				if (playerNumber == mainPlayer.getNum())
 					continue;
@@ -406,15 +480,16 @@ public class CoopRewriter extends ScriptRewriter {
 			}
 			append("    return false" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
-					"function Trig_XT87CS_CoopUnitShare_Actions takes nothing returns nothing" + JASS_DELIM +
+					"function Trig_" + CUSTOM_PREFIX + "UnitShare_Actions takes nothing returns nothing" + JASS_DELIM +
 					"    call SetUnitOwner(GetEnteringUnit()," + toMainPlayerFunc() + ",true)" + JASS_DELIM +
 					"endfunction" + JASS_DELIM +
-					"function InitTrig_XT87CS_CoopUnitShare takes nothing returns nothing" + JASS_DELIM +
-					"    set gg_trg_XT87CS_CoopUnitShare=CreateTrigger()" + JASS_DELIM +
-					"    call TriggerRegisterEnterRectSimple(gg_trg_XT87CS_CoopUnitShare,GetPlayableMapRect())" + JASS_DELIM +
-					"    call TriggerAddCondition(gg_trg_XT87CS_CoopUnitShare,Condition(function Trig_XT87CS_CoopUnitShare_Conditions))" + JASS_DELIM +
-					"    call TriggerAddAction(gg_trg_XT87CS_CoopUnitShare,function Trig_XT87CS_CoopUnitShare_Actions)" + JASS_DELIM +
+					"function InitTrig_" + CUSTOM_PREFIX + "UnitShare takes nothing returns nothing" + JASS_DELIM +
+					"    set tr_" + CUSTOM_PREFIX + "UnitShare=CreateTrigger()" + JASS_DELIM +
+					"    call TriggerRegisterEnterRectSimple(tr_" + CUSTOM_PREFIX + "UnitShare,GetPlayableMapRect())" + JASS_DELIM +
+					"    call TriggerAddCondition(tr_" + CUSTOM_PREFIX + "UnitShare,Condition(function Trig_" + CUSTOM_PREFIX + "UnitShare_Conditions))" + JASS_DELIM +
+					"    call TriggerAddAction(tr_" + CUSTOM_PREFIX + "UnitShare,function Trig_" + CUSTOM_PREFIX + "UnitShare_Actions)" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM, sb);
+			// endregion
 			triggersAdded = true;
 		}
 
@@ -422,10 +497,44 @@ public class CoopRewriter extends ScriptRewriter {
 
 		if (line.equals("globals")) {
 			for (String resourceName : ALL_RESOURCE_NAMES)
-				append("trigger gg_trg_XT87CS_Coop" + resourceName + "Sync=null", sb);
-			append("trigger gg_trg_XT87CS_CoopUnitShare=null", sb);
-			append("force " + FORCE_NAME + "=null", sb);
-			append("hashtable " + LAST_CREATED_COOP_CACHE + "= null", sb);
+				append("trigger tr_" + CUSTOM_PREFIX + resourceName + "Sync=null", sb);
+			append("trigger tr_" + CUSTOM_PREFIX + "UnitShare=null" + JASS_DELIM +
+					"force " + FORCE_NAME + JASS_DELIM +
+					"hashtable " + LAST_CREATED_COOP_CACHE + "=null" + JASS_DELIM +
+					"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
+					"integer array " + ABILITY_ARRAY + JASS_DELIM +
+					"integer " + ABILITY_ARRAY_SIZE + "=0" + JASS_DELIM +
+					"trigger tr_" + CUSTOM_PREFIX + "WatchLearnedSkill", sb);
+		}else if (line.equals("endglobals")) {
+			// region custom functions
+			append("function " + CUSTOM_PREFIX + "WatchSkill takes integer a returns boolean" + JASS_DELIM +
+					"    if not(LoadBooleanBJ(StringHashBJ(\"" + GH_HAS_ABILITY + "\"),a," + GENERAL_HASHTABLE + ")) then" + JASS_DELIM +
+					"        set " + ABILITY_ARRAY + "[" + ABILITY_ARRAY_SIZE + "]=a" + JASS_DELIM +
+					"        call SaveBooleanBJ(true, StringHashBJ(\"" + GH_HAS_ABILITY + "\"),a," + GENERAL_HASHTABLE + ")" + JASS_DELIM +
+					"        set " + ABILITY_ARRAY_SIZE + "=" + ABILITY_ARRAY_SIZE + "+1" + JASS_DELIM +
+					"        return true" + JASS_DELIM +
+					"    else" + JASS_DELIM +
+					"        return false" + JASS_DELIM +
+					"    " + END_IF + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
+					"function Trig_" + CUSTOM_PREFIX + "WatchLearnedSkill_Actions takes nothing returns nothing" + JASS_DELIM +
+					"    local integer i=0" + JASS_DELIM +
+					"    local integer a=GetLearnedSkill()" + JASS_DELIM +
+					"    if " + CUSTOM_PREFIX + "WatchSkill(a) == true then" + JASS_DELIM +
+					"        call DisplayTextToForce(GetPlayersAll(), I2S(i) + \"] \" + I2S(a) + \" _\" + I2S(" + ABILITY_ARRAY_SIZE + " - 1))" + JASS_DELIM +
+					"        loop" + JASS_DELIM +
+					"            exitwhen i>=" + ABILITY_ARRAY_SIZE + JASS_DELIM +
+					"            call DisplayTextToForce(GetPlayersAll(), I2S(i) + \") \" + I2S(" + ABILITY_ARRAY + "[i]) + \" \" + I2S(" + ABILITY_ARRAY_SIZE + " - 1))" + JASS_DELIM +
+					"            set i = i+1" + JASS_DELIM +
+					"        endloop" + JASS_DELIM +
+					"    " + END_IF + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
+					"function InitTrig_" + CUSTOM_PREFIX + "WatchLearnedSkill takes nothing returns nothing" + JASS_DELIM +
+					"    set tr_" + CUSTOM_PREFIX + "WatchLearnedSkill = CreateTrigger()" + JASS_DELIM +
+					"    call TriggerRegisterAnyUnitEventBJ(tr_" + CUSTOM_PREFIX + "WatchLearnedSkill,EVENT_PLAYER_HERO_SKILL)" + JASS_DELIM +
+					"    call TriggerAddAction(tr_" + CUSTOM_PREFIX + "WatchLearnedSkill, function Trig_" + CUSTOM_PREFIX + "WatchLearnedSkill_Actions)" + JASS_DELIM +
+					END_FUNCTION, sb);
+			// endregion
 		} else if (insideInitPlayers) {
 			if (line.equals(END_FUNCTION)) {
 				insideInitPlayers = false;
@@ -440,8 +549,9 @@ public class CoopRewriter extends ScriptRewriter {
 			insideInitPlayers = true;
 		} else if (line.contains("function InitCustomTriggers takes")) {
 			for (String resourceName : ALL_RESOURCE_NAMES)
-				append("    call InitTrig_XT87CS_Coop" + resourceName + "Sync()", sb);
-			append("    call InitTrig_XT87CS_CoopUnitShare()", sb);
+				append("    call InitTrig_" + CUSTOM_PREFIX + resourceName + "Sync()", sb);
+			append("    call InitTrig_" + CUSTOM_PREFIX + "UnitShare()" + JASS_DELIM +
+					"    call InitTrig_" + CUSTOM_PREFIX + "WatchLearnedSkill()", sb);
 		}
 
 		String call = getCallFromLine(line);
