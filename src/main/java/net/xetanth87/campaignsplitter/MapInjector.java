@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.channels.NonReadableChannelException;
-import java.nio.channels.NonWritableChannelException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -149,18 +148,17 @@ public class MapInjector {
 			for (Object object : mapData.getObjsList()) {
 				found = false;
 				ObjMod.Obj obj = (ObjMod.Obj) object;
-				for (int i = 0; i < tempList.size(); i++) {
-					ObjMod.Obj campaignObj = (ObjMod.Obj) tempList.get(i);
-					if (!campaignObj.getId().equals(obj.getId()))
+				for (ObjMod.Obj value : tempList) {
+					if (!value.getId().equals(obj.getId()))
 						continue;
 					found = true;
 					for (ObjMod.Obj.Mod mod : obj.getMods()) {
-						for (ObjMod.Obj.Mod cmod : campaignObj.getMods())
+						for (ObjMod.Obj.Mod cmod : value.getMods())
 							if (cmod.getId().equals(mod.getId())) {
-								campaignObj.getMods().remove(cmod);
+								value.getMods().remove(cmod);
 								break;
 							}
-						campaignObj.addMod(mod);
+						value.addMod(mod);
 					}
 					break;
 				}
@@ -206,7 +204,7 @@ public class MapInjector {
 
 	public void changeMapName(File extractedFile, String originalMapName, String newMapName) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(extractedFile), StandardCharsets.ISO_8859_1));
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int s1 = 0;
 		while ((s1 = br.read()) != -1) {
 			sb.append((char) s1);
@@ -223,7 +221,7 @@ public class MapInjector {
 		int campaignKeyOffset = 0;
 	}
 
-	public StringOffsets mergeStrings() throws Exception {
+	public StringOffsets mergeStrings(W3I info) throws Exception {
 		WTS strings = null;
 		StringOffsets offsets = new StringOffsets();
 		try {
@@ -248,7 +246,7 @@ public class MapInjector {
 			if (buttonIndex >= 0) {
 				W3F.MapEntry mapEntry = cs.campaignData.getMaps().get(buttonIndex);
 				int mapTitleIndex = stringIndexToInt(mapEntry.getMapTitle());
-				mapEditor.extractFile(W3I.GAME_PATH.getPath(), tempFile);
+				info.write(tempFile);
 				int buttonStringIndex = mapTitleIndex + offsets.campaignKeyOffset;
 				changeMapName(tempFile, W3I.ofMapFile(mapFile).getMapName(), STRING_PREFIX + buttonStringIndex);
 				insertDataFile(tempFile, W3I.GAME_PATH.getPath());
@@ -258,9 +256,8 @@ public class MapInjector {
 		} catch (Throwable e) {
 			if (!(e instanceof IOException))
 				System.err.println(e.getMessage());
-		} finally {
-			return offsets;
 		}
+		return offsets;
 	}
 
 	public void mergeMisc() throws IOException {
@@ -273,7 +270,6 @@ public class MapInjector {
 				System.err.println(e.getMessage());
 			if (!cs.withUpkeepRemoval)
 				return;
-		} finally {
 		}
 		try {
 			if (!mapEditor.hasFile(MiscTXT.GAME_PATH.getPath()))
@@ -404,66 +400,26 @@ public class MapInjector {
 		}
 	}
 
-	public ReentrantLock rl = new ReentrantLock();
+	private class MapInfo {
+		public W3I info;
+		public W3I.Player mainPlayer;
+		public List<W3I.Player> secondaryPlayers;
 
-	public void addCampaignData() throws Exception {
-		//rl.lock();
-		mapEditor = new JMpqEditor(mapFile, MPQOpenOption.FORCE_V0);
-		tempFile = new File(cs.getTempPath() + "/" + getWithoutExtension(mapFile.getName()) + ".temp.txt");
-		tempFile.getParentFile().mkdirs();
-		tempFile.createNewFile();
+		public MapInfo(W3I info, W3I.Player mainPlayer, List<W3I.Player> secondaryPlayers) {
+			this.info = info;
+			this.mainPlayer = mainPlayer;
+			this.secondaryPlayers = secondaryPlayers;
+		}
+	}
 
-		// imports
-		System.out.println("Adding imports to map \"" + mapFile.getName() + "\".");
-		mergeImports();
-		cs.IncrementValueProgressBar(1);
-		// strings
-		System.out.println("Adding strings to map \"" + mapFile.getName() + "\".");
-		StringOffsets offsets = mergeStrings();
-		cs.IncrementValueProgressBar(1);
-		//rl.unlock();
-		// misc/constants
-		System.out.println("Adding misc/constants to map \"" + mapFile.getName() + "\".");
-		mergeMisc();
-		cs.IncrementValueProgressBar(1);
-		// skin/interface
-		System.out.println("Adding skin/interface to map \"" + mapFile.getName() + "\".");
-		mergeSkin(offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-
-		System.out.println("Adding data to map \"" + mapFile.getName() + "\".");
-		// units
-		mergeData(new W3U(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-		// items
-		mergeData(new W3T(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-		// destructibles
-		mergeData(new W3B(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-		// doodads
-		mergeData(new W3D(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-		// abilities
-		mergeData(new W3A(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-		// buffs
-		mergeData(new W3H(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-		// upgrades
-		mergeData(new W3Q(), offsets.campaignKeyOffset);
-		cs.IncrementValueProgressBar(1);
-
-		W3I.Player mainPlayer = null;
+	private MapInfo modifyInfo() throws Exception {
 		W3I info = W3I.ofMapFile(mapFile);
+		W3I.Player mainPlayer = null;
 		for (W3I.Player p : info.getPlayers())
 			if (p.getType().equals(Controller.USER)) {
 				mainPlayer = p;
 				break;
 			}
-
-		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets
-				|| cs.withNextLevel || addedCoopPlayers > 0;
 
 		List<W3I.Player> secondaryPlayers = null;
 		if (addedCoopPlayers > 0) {
@@ -496,16 +452,68 @@ public class MapInjector {
 					}
 				}
 			}
-			insertDataFile(info, W3I.GAME_PATH.getPath());
 		}
+		return new MapInfo(info, mainPlayer, secondaryPlayers);
+	}
+
+	public void addCampaignData() throws Exception {
+		mapEditor = new JMpqEditor(mapFile, MPQOpenOption.FORCE_V0);
+		tempFile = new File(cs.getTempPath() + "/" + getWithoutExtension(mapFile.getName()) + ".temp.txt");
+		tempFile.getParentFile().mkdirs();
+		tempFile.createNewFile();
+
+		// imports
+		System.out.println("Adding imports to map \"" + mapFile.getName() + "\".");
+		mergeImports();
+		cs.IncrementValueProgressBar(1);
+		StringOffsets offsets = null;
+		MapInfo mapInfo = modifyInfo();
+		cs.IncrementValueProgressBar(1);
+		// strings
+		System.out.println("Adding strings to map \"" + mapFile.getName() + "\".");
+		offsets = mergeStrings(mapInfo.info);
+		cs.IncrementValueProgressBar(1);
+		// misc/constants
+		System.out.println("Adding misc/constants to map \"" + mapFile.getName() + "\".");
+		mergeMisc();
+		cs.IncrementValueProgressBar(1);
+		// skin/interface
+		System.out.println("Adding skin/interface to map \"" + mapFile.getName() + "\".");
+		mergeSkin(offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+
+		System.out.println("Adding data to map \"" + mapFile.getName() + "\".");
+		// units
+		mergeData(new W3U(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+		// items
+		mergeData(new W3T(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+		// destructibles
+		mergeData(new W3B(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+		// doodads
+		mergeData(new W3D(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+		// abilities
+		mergeData(new W3A(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+		// buffs
+		mergeData(new W3H(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+		// upgrades
+		mergeData(new W3Q(), offsets.campaignKeyOffset);
+		cs.IncrementValueProgressBar(1);
+
+		boolean editScript = withDifficultySelector || cs.withCampaignPreview || cs.withLegacyAssets
+				|| cs.withNextLevel || addedCoopPlayers > 0;
 
 		if (editScript) {
 			ScriptRewriter.readScript(this);
 
 			if (withDifficultySelector) {
-
 				System.out.println("Adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
-				new DifficultySelectorRewriter(this, mainPlayer.getNum()).modifyScript();
+				new DifficultySelectorRewriter(this, mapInfo.mainPlayer.getNum()).modifyScript();
 				System.out.println("Finished adding Difficulty Selector to map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}
@@ -516,7 +524,7 @@ public class MapInjector {
 
 			if (addedCoopPlayers > 0) {
 				System.out.println("Adding coop support to map \"" + mapFile.getName() + "\".");
-				new CoopRewriter(this, info, mainPlayer, secondaryPlayers).modifyScript();
+				new CoopRewriter(this, mapInfo.info, mapInfo.mainPlayer, mapInfo.secondaryPlayers).modifyScript();
 				System.out.println("Finished adding coop support to map \"" + mapFile.getName() + "\".");
 				cs.IncrementValueProgressBar(1);
 			}

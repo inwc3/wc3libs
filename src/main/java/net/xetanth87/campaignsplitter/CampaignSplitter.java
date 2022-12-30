@@ -43,7 +43,6 @@ public class CampaignSplitter {
 	public int buttonCount, addedCoopPlayers = 23;
 	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.SMART;
 	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true, withNextLevel = true;
-	public JMpqEditor campEditor;
 	public W3F campaignData;
 	protected boolean initializedProgressBar = false;
 	public WTS campStrings = null;
@@ -100,7 +99,7 @@ public class CampaignSplitter {
 		}
 	}
 
-	public void extractCampaignFiles() throws IOException {
+	public void extractCampaignFiles(JMpqEditor campEditor) throws IOException {
 		File importsDir = new File(getImportsPath());
 		importsDir.mkdirs();
 		List<File> extractedFiles = Arrays.asList(WTS.CAMPAIGN_PATH, MiscTXT.CAMPAIGN_PATH,
@@ -133,8 +132,7 @@ public class CampaignSplitter {
 			for (IMP.Obj o : imports.getObjs()) {
 				if (o.getPath().isEmpty())
 					continue;
-				if (!campEditor.hasFile(o.getPath()))
-				{
+				if (!campEditor.hasFile(o.getPath())) {
 					System.err.println("Missing campaign import with path \"" + o.getPath() + "\"!");
 					continue;
 				}
@@ -160,8 +158,7 @@ public class CampaignSplitter {
 			if (LegacyMerger.AddLegacyAssets(this, imports)) {
 				System.out.println("Finished extracting legacy asset files.");
 				imports.write(importsListFile);
-			}
-			else if (noCampaignImports) {
+			} else if (noCampaignImports) {
 				importsListFile.delete();
 			}
 		}
@@ -169,50 +166,57 @@ public class CampaignSplitter {
 
 	public void splitCampaign() throws Exception {
 		System.out.println(campFile.getAbsolutePath());
-		campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
 		campaignData = W3F.ofCampaignFile(campFile);
 		buttonCount = campaignData.getMaps().size();
 		SetValueProgressBar(0);
-		File splitDir = new File(splitPath);
-		splitDir.mkdirs();
-		extractCampaignFiles();
+		{
+			File splitDir = new File(splitPath);
+			splitDir.mkdirs();
+		}
 		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
 				(difficultySelectorOption.equals(XT87Utils.TriOption.SMART) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
-		System.out.println("Difficulty selector: " + (withDifficultySelector ? "enabled" : "disabled") + ".");
-		for (int i = 0; i < buttonCount; i++) {
-			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
-			String title = mapEntry.getChapterTitle();
-			if (title == null || !title.contains(STRING_PREFIX))
-				throw new Exception("Invalid chapter title for map " + mapEntry.getMapPath() + ": \"" + title + "\" (Broken campaign)");
-			int chapterTitleIndex = stringIndexToInt(title);
-			title = mapEntry.getMapTitle();
-			if (title == null || !title.contains(STRING_PREFIX))
-				throw new Exception("Invalid map title for map " + mapEntry.getMapPath() + ": \"" + title + "\" (Broken campaign)");
-			int mapTitleIndex = stringIndexToInt(title);
-			String buttonTitle = buttonText(i, buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
-			campStrings.addEntry(mapTitleIndex, buttonTitle);
-			buttonNameMap.put(mapEntry.getMapPath().toLowerCase(), buttonTitle);
-		}
-		int maximumAddedCoopPlayers = addedCoopPlayers;
 		List<File> mapFiles = new ArrayList<>();
-		for (int i = 0; i < buttonCount; i++) {
-			W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
-			String fileName = mapEntry.getMapPath();
-			String mapPath = splitPath + "/" + fileName;
-			if (i != 0)
-				campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
-			if (!campEditor.hasFile(fileName))
-				continue;
-			File mapFile = new File(mapPath);
-			mapFile.createNewFile();
-			campEditor.extractFile(fileName, mapFile);
-			mapFiles.add(mapFile);
-			System.out.println("Extracted map \"" + mapFile.getName() + "\".");
-			W3I info = W3I.ofMapFile(mapFile);
-			maximumAddedCoopPlayers = Math.min(maximumAddedCoopPlayers, XT87Utils.MAX_PLAYER_COUNT - info.getPlayers().size());
+		int maximumAddedCoopPlayers = addedCoopPlayers;
+		// region extract files from campaign
+		{
+			JMpqEditor campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
+			extractCampaignFiles(campEditor);
+			System.out.println("Difficulty selector: " + (withDifficultySelector ? "enabled" : "disabled") + ".");
+			for (int i = 0; i < buttonCount; i++) {
+				W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
+				String title = mapEntry.getChapterTitle();
+				if (title == null || !title.contains(STRING_PREFIX))
+					throw new Exception("Invalid chapter title for map " + mapEntry.getMapPath() + ": \"" + title + "\" (Broken campaign)");
+				int chapterTitleIndex = stringIndexToInt(title);
+				title = mapEntry.getMapTitle();
+				if (title == null || !title.contains(STRING_PREFIX))
+					throw new Exception("Invalid map title for map " + mapEntry.getMapPath() + ": \"" + title + "\" (Broken campaign)");
+				int mapTitleIndex = stringIndexToInt(title);
+				String buttonTitle = buttonText(i, buttonCount) + campStrings.getKeyedEntries().get(chapterTitleIndex) + ": " + campStrings.getKeyedEntries().get(mapTitleIndex);
+				campStrings.addEntry(mapTitleIndex, buttonTitle);
+				buttonNameMap.put(mapEntry.getMapPath().toLowerCase(), buttonTitle);
+			}
+			for (int i = 0; i < buttonCount; i++) {
+				W3F.MapEntry mapEntry = campaignData.getMaps().get(i);
+				String fileName = mapEntry.getMapPath();
+				String mapPath = splitPath + "/" + fileName;
+//			if (i != 0)
+//				campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
+				if (!campEditor.hasFile(fileName))
+					continue;
+				File mapFile = new File(mapPath);
+				mapFile.createNewFile();
+				campEditor.extractFile(fileName, mapFile);
+				mapFiles.add(mapFile);
+				System.out.println("Extracted map \"" + mapFile.getName() + "\".");
+				W3I info = W3I.ofMapFile(mapFile);
+				maximumAddedCoopPlayers = Math.min(maximumAddedCoopPlayers, XT87Utils.MAX_PLAYER_COUNT - info.getPlayers().size());
+			}
+			campEditor.close();
 		}
+		// endregion
 		if (addedCoopPlayers > 0)
-			System.out.println("Number of coop slots to be added: " + maximumAddedCoopPlayers + " (" + (maximumAddedCoopPlayers + 1) +  " slots).");
+			System.out.println("Number of coop slots to be added: " + maximumAddedCoopPlayers + " (" + (maximumAddedCoopPlayers + 1) + " slots).");
 		for (int i = 0; i < buttonCount; i++) {
 			File mapFile = mapFiles.get(i);
 			MapInjector mi = new MapInjector(this, mapFile, i);
@@ -220,10 +224,8 @@ public class CampaignSplitter {
 			mi.addedCoopPlayers = maximumAddedCoopPlayers;
 			try {
 				mi.addCampaignData();
-				System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i, buttonCount));
-			}
-			catch (NonReadableChannelException | NonWritableChannelException e)
-			{
+				System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, i + 1, buttonCount));
+			} catch (NonReadableChannelException | NonWritableChannelException e) {
 				throw new Exception("Map \"" + mapFile.getName() + "\" is protected and cannot be read/edited.");
 			}
 			if (i == 0) {
@@ -231,10 +233,8 @@ public class CampaignSplitter {
 				SetValueProgressBar(STEPS_CAMP_DATA + stepsPerMap);
 			}
 		}
-		System.out.println(MessageFormat.format(MAP_COUNT_FORMAT, buttonCount, buttonCount));
 		XT87Utils.deleteNewFiles();
 		removeTemporaryFiles();
-		campEditor.close();
 		CompleteProgressBar();
 	}
 
