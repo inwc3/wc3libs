@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import java.util.Collection;
 
 public class StateTest {
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test()
     public void test() {
         Class c = AbilityMetaSLK.State.class;

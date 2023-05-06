@@ -24,21 +24,13 @@ public class StdGameExeFinder extends GameExeFinder {
         if (Orient.isMacSystem()) {
             GameExeFinder macGameExeFinder = getMacGameExeFinder();
 
-            try {
-                return macGameExeFinder.get();
-            } catch (NotFoundException e) {
-                throw e;
-            }
+            return macGameExeFinder.get();
         } else if (Orient.isWindowsSystem()) {
             GameExeFinder winGameExeFinder = getWinGameExeFinder();
 
-            try {
-                return winGameExeFinder.get();
-            } catch (NotFoundException e) {
-                throw e;
-            }
+            return winGameExeFinder.get();
         } else {
-            throw new NotFoundException(new Exception("system not supported: " + Orient.getSystem()));
+            throw new UnsupportedPlatformException("system not supported: " + Orient.getSystem());
         }
     }
 }
