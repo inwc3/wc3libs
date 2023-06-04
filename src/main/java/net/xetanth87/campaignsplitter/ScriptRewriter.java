@@ -74,7 +74,7 @@ public abstract class ScriptRewriter {
 		mi.mapEditor.insertFile(mi.scriptPath, mi.tempFile, false, true);
 	}
 
-	public void modifyScript() throws IOException {
+	public void modifyScript() {
 		String text = mi.scriptBuffer.toString();
 		Scanner sc = new Scanner(text);
 		StringBuffer sb = new StringBuffer();
@@ -118,6 +118,15 @@ public abstract class ScriptRewriter {
 	public static String getCallFromLine(String line) {
 		try {
 			return line.substring(line.indexOf("call "), line.indexOf("(") + 1);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static String getTrimmedCallFromLine(String line) {
+		try {
+			String newLine = getCallFromLine(line).substring("call ".length());
+			return newLine.substring(0, newLine.length() - 1).trim();
 		} catch (Exception e) {
 			return null;
 		}

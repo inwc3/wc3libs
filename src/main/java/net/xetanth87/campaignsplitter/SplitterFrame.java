@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 public class SplitterFrame extends JFrame {
 	public static final String AUTHOR = "Xetanth87";
@@ -131,7 +132,7 @@ public class SplitterFrame extends JFrame {
 		panel = new JPanel();
 		add(panel);
 		taskOutput = new JTextArea(12, 50);
-		taskOutput.setMargin(new Insets(5,5,5,5));
+		taskOutput.setMargin(new Insets(5, 5, 5, 5));
 		taskOutput.setEditable(false);
 		panel.add(new JScrollPane(taskOutput), BorderLayout.CENTER);
 
@@ -141,8 +142,11 @@ public class SplitterFrame extends JFrame {
 			ex.printStackTrace();
 		}
 
-		ImageIcon icon = new ImageIcon(getClass().getResource("Icon.png"));
-		setIconImage(icon.getImage());
+		try {
+			setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("Icon.png"))).getImage());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		setVisible(true);
 	}
 
@@ -184,8 +188,7 @@ public class SplitterFrame extends JFrame {
 		}
 	}
 
-	public void setButtonStates(boolean running)
-	{
+	public void setButtonStates(boolean running) {
 		this.running = running;
 		filePathField.setEditable(!running);
 		Enumeration<AbstractButton> e = difficultySelectorGroup.getElements();
@@ -198,8 +201,7 @@ public class SplitterFrame extends JFrame {
 			browse.setBackground(Color.GRAY);
 			split.setText("Stop");
 			split.setBackground(Color.RED);
-		}
-		else {
+		} else {
 			browse.setBackground(new Color(100, 200, 255));
 			split.setText("Split");
 			split.setBackground(Color.ORANGE);
@@ -208,7 +210,7 @@ public class SplitterFrame extends JFrame {
 
 	private static String formatDuration(Duration duration) {
 		long s = duration.getSeconds();
-		return String.format("%d:%02d:%02d", s/3600, (s%3600)/60, (s%60));
+		return String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
 	}
 
 	private class FrameCampaignSplitter extends CampaignSplitter {
@@ -254,8 +256,7 @@ public class SplitterFrame extends JFrame {
 		}
 
 		@Override
-		public void println(String s)
-		{
+		public void println(String s) {
 			super.println(s);
 			if (!frame.taskOutput.getText().isEmpty())
 				frame.taskOutput.append("\n");
@@ -305,8 +306,7 @@ public class SplitterFrame extends JFrame {
 						message = ex.toString();
 					JOptionPane.showMessageDialog(null, "A problem was encountered when splitting \"" + file.getName() + "\"(" + timeSpan + "):\n" + message, APP_TITLE, JOptionPane.ERROR_MESSAGE);
 				}
-			}
-			finally {
+			} finally {
 				setButtonStates(false);
 			}
 		}
@@ -320,8 +320,7 @@ public class SplitterFrame extends JFrame {
 					splitterThread.interrupt();
 				XT87Utils.deleteNewFiles();
 				JOptionPane.showMessageDialog(null, "The splitting has stopped!", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
-			}
-			else {
+			} else {
 				taskOutput.setText("");
 				setButtonStates(true);
 				splitterThread = new CampaignSplitterThread();

@@ -39,7 +39,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static net.xetanth87.campaignsplitter.XT87Utils.STRING_PREFIX;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
@@ -424,7 +423,7 @@ public class MapInjector {
 		List<W3I.Player> secondaryPlayers = null;
 		if (addedCoopPlayers > 0) {
 			W3I.Player finalMainPlayer = mainPlayer;
-			W3I.Force force = info.getForces().stream().filter(x -> x.getPlayerNums().contains(finalMainPlayer.getNum())).findFirst().get();
+			W3I.Force force = info.getForces().stream().filter(f -> f.getPlayerNums().contains(finalMainPlayer.getNum())).findFirst().get();
 			List<Integer> unusedPlayerNumbers = new ArrayList<>();
 			for (int i = mainPlayer.getNum() + 1; i < XT87Utils.MAX_PLAYER_COUNT; i++)
 				unusedPlayerNumbers.add(i);
@@ -436,21 +435,22 @@ public class MapInjector {
 			secondaryPlayers = new ArrayList<>();
 			for (int i : unusedPlayerNumbers) {
 				W3I.Player secondaryPlayer = XT87Utils.clonePlayer(mainPlayer, i);
+				info.getForces().forEach(f -> f.removePlayerNums(i));
 				force.addPlayerNums(i);
 				secondaryPlayers.add(secondaryPlayer);
 				info.getPlayers().add(secondaryPlayer);
-				for (W3I.TechMod techMod : info.getTechMods()) {
-					int players = techMod.getPlayers();
-					if (players >> mainPlayer.getNum() == 1) {
-						techMod.setPlayers(players | 1 << i);
-					}
-				}
-				for (W3I.UpgradeMod upgradeMod : info.getUpgradeMods()) {
-					int players = upgradeMod.getPlayers();
-					if (players >> mainPlayer.getNum() == 1) {
-						upgradeMod.setPlayers(players | 1 << i);
-					}
-				}
+//				for (W3I.TechMod techMod : info.getTechMods()) {
+//					int players = techMod.getPlayers();
+//					if ((players >> mainPlayer.getNum() & 1) == 1) {
+//						techMod.setPlayers(players | (1 << i));
+//					}
+//				}
+//				for (W3I.UpgradeMod upgradeMod : info.getUpgradeMods()) {
+//					int players = upgradeMod.getPlayers();
+//					if ((players >> mainPlayer.getNum() & 1) == 1) {
+//						upgradeMod.setPlayers(players | (1 << i));
+//					}
+//				}
 			}
 		}
 		return new MapInfo(info, mainPlayer, secondaryPlayers);
