@@ -238,14 +238,13 @@ public class CampaignSplitter {
 		CompleteProgressBar();
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		String campaignPath = null;
 		boolean acceptZeroParam = false;
 		int acceptedArgsLength = 1;
 		if (args.length != acceptedArgsLength && (args.length != 0 || !acceptZeroParam))
 			throw new IllegalArgumentException("Wrong number of arguments! Expected: " + acceptedArgsLength + ", Got: " + args.length);
-		if (args.length == 0) {
-		} else {
+		if (args.length > 0) {
 			campaignPath = args[0];
 		}
 		CampaignSplitter cs = null;

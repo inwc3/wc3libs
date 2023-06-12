@@ -63,9 +63,12 @@ public class CoopCallAdjustments {
 		addCallParameters("ForcePlayerStartLocation", 0);
 		addCallParameters("SetPlayerAlliance", Arrays.asList(0, 1));
 		addCallParameters("SetPlayerRacePreference", 0);
+		addCallParameters("SetPlayerRaceSelectable", 0);
 		addCallParameters("SetPlayerController", 0);
 		addCallParameters("ForceAddPlayer", 1);
 		addCallParameters("ForceRemovePlayer", 1);
+		addCallParameters("DialogDisplay", 0);
+		addCallParameters("DialogDisplayBJ", 2);
 //		addCallParameters("TriggerRegisterPlayerAllianceChange", Arrays.asList(0, 1));
 //		addCallParameters("TriggerRegisterPlayerStateEvent", 0);
 		addCallParameters("TriggerRegisterPlayerChatEvent", 1);
