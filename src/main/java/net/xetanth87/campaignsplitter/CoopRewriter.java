@@ -19,11 +19,15 @@ public class CoopRewriter extends ScriptRewriter {
 	public static final String TEMP_POINT_NAME = ARCHON_PREFIX + "TempPoint";
 	public static final String ENFORCE_ARCHON = ARCHON_PREFIX + "EnforceArchon";
 	public static final String LAST_CREATED_COOP_CACHE = ARCHON_PREFIX + "_lastCreatedGameCache";
-	public static final String GENERAL_HASHTABLE = ARCHON_PREFIX + "Hashtable";
+	public static final String GENERAL_HASHTABLE = ARCHON_PREFIX + "GHT";
+	public static final String SELECTION_HASHTABLE = ARCHON_PREFIX + "FXHT";
 	public static final String GH_HAS_ABILITY = "hasAbility";
 	public static final String ABILITY_ARRAY = ARCHON_PREFIX + "AbilityArray";
 	public static final String ABILITY_ARRAY_SIZE = ABILITY_ARRAY + "SIZE";
 
+	// coop selection effects
+
+	// coop cache
 	public static final String CACHE_VALUE_PREFIX = "v";
 	public static final String CACHE_UNIT_PREFIX = "u";
 	public static final String CACHE_OTHER_PREFIX = "o";
@@ -607,8 +611,7 @@ public class CoopRewriter extends ScriptRewriter {
 			for (int i = 0; i < resourceTypes.size(); i++) {
 				String resourceType = resourceTypes.get(i);
 				String resourceName = resourceNames.get(i);
-				append("// Trigger: " + ARCHON_PREFIX + resourceName + "Sync" + JASS_DELIM +
-						"function Trig_" + ARCHON_PREFIX + resourceName + "Sync_Actions takes nothing returns nothing" + JASS_DELIM +
+				append("function Trig_" + ARCHON_PREFIX + resourceName + "Sync_Actions takes nothing returns nothing" + JASS_DELIM +
 						"    local integer resourceSyncValue=GetPlayerState(GetTriggerPlayer()," + resourceType + ")" + JASS_DELIM +
 						"    " + XT87Utils.DISABLE_TRIGGER + XT87Utils.THIS_TRIGGER + ")", sb);
 				for (int playerNumber : allPlayerNumbers) {
@@ -619,20 +622,16 @@ public class CoopRewriter extends ScriptRewriter {
 				}
 				append("    " + XT87Utils.ENABLE_TRIGGER + XT87Utils.THIS_TRIGGER + ")" + JASS_DELIM +
 						END_FUNCTION + JASS_DELIM +
-						"//===========================================================================" + JASS_DELIM +
 						"function InitTrig_" + ARCHON_PREFIX + resourceName + "Sync takes nothing returns nothing" + JASS_DELIM +
 						"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + resourceName + "Sync=CreateTrigger()", sb);
 				append("    call TriggerRegisterPlayerStateEvent(" + TRIGGER_PREFIX + ARCHON_PREFIX + resourceName + "Sync," + toMainPlayerFunc() + "," + resourceType + ",GREATER_THAN_OR_EQUAL,0.00)", sb);
 				append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + resourceName + "Sync,function Trig_" + ARCHON_PREFIX + resourceName + "Sync_Actions)" + JASS_DELIM +
-						END_FUNCTION + JASS_DELIM, sb);
+						END_FUNCTION, sb);
 			}
 			// endregion
 
 			// region give units to main player
-			append("//===========================================================================" + JASS_DELIM +
-					"// Trigger: " + ARCHON_PREFIX + "UnitShare" + JASS_DELIM +
-					"//===========================================================================" + JASS_DELIM +
-					"function Trig_" + ARCHON_PREFIX + "UnitShare_Conditions takes nothing returns boolean", sb);
+			append("function Trig_" + ARCHON_PREFIX + "UnitShare_Conditions takes nothing returns boolean", sb);
 			for (int playerNumber : allPlayerNumbers) {
 				if (playerNumber == mainPlayer.getNum())
 					continue;
@@ -644,13 +643,50 @@ public class CoopRewriter extends ScriptRewriter {
 					END_FUNCTION + JASS_DELIM +
 					"function Trig_" + ARCHON_PREFIX + "UnitShare_Actions takes nothing returns nothing" + JASS_DELIM +
 					"    call SetUnitOwner(GetEnteringUnit()," + toMainPlayerFunc() + ",true)" + JASS_DELIM +
-					"endfunction" + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
 					"function InitTrig_" + ARCHON_PREFIX + "UnitShare takes nothing returns nothing" + JASS_DELIM +
 					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare=CreateTrigger()" + JASS_DELIM +
 					"    call TriggerRegisterEnterRectSimple(" + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare,GetPlayableMapRect())" + JASS_DELIM +
 					"    call TriggerAddCondition(" + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare,Condition(function Trig_" + ARCHON_PREFIX + "UnitShare_Conditions))" + JASS_DELIM +
 					"    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare,function Trig_" + ARCHON_PREFIX + "UnitShare_Actions)" + JASS_DELIM +
-					END_FUNCTION + JASS_DELIM, sb);
+					END_FUNCTION, sb);
+			// endregion
+
+			// region selection effects
+			append("function Trig_" + ARCHON_PREFIX + "Select_Actions takes nothing returns nothing" + JASS_DELIM +
+					"    local integer id=GetHandleId(GetTriggerUnit())" + JASS_DELIM +
+					"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
+					"    call AddSpecialEffectTargetUnitBJ(\"origin\", GetTriggerUnit(), \"buildings\\\\other\\\\CircleOfPower\\\\CircleOfPower.mdl\")" + JASS_DELIM +
+					"    call BlzSetSpecialEffectColorByPlayer(GetLastCreatedEffectBJ(), GetTriggerPlayer())" + JASS_DELIM +
+					//"    call BlzSetSpecialEffectScale(GetLastCreatedEffectBJ(), ( ( I2R(udg_interino) * 0.05 ) + 0.50 ))" + JASS_DELIM +
+					"    call SaveEffectHandleBJ(GetLastCreatedEffectBJ(), GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + ")" + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
+					"function InitTrig_" + ARCHON_PREFIX + "Select takes nothing returns nothing" + JASS_DELIM +
+					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=CreateTrigger()", sb);
+					for (int playerNumber : allPlayerNumbers)
+						append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select," + toPlayerFunc(playerNumber) + ",true)", sb);
+					append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select, function Trig_" + ARCHON_PREFIX + "Select_Actions)" + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
+					"function Trig_" + ARCHON_PREFIX + "Deselect_Actions takes nothing returns nothing" + JASS_DELIM +
+					"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),GetHandleId(GetTriggerUnit())," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
+					"function InitTrig_" + ARCHON_PREFIX + "Deselect takes nothing returns nothing" + JASS_DELIM +
+					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=CreateTrigger()", sb);
+					for (int playerNumber : allPlayerNumbers)
+						append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect," + toPlayerFunc(playerNumber) + ",false)", sb);
+					append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect, function Trig_" + ARCHON_PREFIX + "Deselect_Actions)" + JASS_DELIM +
+					END_FUNCTION + JASS_DELIM +
+					"function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions takes nothing returns nothing" + JASS_DELIM +
+					"    local integer id=GetHandleId(GetTriggerUnit())", sb);
+					for (int playerNumber : allPlayerNumbers)
+						append("    call DestroyEffectBJ(LoadEffectHandleBJ(" + playerNumber +",id," + SELECTION_HASHTABLE + "))", sb);
+					append(END_FUNCTION + JASS_DELIM +
+					"function InitTrig_" + ARCHON_PREFIX + "DeselectOnDeath takes nothing returns nothing" + JASS_DELIM +
+					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=CreateTrigger()" + JASS_DELIM +
+					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_DEATH)" + JASS_DELIM +
+					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_LOADED)" + JASS_DELIM +
+					"    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions)" + JASS_DELIM +
+					END_FUNCTION, sb);
 			// endregion
 
 			// region get main player
@@ -660,7 +696,7 @@ public class CoopRewriter extends ScriptRewriter {
 					"        return " + toMainPlayerFunc() + JASS_DELIM +
 					"    endif" + JASS_DELIM +
 					"    return p" + JASS_DELIM +
-					END_FUNCTION + JASS_DELIM, sb);
+					END_FUNCTION, sb);
 			// endregion
 
 			// region enforce sharing
@@ -714,10 +750,14 @@ public class CoopRewriter extends ScriptRewriter {
 				append("trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + resourceName + "Sync=null", sb);
 			append("trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare=null" + JASS_DELIM +
 					"force " + FORCE_NAME + JASS_DELIM +
-					"location " + TEMP_POINT_NAME + JASS_DELIM, sb);
+					"location " + TEMP_POINT_NAME + JASS_DELIM +
+					"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
+					"hashtable " + SELECTION_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
+					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=null" + JASS_DELIM +
+					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=null" + JASS_DELIM +
+					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=null", sb);
 			if (withCustomGameCache) {
 				append("hashtable " + LAST_CREATED_COOP_CACHE + "=null" + JASS_DELIM +
-						"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
 						"integer array " + ABILITY_ARRAY + JASS_DELIM +
 						"integer " + ABILITY_ARRAY_SIZE + "=0" + JASS_DELIM +
 						"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "WatchLearnedSkill" + JASS_DELIM +
@@ -1028,14 +1068,14 @@ public class CoopRewriter extends ScriptRewriter {
 		} else if (line.contains("function InitCustomTriggers takes")) {
 			for (String resourceName : ALL_RESOURCE_NAMES)
 				append("    call InitTrig_" + ARCHON_PREFIX + resourceName + "Sync()", sb);
-			append("    call InitTrig_" + ARCHON_PREFIX + "UnitShare()" + JASS_DELIM, sb);
+			for (String triggerName : Arrays.asList("UnitShare", "Select", "Deselect", "DeselectOnDeath"))
+				append("    call InitTrig_" + ARCHON_PREFIX + triggerName + "()", sb);
 			if (withCustomGameCache) {
 				append("    call InitTrig_" + ARCHON_PREFIX + "SyncData()" + JASS_DELIM +
 						"    call InitTrig_" + ARCHON_PREFIX + "WatchLearnedSkill()" + JASS_DELIM +
 						"    call ExecuteFunc(\"s__File_FileIO___FileInit__onInit\")", sb);
 			}
-		}
-		else if (line.contains("SetForceAllianceStateBJ("))
+		} else if (line.contains("SetForceAllianceStateBJ("))
 			append("call " + ENFORCE_ARCHON + "()", sb);
 
 		if (line.contains(DEFINE_START_LOC + mainPlayer.getNum() + ",")) {
