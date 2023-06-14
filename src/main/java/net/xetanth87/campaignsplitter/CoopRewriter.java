@@ -1,6 +1,7 @@
 package net.xetanth87.campaignsplitter;
 
 import net.moonlightflower.wc3libs.bin.app.W3I;
+import net.moonlightflower.wc3libs.txt.app.jass.Jass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +20,10 @@ public class CoopRewriter extends ScriptRewriter {
 	public static final String TEMP_POINT_NAME = ARCHON_PREFIX + "TempPoint";
 	public static final String ENFORCE_ARCHON = ARCHON_PREFIX + "EnforceArchon";
 	public static final String LAST_CREATED_COOP_CACHE = ARCHON_PREFIX + "_lastCreatedGameCache";
+	public static final String PLAYER_ID_ARRAY = ARCHON_PREFIX + "IDA";
 	public static final String PLAYER_INDEX_ARRAY = ARCHON_PREFIX + "PIA";
 	public static final String PLAYER_ANGLE_ARRAY = ARCHON_PREFIX + "PAA";
-	public static final String PLAYER_SELECTION_ARRAY = ARCHON_PREFIX + "PSA";
+	public static final String AUX_PLAYER = ARCHON_PREFIX + "AXP";
 	public static final String GENERAL_HASHTABLE = ARCHON_PREFIX + "GHT";
 	public static final String SELECTION_HASHTABLE = ARCHON_PREFIX + "FXHT";
 	public static final String SELECTION_INDICATOR_PATH = "selectionIndicator";
@@ -207,11 +209,11 @@ public class CoopRewriter extends ScriptRewriter {
 							"call SetPlayerOnScoreScreen(" + playerFunc + ",false)", sb);
 				}
 				int index = 0;
-				final float anglePerPlayer = 360f / secondaryPlayers.size();
+				final float anglePerPlayer = 360f / (allPlayerNumbers.size() - 1);
 				for (int playerNum : allPlayerNumbers) {
-					append("set " + PLAYER_INDEX_ARRAY + "[" + playerNum + "]=" + index + JASS_DELIM +
-							"set " + PLAYER_ANGLE_ARRAY + "[" + playerNum + "]=" + (index * anglePerPlayer) + JASS_DELIM +
-							"set " + PLAYER_SELECTION_ARRAY + "[" + playerNum + "]=CreateGroup()", sb);
+					append("set " + PLAYER_ID_ARRAY + "[" + index + "]=" + playerNum + JASS_DELIM +
+							"set " + PLAYER_INDEX_ARRAY + "[" + playerNum + "]=" + index + JASS_DELIM +
+							"set " + PLAYER_ANGLE_ARRAY + "[" + playerNum + "]=" + (index * anglePerPlayer), sb);
 					index++;
 				}
 				append("call " + ENFORCE_ARCHON + "()" + JASS_DELIM +
@@ -666,25 +668,32 @@ public class CoopRewriter extends ScriptRewriter {
 
 			// region selection effects
 			append("function " + ARCHON_PREFIX + "SelectUnit takes nothing returns nothing" + JASS_DELIM +
-					"local integer pid=GetConvertedPlayerId(GetTriggerPlayer())" + JASS_DELIM +
+					"local integer pid=GetPlayerId(" + AUX_PLAYER + ")" + JASS_DELIM +
+					"local integer ct=LoadInteger(" + SELECTION_HASHTABLE + ",pid,0)+1" + JASS_DELIM +
 					"call AddSpecialEffectTargetUnitBJ(\"overhead\",GetEnumUnit(),\"" + XT87Utils.PATH_PREFIX + "\\\\" + SELECTION_INDICATOR_PATH + ".mdx\")" + JASS_DELIM +
-					"call BlzSetSpecialEffectColorByPlayer(GetLastCreatedEffectBJ(),GetTriggerPlayer())" + JASS_DELIM +
+					"call BlzSetSpecialEffectColorByPlayer(GetLastCreatedEffectBJ(),Player(pid))" + JASS_DELIM +
 					"call BlzSetSpecialEffectYaw(GetLastCreatedEffectBJ()," + PLAYER_ANGLE_ARRAY + "[pid]" + ")" + JASS_DELIM +
-					"call SaveEffectHandleBJ(GetLastCreatedEffectBJ(),pid,GetHandleId(GetEnumUnit())," + SELECTION_HASHTABLE + ")" + JASS_DELIM +
-					END_FUNCTION, sb);
-			append("function " + ARCHON_PREFIX + "DeselectUnit takes nothing returns nothing" + JASS_DELIM +
-					"call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),GetHandleId(GetEnumUnit())," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
+					"call SaveEffectHandle(" + SELECTION_HASHTABLE + ",pid,ct,GetLastCreatedEffectBJ())" + JASS_DELIM +
+					"call SaveInteger(" + SELECTION_HASHTABLE + ",pid,0,ct)" + JASS_DELIM +
 					END_FUNCTION, sb);
 			append("function Trig_" + ARCHON_PREFIX + "Select_Actions takes nothing returns nothing" + JASS_DELIM +
-					"local group g=" + PLAYER_SELECTION_ARRAY + "[GetConvertedPlayerId(GetTriggerPlayer())]" + JASS_DELIM +
-					"call SyncSelections()" + JASS_DELIM +
-					"call ForGroup(g,function " + ARCHON_PREFIX + "DeselectUnit)" + JASS_DELIM +
-					"call GroupClear(g)" + JASS_DELIM +
-					"call GroupEnumUnitsSelected(g,GetTriggerPlayer(),null)" + JASS_DELIM +
+					"local integer i=0" + JASS_DELIM +
+					"local integer pid=GetPlayerId(GetTriggerPlayer())" + JASS_DELIM +
+					"local integer ct" + JASS_DELIM +
+					"local group g" + JASS_DELIM +
+					"call TriggerSleepAction(0.00)" + JASS_DELIM +
+					"set ct=LoadInteger(" + SELECTION_HASHTABLE + ",pid,0)" + JASS_DELIM +
+					"loop" + JASS_DELIM +
+					"set i=i+1" + JASS_DELIM +
+					"exitwhen i>ct" + JASS_DELIM +
+					"call DestroyEffect(LoadEffectHandle(" + SELECTION_HASHTABLE + ",GetPlayerId(" + AUX_PLAYER + "),i))" + JASS_DELIM +
+					"endloop" + JASS_DELIM +
+					"call SaveInteger(" + SELECTION_HASHTABLE + ",pid,0,0)" + JASS_DELIM +
+					"set g=CreateGroup()" + JASS_DELIM +
+					"set " + AUX_PLAYER + "=GetTriggerPlayer()" + JASS_DELIM +
+					"call GroupEnumUnitsSelected(g," + AUX_PLAYER + ",null)" + JASS_DELIM +
 					"call ForGroup(g,function " + ARCHON_PREFIX + "SelectUnit)" + JASS_DELIM +
-					//"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
-					//"    call BlzSetSpecialEffectScale(GetLastCreatedEffectBJ(), ( ( I2R(udg_interino) * 0.05 ) + 0.50 ))" + JASS_DELIM +
-					//"    call SaveEffectHandleBJ(GetLastCreatedEffectBJ(), GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + ")" + JASS_DELIM +
+					"call DestroyGroup(g)" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
 					"function InitTrig_" + ARCHON_PREFIX + "Select takes nothing returns nothing" + JASS_DELIM +
 					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=CreateTrigger()", sb);
@@ -693,32 +702,12 @@ public class CoopRewriter extends ScriptRewriter {
 					append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select," + toPlayerFunc(playerNumber) + "," + selectBool + ")", sb);
 			append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select, function Trig_" + ARCHON_PREFIX + "Select_Actions)" + JASS_DELIM +
 					END_FUNCTION, sb);
-//			append("function Trig_" + ARCHON_PREFIX + "Deselect_Actions takes nothing returns nothing" + JASS_DELIM +
-//					"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),GetHandleId(GetTriggerUnit())," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
-//					END_FUNCTION + JASS_DELIM +
-//					"function InitTrig_" + ARCHON_PREFIX + "Deselect takes nothing returns nothing" + JASS_DELIM +
-//					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=CreateTrigger()", sb);
-//			for (int playerNumber : allPlayerNumbers)
-//				append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect," + toPlayerFunc(playerNumber) + ",false)", sb);
-//			append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect, function Trig_" + ARCHON_PREFIX + "Deselect_Actions)" + JASS_DELIM +
-//					END_FUNCTION + JASS_DELIM +
-//					"function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions takes nothing returns nothing" + JASS_DELIM +
-//					"    local integer id=GetHandleId(GetTriggerUnit())", sb);
-//			for (int playerNumber : allPlayerNumbers)
-//				append("    call DestroyEffectBJ(LoadEffectHandleBJ(" + playerNumber + ",id," + SELECTION_HASHTABLE + "))", sb);
-//			append(END_FUNCTION + JASS_DELIM +
-//					"function InitTrig_" + ARCHON_PREFIX + "DeselectOnDeath takes nothing returns nothing" + JASS_DELIM +
-//					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=CreateTrigger()" + JASS_DELIM +
-//					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_DEATH)" + JASS_DELIM +
-//					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_LOADED)" + JASS_DELIM +
-//					"    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions)" + JASS_DELIM +
-//					END_FUNCTION, sb);
 			// endregion
 
 			// region get main player
 			append("function " + ARCHON_PREFIX + "GetMainPlayer takes nothing returns player" + JASS_DELIM +
-					"    local player p = GetLocalPlayer()" + JASS_DELIM +
-					"    if IsPlayerInForce(p, " + FORCE_NAME + ") then" + JASS_DELIM +
+					"    local player p=GetLocalPlayer()" + JASS_DELIM +
+					"    if IsPlayerInForce(p," + FORCE_NAME + ") then" + JASS_DELIM +
 					"        return " + toMainPlayerFunc() + JASS_DELIM +
 					"    endif" + JASS_DELIM +
 					"    return p" + JASS_DELIM +
@@ -778,9 +767,10 @@ public class CoopRewriter extends ScriptRewriter {
 			append("trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare=null" + JASS_DELIM +
 							"force " + FORCE_NAME + JASS_DELIM +
 							"location " + TEMP_POINT_NAME + JASS_DELIM +
+							"integer array " + PLAYER_ID_ARRAY + JASS_DELIM +
 							"integer array " + PLAYER_INDEX_ARRAY + JASS_DELIM +
 							"real array " + PLAYER_ANGLE_ARRAY + JASS_DELIM +
-							"group array " + PLAYER_SELECTION_ARRAY + JASS_DELIM +
+							"player " + AUX_PLAYER + JASS_DELIM +
 							"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
 							"hashtable " + SELECTION_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
 							"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=null"
