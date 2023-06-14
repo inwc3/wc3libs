@@ -24,24 +24,25 @@ public class LegacyMerger {
 
 	static {
 		assetList = Arrays.asList(
-			"replaceabletextures\\commandbuttons\\btnsteamtank.blp",
-			"replaceabletextures\\commandbuttonsdisabled\\disbtnsteamtank.blp",
-			"replaceabletextures\\commandbuttons\\btncatapult.blp",
-			"replaceabletextures\\commandbuttonsdisabled\\disbtncatapult.blp",
-			"replaceabletextures\\commandbuttons\\btnballista.blp",
-			"replaceabletextures\\commandbuttonsdisabled\\disbtnballista.blp",
-			"replaceabletextures\\commandbuttons\\btnchaosspaceorc.blp",
-			"replaceabletextures\\commandbuttonsdisabled\\disbtnchaosspaceorc.blp",
-			"units\\human\\warwagon\\warwagon.mdx",
-			"units\\human\\warwagon\\warwagon_portrait.mdx",
-			"units\\human\\gyrocopter\\gyrocopter.mdx",
-			"units\\human\\gyrocopter\\gyrocopter_portrait.mdx",
-			"units\\orc\\catapult\\catapult.mdx",
-			"units\\orc\\catapult\\catapult_portrait.mdx",
-			"units\\nightelf\\ballista\\ballista.mdx",
-			"units\\nightelf\\ballista\\ballista_portrait.mdx",
-			"units\\critters\\chaosspaceorc\\chaosspaceorc.mdx"
-	);
+				"replaceabletextures\\commandbuttons\\btnsteamtank.blp",
+				"replaceabletextures\\commandbuttonsdisabled\\disbtnsteamtank.blp",
+				"replaceabletextures\\commandbuttons\\btncatapult.blp",
+				"replaceabletextures\\commandbuttonsdisabled\\disbtncatapult.blp",
+				"replaceabletextures\\commandbuttons\\btnballista.blp",
+				"replaceabletextures\\commandbuttonsdisabled\\disbtnballista.blp",
+				"replaceabletextures\\commandbuttons\\btnchaosspaceorc.blp",
+				"replaceabletextures\\commandbuttonsdisabled\\disbtnchaosspaceorc.blp",
+				"units\\human\\warwagon\\warwagon.mdx",
+				"units\\human\\warwagon\\warwagon_portrait.mdx",
+				"units\\human\\gyrocopter\\gyrocopter.mdx",
+				"units\\human\\gyrocopter\\gyrocopter_portrait.mdx",
+				"units\\orc\\catapult\\catapult.mdx",
+				"units\\orc\\catapult\\catapult_portrait.mdx",
+				"units\\nightelf\\ballista\\ballista.mdx",
+				"units\\nightelf\\ballista\\ballista_portrait.mdx",
+				"units\\critters\\chaosspaceorc\\chaosspaceorc.mdx",
+				XT87Utils.PATH_PREFIX + "\\" + CoopRewriter.SELECTION_INDICATOR_PATH + ".mdx"
+		);
 		hdAssetList = new ArrayList<>();
 		for (String path : assetList) {
 			if (path.endsWith(".blp"))
@@ -55,8 +56,7 @@ public class LegacyMerger {
 		return new ArrayList<>(isHd ? hdAssetList : assetList);
 	}
 
-	public static boolean AddLegacyAssets(CampaignSplitter cs, IMP imports)
-	{
+	public static boolean AddLegacyAssets(CampaignSplitter cs, IMP imports) {
 		List<String> originalImportList = new ArrayList<>();
 		for (IMP.Obj o : imports.getObjs()) {
 			originalImportList.add(o.getPath());
@@ -74,8 +74,7 @@ public class LegacyMerger {
 			String zipDirPath = jarFile.getParentFile().getPath() + "/" + (isHd ? hdArchiveName : sdArchiveName);
 			try {
 				zipFile = new ZipFile(zipDirPath);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				zipFile = null;
 			}
 			if (zipFile == null) {
@@ -91,8 +90,7 @@ public class LegacyMerger {
 					String name = path.substring(0, path.length() - 3);
 					checkList.remove(name + ".mdx");
 					checkList.remove(name + portraitSufix + ".mdx");
-				}
-				else
+				} else
 					checkList.remove(path);
 			}
 			while (entries.hasMoreElements()) {
@@ -125,8 +123,7 @@ public class LegacyMerger {
 			if (zipFile != null) {
 				try {
 					zipFile.close();
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 				}
 			}
 			return false;

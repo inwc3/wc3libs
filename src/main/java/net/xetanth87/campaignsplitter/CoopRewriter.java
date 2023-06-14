@@ -19,8 +19,12 @@ public class CoopRewriter extends ScriptRewriter {
 	public static final String TEMP_POINT_NAME = ARCHON_PREFIX + "TempPoint";
 	public static final String ENFORCE_ARCHON = ARCHON_PREFIX + "EnforceArchon";
 	public static final String LAST_CREATED_COOP_CACHE = ARCHON_PREFIX + "_lastCreatedGameCache";
+	public static final String PLAYER_INDEX_ARRAY = ARCHON_PREFIX + "PIA";
+	public static final String PLAYER_ANGLE_ARRAY = ARCHON_PREFIX + "PAA";
+	public static final String PLAYER_SELECTION_ARRAY = ARCHON_PREFIX + "PSA";
 	public static final String GENERAL_HASHTABLE = ARCHON_PREFIX + "GHT";
 	public static final String SELECTION_HASHTABLE = ARCHON_PREFIX + "FXHT";
+	public static final String SELECTION_INDICATOR_PATH = "selectionIndicator";
 	public static final String GH_HAS_ABILITY = "hasAbility";
 	public static final String ABILITY_ARRAY = ARCHON_PREFIX + "AbilityArray";
 	public static final String ABILITY_ARRAY_SIZE = ABILITY_ARRAY + "SIZE";
@@ -201,6 +205,14 @@ public class CoopRewriter extends ScriptRewriter {
 					String playerFunc = toPlayerFunc(player.getNum());
 					append(SETPLAYERCOLOR + playerFunc + "," + CONVERTPLAYERCOLOR + player.getNum() + "))" + JASS_DELIM +
 							"call SetPlayerOnScoreScreen(" + playerFunc + ",false)", sb);
+				}
+				int index = 0;
+				final float anglePerPlayer = 360f / secondaryPlayers.size();
+				for (int playerNum : allPlayerNumbers) {
+					append("set " + PLAYER_INDEX_ARRAY + "[" + playerNum + "]=" + index + JASS_DELIM +
+							"set " + PLAYER_ANGLE_ARRAY + "[" + playerNum + "]=" + (index * anglePerPlayer) + JASS_DELIM +
+							"set " + PLAYER_SELECTION_ARRAY + "[" + playerNum + "]=CreateGroup()", sb);
+					index++;
 				}
 				append("call " + ENFORCE_ARCHON + "()" + JASS_DELIM +
 						"if (GetLocalPlayer()!=" + toMainPlayerFunc() + ") then" + JASS_DELIM +
@@ -653,40 +665,54 @@ public class CoopRewriter extends ScriptRewriter {
 			// endregion
 
 			// region selection effects
+			append("function " + ARCHON_PREFIX + "SelectUnit takes nothing returns nothing" + JASS_DELIM +
+					"local integer pid=GetConvertedPlayerId(GetTriggerPlayer())" + JASS_DELIM +
+					"call AddSpecialEffectTargetUnitBJ(\"overhead\",GetEnumUnit(),\"" + XT87Utils.PATH_PREFIX + "\\\\" + SELECTION_INDICATOR_PATH + ".mdx\")" + JASS_DELIM +
+					"call BlzSetSpecialEffectColorByPlayer(GetLastCreatedEffectBJ(),GetTriggerPlayer())" + JASS_DELIM +
+					"call BlzSetSpecialEffectYaw(GetLastCreatedEffectBJ()," + PLAYER_ANGLE_ARRAY + "[pid]" + ")" + JASS_DELIM +
+					"call SaveEffectHandleBJ(GetLastCreatedEffectBJ(),pid,GetHandleId(GetEnumUnit())," + SELECTION_HASHTABLE + ")" + JASS_DELIM +
+					END_FUNCTION, sb);
+			append("function " + ARCHON_PREFIX + "DeselectUnit takes nothing returns nothing" + JASS_DELIM +
+					"call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),GetHandleId(GetEnumUnit())," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
+					END_FUNCTION, sb);
 			append("function Trig_" + ARCHON_PREFIX + "Select_Actions takes nothing returns nothing" + JASS_DELIM +
-					"    local integer id=GetHandleId(GetTriggerUnit())" + JASS_DELIM +
-					"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
-					"    call AddSpecialEffectTargetUnitBJ(\"origin\", GetTriggerUnit(), \"buildings\\\\other\\\\CircleOfPower\\\\CircleOfPower.mdl\")" + JASS_DELIM +
-					"    call BlzSetSpecialEffectColorByPlayer(GetLastCreatedEffectBJ(), GetTriggerPlayer())" + JASS_DELIM +
+					"local group g=" + PLAYER_SELECTION_ARRAY + "[GetConvertedPlayerId(GetTriggerPlayer())]" + JASS_DELIM +
+					"call SyncSelections()" + JASS_DELIM +
+					"call ForGroup(g,function " + ARCHON_PREFIX + "DeselectUnit)" + JASS_DELIM +
+					"call GroupClear(g)" + JASS_DELIM +
+					"call GroupEnumUnitsSelected(g,GetTriggerPlayer(),null)" + JASS_DELIM +
+					"call ForGroup(g,function " + ARCHON_PREFIX + "SelectUnit)" + JASS_DELIM +
+					//"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
 					//"    call BlzSetSpecialEffectScale(GetLastCreatedEffectBJ(), ( ( I2R(udg_interino) * 0.05 ) + 0.50 ))" + JASS_DELIM +
-					"    call SaveEffectHandleBJ(GetLastCreatedEffectBJ(), GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + ")" + JASS_DELIM +
+					//"    call SaveEffectHandleBJ(GetLastCreatedEffectBJ(), GetConvertedPlayerId(GetTriggerPlayer()),id," + SELECTION_HASHTABLE + ")" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
 					"function InitTrig_" + ARCHON_PREFIX + "Select takes nothing returns nothing" + JASS_DELIM +
 					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=CreateTrigger()", sb);
-					for (int playerNumber : allPlayerNumbers)
-						append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select," + toPlayerFunc(playerNumber) + ",true)", sb);
-					append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select, function Trig_" + ARCHON_PREFIX + "Select_Actions)" + JASS_DELIM +
-					END_FUNCTION + JASS_DELIM +
-					"function Trig_" + ARCHON_PREFIX + "Deselect_Actions takes nothing returns nothing" + JASS_DELIM +
-					"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),GetHandleId(GetTriggerUnit())," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
-					END_FUNCTION + JASS_DELIM +
-					"function InitTrig_" + ARCHON_PREFIX + "Deselect takes nothing returns nothing" + JASS_DELIM +
-					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=CreateTrigger()", sb);
-					for (int playerNumber : allPlayerNumbers)
-						append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect," + toPlayerFunc(playerNumber) + ",false)", sb);
-					append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect, function Trig_" + ARCHON_PREFIX + "Deselect_Actions)" + JASS_DELIM +
-					END_FUNCTION + JASS_DELIM +
-					"function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions takes nothing returns nothing" + JASS_DELIM +
-					"    local integer id=GetHandleId(GetTriggerUnit())", sb);
-					for (int playerNumber : allPlayerNumbers)
-						append("    call DestroyEffectBJ(LoadEffectHandleBJ(" + playerNumber +",id," + SELECTION_HASHTABLE + "))", sb);
-					append(END_FUNCTION + JASS_DELIM +
-					"function InitTrig_" + ARCHON_PREFIX + "DeselectOnDeath takes nothing returns nothing" + JASS_DELIM +
-					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=CreateTrigger()" + JASS_DELIM +
-					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_DEATH)" + JASS_DELIM +
-					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_LOADED)" + JASS_DELIM +
-					"    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions)" + JASS_DELIM +
+			for (int playerNumber : allPlayerNumbers)
+				for (String selectBool : Arrays.asList("false", "true"))
+					append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select," + toPlayerFunc(playerNumber) + "," + selectBool + ")", sb);
+			append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Select, function Trig_" + ARCHON_PREFIX + "Select_Actions)" + JASS_DELIM +
 					END_FUNCTION, sb);
+//			append("function Trig_" + ARCHON_PREFIX + "Deselect_Actions takes nothing returns nothing" + JASS_DELIM +
+//					"    call DestroyEffectBJ(LoadEffectHandleBJ(GetConvertedPlayerId(GetTriggerPlayer()),GetHandleId(GetTriggerUnit())," + SELECTION_HASHTABLE + "))" + JASS_DELIM +
+//					END_FUNCTION + JASS_DELIM +
+//					"function InitTrig_" + ARCHON_PREFIX + "Deselect takes nothing returns nothing" + JASS_DELIM +
+//					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=CreateTrigger()", sb);
+//			for (int playerNumber : allPlayerNumbers)
+//				append("    call TriggerRegisterPlayerSelectionEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect," + toPlayerFunc(playerNumber) + ",false)", sb);
+//			append("    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect, function Trig_" + ARCHON_PREFIX + "Deselect_Actions)" + JASS_DELIM +
+//					END_FUNCTION + JASS_DELIM +
+//					"function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions takes nothing returns nothing" + JASS_DELIM +
+//					"    local integer id=GetHandleId(GetTriggerUnit())", sb);
+//			for (int playerNumber : allPlayerNumbers)
+//				append("    call DestroyEffectBJ(LoadEffectHandleBJ(" + playerNumber + ",id," + SELECTION_HASHTABLE + "))", sb);
+//			append(END_FUNCTION + JASS_DELIM +
+//					"function InitTrig_" + ARCHON_PREFIX + "DeselectOnDeath takes nothing returns nothing" + JASS_DELIM +
+//					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=CreateTrigger()" + JASS_DELIM +
+//					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_DEATH)" + JASS_DELIM +
+//					"    call TriggerRegisterAnyUnitEventBJ(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, EVENT_PLAYER_UNIT_LOADED)" + JASS_DELIM +
+//					"    call TriggerAddAction(" + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath, function Trig_" + ARCHON_PREFIX + "DeselectOnDeath_Actions)" + JASS_DELIM +
+//					END_FUNCTION, sb);
 			// endregion
 
 			// region get main player
@@ -743,19 +769,25 @@ public class CoopRewriter extends ScriptRewriter {
 		}
 
 		if (appendLine)
+
 			append(line, sb);
 
 		if (line.equals("globals")) {
 			for (String resourceName : ALL_RESOURCE_NAMES)
 				append("trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + resourceName + "Sync=null", sb);
 			append("trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "UnitShare=null" + JASS_DELIM +
-					"force " + FORCE_NAME + JASS_DELIM +
-					"location " + TEMP_POINT_NAME + JASS_DELIM +
-					"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
-					"hashtable " + SELECTION_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
-					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=null" + JASS_DELIM +
-					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=null" + JASS_DELIM +
-					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=null", sb);
+							"force " + FORCE_NAME + JASS_DELIM +
+							"location " + TEMP_POINT_NAME + JASS_DELIM +
+							"integer array " + PLAYER_INDEX_ARRAY + JASS_DELIM +
+							"real array " + PLAYER_ANGLE_ARRAY + JASS_DELIM +
+							"group array " + PLAYER_SELECTION_ARRAY + JASS_DELIM +
+							"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
+							"hashtable " + SELECTION_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
+							"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=null"
+//							+ JASS_DELIM +
+//					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "Deselect=null" + JASS_DELIM +
+//					"trigger " + TRIGGER_PREFIX + ARCHON_PREFIX + "DeselectOnDeath=null"
+					, sb);
 			if (withCustomGameCache) {
 				append("hashtable " + LAST_CREATED_COOP_CACHE + "=null" + JASS_DELIM +
 						"integer array " + ABILITY_ARRAY + JASS_DELIM +
@@ -1068,7 +1100,7 @@ public class CoopRewriter extends ScriptRewriter {
 		} else if (line.contains("function InitCustomTriggers takes")) {
 			for (String resourceName : ALL_RESOURCE_NAMES)
 				append("    call InitTrig_" + ARCHON_PREFIX + resourceName + "Sync()", sb);
-			for (String triggerName : Arrays.asList("UnitShare", "Select", "Deselect", "DeselectOnDeath"))
+			for (String triggerName : Arrays.asList("UnitShare", "Select"))//, "Deselect", "DeselectOnDeath"))
 				append("    call InitTrig_" + ARCHON_PREFIX + triggerName + "()", sb);
 			if (withCustomGameCache) {
 				append("    call InitTrig_" + ARCHON_PREFIX + "SyncData()" + JASS_DELIM +
@@ -1076,6 +1108,7 @@ public class CoopRewriter extends ScriptRewriter {
 						"    call ExecuteFunc(\"s__File_FileIO___FileInit__onInit\")", sb);
 			}
 		} else if (line.contains("SetForceAllianceStateBJ("))
+
 			append("call " + ENFORCE_ARCHON + "()", sb);
 
 		if (line.contains(DEFINE_START_LOC + mainPlayer.getNum() + ",")) {
