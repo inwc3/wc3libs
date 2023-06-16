@@ -1,6 +1,8 @@
 package net.xetanth87.campaignsplitter;
 
 import net.moonlightflower.wc3libs.bin.app.W3I;
+import systems.crigges.jmpq3.JMpqEditor;
+import systems.crigges.jmpq3.MPQOpenOption;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,8 +11,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class XT87Utils {
 	public static final String STRING_PREFIX = "TRIGSTR_";
@@ -27,6 +31,20 @@ public class XT87Utils {
 		NO,
 		SMART,
 		YES
+	}
+
+	public static Set<Integer> getUsedPlayerNumbers(MapInjector mi) throws Exception {
+		W3I info = W3I.ofMapFile(mi.mapFile);
+		UsedPlayersScriptReader upsr = new UsedPlayersScriptReader(mi, info.getPlayers().stream()
+				.map(W3I.Player::getNum).collect(Collectors.toSet()));
+		boolean hadEditor = mi.mapEditor != null;
+		if (!hadEditor)
+			mi.initEditor();
+		ScriptRewriter.readScript(mi);
+		upsr.modifyScript();
+		if (!hadEditor)
+			mi.closeEditor();
+		return upsr.getUsedSet();
 	}
 
 	public static String beautifyEnum(Enum e) {

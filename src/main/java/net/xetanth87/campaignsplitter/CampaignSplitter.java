@@ -1,7 +1,6 @@
 package net.xetanth87.campaignsplitter;
 
 import net.moonlightflower.wc3libs.bin.app.W3F;
-import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -27,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static net.xetanth87.campaignsplitter.XT87Utils.STRING_PREFIX;
 import static net.xetanth87.campaignsplitter.XT87Utils.buttonText;
@@ -209,14 +209,14 @@ public class CampaignSplitter {
 				campEditor.extractFile(fileName, mapFile);
 				mapFiles.add(mapFile);
 				System.out.println("Extracted map \"" + mapFile.getName() + "\".");
-				W3I info = W3I.ofMapFile(mapFile);
-				maximumAddedCoopPlayers = Math.min(maximumAddedCoopPlayers, XT87Utils.MAX_PLAYER_COUNT - info.getPlayers().size());
+				Set<Integer> usedPlayerNumbers = XT87Utils.getUsedPlayerNumbers(new MapInjector(this, mapFile, i));
+				maximumAddedCoopPlayers = Math.min(maximumAddedCoopPlayers, XT87Utils.MAX_PLAYER_COUNT - usedPlayerNumbers.size());
 			}
 			campEditor.close();
 		}
 		// endregion
 		if (addedCoopPlayers > 0)
-			System.out.println("Number of coop slots to be added: " + maximumAddedCoopPlayers + " (" + (maximumAddedCoopPlayers + 1) + " slots).");
+			System.out.println("Number of coop slots to be added: " + maximumAddedCoopPlayers + " (" + (maximumAddedCoopPlayers + 1) + " total slots).");
 		for (int i = 0; i < buttonCount; i++) {
 			File mapFile = mapFiles.get(i);
 			MapInjector mi = new MapInjector(this, mapFile, i);

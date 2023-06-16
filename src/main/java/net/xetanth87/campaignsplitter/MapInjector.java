@@ -39,6 +39,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.xetanth87.campaignsplitter.XT87Utils.STRING_PREFIX;
 import static net.xetanth87.campaignsplitter.XT87Utils.getWithoutExtension;
@@ -429,8 +430,8 @@ public class MapInjector {
 				unusedPlayerNumbers.add(i);
 			for (int i = 0; i < mainPlayer.getNum(); i++)
 				unusedPlayerNumbers.add(i);
-			for (W3I.Player p : info.getPlayers())
-				unusedPlayerNumbers.remove((Object) p.getNum());
+			for (Integer id : XT87Utils.getUsedPlayerNumbers(this))
+				unusedPlayerNumbers.remove(id);
 			unusedPlayerNumbers = unusedPlayerNumbers.subList(0, addedCoopPlayers);
 			secondaryPlayers = new ArrayList<>();
 			for (int i : unusedPlayerNumbers) {
@@ -456,11 +457,21 @@ public class MapInjector {
 		return new MapInfo(info, mainPlayer, secondaryPlayers);
 	}
 
-	public void addCampaignData() throws Exception {
+	public void initEditor() throws IOException {
 		mapEditor = new JMpqEditor(mapFile, MPQOpenOption.FORCE_V0);
 		tempFile = new File(cs.getTempPath() + "/" + getWithoutExtension(mapFile.getName()) + ".temp.txt");
 		tempFile.getParentFile().mkdirs();
 		tempFile.createNewFile();
+	}
+
+	public void closeEditor() throws IOException {
+		tempFile.delete();
+		mapEditor.close();
+		mapEditor = null;
+	}
+
+	public void addCampaignData() throws Exception {
+		initEditor();
 
 		// imports
 		System.out.println("Adding imports to map \"" + mapFile.getName() + "\".");
@@ -539,9 +550,8 @@ public class MapInjector {
 			ScriptRewriter.insertScript(this);
 		}
 
-		tempFile.delete();
 		System.out.println("Saving map \"" + mapFile.getName() + "\".");
-		mapEditor.close();
+		closeEditor();
 		cs.IncrementValueProgressBar(10);
 		System.out.println("Finished saving map \"" + mapFile.getName() + "\".");
 	}

@@ -1,14 +1,12 @@
 package net.xetanth87.campaignsplitter;
 
 import net.moonlightflower.wc3libs.bin.app.W3I;
-import net.moonlightflower.wc3libs.txt.app.jass.Jass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CoopRewriter extends ScriptRewriter {
-	public static final String SET_PLAYERS = "call SetPlayers(";
 	public static final String SETPLAYERCOLOR = "call SetPlayerColor(";
 	public static final String DEFINE_START_LOC = "call DefineStartLocation(";
 	public static final String SETPLAYERCOLORBJ = "call SetPlayerColorBJ(";
@@ -62,7 +60,7 @@ public class CoopRewriter extends ScriptRewriter {
 	public static final String CACHE_ITEM_CHARGE_SUFIX = "C";
 
 	public static final List<String> ALL_RESOURCE_NAMES = Arrays.asList("Gold", "Lumber", "FoodUsed", "FoodCap", "FoodCeiling");
-	public boolean triggersAdded, initGlobalsAdded, insideInitialization, insideInitGlobals, insideInitPlayers, withCustomGameCache;
+	public boolean triggersAdded, initGlobalsAdded, insideInitialization, insideInitGlobals, insideConfig, insideCustomPlayerSlots, withCustomGameCache;
 	public W3I info;
 	public W3I.Player mainPlayer;
 	public List<W3I.Player> secondaryPlayers;
@@ -89,7 +87,8 @@ public class CoopRewriter extends ScriptRewriter {
 		initGlobalsAdded = false;
 		insideInitialization = false;
 		insideInitGlobals = false;
-		insideInitPlayers = false;
+		insideConfig = false;
+		insideCustomPlayerSlots = false;
 	}
 
 	public static String toPlayerFunc(int i) {
@@ -188,10 +187,10 @@ public class CoopRewriter extends ScriptRewriter {
 					"RestoreUnitLocFacingAngleBJ(",
 					"RestoreUnitLocFacingPointBJ(");
 			// endregion
-			String call = getCallFromLine(line);
 			for (String gameCacheCall : gameCacheCalls) {
 				line = line.replace(gameCacheCall, ARCHON_PREFIX + gameCacheCall);
 			}
+			String call = getCallFromLine(line);
 			if (call != null) {
 				String[] params = getParamsFromLine(line);
 				if (call.equals("call SelectHeroSkill(")) {
@@ -238,14 +237,10 @@ public class CoopRewriter extends ScriptRewriter {
 		else if (line.contains("function RunInitializationTriggers takes") || line.contains("function main takes"))
 			insideInitialization = true;
 
-		if (line.contains(SET_PLAYERS)) {
-			append("    " + SET_PLAYERS + info.getPlayers().size() + ")", sb);
-			return;
-		}
-
-		if (insideInitPlayers) {
+		if (insideConfig || insideCustomPlayerSlots) {
 			if (line.contains(SETPLAYERCOLOR + toMainPlayerFunc())) {
 				String[] params = getParamsFromLine(line);
+				// recolor players to blue and yellow
 				append(line.replace(params[1], CONVERTPLAYERCOLOR + "1)"), sb);
 				String secondaryColorLine = line.replace(params[1], CONVERTPLAYERCOLOR + "4)");
 				for (W3I.Player player : secondaryPlayers) {
@@ -253,7 +248,8 @@ public class CoopRewriter extends ScriptRewriter {
 				}
 				return;
 			}
-		} else if (!triggersAdded && line.contains("function Trig")) {
+		}
+		if (!triggersAdded && line.contains("function Trig")) {
 			// define functions
 			if (withCustomGameCache) {
 				// region game cache basics natives
@@ -670,23 +666,28 @@ public class CoopRewriter extends ScriptRewriter {
 			append("function " + ARCHON_PREFIX + "SelectUnit takes nothing returns nothing" + JASS_DELIM +
 					"local integer pid=GetPlayerId(" + AUX_PLAYER + ")" + JASS_DELIM +
 					"local integer ct=LoadInteger(" + SELECTION_HASHTABLE + ",pid,0)+1" + JASS_DELIM +
-					"call AddSpecialEffectTargetUnitBJ(\"overhead\",GetEnumUnit(),\"" + XT87Utils.PATH_PREFIX + "\\\\" + SELECTION_INDICATOR_PATH + ".mdx\")" + JASS_DELIM +
-					"call BlzSetSpecialEffectColorByPlayer(GetLastCreatedEffectBJ(),Player(pid))" + JASS_DELIM +
-					"call BlzSetSpecialEffectYaw(GetLastCreatedEffectBJ()," + PLAYER_ANGLE_ARRAY + "[pid]" + ")" + JASS_DELIM +
-					"call SaveEffectHandle(" + SELECTION_HASHTABLE + ",pid,ct,GetLastCreatedEffectBJ())" + JASS_DELIM +
+					"local effect fc=AddSpecialEffectTarget(\"" + XT87Utils.PATH_PREFIX + "\\\\" + SELECTION_INDICATOR_PATH + ".mdx\",GetEnumUnit(),\"overhead\")" + JASS_DELIM +
+					"call BlzSetSpecialEffectColorByPlayer(fc,Player(pid))" + JASS_DELIM +
+					"call BlzSetSpecialEffectYaw(fc," + PLAYER_ANGLE_ARRAY + "[pid]" + ")" + JASS_DELIM +
+					"call SaveEffectHandle(" + SELECTION_HASHTABLE + ",pid,ct,fc)" + JASS_DELIM +
 					"call SaveInteger(" + SELECTION_HASHTABLE + ",pid,0,ct)" + JASS_DELIM +
 					END_FUNCTION, sb);
 			append("function Trig_" + ARCHON_PREFIX + "Select_Actions takes nothing returns nothing" + JASS_DELIM +
 					"local integer i=0" + JASS_DELIM +
 					"local integer pid=GetPlayerId(GetTriggerPlayer())" + JASS_DELIM +
 					"local integer ct" + JASS_DELIM +
+					"local boolean stp=LoadBoolean(" + SELECTION_HASHTABLE + ",pid,-1)" + JASS_DELIM +
 					"local group g" + JASS_DELIM +
-					"call TriggerSleepAction(0.00)" + JASS_DELIM +
+					"if stp then" + JASS_DELIM +
+					"return" + JASS_DELIM +
+					END_IF + JASS_DELIM +
+					"call SaveBoolean(" + SELECTION_HASHTABLE + ",pid,-1,true)" + JASS_DELIM +
+					"call TriggerSleepAction(0.01)" + JASS_DELIM +
 					"set ct=LoadInteger(" + SELECTION_HASHTABLE + ",pid,0)" + JASS_DELIM +
 					"loop" + JASS_DELIM +
 					"set i=i+1" + JASS_DELIM +
 					"exitwhen i>ct" + JASS_DELIM +
-					"call DestroyEffect(LoadEffectHandle(" + SELECTION_HASHTABLE + ",GetPlayerId(" + AUX_PLAYER + "),i))" + JASS_DELIM +
+					"call DestroyEffect(LoadEffectHandle(" + SELECTION_HASHTABLE + ",pid,i))" + JASS_DELIM +
 					"endloop" + JASS_DELIM +
 					"call SaveInteger(" + SELECTION_HASHTABLE + ",pid,0,0)" + JASS_DELIM +
 					"set g=CreateGroup()" + JASS_DELIM +
@@ -694,6 +695,7 @@ public class CoopRewriter extends ScriptRewriter {
 					"call GroupEnumUnitsSelected(g," + AUX_PLAYER + ",null)" + JASS_DELIM +
 					"call ForGroup(g,function " + ARCHON_PREFIX + "SelectUnit)" + JASS_DELIM +
 					"call DestroyGroup(g)" + JASS_DELIM +
+					"call SaveBoolean(" + SELECTION_HASHTABLE + ",pid,-1,false)" + JASS_DELIM +
 					END_FUNCTION + JASS_DELIM +
 					"function InitTrig_" + ARCHON_PREFIX + "Select takes nothing returns nothing" + JASS_DELIM +
 					"    set " + TRIGGER_PREFIX + ARCHON_PREFIX + "Select=CreateTrigger()", sb);
@@ -738,6 +740,13 @@ public class CoopRewriter extends ScriptRewriter {
 		if (call != null) {
 			String[] params = getParamsFromLine(line, call);
 			call = getTrimmedCallFromLine(call);
+			if (call != null)
+				for (String playerNumberCall : Arrays.asList("SetPlayers", "SetTeams")) {
+					if (call.equals(playerNumberCall)) {
+						line = "call " + call + "(" + info.getPlayers().size() + ")";
+						break;
+					}
+				}
 			if (params != null) {
 				CoopCallAdjustments.AdjustmentDetails ad = CoopCallAdjustments.callParameters.get(call);
 				if (ad != null) {
@@ -758,7 +767,6 @@ public class CoopRewriter extends ScriptRewriter {
 		}
 
 		if (appendLine)
-
 			append(line, sb);
 
 		if (line.equals("globals")) {
@@ -1075,18 +1083,24 @@ public class CoopRewriter extends ScriptRewriter {
 						END_FUNCTION, sb);
 				// endregion
 			}
-		} else if (insideInitPlayers) {
+		} else if (insideConfig) {
 			if (line.equals(END_FUNCTION)) {
-				insideInitPlayers = false;
+				insideConfig = false;
 //			} else if (line.contains(toMainPlayerFunc())) {
 //				for (W3I.Player player : secondaryPlayers) {
 //					append(line.replace(toMainPlayerFunc(), toPlayerFunc(player.getNum())), sb);
 //				}
 			}
-		} else if (line.contains("function InitCustomPlayerSlots takes") || line.contains("function InitCustomTeams takes")
-			//|| line.contains("function InitAllyPriorities takes")
-		) {
-			insideInitPlayers = true;
+		} else if (line.contains("function config takes")) {
+			insideConfig = true;
+		} else if (insideCustomPlayerSlots) {
+			if (line.equals(END_FUNCTION)) {
+				insideCustomPlayerSlots = false;
+			}
+		} else if (line.contains("function InitCustomPlayerSlots takes")) {
+			insideCustomPlayerSlots = true;
+//			for (W3I.Player player : secondaryPlayers)
+//				append("call SetPlayerTeam(" + toPlayerFunc(player.getNum()) + "," + (info.getForces().size() - 1) + ")", sb);
 		} else if (line.contains("function InitCustomTriggers takes")) {
 			for (String resourceName : ALL_RESOURCE_NAMES)
 				append("    call InitTrig_" + ARCHON_PREFIX + resourceName + "Sync()", sb);
@@ -1098,13 +1112,10 @@ public class CoopRewriter extends ScriptRewriter {
 						"    call ExecuteFunc(\"s__File_FileIO___FileInit__onInit\")", sb);
 			}
 		} else if (line.contains("SetForceAllianceStateBJ("))
-
 			append("call " + ENFORCE_ARCHON + "()", sb);
 
-		if (line.contains(DEFINE_START_LOC + mainPlayer.getNum() + ",")) {
-			for (W3I.Player player : secondaryPlayers) {
+		if (line.contains(DEFINE_START_LOC + mainPlayer.getNum() + ","))
+			for (W3I.Player player : secondaryPlayers)
 				append(line.replace(DEFINE_START_LOC + mainPlayer.getNum(), DEFINE_START_LOC + player.getNum()), sb);
-			}
-		}
 	}
 }
