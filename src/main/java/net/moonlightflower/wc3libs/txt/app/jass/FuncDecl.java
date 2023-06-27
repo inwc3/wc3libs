@@ -63,7 +63,7 @@ public class FuncDecl implements Decl {
         return new FuncDecl(func_declContext.CONST_DECL() != null, func_declContext.func_name().getText(), params, func_declContext.func_return_type().getText(), false);
     }
 
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         if (_isConstant) sw.write(JassScript.getPrimaryLiteral(JassLexer.CONST_DECL) + " ");
 
         if (_isNative) {
@@ -76,11 +76,15 @@ public class FuncDecl implements Decl {
 
         sw.write(_name);
 
-        sw.write(" ");
+        if (isLua) {
+            sw.write("(");
+        } else {
+            sw.write(" ");
 
-        sw.write(JassScript.getPrimaryLiteral(JassLexer.TAKES));
+            sw.write(JassScript.getPrimaryLiteral(JassLexer.TAKES));
 
-        sw.write(" ");
+            sw.write(" ");
+        }
 
         if (_params.isEmpty()) {
             sw.write(JassScript.getPrimaryLiteral(JassLexer.NOTHING));
@@ -94,16 +98,20 @@ public class FuncDecl implements Decl {
                     sw.write(JassScript.getPrimaryLiteral(JassLexer.COMMA) + " ");
                 }
 
-                param.write(sw);
+                param.write(sw, isLua);
             }
         }
 
-        sw.write(" ");
+        if (isLua) {
+            sw.write(")");
+        } else {
+            sw.write(" ");
 
-        sw.write(JassScript.getPrimaryLiteral(JassLexer.RETURNS));
+            sw.write(JassScript.getPrimaryLiteral(JassLexer.RETURNS));
 
-        sw.write(" ");
+            sw.write(" ");
 
-        sw.write(_returnType == null ? JassScript.getPrimaryLiteral(JassLexer.NOTHING) : _returnType);
+            sw.write(_returnType == null ? JassScript.getPrimaryLiteral(JassLexer.NOTHING) : _returnType);
+        }
     }
 }

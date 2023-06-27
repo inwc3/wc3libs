@@ -68,13 +68,13 @@ public class JassScript {
         }
 
         @Override
-        public void write(@Nonnull StringWriter sw) {
+        public void write(@Nonnull StringWriter sw, boolean isLua) {
             sw.write(getPrimaryLiteral(JassLexer.GLOBALS_START));
 
             sw.write("\n");
 
             for (VarDecl varDecl : _varDecls) {
-                varDecl.write(sw);
+                varDecl.write(sw, isLua);
 
                 sw.write("\n");
             }
@@ -133,15 +133,15 @@ public class JassScript {
         }
     }
 
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         for (TypeDecl typeDecl : _typeDecls) {
-            typeDecl.write(sw);
+            typeDecl.write(sw, isLua);
 
             sw.write("\n");
         }
 
         for (FuncDecl nativeDecl : _nativeDecls) {
-            nativeDecl.write(sw);
+            nativeDecl.write(sw, isLua);
 
             sw.write("\n");
         }
@@ -151,7 +151,7 @@ public class JassScript {
         sw.write("\n");
 
         for (VarDecl varDecl : _globalVars) {
-            varDecl.write(sw);
+            varDecl.write(sw, isLua);
 
             sw.write("\n");
         }
@@ -161,7 +161,7 @@ public class JassScript {
         sw.write("\n");
 
         for (FuncImpl funcImpl : _funcImpls) {
-            funcImpl.write(sw);
+            funcImpl.write(sw, isLua);
 
             sw.write("\n");
         }

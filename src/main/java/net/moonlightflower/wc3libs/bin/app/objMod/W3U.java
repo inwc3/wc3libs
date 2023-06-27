@@ -21,6 +21,7 @@ import java.util.Collection;
  */
 public class W3U extends ObjMod<W3U.Unit> {
 	public final static File GAME_PATH = new File("war3map.w3u");
+	public final static File SKIN_PATH = new File("war3mapSkin.w3u");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3u");
 
 	public W3U(@Nonnull Wc3BinInputStream stream) throws IOException {

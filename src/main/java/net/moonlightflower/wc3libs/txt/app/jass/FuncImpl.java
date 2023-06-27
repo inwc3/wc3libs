@@ -22,6 +22,10 @@ public class FuncImpl implements Decl {
         private List<Statement> _stmts;
 
         public void write(@Nonnull StringWriter sw) {
+            write(sw, false);
+        }
+
+        public void write(@Nonnull StringWriter sw, boolean isLua) {
             boolean first = true;
 
             for (VarDecl var : _localVars) {
@@ -31,7 +35,7 @@ public class FuncImpl implements Decl {
                     sw.write("\n");
                 }
 
-                var.write(sw);
+                var.write(sw, isLua);
             }
 
             for (Statement stmt : _stmts) {
@@ -41,7 +45,7 @@ public class FuncImpl implements Decl {
                     sw.write("\n");
                 }
 
-                stmt.write(sw);
+                stmt.write(sw, isLua);
             }
         }
 
@@ -94,15 +98,20 @@ public class FuncImpl implements Decl {
         return new FuncImpl(FuncDecl.create(func_implContext.func_decl()), Body.create(func_implContext.func_body()));
     }
 
-    public void write(@Nonnull StringWriter sw) {
-        _decl.write(sw);
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
+        _decl.write(sw, isLua);
 
         sw.write("\n");
 
-        _body.write(sw);
+        _body.write(sw, isLua);
 
         sw.write("\n");
 
-        sw.write("endfunction");
+        if (isLua) {
+            sw.write("end");
+        } else {
+            sw.write("endfunction");
+        }
+
     }
 }

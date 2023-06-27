@@ -428,7 +428,7 @@ public class Camera extends MDXObject {
 
         sizeWriter.write(stream);
 
-        stream.writeBytes(Arrays.copyOf(_name.getBytes(), 60));
+        stream.writeBytes(Arrays.copyOf(_name.getBytes(), 80));
 
         stream.writeFloat32(_pos.getX());
         stream.writeFloat32(_pos.getY());
@@ -465,7 +465,7 @@ public class Camera extends MDXObject {
 
     public Camera(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
         _inclusiveSize = stream.readUInt32("inclusiveSize");
-        _name = new String(stream.readBytes(60, "name"), StandardCharsets.US_ASCII);
+        _name = new String(stream.readBytes(80, "name"), StandardCharsets.US_ASCII);
         _pos = new Coords3DF(stream.readFloat32("x"), stream.readFloat32("y"), stream.readFloat32("z"));
         _fieldOfView = stream.readFloat32("fieldOfView");
         _farClippingPlane = stream.readFloat32("farClippingPlane");

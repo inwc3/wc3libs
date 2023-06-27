@@ -22,6 +22,7 @@ import java.util.Collections;
  */
 public class W3D extends ObjMod<W3D.Dood> {
 	public final static File GAME_PATH = new File("war3map.w3d");
+	public final static File SKIN_PATH = new File("war3mapSkin.w3d");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3d");
 
 	public W3D(@Nonnull Wc3BinInputStream stream) throws IOException {

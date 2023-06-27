@@ -4,5 +4,5 @@ import javax.annotation.Nonnull;
 import java.io.StringWriter;
 
 public interface Decl {
-    void write(@Nonnull StringWriter sw);
+    void write(@Nonnull StringWriter sw, boolean isLua);
 }

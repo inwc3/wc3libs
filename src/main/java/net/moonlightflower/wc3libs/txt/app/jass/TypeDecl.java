@@ -20,7 +20,7 @@ public class TypeDecl implements Decl {
         return new TypeDecl(type_declContext.type_name().getText(), type_declContext.parent.getText());
     }
 
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         sw.write(JassScript.getPrimaryLiteral(JassLexer.TYPE_DECL));
 
         sw.write(" ");

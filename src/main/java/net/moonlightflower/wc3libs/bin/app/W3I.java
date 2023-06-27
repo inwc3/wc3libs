@@ -3160,7 +3160,7 @@ public class W3I {
         return w3i;
     }
 
-    public FuncImpl makeInitCustomPlayerSlots() {
+    public FuncImpl makeInitCustomPlayerSlots(boolean isLua) {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
@@ -3183,7 +3183,7 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeInitCustomTeams() {
+    public FuncImpl makeInitCustomTeams(boolean isLua) {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_TEAMS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
@@ -3230,7 +3230,7 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeInitAllyPriorities(@Nonnull GameVersion gameVersion) {
+    public FuncImpl makeInitAllyPriorities(@Nonnull GameVersion gameVersion, boolean isLua) {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
@@ -3296,17 +3296,19 @@ public class W3I {
         return funcImpl;
     }
 
-    public FuncImpl makeConfig() {
+    public FuncImpl makeConfig(boolean isLua) {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.CONFIG_NAME, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
 
-        Function enquote = (Function<String, String>) s -> {
-            return "\"" + s + "\"";
-        };
+        Function<String, String> enquote = s -> "\"" + s + "\"";
 
         stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
-        stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
+        if (isLua) {
+            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(("" + getMapDescription()).replaceAll("\n", "\\\\n")) + ")"));
+        } else {
+            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
+        }
 
         stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
         stmts.add(Statement.create("call SetTeams(" + getForces().size() + ")"));
@@ -3348,10 +3350,10 @@ public class W3I {
             jassScript.removeFuncImpl(funcImpl);
         }
 
-        FuncImpl initCustomPlayerSlots = makeInitCustomPlayerSlots();
-        FuncImpl initCustomTeams = makeInitCustomTeams();
-        FuncImpl initAllyPriorities = makeInitAllyPriorities(gameVersion);
-        FuncImpl config = makeConfig();
+        FuncImpl initCustomPlayerSlots = makeInitCustomPlayerSlots(false);
+        FuncImpl initCustomTeams = makeInitCustomTeams(false);
+        FuncImpl initAllyPriorities = makeInitAllyPriorities(gameVersion, false);
+        FuncImpl config = makeConfig(false);
 
         jassScript.addFuncImpl(initCustomPlayerSlots);
         jassScript.addFuncImpl(initCustomTeams);
@@ -3360,9 +3362,11 @@ public class W3I {
     }
 
     private static final Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
+    private static final Pattern funcStartPatternLua = Pattern.compile("^\\s*function\\(");
+    private static final Pattern funcEndPatternLua = Pattern.compile("^\\s*end");
     private static final Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
 
-    public void removeConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+    public void removeConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, boolean isLua) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
 
             String line;
@@ -3379,7 +3383,7 @@ public class W3I {
 
             while ((line = reader.readLine()) != null) {
 
-                Matcher funcStartMatcher = funcStartPattern.matcher(line);
+                Matcher funcStartMatcher = (isLua ? funcStartPatternLua : funcStartPattern).matcher(line);
 
                 if (funcStartMatcher.find()) {
                     String funcName = funcStartMatcher.group(1);
@@ -3390,7 +3394,7 @@ public class W3I {
                 }
 
                 if (skip) {
-                    Matcher funcEndMatcher = funcEndPattern.matcher(line);
+                    Matcher funcEndMatcher = (isLua ? funcEndPatternLua : funcEndPattern).matcher(line);
 
                     if (funcEndMatcher.find()) {
                         skip = false;
@@ -3411,19 +3415,28 @@ public class W3I {
         }
     }
 
+
+    public void injectConfigsInLuaScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw) throws IOException {
+        injectConfigsInScript(inStream, sw, GameVersion.VERSION_1_32, true);
+    }
+
     public void injectConfigsInJassScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion) throws IOException {
-        removeConfigsInJassScript(inStream, sw);
+        injectConfigsInScript(inStream, sw, gameVersion, false);
+    }
+
+    public void injectConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion, boolean isLua) throws IOException {
+        removeConfigsInScript(inStream, sw, isLua);
 
         List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
 
-        toBeAddedFuncImpls.add(makeInitCustomPlayerSlots());
-        toBeAddedFuncImpls.add(makeInitCustomTeams());
-        toBeAddedFuncImpls.add(makeInitAllyPriorities(gameVersion));
-        toBeAddedFuncImpls.add(makeConfig());
+        toBeAddedFuncImpls.add(makeInitCustomPlayerSlots(isLua));
+        toBeAddedFuncImpls.add(makeInitCustomTeams(isLua));
+        toBeAddedFuncImpls.add(makeInitAllyPriorities(gameVersion, isLua));
+        toBeAddedFuncImpls.add(makeConfig(isLua));
 
         for (FuncImpl funcImpl : toBeAddedFuncImpls) {
             sw.write("\n");
-            funcImpl.write(sw);
+            funcImpl.write(sw, isLua);
         }
     }
 }

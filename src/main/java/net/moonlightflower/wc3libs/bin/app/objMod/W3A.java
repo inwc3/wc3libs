@@ -22,6 +22,7 @@ import java.util.Collections;
  */
 public class W3A extends ObjMod<W3A.Abil> {
 	public final static File GAME_PATH = new File("war3map.w3a");
+	public final static File SKIN_PATH = new File("war3mapSkin.w3a");
 	public final static File CAMPAIGN_PATH = new File("war3campaign.w3a");
 
 	public W3A(@Nonnull Wc3BinInputStream stream) throws IOException {

@@ -5,27 +5,29 @@ import net.moonlightflower.wc3libs.port.win.registry.WinRegistryGameExeFinder;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class WinGameExeFinder extends GameExeFinder {
-    public final static File WAR3_EXE_PATH = new File("war3.exe");
-    public final static File WARCRAFT_III_EXE_PATH = new File("Warcraft III.exe");
-    public final static File FROZEN_THRONE_EXE_PATH = new File("Frozen Throne.exe");
+    public final static Path WAR3_EXE_PATH = Paths.get("war3.exe");
+    public final static Path WARCRAFT_III_EXE_PATH = Paths.get("Warcraft III.exe");
+    public final static Path FROZEN_THRONE_EXE_PATH = Paths.get("Frozen Throne.exe");
 
-    public final static File X86_DIR = new File("x86");
-    public final static File X64_DIR = new File("x86_64");
+    public final static Path X86_DIR = Paths.get("x86");
+    public final static Path X64_DIR = Paths.get("x86_64");
 
-    public final static File RETAIL_DIR = new File("_retail_");
+    public final static Path RETAIL_DIR = Paths.get("_retail_");
 
-    public final static File RETAIL_X86_DIR = new File(RETAIL_DIR, "x86");
-    public final static File RETAIL_X64_DIR = new File(RETAIL_DIR, "x86_64");
+    public final static Path RETAIL_X86_DIR = RETAIL_DIR.resolve("x86");
+    public final static Path RETAIL_X64_DIR = RETAIL_DIR.resolve("x86_64");
 
-    public final static File X86_EXE_PATH_131 = new File(X86_DIR, WARCRAFT_III_EXE_PATH.toString());
-    public final static File X64_EXE_PATH_131 = new File(X64_DIR, WARCRAFT_III_EXE_PATH.toString());
+    public final static Path X86_EXE_PATH_131 = X86_DIR.resolve(WARCRAFT_III_EXE_PATH);
+    public final static Path X64_EXE_PATH_131 = X64_DIR.resolve(WARCRAFT_III_EXE_PATH);
 
-    public final static File X86_EXE_PATH_132 = new File(RETAIL_X86_DIR, WARCRAFT_III_EXE_PATH.toString());
-    public final static File X64_EXE_PATH_132 = new File(RETAIL_X64_DIR, WARCRAFT_III_EXE_PATH.toString());
+    public final static Path X86_EXE_PATH_132 = RETAIL_X86_DIR.resolve(WARCRAFT_III_EXE_PATH);
+    public final static Path X64_EXE_PATH_132 = RETAIL_X64_DIR.resolve(WARCRAFT_III_EXE_PATH);
 
     protected GameExeFinder getRegistryGameExeFinder() {
         return new WinRegistryGameExeFinder();
@@ -93,22 +95,18 @@ public class WinGameExeFinder extends GameExeFinder {
                 break;
         }
 
-        List<File> relativeSearchPaths = Arrays.asList(WARCRAFT_III_EXE_PATH,
+        return Stream.of(WARCRAFT_III_EXE_PATH,
                 FROZEN_THRONE_EXE_PATH,
                 WAR3_EXE_PATH,
                 X86_EXE_PATH_131,
                 X64_EXE_PATH_131,
                 X86_EXE_PATH_132,
-                X64_EXE_PATH_132
-        );
-
-        for (File relativeSearchPath : relativeSearchPaths) {
-            File inDirPath = new File(dir, relativeSearchPath.toString());
-
-            if (inDirPath.exists()) return inDirPath;
-        }
-
-        throw new NotFoundException(new Exception("tried: " + relativeSearchPaths.toString()));
+                X64_EXE_PATH_132)
+            .map(relativePath -> dir.toPath().resolve(relativePath))
+            .filter(Files::exists)
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("tried all known wc3 sub-paths in " + dir.getAbsolutePath()))
+            .toFile();
     }
 
     @Nonnull

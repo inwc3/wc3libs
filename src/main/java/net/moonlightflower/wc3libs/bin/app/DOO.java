@@ -72,6 +72,16 @@ public class DOO {
 			_scale = val;
 		}
 		
+		private ObjId _skinId = null;
+		
+		public ObjId getSkinId() {
+			return _skinId;
+		}
+		
+		public void setSkinId(ObjId val) {
+			_skinId = val;
+		}		
+		
 		private byte _lifePerc = 1;
 		
 		public int getLifePerc() {
@@ -141,14 +151,20 @@ public class DOO {
 			}
 			
 			private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-				int itemsCount = stream.readInt32();
+				int itemsCount = stream.readInt32("itemsCount");
 
 				for (int i = 0; i < itemsCount; i++) {
+                    if (stream.eof()) {
+                        break;
+                    }
 					ObjId typeId = ObjId.valueOf(stream.readId("typeId"));
-					
-					int chance = stream.readInt32("chance");
-					
-					Item item = addItem(typeId, chance);
+
+                    if (stream.eof()) {
+                        break;
+                    }
+                    int chance = stream.readInt32("chance");
+
+                    Item item = addItem(typeId, chance);
 				}
 			}
 			
@@ -216,29 +232,39 @@ public class DOO {
 		}
 
 		public void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			setTypeId(ObjId.valueOf(stream.readId()));
+			setTypeId(ObjId.valueOf(stream.readId("typeId")));
 			
-			setVariation(stream.readInt32());
+			setVariation(stream.readInt32("variation"));
 			
-			setPos(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
+			setPos(new Coords3DF(stream.readFloat32("posX"), stream.readFloat32("posY"), stream.readFloat32("posZ")));
 			
-			setAngle(stream.readFloat32());
+			setAngle(stream.readFloat32("angle"));
 			
-			setScale(new Coords3DF(stream.readFloat32(), stream.readFloat32(), stream.readFloat32()));
+			setScale(new Coords3DF(stream.readFloat32("scaleX"), stream.readFloat32("scaleY"), stream.readFloat32("scaleZ")));
+			
+			//TODO: get rid of this hacky discrimination by knowing the binary structure we want to read beforehand
+			short skinIdDiscriminator = stream.readUByte("skinIdDiscriminator");
+			
+			stream.rewind(1); //rewind by one byte due to the discrimination effort having advanced the stream
+			
+			if (skinIdDiscriminator > 7) {
+				//possible values for flags are only 0x00 to 0x07 (flag on first, second and third bit), so > 0x07 must mean it is not flags, therefore assume skinId
+				setSkinId(ObjId.valueOf(stream.readId("skinId")));
+			}
 
-			setFlags(stream.readUByte());
+			setFlags(stream.readUByte("flags"));
 
-			setLifePerc(stream.readUByte());
+			setLifePerc(stream.readUByte("lifePerc"));
 			
-			setItemTablePtr(stream.readInt32());
+			setItemTablePtr(stream.readInt32("itemTablePtr"));
 
-			int itemsDroppedCount = stream.readInt32();
+			int itemSetsDroppedCount = stream.readInt32("itemSetsDroppedCount");
 			
-			for (int i = 0; i < itemsDroppedCount; i++) {
+			for (int i = 0; i < itemSetsDroppedCount; i++) {
 				addItemSet(new ItemSet(stream, EncodingFormat.DOO_0x8));
 			}
 
-			setEditorId(stream.readInt32());
+			setEditorId(stream.readInt32("editorId"));
 		}
 		
 		public void write_0x8(@Nonnull Wc3BinOutputStream stream) {
@@ -259,6 +285,10 @@ public class DOO {
 			stream.writeFloat32(scale.getX());
 			stream.writeFloat32(scale.getY());
 			stream.writeFloat32(scale.getZ());
+			
+			if (getSkinId() != null) { //assume we want to write a DOO with SkinId per Doodad IFF the SkinId is set
+				stream.writeId(getSkinId());
+			}
 			
 			stream.writeUByte(getFlags());
 
@@ -355,11 +385,11 @@ public class DOO {
 		}
 		
 		private void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			_typeId = ObjId.valueOf(stream.readId());
+			_typeId = ObjId.valueOf(stream.readId("typeId"));
 			
-			int z = stream.readInt32();
-			int x = stream.readInt32();
-			int y = stream.readInt32();
+			int z = stream.readInt32("z");
+			int x = stream.readInt32("x");
+			int y = stream.readInt32("y");
 			
 			_pos = new Coords3DI(x, y, z);
 		}
@@ -541,7 +571,7 @@ public class DOO {
 	}
 	
 	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-		Id startToken = stream.readId("token");
+		Id startToken = stream.readId("startToken");
 
 		int version = stream.readInt32("version");
 
@@ -571,9 +601,9 @@ public class DOO {
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws IOException {
-		Id startToken = stream.readId();
+		Id startToken = stream.readId("startToken");
 		
-		int version = stream.readInt32();
+		int version = stream.readInt32("version");
 		
 		stream.rewind();
 

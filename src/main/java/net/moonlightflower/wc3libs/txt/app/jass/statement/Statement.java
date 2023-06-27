@@ -111,7 +111,7 @@ public abstract class Statement {
         return create(LightJass.transform(input).statement());
     }
 
-    public void write(@Nonnull StringWriter sw) {
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
         if (_isDebug) sw.write("debug ");
     }
 }

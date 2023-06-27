@@ -120,7 +120,9 @@ public class Wc3BinOutputStream extends BinOutputStream {
     public void writeId(@Nullable Id val) {
         if (val == null) val = Id.valueOf("\0\0\0\0");
 
-        byte[] sub = val.toString().getBytes(StandardCharsets.US_ASCII);
+        byte[] valBytes = val.toString().getBytes(StandardCharsets.US_ASCII);
+        byte[] sub = new byte[4];
+        System.arraycopy(valBytes, 0, sub, 0, valBytes.length);
 
         writeBytes(sub);
     }

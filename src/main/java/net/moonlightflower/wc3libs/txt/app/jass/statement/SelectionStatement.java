@@ -82,8 +82,8 @@ public class SelectionStatement extends Statement {
     }
 
     @Override
-    public void write(@Nonnull StringWriter sw) {
-        super.write(sw);
+    public void write(@Nonnull StringWriter sw, boolean isLua) {
+        super.write(sw, isLua);
 
         sw.write("if ");
 
@@ -95,7 +95,7 @@ public class SelectionStatement extends Statement {
             for (Statement stmt : _thenBranch._statements) {
                 sw.write("\n");
 
-                stmt.write(sw);
+                stmt.write(sw, isLua);
             }
         }
 
@@ -109,7 +109,7 @@ public class SelectionStatement extends Statement {
             for (Statement stmt : elseifBranch._statements) {
                 sw.write("\n");
 
-                stmt.write(sw);
+                stmt.write(sw, isLua);
             }
         }
 
@@ -119,7 +119,7 @@ public class SelectionStatement extends Statement {
             for (Statement stmt : _elseStmts) {
                 sw.write("\n");
 
-                stmt.write(sw);
+                stmt.write(sw, isLua);
             }
         }
 
