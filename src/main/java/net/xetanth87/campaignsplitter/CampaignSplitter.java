@@ -40,7 +40,7 @@ public class CampaignSplitter {
 	public static final String MAP_COUNT_FORMAT = "Maps converted: {0}/{1}.";
 	public final File campFile;
 	public final String splitPath;
-	public int buttonCount, addedCoopPlayers = 23;
+	public int buttonCount, archonModeAddedSlots;
 	public XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.SMART;
 	public boolean withCampaignPreview = false, withUpkeepRemoval = false, withLegacyAssets = true, withNextLevel = true;
 	public W3F campaignData;
@@ -176,7 +176,7 @@ public class CampaignSplitter {
 		boolean withDifficultySelector = difficultySelectorOption.equals(XT87Utils.TriOption.YES) ||
 				(difficultySelectorOption.equals(XT87Utils.TriOption.SMART) && campaignData.getFlag(W3F.Flags.Flag.VAR_DIFFICULTY));
 		List<File> mapFiles = new ArrayList<>();
-		int maximumAddedCoopPlayers = addedCoopPlayers;
+		int maximumAddedCoopPlayers = archonModeAddedSlots;
 		// region extract files from campaign
 		{
 			JMpqEditor campEditor = new JMpqEditor(campFile, MPQOpenOption.READ_ONLY);
@@ -215,7 +215,7 @@ public class CampaignSplitter {
 			campEditor.close();
 		}
 		// endregion
-		if (addedCoopPlayers > 0)
+		if (archonModeAddedSlots > 0)
 			System.out.println("Number of coop slots to be added: " + maximumAddedCoopPlayers + " (" + (maximumAddedCoopPlayers + 1) + " total slots).");
 		for (int i = 0; i < buttonCount; i++) {
 			File mapFile = mapFiles.get(i);

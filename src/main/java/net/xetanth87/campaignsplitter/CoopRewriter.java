@@ -20,7 +20,7 @@ public class CoopRewriter extends ScriptRewriter {
 	public static final String LAST_CREATED_COOP_CACHE = ARCHON_PREFIX + "_lastCreatedGameCache";
 	public static final String PLAYER_ID_ARRAY = ARCHON_PREFIX + "IDA";
 	public static final String PLAYER_INDEX_ARRAY = ARCHON_PREFIX + "PIA";
-	public static final String PLAYER_ANGLE_ARRAY = ARCHON_PREFIX + "PAA";
+	//public static final String PLAYER_ANGLE_ARRAY = ARCHON_PREFIX + "PAA";
 	public static final String AUX_PLAYER = ARCHON_PREFIX + "AXP";
 	public static final String GENERAL_HASHTABLE = ARCHON_PREFIX + "GHT";
 	public static final String SELECTION_HASHTABLE = ARCHON_PREFIX + "FXHT";
@@ -211,8 +211,10 @@ public class CoopRewriter extends ScriptRewriter {
 				final float anglePerPlayer = 360f / (allPlayerNumbers.size() - 1);
 				for (int playerNum : allPlayerNumbers) {
 					append("set " + PLAYER_ID_ARRAY + "[" + index + "]=" + playerNum + JASS_DELIM +
-							"set " + PLAYER_INDEX_ARRAY + "[" + playerNum + "]=" + index + JASS_DELIM +
-							"set " + PLAYER_ANGLE_ARRAY + "[" + playerNum + "]=" + (index * anglePerPlayer), sb);
+							"set " + PLAYER_INDEX_ARRAY + "[" + playerNum + "]=" + index + JASS_DELIM
+									// +
+							//"set " + PLAYER_ANGLE_ARRAY + "[" + playerNum + "]=" + (index * anglePerPlayer)
+							, sb);
 					index++;
 				}
 				append("call " + ENFORCE_ARCHON + "()" + JASS_DELIM +
@@ -668,7 +670,7 @@ public class CoopRewriter extends ScriptRewriter {
 					"local integer ct=LoadInteger(" + SELECTION_HASHTABLE + ",pid,0)+1" + JASS_DELIM +
 					"local effect fc=AddSpecialEffectTarget(\"" + XT87Utils.PATH_PREFIX + "\\\\" + SELECTION_INDICATOR_PATH + ".mdx\",GetEnumUnit(),\"overhead\")" + JASS_DELIM +
 					"call BlzSetSpecialEffectColorByPlayer(fc,Player(pid))" + JASS_DELIM +
-					"call BlzSetSpecialEffectYaw(fc," + PLAYER_ANGLE_ARRAY + "[pid]" + ")" + JASS_DELIM +
+					//"call BlzSetSpecialEffectYaw(fc," + PLAYER_ANGLE_ARRAY + "[pid]" + ")" + JASS_DELIM +
 					"call SaveEffectHandle(" + SELECTION_HASHTABLE + ",pid,ct,fc)" + JASS_DELIM +
 					"call SaveInteger(" + SELECTION_HASHTABLE + ",pid,0,ct)" + JASS_DELIM +
 					END_FUNCTION, sb);
@@ -777,7 +779,7 @@ public class CoopRewriter extends ScriptRewriter {
 							"location " + TEMP_POINT_NAME + JASS_DELIM +
 							"integer array " + PLAYER_ID_ARRAY + JASS_DELIM +
 							"integer array " + PLAYER_INDEX_ARRAY + JASS_DELIM +
-							"real array " + PLAYER_ANGLE_ARRAY + JASS_DELIM +
+							//"real array " + PLAYER_ANGLE_ARRAY + JASS_DELIM +
 							"player " + AUX_PLAYER + JASS_DELIM +
 							"hashtable " + GENERAL_HASHTABLE + "=InitHashtable()" + JASS_DELIM +
 							"hashtable " + SELECTION_HASHTABLE + "=InitHashtable()" + JASS_DELIM +

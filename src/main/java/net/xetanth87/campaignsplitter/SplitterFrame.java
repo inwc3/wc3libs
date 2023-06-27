@@ -22,24 +22,43 @@ import java.util.Objects;
 public class SplitterFrame extends JFrame {
 	public static final String AUTHOR = "Xetanth87";
 	public static final String APP_TITLE = "Campaign Splitter";
-	private JTextField filePathField = new JTextField(30);
-	private JButton browse = new JButton("Browse");
-	private JButton split = new JButton("Split");
+	private final JTextField filePathField = new JTextField(30);
+	private final JButton browse = new JButton("Browse");
+	private final JButton split = new JButton("Split");
 	private boolean running = false;
 	private Thread splitterThread = null;
-	private JProgressBar bar;
-	private JTextArea taskOutput;
+	private final JProgressBar bar;
+	private final JTextArea taskOutput;
 	private XT87Utils.TriOption difficultySelectorOption = XT87Utils.TriOption.SMART;
-	private ButtonGroup difficultySelectorGroup;
-	private JCheckBox campaignPreviewCheck = new JCheckBox();
-	private JCheckBox nextLevelCheck = new JCheckBox();
-	private JCheckBox legacyAssetsCheck = new JCheckBox();
-	private JCheckBox upkeepRemovalCheck = new JCheckBox();
-	private List<? extends JComponent> componentList = Arrays.asList(browse, campaignPreviewCheck, nextLevelCheck, legacyAssetsCheck, upkeepRemovalCheck);
+	private final ButtonGroup difficultySelectorGroup;
+	private final JCheckBox campaignPreviewCheck = new JCheckBox();
+	private final JCheckBox nextLevelCheck = new JCheckBox();
+	private final JCheckBox legacyAssetsCheck = new JCheckBox();
+	private final JCheckBox upkeepRemovalCheck = new JCheckBox();
+	private final JComboBox<ArchonModeAddedSlotsVariant> archonModeAddedSlotsDropdown = new JComboBox<>();
+	private final List<? extends JComponent> componentList = Arrays.asList(browse, campaignPreviewCheck, nextLevelCheck, legacyAssetsCheck, upkeepRemovalCheck);
+
+	private static class ArchonModeAddedSlotsVariant {
+		private final int value;
+
+		private ArchonModeAddedSlotsVariant(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public String toString() {
+			if (value == 0)
+				return "Singleplayer";
+			return (value + 1) + " players";
+		}
+	}
 
 	public SplitterFrame() {
 		super(AUTHOR + "'s " + APP_TITLE);
-		setSize(600, 560);
+		setSize(600, 580);
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
@@ -106,6 +125,15 @@ public class SplitterFrame extends JFrame {
 		upkeepRemovalCheck.setSelected(false);
 		panel.add(upkeepRemovalCheck);
 		upkeepRemovalCheck.setToolTipText("Removes Upkeep from each map. May lead to unforeseen consequences. (Not recommended)");
+
+		panel = new JPanel();
+		optionsPanel.add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.add(new JLabel("Archon Mode Slots"));
+		panel.add(archonModeAddedSlotsDropdown);
+		for (int i = 0; i < 24; i++)
+			archonModeAddedSlotsDropdown.addItem(new ArchonModeAddedSlotsVariant(i));
+		archonModeAddedSlotsDropdown.setToolTipText("Select the number of player slots, limited by the amount of unused slots of every map.");
 
 		browse.addActionListener(new BrowseL());
 		split.addActionListener(new SplitL());
@@ -280,6 +308,7 @@ public class SplitterFrame extends JFrame {
 				cs.withNextLevel = nextLevelCheck.isSelected();
 				cs.withUpkeepRemoval = upkeepRemovalCheck.isSelected();
 				cs.withLegacyAssets = legacyAssetsCheck.isSelected();
+				cs.archonModeAddedSlots = ((ArchonModeAddedSlotsVariant) Objects.requireNonNull(archonModeAddedSlotsDropdown.getSelectedItem())).getValue();
 				cs.splitCampaign();
 				String timeSpan = formatDuration(Duration.between(startTime, Instant.now()));
 				JOptionPane.showMessageDialog(null, "Campaign \"" + file.getName() + "\" has been split successfully! (" + timeSpan + ")", APP_TITLE, JOptionPane.INFORMATION_MESSAGE);
