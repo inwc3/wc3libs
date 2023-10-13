@@ -21,7 +21,7 @@ public class ExeVersionPe implements ExeVersion {
             // The dorkbox PE version will return more than just the version if available:
             // dorkbox: "6.1.7601.23403 (win7sp1_ldr.160325-0600)" for cmd.exe
             // wmic Version: "6.1.7601.23403"
-            Matcher m = versionOnly.matcher(PE.getVersion(executablePath));
+            Matcher m = versionOnly.matcher(PE.Companion.getVersion(executablePath));
             if (m.find()) {
                 return m.group(1);
             } else {
