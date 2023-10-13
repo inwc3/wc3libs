@@ -51,6 +51,7 @@ jacocoTestReport {
 }
 
 task sourcesJar(type: Jar) {
+    dependsOn 'generateGrammarSource'
     archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
