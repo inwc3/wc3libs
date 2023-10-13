@@ -335,7 +335,7 @@ public class DOO_UNITS {
 			_heroInt = intVal;
 		}
 		
-		public class InvItem {
+		public static class InvItem {
 			private int _slot = 0;
 			
 			public int getSlot() {
@@ -410,7 +410,7 @@ public class DOO_UNITS {
 			return item;
 		}
 
-		public class AbilMod {
+		public static class AbilMod {
 			private ObjId _typeId;
 			
 			public ObjId getTypeId() {
@@ -557,7 +557,7 @@ public class DOO_UNITS {
 			_randGroupPos = val;
 		}
 		
-		public class RandObj {
+		public static class RandObj {
 			private ObjId _typeId;
 			
 			public ObjId getTypeId() {

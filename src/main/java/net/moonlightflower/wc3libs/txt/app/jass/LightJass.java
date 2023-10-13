@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import javax.annotation.Nonnull;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -146,7 +147,7 @@ public class LightJass {
 	}
 
 	public LightJass(@Nonnull File file) throws IOException {
-		InputStream inStream = new FileInputStream(file);
+		InputStream inStream = Files.newInputStream(file.toPath());
 
 		read(inStream);
 

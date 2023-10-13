@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class RawMetaSLK extends MetaSLK<RawMetaSLK, ObjId, RawMetaSLK.Obj> {
-	public class Obj extends SLK.Obj<ObjId> {
+	public static class Obj extends SLK.Obj<ObjId> {
 		@Override
 		public Map<ObjSLK.State, DataType> getStateVals() {
 			return null;

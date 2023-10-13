@@ -28,7 +28,7 @@ public class ExeVersionTest extends Wc3LibTest {
         // https://github.com/Luashine/dotnet-pe-version
         File peResourceFile = getFile("pefile/dotnet-pe-version.dll");
 
-        try (InputStream peResourceIn = new FileInputStream(peResourceFile);
+        try (InputStream peResourceIn = Files.newInputStream(peResourceFile.toPath());
              InputStream peResourceBufferedIn = new BufferedInputStream(peResourceIn)) {
 
             peTempFile = File.createTempFile("wc3libs-peversion-test-" + System.currentTimeMillis(), ".dl_");

@@ -112,22 +112,23 @@ public class JMpqPort extends MpqPort {
 									fileExport.getOutDir().mkdirs();
 								}
 
-								InputStream inStream = getClass().getResourceAsStream(inFile.getName());
+								try(InputStream inStream = getClass().getResourceAsStream(inFile.getName())) {
+                                    if (inStream == null) throw new FileNotFoundException();
 
-								if (inStream == null) throw new FileNotFoundException();
+                                    try (OutputStream outStream = Orient.createFileOutputStream(outFile)) {
+                                        byte[] buf = new byte[8192];
+                                        int len = 0;
+                                        while ((len = inStream.read(buf, 0, buf.length)) > 0) {
+                                            outStream.write(buf, 0, len);
+                                        }
 
-								byte[] buf = new byte[8192];
-								int len = 0;
+                                        resultFileExport = new FileExport(inFile, outFile, false);
 
-								OutputStream outStream = Orient.createFileOutputStream(outFile);
+                                        result.addExport(mpqFile, resultFileExport);
+                                    }
+                                }
 
-								while ((len = inStream.read(buf, 0, buf.length)) > 0) {
-									outStream.write(buf, 0, len);
-								}
 
-								resultFileExport = new FileExport(inFile, outFile, false);
-
-								result.addExport(mpqFile, resultFileExport);
 							} else {
 								DummyOutputStream dummyStream = new DummyOutputStream();
 

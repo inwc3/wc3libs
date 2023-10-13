@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 public class BLP extends Wc3RasterImg {
 	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
 
-	private class Reader {		
+	private static class Reader {
 		private byte[] _bytes;
 		private int _pos;
 		
@@ -338,7 +339,7 @@ public class BLP extends Wc3RasterImg {
 	public BLP(@Nonnull File file) throws IOException, UnsupportedFormatException {
 		super();
 		
-		InputStream inStream = new FileInputStream(file);
+		InputStream inStream = Files.newInputStream(file.toPath());
 		
 		read(inStream);
 		

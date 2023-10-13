@@ -18,7 +18,7 @@ import java.util.List;
 public class MiscDataTXT extends TXT {
 	public final static File GAME_USE_PATH = new File("UI\\MiscData.txt");
 	
-	public class Speed extends DataType {
+	public static class Speed extends DataType {
 
 		@Override
 		public DataType decode(Object val) {

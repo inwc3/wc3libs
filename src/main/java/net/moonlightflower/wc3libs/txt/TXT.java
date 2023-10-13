@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -267,7 +268,7 @@ public class TXT implements Printable {
 			_fieldsLower.remove(fieldId.lower());
 		}
 
-		public class FieldDoesNotExistException extends Exception {
+		public static class FieldDoesNotExistException extends Exception {
 			public FieldDoesNotExistException(@Nonnull FieldId fieldId) {
 				super(fieldId.toString());
 			}
@@ -524,7 +525,7 @@ public class TXT implements Printable {
 	}
 	
 	public void read(@Nonnull File file) throws IOException {
-		InputStream inStream = new FileInputStream(file);
+		InputStream inStream = Files.newInputStream(file.toPath());
 
 		read(inStream);
 		

@@ -177,7 +177,7 @@ public class Profile extends TXT implements Printable {
 	}
 	
 	public static class Obj extends TXT.Section {		
-		public class Field extends TXT.Section.Field {
+		public static class Field extends TXT.Section.Field {
 			@Override
 			public void merge(@Nonnull TXT.Section.Field otherField, boolean overwrite) {
 				super.merge(otherField, overwrite);
@@ -198,9 +198,8 @@ public class Profile extends TXT implements Printable {
 		@Override
 		@Nonnull
 		public Map<FieldId, Field> getFields() {
-			Map<FieldId, Field> ret = new LinkedHashMap<>();
-			
-			ret.putAll((Map<? extends FieldId, ? extends Field>) super.getFields());
+
+            Map<FieldId, Field> ret = new LinkedHashMap<>((Map<? extends FieldId, ? extends Field>) super.getFields());
 			
 			return ret;
 		}

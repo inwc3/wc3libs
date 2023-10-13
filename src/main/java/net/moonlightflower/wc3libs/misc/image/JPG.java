@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 public class JPG extends Wc3RasterImg {
 	private void read(@Nonnull InputStream stream) throws IOException {
@@ -40,7 +41,7 @@ public class JPG extends Wc3RasterImg {
 	}
 	
 	public JPG(@Nonnull File file) throws IOException {
-		this(new FileInputStream(file));
+		this(Files.newInputStream(file.toPath()));
 	}
 	
 	public JPG(@Nonnull Size size) {

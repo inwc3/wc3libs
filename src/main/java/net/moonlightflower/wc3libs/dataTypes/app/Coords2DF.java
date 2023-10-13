@@ -43,10 +43,10 @@ public class Coords2DF extends DataType {
 
 	@Nonnull
 	public Coords2DF scale(double factor) {
-		Double x = getX().toFloat() * factor;
-		Double y = getY().toFloat() * factor;
+		double x = getX().toFloat() * factor;
+		double y = getY().toFloat() * factor;
 
-		return new Coords2DF(x.intValue(), y.intValue());
+		return new Coords2DF((int) x, (int) y);
 	}
 
 	public Coords2DF(float x, float y) {

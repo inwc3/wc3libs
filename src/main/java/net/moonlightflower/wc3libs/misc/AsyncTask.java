@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 public abstract class AsyncTask {
 	private final Thread _thread;
 
-	public class FinishedException extends RuntimeException {
+	public static class FinishedException extends RuntimeException {
 		
 	}
 
