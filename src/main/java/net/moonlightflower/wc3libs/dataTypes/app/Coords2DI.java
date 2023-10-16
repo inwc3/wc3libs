@@ -36,10 +36,10 @@ public class Coords2DI extends DataType {
 
 	@Nonnull
 	public Coords2DI scale(double factor) {
-		Double x = getX() * factor;
-		Double y = getY() * factor;
+		double x = getX() * factor;
+		double y = getY() * factor;
 		
-		return new Coords2DI(x.intValue(), y.intValue());
+		return new Coords2DI((int) x, (int) y);
 	}
 	
 	public Coords2DI(int x, int y) {

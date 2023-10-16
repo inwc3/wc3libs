@@ -179,7 +179,7 @@ public class MMP {
 		return icon;
 	}
 	
-	public class IconImg {
+	public static class IconImg {
 		public int _width;
 		public int _height;
 		public int[] _pxBuf;

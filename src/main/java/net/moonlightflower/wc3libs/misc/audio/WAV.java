@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.sound.sampled.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Vector;
 
 public class WAV {
@@ -149,7 +150,7 @@ public class WAV {
     }
 
     public WAV(File inFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        InputStream inStream = new FileInputStream(inFile);
+        InputStream inStream = Files.newInputStream(inFile.toPath());
 
         read(inStream);
 

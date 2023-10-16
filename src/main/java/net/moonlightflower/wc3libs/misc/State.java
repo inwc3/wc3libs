@@ -104,9 +104,7 @@ abstract public class State<FieldIdType extends FieldId, T extends DataType> {
 			if (otherClass.isAssignableFrom(specificClass)) {
 				Collection<State> states = entry.getValue()._states.values();
 
-				for (State state : states) {
-					ret.add(state);
-				}
+                ret.addAll(states);
 			}
 		}
 

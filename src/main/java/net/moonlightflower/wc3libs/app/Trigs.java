@@ -21,7 +21,7 @@ public class Trigs {
 		return _wtg;
 	}
 	
-	public class Var {
+	public static class Var {
 		private String _name;
 		
 		public String getName() {
@@ -87,7 +87,7 @@ public class Trigs {
 		_vars.add(val);
 	}
 	
-	public class TrigCat {
+	public static class TrigCat {
 		private String _name;
 		
 		public String getName() {

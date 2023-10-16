@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType extends ObjId, ObjType extends SLK.Obj<? extends ObjIdType>> implements
@@ -321,7 +322,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
         _fields.entrySet().removeIf(entry -> countMap.containsKey(entry.getKey().toString()));
     }
 
-    private class RecordPart {
+    private static class RecordPart {
         private String _attr;
         private DataType _val;
 
@@ -352,7 +353,7 @@ public abstract class SLK<Self extends SLK<Self, ObjIdType, ObjType>, ObjIdType 
     }
 
     public void read(@Nonnull File file, boolean onlyHeader) throws IOException {
-        InputStream inStream = new FileInputStream(file);
+        InputStream inStream = Files.newInputStream(file.toPath());
 
         UTF8 reader = new UTF8(inStream, false, true);
 

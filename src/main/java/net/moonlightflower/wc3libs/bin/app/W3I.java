@@ -528,7 +528,7 @@ public class W3I {
         _loadingScreen = val;
     }
 
-    public class PrologueScreen {
+    public static class PrologueScreen {
         private String _path;
 
         public String getPath() {
@@ -1302,9 +1302,8 @@ public class W3I {
         }
 
         public Set<Integer> getPlayerNums() {
-            Set<Integer> ret = new LinkedHashSet<>();
 
-            ret.addAll(_players.stream().boxed().collect(Collectors.toList()));
+            Set<Integer> ret = new LinkedHashSet<>(_players.stream().boxed().collect(Collectors.toList()));
 
             return ret;
         }
@@ -2213,7 +2212,7 @@ public class W3I {
         setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x12));
 
         setPrologueScreen(new PrologueScreen(null, stream.readString("prologueScreenText"), stream.readString("prologueScreenTitle"), stream.readString
-                ("prologueScreenSubtitle")));
+            ("prologueScreenSubtitle")));
 
         int playersCount = stream.readInt32("playersCount");
 
@@ -2358,10 +2357,10 @@ public class W3I {
         setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
 
         setPrologueScreen(new PrologueScreen(
-                stream.readString("prologueScreenPath"),
-                stream.readString("prologueScreenText"),
-                stream.readString("prologueScreenTitle"),
-                stream.readString("prologueScreenSubtitle")
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
         ));
 
         TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
@@ -2589,10 +2588,10 @@ public class W3I {
         setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
 
         setPrologueScreen(new PrologueScreen(
-                stream.readString("prologueScreenPath"),
-                stream.readString("prologueScreenText"),
-                stream.readString("prologueScreenTitle"),
-                stream.readString("prologueScreenSubtitle")
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
         ));
 
         TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));

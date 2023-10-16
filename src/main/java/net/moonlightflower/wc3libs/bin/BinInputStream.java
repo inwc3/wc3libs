@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 public class BinInputStream extends BinStream implements AutoCloseable {
 	public byte readByte() throws StreamException {
@@ -74,7 +75,7 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	}
 
 	public void read(@Nonnull File file) throws IOException {
-		InputStream inStream = new FileInputStream(file);
+		InputStream inStream = Files.newInputStream(file.toPath());
 
 		read(inStream);
 
@@ -110,7 +111,7 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	}
 
 	public BinInputStream(@Nonnull File file) throws IOException {
-		_inStream = new FileInputStream(file);
+		_inStream = Files.newInputStream(file.toPath());
 
 		read(_inStream);
 	}

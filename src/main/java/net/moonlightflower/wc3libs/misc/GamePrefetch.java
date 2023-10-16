@@ -88,7 +88,7 @@ public class GamePrefetch {
 				throw new RuntimeException(e);
 			}
 
-			throw new AsyncTask.FinishedException();
+			throw new FinishedException();
 		}
 		
 		@Override
@@ -177,9 +177,8 @@ public class GamePrefetch {
 					final Runnable eventHandler = this;
 
 					AsyncTask task = new PortTask(procFiles, _objs, () -> {
-						List<Obj> removeObjs = new ArrayList<>();
 
-						removeObjs.addAll(_objs);
+                        List<Obj> removeObjs = new ArrayList<>(_objs);
 
 						_objs.removeAll(removeObjs);
 

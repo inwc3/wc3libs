@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -227,7 +228,7 @@ public class FDF extends UTF8 {
 	}
 
 	public FDF(@Nonnull File file) throws IOException {
-		this(new FileInputStream(file));
+		this(Files.newInputStream(file.toPath()));
 	}
 	
 	public FDF(@Nonnull InputStream inStream) throws IOException {

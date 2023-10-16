@@ -11,8 +11,6 @@ import net.moonlightflower.wc3libs.slk.SLK;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 
 public class GameExeFinderTest {
-    public class TestGameExeFinder extends GameExeFinder {
+    public static class TestGameExeFinder extends GameExeFinder {
         @Nonnull
         @Override
         public File find() throws NotFoundException {

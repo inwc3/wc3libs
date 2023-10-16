@@ -69,7 +69,7 @@ public class BinStream {
         _pos = pos;
     }
 
-    protected class ByteList {
+    protected static class ByteList {
         protected List<Byte> _bytes = new ArrayList<>();
 
         public long size() {
