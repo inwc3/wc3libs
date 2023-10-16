@@ -13,7 +13,7 @@ java {
 
 // Project Info
 group 'net.moonlightflower'
-version '1.2.0'
+version '1.2.2'
 
 repositories {
     mavenCentral()
@@ -29,7 +29,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.11'
 
     // Libs
-    implementation group: 'com.github.inwc3', name: 'jmpq3', version: 'b4ef7121a4'
+    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '264c54cfc8'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     implementation group: 'com.dorkbox', name: 'PeParser', version: '3.3'
     implementation group: 'com.dorkbox', name: 'PeParser-Dorkbox-Util', version: '2.7'
@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.jcraft:jzlib:1.1.3'
 
     // TestNG
-    testImplementation 'org.testng:testng:6.14.3'
+    testImplementation 'org.testng:testng:7.8.0'
 }
 
 test {
