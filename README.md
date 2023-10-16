@@ -9,6 +9,7 @@ With Wc3libs we aim to offer a feature-complete, easy, plug & play solution for 
 # Usage
 
 Use this library in your maven/gradle project using [JitPack](https://jitpack.io/#inwc3/wc3libs).
+The latest version requires Java 11 or higher.
 
 Gradle Example:
 ```gradle
