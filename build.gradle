@@ -3,6 +3,7 @@ plugins {
     id "antlr"
     id "jacoco"
     id "idea"
+    id 'maven-publish'
 }
 
 java {
@@ -79,3 +80,14 @@ generateGrammarSource { doLast {
 
 generateGrammarSource.dependsOn cleanAntlrDir
 compileJava.dependsOn generateGrammarSource
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'inwc3'
+            artifactId = 'wc3libs'
+
+            from components.java
+        }
+    }
+}
