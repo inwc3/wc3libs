@@ -3,6 +3,7 @@ plugins {
     id "antlr"
     id "jacoco"
     id "idea"
+    id 'maven-publish'
 }
 
 java {
@@ -13,7 +14,7 @@ java {
 
 // Project Info
 group 'net.moonlightflower'
-version '1.2.0'
+version '1.2.1'
 
 repositories {
     mavenCentral()
@@ -79,3 +80,14 @@ generateGrammarSource { doLast {
 
 generateGrammarSource.dependsOn cleanAntlrDir
 compileJava.dependsOn generateGrammarSource
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'inwc3'
+            artifactId = 'wc3libs'
+
+            from components.java
+        }
+    }
+}
