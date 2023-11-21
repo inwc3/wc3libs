@@ -44,8 +44,12 @@ public abstract class LoadingScreenBackground {
 		public String getLabel() {
 			return _label;
 		}
-		
-		@Override
+
+        public void setLabel(String label) {
+            this._label = label;
+        }
+
+        @Override
 		public String toString() {
 			return _label;
 		}
@@ -196,8 +200,12 @@ public abstract class LoadingScreenBackground {
 		public File getCustomPath() {
 			return _path;
 		}
-		
-		@Override
+
+        public void setCustomPath(File path) {
+            this._path = path;
+        }
+
+        @Override
 		public String toString() {
 			return getCustomPath().toString();
 		}
