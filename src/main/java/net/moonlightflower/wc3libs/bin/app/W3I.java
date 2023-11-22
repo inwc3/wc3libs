@@ -408,7 +408,6 @@ public class W3I {
             stream.writeString(getText());
             stream.writeString(getTitle());
             stream.writeString(getSubtitle());
-            stream.writeInt32(getCampaignBackgroundIndex());
         }
 
         private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
@@ -593,6 +592,7 @@ public class W3I {
     public static class GameDataSet {
         private final static Map<Integer, GameDataSet> _map = new LinkedHashMap<>();
 
+        public final static GameDataSet MAX = new GameDataSet(-1, "MAX");
         public final static GameDataSet STANDARD = new GameDataSet(0, "DEFAULT");
         public final static GameDataSet CUSTOM_V1 = new GameDataSet(1, "CUSTOM_V1");
         public final static GameDataSet MELEE_V1 = new GameDataSet(2, "MELEE_V1");
@@ -2208,6 +2208,8 @@ public class W3I {
 
         setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x12));
 
+        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
+
         setPrologueScreen(new PrologueScreen(null, stream.readString("prologueScreenText"), stream.readString("prologueScreenTitle"), stream.readString
             ("prologueScreenSubtitle")));
 
@@ -2279,6 +2281,8 @@ public class W3I {
         stream.writeChar(getTileset().getChar());
 
         getLoadingScreen().write(stream, EncodingFormat.W3I_0x12);
+
+        stream.writeInt32(getGameDataSet().getIndex());
 
         PrologueScreen prologueScreen = getPrologueScreen();
 
