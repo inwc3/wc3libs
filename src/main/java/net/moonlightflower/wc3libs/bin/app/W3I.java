@@ -357,37 +357,37 @@ public class W3I {
             _subtitle = val;
         }
 
-        private int _index = 0;
+        private int _campaignBackgroundIndex = 0;
 
-        public int getIndex() {
-            return _index;
+        public int getCampaignBackgroundIndex() {
+            return _campaignBackgroundIndex;
         }
 
-        public void setIndex(int val) {
-            _index = val;
+        public void setCampaignBackgroundIndex(int val) {
+            _campaignBackgroundIndex = val;
         }
 
         @Override
         public String toString() {
-            return String.format("background=%s text=%s title=%s subtitle=%s index=%d", getBackground(), getText(), getTitle(), getSubtitle(), getIndex());
+            return String.format("background=%s text=%s title=%s subtitle=%s campaignBackgroundIndex=%d", getBackground(), getText(), getTitle(), getSubtitle(), getCampaignBackgroundIndex());
         }
 
-        private void set(int backgroundIndex, String customPath, String text, String title, String subtitle, int index) {
+        private void set(int campaignBackgroundIndex, String customPath, String text, String title, String subtitle) {
             LoadingScreenBackground background = null;
 
-            if (backgroundIndex < 0) {
+            if (campaignBackgroundIndex < 0) {
                 if ((customPath != null) && !customPath.isEmpty()) {
                     background = new LoadingScreenBackground.CustomBackground(new File(customPath));
                 }
-            } else if (backgroundIndex > 0) {
-                background = LoadingScreenBackground.PresetBackground.valueOf(backgroundIndex);
+            } else {
+                background = LoadingScreenBackground.PresetBackground.valueOf(campaignBackgroundIndex);
             }
 
             setBackground(background);
+            setCampaignBackgroundIndex(campaignBackgroundIndex);
             setText(text);
             setTitle(title);
             setSubtitle(subtitle);
-            setIndex(index);
         }
 
         private void read_0x12(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -396,8 +396,7 @@ public class W3I {
                     null,
                     stream.readString("loadingScreenText"),
                     stream.readString("loadingScreenTitle"),
-                    stream.readString("loadingScreenSubtitle"),
-                    stream.readInt32("loadingScreenIndex")
+                    stream.readString("loadingScreenSubtitle")
             );
         }
 
@@ -409,7 +408,7 @@ public class W3I {
             stream.writeString(getText());
             stream.writeString(getTitle());
             stream.writeString(getSubtitle());
-            stream.writeInt32(getIndex());
+            stream.writeInt32(getCampaignBackgroundIndex());
         }
 
         private void read_0x19(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {
@@ -418,8 +417,7 @@ public class W3I {
                     stream.readString("loadingScreenModel"),
                     stream.readString("loadingScreenText"),
                     stream.readString("loadingScreenTitle"),
-                    stream.readString("loadingScreenSubtitle"),
-                    -1
+                    stream.readString("loadingScreenSubtitle")
             );
         }
 
@@ -447,8 +445,7 @@ public class W3I {
                     stream.readString("loadingScreenModel"),
                     stream.readString("loadingScreenText"),
                     stream.readString("loadingScreenTitle"),
-                    stream.readString("loadingScreenSubtitle"),
-                    -1
+                    stream.readString("loadingScreenSubtitle")
             );
         }
 
@@ -505,12 +502,12 @@ public class W3I {
             }
         }
 
-        public LoadingScreen(LoadingScreenBackground background, String text, String title, String subtitle, int index) {
+        public LoadingScreen(LoadingScreenBackground background, String text, String title, String subtitle, int campaignBackgroundIndex) {
             setBackground(background);
+            setCampaignBackgroundIndex(campaignBackgroundIndex);
             setText(text);
             setTitle(title);
             setSubtitle(subtitle);
-            setIndex(index);
         }
 
         public LoadingScreen(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
