@@ -127,6 +127,7 @@ public class W3ITest extends Wc3LibTest {
 
         w3iFile.forEach((Path p) -> {
             try {
+                log.info("w3i read write cycle: " + p.getFileName());
                 readWriteCycle(W3I.class, p.toFile());
             } catch (IOException e) {
                 throw new RuntimeException(e);
