@@ -3,6 +3,7 @@ package wc3libs.misc;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.app.WCT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -111,6 +112,10 @@ public abstract class Wc3LibTest {
                     Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class, ObjMod.EncodingFormat.class);
 
                     writeMethod.invoke(testObj, outStream, ObjMod.EncodingFormat.AS_DEFINED);
+                } else if (WCT.class.isAssignableFrom(testClass)) {
+                    Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class, WCT.EncodingFormat.class);
+
+                    writeMethod.invoke(testObj, outStream, WCT.EncodingFormat.AS_DEFINED);
                 } else {
                     Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class);
 

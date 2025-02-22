@@ -1,9 +1,6 @@
 package net.moonlightflower.wc3libs.bin.app;
 
-import net.moonlightflower.wc3libs.bin.BinInputStream;
-import net.moonlightflower.wc3libs.bin.Format;
-import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
-import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.bin.*;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
@@ -20,7 +17,17 @@ import java.util.*;
  */
 public class WCT {
 	public final static File GAME_PATH = new File("war3map.wct");
-	
+
+    private EncodingFormat _format;
+
+    public EncodingFormat getFormat() {
+        return _format;
+    }
+
+    public void setFormat(@Nonnull EncodingFormat format) {
+        this._format = format;
+    }
+
 	public static class Trig {
 		private String _text;
 		
@@ -55,6 +62,7 @@ public class WCT {
 		
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
+            case WCT_0x80000004:
 			case WCT_0x1:
 			case WCT_0x0: {
 				read_0x0(stream);
@@ -65,6 +73,7 @@ public class WCT {
 		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 			switch (format.toEnum()) {
 			case AUTO:
+            case WCT_0x80000004:
 			case WCT_0x1:
 			case WCT_0x0: {
 				write_0x0(stream);
@@ -99,7 +108,13 @@ public class WCT {
 		
 		return trig;
 	}
-	
+
+    private int _useHeader;
+
+    public void setUseHeader(int val) {
+        _useHeader = val;
+    }
+
 	private String _headComment;
 	
 	public void setHeadComment(@Nullable String val) {
@@ -115,21 +130,31 @@ public class WCT {
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
+            AS_DEFINED,
 			WCT_0x0,
 			WCT_0x1,
+            WCT_0x80000004
 		}
-		
+
+        private final static Map<Integer, EncodingFormat> _map = new LinkedHashMap<>();
+
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat AS_DEFINED = new EncodingFormat(Enum.AS_DEFINED, null);
 		public final static EncodingFormat WCT_0x0 = new EncodingFormat(Enum.WCT_0x0, 0x0);
 		public final static EncodingFormat WCT_0x1 = new EncodingFormat(Enum.WCT_0x1, 0x1);
+        public final static EncodingFormat WCT_0x80000004 = new EncodingFormat(Enum.WCT_0x80000004, 0x80000004);
 
 		@Nullable
-		public static EncodingFormat valueOf(@Nonnull Integer version) {
-			return get(EncodingFormat.class, version);
+		public static EncodingFormat valueOf(int version) {
+            return _map.get(version);
 		}
 		
-		private EncodingFormat(@Nonnull Enum enumVal, int version) {
+		private EncodingFormat(@Nonnull Enum enumVal, @Nullable Integer version) {
 			super(enumVal, version);
+
+            if (version != null) {
+                _map.put(version, this);
+            }
 		}
 	}
 	
@@ -137,6 +162,8 @@ public class WCT {
 		int version = stream.readInt32();
 		
 		stream.checkFormatVersion(EncodingFormat.WCT_0x0.getVersion(), version);
+
+        _format = EncodingFormat.valueOf(version);
 
 		int trigsCount = stream.readInt32();
 
@@ -159,7 +186,9 @@ public class WCT {
 		int version = stream.readInt32("version");
 		
 		stream.checkFormatVersion(EncodingFormat.WCT_0x1.getVersion(), version);
-		
+
+        _format = EncodingFormat.valueOf(version);
+
 		_headComment = stream.readString("headComment");
 		
 		_headTrig = new Trig(stream, EncodingFormat.WCT_0x1);
@@ -184,22 +213,88 @@ public class WCT {
 			trig.write(stream, EncodingFormat.WCT_0x1);
 		}
 	}
-	
-	private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
+
+    public void read_0x80000004(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+        int version = stream.readInt32("version");
+
+        stream.checkFormatVersion(EncodingFormat.WCT_0x80000004.getVersion(), version);
+
+        _format = EncodingFormat.valueOf(version);
+
+        _useHeader = stream.readInt32("useHeader");
+
+        if (_useHeader != 0) {
+            _headComment = stream.readString("headComment");
+
+            _headTrig = new Trig(stream, EncodingFormat.WCT_0x80000004);
+        }
+
+        while (!stream.eof()) {
+            addTrig(new Trig(stream, EncodingFormat.WCT_0x80000004));
+        }
+    }
+
+    public void write_0x80000004(@Nonnull Wc3BinOutputStream stream) {
+        stream.writeInt32(EncodingFormat.WCT_0x80000004.getVersion());
+
+        stream.writeInt32(_useHeader);
+
+        if (_useHeader != 0) {
+            stream.writeString(_headComment);
+
+            _headTrig.write(stream, EncodingFormat.WCT_0x80000004);
+        }
+
+        for (Trig trig : _trigs) {
+            trig.write(stream, EncodingFormat.WCT_0x80000004);
+        }
+    }
+
+    private void write_as_defined(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        switch (_format.toEnum()) {
+            case WCT_0x0: {
+                write_0x0(stream);
+
+                break;
+            }
+            case WCT_0x1: {
+                write_0x1(stream);
+
+                break;
+            }
+            case WCT_0x80000004: {
+                write_0x80000004(stream);
+
+                break;
+            }
+        }
+    }
+
+	private void read_as_defined(@Nonnull Wc3BinInputStream stream) throws Exception {
 		int version = stream.readInt32();
 		
 		stream.rewind();
 
-		read(stream, stream.getFormat(EncodingFormat.class, version));
+        EncodingFormat format = EncodingFormat.valueOf(version);
+
+        if (format == null) throw new IllegalArgumentException("unknown format " + version);
+
+		read(stream, format);
 	}
-	
-	private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
+
+    public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
 		switch (format.toEnum()) {
-		case AUTO: {
-			read_auto(stream);
-			
-			break;
-		}
+		case AUTO:
+        case AS_DEFINED: {
+            read_as_defined(stream);
+
+            break;
+        }
+        case WCT_0x80000004: {
+            read_0x80000004(stream);
+
+            break;
+        }
 		case WCT_0x1: {
 			read_0x1(stream);
 			
@@ -213,9 +308,19 @@ public class WCT {
 		}
 	}
 	
-	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 		switch (format.toEnum()) {
+        case AS_DEFINED: {
+            write_as_defined(stream);
+
+            break;
+        }
 		case AUTO:
+        case WCT_0x80000004: {
+            write_0x80000004(stream);
+
+            break;
+        }
 		case WCT_0x1: {
 			write_0x1(stream);
 			
@@ -228,12 +333,12 @@ public class WCT {
 		}
 		}
 	}
-	
-	private void read(@Nonnull Wc3BinInputStream stream) throws Exception {
+
+    public void read(@Nonnull Wc3BinInputStream stream) throws Exception {
 		read(stream, EncodingFormat.AUTO);
 	}
 
-	public void write(@Nonnull Wc3BinOutputStream stream) {
+	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		write(stream, EncodingFormat.AUTO);
 	}
 
