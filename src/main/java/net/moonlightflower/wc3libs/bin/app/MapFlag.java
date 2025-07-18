@@ -22,6 +22,9 @@ public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag USE_TERRAIN_FOG = new MapFlag(13, "useTerrainFog");
     public final static MapFlag REQUIRES_EXPANSION = new MapFlag(14, "requiresExpansion");
     public final static MapFlag USE_ITEM_CLASSIFICATION_SYSTEM = new MapFlag(15, "useItemClassificationSystem");
+    public final static MapFlag USE_WATER_TINTING_COLOR = new MapFlag(16, "useWaterTintingColor");
+    public final static MapFlag USE_ACCURATE_PROBABILITY_FOR_CALCULATIONS = new MapFlag(17, "useAccurateProbabilityForCalculations");
+    public final static MapFlag USE_CUSTOM_ABIL_SKIN = new MapFlag(18, "useCustomAbilSkin");
 
     @Nonnull
     public static Collection<MapFlag> values() {
