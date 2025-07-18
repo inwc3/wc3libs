@@ -28,6 +28,7 @@ public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag DISABLE_DENY_ICON = new MapFlag(19, "disableDenyIcon");
     public final static MapFlag USE_FORCE_DEFAULT_CAMERA_ZOOM = new MapFlag(20, "useForceDefaultCameraZoom");
     public final static MapFlag USE_FORCE_MAX_CAMERA_ZOOM = new MapFlag(21, "useForceMaxCameraZoom");
+    public final static MapFlag USE_FORCE_MIN_CAMERA_ZOOM = new MapFlag(22, "useForceMinCameraZoom");
 
     @Nonnull
     public static Collection<MapFlag> values() {

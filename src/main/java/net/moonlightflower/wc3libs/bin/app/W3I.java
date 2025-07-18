@@ -468,6 +468,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -487,6 +488,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -778,6 +780,16 @@ public class W3I {
 
     public void setForceMaxCameraZoom(int val) {
         _forceMaxCameraZoom = val;
+    }
+
+    private int _forceMinCameraZoom = 1250;
+
+    public int getForceMinCameraZoom() {
+        return _forceMinCameraZoom;
+    }
+
+    public void setForceMinCameraZoom(int val) {
+        _forceMinCameraZoom = val;
     }
 
     public static class Player {
@@ -1187,6 +1199,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                     read_0x1F(stream);
@@ -1205,6 +1218,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                     write_0x1F(stream);
@@ -1395,6 +1409,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1410,6 +1425,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1517,6 +1533,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1532,6 +1549,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1604,6 +1622,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1619,6 +1638,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1758,6 +1778,7 @@ public class W3I {
 
             private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 switch (format.toEnum()) {
+                    case W3I_0x21:
                     case W3I_0x20:
                     case W3I_0x1F:
                     case W3I_0x1C:
@@ -1773,6 +1794,7 @@ public class W3I {
             private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                 switch (format.toEnum()) {
                     case AUTO:
+                    case W3I_0x21:
                     case W3I_0x20:
                     case W3I_0x1F:
                     case W3I_0x1C:
@@ -1852,6 +1874,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1867,6 +1890,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -1963,6 +1987,7 @@ public class W3I {
 
                 private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                     switch (format.toEnum()) {
+                        case W3I_0x21:
                         case W3I_0x20:
                         case W3I_0x1F:
                         case W3I_0x1C:
@@ -1977,6 +2002,7 @@ public class W3I {
                 private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                     switch (format.toEnum()) {
                         case AUTO:
+                        case W3I_0x21:
                         case W3I_0x20:
                         case W3I_0x1F:
                         case W3I_0x1C:
@@ -2032,6 +2058,7 @@ public class W3I {
 
             private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
                 switch (format.toEnum()) {
+                    case W3I_0x21:
                     case W3I_0x20:
                     case W3I_0x1F:
                     case W3I_0x1C:
@@ -2046,6 +2073,7 @@ public class W3I {
             private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
                 switch (format.toEnum()) {
                     case AUTO:
+                    case W3I_0x21:
                     case W3I_0x20:
                     case W3I_0x1F:
                     case W3I_0x1C:
@@ -2107,6 +2135,7 @@ public class W3I {
 
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -2121,6 +2150,7 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
                 case W3I_0x1C:
@@ -2201,6 +2231,7 @@ public class W3I {
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
         public enum Enum {
             AUTO,
+            W3I_0x21,
             W3I_0x20,
             W3I_0x1F,
             W3I_0x1C,
@@ -2209,6 +2240,7 @@ public class W3I {
         }
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat W3I_0x21 = new EncodingFormat(Enum.W3I_0x21, 0x21);
         public final static EncodingFormat W3I_0x20 = new EncodingFormat(Enum.W3I_0x20, 0x20);
         public final static EncodingFormat W3I_0x1F = new EncodingFormat(Enum.W3I_0x1F, 0x1F);
         public final static EncodingFormat W3I_0x1C = new EncodingFormat(Enum.W3I_0x1C, 0x1C);
@@ -3345,6 +3377,269 @@ public class W3I {
         }
     }
 
+    private void read_0x21(@Nonnull Wc3BinInputStream stream) throws Exception {
+        _fileVersion = stream.readInt32("version");
+
+        stream.checkFormatVersion(EncodingFormat.W3I_0x21.getVersion(), _fileVersion);
+
+        set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
+        setEditorVersion(stream.readInt32("editorVersion"));
+
+        setGameVersion_major(stream.readUInt32("gameVersion_major"));
+        setGameVersion_minor(stream.readUInt32("gameVersion_minor"));
+        setGameVersion_rev(stream.readUInt32("gameVersion_rev"));
+        setGameVersion_build(stream.readUInt32("gameVersion_build"));
+
+        setMapName(stream.readString("mapName"));
+        setMapAuthor(stream.readString("mapAuthor"));
+        setMapDescription(stream.readString("mapDescription"));
+        setPlayersRecommendedAmount(stream.readString("playersRecommendedAmount"));
+
+        setCameraBounds(new Coords2DF(
+                stream.readFloat32("camA"),
+                stream.readFloat32("camB")),
+            new Coords2DF(
+                stream.readFloat32("camC"),
+                stream.readFloat32("camD")),
+            new Coords2DF(
+                stream.readFloat32("camE"),
+                stream.readFloat32("camF")),
+            new Coords2DF(stream.readFloat32("camG"),
+                stream.readFloat32("camH")
+            ));
+        setMargins(new Bounds(-stream.readInt32("marginA"), stream.readInt32("marginB"), -stream.readInt32("marginC"), stream.readInt32("marginD")));
+
+        setDimensions(stream.readInt32("width"), stream.readInt32("height"));
+
+        setFlags(Flags.valueOf(stream.readInt32("flags")));
+
+        setTileset(Tileset.valueOf(stream.readChar("tileset")));
+
+        setLoadingScreen(new LoadingScreen(stream, EncodingFormat.W3I_0x21));
+
+        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
+
+        setPrologueScreen(new PrologueScreen(
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
+        ));
+
+        TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
+        War3Real terrainFogZStart = stream.readReal("terrainFogZStart");
+        War3Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
+        War3Real terrainFogDensity = stream.readReal("terrainFogDensity");
+        Color terrainFogColor = Color.fromRGBA255(stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"), stream.readUByte("terrainFogBlue"),
+            stream.readUByte("terrainFogAlpha"));
+
+        setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
+
+        setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
+        setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
+        setTilesetLightEnv(Tileset.valueOf(stream.readChar("tilesetLightEnv")));
+
+        setWaterColor(Color.fromRGBA255(
+            stream.readUByte("waterRed"),
+            stream.readUByte("waterGreen"),
+            stream.readUByte("waterBlue"),
+            stream.readUByte("waterAlpha")
+        ));
+
+        setScriptLang(stream.readUInt32("scriptLang") == 0 ? ScriptLang.JASS : ScriptLang.LUA);
+        setGraphics(((Function<Long, Graphics>) val -> {
+            if (val == 1L) return Graphics.SD;
+            if (val == 2L) return Graphics.HD;
+            if (val == 3L) return Graphics.SD_AND_HD;
+            return Graphics.SD;
+        }).apply(stream.readUInt32("graphics")));
+        setGameDataVersion(stream.readUInt32("gameDataVersion") == 0 ? GameDataVersion.ROC : GameDataVersion.TFT);
+
+        setForceDefaultCameraZoom(stream.readInt32("forceDefaultCameraZoom"));
+        setForceMaxCameraZoom(stream.readInt32("forceMaxCameraZoom"));
+        setForceMinCameraZoom(stream.readInt32("forceMinCameraZoom"));
+
+        int playersCount = stream.readInt32("playersCount");
+
+        for (int i = 0; i < playersCount; i++) {
+            addPlayer(new Player(stream, EncodingFormat.W3I_0x21));
+        }
+
+        if (stream.eof()) return;
+
+        int forcesCount = stream.readInt32("forcesCount");
+
+        for (int i = 0; i < forcesCount; i++) {
+            addForce(new Force(stream, EncodingFormat.W3I_0x21));
+        }
+
+        if (stream.eof()) return;
+
+        if (stream.readUByte() == 0xFF) return;
+
+        stream.rewind(1);
+
+        int upgradeModsCount = stream.readInt32("upgradeModsCount");
+
+        for (int i = 0; i < upgradeModsCount; i++) {
+            addUpgradeMod(new UpgradeMod(stream, EncodingFormat.W3I_0x21));
+        }
+
+        if (stream.eof()) return;
+
+        int techModsCount = stream.readInt32("techModsCount");
+
+        for (int i = 0; i < techModsCount; i++) {
+            addTechMod(new TechMod(stream, EncodingFormat.W3I_0x21));
+        }
+
+        if (stream.eof()) return;
+
+        int unitTablesCount = stream.readInt32("unitTablesCount");
+
+        for (int i = 0; i < unitTablesCount; i++) {
+            addUnitTable(new UnitTable(stream, EncodingFormat.W3I_0x21));
+        }
+
+        if (stream.eof()) return;
+
+        int itemTablesCount = stream.readInt32("itemTablesCount");
+
+        for (int i = 0; i < itemTablesCount; i++) {
+            addItemTable(new ItemTable(stream, EncodingFormat.W3I_0x21));
+        }
+    }
+
+    private void write_0x21(@Nonnull Wc3BinOutputStream stream) {
+        stream.writeInt32(EncodingFormat.W3I_0x21.getVersion());
+
+        stream.writeInt32(getSavesAmount());
+        stream.writeInt32(getEditorVersion());
+
+        stream.writeUInt32(getGameVersion_major());
+        stream.writeUInt32(getGameVersion_minor());
+        stream.writeUInt32(getGameVersion_rev());
+        stream.writeUInt32(getGameVersion_build());
+
+        stream.writeString(getMapName());
+        stream.writeString(getMapAuthor());
+        stream.writeString(getMapDescription());
+        stream.writeString(getPlayersRecommendedAmount());
+
+        Coords2DF camBounds1 = getCameraBounds1();
+        Coords2DF camBounds2 = getCameraBounds2();
+        Coords2DF camBounds3 = getCameraBounds3();
+        Coords2DF camBounds4 = getCameraBounds4();
+
+        stream.writeFloat32(camBounds1.getX());
+        stream.writeFloat32(camBounds1.getY());
+        stream.writeFloat32(camBounds2.getX());
+        stream.writeFloat32(camBounds2.getY());
+        stream.writeFloat32(camBounds3.getX());
+        stream.writeFloat32(camBounds3.getY());
+        stream.writeFloat32(camBounds4.getX());
+        stream.writeFloat32(camBounds4.getY());
+
+        stream.writeInt32(-getMargins().getMinX());
+        stream.writeInt32(getMargins().getMaxX());
+        stream.writeInt32(-getMargins().getMinY());
+        stream.writeInt32(getMargins().getMaxY());
+
+        stream.writeInt32(getWidth());
+        stream.writeInt32(getHeight());
+
+        stream.writeInt32(getFlags().toInt());
+
+        stream.writeChar(getTileset().getChar());
+
+        getLoadingScreen().write(stream, EncodingFormat.W3I_0x21);
+
+        stream.writeInt32(getGameDataSet().getIndex());
+
+        PrologueScreen prologueScreen = getPrologueScreen();
+
+        stream.writeString(prologueScreen != null ? prologueScreen.getPath() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getText() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getTitle() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getSubtitle() : null);
+
+        TerrainFog terrainFog = getTerrainFog();
+
+        TerrainFogType terrainFogType = terrainFog != null ? terrainFog.getType() : null;
+
+        stream.writeInt32(terrainFogType != null ? terrainFogType.getVal() : 0);
+        stream.writeReal(terrainFog != null ? terrainFog.getZStart() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getDensity() : null);
+
+        Color terrainFogColor = (terrainFog != null) ? terrainFog.getColor() : null;
+
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue255() : 0x00);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha255() : 0x00);
+
+        stream.writeId(getGlobalWeatherId());
+        stream.writeString(getSoundEnv());
+        stream.writeChar(getTilesetLightEnv() != null ? getTilesetLightEnv().getChar() : null);
+
+        Color waterColor = getWaterColor();
+
+        stream.writeUByte(waterColor.getRed255());
+        stream.writeUByte(waterColor.getGreen255());
+        stream.writeUByte(waterColor.getBlue255());
+        stream.writeUByte(waterColor.getAlpha255());
+
+        stream.writeUInt32(getScriptLang() == ScriptLang.LUA ? 1 : 0);
+        stream.writeUInt32(((Function<Graphics, Long>) val -> {
+            if (val == Graphics.SD) return 1L;
+            if (val == Graphics.HD) return 2L;
+            if (val == Graphics.SD_AND_HD) return 3L;
+            return 1L;
+        }).apply(getGraphics()));
+        stream.writeUInt32(getGameDataVersion() == GameDataVersion.TFT ? 1 : 0);
+
+        stream.writeInt32(getForceDefaultCameraZoom());
+        stream.writeInt32(getForceMaxCameraZoom());
+        stream.writeInt32(getForceMinCameraZoom());
+
+        stream.writeInt32(_players.size());
+
+        for (Player player : _players) {
+            player.write(stream, EncodingFormat.W3I_0x21);
+        }
+
+        stream.writeInt32(_forces.size());
+
+        for (Force force : _forces) {
+            force.write(stream, EncodingFormat.W3I_0x21);
+        }
+
+        stream.writeInt32(_upgradeMods.size());
+
+        for (UpgradeMod upgradeMod : _upgradeMods) {
+            upgradeMod.write(stream, EncodingFormat.W3I_0x21);
+        }
+
+        stream.writeInt32(_techMods.size());
+
+        for (TechMod techMod : _techMods) {
+            techMod.write(stream, EncodingFormat.W3I_0x21);
+        }
+
+        stream.writeInt32(_unitTables.size());
+
+        for (UnitTable unitTable : _unitTables) {
+            unitTable.write(stream, EncodingFormat.W3I_0x21);
+        }
+
+        stream.writeInt32(_itemTables.size());
+
+        for (ItemTable itemTable : _itemTables) {
+            itemTable.write(stream, EncodingFormat.W3I_0x21);
+        }
+    }
+
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt32("version");
 
@@ -3373,6 +3668,9 @@ public class W3I {
             case W3I_0x20:
                 read_0x20(stream);
                 break;
+            case W3I_0x21:
+                read_0x21(stream);
+                break;
         }
     }
 
@@ -3386,6 +3684,11 @@ public class W3I {
                 write(stream, format);
 
                 break;
+            case W3I_0x21: {
+                write_0x21(stream);
+
+                break;
+            }
             case W3I_0x20: {
                 write_0x20(stream);
 
