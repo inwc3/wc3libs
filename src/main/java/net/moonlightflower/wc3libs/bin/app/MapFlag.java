@@ -3,9 +3,7 @@ package net.moonlightflower.wc3libs.bin.app;
 import net.moonlightflower.wc3libs.dataTypes.app.FlagsInt;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag HIDE_MINIMAP = new MapFlag(0, "hideMinimap");
@@ -21,9 +19,9 @@ public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag MAP_PROPERTIES_WINDOW_OPENED_BEFORE = new MapFlag(10, "mapPrioritiesWindowOpenedBefore");
     public final static MapFlag SHOW_WATER_WAVES_ON_CLIFF_SHORES = new MapFlag(11, "showWaterWavesOnCliffShores");
     public final static MapFlag SHOW_WATER_WAVES_ON_ROLLING_SHORES = new MapFlag(12, "showWaterWavesOnRollingShores");
-    public final static MapFlag UNKNOWN = new MapFlag(13, "unknown");
-    public final static MapFlag UNKNOWN_B = new MapFlag(14, "unknownB");
-    public final static MapFlag UNKNOWN_C = new MapFlag(15, "unknownC");
+    public final static MapFlag USE_TERRAIN_FOG = new MapFlag(13, "useTerrainFog");
+    public final static MapFlag REQUIRES_EXPANSION = new MapFlag(14, "requiresExpansion");
+    public final static MapFlag USE_ITEM_CLASSIFICATION_SYSTEM = new MapFlag(15, "useItemClassificationSystem");
 
     @Nonnull
     public static Collection<MapFlag> values() {

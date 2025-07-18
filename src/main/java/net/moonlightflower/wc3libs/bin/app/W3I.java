@@ -2161,6 +2161,7 @@ public class W3I {
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
         public enum Enum {
             AUTO,
+            W3I_0x20,
             W3I_0x1F,
             W3I_0x1C,
             W3I_0x19,
@@ -2168,6 +2169,7 @@ public class W3I {
         }
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat W3I_0x20 = new EncodingFormat(Enum.W3I_0x20, 0x20);
         public final static EncodingFormat W3I_0x1F = new EncodingFormat(Enum.W3I_0x1F, 0x1F);
         public final static EncodingFormat W3I_0x1C = new EncodingFormat(Enum.W3I_0x1C, 0x1C);
         public final static EncodingFormat W3I_0x19 = new EncodingFormat(Enum.W3I_0x19, 0x19);
