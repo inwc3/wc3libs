@@ -332,8 +332,25 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
-    private String trimZeroes(@Nonnull final String input) {
-        return input.replaceFirst("^\0+", "").replaceFirst("\0+$", "");
+    @Nonnull
+    private static String trimZeroes(@Nonnull String s) {
+        int len = s.length();
+        int start = 0;
+
+        // skip leading NULs
+        while (start < len && s.charAt(start) == '\0') start++;
+
+        // if all NULs, return empty
+        if (start == len) return "";
+
+        // skip trailing NULs
+        int end = len - 1;
+        while (end >= start && s.charAt(end) == '\0') end--;
+
+        // nothing trimmed → return original to avoid new allocation
+        if (start == 0 && end == len - 1) return s;
+
+        return s.substring(start, end + 1);
     }
 
 	@Nonnull
