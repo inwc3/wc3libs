@@ -40,7 +40,7 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 				vals[i] = _bytes.get(_pos++);
 			}
 
-//			log("bytes", label, vals);
+			log("bytes", label, vals);
 
 			return vals;
 		} catch (IndexOutOfBoundsException e) {

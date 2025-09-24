@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import static net.moonlightflower.wc3libs.port.LogConfig.LOG_ENABLED;
+
 public class BinStream {
     public long getPos() {
         return _pos;
@@ -110,6 +112,8 @@ public class BinStream {
     }
 
     public void log(@Nonnull String type, @Nullable String label, Object val, String valFormat) {
+        if (!LOG_ENABLED) return;
+
         long startPos = _logStartPos;
         long endPos = _pos;
 
