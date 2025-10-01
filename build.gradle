@@ -30,7 +30,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.11'
 
     // Libs
-    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '3183dd7680'
+    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '1698cc8f61'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     implementation group: 'com.dorkbox', name: 'PeParser', version: '3.3'
     implementation group: 'com.dorkbox', name: 'PeParser-Dorkbox-Util', version: '2.7'
