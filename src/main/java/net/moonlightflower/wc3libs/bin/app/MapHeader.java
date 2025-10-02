@@ -194,57 +194,65 @@ public class MapHeader {
 
         stream.close();
 
-        byte[] bytes = byteStream.toByteArray();
+        byte[] headerBytes = byteStream.toByteArray();
 
+        // Check if file has a map header (HM3W) or starts with MPQ archive
         RandomAccessFile fp = new RandomAccessFile(file, "r");
 
         byte[] startTokenBytes = new byte[4];
-
         fp.read(startTokenBytes, 0, startTokenBytes.length);
-
         fp.close();
 
-        Id startToken = Id.valueOf(new String(startTokenBytes, StandardCharsets.US_ASCII));
+        String startToken = new String(startTokenBytes, StandardCharsets.US_ASCII);
+        Id startId = Id.valueOf(startToken);
 
-        if (!startToken.equals(START_TOKEN)) {
-            //start token is missing, assume that header must be missing, prepend new one
+        // MPQ archives start with "MPQ\u001a" or "MPQ\u001b"
+        boolean startsWithMPQ = startToken.startsWith("MPQ");
+        boolean hasMapHeader = startId.equals(START_TOKEN);
+
+        if (startsWithMPQ || !hasMapHeader) {
+            // No map header exists - need to INSERT 512 bytes at the beginning
+            // This shifts the entire file content forward
             fp = new RandomAccessFile(file, "rw");
 
-            long length = fp.length();
+            long fileLength = fp.length();
+            long newLength = fileLength + HEADER_BYTES_SIZE;
 
-            long endPos = length - 1;
+            // Expand file to new size
+            fp.setLength(newLength);
 
-            int maxChunkSize = Integer.MAX_VALUE / 2;
+            // Shift content forward in chunks (from end to beginning to avoid overwriting)
+            int chunkSize = 1024 * 1024; // 1MB chunks
+            byte[] buffer = new byte[chunkSize];
 
-            int chunkSize = (int) Math.min(length, maxChunkSize);
+            // Start from the end and work backwards
+            long readPos = fileLength;
+            long writePos = newLength;
 
-            long startPos = endPos - chunkSize + 1;
+            while (readPos > 0) {
+                int bytesToRead = (int) Math.min(chunkSize, readPos);
+                readPos -= bytesToRead;
+                writePos -= bytesToRead;
 
-            while (chunkSize > 0) {
-                fp.seek(startPos);
+                fp.seek(readPos);
+                fp.readFully(buffer, 0, bytesToRead);
 
-                byte[] chunkBytes = new byte[chunkSize];
-
-                fp.read(chunkBytes, 0, chunkBytes.length);
-
-                fp.write(chunkBytes);
-
-                length = startPos;
-
-                chunkSize = (int) Math.min(length, maxChunkSize);
-
-                endPos = startPos - 1;
-
-                startPos = endPos - chunkSize + 1;
+                fp.seek(writePos);
+                fp.write(buffer, 0, bytesToRead);
             }
+
+            // Now write the header at position 0
+            fp.seek(0);
+            fp.write(headerBytes);
+
+            fp.close();
         } else {
+            // Map header already exists - just overwrite it
             fp = new RandomAccessFile(file, "rw");
+            fp.seek(0);
+            fp.write(headerBytes);
+            fp.close();
         }
-
-        fp.seek(0);
-        fp.write(bytes);
-
-        fp.close();
     }
 
     public static MapHeader ofFile(@Nonnull File file) throws IOException {
