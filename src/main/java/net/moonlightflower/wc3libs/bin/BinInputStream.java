@@ -1,10 +1,7 @@
 package net.moonlightflower.wc3libs.bin;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 
 public class BinInputStream extends BinStream implements AutoCloseable {
@@ -115,4 +112,5 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 
 		read(_inStream);
 	}
+
 }

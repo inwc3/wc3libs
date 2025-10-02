@@ -5,10 +5,7 @@ import net.moonlightflower.wc3libs.misc.Id;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class MapHeader {
@@ -244,20 +241,33 @@ public class MapHeader {
             fp = new RandomAccessFile(file, "rw");
         }
 
+        fp.seek(0);
         fp.write(bytes);
 
         fp.close();
     }
 
     public static MapHeader ofFile(@Nonnull File file) throws IOException {
-        Wc3BinInputStream stream = new Wc3BinInputStream(file);
+        // Only read the header portion (512 bytes)
+        try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+            byte[] headerBytes = new byte[(int) HEADER_BYTES_SIZE];
+            int bytesRead = raf.read(headerBytes);
 
-        Reader reader = new Reader(stream);
+            if (bytesRead < headerBytes.length) {
+                throw new IOException("File too small to contain map header");
+            }
 
-        MapHeader mapHeader = reader.exec();
+            // Create a stream from just the header bytes
+            ByteArrayInputStream bais = new ByteArrayInputStream(headerBytes);
+            Wc3BinInputStream stream = new Wc3BinInputStream(bais);
 
-        stream.close();
+            Reader reader = new Reader(stream);
 
-        return mapHeader;
+            MapHeader mapHeader = reader.exec();
+
+            stream.close();
+
+            return mapHeader;
+        }
     }
 }
