@@ -265,10 +265,10 @@ public class WinRegistryHandler {
 		}
 
 		/** Of the form `"C:\Program Files\Warcraft III\x86_64\Warcraft III.exe",0` */
-		public final static Wc3Entry APPLICATION_ICON = new Wc3Entry("ApplicationIcon", EntryType.REG_SZ);
+		public final static Wc3ReforgedEntry APPLICATION_ICON = new Wc3ReforgedEntry("ApplicationIcon", EntryType.REG_SZ);
 
-		/** Of the form `"C:\Program Files\Warcraft III\x86_64\Warcraft III.exe",0` */
-		public final static Wc3Entry INSTALL_PATH = APPLICATION_ICON;
+		/** Alias for convenience – same value as APPLICATION_ICON. */
+		public final static Wc3ReforgedEntry INSTALL_PATH = APPLICATION_ICON;
 	}
 
 	/** A warcraft3-specific registry entry. Present on wc3 versions before 1.32 (reforged). */
@@ -293,8 +293,26 @@ public class WinRegistryHandler {
 		}
 	}
 
+	/** Battle.net "Programs and Features" entry. Present on Reforged installs. */
+	public static class Wc3UninstallEntry extends Entry {
+		public final static String PREFIX_WOW6432 =
+			"HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Warcraft III";
+		public final static String PREFIX_NATIVE =
+			"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Warcraft III";
+
+		public static final Wc3UninstallEntry INSTALL_LOCATION_WOW6432 =
+			new Wc3UninstallEntry(PREFIX_WOW6432, "InstallLocation", EntryType.REG_SZ);
+
+		public static final Wc3UninstallEntry INSTALL_LOCATION_NATIVE =
+			new Wc3UninstallEntry(PREFIX_NATIVE, "InstallLocation", EntryType.REG_SZ);
+
+		private Wc3UninstallEntry(@Nonnull String dirS, @Nonnull String key, @Nonnull EntryType entryType) {
+			super(dirS, key, entryType);
+		}
+	}
+
 	public String get(@Nonnull File dir, @Nonnull String key) throws IOException {
-        if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
+		if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
 		ProcCaller proc = getQueryingProcCaller(dir, key);
 
@@ -332,7 +350,7 @@ public class WinRegistryHandler {
 	}
 
 	public void set(@Nonnull File dir, @Nonnull String key, @Nonnull EntryType entryType, @Nonnull String val) throws IOException {
-        if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
+		if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
 		ProcCaller proc = getUpdatingProcCaller(dir, key, entryType.name(), val);
 
@@ -350,7 +368,7 @@ public class WinRegistryHandler {
 	}
 
 	public void remove(@Nonnull File dir, @Nonnull String key) throws IOException {
-	    if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
+		if (!Orient.isWindowsSystem()) throw new UnsupportedOperationException("not a windows system: " + Orient.getSystem());
 
 		ProcCaller proc = getDeletionProcCaller(dir, key);
 
