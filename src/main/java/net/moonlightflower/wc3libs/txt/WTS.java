@@ -23,10 +23,16 @@ public class WTS {
     public final static File GAME_PATH = new File("war3map.WTS");
     public final static File CAMPAIGN_PATH = new File("war3campaign.WTS");
 
-    private static final Pattern KEY_PATTERN = Pattern.compile("STRING ([\\d]+)[\\n\\s]*\\{([^\\}]*)[\\n]*\\}");
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("(?m)^//.*");
+    private static final Pattern KEY_PATTERN = Pattern.compile(
+        "(?is)\\bSTRING\\s+(\\d+)\\s*(?:\\r?\\n)+\\{\\s*(.*?)\\s*(?:\\r?\\n)?\\}"
+    );
+
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("(?m)^//.*$");
 
     private final Map<Integer, String> _vals = new LinkedHashMap<>();
+
+    // Preserve style from input. Default for newly-created WTS.
+    private String _lineEnding = "\r\n";
 
     @Nonnull
     public Map<Integer, String> getKeyedEntries() {
@@ -79,37 +85,62 @@ public class WTS {
     }
 
     public void write(@Nonnull File file) throws IOException {
-        write(new FileOutputStream(file));
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            write(fos);
+        }
     }
 
     public void write(@Nonnull OutputStream outputStream) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
+            int i = 0;
+            int size = _vals.size();
 
-        for (Map.Entry<Integer, String> entry : _vals.entrySet()) {
-            int key = entry.getKey();
-            String val = entry.getValue();
+            for (Map.Entry<Integer, String> entry : _vals.entrySet()) {
+                int key = entry.getKey();
+                String val = entry.getValue() == null ? "" : entry.getValue();
 
-            writer.write(String.format("STRING %s\r\n{\r\n%s\r\n}\r\n", key, val));
+                writer.write("STRING ");
+                writer.write(Integer.toString(key));
+                writer.write(_lineEnding);
+                writer.write("{");
+                writer.write(_lineEnding);
+                writer.write(val);
+                writer.write(_lineEnding);
+                writer.write("}");
+                writer.write(_lineEnding);
+
+                // Keep a blank line between entries for canonical compatibility
+                if (++i < size) {
+                    writer.write(_lineEnding);
+                }
+            }
         }
-
-        writer.close();
     }
 
     private void read(@Nonnull InputStream inStream) throws IOException {
-        UTF8 reader = new UTF8(inStream);
+        byte[] raw = inStream.readAllBytes();
 
-        String input = reader.readAll();
+        // Detect original newline style from raw bytes (robust against reader normalization)
+        boolean hasCRLF = false;
+        for (int i = 0; i < raw.length - 1; i++) {
+            if (raw[i] == '\r' && raw[i + 1] == '\n') {
+                hasCRLF = true;
+                break;
+            }
+        }
+        _lineEnding = hasCRLF ? "\r\n" : "\n";
+
+        // Decode directly; avoid UTF8 helper if it normalizes newlines
+        String input = new String(raw, StandardCharsets.UTF_8);
 
         Matcher commentMatcher = COMMENT_PATTERN.matcher(input);
-
         input = commentMatcher.replaceAll("");
 
         Matcher matcher = KEY_PATTERN.matcher(input);
 
         while (matcher.find()) {
             int key = Integer.parseInt(matcher.group(1));
-            String val = matcher.group(2).trim();
-
+            String val = matcher.group(2); // do not trim
             addEntry(key, val);
         }
     }
@@ -122,11 +153,9 @@ public class WTS {
     }
 
     public WTS(@Nonnull File file) throws IOException {
-        InputStream inStream = new FileInputStream(file);
-
-        read(inStream);
-
-        inStream.close();
+        try (InputStream inStream = new FileInputStream(file)) {
+            read(inStream);
+        }
     }
 
     @Nonnull
@@ -141,13 +170,9 @@ public class WTS {
 
         byte[] bytes = portResult.getExports().get(GAME_PATH).getOutBytes();
 
-        InputStream inStream = new ByteArrayInputStream(bytes);
-
-        WTS wts = new WTS(inStream);
-
-        inStream.close();
-
-        return wts;
+        try (InputStream inStream = new ByteArrayInputStream(bytes)) {
+            return new WTS(inStream);
+        }
     }
 
     @Override
