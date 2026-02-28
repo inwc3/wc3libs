@@ -14,12 +14,6 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install JDK 11 for Gradle toolchain
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y openjdk-11-jdk
-
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "build.gradle" }}
