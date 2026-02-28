@@ -68,6 +68,17 @@ public class DOO_UNITS {
 		public void setScale(Coords3DF val) {
 			_scale = val;
 		}
+
+		private ObjId _skinId = null;
+
+		@Nullable
+		public ObjId getSkinId() {
+			return _skinId;
+		}
+
+		public void setSkinId(@Nullable ObjId val) {
+			_skinId = val;
+		}
 		
 		private int _flags = 0;
 		
@@ -671,11 +682,20 @@ public class DOO_UNITS {
 			setAngle(stream.readFloat32("angle"));
 			
 			setScale(new Coords3DF(stream.readFloat32("scaleX"), stream.readFloat32("scaleY"), stream.readFloat32("scaleZ")));
-			
-			setFlags(stream.readByte("flags"));
+
+			// flags for units/items only use the first 3 bits, so values above 0x07 indicate the next 4 bytes are a skin id
+			short skinIdDiscriminator = stream.readUByte("skinIdDiscriminator");
+
+			stream.rewind(1);
+
+			if (skinIdDiscriminator > 7) {
+				setSkinId(ObjId.valueOf(stream.readId("skinId")));
+			}
+
+			setFlags(stream.readUByte("flags"));
 			setOwnerIndex(stream.readInt32("ownerIndex"));
-			setUnknownA(stream.readByte("unknownA"));
-			setUnknownB(stream.readByte("unknownB"));
+			setUnknownA(stream.readUByte("unknownA"));
+			setUnknownB(stream.readUByte("unknownB"));
 			
 			setLifePerc(stream.readInt32("lifePerc"));
 			setManaPerc(stream.readInt32("manaPerc"));
@@ -766,6 +786,10 @@ public class DOO_UNITS {
 			stream.writeFloat32(scale.getX());
 			stream.writeFloat32(scale.getY());
 			stream.writeFloat32(scale.getZ());
+
+			if (getSkinId() != null) {
+				stream.writeId(getSkinId());
+			}
 			
 			stream.writeUByte(getFlags());
 			stream.writeInt32(getOwnerIndex());
