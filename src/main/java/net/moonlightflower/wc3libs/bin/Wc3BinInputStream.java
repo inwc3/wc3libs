@@ -9,8 +9,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -112,9 +110,10 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	public short readInt16() throws StreamException {
 		try {
-			byte[] sub = readBytes(2);
-			
-			return ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getShort();
+			int b0 = readByte() & 0xFF;
+			int b1 = readByte() & 0xFF;
+
+			return (short) (b0 | (b1 << 8));
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
@@ -156,9 +155,12 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	public int readInt32() throws StreamException {
 		try {
-			byte[] sub = readBytes(4);
+			int b0 = readByte() & 0xFF;
+			int b1 = readByte() & 0xFF;
+			int b2 = readByte() & 0xFF;
+			int b3 = readByte() & 0xFF;
 
-			return ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getInt();
+			return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
@@ -369,15 +371,7 @@ public class Wc3BinInputStream extends BinInputStream {
 	}
 
 	public float readFloat32() throws StreamException {
-		try {
-			byte[] sub = readBytes(4);
-
-			//float res = Float.intBitsToFloat((int) (((_bytes.get(_pos) & 0xFFL) << 24) | ((_bytes.get(_pos) & 0xFFL) << 16) | ((_bytes.get(_pos) & 0xFFL) << 8) | ((_bytes.get(_pos) & 0xFFL) << 0)));
-			
-			return ByteBuffer.wrap(sub).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-		} catch (IndexOutOfBoundsException e) {
-			throw new StreamException(this);
-		}
+		return Float.intBitsToFloat(readInt32());
 	}
 
 	@Nonnull

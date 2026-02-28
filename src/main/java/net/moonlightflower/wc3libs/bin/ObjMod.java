@@ -114,7 +114,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
             }
 
             private ValType getValTypeFromVal(DataType val) {
-                if (val == null || val instanceof War3Int) {
+                if (val == null) {
+                    return ValType.STRING;
+                } else if (val instanceof War3Int) {
                     return ValType.INT;
                 } else if (val instanceof War3Real) {
                     if (ValType.UNREAL.equals(_valType)) {
@@ -150,8 +152,7 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 			public Mod(@Nonnull MetaFieldId id, @Nullable DataType val) {
 				_id = id;
-				_valType = null;
-				_val = val;
+				setVal(val);
 			}
 
 			@Override
@@ -221,19 +222,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 
 		@Nonnull
 		public List<Mod> getModsOfField(@Nonnull MetaFieldId fieldId) {
-			return _modsMap.getOrDefault(fieldId, new ArrayList<>());
+			List<Mod> mods = _modsMap.get(fieldId);
+
+			return (mods != null) ? mods : Collections.emptyList();
 		}
 
 		public void addMod(@Nonnull Mod mod) {
 			_mods.add(mod);
 
 			MetaFieldId id = mod.getId();
-
-			if (!_modsMap.containsKey(id)) {
-				_modsMap.put(id, new ArrayList<>());
-			}
-
-			_modsMap.get(id).add(mod);
+			_modsMap.computeIfAbsent(id, k -> new ArrayList<>()).add(mod);
 		}
 
 		@Nullable
@@ -265,7 +263,21 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			_modsMap.put(id, new ArrayList<>());
 
 			_modsMap.get(id).add(mod);
- 		}
+  		}
+
+        public void set(@Nonnull MetaFieldId id, @Nullable DataType val, @Nonnull ValType valType) {
+            Mod mod = new Mod(id, valType, val);
+
+            if (_modsMap.containsKey(id)) {
+                _mods.removeIf((Mod filterMod) -> {return filterMod._id.equals(id);});
+                _modsMap.remove(id);
+            }
+
+            _mods.add(mod);
+            _modsMap.put(id, new ArrayList<>());
+
+            _modsMap.get(id).add(mod);
+        }
 
  		public void remove(@Nonnull Mod mod) {
 			_mods.remove(mod);
@@ -291,15 +303,10 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				MetaFieldId fieldId = otherModEntry.getKey();
 				List<Mod> otherModsList = otherModEntry.getValue();
 
-				List<Mod> modsList = _modsMap.getOrDefault(fieldId, new ArrayList<>());
-
-				for (int i = 0; i < otherModsList.size(); i++) {
-                    if (modsList.size() <= i) {
-                        modsList.add(otherModsList.get(i));
-                    } else {
-                        modsList.set(i, otherModsList.get(i));
-                    }
-				}
+                remove(fieldId);
+                for (Mod mod : otherModsList) {
+                    addMod(mod);
+                }
 			}
 		}
 		
@@ -372,6 +379,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			_id = (_newId == null) ? _baseId : _newId;
 
 			int modsAmount = stream.readInt32("modsAmount");
+			_mods = new ArrayList<>(modsAmount);
+			_modsMap = new LinkedHashMap<>((int) (modsAmount / 0.75f) + 1);
 			
 			for (int i = 0; i < modsAmount; i++) {
 				MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
@@ -435,6 +444,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			_id = (_newId == null) ? _baseId : _newId;
 
 			int modsAmount = stream.readInt32("modsAmount");
+			_mods = new ArrayList<>(modsAmount);
+			_modsMap = new LinkedHashMap<>((int) (modsAmount / 0.75f) + 1);
 
 			for (int i = 0; i < modsAmount; i++) {
 				MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
@@ -507,6 +518,8 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
             _unknown = unknown;
 
             int modsAmount = stream.readInt32("modsAmount");
+            _mods = new ArrayList<>(modsAmount);
+            _modsMap = new LinkedHashMap<>((int) (modsAmount / 0.75f) + 1);
 
             for (int i = 0; i < modsAmount; i++) {
                 MetaFieldId fieldId = MetaFieldId.valueOf(stream.readId("fieldId"));
@@ -1250,56 +1263,65 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
     }
 
 	private void write_0x1(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		List<ObjType> origObjs = getOrigObjs();
+		List<ObjType> customObjs = getCustomObjs();
+
 		stream.writeInt32(EncodingFormat.OBJ_0x1.getVersion());
 		
-		stream.writeInt32(getOrigObjs().size());
+		stream.writeInt32(origObjs.size());
 
-		for (Obj obj : getOrigObjs()) {
+		for (Obj obj : origObjs) {
 			obj.write(stream, EncodingFormat.OBJ_0x1);
 		}
 		
-		stream.writeInt32(getCustomObjs().size());
+		stream.writeInt32(customObjs.size());
 		
-		for (Obj obj : getCustomObjs()) {
+		for (Obj obj : customObjs) {
 			obj.write(stream, EncodingFormat.OBJ_0x1);
 		}
 	}
 	
 	private void write_0x2(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+		List<ObjType> origObjs = getOrigObjs();
+		List<ObjType> customObjs = getCustomObjs();
+
 		stream.writeInt32(EncodingFormat.OBJ_0x2.getVersion());
 
-		stream.writeInt32(getOrigObjs().size());
+		stream.writeInt32(origObjs.size());
 		
-		for (int i = 0; i < getOrigObjs().size(); i++) {
-			Obj obj = getOrigObjs().get(i);
+		for (int i = 0; i < origObjs.size(); i++) {
+			Obj obj = origObjs.get(i);
 			
 			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
 		
-		stream.writeInt32(getCustomObjs().size());
+		stream.writeInt32(customObjs.size());
 		
-		for (int i = 0; i < getCustomObjs().size(); i++) {
-			Obj obj = getCustomObjs().get(i);
+		for (int i = 0; i < customObjs.size(); i++) {
+			Obj obj = customObjs.get(i);
 			
 			obj.write(stream, EncodingFormat.OBJ_0x2);
 		}
 	}
 
     private void write_0x3(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
+        List<ObjType> origObjs = getOrigObjs();
+        List<ObjType> customObjs = getCustomObjs();
+
         stream.writeInt32(EncodingFormat.OBJ_0x3.getVersion());
 
-        stream.writeInt32(getOrigObjs().size());
+        stream.writeInt32(origObjs.size());
 
-        for (int i = 0; i < getOrigObjs().size(); i++) {
-            Obj obj = getOrigObjs().get(i);
+        for (int i = 0; i < origObjs.size(); i++) {
+            Obj obj = origObjs.get(i);
 
             obj.write(stream, EncodingFormat.OBJ_0x3);
         }
 
-        stream.writeInt32(getCustomObjs().size());
+        stream.writeInt32(customObjs.size());
 
-        for (int i = 0; i < getCustomObjs().size(); i++) {
-            Obj obj = getCustomObjs().get(i);
+        for (int i = 0; i < customObjs.size(); i++) {
+            Obj obj = customObjs.get(i);
 
             obj.write(stream, EncodingFormat.OBJ_0x3);
         }

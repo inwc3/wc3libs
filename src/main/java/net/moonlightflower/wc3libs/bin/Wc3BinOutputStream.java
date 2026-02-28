@@ -11,19 +11,12 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 public class Wc3BinOutputStream extends BinOutputStream {
     public void writeUByte(int val) {
         writeByte((byte) val);
     }
-
-    private final static byte[] _shortBytes = new byte[2];
-
-    private final static ByteBuffer _shortBuf = ByteBuffer.wrap(_shortBytes);
 
     public void writeInt8(short val) {
         writeByte((byte) (val & 0xFF));
@@ -34,29 +27,19 @@ public class Wc3BinOutputStream extends BinOutputStream {
     }
 
     public void writeInt16(short val) {
-        ((Buffer) _shortBuf).rewind();
-        _shortBuf.order(ByteOrder.LITTLE_ENDIAN);
-
-        _shortBuf.putShort(val);
-
-        writeBytes(_shortBytes);
+        writeByte((byte) (val & 0xFF));
+        writeByte((byte) ((val >>> 8) & 0xFF));
     }
 
     public void writeUInt16(int val) {
         writeInt16((short) val);
     }
 
-    private final static byte[] _intBytes = new byte[4];
-
-    private final static ByteBuffer _intBuf = ByteBuffer.wrap(_intBytes);
-
     public void writeInt32(int val) {
-        ((Buffer) _intBuf).rewind();
-        _intBuf.order(ByteOrder.LITTLE_ENDIAN);
-
-        _intBuf.putInt(val);
-
-        writeBytes(_intBytes);
+        writeByte((byte) (val & 0xFF));
+        writeByte((byte) ((val >>> 8) & 0xFF));
+        writeByte((byte) ((val >>> 16) & 0xFF));
+        writeByte((byte) ((val >>> 24) & 0xFF));
     }
 
     public void writeInt32(@Nonnull War3Int val) {
@@ -68,13 +51,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     }
 
     public void writeFloat32(float val) {
-        ByteBuffer buf = ByteBuffer.allocate(4);
-
-        buf.order(ByteOrder.LITTLE_ENDIAN);
-
-        buf.putFloat(val);
-
-        writeBytes(buf.array());
+        writeInt32(Float.floatToIntBits(val));
     }
 
     public void writeFloat32(@Nullable War3Real val) {
@@ -121,10 +98,14 @@ public class Wc3BinOutputStream extends BinOutputStream {
         if (val == null) val = Id.valueOf("\0\0\0\0");
 
         byte[] valBytes = val.toString().getBytes(StandardCharsets.US_ASCII);
-        byte[] sub = new byte[4];
-        System.arraycopy(valBytes, 0, sub, 0, valBytes.length);
+        int len = Math.min(4, valBytes.length);
 
-        writeBytes(sub);
+        for (int i = 0; i < len; i++) {
+            writeByte(valBytes[i]);
+        }
+        for (int i = len; i < 4; i++) {
+            writeByte((byte) 0);
+        }
     }
 
     public Wc3BinOutputStream(@Nonnull OutputStream outStream) {
