@@ -246,44 +246,7 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	@Nonnull
 	public String readString() throws StreamException {
-		try {
-			long cutPos = getPos();
-
-			while ((cutPos < size()) && (get(cutPos) != 0)) {				
-				cutPos += 1;
-			}
-
-			long size = cutPos - getPos();
-
-			if (size == 0) {				
-				setPos(Math.min(cutPos + 1, size() - 1));
-				
-				return "";
-			}
-
-			StringBuilder sb = new StringBuilder();
-
-			while (size > 0) {
-				int sizeI = (int) size;
-
-				byte[] retBytes = new byte[sizeI];
-
-				for (int i = 0; i < size; i++) {
-					retBytes[i] = get(getPos() + i);
-				}
-
-				setPos(Math.min(cutPos + 1, size() - 1));
-
-				//TODO: split bytes so that utf8 is sure to yield valid strings
-				sb.append(new String(retBytes, StandardCharsets.UTF_8));
-
-				size -= sizeI;
-			}
-
-			return sb.toString();
-		} catch (IndexOutOfBoundsException e) {
-			throw new StreamException(this);
-		}
+		return readNullTerminatedStringUtf8();
 	}
 
 	@Nonnull

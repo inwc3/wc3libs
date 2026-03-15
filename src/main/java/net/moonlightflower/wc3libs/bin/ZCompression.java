@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.DataFormatException;
@@ -51,27 +50,20 @@ public class ZCompression {
     public static byte[] compress(@Nonnull Wc3BinInputStream inStream) throws BinStream.StreamException {
         //deflate
         final List<byte[]> compressedBlocks = new ArrayList<>();
-        final List<byte[]> uncompressedBlocks = new ArrayList<>();
+        final List<Integer> uncompressedBlockSizes = new ArrayList<>();
 
         long compressedSize = 0;
         long uncompressedSize = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         while (!inStream.eof()) {
             //TODO: long?
             final byte[] uncompressedBlock = inStream.readBytes((int) java.lang.Math.min(2048, inStream.size() - inStream.getPos()));
-            uncompressedBlocks.add(uncompressedBlock);
-            try {
-                bos.write(uncompressedBlock);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+            final byte[] compressedBlock = compressBlock(uncompressedBlock);
 
-        byte[] concatenatedUncompressedBytes = bos.toByteArray();
-
-        for (byte[] uncompressedBlock : uncompressedBlocks) {
-            compressedBlocks.add(compressBlock(uncompressedBlock));
+            uncompressedBlockSizes.add(uncompressedBlock.length);
+            compressedBlocks.add(compressedBlock);
+            uncompressedSize += uncompressedBlock.length;
+            compressedSize += compressedBlock.length;
         }
 
 
@@ -143,8 +135,7 @@ public class ZCompression {
 
         for (final byte[] block : compressedBlocks) {
             outStream.writeUInt32(block.length);
-            outStream.writeUInt32(uncompressedBlocks.get(c).length);
-            System.out.println("compress " + block.length + ";" + uncompressedBlocks.get(c).length);
+            outStream.writeUInt32(uncompressedBlockSizes.get(c));
             outStream.writeUInt32(0);  //hash
 
             outStream.writeBytes(block);
@@ -228,7 +219,6 @@ public class ZCompression {
             /*
              * multiple of 2048, rest padded with 0x00
              */
-            System.out.println("decompress " + compressedSize + ";" + uncompressedSize);
             final long hash = inStream.readUInt32();
 
             blocks.add(inStream.readBytes((int) compressedSize));
