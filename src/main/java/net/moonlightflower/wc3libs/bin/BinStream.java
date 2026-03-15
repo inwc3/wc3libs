@@ -94,6 +94,12 @@ public class BinStream {
             _bytes.add(val);
         }
 
+        public void addAll(byte[] vals, int len) {
+            for (int i = 0; i < len; i++) {
+                _bytes.add(vals[i]);
+            }
+        }
+
         public ByteList() {
 
         }

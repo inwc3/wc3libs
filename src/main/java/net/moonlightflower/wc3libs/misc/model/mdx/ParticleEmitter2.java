@@ -110,13 +110,23 @@ public class ParticleEmitter2 extends MDXObject {
     }
 
     public void squish() {
-        _speed = (float) (Math.floor(_speed * 1000f) / 1000f);
-        _variation = (float) (Math.floor(_variation * 1000f) / 1000f);
-        _latitude = (float) (Math.floor(_latitude * 1000f) / 1000f);
-        _gravity = (float) (Math.floor(_gravity * 1000f) / 1000f);
-        _emissionRate = (float) (Math.floor(_emissionRate * 1000f) / 1000f);
-        _width = (float) (Math.floor(_width * 1000f) / 1000f);
-        _length = (float) (Math.floor(_length * 1000f) / 1000f);
+        _speed = squishVal(_speed);
+        _variation = squishVal(_variation);
+        _latitude = squishVal(_latitude);
+        _gravity = squishVal(_gravity);
+        _lifespan = squishVal(_lifespan);
+        _emissionRate = squishVal(_emissionRate);
+        _width = squishVal(_width);
+        _length = squishVal(_length);
+        _tailLength = squishVal(_tailLength);
+        _time = squishVal(_time);
+        _startScaling = squishVal(_startScaling);
+        _midScaling = squishVal(_midScaling);
+        _endScaling = squishVal(_endScaling);
+    }
+
+    private static float squishVal(float val) {
+        return java.lang.Math.round(val * 1000F) / 1000F;
     }
 
     public enum FilterMode {

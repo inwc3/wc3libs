@@ -26,6 +26,7 @@ public class BLP extends Wc3RasterImg {
 	private static final int CONTENT_JPEG = 0;
 	private static final int CONTENT_DIRECT = 1;
 	private static final int MAX_DIMENSION = 65535;
+	private byte[] _sourceBytes;
 
 	private static int readAlpha(@Nonnull byte[] alphaData, int pixelIndex, int alphaBits) {
 		if (alphaBits <= 0) return 0xFF;
@@ -55,6 +56,79 @@ public class BLP extends Wc3RasterImg {
 
 			return alphaData[pixelIndex] & 0xFF;
 		}
+	}
+
+	private static int findJpegEndExclusive(@Nonnull byte[] data) {
+		for (int i = 0; i < data.length - 1; i++) {
+			if ((data[i] & 0xFF) == 0xFF && (data[i + 1] & 0xFF) == 0xD9) {
+				return i + 2;
+			}
+		}
+
+		return data.length;
+	}
+
+	private static class AlphaLayout {
+		private final int _width;
+		private final int _height;
+		private final int _stride;
+
+		private AlphaLayout(int width, int height, int stride) {
+			_width = width;
+			_height = height;
+			_stride = stride;
+		}
+	}
+
+	private static AlphaLayout inferAlphaLayout(int alphaBytes, int baseWidth, int baseHeight, int alphaBits) {
+		if ((alphaBytes <= 0) || (alphaBits <= 0)) {
+			return new AlphaLayout(baseWidth, baseHeight, baseWidth);
+		}
+
+		if (alphaBits == 8) {
+			for (int level = 0; level < 16; level++) {
+				int mipW = mipSizeAtLevel(baseWidth, level);
+				int mipH = mipSizeAtLevel(baseHeight, level);
+				int exactSize = mipW * mipH;
+				int alignedStride = ((mipW + 3) / 4) * 4;
+				int alignedSize = alignedStride * mipH;
+
+				if (alphaBytes == exactSize) return new AlphaLayout(mipW, mipH, mipW);
+				if (alphaBytes == alignedSize) return new AlphaLayout(mipW, mipH, alignedStride);
+			}
+
+			if ((baseHeight > 0) && (alphaBytes % baseHeight == 0)) {
+				int inferredStride = alphaBytes / baseHeight;
+
+				if (inferredStride >= baseWidth) {
+					return new AlphaLayout(baseWidth, baseHeight, inferredStride);
+				}
+			}
+		}
+
+		return new AlphaLayout(baseWidth, baseHeight, baseWidth);
+	}
+
+	private static int sampleAlpha(@Nonnull byte[] alphaData, int alphaBits, int x, int y, int outWidth, int outHeight, @Nonnull AlphaLayout layout) {
+		if (alphaBits <= 0 || alphaData.length == 0) return 0xFF;
+
+		int srcX = (outWidth <= 1) ? 0 : (x * layout._width) / outWidth;
+		int srcY = (outHeight <= 1) ? 0 : (y * layout._height) / outHeight;
+
+		srcX = Math.max(0, Math.min(layout._width - 1, srcX));
+		srcY = Math.max(0, Math.min(layout._height - 1, srcY));
+
+		if (alphaBits == 8) {
+			int idx = srcY * layout._stride + srcX;
+
+			if (idx < 0 || idx >= alphaData.length) return 0xFF;
+
+			return alphaData[idx] & 0xFF;
+		}
+
+		int pixelIndex = srcY * layout._width + srcX;
+
+		return readAlpha(alphaData, pixelIndex, alphaBits);
 	}
 
 	private static int mipSizeAtLevel(int baseSize, int level) {
@@ -366,20 +440,19 @@ public class BLP extends Wc3RasterImg {
 				if (mipmapData0.length == 0) throw new UnsupportedFormatException("missing or invalid JPEG mipmap level 0");
 
 				byte[] alphaData = null;
-				int mipmapJpegSize = mipmapData0.length;
+				int mipmapJpegSize = findJpegEndExclusive(mipmapData0);
 
-				if (hasAlpha && alphaBits > 0 && mipmapData0 != null) {
+				if (hasAlpha && alphaBits > 0 && (mipmapJpegSize < mipmapData0.length)) {
+					alphaData = Arrays.copyOfRange(mipmapData0, mipmapJpegSize, mipmapData0.length);
+				} else if (hasAlpha && alphaBits > 0) {
 					long pixelCountLong = (long) width * (long) height;
 					int pixelCount = safeToInt(pixelCountLong, "pixelCount");
-					int alphaDataSize = (pixelCount * alphaBits + 7) / 8;
+					int expectedAlphaDataSize = (pixelCount * alphaBits + 7) / 8;
 
-					if (alphaDataSize > 0 && alphaDataSize <= mipmapData0.length) {
-						mipmapJpegSize = mipmapData0.length - alphaDataSize;
-						alphaData = new byte[alphaDataSize];
-
-						System.arraycopy(mipmapData0, mipmapJpegSize, alphaData, 0, alphaDataSize);
-					} else if (alphaDataSize > mipmapData0.length) {
-						log.warn("alpha block larger than mipmap payload (expected {}, got {}), treating as fully opaque", alphaDataSize, mipmapData0.length);
+					if ((expectedAlphaDataSize > 0) && (expectedAlphaDataSize < mipmapData0.length)) {
+						mipmapJpegSize = mipmapData0.length - expectedAlphaDataSize;
+						alphaData = Arrays.copyOfRange(mipmapData0, mipmapJpegSize, mipmapData0.length);
+						log.debug("JPEG alpha fallback split: expected {} bytes at tail", expectedAlphaDataSize);
 					}
 				}
 
@@ -416,19 +489,29 @@ public class BLP extends Wc3RasterImg {
 				imgReader.dispose();
 
 				BufferedImage writeImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-				int copyWidth = Math.min(width, raster.getWidth());
-				int copyHeight = Math.min(height, raster.getHeight());
+				int rasterWidth = raster.getWidth();
+				int rasterHeight = raster.getHeight();
 
-				if ((raster.getWidth() != width) || (raster.getHeight() != height)) {
+				if ((rasterWidth != width) || (rasterHeight != height)) {
 					log.warn("JPEG mipmap 0 dimensions {}x{} differ from header {}x{}, cropping/padding to header dimensions",
-							raster.getWidth(), raster.getHeight(), width, height);
+							rasterWidth, rasterHeight, width, height);
 				}
-				
-				for (int x = 0; x < copyWidth; x++) {
-					for (int y = 0; y < copyHeight; y++) {
+
+				AlphaLayout alphaLayout = new AlphaLayout(width, height, width);
+				if (alphaData != null) {
+					alphaLayout = inferAlphaLayout(alphaData.length, width, height, alphaBits);
+				}
+
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
+						int srcX = (width <= 1) ? 0 : (x * rasterWidth) / width;
+						int srcY = (height <= 1) ? 0 : (y * rasterHeight) / height;
+						srcX = Math.max(0, Math.min(rasterWidth - 1, srcX));
+						srcY = Math.max(0, Math.min(rasterHeight - 1, srcY));
+
 						int[] colors = new int[Math.max(3, raster.getNumBands())];
 
-						raster.getPixel(x, y, colors);
+						raster.getPixel(srcX, srcY, colors);
 
 						int red;
 						int green;
@@ -445,8 +528,7 @@ public class BLP extends Wc3RasterImg {
 
 						int alpha = 255;
 						if (alphaData != null) {
-							int pixelIndex = y * width + x;
-							alpha = readAlpha(alphaData, pixelIndex, alphaBits);
+							alpha = sampleAlpha(alphaData, alphaBits, x, y, width, height, alphaLayout);
 						}
 
 						java.awt.Color color = new java.awt.Color(red, green, blue, alpha);
@@ -521,21 +603,39 @@ public class BLP extends Wc3RasterImg {
 			throw new UnsupportedFormatException(String.format("failed reading BLP: %s", e.getMessage()));
 		}
 	}
+
+	public void write(@Nonnull OutputStream outStream) throws IOException {
+		if (_sourceBytes == null) {
+			throw new UnsupportedOperationException("BLP encoding is not implemented for generated images; load from a BLP file/stream for binary roundtrip write");
+		}
+
+		outStream.write(_sourceBytes);
+	}
+
+	public void write(@Nonnull File file) throws IOException {
+		try (OutputStream outStream = Files.newOutputStream(file.toPath())) {
+			write(outStream);
+		}
+	}
 	
 	public BLP(@Nonnull InputStream inStream) throws UnsupportedFormatException {
 		super();
-		
-		read(inStream);
+
+		try {
+			_sourceBytes = inStream.readAllBytes();
+		} catch (IOException e) {
+			throw new UnsupportedFormatException(String.format("failed reading BLP stream: %s", e.getMessage()));
+		}
+
+		read(new ByteArrayInputStream(_sourceBytes));
 	}
 	
 	public BLP(@Nonnull File file) throws IOException, UnsupportedFormatException {
 		super();
-		
-		InputStream inStream = Files.newInputStream(file.toPath());
-		
-		read(inStream);
-		
-		inStream.close();
+
+		_sourceBytes = Files.readAllBytes(file.toPath());
+
+		read(new ByteArrayInputStream(_sourceBytes));
 	}
 	
 	public BLP(@Nonnull Size size) {

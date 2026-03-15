@@ -46,13 +46,16 @@ public class Extent extends MDXObject {
     }
     
     public void squish() {
-        _boundsRadius = (float) (Math.floor(_boundsRadius * 1000f) / 1000f);
-        _minX = (float) (Math.floor(_minX * 1000f) / 1000f);
-        _minY = (float) (Math.floor(_minY * 1000f) / 1000f);
-        _minZ = (float) (Math.floor(_minZ * 1000f) / 1000f);
-        _maxX = (float) (Math.floor(_maxX * 1000f) / 1000f);
-        _maxY = (float) (Math.floor(_maxY * 1000f) / 1000f);
-        _maxZ = (float) (Math.floor(_maxZ * 1000f) / 1000f);
+        _boundsRadius = squishVal(_boundsRadius);
+        _minX = squishVal(_minX);
+        _minY = squishVal(_minY);
+        _minZ = squishVal(_minZ);
+        _maxX = squishVal(_maxX);
+        _maxY = squishVal(_maxY);
+        _maxZ = squishVal(_maxZ);
+    }
 
+    private static float squishVal(float val) {
+        return java.lang.Math.round(val * 1000F) / 1000F;
     }
 }

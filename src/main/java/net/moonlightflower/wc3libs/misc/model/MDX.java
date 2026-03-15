@@ -328,18 +328,61 @@ public class MDX {
                 squishPivot((PivotPointChunk) chunk);
             } else if (chunk instanceof BoneChunk) {
                 squishBone((BoneChunk) chunk);
+            } else if (chunk instanceof HelperChunk) {
+                squishHelper((HelperChunk) chunk);
+            } else if (chunk instanceof AttachmentChunk) {
+                squishAttachment((AttachmentChunk) chunk);
+            } else if (chunk instanceof LightChunk) {
+                squishLight((LightChunk) chunk);
+            } else if (chunk instanceof ParticleEmitterChunk) {
+                squishParticleEmitter((ParticleEmitterChunk) chunk);
             } else if (chunk instanceof ModelInfoChunk) {
                 squishModelInfo((ModelInfoChunk) chunk);
             } else if (chunk instanceof ParticleEmitter2Chunk) {
                 squishParticleEmitter2((ParticleEmitter2Chunk) chunk);
+            } else if (chunk instanceof RibbonEmitterChunk) {
+                squishRibbonEmitter((RibbonEmitterChunk) chunk);
+            } else if (chunk instanceof EventObjectChunk) {
+                squishEventObject((EventObjectChunk) chunk);
+            } else if (chunk instanceof CollisionShapeChunk) {
+                squishCollisionShape((CollisionShapeChunk) chunk);
             }
         }
     }
 
+    private void squishCollisionShape(CollisionShapeChunk chunk) {
+        chunk.getCollisionShapes().forEach(collisionShape -> squishNode(collisionShape.getNode()));
+    }
+
+    private void squishEventObject(EventObjectChunk chunk) {
+        chunk.getEventObjects().forEach(eventObject -> squishNode(eventObject.getNode()));
+    }
+
+    private void squishRibbonEmitter(RibbonEmitterChunk chunk) {
+        chunk.getRibbonEmitters().forEach(ribbonEmitter -> squishNode(ribbonEmitter.getNode()));
+    }
+
     private void squishParticleEmitter2(ParticleEmitter2Chunk chunk) {
         for (ParticleEmitter2 particleEmitter2 : chunk.getParticleEmitter2s()) {
+            squishNode(particleEmitter2.getNode());
             particleEmitter2.squish();
         }
+    }
+
+    private void squishParticleEmitter(ParticleEmitterChunk chunk) {
+        chunk.getParticleEmitters().forEach(particleEmitter -> squishNode(particleEmitter.getNode()));
+    }
+
+    private void squishLight(LightChunk chunk) {
+        chunk.getLights().forEach(light -> squishNode(light.getNode()));
+    }
+
+    private void squishAttachment(AttachmentChunk chunk) {
+        chunk.getAttachments().forEach(attachment -> squishNode(attachment.getNode()));
+    }
+
+    private void squishHelper(HelperChunk chunk) {
+        chunk.getHelpers().forEach(helper -> squishNode(helper.getNode()));
     }
 
     private void squishModelInfo(ModelInfoChunk chunk) {
@@ -355,26 +398,62 @@ public class MDX {
 
     private void squishNode(Node node) {
         node.getRotationTrackChunks().forEach(rotationTrackChunk -> {
+            boolean hasTangents = hasTangents(rotationTrackChunk.getInterpolationType());
+
             rotationTrackChunk.getRotationTracks().forEach(rotationTrack -> {
-                rotationTrack.setRotation(rotationTrack.getRotation().squish());
-                rotationTrack.setInTanRotation(rotationTrack.getInTanRotation().squish());
-                rotationTrack.setOutTanRotation(rotationTrack.getOutTanRotation().squish());
+                if (rotationTrack.getRotation() != null) {
+                    rotationTrack.setRotation(rotationTrack.getRotation().squish());
+                }
+                if (hasTangents) {
+                    if (rotationTrack.getInTanRotation() != null) {
+                        rotationTrack.setInTanRotation(rotationTrack.getInTanRotation().squish());
+                    }
+                    if (rotationTrack.getOutTanRotation() != null) {
+                        rotationTrack.setOutTanRotation(rotationTrack.getOutTanRotation().squish());
+                    }
+                }
             });
         });
+
         node.getTranslationTrackChunks().forEach(translationTrackChunk -> {
+            boolean hasTangents = hasTangents(translationTrackChunk.getInterpolationType());
+
             translationTrackChunk.getTranslationTracks().forEach(translationTrack -> {
-                translationTrack.setTranslation(translationTrack.getTranslation().squish());
-                translationTrack.setInTanTranslation(translationTrack.getInTanTranslation().squish());
-                translationTrack.setOutTanTranslation(translationTrack.getOutTanTranslation().squish());
+                if (translationTrack.getTranslation() != null) {
+                    translationTrack.setTranslation(translationTrack.getTranslation().squish());
+                }
+                if (hasTangents) {
+                    if (translationTrack.getInTanTranslation() != null) {
+                        translationTrack.setInTanTranslation(translationTrack.getInTanTranslation().squish());
+                    }
+                    if (translationTrack.getOutTanTranslation() != null) {
+                        translationTrack.setOutTanTranslation(translationTrack.getOutTanTranslation().squish());
+                    }
+                }
             });
         });
+
         node.getScalingTrackChunks().forEach(scalingTrackChunk -> {
+            boolean hasTangents = hasTangents(scalingTrackChunk.getInterpolationType());
+
             scalingTrackChunk.getScalingTracks().forEach(scalingTrack -> {
-                scalingTrack.setScaling(scalingTrack.getScaling().squish());
-                scalingTrack.setInTanScaling(scalingTrack.getInTanScaling().squish());
-                scalingTrack.setOutTanScaling(scalingTrack.getOutTanScaling().squish());
+                if (scalingTrack.getScaling() != null) {
+                    scalingTrack.setScaling(scalingTrack.getScaling().squish());
+                }
+                if (hasTangents) {
+                    if (scalingTrack.getInTanScaling() != null) {
+                        scalingTrack.setInTanScaling(scalingTrack.getInTanScaling().squish());
+                    }
+                    if (scalingTrack.getOutTanScaling() != null) {
+                        scalingTrack.setOutTanScaling(scalingTrack.getOutTanScaling().squish());
+                    }
+                }
             });
         });
+    }
+
+    private static boolean hasTangents(@Nonnull TrackChunk.InterpolationType interpolationType) {
+        return interpolationType.equals(TrackChunk.InterpolationType.HERMITE) || interpolationType.equals(TrackChunk.InterpolationType.BEZIER);
     }
 
     private void squishPivot(PivotPointChunk chunk) {

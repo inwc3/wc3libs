@@ -18,13 +18,16 @@ public class BinOutputStream extends BinStream implements AutoCloseable {
     }
 
     public byte[] getBytes() {
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        if (_bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + _bytes.size());
 
-        for (long i = 0; i < size(); i++) {
-            byteArrayOutputStream.write(get(i));
+        final int size = (int) _bytes.size();
+        final byte[] out = new byte[size];
+
+        for (int i = 0; i < size; i++) {
+            out[i] = _bytes.get(i);
         }
 
-        return byteArrayOutputStream.toByteArray();
+        return out;
     }
 
     public void writeByte(byte val) {
@@ -44,21 +47,15 @@ public class BinOutputStream extends BinStream implements AutoCloseable {
     private void write(@Nonnull OutputStream outStream) throws IOException {
         ByteList bytes = _bytes;
 
-        long size = size();
+        if (bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + bytes.size());
 
-        while (size > 0) {
-            int sizeI = (int) size;
+        int size = (int) bytes.size();
+        byte[] buf = new byte[size];
 
-            byte[] buf = new byte[sizeI];
-
-            for (int i = 0; i < bytes.size(); i++) {
-                buf[i] = bytes.get(i);
-            }
-
-            outStream.write(buf);
-
-            size -= sizeI;
+        for (int i = 0; i < size; i++) {
+            buf[i] = bytes.get(i);
         }
+        outStream.write(buf);
 
         outStream.flush();
     }

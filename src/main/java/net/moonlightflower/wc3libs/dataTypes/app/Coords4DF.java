@@ -3,7 +3,6 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class Coords4DF extends DataType {
 	private final War3Real _x;
@@ -81,9 +80,10 @@ public class Coords4DF extends DataType {
 	}
 
     public Coords4DF squish() {
-        return new Coords4DF(Objects.requireNonNull(War3Real.valueOf(Math.floor(_x.getVal() * 1000f) / 1000f)),
-            Objects.requireNonNull(War3Real.valueOf(Math.floor(_y.getVal() * 1000f) / 1000f)),
-            Objects.requireNonNull(War3Real.valueOf(Math.floor(_z.getVal() * 1000f) / 1000f)),
-            Objects.requireNonNull(War3Real.valueOf(Math.floor(_a.getVal() * 1000f) / 1000f)));
+        return new Coords4DF(squishVal(_x.getVal()), squishVal(_y.getVal()), squishVal(_z.getVal()), squishVal(_a.getVal()));
+    }
+
+    private static float squishVal(float val) {
+        return java.lang.Math.round(val * 1000F) / 1000F;
     }
 }
