@@ -53,7 +53,7 @@ public class WinRegistryGameDirFinder extends GameDirFinder {
 	@Override
 	public File find() throws NotFoundException {
 		List<WinRegistryHandler.Entry> entries = Arrays.asList(
-			// Battle.net “Uninstall” (most reliable on Reforged)
+			// Battle.net "Uninstall" (most reliable on Reforged)
 			WinRegistryHandler.Wc3UninstallEntry.INSTALL_LOCATION_WOW6432,
 			WinRegistryHandler.Wc3UninstallEntry.INSTALL_LOCATION_NATIVE,
 

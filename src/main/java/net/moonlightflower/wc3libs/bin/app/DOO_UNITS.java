@@ -672,7 +672,7 @@ public class DOO_UNITS {
 			_editorId = val;
 		}
 
-		private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		private void read_0x8(@Nonnull Wc3BinInputStream stream, int subVersion) throws BinInputStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId("typeId")));
 			
 			setVariation(stream.readInt32("variation"));
@@ -699,8 +699,11 @@ public class DOO_UNITS {
 			
 			setLifePerc(stream.readInt32("lifePerc"));
 			setManaPerc(stream.readInt32("manaPerc"));
-			
-			setItemTablePtr(stream.readInt32("itemTablePtr"));
+
+			// item table pointer and hero attributes present only in subVersion >= 11
+			if (subVersion >= 11) {
+				setItemTablePtr(stream.readInt32("itemTablePtr"));
+			}
 
 			int lootsCount = stream.readInt32("lootsCount");
 			
@@ -713,9 +716,11 @@ public class DOO_UNITS {
 			setTargetAcquisition(stream.readFloat32("targetAcquisition"));
 			
 			setHeroLevel(stream.readInt32("heroLevel"));
-			
-			setHeroAttributes(stream.readInt32("heroStr"), stream.readInt32("heroAgi"), stream.readInt32("heroInt"));
-			
+
+			if (subVersion >= 11) {
+				setHeroAttributes(stream.readInt32("heroStr"), stream.readInt32("heroAgi"), stream.readInt32("heroInt"));
+			}
+
 			int invItemsCount = stream.readInt32("invItemsCount");
 			
 			for (int i = 0; i < invItemsCount; i++) {
@@ -871,10 +876,10 @@ public class DOO_UNITS {
 			stream.writeInt32(getEditorId());
 		}
 		
-		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case DOO_0x8: {
-				read_0x8(stream);
+				read_0x8(stream, subVersion);
 				
 				break;
 			}
@@ -892,8 +897,8 @@ public class DOO_UNITS {
 			}
 		}
 		
-		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
-			read(stream, format);
+		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion) throws BinInputStream.StreamException {
+			read(stream, format, subVersion);
 		}
 		
 		public Obj() {
@@ -965,7 +970,7 @@ public class DOO_UNITS {
 		int objsCount = stream.readInt32("objsCount");
 
 		for (int i = 0; i < objsCount; i++) {
-			addObj(new Obj(stream, EncodingFormat.DOO_0x8));
+			addObj(new Obj(stream, EncodingFormat.DOO_0x8, subVersion));
 		}
 	}
 
