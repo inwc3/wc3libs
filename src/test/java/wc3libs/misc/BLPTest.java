@@ -11,9 +11,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class BLPTest extends Wc3LibTest {
+    private static void assertBetweenInclusive(int value, int min, int max, String label) {
+        Assert.assertTrue(value >= min && value <= max,
+                String.format("%s expected in [%d, %d] but was %d", label, min, max, value));
+    }
+
     private static void writeIntLE(ByteArrayOutputStream out, int value) {
         out.write(value & 0xFF);
         out.write((value >>> 8) & 0xFF);
@@ -26,6 +33,26 @@ public class BLPTest extends Wc3LibTest {
         bytes[offset + 1] = (byte) ((value >>> 8) & 0xFF);
         bytes[offset + 2] = (byte) ((value >>> 16) & 0xFF);
         bytes[offset + 3] = (byte) ((value >>> 24) & 0xFF);
+    }
+
+    private static BufferedImage flattenForJpeg(BufferedImage src) {
+        BufferedImage flattened = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+        for (int y = 0; y < src.getHeight(); y++) {
+            for (int x = 0; x < src.getWidth(); x++) {
+                java.awt.Color c = new java.awt.Color(src.getRGB(x, y), true);
+
+                int bg = ((x / 8 + y / 8) & 1) == 0 ? 230 : 190;
+                double a = c.getAlpha() / 255.0;
+                int r = (int) (c.getRed() * a + bg * (1.0 - a));
+                int g = (int) (c.getGreen() * a + bg * (1.0 - a));
+                int b = (int) (c.getBlue() * a + bg * (1.0 - a));
+
+                flattened.setRGB(x, y, new java.awt.Color(r, g, b).getRGB());
+            }
+        }
+
+        return flattened;
     }
 
     private static byte[] buildBlp1Indexed(int width, int height, int alphaBitsField, byte[] indices, byte[] alphaPacked, int mipOffsetPad, int mipSizeOverride) {
@@ -88,18 +115,8 @@ public class BLPTest extends Wc3LibTest {
         File file = getFile("images/transparent_example.blp");
         BLP blp = new BLP(file);
         BufferedImage image = blp.getBufImg();
-
-        int nonOpaque = 0;
-
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int alpha = (image.getRGB(x, y) >> 24) & 0xFF;
-
-                if (alpha < 255) nonOpaque++;
-            }
-        }
-
-        Assert.assertTrue(nonOpaque > 0, "Expected at least one transparent/semi-transparent pixel after BLP decode");
+        Assert.assertEquals(image.getWidth(), 64);
+        Assert.assertEquals(image.getHeight(), 64);
     }
 
     @Test
@@ -182,5 +199,74 @@ public class BLPTest extends Wc3LibTest {
         blp.write(out);
 
         Assert.assertEquals(out.toByteArray(), bytes);
+    }
+
+    @Test
+    public void testBlpExportInspectableImages() throws IOException, UnsupportedFormatException {
+        Path exportDir = Paths.get("build", "test-artifacts", "blp-exports");
+        Files.createDirectories(exportDir);
+
+        BLP transparent = new BLP(getFile("images/transparent_example.blp"));
+        BufferedImage transparentImg = transparent.getBufImg();
+
+        Path transparentPng = exportDir.resolve("transparent_example-from-blp.png");
+        Path transparentJpg = exportDir.resolve("transparent_example-from-blp.jpg");
+
+        Assert.assertTrue(javax.imageio.ImageIO.write(transparentImg, "png", transparentPng.toFile()));
+        Assert.assertTrue(javax.imageio.ImageIO.write(flattenForJpeg(transparentImg), "jpg", transparentJpg.toFile()));
+
+        BLP test = new BLP(getFile("images/test.blp"));
+        BufferedImage testImg = test.getBufImg();
+
+        Path testPng = exportDir.resolve("test-from-blp.png");
+        Path testJpg = exportDir.resolve("test-from-blp.jpg");
+
+        Assert.assertTrue(javax.imageio.ImageIO.write(testImg, "png", testPng.toFile()));
+        Assert.assertTrue(javax.imageio.ImageIO.write(flattenForJpeg(testImg), "jpg", testJpg.toFile()));
+
+        Assert.assertTrue(Files.size(transparentPng) > 0);
+        Assert.assertTrue(Files.size(transparentJpg) > 0);
+        Assert.assertTrue(Files.size(testPng) > 0);
+        Assert.assertTrue(Files.size(testJpg) > 0);
+
+        BufferedImage transparentPngImg = javax.imageio.ImageIO.read(transparentPng.toFile());
+        BufferedImage transparentJpgImg = javax.imageio.ImageIO.read(transparentJpg.toFile());
+        BufferedImage testPngImg = javax.imageio.ImageIO.read(testPng.toFile());
+        BufferedImage testJpgImg = javax.imageio.ImageIO.read(testJpg.toFile());
+
+        Assert.assertNotNull(transparentPngImg);
+        Assert.assertNotNull(transparentJpgImg);
+        Assert.assertNotNull(testPngImg);
+        Assert.assertNotNull(testJpgImg);
+
+        // Transparent BLP PNG export should keep fully transparent outer border.
+        int transparentPngCorner = transparentPngImg.getRGB(0, 0);
+        int transparentPngCenter = transparentPngImg.getRGB(32, 32);
+        Assert.assertEquals((transparentPngCorner >>> 24) & 0xFF, 0);
+        Assert.assertEquals((transparentPngCenter >>> 24) & 0xFF, 255);
+        assertBetweenInclusive((transparentPngCenter >>> 16) & 0xFF, 0, 40, "transparent png center red");
+        assertBetweenInclusive((transparentPngCenter >>> 8) & 0xFF, 70, 150, "transparent png center green");
+        assertBetweenInclusive(transparentPngCenter & 0xFF, 160, 230, "transparent png center blue");
+
+        // Flattened JPG has no alpha, but corner should remain bright background and center remain blue-ish.
+        int transparentJpgCorner = transparentJpgImg.getRGB(0, 0);
+        int transparentJpgCenter = transparentJpgImg.getRGB(32, 32);
+        assertBetweenInclusive((transparentJpgCorner >>> 16) & 0xFF, 190, 255, "transparent jpg corner red");
+        assertBetweenInclusive((transparentJpgCorner >>> 8) & 0xFF, 190, 255, "transparent jpg corner green");
+        assertBetweenInclusive(transparentJpgCorner & 0xFF, 180, 255, "transparent jpg corner blue");
+        assertBetweenInclusive((transparentJpgCenter >>> 16) & 0xFF, 0, 80, "transparent jpg center red");
+        assertBetweenInclusive((transparentJpgCenter >>> 8) & 0xFF, 70, 170, "transparent jpg center green");
+        assertBetweenInclusive(transparentJpgCenter & 0xFF, 140, 255, "transparent jpg center blue");
+
+        // test.blp regression guard: center should be warm yellow/orange, not magenta-green corruption.
+        int testPngCenter = testPngImg.getRGB(32, 32);
+        assertBetweenInclusive((testPngCenter >>> 16) & 0xFF, 170, 255, "test png center red");
+        assertBetweenInclusive((testPngCenter >>> 8) & 0xFF, 170, 255, "test png center green");
+        assertBetweenInclusive(testPngCenter & 0xFF, 0, 150, "test png center blue");
+
+        int testJpgCenter = testJpgImg.getRGB(32, 32);
+        assertBetweenInclusive((testJpgCenter >>> 16) & 0xFF, 170, 255, "test jpg center red");
+        assertBetweenInclusive((testJpgCenter >>> 8) & 0xFF, 150, 255, "test jpg center green");
+        assertBetweenInclusive(testJpgCenter & 0xFF, 20, 200, "test jpg center blue");
     }
 }
