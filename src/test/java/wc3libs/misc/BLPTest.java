@@ -161,4 +161,26 @@ public class BLPTest extends Wc3LibTest {
         Assert.assertEquals(image.getWidth(), 48);
         Assert.assertEquals(image.getHeight(), 48);
     }
+
+    @Test
+    public void testBlpBinaryRoundtripDirect() throws IOException, UnsupportedFormatException {
+        byte[] bytes = Files.readAllBytes(getFile("images/test.blp").toPath());
+
+        BLP blp = new BLP(new ByteArrayInputStream(bytes));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        blp.write(out);
+
+        Assert.assertEquals(out.toByteArray(), bytes);
+    }
+
+    @Test
+    public void testBlpBinaryRoundtripJpegAlpha() throws IOException, UnsupportedFormatException {
+        byte[] bytes = Files.readAllBytes(getFile("images/transparent_example.blp").toPath());
+
+        BLP blp = new BLP(new ByteArrayInputStream(bytes));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        blp.write(out);
+
+        Assert.assertEquals(out.toByteArray(), bytes);
+    }
 }
