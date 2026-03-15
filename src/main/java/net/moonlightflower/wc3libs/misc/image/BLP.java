@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
-import javax.imageio.event.IIOReadWarningListener;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 import java.awt.image.BufferedImage;
@@ -19,20 +17,168 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class BLP extends Wc3RasterImg {
 	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
+	private static final int CONTENT_JPEG = 0;
+	private static final int CONTENT_DIRECT = 1;
+	private static final int MAX_DIMENSION = 65535;
+
+	private static int readAlpha(@Nonnull byte[] alphaData, int pixelIndex, int alphaBits) {
+		if (alphaBits <= 0) return 0xFF;
+
+		switch (alphaBits) {
+		case 1: {
+			int byteIndex = pixelIndex / 8;
+
+			if (byteIndex >= alphaData.length) return 0xFF;
+
+			int bit = (alphaData[byteIndex] >> (pixelIndex % 8)) & 0x1;
+
+			return bit == 0 ? 0x00 : 0xFF;
+		}
+		case 4: {
+			int byteIndex = pixelIndex / 2;
+
+			if (byteIndex >= alphaData.length) return 0xFF;
+
+			int alphaNibble = (pixelIndex % 2 == 0) ? (alphaData[byteIndex] & 0xF) : ((alphaData[byteIndex] >> 4) & 0xF);
+
+			return (alphaNibble * 0xFF) / 0xF;
+		}
+		case 8:
+		default:
+			if (pixelIndex >= alphaData.length) return 0xFF;
+
+			return alphaData[pixelIndex] & 0xFF;
+		}
+	}
+
+	private static int mipSizeAtLevel(int baseSize, int level) {
+		int result = Math.max(1, baseSize);
+
+		for (int i = 0; i < level; i++) {
+			result = Math.max(1, result / 2);
+		}
+
+		return result;
+	}
+
+	private static int getMipmapLevelCount(int width, int height, boolean hasMipmaps) {
+		if (!hasMipmaps) return 1;
+
+		int levels = 1;
+		int maxDim = Math.max(width, height);
+
+		while ((maxDim > 1) && (levels < 16)) {
+			maxDim = Math.max(1, maxDim / 2);
+			levels++;
+		}
+
+		return levels;
+	}
+
+	private static int validateDimension(String fieldName, int value, int version) throws UnsupportedFormatException {
+		if (value <= 0) throw new UnsupportedFormatException(String.format("%s %d is invalid", fieldName, value));
+		if (value > MAX_DIMENSION) throw new UnsupportedFormatException(String.format("%s %d exceeds max %d", fieldName, value, MAX_DIMENSION));
+
+		if ((version == 0) && (value > 512)) {
+			log.warn("{} {} exceeds BLP0 compatibility limit of 512", fieldName, value);
+		}
+
+		return value;
+	}
+
+	private static int normalizeAlphaBits(int rawAlphaBits, int contentType) {
+		if (contentType == CONTENT_JPEG) {
+			if ((rawAlphaBits == 0) || (rawAlphaBits == 8)) return rawAlphaBits;
+
+			log.warn("invalid alphaBits {} for JPEG content, treating as 0", rawAlphaBits);
+
+			return 0;
+		}
+
+		if ((rawAlphaBits == 0) || (rawAlphaBits == 1) || (rawAlphaBits == 4) || (rawAlphaBits == 8)) return rawAlphaBits;
+
+		log.warn("invalid alphaBits {} for direct content, treating as 0", rawAlphaBits);
+
+		return 0;
+	}
+
+	private static byte[] readPadded(@Nonnull Reader reader, int size, @Nonnull String fieldName) throws IOException {
+		int available = Math.min(size, reader.remaining());
+
+		if (available < size) {
+			log.warn("{} truncated (expected {}, got {})", fieldName, size, available);
+		}
+
+		byte[] result = new byte[size];
+		byte[] readBytes = reader.read(available);
+		System.arraycopy(readBytes, 0, result, 0, readBytes.length);
+
+		return result;
+	}
+
+	private static int safeToInt(long value, @Nonnull String fieldName) throws UnsupportedFormatException {
+		if ((value < 0) || (value > Integer.MAX_VALUE)) {
+			throw new UnsupportedFormatException(String.format("%s %d is too large", fieldName, value));
+		}
+
+		return (int) value;
+	}
+
+	private static byte[] getMipmapChunk(@Nonnull Reader reader, int[] mipmapOffsets, int[] mipmapSizes, int mipmapLevel) {
+		if ((mipmapLevel < 0) || (mipmapLevel >= 16)) return new byte[0];
+
+		int offset = mipmapOffsets[mipmapLevel];
+		int size = mipmapSizes[mipmapLevel];
+
+		if ((offset <= 0) || (size <= 0)) {
+			log.warn("mipmap {} has invalid location offset={} size={}", mipmapLevel, offset, size);
+			return new byte[0];
+		}
+
+		if (offset >= reader.size()) {
+			log.warn("mipmap {} offset {} is past EOF {}", mipmapLevel, offset, reader.size());
+			return new byte[0];
+		}
+
+		int available = Math.min(size, reader.size() - offset);
+
+		if (available < size) {
+			log.warn("mipmap {} truncated at EOF (expected {}, got {})", mipmapLevel, size, available);
+		}
+
+		return reader.copy(offset, available);
+	}
+
+	private static byte[] resizeChunk(@Nonnull byte[] src, int expectedSize, @Nonnull String label) {
+		if (src.length == expectedSize) return src;
+
+		if (src.length < expectedSize) {
+			log.warn("{} smaller than expected (expected {}, got {}), padding with zeros", label, expectedSize, src.length);
+		} else {
+			log.warn("{} larger than expected (expected {}, got {}), truncating", label, expectedSize, src.length);
+		}
+
+		return Arrays.copyOf(src, expectedSize);
+	}
 
 	private static class Reader {
 		private byte[] _bytes;
 		private int _pos;
 		
 		public byte[] read(int size) {
+			if (size < 0) size = 0;
+
+			int available = Math.min(size, remaining());
+
 			byte b[] = new byte[size];
 			
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i < available; i++) {
 				b[i] = _bytes[_pos];
 				
 				_pos++;
@@ -64,7 +210,25 @@ public class BLP extends Wc3RasterImg {
 		}
 		
 		public void seek(int val) {
-			_pos = val;
+			_pos = Math.max(0, Math.min(val, _bytes.length));
+		}
+
+		public int remaining() {
+			return _bytes.length - _pos;
+		}
+
+		public int size() {
+			return _bytes.length;
+		}
+
+		public byte[] copy(int offset, int size) {
+			if ((offset < 0) || (size <= 0) || (offset >= _bytes.length)) return new byte[0];
+
+			int available = Math.min(size, _bytes.length - offset);
+			byte[] result = new byte[available];
+			System.arraycopy(_bytes, offset, result, 0, available);
+
+			return result;
 		}
 		
 		public Reader(@Nonnull InputStream inStream) throws IOException {
@@ -86,18 +250,33 @@ public class BLP extends Wc3RasterImg {
 	private void read(@Nonnull InputStream inStream) throws UnsupportedFormatException {
 		try {
 			Reader reader = new Reader(inStream);
-			BufferedInputStream in;
+
 			String startToken = reader.readChar4();
+			if ((startToken.length() < 4) || !startToken.startsWith("BLP")) {
+				throw new UnsupportedFormatException(String.format("invalid magic %s", startToken));
+			}
 
 			int version = (int) startToken.charAt(3) - '0';
+			if ((version < 0) || (version > 2)) throw new UnsupportedFormatException(String.format("unsupported BLP version %d", version));
+
+			if (version == 0) {
+				throw new UnsupportedFormatException("BLP0 is not supported (external bXX mipmap files required)");
+			}
 			
-			int type = reader.readInt();
+			int typeRaw = reader.readInt();
+			int type = typeRaw;
 			/*
 			 * 0 - jpeg
 			 * 1 - true color
 			 */
+			if ((type != CONTENT_JPEG) && (type != CONTENT_DIRECT)) {
+				log.warn("invalid content type {}, defaulting to JPEG", typeRaw);
+				type = CONTENT_JPEG;
+			}
 
 			boolean hasAlpha = false;
+			int alphaBits = 0;
+			boolean hasMipmaps = false;
 			
 			if (version >= 2) {
 				int pixmapType = reader.readUByte();
@@ -106,10 +285,11 @@ public class BLP extends Wc3RasterImg {
 				 * 2 - compressed sample
 				 * 3 - BGRA
 				 */
+				if ((pixmapType < 1) || (pixmapType > 3)) {
+					log.warn("invalid pixmapType {} for BLP2, continuing", pixmapType);
+				}
 
-				if (pixmapType > 3) throw new UnsupportedFormatException(String.format("invalid pixmapType %d", pixmapType));
-
-				byte alphaBits = reader.readByte();
+				alphaBits = normalizeAlphaBits(reader.readUByte(), type);
 				/*
 				 * 8 - 8 bits for alpha
 				 * 4 - 4 bits for alpha, not for JPEG
@@ -117,29 +297,37 @@ public class BLP extends Wc3RasterImg {
 				 * 0 - no alpha
 				 * unknown for BGRA pixmapType
 				 */
+				hasAlpha = alphaBits > 0;
 
 				byte sampleType = reader.readByte();
-				byte hasMipmaps = reader.readByte();
+				hasMipmaps = reader.readUByte() != 0;
 			} else {
-				int alphaBits = reader.readInt();
-				
-				hasAlpha = ((alphaBits & 0x8) > 0);
+				int alphaBitsRaw = reader.readInt();
+				int normalizedRawBits = alphaBitsRaw;
+				if ((alphaBitsRaw != 0) && (alphaBitsRaw != 1) && (alphaBitsRaw != 4) && (alphaBitsRaw != 8)) {
+					if ((alphaBitsRaw & 0x8) > 0) {
+						log.warn("BLP1 alphaBits {} appears flag-encoded, treating as 8-bit alpha", alphaBitsRaw);
+						normalizedRawBits = 8;
+					}
+				}
+
+				alphaBits = normalizeAlphaBits(normalizedRawBits, type);
+
+				hasAlpha = alphaBits > 0;
 			}
 			
-			int width = reader.readInt(); //max 512
-			int height = reader.readInt(); //max 512
-
-			if (width > 512) throw new UnsupportedFormatException(String.format("width %d exceeds the limit of 512", width));
-			if (height > 512) throw new UnsupportedFormatException(String.format("height %d exceeds the limit of 512", height));
+			int width = validateDimension("width", reader.readInt(), version);
+			int height = validateDimension("height", reader.readInt(), version);
 			
 			if (version < 2) {
 				int unknown = reader.readInt(); //?
-				int hasMipmaps = reader.readInt();
+				hasMipmaps = reader.readInt() != 0;
 				/*
 				 * 0 - no mipmaps, only full
 				 * else - mipmaps from full to 1x1
 				 */
 			}
+			int mipmapCount = getMipmapLevelCount(width, height, hasMipmaps);
 			
 			int[] mipmapOffsets = new int[16];
 			int[] mipmapSizes = new int[16];
@@ -168,32 +356,37 @@ public class BLP extends Wc3RasterImg {
 				//jpeg
 				
 				int headerSize = reader.readInt();
-				
-				byte[] headerBytes = new byte[headerSize];
-				
-				for (int i = 0; i < headerSize; i++) {
-					headerBytes[i] = reader.readByte();
+				if (headerSize < 0) throw new UnsupportedFormatException(String.format("invalid jpegHeaderSize %d", headerSize));
+				if (headerSize > 0x270) {
+					log.warn("jpegHeaderSize {} exceeds recommended max of 624 bytes", headerSize);
 				}
+				byte[] headerBytes = readPadded(reader, headerSize, "jpegHeaderChunk");
 				
-				byte[][] mipmapDatas = new byte[16][];
-				
-				for (int i = 0; i < 16; i++) {				
-					reader.seek(mipmapOffsets[i]);
+				byte[] mipmapData0 = getMipmapChunk(reader, mipmapOffsets, mipmapSizes, 0);
+				if (mipmapData0.length == 0) throw new UnsupportedFormatException("missing or invalid JPEG mipmap level 0");
 
-					byte[] mipmapData = new byte[mipmapSizes[i]];
-					
-					mipmapDatas[i] = mipmapData;//ByteBuffer.allocate();
-					
-					for (int j = 0; j < mipmapSizes[i]; j++) {
-						//mipmapData[i].put(reader.readByte());
-						mipmapData[j] = reader.readByte();
+				byte[] alphaData = null;
+				int mipmapJpegSize = mipmapData0.length;
+
+				if (hasAlpha && alphaBits > 0 && mipmapData0 != null) {
+					long pixelCountLong = (long) width * (long) height;
+					int pixelCount = safeToInt(pixelCountLong, "pixelCount");
+					int alphaDataSize = (pixelCount * alphaBits + 7) / 8;
+
+					if (alphaDataSize > 0 && alphaDataSize <= mipmapData0.length) {
+						mipmapJpegSize = mipmapData0.length - alphaDataSize;
+						alphaData = new byte[alphaDataSize];
+
+						System.arraycopy(mipmapData0, mipmapJpegSize, alphaData, 0, alphaDataSize);
+					} else if (alphaDataSize > mipmapData0.length) {
+						log.warn("alpha block larger than mipmap payload (expected {}, got {}), treating as fully opaque", alphaDataSize, mipmapData0.length);
 					}
 				}
-				
-				ByteBuffer buf = ByteBuffer.allocate(headerSize + mipmapSizes[0]);
-				
+
+				ByteBuffer buf = ByteBuffer.allocate(headerSize + Math.max(0, mipmapJpegSize));
+
 				buf.put(headerBytes);
-				buf.put(mipmapDatas[0]);
+				buf.put(mipmapData0, 0, Math.max(0, mipmapJpegSize));
 				
 				InputStream stream = new ByteArrayInputStream(buf.array());
 				
@@ -219,25 +412,42 @@ public class BLP extends Wc3RasterImg {
 
 				imgReader.setInput(imageInputStream, true, true);
 
-				ImageReadParam readParam = imgReader.getDefaultReadParam();
-
-				readParam.setDestinationBands(new int[]{2, 1, 0, 3});
-
-				java.awt.image.Raster raster = imgReader.readRaster(0, readParam);
+				java.awt.image.Raster raster = imgReader.readRaster(0, null);
 				imgReader.dispose();
 
-				BufferedImage writeImg = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				BufferedImage writeImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				int copyWidth = Math.min(width, raster.getWidth());
+				int copyHeight = Math.min(height, raster.getHeight());
+
+				if ((raster.getWidth() != width) || (raster.getHeight() != height)) {
+					log.warn("JPEG mipmap 0 dimensions {}x{} differ from header {}x{}, cropping/padding to header dimensions",
+							raster.getWidth(), raster.getHeight(), width, height);
+				}
 				
-				for (int x = 0; x < raster.getWidth(); x++) {
-					for (int y = 0; y < raster.getHeight(); y++) {
-						int[] colors = new int[4];
+				for (int x = 0; x < copyWidth; x++) {
+					for (int y = 0; y < copyHeight; y++) {
+						int[] colors = new int[Math.max(3, raster.getNumBands())];
 
 						raster.getPixel(x, y, colors);
 
-						int red = colors[2];
-						int green = colors[1];
-						int blue = colors[0];
+						int red;
+						int green;
+						int blue;
+						if (raster.getNumBands() >= 4) {
+							blue = colors[0];
+							green = colors[1];
+							red = colors[2];
+						} else {
+							red = colors[0];
+							green = colors[1];
+							blue = colors[2];
+						}
+
 						int alpha = 255;
+						if (alphaData != null) {
+							int pixelIndex = y * width + x;
+							alpha = readAlpha(alphaData, pixelIndex, alphaBits);
+						}
 
 						java.awt.Color color = new java.awt.Color(red, green, blue, alpha);
 
@@ -250,50 +460,32 @@ public class BLP extends Wc3RasterImg {
 				break;
 			}
 			case 1: {
+				byte[] colorTableBytes = readPadded(reader, 256 * 4, "direct color table");
 				byte[][] colors = new byte[256][4];
-				
+
 				for (int i = 0; i < 256; i++) {
-					colors[i][0] = reader.readByte();
-					colors[i][1] = reader.readByte();
-					colors[i][2] = reader.readByte();
-					colors[i][3] = reader.readByte();
-					
-					//System.out.println("color " + i + " -> " + colors[i][0] + ";" + colors[i][1] + ";" + colors[i][2] + ";" + colors[i][3]);
+					colors[i][0] = colorTableBytes[i * 4];
+					colors[i][1] = colorTableBytes[i * 4 + 1];
+					colors[i][2] = colorTableBytes[i * 4 + 2];
+					colors[i][3] = colorTableBytes[i * 4 + 3];
 				}
-				
-				int curWidth = width;
-				int curHeight = height;
-				
-				byte mipmapIndexLists[][] = new byte[16][];
-				byte mipmapAlphaLists[][] = new byte[16][];
-				
-				for (int i = 0; i < 1; i++) {
-					byte[] indexList = new byte[curWidth * curHeight];
-					
-					mipmapIndexLists[i] = indexList;
-					
-					for (int j = 0; j < indexList.length; j++) {
-						indexList[j] = reader.readByte();
-					}
-					
-					if (hasAlpha) {
-						byte[] alphaList = new byte[curWidth * curHeight];
-	
-						mipmapAlphaLists[i] = alphaList;
-						
-						for (int j = 0; j < indexList.length; j++) {
-							alphaList[j] = reader.readByte();
-						}
-					}
-				}
+
+				long pixelCountLong = (long) width * (long) height;
+				int pixelCount = safeToInt(pixelCountLong, "pixelCount");
+				int alphaSize = hasAlpha ? (pixelCount * alphaBits + 7) / 8 : 0;
+				int expectedChunkSize = pixelCount + alphaSize;
+
+				byte[] mipmapData0 = getMipmapChunk(reader, mipmapOffsets, mipmapSizes, 0);
+				if (mipmapData0.length == 0) throw new UnsupportedFormatException("missing or invalid direct mipmap level 0");
+				mipmapData0 = resizeChunk(mipmapData0, expectedChunkSize, "direct mipmap 0 payload");
+
+				byte[] indexList = Arrays.copyOfRange(mipmapData0, 0, pixelCount);
+				byte[] alphaList = hasAlpha ? Arrays.copyOfRange(mipmapData0, pixelCount, pixelCount + alphaSize) : null;
 
 				BufferedImage writeImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				
 				int c = 0;
-				
-				byte[] indexList = mipmapIndexLists[0];
-				byte[] alphaList = mipmapAlphaLists[0];
-				
+
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
 						int colIndex = indexList[c] & 0xFF;
@@ -305,8 +497,7 @@ public class BLP extends Wc3RasterImg {
 						double alpha = 1D;
 						
 						if (hasAlpha) {
-							int alphaIndex = alphaList[c] & 0xFF;
-						
+							int alphaIndex = readAlpha(alphaList, c, alphaBits);
 							alpha = ((double) (alphaIndex & 0xFF)) / 0xFF;
 						}
 						
@@ -325,8 +516,9 @@ public class BLP extends Wc3RasterImg {
 				throw new UnsupportedFormatException(String.format("format type %d not supported", type));
 			}
 			}
-		} catch (IOException e) {
+		} catch (IOException | RuntimeException e) {
 			log.error(e.getMessage(), e);
+			throw new UnsupportedFormatException(String.format("failed reading BLP: %s", e.getMessage()));
 		}
 	}
 	
