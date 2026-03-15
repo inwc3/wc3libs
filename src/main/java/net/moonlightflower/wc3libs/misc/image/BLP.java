@@ -25,6 +25,36 @@ import java.util.List;
 public class BLP extends Wc3RasterImg {
 	private static final Logger log = LoggerFactory.getLogger(FlagsInt.class.getName());
 
+	private static int readAlpha(@Nonnull byte[] alphaData, int pixelIndex, int alphaBits) {
+		if (alphaBits <= 0) return 0xFF;
+
+		switch (alphaBits) {
+		case 1: {
+			int byteIndex = pixelIndex / 8;
+
+			if (byteIndex >= alphaData.length) return 0xFF;
+
+			int bit = (alphaData[byteIndex] >> (pixelIndex % 8)) & 0x1;
+
+			return bit == 0 ? 0x00 : 0xFF;
+		}
+		case 4: {
+			int byteIndex = pixelIndex / 2;
+
+			if (byteIndex >= alphaData.length) return 0xFF;
+
+			int alphaNibble = (pixelIndex % 2 == 0) ? (alphaData[byteIndex] & 0xF) : ((alphaData[byteIndex] >> 4) & 0xF);
+
+			return (alphaNibble * 0xFF) / 0xF;
+		}
+		case 8:
+		default:
+			if (pixelIndex >= alphaData.length) return 0xFF;
+
+			return alphaData[pixelIndex] & 0xFF;
+		}
+	}
+
 	private static class Reader {
 		private byte[] _bytes;
 		private int _pos;
@@ -98,6 +128,7 @@ public class BLP extends Wc3RasterImg {
 			 */
 
 			boolean hasAlpha = false;
+			int alphaBits = 0;
 			
 			if (version >= 2) {
 				int pixmapType = reader.readUByte();
@@ -109,7 +140,7 @@ public class BLP extends Wc3RasterImg {
 
 				if (pixmapType > 3) throw new UnsupportedFormatException(String.format("invalid pixmapType %d", pixmapType));
 
-				byte alphaBits = reader.readByte();
+				alphaBits = reader.readUByte();
 				/*
 				 * 8 - 8 bits for alpha
 				 * 4 - 4 bits for alpha, not for JPEG
@@ -117,13 +148,21 @@ public class BLP extends Wc3RasterImg {
 				 * 0 - no alpha
 				 * unknown for BGRA pixmapType
 				 */
+				hasAlpha = alphaBits > 0;
 
 				byte sampleType = reader.readByte();
 				byte hasMipmaps = reader.readByte();
 			} else {
-				int alphaBits = reader.readInt();
-				
-				hasAlpha = ((alphaBits & 0x8) > 0);
+				int alphaBitsRaw = reader.readInt();
+
+				if ((alphaBitsRaw == 0) || (alphaBitsRaw == 1) || (alphaBitsRaw == 4) || (alphaBitsRaw == 8)) {
+					alphaBits = alphaBitsRaw;
+				} else {
+					// Some BLP1 files encode alpha presence as flags; keep 8-bit alpha for compatibility.
+					alphaBits = ((alphaBitsRaw & 0x8) > 0) ? 8 : 0;
+				}
+
+				hasAlpha = alphaBits > 0;
 			}
 			
 			int width = reader.readInt(); //max 512
@@ -190,10 +229,26 @@ public class BLP extends Wc3RasterImg {
 					}
 				}
 				
-				ByteBuffer buf = ByteBuffer.allocate(headerSize + mipmapSizes[0]);
-				
+				byte[] alphaData = null;
+				int mipmapJpegSize = mipmapSizes[0];
+				byte[] mipmapData0 = mipmapDatas[0];
+
+				if (hasAlpha && alphaBits > 0 && mipmapData0 != null) {
+					int pixelCount = width * height;
+					int alphaDataSize = (pixelCount * alphaBits + 7) / 8;
+
+					if (alphaDataSize > 0 && alphaDataSize <= mipmapData0.length) {
+						mipmapJpegSize = mipmapData0.length - alphaDataSize;
+						alphaData = new byte[alphaDataSize];
+
+						System.arraycopy(mipmapData0, mipmapJpegSize, alphaData, 0, alphaDataSize);
+					}
+				}
+
+				ByteBuffer buf = ByteBuffer.allocate(headerSize + Math.max(0, mipmapJpegSize));
+
 				buf.put(headerBytes);
-				buf.put(mipmapDatas[0]);
+				buf.put(mipmapData0, 0, Math.max(0, mipmapJpegSize));
 				
 				InputStream stream = new ByteArrayInputStream(buf.array());
 				
@@ -238,6 +293,10 @@ public class BLP extends Wc3RasterImg {
 						int green = colors[1];
 						int blue = colors[0];
 						int alpha = 255;
+						if (alphaData != null) {
+							int pixelIndex = y * raster.getWidth() + x;
+							alpha = readAlpha(alphaData, pixelIndex, alphaBits);
+						}
 
 						java.awt.Color color = new java.awt.Color(red, green, blue, alpha);
 
