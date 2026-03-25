@@ -10,6 +10,7 @@ import wc3libs.misc.Wc3LibTest;
 import wc3libs.util.MurmurHash;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -122,6 +123,8 @@ public class W3ITest extends Wc3LibTest {
     @Test()
     public void readWriteCycle() throws IOException {
         readWriteCycle(W3I.class, getFile("wc3data/W3I/war3map.w3i"));
+        readWriteCycle(W3I.class, getFile("wc3data/W3I/war3map_default.w3i"));
+        readWriteCycle(W3I.class, getFile("wc3data/W3I/war3map_latest_lua.w3i"));
 
         List<Path> w3iFile = getFiles("wc3data/Infos/");
 
@@ -133,5 +136,71 @@ public class W3ITest extends Wc3LibTest {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Test
+    public void testDefaultW3I() throws Exception {
+        File file = getFile("wc3data/W3I/war3map_default.w3i");
+        W3I w3i = new W3I(file);
+
+        Assert.assertEquals(w3i.getFileVersion(), 33);
+        Assert.assertEquals(w3i.getScriptLang(), W3I.ScriptLang.JASS);
+        Assert.assertEquals(w3i.getGraphics(), W3I.Graphics.SD_AND_HD);
+        Assert.assertEquals(w3i.getGameDataVersion(), W3I.GameDataVersion.TFT);
+        Assert.assertEquals(w3i.getForceDefaultCameraZoom(), 1250);
+        Assert.assertEquals(w3i.getForceMaxCameraZoom(), 1250);
+        Assert.assertEquals(w3i.getForceMinCameraZoom(), 1250);
+
+        // Verify these match the defaults of a freshly constructed W3I
+        W3I fresh = new W3I();
+        Assert.assertEquals(fresh.getFileVersion(), w3i.getFileVersion());
+        Assert.assertEquals(fresh.getScriptLang(), w3i.getScriptLang());
+        Assert.assertEquals(fresh.getGraphics(), w3i.getGraphics());
+        Assert.assertEquals(fresh.getGameDataVersion(), w3i.getGameDataVersion());
+        Assert.assertEquals(fresh.getForceDefaultCameraZoom(), w3i.getForceDefaultCameraZoom());
+        Assert.assertEquals(fresh.getForceMaxCameraZoom(), w3i.getForceMaxCameraZoom());
+        Assert.assertEquals(fresh.getForceMinCameraZoom(), w3i.getForceMinCameraZoom());
+        Assert.assertEquals(fresh.getTerrainFog(), w3i.getTerrainFog());
+        Assert.assertEquals(fresh.getWaterColor().toString(), w3i.getWaterColor().toString());
+
+        readWriteCycle(W3I.class, file);
+    }
+
+    @Test
+    public void testLatestLuaW3I() throws Exception {
+        File file = getFile("wc3data/W3I/war3map_latest_lua.w3i");
+        W3I w3i = new W3I(file);
+
+        // Verify latest format version (0x21 = 33)
+        Assert.assertEquals(w3i.getFileVersion(), 33);
+
+        // Verify Lua scripting language
+        Assert.assertEquals(w3i.getScriptLang(), W3I.ScriptLang.LUA);
+
+        // Verify 0x1F+ fields are present
+        Assert.assertNotNull(w3i.getGraphics());
+        Assert.assertNotNull(w3i.getGameDataVersion());
+
+        // Verify version-specific field values as stored by WC3 editor (even when not explicitly customized)
+        Assert.assertEquals(w3i.getGraphics(), W3I.Graphics.SD_AND_HD);
+        Assert.assertEquals(w3i.getGameDataVersion(), W3I.GameDataVersion.TFT);
+        // Camera zoom: WC3 editor always writes concrete values (not 0); default/min=1250, max=2000
+        Assert.assertEquals(w3i.getForceDefaultCameraZoom(), 1250);
+        Assert.assertEquals(w3i.getForceMaxCameraZoom(), 2000);
+        Assert.assertEquals(w3i.getForceMinCameraZoom(), 1250);
+
+        // Verify read/write cycle produces byte-identical output
+        readWriteCycle(W3I.class, file);
+
+        // Verify round-trip field equality
+        W3I w3i2 = new W3I(file);
+        assertEqualsW3I(w3i, w3i2);
+        Assert.assertEquals(w3i2.getFileVersion(), w3i.getFileVersion());
+        Assert.assertEquals(w3i2.getScriptLang(), w3i.getScriptLang());
+        Assert.assertEquals(w3i2.getGraphics(), w3i.getGraphics());
+        Assert.assertEquals(w3i2.getGameDataVersion(), w3i.getGameDataVersion());
+        Assert.assertEquals(w3i2.getForceDefaultCameraZoom(), w3i.getForceDefaultCameraZoom());
+        Assert.assertEquals(w3i2.getForceMaxCameraZoom(), w3i.getForceMaxCameraZoom());
+        Assert.assertEquals(w3i2.getForceMinCameraZoom(), w3i.getForceMinCameraZoom());
     }
 }

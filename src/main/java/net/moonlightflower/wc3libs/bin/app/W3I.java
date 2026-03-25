@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class W3I {
     public final static File GAME_PATH = new File("war3map.w3i");
 
-    private int _fileVersion = 0;
+    private int _fileVersion = EncodingFormat.W3I_0x21.getVersion();
 
     public int getFileVersion() {
         return _fileVersion;
@@ -658,7 +658,7 @@ public class W3I {
         _gameData = val;
     }
 
-    private TerrainFog _terrainFog;
+    private TerrainFog _terrainFog = new TerrainFog(TerrainFogType.NONE, War3Real.valueOf(3000f), War3Real.valueOf(5000f), War3Real.valueOf(0.5f), Color.fromRGBA255(0, 0, 0, 255));
 
     @Nullable
     public TerrainFog getTerrainFog() {
