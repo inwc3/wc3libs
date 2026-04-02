@@ -3774,15 +3774,31 @@ public class W3I {
         return w3i;
     }
 
+    @Nonnull
+    private Map<Integer, Integer> getStartLocIndicesByPlayerNum() {
+        Map<Integer, Integer> indices = new LinkedHashMap<>();
+
+        int startLocIndex = 0;
+
+        for (Player player : getPlayers()) {
+            indices.put(player.getNum(), startLocIndex++);
+        }
+
+        return indices;
+    }
+
     public FuncImpl makeInitCustomPlayerSlots(boolean isLua) {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_CUSTOM_PLAYER_SLOTS, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
+        Map<Integer, Integer> startLocIndicesByPlayerNum = getStartLocIndicesByPlayerNum();
 
         for (Player player : getPlayers()) {
-            stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + player.getNum() + ")"));
+            int startLocIndex = startLocIndicesByPlayerNum.get(player.getNum());
+
+            stmts.add(Statement.create("call SetPlayerStartLocation(Player(" + player.getNum() + ")" + ", " + startLocIndex + ")"));
             if (player.getStartPosFixed() == 1) {
-                stmts.add(Statement.create("call ForcePlayerStartLocation(Player(" + player.getNum() + "), " + player.getNum() + ")"));
+                stmts.add(Statement.create("call ForcePlayerStartLocation(Player(" + player.getNum() + "), " + startLocIndex + ")"));
             }
             stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
             stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
@@ -3808,30 +3824,64 @@ public class W3I {
             numToPlayerMap.put(player.getNum(), player);
         }
 
-        for (Force force : getForces()) {
-            for (Integer playerNum : force.getPlayerNums(getPlayers())) {
+        for (int forceIndex = 0; forceIndex < getForces().size(); forceIndex++) {
+            Force force = getForces().get(forceIndex);
+            Set<Integer> playerNums = force.getPlayerNums(getPlayers());
+
+            for (Integer playerNum : playerNums) {
                 Player player = numToPlayerMap.get(playerNum);
 
-                stmts.add(Statement.create("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + getForces().indexOf(force) + ")"));
+                stmts.add(Statement.create("call SetPlayerTeam(Player(" + player.getNum() + ")" + ", " + forceIndex + ")"));
+
+                if (force.getFlag(Force.Flags.Flag.ALLIED_VICTORY)) {
+                    stmts.add(Statement.create("call SetPlayerState(Player(" + player.getNum() + "), PLAYER_STATE_ALLIED_VICTORY, 1)"));
+                }
             }
-        }
 
-        for (Force force : getForces()) {
-            for (Integer playerNum : force.getPlayerNums(getPlayers())) {
-                Player player = numToPlayerMap.get(playerNum);
+            if (force.getFlag(Force.Flags.Flag.ALLIED)) {
+                for (Integer playerNum : playerNums) {
+                    Player player = numToPlayerMap.get(playerNum);
 
-                if (force.getFlag(Force.Flags.Flag.ALLIED)) {
-                    for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
+                    for (Integer playerNum2 : playerNums) {
                         if (playerNum.equals(playerNum2)) continue;
 
                         stmts.add(Statement.create("call SetPlayerAllianceStateAllyBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
                     }
                 }
-                if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
-                    for (Integer playerNum2 : force.getPlayerNums(getPlayers())) {
+            }
+
+            if (force.getFlag(Force.Flags.Flag.SHARED_VISION)) {
+                for (Integer playerNum : playerNums) {
+                    Player player = numToPlayerMap.get(playerNum);
+
+                    for (Integer playerNum2 : playerNums) {
                         if (playerNum.equals(playerNum2)) continue;
 
                         stmts.add(Statement.create("call SetPlayerAllianceStateVisionBJ(Player(" + player.getNum() + ")" + ", Player(" + playerNum2 + "), true)"));
+                    }
+                }
+            }
+
+            if (force.getFlag(Force.Flags.Flag.SHARED_UNIT_CONTROL)) {
+                for (Integer playerNum : playerNums) {
+                    Player player = numToPlayerMap.get(playerNum);
+
+                    for (Integer playerNum2 : playerNums) {
+                        if (playerNum.equals(playerNum2)) continue;
+
+                        stmts.add(Statement.create("call SetPlayerAllianceStateControlBJ(Player(" + player.getNum() + "), Player(" + playerNum2 + "), true)"));
+                    }
+                }
+            }
+
+            if (force.getFlag(Force.Flags.Flag.SHARED_UNIT_CONTROL_ADVANCED)) {
+                for (Integer playerNum : playerNums) {
+                    Player player = numToPlayerMap.get(playerNum);
+
+                    for (Integer playerNum2 : playerNums) {
+                        if (playerNum.equals(playerNum2)) continue;
+
+                        stmts.add(Statement.create("call SetPlayerAllianceStateFullControlBJ(Player(" + player.getNum() + "), Player(" + playerNum2 + "), true)"));
                     }
                 }
             }
@@ -3848,15 +3898,17 @@ public class W3I {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.INIT_ALLY_PRIORITIES, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
+        Map<Integer, Integer> startLocIndicesByPlayerNum = getStartLocIndicesByPlayerNum();
 
         for (Player player : getPlayers()) {
             int playerNum = player.getNum();
+            int startLocIndex = startLocIndicesByPlayerNum.get(playerNum);
 
             {
                 Set<Integer> allyLowNums = player.getAllyLowPrioPlayerNums();
                 Set<Integer> allyHighNums = player.getAllyHighPrioPlayerNums();
 
-                stmts.add(Statement.create(String.format("call SetStartLocPrioCount(%d, %d)", playerNum, allyLowNums.size() + allyHighNums.size())));
+                stmts.add(Statement.create(String.format("call SetStartLocPrioCount(%d, %d)", startLocIndex, allyLowNums.size() + allyHighNums.size())));
 
                 int c = 0;
 
@@ -3866,14 +3918,14 @@ public class W3I {
                     if (playerNum == otherPlayerNum) continue;
 
                     if (allyLowNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", startLocIndex, c, startLocIndicesByPlayerNum.get(otherPlayerNum), "MAP_LOC_PRIO_LOW")));
+                        c++;
                     } else if (allyHighNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                        stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", startLocIndex, c, startLocIndicesByPlayerNum.get(otherPlayerNum), "MAP_LOC_PRIO_HIGH")));
+                        c++;
                     } else {
-                        //stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                        //stmts.add(Statement.create(String.format("call SetStartLocPrio(%d, %d, %d, %s)", startLocIndex, c, startLocIndicesByPlayerNum.get(otherPlayerNum), "MAP_LOC_PRIO_HIGH")));
                     }
-
-                    c++;
                 }
             }
 
@@ -3881,7 +3933,7 @@ public class W3I {
                 Set<Integer> enemyLowNums = player.getEnemyLowPrioPlayerNums();
                 Set<Integer> enemyHighNums = player.getEnemyHighPrioPlayerNums();
 
-                stmts.add(Statement.create(String.format("call SetEnemyStartLocPrioCount(%d, %d)", playerNum, enemyLowNums.size() + enemyHighNums.size())));
+                stmts.add(Statement.create(String.format("call SetEnemyStartLocPrioCount(%d, %d)", startLocIndex, enemyLowNums.size() + enemyHighNums.size())));
 
                 int c = 0;
 
@@ -3891,14 +3943,14 @@ public class W3I {
                     if (playerNum == otherPlayerNum) continue;
 
                     if (enemyLowNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_LOW")));
+                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", startLocIndex, c, startLocIndicesByPlayerNum.get(otherPlayerNum), "MAP_LOC_PRIO_LOW")));
+                        c++;
                     } else if (enemyHighNums.contains(otherPlayerNum)) {
-                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                        stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", startLocIndex, c, startLocIndicesByPlayerNum.get(otherPlayerNum), "MAP_LOC_PRIO_HIGH")));
+                        c++;
                     } else {
-                        //stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", playerNum, c, otherPlayerNum, "MAP_LOC_PRIO_HIGH")));
+                        //stmts.add(Statement.create(String.format("call SetEnemyStartLocPrio(%d, %d, %d, %s)", startLocIndex, c, startLocIndicesByPlayerNum.get(otherPlayerNum), "MAP_LOC_PRIO_HIGH")));
                     }
-
-                    c++;
                 }
             }
         }
@@ -3914,6 +3966,7 @@ public class W3I {
         FuncDecl funcDecl = new FuncDecl(false, FuncDecl.CONFIG_NAME, new ArrayList<>(), null);
 
         List<Statement> stmts = new ArrayList<>();
+        Map<Integer, Integer> startLocIndicesByPlayerNum = getStartLocIndicesByPlayerNum();
 
         Function<String, String> enquote = s -> "\"" + s + "\"";
 
@@ -3925,12 +3978,12 @@ public class W3I {
         }
 
         stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
-        stmts.add(Statement.create("call SetTeams(" + getForces().size() + ")"));
+        stmts.add(Statement.create("call SetTeams(" + getPlayers().size() + ")"));
 
         stmts.add(Statement.create("call SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)"));
 
         for (Player player : getPlayers()) {
-            stmts.add(Statement.create("call DefineStartLocation(" + player.getNum() + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
+            stmts.add(Statement.create("call DefineStartLocation(" + startLocIndicesByPlayerNum.get(player.getNum()) + ", " + player.getStartPos().getX() + ", " + player.getStartPos().getY() + ")"));
         }
 
         stmts.add(Statement.create("call " + FuncDecl.INIT_CUSTOM_PLAYER_SLOTS + "()"));
@@ -3976,7 +4029,7 @@ public class W3I {
     }
 
     private static final Pattern funcStartPattern = Pattern.compile("^\\s*function\\s+(\\w+)");
-    private static final Pattern funcStartPatternLua = Pattern.compile("^\\s*function\\(");
+    private static final Pattern funcStartPatternLua = Pattern.compile("^\\s*function\\s+(\\w+)\\s*\\(");
     private static final Pattern funcEndPatternLua = Pattern.compile("^\\s*end");
     private static final Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
 
