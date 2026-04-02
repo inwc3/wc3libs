@@ -201,6 +201,81 @@ public class BLPTest extends Wc3LibTest {
         Assert.assertEquals(out.toByteArray(), bytes);
     }
 
+    // --- fake_alpha.blp ---
+    // BLP1 JPEG with alphaBitsRaw=7. The header value is invalid and must be ignored. This file
+    // still carries a fourth decoded JPEG band, so wc3libs should preserve transparency by
+    // trusting the raster instead of the broken header.
+
+    @Test
+    public void testFakeAlphaBlpDimensions() throws IOException, UnsupportedFormatException {
+        BLP blp = new BLP(getFile("images/fake_alpha.blp"));
+        BufferedImage image = blp.getBufImg();
+        Assert.assertEquals(image.getWidth(), 256);
+        Assert.assertEquals(image.getHeight(), 128);
+    }
+
+    @Test
+    public void testFakeAlphaBlpUsesRasterAlpha() throws IOException, UnsupportedFormatException {
+        BLP blp = new BLP(getFile("images/fake_alpha.blp"));
+        BufferedImage image = blp.getBufImg();
+        int w = image.getWidth();
+        int h = image.getHeight();
+
+        int[][] probes = {{0,0},{w-1,0},{0,h-1},{w-1,h-1},{w/2,h/2},{w/4,h/4},{3*w/4,3*h/4}};
+        boolean foundTransparentPixel = false;
+        for (int[] p : probes) {
+            int alpha = (image.getRGB(p[0], p[1]) >>> 24) & 0xFF;
+            if (alpha < 255) {
+                foundTransparentPixel = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundTransparentPixel, "fake_alpha should preserve transparency from the decoded JPEG raster");
+    }
+
+    @Test
+    public void testBinaryRoundtripFakeAlpha() throws IOException, UnsupportedFormatException {
+        byte[] bytes = Files.readAllBytes(getFile("images/fake_alpha.blp").toPath());
+        BLP blp = new BLP(new ByteArrayInputStream(bytes));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        blp.write(out);
+        Assert.assertEquals(out.toByteArray(), bytes);
+    }
+
+    // --- no_alpha.blp ---
+    // BLP1 JPEG with alphaBitsRaw=0 (explicit no-alpha). All pixels should be opaque.
+
+    @Test
+    public void testNoAlphaBlpDimensions() throws IOException, UnsupportedFormatException {
+        BLP blp = new BLP(getFile("images/no_alpha.blp"));
+        BufferedImage image = blp.getBufImg();
+        Assert.assertEquals(image.getWidth(), 771);
+        Assert.assertEquals(image.getHeight(), 133);
+    }
+
+    @Test
+    public void testNoAlphaBlpAllPixelsOpaque() throws IOException, UnsupportedFormatException {
+        BLP blp = new BLP(getFile("images/no_alpha.blp"));
+        BufferedImage image = blp.getBufImg();
+        int w = image.getWidth();
+        int h = image.getHeight();
+        int[][] probes = {{0,0},{w-1,0},{0,h-1},{w-1,h-1},{w/2,h/2},{w/4,h/4},{3*w/4,3*h/4}};
+        for (int[] p : probes) {
+            int alpha = (image.getRGB(p[0], p[1]) >>> 24) & 0xFF;
+            Assert.assertEquals(alpha, 255,
+                    String.format("no_alpha pixel (%d,%d) should be opaque", p[0], p[1]));
+        }
+    }
+
+    @Test
+    public void testBinaryRoundtripNoAlpha() throws IOException, UnsupportedFormatException {
+        byte[] bytes = Files.readAllBytes(getFile("images/no_alpha.blp").toPath());
+        BLP blp = new BLP(new ByteArrayInputStream(bytes));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        blp.write(out);
+        Assert.assertEquals(out.toByteArray(), bytes);
+    }
+
     @Test
     public void testBlpExportInspectableImages() throws IOException, UnsupportedFormatException {
         Path exportDir = Paths.get("build", "test-artifacts", "blp-exports");

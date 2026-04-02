@@ -299,15 +299,24 @@ public class BLP extends Wc3RasterImg {
 				hasMipmaps = reader.readUByte() != 0;
 			} else {
 				int alphaBitsRaw = reader.readInt();
-				int normalizedRawBits = alphaBitsRaw;
-				if ((alphaBitsRaw != 0) && (alphaBitsRaw != 1) && (alphaBitsRaw != 4) && (alphaBitsRaw != 8)) {
-					if ((alphaBitsRaw & 0x8) > 0) {
-						log.warn("BLP1 alphaBits {} appears flag-encoded, treating as 8-bit alpha", alphaBitsRaw);
-						normalizedRawBits = 8;
+				if (type == CONTENT_JPEG) {
+					// Some BLP1 JPEG exporters write garbage in alphaBits (for example 7 instead of 8).
+					// Defer alpha presence to the decoded JPEG raster and keep the raw field only for
+					// diagnostics and binary round-tripping.
+					if (alphaBitsRaw != 0 && alphaBitsRaw != 8) {
+						log.warn("BLP1 JPEG alphaBits {} is non-standard; deferring alpha detection to JPEG bands", alphaBitsRaw);
 					}
+					alphaBits = (alphaBitsRaw == 8) ? 8 : 0;
+				} else {
+					int normalizedRawBits = alphaBitsRaw;
+					if ((alphaBitsRaw != 0) && (alphaBitsRaw != 1) && (alphaBitsRaw != 4) && (alphaBitsRaw != 8)) {
+						if ((alphaBitsRaw & 0x8) > 0) {
+							log.warn("BLP1 alphaBits {} appears flag-encoded, treating as 8-bit alpha", alphaBitsRaw);
+							normalizedRawBits = 8;
+						}
+					}
+					alphaBits = normalizeAlphaBits(normalizedRawBits, type);
 				}
-
-				alphaBits = normalizeAlphaBits(normalizedRawBits, type);
 
 				hasAlpha = alphaBits > 0;
 			}
@@ -392,6 +401,15 @@ public class BLP extends Wc3RasterImg {
 				}
 
 				final int bands = raster.getNumBands();
+				final boolean rasterHasAlpha = bands >= 4;
+				if ((version < 2) && (hasAlpha != rasterHasAlpha)) {
+					log.warn("BLP1 JPEG header alpha={} disagrees with decoded raster bands={}, using raster alpha",
+							hasAlpha, bands);
+				}
+				if (version < 2) {
+					hasAlpha = rasterHasAlpha;
+					alphaBits = rasterHasAlpha ? 8 : 0;
+				}
 				final int[] px = new int[Math.max(4, bands)];
 
 				for (int x = 0; x < width; x++) {
@@ -406,7 +424,7 @@ public class BLP extends Wc3RasterImg {
 						int blue = px[0] & 0xFF;
 						int green = bands >= 2 ? (px[1] & 0xFF) : blue;
 						int red = bands >= 3 ? (px[2] & 0xFF) : green;
-						int alpha = (alphaBits == 8 && bands >= 4) ? (px[3] & 0xFF) : 255;
+						int alpha = rasterHasAlpha ? (px[3] & 0xFF) : 255;
 
 						java.awt.Color color = new java.awt.Color(red, green, blue, alpha);
 
