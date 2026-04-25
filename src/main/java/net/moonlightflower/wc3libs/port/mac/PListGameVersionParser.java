@@ -11,7 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 public class PListGameVersionParser {
-    public static File PLIST_FILE = new File("/Applications/Warcraft III/x86_64/Warcraft III.app/Contents/Info.plist");
+    public static File PLIST_FILE = new File("/Applications/Warcraft III/_retail_/x86_64/Warcraft III.app/Contents/Info.plist");
 
     public static GameVersion get(@Nonnull File file) throws Exception {
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
@@ -25,6 +25,16 @@ public class PListGameVersionParser {
         for (int i = 0; i < keyList.getLength(); i++) {
             Node key = keyList.item(i);
 
+            if (key.getTextContent().equals("CFBundleVersion")) {
+                Node val = key.getNextSibling().getNextSibling();
+
+                return new GameVersion(val.getTextContent());
+            }
+        }
+
+        for (int i = 0; i < keyList.getLength(); i++) {
+            Node key = keyList.item(i);
+
             if (key.getTextContent().equals("BlizzardFileVersion")) {
                 Node val = key.getNextSibling().getNextSibling();
 
@@ -32,7 +42,7 @@ public class PListGameVersionParser {
             }
         }
 
-        throw new Exception("key BlizzardFileVersion not found");
+        throw new Exception("key CFBundleVersion not found");
     }
 
     public static GameVersion get() throws Exception {
