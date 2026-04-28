@@ -91,10 +91,6 @@ public class BLP extends Wc3RasterImg {
 		if (value <= 0) throw new UnsupportedFormatException(String.format("%s %d is invalid", fieldName, value));
 		if (value > MAX_DIMENSION) throw new UnsupportedFormatException(String.format("%s %d exceeds max %d", fieldName, value, MAX_DIMENSION));
 
-		if ((version == 0) && (value > 512)) {
-			log.debug("{} {} exceeds BLP0 compatibility limit of 512", fieldName, value);
-		}
-
 		return value;
 	}
 
@@ -102,24 +98,16 @@ public class BLP extends Wc3RasterImg {
 		if (contentType == CONTENT_JPEG) {
 			if ((rawAlphaBits == 0) || (rawAlphaBits == 8)) return rawAlphaBits;
 
-			log.debug("invalid alphaBits {} for JPEG content, treating as 0", rawAlphaBits);
-
 			return 0;
 		}
 
 		if ((rawAlphaBits == 0) || (rawAlphaBits == 1) || (rawAlphaBits == 4) || (rawAlphaBits == 8)) return rawAlphaBits;
-
-		log.debug("invalid alphaBits {} for direct content, treating as 0", rawAlphaBits);
 
 		return 0;
 	}
 
 	private static byte[] readPadded(@Nonnull Reader reader, int size, @Nonnull String fieldName) throws IOException {
 		int available = Math.min(size, reader.remaining());
-
-		if (available < size) {
-			log.debug("{} truncated (expected {}, got {})", fieldName, size, available);
-		}
 
 		byte[] result = new byte[size];
 		byte[] readBytes = reader.read(available);
@@ -143,32 +131,20 @@ public class BLP extends Wc3RasterImg {
 		int size = mipmapSizes[mipmapLevel];
 
 		if ((offset <= 0) || (size <= 0)) {
-			log.debug"mipmap {} has invalid location offset={} size={}", mipmapLevel, offset, size);
 			return new byte[0];
 		}
 
 		if (offset >= reader.size()) {
-			log.debug"mipmap {} offset {} is past EOF {}", mipmapLevel, offset, reader.size());
 			return new byte[0];
 		}
 
 		int available = Math.min(size, reader.size() - offset);
-
-		if (available < size) {
-			log.debug"mipmap {} truncated at EOF (expected {}, got {})", mipmapLevel, size, available);
-		}
 
 		return reader.copy(offset, available);
 	}
 
 	private static byte[] resizeChunk(@Nonnull byte[] src, int expectedSize, @Nonnull String label) {
 		if (src.length == expectedSize) return src;
-
-		if (src.length < expectedSize) {
-			log.debug"{} smaller than expected (expected {}, got {}), padding with zeros", label, expectedSize, src.length);
-		} else {
-			log.debug"{} larger than expected (expected {}, got {}), truncating", label, expectedSize, src.length);
-		}
 
 		return Arrays.copyOf(src, expectedSize);
 	}
@@ -265,7 +241,6 @@ public class BLP extends Wc3RasterImg {
 			 * 1 - true color
 			 */
 			if ((type != CONTENT_JPEG) && (type != CONTENT_DIRECT)) {
-				log.debug"invalid content type {}, defaulting to JPEG", typeRaw);
 				type = CONTENT_JPEG;
 			}
 
@@ -276,14 +251,6 @@ public class BLP extends Wc3RasterImg {
 			
 			if (version >= 2) {
 				pixmapType = reader.readUByte();
-				/*
-				 * 1 - indexed
-				 * 2 - compressed sample
-				 * 3 - BGRA
-				 */
-				if ((pixmapType < 1) || (pixmapType > 3)) {
-					log.debug"invalid pixmapType {} for BLP2, continuing", pixmapType);
-				}
 
 				alphaBits = normalizeAlphaBits(reader.readUByte(), type);
 				/*
@@ -303,15 +270,11 @@ public class BLP extends Wc3RasterImg {
 					// Some BLP1 JPEG exporters write garbage in alphaBits (for example 7 instead of 8).
 					// Defer alpha presence to the decoded JPEG raster and keep the raw field only for
 					// diagnostics and binary round-tripping.
-					if (alphaBitsRaw != 0 && alphaBitsRaw != 8) {
-						log.debug"BLP1 JPEG alphaBits {} is non-standard; deferring alpha detection to JPEG bands", alphaBitsRaw);
-					}
 					alphaBits = (alphaBitsRaw == 8) ? 8 : 0;
 				} else {
 					int normalizedRawBits = alphaBitsRaw;
 					if ((alphaBitsRaw != 0) && (alphaBitsRaw != 1) && (alphaBitsRaw != 4) && (alphaBitsRaw != 8)) {
 						if ((alphaBitsRaw & 0x8) > 0) {
-							log.debug"BLP1 alphaBits {} appears flag-encoded, treating as 8-bit alpha", alphaBitsRaw);
 							normalizedRawBits = 8;
 						}
 					}
@@ -362,9 +325,6 @@ public class BLP extends Wc3RasterImg {
 				
 				int headerSize = reader.readInt();
 				if (headerSize < 0) throw new UnsupportedFormatException(String.format("invalid jpegHeaderSize %d", headerSize));
-				if (headerSize > 0x270) {
-					log.debug"jpegHeaderSize {} exceeds recommended max of 624 bytes", headerSize);
-				}
 				byte[] headerBytes = readPadded(reader, headerSize, "jpegHeaderChunk");
 				
 				byte[] mipmapData0 = getMipmapChunk(reader, mipmapOffsets, mipmapSizes, 0);
@@ -395,17 +355,9 @@ public class BLP extends Wc3RasterImg {
 				int rasterWidth = raster.getWidth();
 				int rasterHeight = raster.getHeight();
 
-				if ((rasterWidth != width) || (rasterHeight != height)) {
-					log.debug"JPEG mipmap 0 dimensions {}x{} differ from header {}x{}, cropping/padding to header dimensions",
-							rasterWidth, rasterHeight, width, height);
-				}
 
 				final int bands = raster.getNumBands();
 				final boolean rasterHasAlpha = bands >= 4;
-				if ((version < 2) && (hasAlpha != rasterHasAlpha)) {
-					log.debug"BLP1 JPEG header alpha={} disagrees with decoded raster bands={}, using raster alpha",
-							hasAlpha, bands);
-				}
 				if (version < 2) {
 					hasAlpha = rasterHasAlpha;
 					alphaBits = rasterHasAlpha ? 8 : 0;
