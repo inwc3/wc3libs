@@ -25,7 +25,8 @@ public class GameExe {
             }
         } catch (Exception e) {
             log.warn("Falling back to WMIC due to {}", e.getMessage());
-            e.printStackTrace();
+            // Keep the user-facing log short; the full PE-parser trace is only useful with debug logging enabled.
+            log.debug("PE version extraction failed for '{}'", exePath, e);
         }
 
         String version;
