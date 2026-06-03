@@ -8,7 +8,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WinGameExeFinder extends GameExeFinder {
     public final static Path WAR3_EXE_PATH = Paths.get("war3.exe");
@@ -44,64 +45,62 @@ public class WinGameExeFinder extends GameExeFinder {
     @Nonnull
     public static File fromDir(
             @Nonnull File dir, @Nonnull GameVersion version, @Nonnull Orient.WinArch arch) throws NotFoundException {
+        List<Path> candidates = new ArrayList<>();
         if (version.compareTo(GameVersion.VERSION_1_31) >= 0) {
-            switch (arch) {
-                case X86:
-                    File inDirPathX86 = new File(dir, X86_EXE_PATH_131.toString());
-
-                    if (inDirPathX86.exists()) {
-                        return inDirPathX86;
-                    }
-                case X64:
-                    File inDirPathX64 = new File(dir, X64_EXE_PATH_131.toString());
-
-                    if (inDirPathX64.exists()) {
-                        return inDirPathX64;
-                    }
-
-                    return inDirPathX64;
+            // 1.31+: split per-architecture binaries. 1.32+ (Reforged) moves them under _retail_. Prefer the
+            // current architecture, then the 1.32 layout over the 1.31 layout, with the root exe as a last resort.
+            if (arch == Orient.WinArch.X86) {
+                candidates.add(X86_EXE_PATH_132);
+                candidates.add(X86_EXE_PATH_131);
+                candidates.add(X64_EXE_PATH_132);
+                candidates.add(X64_EXE_PATH_131);
+            } else {
+                candidates.add(X64_EXE_PATH_132);
+                candidates.add(X64_EXE_PATH_131);
+                candidates.add(X86_EXE_PATH_132);
+                candidates.add(X86_EXE_PATH_131);
             }
+            candidates.add(WARCRAFT_III_EXE_PATH);
         } else if (version.compareTo(GameVersion.VERSION_1_29) >= 0) {
-            File inDirPath = new File(dir, WARCRAFT_III_EXE_PATH.toString());
-
-            if (inDirPath.exists()) {
-                return inDirPath;
-            }
+            // 1.29 / 1.30: a single "Warcraft III.exe" at the install root.
+            candidates.add(WARCRAFT_III_EXE_PATH);
         }
+        // Classic / legacy clients.
+        candidates.add(WAR3_EXE_PATH);
+        candidates.add(FROZEN_THRONE_EXE_PATH);
 
-        File inDirPath = new File(dir, WAR3_EXE_PATH.toString());
-
-        if (inDirPath.exists()) {
-            return inDirPath;
-        }
-
-        throw new NotFoundException();
+        return candidates.stream()
+            .map(relativePath -> dir.toPath().resolve(relativePath))
+            .filter(Files::exists)
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(
+                "no Warcraft III executable for version " + version + " in " + dir.getAbsolutePath()))
+            .toFile();
     }
 
     @Nonnull
     public static File fromDirIgnoreVersion(@Nonnull File dir, @Nonnull Orient.WinArch arch) throws NotFoundException {
-        switch (arch) {
-            case X86:
-                File inDirPathX86 = new File(dir, X86_EXE_PATH_131.toString());
-
-                if (inDirPathX86.exists()) return inDirPathX86;
-
-                break;
-            case X64:
-                File inDirPathX64 = new File(dir, X64_EXE_PATH_131.toString());
-
-                if (inDirPathX64.exists()) return inDirPathX64;
-
-                break;
+        // Prefer the real, launchable game binary over the install-root "Warcraft III.exe": on Reforged that root
+        // file is only a launcher stub which has no clean version resource and cannot be started directly
+        // (CreateProcess error 216). Within the real binaries, prefer the current architecture, then 1.32 (_retail_)
+        // over the 1.31 layout. Classic/legacy install-root executables come last as a fallback.
+        List<Path> candidates = new ArrayList<>();
+        if (arch == Orient.WinArch.X86) {
+            candidates.add(X86_EXE_PATH_132);
+            candidates.add(X86_EXE_PATH_131);
+            candidates.add(X64_EXE_PATH_132);
+            candidates.add(X64_EXE_PATH_131);
+        } else {
+            candidates.add(X64_EXE_PATH_132);
+            candidates.add(X64_EXE_PATH_131);
+            candidates.add(X86_EXE_PATH_132);
+            candidates.add(X86_EXE_PATH_131);
         }
+        candidates.add(WARCRAFT_III_EXE_PATH);
+        candidates.add(FROZEN_THRONE_EXE_PATH);
+        candidates.add(WAR3_EXE_PATH);
 
-        return Stream.of(WARCRAFT_III_EXE_PATH,
-                FROZEN_THRONE_EXE_PATH,
-                WAR3_EXE_PATH,
-                X86_EXE_PATH_131,
-                X64_EXE_PATH_131,
-                X86_EXE_PATH_132,
-                X64_EXE_PATH_132)
+        return candidates.stream()
             .map(relativePath -> dir.toPath().resolve(relativePath))
             .filter(Files::exists)
             .findFirst()

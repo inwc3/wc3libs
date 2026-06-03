@@ -41,7 +41,17 @@ public class ExeVersionTest extends Wc3LibTest {
         if (!Orient.isWindowsSystem()) throw new SkipException("Skipping WMIC Version extractor test, not running Windows");
 
         String peTempPath = peTempFile.toPath().toString();
-        String peVersionWmic = ExeVersionWmic.getVersion(peTempPath);
+        String peVersionWmic;
+        try {
+            peVersionWmic = ExeVersionWmic.getVersion(peTempPath);
+        } catch (VersionExtractionException e) {
+            // WMIC was deprecated and removed from recent Windows 11 builds; it is no longer part of the version
+            // detection path. Skip rather than fail when the binary is unavailable.
+            if (e.getMessage() != null && e.getMessage().contains("Failed to start wmic")) {
+                throw new SkipException("Skipping WMIC test: wmic is not available on this system");
+            }
+            throw e;
+        }
         assertEquals(peVersionWmic, dotnetVersionExpected);
     }
 

@@ -1,6 +1,5 @@
 package net.moonlightflower.wc3libs.port;
 
-import dorkbox.peParser.PE;
 import net.moonlightflower.wc3libs.bin.GameExe;
 import net.moonlightflower.wc3libs.port.mac.MacGameExeFinder;
 import net.moonlightflower.wc3libs.port.mac.MacGameVersionFinder;

@@ -8,7 +8,7 @@ import java.io.File;
 
 public class WinDefaultGameDirFinder extends GameDirFinder {
     public final static File WIN_DEFAULT_PATH = new File("C:/Program Files/Warcraft III");
-    public final static File WIN_DEFAULT_X86_PATH = new File("C:/Program Files (86)/Warcraft III");
+    public final static File WIN_DEFAULT_X86_PATH = new File("C:/Program Files (x86)/Warcraft III");
 
     @Nonnull
     @Override
