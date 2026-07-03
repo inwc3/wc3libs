@@ -30,7 +30,7 @@ dependencies {
 
 
     // Libs
-    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '29b55f2c32'
+    implementation group: 'com.github.inwc3', name: 'jmpq3', version: 'e28f6999c0'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     implementation group: 'com.twelvemonkeys.imageio', name: 'imageio-jpeg', version: '3.13.1'
     implementation 'com.jcraft:jzlib:1.1.3'
