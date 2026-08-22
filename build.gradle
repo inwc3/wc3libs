@@ -63,10 +63,6 @@ dependencies {
 
 test {
     useTestNG()
-    // JMPQ3 reads archives through memory-mapped segments (FFM), which is a
-    // restricted operation; without this every archive the tests open logs a
-    // warning.
-    jvmArgs '--enable-native-access=ALL-UNNAMED'
     testLogging {
         events 'failed'
         exceptionFormat 'full'
