@@ -305,7 +305,13 @@ public class W3I {
         _flags.setFlag(flag, val);
     }
 
-    private Tileset _tileset;
+    /**
+     * Every format version writes a tileset, and this getter promises one, but
+     * nothing gave a fresh {@code W3I} its value: writing one straight after
+     * constructing it failed with a null dereference instead. Lordaeron Summer
+     * is what the World Editor starts a new map with.
+     */
+    private Tileset _tileset = Tileset.LORDAERON_SUMMER;
 
     @Nonnull
     public Tileset getTileset() {
@@ -518,7 +524,13 @@ public class W3I {
         }
     }
 
-    private LoadingScreen _loadingScreen;
+    /**
+     * A map always records a loading screen -- an unset one is index -1 with
+     * empty strings -- and every writer dereferences this without checking, so
+     * a fresh {@code W3I} could not be written. It starts out as that unset
+     * record rather than as null.
+     */
+    private LoadingScreen _loadingScreen = new LoadingScreen(null, null, null, null, -1);
 
     public LoadingScreen getLoadingScreen() {
         return _loadingScreen;

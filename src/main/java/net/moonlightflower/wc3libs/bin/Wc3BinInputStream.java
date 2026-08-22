@@ -181,9 +181,18 @@ public class Wc3BinInputStream extends BinInputStream {
 		}
 	}
 
+	/**
+	 * Reads four bytes as an unsigned 32-bit value.
+	 * <p>
+	 * The mask used to be the {@code int} literal {@code 0xFFFFFFFF}, so the
+	 * whole expression stayed an {@code int} and was sign-extended on the way to
+	 * {@code long}: every value with its top bit set came back negative, which
+	 * is precisely what this method exists to avoid. A force whose player mask
+	 * included the last player, for instance, was read as a mask with all of
+	 * bits 31 to 63 set.
+	 */
 	public long readUInt32() throws StreamException {
-		//noinspection PointlessBitwiseExpression
-		return (readInt32() & 0xFFFFFFFF);
+		return readInt32() & 0xFFFFFFFFL;
 	}
 
 	@Nonnull
