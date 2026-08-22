@@ -329,8 +329,11 @@ public class JMpqPort extends MpqPort {
 			OutputStream outStream = fileExport.getOutStream();
 
 			if (outStream != null) {
+				// The stream belongs to the caller, who may be writing several
+				// exports into one destination, so it is written to and flushed
+				// but never closed.
 				outStream.write(bytes);
-				outStream.close();
+				outStream.flush();
 			}
 
 			result.addExport(mpqFile, new FileExport(inFile, outStream), bytes);

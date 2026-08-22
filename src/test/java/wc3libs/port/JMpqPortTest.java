@@ -8,6 +8,7 @@ import wc3libs.misc.Wc3LibTest;
 
 import javax.annotation.Nonnull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -121,6 +122,58 @@ public class JMpqPortTest extends Wc3LibTest {
 
 			assertTrue(after.stream().anyMatch(name::equalsIgnoreCase), "lost " + name + " on rebuild");
 		}
+	}
+
+	/**
+	 * The stream belongs to the caller, who may be writing several exports into
+	 * one destination, so the port must not close it.
+	 */
+	@Test
+	public void doesNotCloseACallerSuppliedStream() throws Exception {
+		Path map = copyToTemp(LISTED_MAP, "streams.w3x");
+
+		class CountingStream extends ByteArrayOutputStream {
+			int closes;
+
+			@Override
+			public void close() {
+				closes++;
+			}
+		}
+
+		CountingStream first = new CountingStream();
+		CountingStream second = new CountingStream();
+
+		MpqPort.Out out = new JMpqPort.Out();
+		out.add(new File("war3map.w3i"), first);
+		out.add(new File("war3map.w3e"), second);
+
+		out.commit(map.toFile());
+
+		assertEquals(first.closes, 0, "the port closed the caller's stream");
+		assertEquals(second.closes, 0, "the port closed the caller's stream");
+		assertTrue(first.size() > 0, "nothing was written to the first stream");
+		assertTrue(second.size() > 0, "nothing was written to the second stream");
+	}
+
+	/** One destination taking several exports must receive all of them. */
+	@Test
+	public void writesSeveralExportsIntoOneStream() throws Exception {
+		Path map = copyToTemp(LISTED_MAP, "shared-stream.w3x");
+
+		ByteArrayOutputStream shared = new ByteArrayOutputStream();
+
+		MpqPort.Out out = new JMpqPort.Out();
+		out.add(new File("war3map.w3i"), shared);
+		out.add(new File("war3map.w3e"), shared);
+
+		MpqPort.Out.Result result = out.commit(map.toFile());
+
+		int w3iSize = result.getInputStream(new File("war3map.w3i")).readAllBytes().length;
+		int w3eSize = result.getInputStream(new File("war3map.w3e")).readAllBytes().length;
+
+		assertEquals(shared.size(), w3iSize + w3eSize,
+			"a closed stream would have swallowed everything after the first export");
 	}
 
 	@Test
