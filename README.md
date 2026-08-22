@@ -14,7 +14,16 @@ With Wc3libs we aim to offer a feature-complete, easy, plug & play solution for 
 | 1.2.x | 17 |
 
 The Java 25 baseline comes from [JMPQ3](https://github.com/inwc3/JMPQ3) 2.0,
-which wc3libs uses to read and write MPQ archives.
+which wc3libs uses to read and write MPQ archives. What took JMPQ3 past Java 21
+was adopting the foreign function and memory API in its read layer: an archive
+is mapped into an `Arena`-scoped `MemorySegment` rather than a
+`MappedByteBuffer`, so the mapping is released the moment the archive is closed
+instead of whenever the garbage collector gets round to it. That is what makes
+rebuilding a map in place work on Windows, where the old mapping kept the file
+locked long after `close()` had returned.
+
+Nothing here calls a restricted method, so no `--enable-native-access` flag is
+needed to read archives.
 
 # Usage
 
