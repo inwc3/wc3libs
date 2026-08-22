@@ -14,8 +14,8 @@ public class AttributeType extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof AttributeType)
-			return equals((AttributeType) other);
+		if (other instanceof AttributeType attributeType)
+			return equals(attributeType);
 
 		return super.equals(other);
 	}

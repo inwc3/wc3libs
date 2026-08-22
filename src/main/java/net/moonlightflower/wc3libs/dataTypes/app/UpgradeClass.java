@@ -15,8 +15,8 @@ public class UpgradeClass extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof UpgradeClass)
-			return equals((UpgradeClass) other);
+		if (other instanceof UpgradeClass upgradeClass)
+			return equals(upgradeClass);
 
 		return super.equals(other);
 	}

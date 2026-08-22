@@ -17,33 +17,25 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	public byte[] readBytes(int size) throws StreamException {
 		try {
 			byte[] vals = new byte[size];
-			
-			for (int i = 0; i < vals.length; i++) {
-				vals[i] = _bytes.get(_pos++);
-			}
-			
+
+			_bytes.copyInto(_pos, vals, 0, size);
+
+			_pos += size;
+
 			return vals;
-		} catch (IndexOutOfBoundsException e) {
-			throw new StreamException(this, e.getMessage());
+		} catch (IndexOutOfBoundsException | NegativeArraySizeException e) {
+			throw new StreamException(this, String.valueOf(e.getMessage()));
 		}
 	}
 
 	public byte[] readBytes(int size, String label) throws StreamException {
-		try {
-			byte[] vals = new byte[size];
+		logBegin();
 
-			logBegin();
+		byte[] vals = readBytes(size);
 
-			for (int i = 0; i < vals.length; i++) {
-				vals[i] = _bytes.get(_pos++);
-			}
+		log("bytes", label, vals);
 
-			log("bytes", label, vals);
-
-			return vals;
-		} catch (IndexOutOfBoundsException e) {
-			throw new StreamException(this);
-		}
+		return vals;
 	}
 
 	public void rewind() {
@@ -62,7 +54,7 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	}
 
 	public void read(@Nonnull InputStream inStream) throws IOException {
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[8192];
 		int len;
 
 		while ((len = inStream.read(buf, 0, buf.length)) != -1) {
@@ -71,43 +63,25 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	}
 
 	public void read(@Nonnull File file) throws IOException {
-		InputStream inStream = Files.newInputStream(file.toPath());
-
-		read(inStream);
-
-		inStream.close();
+		try (InputStream inStream = Files.newInputStream(file.toPath())) {
+			read(inStream);
+		}
 	}
 
 	@Nonnull
 	public byte[] writeToByteArray() {
-		ByteList bytes = _bytes;
-
-		if (bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + bytes.size());
-
-		byte[] buf = new byte[(int) bytes.size()];
-
-		for (int i = 0; i < bytes.size(); i++) {
-			buf[i] = bytes.get(i);
-		}
-
-		return buf;
+		return _bytes.toArray();
 	}
 
 	protected String readNullTerminatedStringUtf8() throws StreamException {
 		try {
 			final long startPos = getPos();
-			long cutPos = startPos;
-
-			while ((cutPos < size()) && (get(cutPos) != 0)) {
-				cutPos += 1;
-			}
+			final long cutPos = _bytes.indexOfZero(startPos);
 
 			final int len = Math.toIntExact(cutPos - startPos);
 			final byte[] retBytes = new byte[len];
 
-			for (int i = 0; i < len; i++) {
-				retBytes[i] = get(startPos + i);
-			}
+			_bytes.copyInto(startPos, retBytes, 0, len);
 
 			// Consume terminating zero when present, otherwise move to EOF.
 			setPos((cutPos < size()) ? (cutPos + 1) : cutPos);

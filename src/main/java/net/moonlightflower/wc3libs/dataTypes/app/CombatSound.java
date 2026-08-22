@@ -24,8 +24,8 @@ public class CombatSound extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof CombatTarget)
-			return equals((CombatTarget) other);
+		if (other instanceof CombatTarget combatTarget)
+			return equals(combatTarget);
 
 		return super.equals(other);
 	}

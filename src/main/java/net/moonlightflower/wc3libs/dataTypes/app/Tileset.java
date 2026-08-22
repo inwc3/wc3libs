@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,10 +45,20 @@ public class Tileset extends DataType {
 		return _char;
 	}
 
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getChar());
+	}
+
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Tileset)
-			return equals((Tileset) other);
+		if (other instanceof Tileset tileset)
+			return equals(tileset);
 
 		return super.equals(other);
 	}

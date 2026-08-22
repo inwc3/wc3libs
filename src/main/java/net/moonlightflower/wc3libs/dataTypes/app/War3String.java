@@ -3,6 +3,8 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.Stringable;
 
+import java.util.Objects;
+
 public class War3String extends DataType implements Stringable {
 	private static final War3String EMPTY_STRING = new War3String("");
 
@@ -31,21 +33,29 @@ public class War3String extends DataType implements Stringable {
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		return Objects.hashCode(getVal());
 	}
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof War3String)
-			return equals((War3String) other);
+		if (other instanceof War3String war3String)
+			return equals(war3String);
 		if (other instanceof String)
 			return equals(War3String.valueOf(other));
 
 		return super.equals(other);
 	}
 
+	/**
+	 * Compares the strings.
+	 * <p>
+	 * This used to compare hash codes, which for strings is a 32-bit digest of
+	 * the value rather than the value: any two colliding strings compared equal.
+	 * These are used as object and field identifiers throughout the library, so
+	 * a collision silently merged two unrelated entries.
+	 */
 	public boolean equals(War3String other) {
-		return (hashCode() == other.hashCode());
+		return Objects.equals(getVal(), other.getVal());
 	}
 
 	@Override

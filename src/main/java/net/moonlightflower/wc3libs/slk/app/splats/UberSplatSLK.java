@@ -25,7 +25,7 @@ public class UberSplatSLK extends ObjSLK<UberSplatSLK, UberSplatId, UberSplatSLK
 
 	public static class State<T extends DataType> extends ObjSLK.State<T> {
 		public static Collection<State> values() {
-			return (Collection<State>) State.values(State.class);
+			return State.values(State.class);
 		}
 
 		public final static State<UberSplatId> OBJ_ID = new State<>("Name", UberSplatId.class);

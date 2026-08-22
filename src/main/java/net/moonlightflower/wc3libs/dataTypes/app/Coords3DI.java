@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class Coords3DI {
 	private final War3Int _x;
@@ -22,18 +23,33 @@ public class Coords3DI {
 		return _z;
 	}
 
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(getX(), getY(), getZ());
+	}
+
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords3DI)
-			return equals((Coords3DI) other);
+		if (other instanceof Coords3DI coords3DI)
+			return equals(coords3DI);
 
 		return super.equals(other);
 	}
 
+	/**
+	 * The components are {@link War3Int} objects, not ints. Comparing them with
+	 * {@code ==} compared references, and each coordinate holds its own, so no
+	 * two separately built instances were ever equal.
+	 */
 	public boolean equals(Coords3DI other) {
-		return getX() == other.getX() &&
-				getY() == other.getY() &&
-				getZ() == other.getZ();
+		return Objects.equals(getX(), other.getX()) &&
+				Objects.equals(getY(), other.getY()) &&
+				Objects.equals(getZ(), other.getZ());
 	}
 
 	public Coords3DI(@Nonnull War3Int x, @Nonnull War3Int y, @Nonnull War3Int z) {

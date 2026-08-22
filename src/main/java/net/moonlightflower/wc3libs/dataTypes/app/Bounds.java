@@ -4,6 +4,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.misc.Size;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class Bounds extends DataType {
 	private Coords2DF _center;
@@ -36,10 +37,20 @@ public class Bounds extends DataType {
 		return (int) (getCenter().getY().toFloat() + getSize().getY() / 2F);
 	}
 	
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(getCenter(), getSize());
+	}
+
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Bounds)
-			return equals((Bounds) other);
+		if (other instanceof Bounds bounds)
+			return equals(bounds);
 		
 		return super.equals(other);
 	}
@@ -82,8 +93,8 @@ public class Bounds extends DataType {
 	}
 
 	public static Bounds decodeStatic(Object val) {
-		if (val instanceof Bounds)
-			return valueOf(((Bounds) val).getMinX(), ((Bounds) val).getMaxX(), ((Bounds) val).getMinY(), ((Bounds) val).getMaxY());
+		if (val instanceof Bounds bounds)
+			return valueOf(bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY());
 		
 		return null;
 	}

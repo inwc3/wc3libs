@@ -14,8 +14,8 @@ public class DestructableClass extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof DestructableClass)
-			return equals((DestructableClass) other);
+		if (other instanceof DestructableClass destructableClass)
+			return equals(destructableClass);
 
 		return super.equals(other);
 	}

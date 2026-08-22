@@ -6,42 +6,71 @@ plugins {
     id 'maven-publish'
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
 // Project Info
 group 'net.moonlightflower'
-version '1.2.2'
+
+// A tagged build passes the version in, so a release publishes 2.0.0 rather
+// than a snapshot of it. Local and CI builds stay a snapshot, which keeps an
+// accidental `publish` from claiming a release version.
+version = findProperty('releaseVersion') ?: '2.0.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(25)
+    options.encoding = 'UTF-8'
+    // rawtypes and unchecked are off because this code predates generics in
+    // places and the ~90 warnings they raise would bury the ones worth acting
+    // on. Everything else is on, which is what caught the equals/hashCode and
+    // lossy-conversion defects fixed alongside this change.
+    options.compilerArgs << '-Xlint:all,-serial,-this-escape,-deprecation,-rawtypes,-unchecked'
+}
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url = uri('https://jitpack.io') }
+}
+
+jacoco {
+    toolVersion = '0.8.13'
 }
 
 dependencies {
-    antlr "org.antlr:antlr4:4.13.1"
+    antlr 'org.antlr:antlr4:4.13.2'
 
-    // Logging
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.11'
-
+    // Logging: API only. A library must not impose a backend on its consumers,
+    // so logback is a test-time concern below rather than a dependency.
+    api group: 'org.slf4j', name: 'slf4j-api', version: '2.0.17'
 
     // Libs
-    implementation group: 'com.github.inwc3', name: 'jmpq3', version: 'e28f6999c0'
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '15fce9189917'
     implementation group: 'com.twelvemonkeys.imageio', name: 'imageio-jpeg', version: '3.13.1'
-    implementation 'com.jcraft:jzlib:1.1.3'
-    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    // Annotations are needed to compile, never at runtime, and putting them on
+    // the consumer's classpath is not this library's business.
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    testCompileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
     // TestNG
-    testImplementation 'org.testng:testng:7.8.0'
+    testImplementation 'org.testng:testng:7.11.0'
+    testRuntimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
 }
 
 test {
     useTestNG()
+    // JMPQ3 reads archives through memory-mapped segments (FFM), which is a
+    // restricted operation; without this every archive the tests open logs a
+    // warning.
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+    testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+    }
 }
 
 jacocoTestReport {
@@ -50,36 +79,6 @@ jacocoTestReport {
     }
 }
 
-task sourcesJar(type: Jar) {
-    dependsOn 'generateGrammarSource'
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-}
-
-task cleanAntlrDir {
-    delete "${buildDir}/generated-src/"
-    delete fileTree("src/main/java/net/moonlightflower/wc3libs/antlr").include('*.*')
-}
-
-generateGrammarSource { doLast {
-    println "Copying generated grammar lexer/parser files to main directory."
-
-    copy {
-        from "${buildDir}/generated-src/antlr/main"
-        into "src/main/java/net/moonlightflower/wc3libs/antlr"
-    }
-    project.delete fileTree("${buildDir}/generated-src/antlr/main").include('*.*')
-}}
-
-
-generateGrammarSource.dependsOn cleanAntlrDir
-compileJava.dependsOn generateGrammarSource
-
 publishing {
     publications {
         maven(MavenPublication) {
@@ -87,6 +86,22 @@ publishing {
             artifactId = 'wc3libs'
 
             from components.java
+
+            pom {
+                name = 'wc3libs'
+                description = 'A Java library for reading and writing Warcraft III file formats.'
+                url = 'https://github.com/inwc3/wc3libs'
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License v3.0'
+                        url = 'https://github.com/inwc3/wc3libs/blob/master/license.txt'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/inwc3/wc3libs'
+                    connection = 'scm:git:https://github.com/inwc3/wc3libs.git'
+                }
+            }
         }
     }
 }

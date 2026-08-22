@@ -151,52 +151,60 @@ public class MapFooter {
 
         byte[] bytes = byteStream.toByteArray();
 
-        RandomAccessFile fp = new RandomAccessFile(file, "r");
+        boolean hasFooter = hasFooter(file);
 
-        fp.seek(fp.length() - DATA_SIZE - 4);
+        try (RandomAccessFile fp = new RandomAccessFile(file, "rw")) {
+            // A footer already there is replaced; otherwise one is appended.
+            fp.seek(hasFooter ? footerOffset(fp.length()) : fp.length());
 
-        byte[] startTokenBytes = new byte[4];
-
-        fp.read(startTokenBytes, 0, startTokenBytes.length);
-
-        fp.close();
-
-        Id startToken = Id.valueOf(new String(startTokenBytes, StandardCharsets.US_ASCII));
-
-        fp = new RandomAccessFile(file, "rw");
-
-        if (startToken.equals(START_TOKEN)) {
-            //start token is existing, assume that footer must be existing, substitute old one
-            fp.seek(fp.length() - DATA_SIZE - 4);
-        } else {
-            fp.seek(fp.length());
+            fp.write(bytes);
         }
+    }
 
-        fp.write(bytes);
+    /** Where a footer sits: its token and data, at the very end of the file. */
+    private final static int FOOTER_SIZE = 4 + DATA_SIZE;
 
-        fp.close();
+    private static long footerOffset(long fileLength) {
+        return fileLength - FOOTER_SIZE;
+    }
+
+    /**
+     * @return whether the file ends in a footer.
+     *         <p>
+     *         The seek used to be unguarded, so a file shorter than a footer
+     *         asked for a negative offset, and the read that followed ignored
+     *         how many bytes it got.
+     */
+    private static boolean hasFooter(@Nonnull File file) throws IOException {
+        try (RandomAccessFile fp = new RandomAccessFile(file, "r")) {
+            if (fp.length() < FOOTER_SIZE) return false;
+
+            fp.seek(footerOffset(fp.length()));
+
+            byte[] startTokenBytes = new byte[4];
+
+            fp.readFully(startTokenBytes);
+
+            return Id.valueOf(new String(startTokenBytes, StandardCharsets.US_ASCII)).equals(START_TOKEN);
+        }
     }
 
     public static MapFooter ofMapFile(@Nonnull File file) throws IOException {
-        RandomAccessFile fp = new RandomAccessFile(file, "r");
+        byte[] bytes = new byte[FOOTER_SIZE];
 
-        fp.seek(fp.length() - DATA_SIZE - 4);
+        try (RandomAccessFile fp = new RandomAccessFile(file, "r")) {
+            if (fp.length() < FOOTER_SIZE) {
+                throw new IOException("file is too small to contain a map footer: " + file);
+            }
 
-        byte[] bytes = new byte[4 + DATA_SIZE];
+            fp.seek(footerOffset(fp.length()));
 
-        fp.read(bytes);
+            fp.readFully(bytes);
+        }
 
-        fp.close();
-
-        Wc3BinInputStream stream = new Wc3BinInputStream(new ByteArrayInputStream(bytes));
-
-        Reader reader = new Reader(stream);
-
-        MapFooter mapFooter = reader.exec();
-
-        stream.close();
-
-        return mapFooter;
+        try (Wc3BinInputStream stream = new Wc3BinInputStream(new ByteArrayInputStream(bytes))) {
+            return new Reader(stream).exec();
+        }
     }
 
     public static MapFooter ofFile(@Nonnull File file) throws IOException {

@@ -13,8 +13,8 @@ public class MoveType extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof MoveType)
-			return equals((MoveType) other);
+		if (other instanceof MoveType moveType)
+			return equals(moveType);
 
 		return super.equals(other);
 	}

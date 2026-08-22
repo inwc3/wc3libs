@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -71,37 +72,114 @@ public class BinStream {
         _pos = pos;
     }
 
-    protected static class ByteList {
-        protected List<Byte> _bytes = new ArrayList<>();
+    /**
+     * The bytes of the file being read or written.
+     * <p>
+     * This used to be an {@code ArrayList<Byte>}, which boxes every single byte:
+     * a megabyte of terrain or model data became a million {@code Byte} objects
+     * plus a million references to them, so the buffer cost something like
+     * twenty times the file it held and every read paid an unboxing indirection.
+     * A {@code byte[]} that grows geometrically costs the file's own size.
+     * <p>
+     * Growing also zero-fills, which closes a hole in the writer: seeking past
+     * the end and writing used to pad with {@code null} entries, and turning one
+     * of those back into a {@code byte} threw.
+     */
+    protected static final class ByteList {
+        private final static int MIN_CAPACITY = 64;
+
+        private byte[] _data;
+        private int _size;
 
         public long size() {
-            return _bytes.size();
+            return _size;
         }
 
-        public Byte get(long index) {
-            if (index > Integer.MAX_VALUE) throw new UnsupportedOperationException("index out of bounds " + index);
+        public byte get(long index) {
+            checkIndex(index);
 
-            return _bytes.get((int) index);
+            return _data[(int) index];
         }
 
-        public void set(long index, Byte val) {
-            if (index > Integer.MAX_VALUE) throw new UnsupportedOperationException("index out of bounds " + index);
+        public void set(long index, byte val) {
+            if (index < 0) throw new IndexOutOfBoundsException("index out of bounds " + index);
+            if (index >= Integer.MAX_VALUE) throw new UnsupportedOperationException("index out of bounds " + index);
 
-            _bytes.set((int) index, val);
+            ensureSize(index + 1);
+
+            _data[(int) index] = val;
         }
 
-        public void add(Byte val) {
-            _bytes.add(val);
+        public void add(byte val) {
+            set(_size, val);
         }
 
         public void addAll(byte[] vals, int len) {
-            for (int i = 0; i < len; i++) {
-                _bytes.add(vals[i]);
+            long start = _size;
+
+            ensureSize(start + len);
+
+            System.arraycopy(vals, 0, _data, (int) start, len);
+        }
+
+        /**
+         * Copies {@code len} bytes starting at {@code srcPos} into {@code dst}.
+         *
+         * @throws IndexOutOfBoundsException if the range is not all present.
+         */
+        public void copyInto(long srcPos, byte[] dst, int dstPos, int len) {
+            if (srcPos < 0 || len < 0 || srcPos + len > _size) {
+                throw new IndexOutOfBoundsException("range out of bounds " + srcPos + ".." + (srcPos + len));
             }
+
+            System.arraycopy(_data, (int) srcPos, dst, dstPos, len);
+        }
+
+        /**
+         * @return the index of the first zero byte at or after {@code from}, or
+         *         {@link #size()} if there is none.
+         */
+        public long indexOfZero(long from) {
+            for (int i = (int) Math.max(0, from); i < _size; i++) {
+                if (_data[i] == 0) return i;
+            }
+
+            // Never before `from`, so a position already past the end yields an
+            // empty range rather than a negative one.
+            return Math.max(from, _size);
+        }
+
+        @Nonnull
+        public byte[] toArray() {
+            return Arrays.copyOf(_data, _size);
+        }
+
+        public void writeTo(@Nonnull OutputStream outStream) throws IOException {
+            outStream.write(_data, 0, _size);
+        }
+
+        private void checkIndex(long index) {
+            if (index < 0 || index >= _size) throw new IndexOutOfBoundsException("index out of bounds " + index);
+        }
+
+        private void ensureSize(long size) {
+            if (size > Integer.MAX_VALUE) throw new UnsupportedOperationException("size out of bounds " + size);
+
+            if (size > _data.length) {
+                int capacity = Math.max(MIN_CAPACITY, _data.length);
+
+                while (capacity < size) {
+                    capacity = (capacity > Integer.MAX_VALUE / 2) ? Integer.MAX_VALUE : capacity * 2;
+                }
+
+                _data = Arrays.copyOf(_data, capacity);
+            }
+
+            if (size > _size) _size = (int) size;
         }
 
         public ByteList() {
-
+            _data = new byte[MIN_CAPACITY];
         }
     }
 

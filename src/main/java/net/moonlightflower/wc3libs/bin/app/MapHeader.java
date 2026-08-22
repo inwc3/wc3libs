@@ -93,17 +93,19 @@ public class MapHeader {
 
             stream.writeInt32(_mapHeader._maxPlayersCount);
 
-            long fillBytesSize = HEADER_BYTES_SIZE - stream.getPos() - startPos;
+            // The header is a fixed 512 bytes, so what is left to pad is that
+            // less what was just written. Subtracting the start position a
+            // second time instead of using it to measure the written length
+            // under-padded by exactly that much whenever the header did not
+            // begin at the start of the stream.
+            long fillBytesSize = HEADER_BYTES_SIZE - (stream.getPos() - startPos);
 
-            if (fillBytesSize > 0) {
-                do {
-                    int fillBytesSizeI = (int) fillBytesSize;
-
-                    stream.writeBytes(new byte[fillBytesSizeI]);
-
-                    fillBytesSize -= fillBytesSizeI;
-                } while (fillBytesSize > 0);
+            if (fillBytesSize < 0) {
+                throw new BinStream.StreamException(stream,
+                    "map header does not fit in " + HEADER_BYTES_SIZE + " bytes");
             }
+
+            stream.writeBytes(new byte[(int) fillBytesSize]);
         }
 
         public void exec(@Nonnull MapHeader mapHeader) throws BinStream.StreamException {
@@ -169,6 +171,16 @@ public class MapHeader {
 
             Id startToken = stream.readId("startToken");
 
+            // A .w3x is a bare MPQ archive when it has no header at all, which
+            // writeToMapFile already knows and handles. Reading one without
+            // checking produced a header full of whatever the archive's own
+            // first bytes happened to say. The footer reader has always checked
+            // its own token; this one now does too.
+            if (!startToken.equals(START_TOKEN)) {
+                throw new BinInputStream.StreamException(stream,
+                    "wrong startToken " + startToken + " (expected " + START_TOKEN + ")");
+            }
+
             _mapHeader._unknown = stream.readInt32("unknown");
             _mapHeader._mapName = stream.readString("mapName");
             _mapHeader._flags = stream.readInt32("flags");
@@ -181,6 +193,23 @@ public class MapHeader {
         private MapHeader read_auto() throws IOException {
             return read_0x0();
         }
+    }
+
+    /**
+     * @return the file's first four bytes as a token, or the empty string if it
+     *         is too short to hold one.
+     */
+    @Nonnull
+    private static String readStartToken(@Nonnull File file) throws IOException {
+        byte[] bytes = new byte[4];
+
+        try (RandomAccessFile fp = new RandomAccessFile(file, "r")) {
+            if (fp.length() < bytes.length) return "";
+
+            fp.readFully(bytes);
+        }
+
+        return new String(bytes, StandardCharsets.US_ASCII);
     }
 
     public void writeToMapFile(@Nonnull File file) throws IOException {
@@ -196,21 +225,15 @@ public class MapHeader {
 
         byte[] headerBytes = byteStream.toByteArray();
 
-        // Check if file has a map header (HM3W) or starts with MPQ archive
-        RandomAccessFile fp = new RandomAccessFile(file, "r");
+        // Does the file already carry a header, or does it start straight in
+        // on the MPQ archive? Reading the token used to ignore how many bytes
+        // arrived, so a file too short to hold one compared the zeroed
+        // remainder of the buffer instead.
+        boolean hasMapHeader = Id.valueOf(readStartToken(file)).equals(START_TOKEN);
 
-        byte[] startTokenBytes = new byte[4];
-        fp.read(startTokenBytes, 0, startTokenBytes.length);
-        fp.close();
+        RandomAccessFile fp;
 
-        String startToken = new String(startTokenBytes, StandardCharsets.US_ASCII);
-        Id startId = Id.valueOf(startToken);
-
-        // MPQ archives start with "MPQ\u001a" or "MPQ\u001b"
-        boolean startsWithMPQ = startToken.startsWith("MPQ");
-        boolean hasMapHeader = startId.equals(START_TOKEN);
-
-        if (startsWithMPQ || !hasMapHeader) {
+        if (!hasMapHeader) {
             // No map header exists - need to INSERT 512 bytes at the beginning
             // This shifts the entire file content forward
             fp = new RandomAccessFile(file, "rw");

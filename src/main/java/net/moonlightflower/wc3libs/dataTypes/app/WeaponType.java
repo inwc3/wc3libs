@@ -19,8 +19,8 @@ public class WeaponType extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof WeaponType)
-			return equals((WeaponType) other);
+		if (other instanceof WeaponType weaponType)
+			return equals(weaponType);
 
 		return super.equals(other);
 	}

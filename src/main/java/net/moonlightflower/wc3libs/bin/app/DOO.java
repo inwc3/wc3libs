@@ -20,7 +20,49 @@ import java.util.*;
  */
 public class DOO {
 	public final static File GAME_PATH = new File("war3map.doo");
-	
+
+	/** The sub-version Warcraft III writes, and this library's default. */
+	public final static int DEFAULT_SUB_VERSION = 0xB;
+
+	/**
+	 * Whether each doodad carries the four-byte skin id Reforged added.
+	 * <p>
+	 * It is a property of the whole file. {@link #AUTO} works it out on read and
+	 * reproduces on write whatever was read, so a file round-trips unchanged;
+	 * name it explicitly when producing a file for a particular game version.
+	 */
+	public enum SkinIds {
+		AUTO,
+		PRESENT,
+		ABSENT
+	}
+
+	private int _subVersion = DEFAULT_SUB_VERSION;
+
+	/**
+	 * @return the sub-version read from the file, or the one that will be
+	 *         written. Sub-version 9 predates 11 and is still in circulation;
+	 *         writing 11 regardless, as this used to, relabelled such a file.
+	 */
+	public int getSubVersion() {
+		return _subVersion;
+	}
+
+	public void setSubVersion(int val) {
+		_subVersion = val;
+	}
+
+	private SkinIds _skinIds = SkinIds.AUTO;
+
+	@Nonnull
+	public SkinIds getSkinIds() {
+		return _skinIds;
+	}
+
+	public void setSkinIds(@Nonnull SkinIds val) {
+		_skinIds = val;
+	}
+
 	public static class Dood {
 		private ObjId _typeId;
 		
@@ -231,103 +273,104 @@ public class DOO {
 			_editorId = val;
 		}
 
-		public void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		public void read_0x8(@Nonnull Wc3BinInputStream stream, boolean withSkinId) throws BinInputStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId("typeId")));
-			
+
 			setVariation(stream.readInt32("variation"));
-			
+
 			setPos(new Coords3DF(stream.readFloat32("posX"), stream.readFloat32("posY"), stream.readFloat32("posZ")));
-			
+
 			setAngle(stream.readFloat32("angle"));
-			
+
 			setScale(new Coords3DF(stream.readFloat32("scaleX"), stream.readFloat32("scaleY"), stream.readFloat32("scaleZ")));
-			
-			//TODO: get rid of this hacky discrimination by knowing the binary structure we want to read beforehand
-			short skinIdDiscriminator = stream.readUByte("skinIdDiscriminator");
-			
-			stream.rewind(1); //rewind by one byte due to the discrimination effort having advanced the stream
-			
-			if (skinIdDiscriminator > 7) {
-				//possible values for flags are only 0x00 to 0x07 (flag on first, second and third bit), so > 0x07 must mean it is not flags, therefore assume skinId
+
+			// Whether a skin id is here is a property of the file, not of this
+			// doodad, so it is decided once by DOO.readDoods and passed in.
+			if (withSkinId) {
 				setSkinId(ObjId.valueOf(stream.readId("skinId")));
 			}
 
 			setFlags(stream.readUByte("flags"));
 
 			setLifePerc(stream.readUByte("lifePerc"));
-			
+
 			setItemTablePtr(stream.readInt32("itemTablePtr"));
 
 			int itemSetsDroppedCount = stream.readInt32("itemSetsDroppedCount");
-			
+
 			for (int i = 0; i < itemSetsDroppedCount; i++) {
 				addItemSet(new ItemSet(stream, EncodingFormat.DOO_0x8));
 			}
 
 			setEditorId(stream.readInt32("editorId"));
 		}
-		
-		public void write_0x8(@Nonnull Wc3BinOutputStream stream) {
+
+		public void write_0x8(@Nonnull Wc3BinOutputStream stream, boolean withSkinId) {
 			stream.writeId(getTypeId());
-			
+
 			stream.writeInt32(getVariation());
-			
+
 			Coords3DF pos = getPos();
-			
+
 			stream.writeFloat32(pos.getX());
 			stream.writeFloat32(pos.getY());
 			stream.writeFloat32(pos.getZ());
-			
+
 			stream.writeFloat32(getAngle());
-			
+
 			Coords3DF scale = getScale();
-			
+
 			stream.writeFloat32(scale.getX());
 			stream.writeFloat32(scale.getY());
 			stream.writeFloat32(scale.getZ());
-			
-			if (getSkinId() != null) { //assume we want to write a DOO with SkinId per Doodad IFF the SkinId is set
-				stream.writeId(getSkinId());
+
+			// Every doodad in a file that has skin ids needs one, so an unset
+			// skin falls back to the doodad's own type, which is what the editor
+			// stores for a doodad using its default skin. Writing the field only
+			// where it happened to be set, as this did, produced a file whose
+			// doodads were no longer a fixed distance apart.
+			if (withSkinId) {
+				stream.writeId(getSkinId() != null ? getSkinId() : getTypeId());
 			}
-			
+
 			stream.writeUByte(getFlags());
 
 			stream.writeUByte(getLifePerc());
-			
+
 			stream.writeInt32(getItemTablePtr());
-			
+
 			stream.writeInt32(_itemSets.size());
-			
+
 			for (ItemSet set : _itemSets) {
 				set.write(stream, EncodingFormat.DOO_0x8);
 			}
 
 			stream.writeInt32(_editorId);
 		}
-		
-		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+
+		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean withSkinId) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case DOO_0x8: {
-				read_0x8(stream);
-				
+				read_0x8(stream, withSkinId);
+
 				break;
 			}
 			}
 		}
-		
-		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+
+		public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, boolean withSkinId) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case DOO_0x8: {
-				write_0x8(stream);
-				
+				write_0x8(stream, withSkinId);
+
 				break;
 			}
 			}
 		}
-		
-		public Dood(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
-			read(stream, format);
+
+		public Dood(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean withSkinId) throws BinInputStream.StreamException {
+			read(stream, format, withSkinId);
 		}
 		
 		public Dood() {
@@ -576,28 +619,149 @@ public class DOO {
 		int version = stream.readInt32("version");
 
 		stream.checkFormatVersion(EncodingFormat.DOO_0x8.getVersion(), version);
-		
-		int subVersion = stream.readInt32("subVersion"); //0xB
-		
+
+		_subVersion = stream.readInt32("subVersion");
+
 		int doodsCount = stream.readInt32("doodsCount");
-		
+
+		readDoods(stream, doodsCount);
+	}
+
+	/**
+	 * Reads the doodad array, working out first whether its entries carry a skin
+	 * id.
+	 * <p>
+	 * The sub-version does not say: files exist with sub-version 11 and no skin
+	 * ids, and others with sub-version 11 and skin ids. What does say is the
+	 * arithmetic. The two layouts differ by exactly four bytes per doodad, so at
+	 * most one of them can consume the array and leave the special-doodad
+	 * section it is followed by intact. That is decidable, unlike the previous
+	 * approach of peeking one byte and assuming a value above 7 could not be a
+	 * flags byte -- which a skin id of four NULs, or one whose first character is
+	 * a control code, defeats.
+	 */
+	private void readDoods(@Nonnull Wc3BinInputStream stream, int doodsCount) throws BinInputStream.StreamException {
+		if (_skinIds != SkinIds.AUTO) {
+			readDoods(stream, doodsCount, _skinIds == SkinIds.PRESENT);
+
+			return;
+		}
+
+		long start = stream.getPos();
+
+		boolean fitsWithout = fits(stream, start, doodsCount, false);
+		boolean fitsWith = fits(stream, start, doodsCount, true);
+
+		// Exactly one layout accounting for the file is the answer. Both fitting
+		// is possible in principle, because a misparse can absorb the four-byte
+		// difference into an item-set count, so that is treated as no answer at
+		// all rather than as a reason to prefer one.
+		if (fitsWithout != fitsWith) {
+			stream.setPos(start);
+
+			_skinIds = fitsWith ? SkinIds.PRESENT : SkinIds.ABSENT;
+
+			readDoods(stream, doodsCount, fitsWith);
+
+			return;
+		}
+
+		// Fall back to the old guess rather than refusing a file this library
+		// used to read: a flags byte only ever uses its low three bits, so a
+		// larger value is more likely to be the first character of a skin id.
+		stream.setPos(start);
+
+		boolean withSkinIds = doodsCount > 0 && peekSkinIdAt(stream, start + SKIN_ID_OFFSET);
+
+		_skinIds = withSkinIds ? SkinIds.PRESENT : SkinIds.ABSENT;
+
+		readDoods(stream, doodsCount, withSkinIds);
+	}
+
+	private void readDoods(@Nonnull Wc3BinInputStream stream, int doodsCount, boolean withSkinIds)
+		throws BinInputStream.StreamException {
 		for (int i = 0; i < doodsCount; i++) {
-			addDood(new Dood(stream, EncodingFormat.DOO_0x8));
+			addDood(new Dood(stream, EncodingFormat.DOO_0x8, withSkinIds));
 		}
 	}
-	
+
+	/** Offset of the byte that is either a skin id's first character or the flags. */
+	private final static int SKIN_ID_OFFSET = 4 + 4 + 12 + 4 + 12;
+
+	private static boolean peekSkinIdAt(@Nonnull Wc3BinInputStream stream, long pos) {
+		if (pos >= stream.size()) return false;
+
+		return (stream.get(pos) & 0xFF) > 0x07;
+	}
+
+	/**
+	 * @return whether reading {@code doodsCount} doodads in the given layout
+	 *         consumes the array and leaves exactly a well-formed special-doodad
+	 *         section, or nothing, behind it.
+	 */
+	private static boolean fits(@Nonnull Wc3BinInputStream stream, long start, int doodsCount, boolean withSkinIds) {
+		try {
+			stream.setPos(start);
+
+			for (int i = 0; i < doodsCount; i++) {
+				new Dood(stream, EncodingFormat.DOO_0x8, withSkinIds);
+			}
+
+			long remaining = stream.size() - stream.getPos();
+
+			// Nothing after the doodads at all is a valid, if unusual, file.
+			if (remaining == 0) return true;
+
+			if (remaining < SPECIAL_HEADER_SIZE) return false;
+
+			int specialVersion = stream.readInt32();
+			int specialCount = stream.readInt32();
+
+			if (specialVersion != 0 || specialCount < 0) return false;
+
+			return remaining == SPECIAL_HEADER_SIZE + (long) specialCount * SPECIAL_DOOD_SIZE;
+		} catch (BinInputStream.StreamException | RuntimeException e) {
+			// Running off the end of the file, or reading an absurd item-set
+			// count, means this was the wrong layout.
+			return false;
+		}
+	}
+
+	/** The special-doodad section's own version and count. */
+	private final static int SPECIAL_HEADER_SIZE = 4 + 4;
+
+	/** A special doodad: its type and three integer coordinates. */
+	private final static int SPECIAL_DOOD_SIZE = 4 + 4 + 4 + 4;
+
 	private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("W3do"));
-		
+
 		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
-		
-		stream.writeInt32(0xB); //subVersion
-		
+
+		stream.writeInt32(_subVersion);
+
 		stream.writeInt32(_doods.size());
-		
+
+		boolean withSkinIds = writesSkinIds();
+
 		for (Dood dood : _doods) {
-			dood.write(stream, EncodingFormat.DOO_0x8);
+			dood.write(stream, EncodingFormat.DOO_0x8, withSkinIds);
 		}
+	}
+
+	/**
+	 * Whether the doodads will be written with a skin id.
+	 * <p>
+	 * A file's doodads are all one shape, so this is all-or-nothing: it is on if
+	 * the caller asked for it, or if any doodad has a skin to record. Writing
+	 * the field per doodad, as this used to, produced a file nothing could read.
+	 */
+	private boolean writesSkinIds() {
+		return switch (_skinIds) {
+			case PRESENT -> true;
+			case ABSENT -> false;
+			case AUTO -> _doods.stream().anyMatch(dood -> dood.getSkinId() != null);
+		};
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws IOException {

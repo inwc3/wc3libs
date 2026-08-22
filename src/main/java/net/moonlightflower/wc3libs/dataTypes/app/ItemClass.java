@@ -16,8 +16,8 @@ public class ItemClass extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof ItemClass)
-			return equals((ItemClass) other);
+		if (other instanceof ItemClass itemClass)
+			return equals(itemClass);
 
 		return super.equals(other);
 	}

@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class Coords4DF extends DataType {
 	private final War3Real _x;
@@ -35,10 +36,20 @@ public class Coords4DF extends DataType {
 		return "[" + getX() + ";" + getY() + ";" + getZ() + ";" + getA() + "]";
 	}
 
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(getX(), getY(), getZ(), getA());
+	}
+
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords4DF)
-			return equals((Coords4DF) other);
+		if (other instanceof Coords4DF coords4DF)
+			return equals(coords4DF);
 
 		return super.equals(other);
 	}

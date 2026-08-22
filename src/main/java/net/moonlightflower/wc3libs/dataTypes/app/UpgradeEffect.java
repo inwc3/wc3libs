@@ -47,8 +47,8 @@ public class UpgradeEffect extends Id {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof UpgradeEffect)
-			return equals((UpgradeEffect) other);
+		if (other instanceof UpgradeEffect upgradeEffect)
+			return equals(upgradeEffect);
 
 		return super.equals(other);
 	}

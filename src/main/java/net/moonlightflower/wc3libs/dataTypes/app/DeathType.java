@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.dataTypes.app;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,10 +17,20 @@ public class DeathType extends War3Int {
 	public final static DeathType DECAYS = new DeathType(0x2);
 	public final static DeathType RAISES_AND_DECAYS = new DeathType(0x3);
 
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getVal());
+	}
+
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof DeathType)
-			return equals((DeathType) other);
+		if (other instanceof DeathType deathType)
+			return equals(deathType);
 
 		return super.equals(other);
 	}

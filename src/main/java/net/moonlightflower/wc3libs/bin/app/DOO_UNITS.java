@@ -17,6 +17,49 @@ import java.util.List;
  */
 public class DOO_UNITS {
 	public final static File GAME_PATH = new File("war3mapUnits.doo");
+
+	/** The sub-version Warcraft III writes, and this library's default. */
+	public final static int DEFAULT_SUB_VERSION = 0xB;
+
+	/**
+	 * Whether each object carries the four-byte skin id Reforged added.
+	 * <p>
+	 * It is a property of the whole file. {@link #AUTO} works it out on read and
+	 * reproduces on write whatever was read, so a file round-trips unchanged;
+	 * name it explicitly when producing a file for a particular game version.
+	 */
+	public enum SkinIds {
+		AUTO,
+		PRESENT,
+		ABSENT
+	}
+
+	private int _subVersion = DEFAULT_SUB_VERSION;
+
+	/**
+	 * @return the sub-version read from the file, or the one that will be
+	 *         written. Sub-version 9 has neither the item-table pointer nor the
+	 *         hero attributes; writing 11 regardless, as this used to, produced
+	 *         a file whose objects no longer matched its own header.
+	 */
+	public int getSubVersion() {
+		return _subVersion;
+	}
+
+	public void setSubVersion(int val) {
+		_subVersion = val;
+	}
+
+	private SkinIds _skinIds = SkinIds.AUTO;
+
+	@Nonnull
+	public SkinIds getSkinIds() {
+		return _skinIds;
+	}
+
+	public void setSkinIds(@Nonnull SkinIds val) {
+		_skinIds = val;
+	}
 	
 	public static class Obj {
 		private ObjId _typeId;
@@ -672,23 +715,20 @@ public class DOO_UNITS {
 			_editorId = val;
 		}
 
-		private void read_0x8(@Nonnull Wc3BinInputStream stream, int subVersion) throws BinInputStream.StreamException {
+		private void read_0x8(@Nonnull Wc3BinInputStream stream, int subVersion, boolean withSkinId) throws BinInputStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId("typeId")));
-			
+
 			setVariation(stream.readInt32("variation"));
-			
+
 			setPos(new Coords3DF(stream.readFloat32("posX"), stream.readFloat32("posY"), stream.readFloat32("posZ")));
-			
+
 			setAngle(stream.readFloat32("angle"));
-			
+
 			setScale(new Coords3DF(stream.readFloat32("scaleX"), stream.readFloat32("scaleY"), stream.readFloat32("scaleZ")));
 
-			// flags for units/items only use the first 3 bits, so values above 0x07 indicate the next 4 bytes are a skin id
-			short skinIdDiscriminator = stream.readUByte("skinIdDiscriminator");
-
-			stream.rewind(1);
-
-			if (skinIdDiscriminator > 7) {
+			// Whether a skin id is here is a property of the file, decided once
+			// by DOO_UNITS.readObjs and passed in.
+			if (withSkinId) {
 				setSkinId(ObjId.valueOf(stream.readId("skinId")));
 			}
 
@@ -773,39 +813,46 @@ public class DOO_UNITS {
 			setEditorId(stream.readInt32("editorId"));
 		}
 
-		private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
+		private void write_0x8(@Nonnull Wc3BinOutputStream stream, int subVersion, boolean withSkinId) {
 			stream.writeId(getTypeId());
-			
+
 			stream.writeInt32(getVariation());
-			
+
 			Coords3DF pos = getPos();
-			
+
 			stream.writeFloat32(pos.getX());
 			stream.writeFloat32(pos.getY());
 			stream.writeFloat32(pos.getZ());
-			
+
 			stream.writeFloat32(getAngle());
-			
+
 			Coords3DF scale = getScale();
-			
+
 			stream.writeFloat32(scale.getX());
 			stream.writeFloat32(scale.getY());
 			stream.writeFloat32(scale.getZ());
 
-			if (getSkinId() != null) {
-				stream.writeId(getSkinId());
+			// Every object in a file that has skin ids needs one, so an unset
+			// skin falls back to the object's own type, which is what the editor
+			// stores for the default skin.
+			if (withSkinId) {
+				stream.writeId(getSkinId() != null ? getSkinId() : getTypeId());
 			}
-			
+
 			stream.writeUByte(getFlags());
 			stream.writeInt32(getOwnerIndex());
 			stream.writeUByte(getUnknownA());
 			stream.writeUByte(getUnknownB());
-			
+
 			stream.writeInt32(getLifePerc());
 			stream.writeInt32(getManaPerc());
-			
-			stream.writeInt32(getItemTablePtr());
-			
+
+			// Only sub-version 11 and up has these; writing them into a
+			// sub-version 9 file, as this did, shifted everything after them.
+			if (subVersion >= 11) {
+				stream.writeInt32(getItemTablePtr());
+			}
+
 			stream.writeInt32(_lootSets.size());
 
 			for (LootSet set : _lootSets) {
@@ -817,11 +864,13 @@ public class DOO_UNITS {
 			stream.writeFloat32(getTargetAcquisition());
 			
 			stream.writeInt32(getHeroLevel());
-			
-			stream.writeInt32(getHeroStr());
-			stream.writeInt32(getHeroAgi());
-			stream.writeInt32(getHeroInt());
-			
+
+			if (subVersion >= 11) {
+				stream.writeInt32(getHeroStr());
+				stream.writeInt32(getHeroAgi());
+				stream.writeInt32(getHeroInt());
+			}
+
 			stream.writeInt32(_invItems.size());
 			
 			for (InvItem item : _invItems) {
@@ -876,29 +925,29 @@ public class DOO_UNITS {
 			stream.writeInt32(getEditorId());
 		}
 		
-		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion) throws BinInputStream.StreamException {
+		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion, boolean withSkinId) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case DOO_0x8: {
-				read_0x8(stream, subVersion);
-				
+				read_0x8(stream, subVersion, withSkinId);
+
 				break;
 			}
 			}
 		}
-		
-		private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+
+		private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, int subVersion, boolean withSkinId) {
 			switch (format.toEnum()) {
 			case AUTO:
 			case DOO_0x8: {
-				write_0x8(stream);
-				
+				write_0x8(stream, subVersion, withSkinId);
+
 				break;
 			}
 			}
 		}
-		
-		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion) throws BinInputStream.StreamException {
-			read(stream, format, subVersion);
+
+		public Obj(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion, boolean withSkinId) throws BinInputStream.StreamException {
+			read(stream, format, subVersion, withSkinId);
 		}
 		
 		public Obj() {
@@ -946,31 +995,128 @@ public class DOO_UNITS {
 	
 	private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
 		stream.writeId(Id.valueOf("W3do"));
-		
+
 		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
-		
-		stream.writeInt32(0xB); //subVersion
-		
+
+		stream.writeInt32(_subVersion);
+
 		stream.writeInt32(_objs.size());
 
+		boolean withSkinIds = writesSkinIds();
+
 		for (Obj obj : _objs) {
-			obj.write(stream, EncodingFormat.DOO_0x8);
+			obj.write(stream, EncodingFormat.DOO_0x8, _subVersion, withSkinIds);
 		}
+	}
+
+	/**
+	 * Whether the objects will be written with a skin id.
+	 * <p>
+	 * A file's objects are all one shape, so this is all-or-nothing: it is on if
+	 * the caller asked for it, or if any object has a skin to record. Writing
+	 * the field per object, as this used to, produced a file nothing could read.
+	 */
+	private boolean writesSkinIds() {
+		return switch (_skinIds) {
+			case PRESENT -> true;
+			case ABSENT -> false;
+			case AUTO -> _objs.stream().anyMatch(obj -> obj.getSkinId() != null);
+		};
 	}
 
 	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
-		
-		int version = stream.readInt32("version"); //0xB
-		
+
+		int version = stream.readInt32("version");
+
 		stream.checkFormatVersion(EncodingFormat.DOO_0x8.getVersion(), version);
-		
-		int subVersion = stream.readInt32("subVersion"); //usually 0xB
-		
+
+		_subVersion = stream.readInt32("subVersion");
+
 		int objsCount = stream.readInt32("objsCount");
 
+		readObjs(stream, objsCount);
+	}
+
+	/**
+	 * Reads the object array, working out first whether its entries carry a skin
+	 * id.
+	 * <p>
+	 * The sub-version does not say: files exist with sub-version 11 both with
+	 * and without them. The arithmetic does. The two layouts differ by exactly
+	 * four bytes per object, so at most one of them can consume the array and
+	 * land on the end of the file. That is decidable, unlike the previous
+	 * approach of peeking one byte and assuming a value above 7 could not be a
+	 * flags byte -- which a skin id of four NULs defeats.
+	 */
+	private void readObjs(@Nonnull Wc3BinInputStream stream, int objsCount) throws BinInputStream.StreamException {
+		if (_skinIds != SkinIds.AUTO) {
+			readObjs(stream, objsCount, _skinIds == SkinIds.PRESENT);
+
+			return;
+		}
+
+		long start = stream.getPos();
+
+		boolean fitsWithout = fits(stream, start, objsCount, false);
+		boolean fitsWith = fits(stream, start, objsCount, true);
+
+		// Exactly one layout accounting for the file is the answer. Both fitting
+		// is possible in principle, because a misparse can absorb the four-byte
+		// difference into one of the variable-length counts, so that is treated
+		// as no answer at all rather than as a reason to prefer one.
+		if (fitsWithout != fitsWith) {
+			stream.setPos(start);
+
+			_skinIds = fitsWith ? SkinIds.PRESENT : SkinIds.ABSENT;
+
+			readObjs(stream, objsCount, fitsWith);
+
+			return;
+		}
+
+		// Fall back to the old guess rather than refusing a file this library
+		// used to read -- one with trailing bytes, say.
+		stream.setPos(start);
+
+		boolean withSkinIds = objsCount > 0 && peekSkinIdAt(stream, start + SKIN_ID_OFFSET);
+
+		_skinIds = withSkinIds ? SkinIds.PRESENT : SkinIds.ABSENT;
+
+		readObjs(stream, objsCount, withSkinIds);
+	}
+
+	private void readObjs(@Nonnull Wc3BinInputStream stream, int objsCount, boolean withSkinIds)
+		throws BinInputStream.StreamException {
 		for (int i = 0; i < objsCount; i++) {
-			addObj(new Obj(stream, EncodingFormat.DOO_0x8, subVersion));
+			addObj(new Obj(stream, EncodingFormat.DOO_0x8, _subVersion, withSkinIds));
+		}
+	}
+
+	/** Offset of the byte that is either a skin id's first character or the flags. */
+	private final static int SKIN_ID_OFFSET = 4 + 4 + 12 + 4 + 12;
+
+	private static boolean peekSkinIdAt(@Nonnull Wc3BinInputStream stream, long pos) {
+		if (pos >= stream.size()) return false;
+
+		return (stream.get(pos) & 0xFF) > 0x07;
+	}
+
+	/**
+	 * @return whether reading {@code objsCount} objects in the given layout
+	 *         consumes the array and lands exactly on the end of the file.
+	 */
+	private boolean fits(@Nonnull Wc3BinInputStream stream, long start, int objsCount, boolean withSkinIds) {
+		try {
+			stream.setPos(start);
+
+			for (int i = 0; i < objsCount; i++) {
+				new Obj(stream, EncodingFormat.DOO_0x8, _subVersion, withSkinIds);
+			}
+
+			return stream.getPos() == stream.size();
+		} catch (BinInputStream.StreamException | RuntimeException e) {
+			return false;
 		}
 	}
 
