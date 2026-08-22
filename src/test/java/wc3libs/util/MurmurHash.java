@@ -30,6 +30,7 @@ public final class MurmurHash {
      * @param seed   initial seed value
      * @return 32 bit hash of the given array
      */
+    @SuppressWarnings("fallthrough")
     public static int hash32(final byte[] data, int length, int seed) {
         // 'm' and 'r' are mixing constants generated offline.
         // They're not really 'magic', they just happen to work well.
@@ -111,6 +112,7 @@ public final class MurmurHash {
      * @param seed   initial seed value
      * @return 64 bit hash of the given array
      */
+    @SuppressWarnings("fallthrough")
     public static long hash64(final byte[] data, int length, int seed) {
         final long m = 0xc6a4a7935bd1e995L;
         final int r = 47;

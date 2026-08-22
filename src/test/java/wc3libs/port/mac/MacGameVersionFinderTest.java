@@ -17,9 +17,7 @@ import java.nio.file.Path;
 public class MacGameVersionFinderTest extends Wc3LibTest {
     @Test
     public void test() throws Exception {
-        PListGameVersionParser finder = new PListGameVersionParser();
-
-        GameVersion gameVersion = finder.get(getFile("wc3data/context/Info.plist"));
+        GameVersion gameVersion = PListGameVersionParser.get(getFile("wc3data/context/Info.plist"));
 
         Assert.assertEquals(gameVersion, new GameVersion("1.31.1.12164"));
     }

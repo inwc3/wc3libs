@@ -37,9 +37,23 @@ public class ProfileGamePathTest {
 			Field field = type.getDeclaredField("GAME_PATH");
 			File path = (File) field.get(null);
 
-			assertEquals(path.getName(), type.getSimpleName() + ".txt",
+			assertEquals(fileName(path), type.getSimpleName() + ".txt",
 				type.getName() + " points at " + path);
 		}
+	}
+
+	/**
+	 * These paths are spelled the way the game spells them, with backslashes,
+	 * and are held in a {@link File}. On Windows a backslash is a separator and
+	 * {@code getName()} gives the last segment; everywhere else it is an
+	 * ordinary character and {@code getName()} gives the whole string. So the
+	 * last segment has to be taken without asking the platform.
+	 */
+	private static String fileName(File path) {
+		String s = path.toString();
+		int cut = Math.max(s.lastIndexOf('\\'), s.lastIndexOf('/'));
+
+		return s.substring(cut + 1);
 	}
 
 	private static List<Class<?>> profileClasses() throws Exception {
