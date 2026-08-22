@@ -10,6 +10,8 @@ import javax.annotation.Nonnull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
 public class JMpqPortTest extends Wc3LibTest {
@@ -174,6 +177,34 @@ public class JMpqPortTest extends Wc3LibTest {
 
 		assertEquals(shared.size(), w3iSize + w3eSize,
 			"a closed stream would have swallowed everything after the first export");
+	}
+
+	/**
+	 * A destination that cannot be written to is not the archive's fault.
+	 * Treating it as "this volume does not have the file" hid disk-full and
+	 * permission errors, moved on to the next volume, and could append the same
+	 * bytes twice after a partial write.
+	 */
+	@Test
+	public void destinationFailurePropagatesInsteadOfLookingLikeAMissingEntry() throws Exception {
+		Path map = copyToTemp(LISTED_MAP, "failing-destination.w3x");
+
+		OutputStream broken = new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+				throw new IOException("disk full");
+			}
+
+			@Override
+			public void write(byte[] b, int off, int len) throws IOException {
+				throw new IOException("disk full");
+			}
+		};
+
+		MpqPort.Out out = new JMpqPort.Out();
+		out.add(new File("war3map.w3i"), broken);
+
+		assertThrows(IOException.class, () -> out.commit(map.toFile()));
 	}
 
 	@Test

@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -228,46 +229,73 @@ public class JMpqPort extends MpqPort {
 			return exportFromArchive(mpqFile, exports, result);
 		}
 
+		/** Where one export's bytes come from, for a given volume. */
+		@FunctionalInterface
+		private interface Source {
+			@Nonnull
+			byte[] read(@Nonnull File inFile) throws IOException;
+		}
+
+		/**
+		 * Reads each export's bytes out of one volume and delivers them.
+		 * <p>
+		 * Only the read is allowed to mean "not in this volume". Delivering the
+		 * bytes is deliberately outside that guard: a full disk, a permission
+		 * error or a broken destination stream is not the volume's fault, and
+		 * treating it as one hid the failure, moved on to the next volume, and
+		 * could append the same bytes twice after a partial write.
+		 *
+		 * @return the exports this volume did not have.
+		 */
 		@Nonnull
-		private List<FileExport> exportFromResources(@Nonnull ResourceFile source,
-													@Nonnull List<FileExport> exports,
-													@Nonnull Result result) {
+		private List<FileExport> exportEach(@Nonnull File volume,
+											@Nonnull List<FileExport> exports,
+											@Nonnull Result result,
+											@Nonnull Function<FileExport, File> resolve,
+											@Nonnull Source source) throws IOException {
 			List<FileExport> failed = new ArrayList<>();
 
 			for (FileExport fileExport : exports) {
-				File inFile = new File(source, fileExport.getInFile().toString());
+				File inFile = resolve.apply(fileExport);
 
-				try (InputStream inStream = openResource(inFile)) {
-					deliver(source, fileExport, inFile, inStream.readAllBytes(), result);
+				byte[] bytes;
+
+				try {
+					bytes = source.read(inFile);
 				} catch (IOException e) {
-					log.debug("failed to export {} from {}", fileExport.getInFile(), source, e);
+					log.debug("{} does not have {}", volume, fileExport.getInFile(), e);
 
 					failed.add(fileExport);
+
+					continue;
 				}
+
+				deliver(volume, fileExport, inFile, bytes, result);
 			}
 
 			return failed;
 		}
 
 		@Nonnull
+		private List<FileExport> exportFromResources(@Nonnull ResourceFile source,
+													@Nonnull List<FileExport> exports,
+													@Nonnull Result result) throws IOException {
+			return exportEach(source, exports, result,
+				fileExport -> new File(source, fileExport.getInFile().toString()),
+				inFile -> {
+					try (InputStream inStream = openResource(inFile)) {
+						return inStream.readAllBytes();
+					}
+				});
+		}
+
+		@Nonnull
 		private List<FileExport> exportFromDir(@Nonnull File dir,
 											   @Nonnull List<FileExport> exports,
-											   @Nonnull Result result) {
-			List<FileExport> failed = new ArrayList<>();
-
-			for (FileExport fileExport : exports) {
-				File inFile = new File(dir, fileExport.getInFile().toString());
-
-				try {
-					deliver(dir, fileExport, inFile, Files.readAllBytes(inFile.toPath()), result);
-				} catch (IOException e) {
-					log.debug("failed to export {} from {}", fileExport.getInFile(), dir, e);
-
-					failed.add(fileExport);
-				}
-			}
-
-			return failed;
+											   @Nonnull Result result) throws IOException {
+			return exportEach(dir, exports, result,
+				fileExport -> new File(dir, fileExport.getInFile().toString()),
+				inFile -> Files.readAllBytes(inFile.toPath()));
 		}
 
 		@Nonnull
@@ -284,23 +312,11 @@ public class JMpqPort extends MpqPort {
 				source = tempFile;
 			}
 
-			List<FileExport> failed = new ArrayList<>();
-
 			try (MpqArchive archive = MpqArchive.open(source.toPath(), readOptions())) {
-				for (FileExport fileExport : exports) {
-					File inFile = fileExport.getInFile();
-
-					try {
-						deliver(mpqFile, fileExport, inFile, archive.read(inFile.toString()), result);
-					} catch (IOException e) {
-						log.debug("failed to export {} from {}", inFile, mpqFile, e);
-
-						failed.add(fileExport);
-					}
-				}
+				return exportEach(mpqFile, exports, result,
+					FileExport::getInFile,
+					inFile -> archive.read(inFile.toString()));
 			}
-
-			return failed;
 		}
 
 		/**
