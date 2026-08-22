@@ -286,37 +286,16 @@ public class Wc3BinInputStream extends BinInputStream {
 
 	@Nonnull
 	public Id readId() throws StreamException {
-		Id val = null;
-
 		try {
 			byte[] sub = readBytes(4);
 
-			return Id.valueOf(trimZeroes(new String(sub, StandardCharsets.US_ASCII)));
+			// Id.valueOf strips the padding NULs, so the same trimming no
+			// longer lives in two places with a chance of disagreeing.
+			return Id.valueOf(new String(sub, StandardCharsets.US_ASCII));
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}
 	}
-
-    @Nonnull
-    private static String trimZeroes(@Nonnull String s) {
-        int len = s.length();
-        int start = 0;
-
-        // skip leading NULs
-        while (start < len && s.charAt(start) == '\0') start++;
-
-        // if all NULs, return empty
-        if (start == len) return "";
-
-        // skip trailing NULs
-        int end = len - 1;
-        while (end >= start && s.charAt(end) == '\0') end--;
-
-        // nothing trimmed → return original to avoid new allocation
-        if (start == 0 && end == len - 1) return s;
-
-        return s.substring(start, end + 1);
-    }
 
 	@Nonnull
 	public Id readId(@Nullable String label) throws StreamException {

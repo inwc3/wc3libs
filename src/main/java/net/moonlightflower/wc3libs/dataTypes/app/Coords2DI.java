@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class Coords2DI extends DataType {
 	private final int _x;
@@ -16,6 +17,16 @@ public class Coords2DI extends DataType {
 		return _y;
 	}
 	
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(getX(), getY());
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Coords2DI)

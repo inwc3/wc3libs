@@ -75,12 +75,17 @@ public class TypeInfo<boundType> {
 		return toString().hashCode();
 	}
 	
+	/**
+	 * Compares the rendered type names.
+	 * <p>
+	 * This used to compare hash codes, so two type names that happened to
+	 * collide described the same type as far as this class was concerned.
+	 */
 	@Override
 	public boolean equals(Object other) {
 		if (this == other) return true;
 
-		return other instanceof TypeInfo && (hashCode() == other.hashCode());
-
+		return other instanceof TypeInfo && toString().equals(other.toString());
 	}
 	
 	public TypeInfo(@Nonnull Class<? extends boundType> type, @Nonnull Class<? extends boundType>[] generics) {

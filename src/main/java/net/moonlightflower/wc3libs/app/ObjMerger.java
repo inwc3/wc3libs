@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.app;
 
 import net.moonlightflower.wc3libs.antlr.JassLexer;
+import net.moonlightflower.wc3libs.txt.app.jass.expr.num.IntLiteral;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.ObjMod.ObjPack;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
@@ -425,21 +426,12 @@ public class ObjMerger {
             log.info("examine tokens");
             for (Token token : j.getTokens()) {
                 if (token.getType() == JassLexer.OCT_INT_LITERAL || token.getType() == JassLexer.DEC_INT_LITERAL || token.getType() == JassLexer.HEX_INT_LITERAL || token.getType() == JassLexer.ID_INT_LITERAL) {
-                    String text = token.getText();
-
-                    int val;
-
-                    if (text.startsWith("0x") || text.startsWith("0X")) {
-                        val = Math.decode(text.substring(2).toLowerCase(), Math.CODE_HEX);
-                    } else if (text.startsWith("$")) {
-                        val = Math.decode(text.substring(1), Math.CODE_HEX);
-                    } else if (text.startsWith("0")) {
-                        val = Math.decode(text.substring(1), Math.CODE_OCT);
-                    } else if (text.startsWith("'")) {
-                        val = Math.decode(text.substring(1, text.length() - 1), Math.CODE_ASCII);
-                    } else {
-                        val = Math.decode(text, Math.CODE_DEC);
-                    }
+                    // Reading the literal used to be open-coded here as well as
+                    // in IntLiteral, and the copies disagreed: this one
+                    // lower-cased hex digits before looking them up in an
+                    // upper-case alphabet, so every id written as 0xABCD1234
+                    // decoded to something else entirely.
+                    int val = IntLiteral.parse(token.getText()).getVal();
 
                     Id id = Id.valueOf(Math.encode(val, Math.CODE_ASCII));
 
@@ -447,30 +439,6 @@ public class ObjMerger {
                         jRefedIds.add(id);
                     }
                 }
-
-                /*if (token.getType() == JassLexer.INT_LITERAL) {
-                    String text = token.getText();
-
-                    int val;
-
-                    if (text.startsWith("0x") || text.startsWith("0X")) {
-                        val = Math.decode(text.substring(2).toLowerCase(), Math.CODE_HEX);
-                    } else if (text.startsWith("$")) {
-                        val = Math.decode(text.substring(1), Math.CODE_HEX);
-                    } else if (text.startsWith("0")) {
-                        val = Math.decode(text.substring(1), Math.CODE_OCT);
-                    } else if (text.startsWith("'")) {
-                        val = Math.decode(text.substring(1, text.length() - 1), Math.CODE_ASCII);
-                    } else {
-                        val = Math.decode(text, Math.CODE_DEC);
-                    }
-
-                    Id id = Id.valueOf(Math.encode(val, Math.CODE_ASCII));
-
-                    if (id.toString().length() == 4) {
-                        jRefedIds.add(id);
-                    }
-                }*/
             }
         }
 

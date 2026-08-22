@@ -42,17 +42,43 @@ public class GameVersion implements Comparable<GameVersion> {
         return _versionNumList.toString();
     }
 
+    /**
+     * Compares component by component, treating an absent component as zero, so
+     * {@code 1.29} and {@code 1.29.0} are the same version.
+     * <p>
+     * The loop used to end only when the index reached the length of
+     * <em>both</em> lists, which for two versions of different length that never
+     * differ -- exactly the {@code 1.29} against {@code 1.29.0} case -- it never
+     * did. Running past the longer list is enough: everything beyond it is zero
+     * on both sides.
+     */
     @Override
     public int compareTo(@Nonnull GameVersion other) {
-        for (int i = 0; ; i++) {
+        int components = java.lang.Math.max(_versionNumList.size(), other._versionNumList.size());
+
+        for (int i = 0; i < components; i++) {
             int curNum = (i < _versionNumList.size()) ? _versionNumList.get(i) : 0;
             int otherCurNum = (i < other._versionNumList.size()) ? other._versionNumList.get(i) : 0;
 
             if (curNum > otherCurNum) return 1;
             if (curNum < otherCurNum) return -1;
-
-            if (i == _versionNumList.size() && i == other._versionNumList.size()) return 0;
         }
+
+        return 0;
+    }
+
+    /**
+     * Consistent with {@link #compareTo(GameVersion)}, and therefore with
+     * {@link #equals(Object)}: trailing zeros do not distinguish a version, so
+     * they must not distinguish its hash either.
+     */
+    @Override
+    public int hashCode() {
+        int end = _versionNumList.size();
+
+        while (end > 0 && _versionNumList.get(end - 1) == 0) end--;
+
+        return _versionNumList.subList(0, end).hashCode();
     }
 
     @Override

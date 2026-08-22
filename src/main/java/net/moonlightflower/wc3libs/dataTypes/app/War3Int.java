@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.War3Num;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class War3Int extends DataType implements War3Num {
 	public static String name() {
@@ -21,6 +22,16 @@ public class War3Int extends DataType implements War3Num {
 		return _val;
 	}
 	
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getVal());
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof War3Int)

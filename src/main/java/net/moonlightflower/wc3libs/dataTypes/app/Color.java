@@ -3,6 +3,7 @@ package net.moonlightflower.wc3libs.dataTypes.app;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class Color extends DataType {
 	private final int _red;
@@ -26,6 +27,16 @@ public class Color extends DataType {
 		return _alpha;
 	}
 	
+	/**
+	 * Consistent with {@link #equals(Object)}, which this class overrides
+	 * without having overridden this: instances that compare equal hashed
+	 * differently, so a set or map key made of them did not work.
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(getRed255(), getGreen255(), getBlue255(), getAlpha255());
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Color)
