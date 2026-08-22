@@ -6,10 +6,19 @@
 Pure Java library for general wc3 modding and tool development.
 With Wc3libs we aim to offer a feature-complete, easy, plug & play solution for jvm applications to access, modify and output any kind of Warcraft III specific game data.
 
+# Requirements
+
+| wc3libs | Java |
+|---|---|
+| 2.0.0 and newer | 25 |
+| 1.2.x | 17 |
+
+The Java 25 baseline comes from [JMPQ3](https://github.com/inwc3/JMPQ3) 2.0,
+which wc3libs uses to read and write MPQ archives.
+
 # Usage
 
 Use this library in your maven/gradle project using [JitPack](https://jitpack.io/#inwc3/wc3libs).
-The latest version requires Java 11 or higher.
 
 Gradle Example:
 ```gradle
@@ -29,6 +38,19 @@ dependencies {
 ## Reading maps
 
 This project uses another one of our projects, [JMPQ](https://github.com/inwc3/JMPQ3) to read and write mpq archives, ie warcraft 3 maps.
+
+`JMpqPort` is the entry point. Reading never modifies the archive, and writing
+happens when the port is committed rather than as a side effect of closing
+anything.
+
+An archive addresses its files by a hash of their name, and the names themselves
+live in an optional `(listfile)` that map protectors strip. Such a map still
+plays, because the game asks for its files by name, but it cannot list itself --
+so rebuilding it from its own listing would drop everything the listing does not
+mention. `War3MapFiles` holds the paths the game asks for, and both `listFiles`
+and the rebuild consult it, which recovers the terrain, objects and script of an
+unlisted map. Imported assets, whose names are arbitrary, cannot be recovered
+this way.
 
 ## Data Formats
 
