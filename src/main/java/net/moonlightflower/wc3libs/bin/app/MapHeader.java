@@ -93,17 +93,19 @@ public class MapHeader {
 
             stream.writeInt32(_mapHeader._maxPlayersCount);
 
-            long fillBytesSize = HEADER_BYTES_SIZE - stream.getPos() - startPos;
+            // The header is a fixed 512 bytes, so what is left to pad is that
+            // less what was just written. Subtracting the start position a
+            // second time instead of using it to measure the written length
+            // under-padded by exactly that much whenever the header did not
+            // begin at the start of the stream.
+            long fillBytesSize = HEADER_BYTES_SIZE - (stream.getPos() - startPos);
 
-            if (fillBytesSize > 0) {
-                do {
-                    int fillBytesSizeI = (int) fillBytesSize;
-
-                    stream.writeBytes(new byte[fillBytesSizeI]);
-
-                    fillBytesSize -= fillBytesSizeI;
-                } while (fillBytesSize > 0);
+            if (fillBytesSize < 0) {
+                throw new BinStream.StreamException(stream,
+                    "map header does not fit in " + HEADER_BYTES_SIZE + " bytes");
             }
+
+            stream.writeBytes(new byte[(int) fillBytesSize]);
         }
 
         public void exec(@Nonnull MapHeader mapHeader) throws BinStream.StreamException {

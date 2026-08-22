@@ -262,28 +262,26 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 				stream.writeInt16(_tile.getGroundHeight());
 
-				short waterLevel = _tile.getWaterLevel();
+				int waterLevel = (_tile.getWaterLevel() & 0x7FFF) | ((_tile.getBoundary() & 0x1) << 15);
 
-				waterLevel |= _tile.getBoundary() << 15;
+				stream.writeUInt16(waterLevel);
 
-				stream.writeInt16(waterLevel);
+				// Bit order per the format: ramp, blight, water, camera
+				// boundary, then the ground texture in the high nibble.
+				int flags = _tile.getRamp() & 0x1;
 
-				int flags = _tile.getBoundary2();
-
-				flags |= (_tile.getWater() << 1);
-				flags |= (_tile.getBlight() << 2);
-				flags |= (_tile.getRamp() << 3);
-				flags |= (_tile.getTex() << 4);
+				flags |= (_tile.getBlight() & 0x1) << 1;
+				flags |= (_tile.getWater() & 0x1) << 2;
+				flags |= (_tile.getBoundary2() & 0x1) << 3;
+				flags |= (_tile.getTex() & 0xF) << 4;
 
 				stream.writeUByte(flags);
 
 				stream.writeUByte(_tile.getTexDetails());
 
-				int cliff = _tile.getCliffTex() << 4;
+				int cliff = (_tile.getCliffTex() & 0xF) << 4;
 
-				int layer = Math.min(_tile.getCliffLayer(), 14); //15 is bad
-
-				cliff |= layer;
+				cliff |= _tile.getCliffLayer() & 0xF;
 
 				stream.writeUByte(cliff);
 			}
@@ -322,11 +320,16 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 			private void read(@Nonnull EncodingFormat format) throws BinStream.StreamException {
 				switch (format.toEnum()) {
+					// A tile carries no version of its own -- the file's header
+					// holds the only one -- so AUTO has nothing to detect and
+					// means the only layout there is. Rejecting it made the
+					// stream constructor, whose format defaults to AUTO,
+					// unusable.
+					case AUTO:
 					case W3E_0xB: {
 						read_0xB();
 
 						break;
-
 					}
 					default:
 						throw new EncodingFormat.InvalidFormatException(format);
@@ -338,22 +341,32 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 				_tile.setGroundHeight(stream.readInt16("groundHeight"));
 
-				short waterLevel = stream.readInt16("waterLevelAndFlag");
+				int waterLevel = stream.readUInt16("waterLevelAndFlag");
 
 				_tile.setWaterLevel((short) (waterLevel & 0x7FFF));
-				_tile.setBoundary(waterLevel >> 15);
+
+				// Read as a signed short, the top bit sign-extended, so this
+				// reported the flag as -1 rather than 1 whenever it was set --
+				// and the value survived a round trip only because writing
+				// shifted the same -1 straight back out.
+				_tile.setBoundary((waterLevel >> 15) & 0x1);
 
 				int flags = stream.readUByte("flags");
 
-				_tile.setBoundary2(flags & 0x1);
-				_tile.setWater((flags >> 1) & 0x1);
-				_tile.setBlight((flags >> 2) & 0x1);
-				_tile.setRamp((flags >> 3) & 0x1);
-				_tile.setTex(flags >> 4);
+				// The low nibble is, from bit 0 up: ramp, blight, water, camera
+				// boundary. This used to assign them in the opposite order, so
+				// getRamp() returned the camera boundary bit, getBlight()
+				// returned water, and so on. Symmetrically wrong on write, which
+				// is why a round trip never noticed.
+				_tile.setRamp(flags & 0x1);
+				_tile.setBlight((flags >> 1) & 0x1);
+				_tile.setWater((flags >> 2) & 0x1);
+				_tile.setBoundary2((flags >> 3) & 0x1);
+				_tile.setTex((flags >> 4) & 0xF);
 
 				_tile.setTexDetails(stream.readUByte("texDetails"));
 
-				byte cliff = stream.readByte("cliffTexAndLayer");
+				int cliff = stream.readUByte("cliffTexAndLayer");
 
 				_tile.setCliffTex((cliff >> 4) & 0xF);
 				_tile.setCliffLayer(cliff & 0xF);
@@ -369,8 +382,15 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 			reader.exec(this);
 		}
 
+		/**
+		 * Reads a tile from the stream.
+		 * <p>
+		 * This used to call {@code exec()}, which reads into a tile of its own
+		 * and returns it: the stream advanced, the result was thrown away, and
+		 * the caller got a tile still holding its defaults.
+		 */
 		public Tile(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			new Reader(stream).exec();
+			new Reader(stream).exec(this);
 		}
 		
 		public Tile() {
