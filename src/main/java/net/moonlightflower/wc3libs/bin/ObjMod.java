@@ -30,7 +30,7 @@ import net.moonlightflower.wc3libs.slk.app.meta.CommonMetaSLK;
 import net.moonlightflower.wc3libs.txt.Profile;
 import net.moonlightflower.wc3libs.txt.TXTSectionId;
 
-;import javax.annotation.Nonnull;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**

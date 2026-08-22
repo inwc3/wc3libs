@@ -8,11 +8,12 @@ import net.moonlightflower.wc3libs.txt.app.MiscTXT;
 import net.moonlightflower.wc3libs.txt.app.SkinTXT;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import systems.crigges.jmpq3.JMpqEditor;
-import systems.crigges.jmpq3.MPQOpenOption;
+import org.inwc3.jmpq.MpqArchive;
+import org.inwc3.jmpq.MpqOpenOptions;
 import wc3libs.misc.Wc3LibTest;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import static net.moonlightflower.wc3libs.txt.app.ExtraTXT.SkyModel.LORDAERON_WINTER_PURPLE;
 import static net.moonlightflower.wc3libs.txt.app.ExtraTXT.State.SKY_MODEL;
@@ -25,17 +26,19 @@ public class MapTest extends Wc3LibTest {
     @Test
     public void testMap() throws Exception {
         File file = getFile("in.w3x");
-        JMpqEditor jMpqEditor = new JMpqEditor(file, MPQOpenOption.READ_ONLY);
         File extra = new File("extra");
         extra.deleteOnExit();
         File misc = new File("misc");
         misc.deleteOnExit();
         File skin = new File("skin");
         skin.deleteOnExit();
-        jMpqEditor.extractFile(ExtraTXT.GAME_PATH.getName(), extra);
-        jMpqEditor.extractFile(MiscTXT.GAME_PATH.getName(), misc);
-        jMpqEditor.extractFile(SkinTXT.GAME_PATH.getName(), skin);
-        jMpqEditor.close();
+
+        try (MpqArchive archive = MpqArchive.open(file.toPath(), MpqOpenOptions.warcraft3())) {
+            Files.write(extra.toPath(), archive.read(ExtraTXT.GAME_PATH.getName()));
+            Files.write(misc.toPath(), archive.read(MiscTXT.GAME_PATH.getName()));
+            Files.write(skin.toPath(), archive.read(SkinTXT.GAME_PATH.getName()));
+        }
+
         Env env = Env.ofMapFile(file);
 
         Assert.assertEquals(env.getWidth(), 129);
