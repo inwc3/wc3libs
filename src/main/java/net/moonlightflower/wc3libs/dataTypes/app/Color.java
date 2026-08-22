@@ -39,8 +39,8 @@ public class Color extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Color)
-			return equals((Color) other);
+		if (other instanceof Color color)
+			return equals(color);
 		
 		return super.equals(other);
 	}
@@ -100,8 +100,8 @@ public class Color extends DataType {
 	}
 
 	public static DataType decodeStatic(Object val) {
-		if (val instanceof Color)
-			return Color.fromBGRA255(((Color) val).getBlue255(), ((Color) val).getGreen255(), ((Color) val).getRed255(), ((Color) val).getAlpha255());
+		if (val instanceof Color color)
+			return Color.fromBGRA255(color.getBlue255(), color.getGreen255(), color.getRed255(), color.getAlpha255());
 		
 		return null;
 	}

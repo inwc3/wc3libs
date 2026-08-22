@@ -258,8 +258,8 @@ public class MMP {
 			int minX = icon.getCoords().getX() - iconImg._width / 2;
 			int minY = icon.getCoords().getY() - iconImg._height / 2;
 			
-			int maxX = (int) Math.min(img.getWidth() - 1, minX + iconImg._width);
-			int maxY = (int) Math.min(img.getHeight() - 1, minY + iconImg._height);
+			int maxX = Math.min(img.getWidth() - 1, minX + iconImg._width);
+			int maxY = Math.min(img.getHeight() - 1, minY + iconImg._height);
 			
 			int width = maxX - minX;
 			int height = maxY - minY;

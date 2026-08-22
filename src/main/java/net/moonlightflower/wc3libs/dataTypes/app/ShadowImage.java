@@ -14,8 +14,8 @@ public class ShadowImage extends FileType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof ShadowImage)
-			return equals((ShadowImage) other);
+		if (other instanceof ShadowImage shadowImage)
+			return equals(shadowImage);
 
 		return super.equals(other);
 	}

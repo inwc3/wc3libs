@@ -25,8 +25,8 @@ public class TerrainFogType extends War3Int {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof TerrainFogType)
-			return equals((TerrainFogType) other);
+		if (other instanceof TerrainFogType terrainFogType)
+			return equals(terrainFogType);
 
 		return super.equals(other);
 	}

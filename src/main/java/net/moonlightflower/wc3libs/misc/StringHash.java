@@ -32,6 +32,13 @@ public class StringHash {
         return i;
     }
 
+    /**
+     * The trailing switch falls through by design: it folds however many of the
+     * last eleven bytes there are into the accumulators, one case per byte. That
+     * is how Bob Jenkins' lookup2 is written and changing it would change the
+     * hash.
+     */
+    @SuppressWarnings("fallthrough")
     private static int hash(byte[] k, int length, int initVal){
         int idx = 0;
         int len = length;

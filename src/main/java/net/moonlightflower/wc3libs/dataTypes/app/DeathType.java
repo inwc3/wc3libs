@@ -29,8 +29,8 @@ public class DeathType extends War3Int {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof DeathType)
-			return equals((DeathType) other);
+		if (other instanceof DeathType deathType)
+			return equals(deathType);
 
 		return super.equals(other);
 	}

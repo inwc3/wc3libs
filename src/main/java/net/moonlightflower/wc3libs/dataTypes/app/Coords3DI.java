@@ -35,8 +35,8 @@ public class Coords3DI {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords3DI)
-			return equals((Coords3DI) other);
+		if (other instanceof Coords3DI coords3DI)
+			return equals(coords3DI);
 
 		return super.equals(other);
 	}

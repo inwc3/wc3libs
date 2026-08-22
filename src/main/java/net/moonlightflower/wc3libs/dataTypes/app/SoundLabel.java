@@ -5,8 +5,8 @@ import javax.annotation.Nonnull;
 public class SoundLabel extends War3String {
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof SoundLabel)
-			return equals((SoundLabel) other);
+		if (other instanceof SoundLabel soundLabel)
+			return equals(soundLabel);
 
 		return super.equals(other);
 	}

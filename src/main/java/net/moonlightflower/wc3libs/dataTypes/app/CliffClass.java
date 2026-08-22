@@ -13,8 +13,8 @@ public class CliffClass extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof CliffClass)
-			return equals((CliffClass) other);
+		if (other instanceof CliffClass cliffClass)
+			return equals(cliffClass);
 
 		return super.equals(other);
 	}

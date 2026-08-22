@@ -25,8 +25,8 @@ public class UnitRace extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof UnitRace)
-			return equals((UnitRace) other);
+		if (other instanceof UnitRace unitRace)
+			return equals(unitRace);
 
 		return super.equals(other);
 	}

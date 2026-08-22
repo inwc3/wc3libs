@@ -48,8 +48,8 @@ public class Coords4DF extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords4DF)
-			return equals((Coords4DF) other);
+		if (other instanceof Coords4DF coords4DF)
+			return equals(coords4DF);
 
 		return super.equals(other);
 	}

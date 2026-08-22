@@ -20,8 +20,8 @@ public class DefType extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof DefType)
-			return equals((DefType) other);
+		if (other instanceof DefType defType)
+			return equals(defType);
 
 		return super.equals(other);
 	}

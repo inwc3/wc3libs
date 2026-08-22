@@ -24,8 +24,8 @@ public class SpellDetail extends War3Int {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof SpellDetail)
-			return equals((SpellDetail) other);
+		if (other instanceof SpellDetail spellDetail)
+			return equals(spellDetail);
 
 		return super.equals(other);
 	}

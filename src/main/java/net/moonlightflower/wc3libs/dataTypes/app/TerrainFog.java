@@ -69,8 +69,8 @@ public class TerrainFog extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof TerrainFog)
-			return equals(((TerrainFog) other));
+		if (other instanceof TerrainFog terrainFog)
+			return equals(terrainFog);
 
 		return super.equals(other);
 	}

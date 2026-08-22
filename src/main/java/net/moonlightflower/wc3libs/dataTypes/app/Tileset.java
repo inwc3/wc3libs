@@ -57,8 +57,8 @@ public class Tileset extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Tileset)
-			return equals((Tileset) other);
+		if (other instanceof Tileset tileset)
+			return equals(tileset);
 
 		return super.equals(other);
 	}

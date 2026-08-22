@@ -17,12 +17,6 @@ import java.util.Map;
 /**
  * imports file for wrapping war3map.imp
  */
-interface IMP_Streamable {
-    void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException;
-
-    void write(@Nonnull Wc3BinOutputStream stream);
-}
-
 public class IMP {
     public final static String GAME_PATH = "war3map.imp";
     public final static File CAMPAIGN_PATH = new File("war3campaign.imp");

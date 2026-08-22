@@ -38,8 +38,8 @@ public class War3String extends DataType implements Stringable {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof War3String)
-			return equals((War3String) other);
+		if (other instanceof War3String war3String)
+			return equals(war3String);
 		if (other instanceof String)
 			return equals(War3String.valueOf(other));
 

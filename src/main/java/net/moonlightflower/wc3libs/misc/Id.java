@@ -58,7 +58,7 @@ public class Id extends War3String {
 	public boolean equals(Object other) {
 		if (this == other) return true;
 
-		if (other instanceof Id) return equals((Id) other);
+		if (other instanceof Id id) return equals(id);
 
 		return super.equals(other);
 	}

@@ -29,8 +29,8 @@ public class Coords2DI extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords2DI)
-			return equals((Coords2DI) other);
+		if (other instanceof Coords2DI coords2DI)
+			return equals(coords2DI);
 		
 		return super.equals(other);
 	}

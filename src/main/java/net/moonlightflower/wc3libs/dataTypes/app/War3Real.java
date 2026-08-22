@@ -31,8 +31,8 @@ public class War3Real extends DataType implements War3Num {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof War3Real)
-			return equals((War3Real) other);
+		if (other instanceof War3Real war3Real)
+			return equals(war3Real);
 
 		return super.equals(other);
 	}

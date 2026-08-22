@@ -42,8 +42,8 @@ public class Coords3DF extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords3DF)
-			return equals((Coords3DF) other);
+		if (other instanceof Coords3DF coords3DF)
+			return equals(coords3DF);
 
 		return super.equals(other);
 	}

@@ -34,8 +34,8 @@ public class War3Int extends DataType implements War3Num {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof War3Int)
-			return equals((War3Int) other);
+		if (other instanceof War3Int war3Int)
+			return equals(war3Int);
 		
 		return super.equals(other);
 	}

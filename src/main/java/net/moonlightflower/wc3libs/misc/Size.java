@@ -26,8 +26,8 @@ public class Size extends Coords2DI {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Size)
-			return equals((Size) other);
+		if (other instanceof Size size)
+			return equals(size);
 		
 		return super.equals(other);
 	}

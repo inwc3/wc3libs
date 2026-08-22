@@ -20,8 +20,8 @@ public class Coords2DF extends DataType {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coords2DF)
-			return equals((Coords2DF) other);
+		if (other instanceof Coords2DF coords2DF)
+			return equals(coords2DF);
 
 		return super.equals(other);
 	}
@@ -70,8 +70,8 @@ public class Coords2DF extends DataType {
 	}
 
 	public static DataType decodeStatic(Object val) {
-		if (val instanceof Coords2DF)
-			return new Coords2DF(((Coords2DF) val).getX(), ((Coords2DF) val).getY());
+		if (val instanceof Coords2DF coords2DF)
+			return new Coords2DF(coords2DF.getX(), coords2DF.getY());
 
 		return null;
 	}

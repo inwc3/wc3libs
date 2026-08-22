@@ -16,8 +16,8 @@ public class RegenType extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof RegenType)
-			return equals((RegenType) other);
+		if (other instanceof RegenType regenType)
+			return equals(regenType);
 
 		return super.equals(other);
 	}

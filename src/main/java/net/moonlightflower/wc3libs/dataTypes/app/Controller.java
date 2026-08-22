@@ -27,8 +27,8 @@ public class Controller extends War3Int {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Controller)
-			return equals((Controller) other);
+		if (other instanceof Controller controller)
+			return equals(controller);
 
 		return super.equals(other);
 	}

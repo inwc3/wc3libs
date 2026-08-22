@@ -16,8 +16,8 @@ public class DoodadClass extends War3String {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof DoodadClass)
-			return equals((DoodadClass) other);
+		if (other instanceof DoodadClass doodadClass)
+			return equals(doodadClass);
 
 		return super.equals(other);
 	}
