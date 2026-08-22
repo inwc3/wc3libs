@@ -649,22 +649,26 @@ public class DOO {
 
 		long start = stream.getPos();
 
-		for (boolean withSkinIds : new boolean[]{false, true}) {
-			if (!fits(stream, start, doodsCount, withSkinIds)) continue;
+		boolean fitsWithout = fits(stream, start, doodsCount, false);
+		boolean fitsWith = fits(stream, start, doodsCount, true);
 
+		// Exactly one layout accounting for the file is the answer. Both fitting
+		// is possible in principle, because a misparse can absorb the four-byte
+		// difference into an item-set count, so that is treated as no answer at
+		// all rather than as a reason to prefer one.
+		if (fitsWithout != fitsWith) {
 			stream.setPos(start);
 
-			_skinIds = withSkinIds ? SkinIds.PRESENT : SkinIds.ABSENT;
+			_skinIds = fitsWith ? SkinIds.PRESENT : SkinIds.ABSENT;
 
-			readDoods(stream, doodsCount, withSkinIds);
+			readDoods(stream, doodsCount, fitsWith);
 
 			return;
 		}
 
-		// Neither layout accounts for the file exactly. Fall back to the old
-		// guess rather than refusing a file this library used to read: a flags
-		// byte only ever uses its low three bits, so a larger value is more
-		// likely to be the first character of a skin id.
+		// Fall back to the old guess rather than refusing a file this library
+		// used to read: a flags byte only ever uses its low three bits, so a
+		// larger value is more likely to be the first character of a skin id.
 		stream.setPos(start);
 
 		boolean withSkinIds = doodsCount > 0 && peekSkinIdAt(stream, start + SKIN_ID_OFFSET);

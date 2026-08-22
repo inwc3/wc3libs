@@ -1058,21 +1058,25 @@ public class DOO_UNITS {
 
 		long start = stream.getPos();
 
-		for (boolean withSkinIds : new boolean[]{false, true}) {
-			if (!fits(stream, start, objsCount, withSkinIds)) continue;
+		boolean fitsWithout = fits(stream, start, objsCount, false);
+		boolean fitsWith = fits(stream, start, objsCount, true);
 
+		// Exactly one layout accounting for the file is the answer. Both fitting
+		// is possible in principle, because a misparse can absorb the four-byte
+		// difference into one of the variable-length counts, so that is treated
+		// as no answer at all rather than as a reason to prefer one.
+		if (fitsWithout != fitsWith) {
 			stream.setPos(start);
 
-			_skinIds = withSkinIds ? SkinIds.PRESENT : SkinIds.ABSENT;
+			_skinIds = fitsWith ? SkinIds.PRESENT : SkinIds.ABSENT;
 
-			readObjs(stream, objsCount, withSkinIds);
+			readObjs(stream, objsCount, fitsWith);
 
 			return;
 		}
 
-		// Neither layout accounts for the file exactly -- a file with trailing
-		// bytes, say. Fall back to the old guess rather than refusing a file
-		// this library used to read.
+		// Fall back to the old guess rather than refusing a file this library
+		// used to read -- one with trailing bytes, say.
 		stream.setPos(start);
 
 		boolean withSkinIds = objsCount > 0 && peekSkinIdAt(stream, start + SKIN_ID_OFFSET);
