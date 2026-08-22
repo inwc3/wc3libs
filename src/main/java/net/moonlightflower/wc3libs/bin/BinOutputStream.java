@@ -9,35 +9,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class BinOutputStream extends BinStream implements AutoCloseable {
-    private void ensureCap(long size) {
-        long toAdd = size - _bytes.size();
-
-        for (long i = 1; i <= toAdd; i++) {
-            _bytes.add(null);
-        }
-    }
-
     public byte[] getBytes() {
-        if (_bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + _bytes.size());
-
-        final int size = (int) _bytes.size();
-        final byte[] out = new byte[size];
-
-        for (int i = 0; i < size; i++) {
-            out[i] = _bytes.get(i);
-        }
-
-        return out;
+        return _bytes.toArray();
     }
 
     public void writeByte(byte val) {
-        ensureCap(_pos + 1);
-
         _bytes.set(_pos++, val);
     }
 
     public void writeBytes(byte[] vals) {
-        ensureCap(_pos + vals.length);
+        if (_pos == _bytes.size()) {
+            // The common case: appending at the end, in one copy.
+            _bytes.addAll(vals, vals.length);
+
+            _pos += vals.length;
+
+            return;
+        }
 
         for (byte val : vals) {
             _bytes.set(_pos++, val);
@@ -45,17 +33,7 @@ public class BinOutputStream extends BinStream implements AutoCloseable {
     }
 
     private void write(@Nonnull OutputStream outStream) throws IOException {
-        ByteList bytes = _bytes;
-
-        if (bytes.size() > Integer.MAX_VALUE) throw new RuntimeException("size out of bounds " + bytes.size());
-
-        int size = (int) bytes.size();
-        byte[] buf = new byte[size];
-
-        for (int i = 0; i < size; i++) {
-            buf[i] = bytes.get(i);
-        }
-        outStream.write(buf);
+        _bytes.writeTo(outStream);
 
         outStream.flush();
     }
