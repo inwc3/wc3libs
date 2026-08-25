@@ -34,14 +34,6 @@ import java.util.stream.Collectors;
 public class JMpqPort extends MpqPort {
 	private final static Logger log = LoggerFactory.getLogger(JMpqPort.class);
 
-	private final static File workDir = new File(Orient.getExecDir(), Orient.getExecPath().getName() + "_work");
-
-	private final static File classWorkDir = new File(workDir, Orient.localClassPath().toString());
-
-	private final static File tempDir = new File(classWorkDir, "temp");
-
-	private final static File exportDir = new File(tempDir, "exported");
-
 	/**
 	 * Reads every archive the way Warcraft III reads its own: format version 0
 	 * is forced, so a header whose size or version a protector mangled still
@@ -199,9 +191,6 @@ public class JMpqPort extends MpqPort {
 		@Nonnull
 		@Override
 		public Result commit(@Nonnull Vector<File> mpqFiles) throws IOException {
-			Orient.removeDir(exportDir);
-			Orient.createDir(exportDir);
-
 			List<FileExport> pending = new ArrayList<>(getFiles());
 			Result result = new Result();
 
@@ -300,19 +289,9 @@ public class JMpqPort extends MpqPort {
 
 		@Nonnull
 		private List<FileExport> exportFromArchive(@Nonnull File mpqFile,
-												   @Nonnull List<FileExport> exports,
-												   @Nonnull Result result) throws IOException {
-			File source = mpqFile;
-
-			if (Orient.fileIsLocked(source)) {
-				File tempFile = new File(tempDir, Orient.getFileName(source));
-
-				Orient.copyFileIfNewer(source, tempFile);
-
-				source = tempFile;
-			}
-
-			try (MpqArchive archive = MpqArchive.open(source.toPath(), readOptions())) {
+																	   @Nonnull List<FileExport> exports,
+																	   @Nonnull Result result) throws IOException {
+			try (MpqArchive archive = MpqArchive.open(mpqFile.toPath(), readOptions())) {
 				return exportEach(mpqFile, exports, result,
 					FileExport::getInFile,
 					inFile -> archive.read(inFile.toString()));
