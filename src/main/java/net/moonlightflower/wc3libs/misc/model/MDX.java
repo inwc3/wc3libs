@@ -234,11 +234,7 @@ public class MDX {
 
                 handler.run();
             } else {
-                System.err.println("unknown chunk " + chunkToken + ";" + Arrays.toString(chunkToken.toString().getBytes()));
-
-                long size = stream.readUInt32("header_size");
-
-                stream.skip(size);
+                _chunks.add(new RawChunk(chunkToken, stream));
             }
         }
     }
@@ -290,15 +286,15 @@ public class MDX {
     }
 
     private void read(@Nonnull File file, @Nonnull MDX.EncodingFormat format) throws IOException {
-        read(new Wc3BinInputStream(file), format);
+        try (Wc3BinInputStream stream = new Wc3BinInputStream(file)) {
+            read(stream, format);
+        }
     }
 
     public void write(@Nonnull File file, @Nonnull MDX.EncodingFormat format) throws IOException {
-        Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
-
-        write(outStream, format);
-
-        outStream.close();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(file)) {
+            write(stream, format);
+        }
     }
 
     private void read(@Nonnull File file) throws IOException {
@@ -306,7 +302,9 @@ public class MDX {
     }
 
     public void write(@Nonnull File file) throws IOException {
-        write(new Wc3BinOutputStream(file));
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(file)) {
+            write(stream);
+        }
     }
 
     public MDX() {
@@ -322,7 +320,9 @@ public class MDX {
 
     public void squish() {
         for (Chunk chunk : getChunks()) {
-            if (chunk instanceof GeosetChunk) {
+            if (chunk instanceof SequenceChunk) {
+                squishSequences((SequenceChunk) chunk);
+            } else if (chunk instanceof GeosetChunk) {
                 squishGeoset((GeosetChunk) chunk);
             } else if (chunk instanceof PivotPointChunk) {
                 squishPivot((PivotPointChunk) chunk);
@@ -348,6 +348,10 @@ public class MDX {
                 squishCollisionShape((CollisionShapeChunk) chunk);
             }
         }
+    }
+
+    private void squishSequences(SequenceChunk chunk) {
+        chunk.getSequences().forEach(sequence -> sequence.getExtent().squish());
     }
 
     private void squishCollisionShape(CollisionShapeChunk chunk) {
@@ -464,6 +468,9 @@ public class MDX {
 
     private void squishGeoset(GeosetChunk chunk) {
         chunk.getGeosets().forEach(geoset -> {
+            geoset.getExtent().squish();
+            geoset.getExtents().forEach(Extent::squish);
+
             geoset.getVertexChunk().getVertices().forEach(vertex -> {
                 vertex.setPos(vertex.getPos().squish());
             });
