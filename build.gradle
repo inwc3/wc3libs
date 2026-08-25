@@ -48,7 +48,7 @@ dependencies {
     api group: 'org.slf4j', name: 'slf4j-api', version: '2.0.17'
 
     // Libs
-    implementation group: 'com.github.inwc3', name: 'jmpq3', version: '15fce9189917'
+    implementation group: 'com.github.inwc3', name: 'JMPQ3', version: 'v2.0.1'
     implementation group: 'com.twelvemonkeys.imageio', name: 'imageio-jpeg', version: '3.13.1'
 
     // Annotations are needed to compile, never at runtime, and putting them on
