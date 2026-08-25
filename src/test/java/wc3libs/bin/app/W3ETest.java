@@ -29,6 +29,8 @@ public class W3ETest extends Wc3LibTest {
 		W3E.Reader reader = new W3E.Reader(new Wc3BinInputStream(new ByteArrayInputStream(serialized)));
 		reader.setFormat(W3E.EncodingFormat.W3E_0xC);
 		W3E parsed = new W3E(reader);
+		Assert.assertEquals(parsed.get(new Coords2DI(1, 0)).getBoundary(), 1);
+		Assert.assertEquals(parsed.get(new Coords2DI(1, 1)).getCliffLayer(), 15);
 		byte[] roundTrip = write(parsed, W3E.EncodingFormat.W3E_0xC);
 
 		Assert.assertEquals(roundTrip, serialized);
@@ -68,7 +70,7 @@ public class W3ETest extends Wc3LibTest {
 				tile.setRamp((x + y) % 2);
 				tile.setTex((x << 1) | y);
 				tile.setCliffTex(2);
-				tile.setCliffLayer(2 + x + y);
+				tile.setCliffLayer(x == 1 && y == 1 ? 15 : 2 + x + y);
 				tile.setTexDetails(0x1F);
 
 				w3e.set(new Coords2DI(x, y), tile);

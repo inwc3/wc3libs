@@ -297,7 +297,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 				short waterLevel = _tile.getWaterLevel();
 
-				waterLevel |= _tile.getBoundary() << 15;
+				waterLevel |= (short) (_tile.getBoundary() << 15);
 
 				stream.writeInt16(waterLevel);
 
@@ -314,7 +314,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 				int cliff = _tile.getCliffTex() << 4;
 
-				int layer = Math.min(_tile.getCliffLayer(), 14); //15 is bad
+				int layer = _tile.getCliffLayer() & 0xF;
 
 				cliff |= layer;
 
@@ -421,7 +421,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 				short waterLevel = stream.readInt16("waterLevelAndFlag");
 
 				_tile.setWaterLevel((short) (waterLevel & 0x7FFF));
-				_tile.setBoundary(waterLevel >> 15);
+				_tile.setBoundary((waterLevel >> 15) & 0x1);
 
 				int texAndFlags = stream.readUInt16("groundTextureAndFlags");
 
