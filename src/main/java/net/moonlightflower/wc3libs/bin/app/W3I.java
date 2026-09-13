@@ -742,9 +742,32 @@ public class W3I {
     }
 
     public enum Graphics {
-        SD,
-        HD,
-        SD_AND_HD
+        SD(1),
+        HD(2),
+        SD_AND_HD(3),
+        DE(4),
+        SD_AND_DE(5),
+        HD_AND_DE(6),
+        SD_HD_AND_DE(7);
+
+        private final long _val;
+
+        Graphics(long val) {
+            _val = val;
+        }
+
+        public long getVal() {
+            return _val;
+        }
+
+        @Nonnull
+        public static Graphics valueOf(long val) {
+            for (Graphics graphics : values()) {
+                if (graphics.getVal() == val) return graphics;
+            }
+
+            return SD;
+        }
     }
 
     private Graphics _graphics = Graphics.SD_AND_HD;
@@ -803,6 +826,70 @@ public class W3I {
     public void setForceMinCameraZoom(int val) {
         _forceMinCameraZoom = val;
     }
+
+    // Version 39 fields. The byte-sized settings deliberately remain ints so
+    // unknown future enum values can be read and written without loss.
+    private int _alphaTileMinimapColor = 128;
+    private int _terrainFogStyle = 0;
+    private boolean _drawTerrainFogOverSky = false;
+    private float _terrainFogLinearStart = 10000F;
+    private float _terrainFogLinearEnd = 10000F;
+    private float _terrainFogMaxOpacity = 1F;
+    private float _terrainFogHeightStart = 0F;
+    private float _terrainFogHeightEnd = 0F;
+    private int _skyDisplay = 0;
+    private int _timeOfDay = 0;
+    private int _waterMinOpacity = 0;
+    private int _waterMaxOpacity = 100;
+    private int _waterReflectivity = 10;
+    private int _waterEmissivity = 0;
+    private int _waterEdgeSoftness = 50;
+    private int _waterWavesVertexDisplacement = 20;
+    private int _waterWavesNormalMapStrength = 100;
+    private int _waterOverrideColor = 0;
+    private int _waterEnvMapReflectivity = 100;
+    private int _waterUnknown = -1;
+
+    public int getAlphaTileMinimapColor() { return _alphaTileMinimapColor; }
+    public void setAlphaTileMinimapColor(int val) { _alphaTileMinimapColor = val; }
+    public int getTerrainFogStyle() { return _terrainFogStyle; }
+    public void setTerrainFogStyle(int val) { _terrainFogStyle = val; }
+    public boolean getDrawTerrainFogOverSky() { return _drawTerrainFogOverSky; }
+    public void setDrawTerrainFogOverSky(boolean val) { _drawTerrainFogOverSky = val; }
+    public float getTerrainFogLinearStart() { return _terrainFogLinearStart; }
+    public void setTerrainFogLinearStart(float val) { _terrainFogLinearStart = val; }
+    public float getTerrainFogLinearEnd() { return _terrainFogLinearEnd; }
+    public void setTerrainFogLinearEnd(float val) { _terrainFogLinearEnd = val; }
+    public float getTerrainFogMaxOpacity() { return _terrainFogMaxOpacity; }
+    public void setTerrainFogMaxOpacity(float val) { _terrainFogMaxOpacity = val; }
+    public float getTerrainFogHeightStart() { return _terrainFogHeightStart; }
+    public void setTerrainFogHeightStart(float val) { _terrainFogHeightStart = val; }
+    public float getTerrainFogHeightEnd() { return _terrainFogHeightEnd; }
+    public void setTerrainFogHeightEnd(float val) { _terrainFogHeightEnd = val; }
+    public int getSkyDisplay() { return _skyDisplay; }
+    public void setSkyDisplay(int val) { _skyDisplay = val; }
+    public int getTimeOfDay() { return _timeOfDay; }
+    public void setTimeOfDay(int val) { _timeOfDay = val; }
+    public int getWaterMinOpacity() { return _waterMinOpacity; }
+    public void setWaterMinOpacity(int val) { _waterMinOpacity = val; }
+    public int getWaterMaxOpacity() { return _waterMaxOpacity; }
+    public void setWaterMaxOpacity(int val) { _waterMaxOpacity = val; }
+    public int getWaterReflectivity() { return _waterReflectivity; }
+    public void setWaterReflectivity(int val) { _waterReflectivity = val; }
+    public int getWaterEmissivity() { return _waterEmissivity; }
+    public void setWaterEmissivity(int val) { _waterEmissivity = val; }
+    public int getWaterEdgeSoftness() { return _waterEdgeSoftness; }
+    public void setWaterEdgeSoftness(int val) { _waterEdgeSoftness = val; }
+    public int getWaterWavesVertexDisplacement() { return _waterWavesVertexDisplacement; }
+    public void setWaterWavesVertexDisplacement(int val) { _waterWavesVertexDisplacement = val; }
+    public int getWaterWavesNormalMapStrength() { return _waterWavesNormalMapStrength; }
+    public void setWaterWavesNormalMapStrength(int val) { _waterWavesNormalMapStrength = val; }
+    public int getWaterOverrideColor() { return _waterOverrideColor; }
+    public void setWaterOverrideColor(int val) { _waterOverrideColor = val; }
+    public int getWaterEnvMapReflectivity() { return _waterEnvMapReflectivity; }
+    public void setWaterEnvMapReflectivity(int val) { _waterEnvMapReflectivity = val; }
+    public int getWaterUnknown() { return _waterUnknown; }
+    public void setWaterUnknown(int val) { _waterUnknown = val; }
 
     public static class Player {
         private int _num = 0;
@@ -902,6 +989,16 @@ public class W3I {
 
         public void setStartPosFixed(int val) {
             _startPosFixed = val;
+        }
+
+        private int _hudSkin = 0;
+
+        public int getHudSkin() {
+            return _hudSkin;
+        }
+
+        public void setHudSkin(int val) {
+            _hudSkin = val;
         }
 
         private String _name;
@@ -1209,8 +1306,46 @@ public class W3I {
             stream.writeInt32(getEnemyHighPrioFlags());
         }
 
+        private void read_0x27(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+            setNum(stream.readInt32("playerNum"));
+
+            Controller controller = Controller.valueOf(stream.readInt32("controller"));
+            if (controller != null) setType(controller);
+
+            UnitRace race = UnitRace.valueOf(stream.readInt32("race"));
+            if (race != null) setRace(race);
+
+            setStartPosFixed(stream.readInt32("startPosFixed"));
+            setHudSkin(stream.readInt32("hudSkin"));
+            setName(stream.readString("playerName"));
+            setStartPos(new Coords2DF(stream.readFloat32("startPosX"), stream.readFloat32("startPosY")));
+            setAllyLowPrioFlags(stream.readInt32("allyLowPrioFlags"));
+            setAllyHighPrioFlags(stream.readInt32("allyHighPrioFlags"));
+            setEnemyLowPrioFlags(stream.readInt32("enemyLowPrioFlags"));
+            setEnemyHighPrioFlags(stream.readInt32("enemyHighPrioFlags"));
+        }
+
+        private void write_0x27(@Nonnull Wc3BinOutputStream stream) {
+            stream.writeInt32(getNum());
+            stream.writeInt32(getType().getVal());
+            stream.writeInt32(getRace().getVal());
+            stream.writeInt32(getStartPosFixed());
+            stream.writeInt32(getHudSkin());
+            stream.writeString(getName());
+            stream.writeFloat32(getStartPos().getX());
+            stream.writeFloat32(getStartPos().getY());
+            stream.writeInt32(getAllyLowPrioFlags());
+            stream.writeInt32(getAllyHighPrioFlags());
+            stream.writeInt32(getEnemyLowPrioFlags());
+            stream.writeInt32(getEnemyHighPrioFlags());
+        }
+
         private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
             switch (format.toEnum()) {
+                case W3I_0x27:
+                    read_0x27(stream);
+
+                    break;
                 case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
@@ -1230,6 +1365,10 @@ public class W3I {
         private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
             switch (format.toEnum()) {
                 case AUTO:
+                case W3I_0x27:
+                    write_0x27(stream);
+
+                    break;
                 case W3I_0x21:
                 case W3I_0x20:
                 case W3I_0x1F:
@@ -2243,6 +2382,7 @@ public class W3I {
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
         public enum Enum {
             AUTO,
+            W3I_0x27,
             W3I_0x21,
             W3I_0x20,
             W3I_0x1F,
@@ -2252,6 +2392,7 @@ public class W3I {
         }
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat W3I_0x27 = new EncodingFormat(Enum.W3I_0x27, 0x27);
         public final static EncodingFormat W3I_0x21 = new EncodingFormat(Enum.W3I_0x21, 0x21);
         public final static EncodingFormat W3I_0x20 = new EncodingFormat(Enum.W3I_0x20, 0x20);
         public final static EncodingFormat W3I_0x1F = new EncodingFormat(Enum.W3I_0x1F, 0x1F);
@@ -3652,6 +3793,233 @@ public class W3I {
         }
     }
 
+    private void read_0x27(@Nonnull Wc3BinInputStream stream) throws Exception {
+        _fileVersion = stream.readInt32("version");
+        stream.checkFormatVersion(EncodingFormat.W3I_0x27.getVersion(), _fileVersion);
+
+        set(State.SAVES_AMOUNT, War3Int.valueOf(stream.readInt32("savesAmount")));
+        setEditorVersion(stream.readInt32("editorVersion"));
+        setGameVersion_major(stream.readUInt32("gameVersion_major"));
+        setGameVersion_minor(stream.readUInt32("gameVersion_minor"));
+        setGameVersion_rev(stream.readUInt32("gameVersion_rev"));
+        setGameVersion_build(stream.readUInt32("gameVersion_build"));
+
+        setMapName(stream.readString("mapName"));
+        setMapAuthor(stream.readString("mapAuthor"));
+        setMapDescription(stream.readString("mapDescription"));
+        setPlayersRecommendedAmount(stream.readString("playersRecommendedAmount"));
+
+        setCameraBounds(
+            new Coords2DF(stream.readFloat32("camA"), stream.readFloat32("camB")),
+            new Coords2DF(stream.readFloat32("camC"), stream.readFloat32("camD")),
+            new Coords2DF(stream.readFloat32("camE"), stream.readFloat32("camF")),
+            new Coords2DF(stream.readFloat32("camG"), stream.readFloat32("camH"))
+        );
+        setMargins(new Bounds(-stream.readInt32("marginA"), stream.readInt32("marginB"), -stream.readInt32("marginC"), stream.readInt32("marginD")));
+        setDimensions(stream.readInt32("width"), stream.readInt32("height"));
+        setFlags(Flags.valueOf(stream.readInt32("flags")));
+        setTileset(Tileset.valueOf(stream.readChar("tileset")));
+
+        int campaignBackgroundIndex = stream.readInt32("campaignBackgroundIndex");
+        setAlphaTileMinimapColor(stream.readInt32("alphaTileMinimapColor"));
+        LoadingScreen loadingScreen = new LoadingScreen(null, null, null, null, campaignBackgroundIndex);
+        loadingScreen.set(
+            campaignBackgroundIndex,
+            stream.readString("loadingScreenModel"),
+            stream.readString("loadingScreenText"),
+            stream.readString("loadingScreenTitle"),
+            stream.readString("loadingScreenSubtitle")
+        );
+        setLoadingScreen(loadingScreen);
+
+        setGameDataSet(GameDataSet.valueOf(stream.readInt32("gameDataSet")));
+        setPrologueScreen(new PrologueScreen(
+            stream.readString("prologueScreenPath"),
+            stream.readString("prologueScreenText"),
+            stream.readString("prologueScreenTitle"),
+            stream.readString("prologueScreenSubtitle")
+        ));
+
+        TerrainFogType terrainFogType = TerrainFogType.valueOf(stream.readInt32("terrainFogType"));
+        War3Real terrainFogZStart = stream.readReal("terrainFogZStart");
+        War3Real terrainFogZEnd = stream.readReal("terrainFogZEnd");
+        War3Real terrainFogDensity = stream.readReal("terrainFogDensity");
+        Color terrainFogColor = Color.fromRGBA255(
+            stream.readUByte("terrainFogRed"), stream.readUByte("terrainFogGreen"),
+            stream.readUByte("terrainFogBlue"), stream.readUByte("terrainFogAlpha")
+        );
+        setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
+
+        setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
+        setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
+        setTilesetLightEnv(Tileset.valueOf(stream.readChar("tilesetLightEnv")));
+
+        setTerrainFogStyle(stream.readUByte("terrainFogStyle"));
+        setDrawTerrainFogOverSky(stream.readUByte("drawTerrainFogOverSky") != 0);
+        setTerrainFogLinearStart(stream.readFloat32("terrainFogLinearStart"));
+        setTerrainFogLinearEnd(stream.readFloat32("terrainFogLinearEnd"));
+        setTerrainFogMaxOpacity(stream.readFloat32("terrainFogMaxOpacity"));
+        setTerrainFogHeightStart(stream.readFloat32("terrainFogHeightStart"));
+        setTerrainFogHeightEnd(stream.readFloat32("terrainFogHeightEnd"));
+        setSkyDisplay(stream.readUByte("skyDisplay"));
+        setTimeOfDay(stream.readUByte("timeOfDay"));
+
+        setWaterColor(Color.fromRGBA255(
+            stream.readUByte("waterRed"), stream.readUByte("waterGreen"),
+            stream.readUByte("waterBlue"), stream.readUByte("waterAlpha")
+        ));
+        setScriptLang(stream.readUInt32("scriptLang") == 0 ? ScriptLang.JASS : ScriptLang.LUA);
+        setGraphics(Graphics.valueOf(stream.readUInt32("graphics")));
+        setGameDataVersion(stream.readUInt32("gameDataVersion") == 0 ? GameDataVersion.ROC : GameDataVersion.TFT);
+        setForceDefaultCameraZoom(stream.readInt32("forceDefaultCameraZoom"));
+        setForceMaxCameraZoom(stream.readInt32("forceMaxCameraZoom"));
+        setForceMinCameraZoom(stream.readInt32("forceMinCameraZoom"));
+
+        setWaterMinOpacity(stream.readInt32("waterMinOpacity"));
+        setWaterMaxOpacity(stream.readInt32("waterMaxOpacity"));
+        setWaterReflectivity(stream.readInt32("waterReflectivity"));
+        setWaterEmissivity(stream.readInt32("waterEmissivity"));
+        setWaterEdgeSoftness(stream.readInt32("waterEdgeSoftness"));
+        setWaterWavesVertexDisplacement(stream.readInt32("waterWavesVertexDisplacement"));
+        setWaterWavesNormalMapStrength(stream.readInt32("waterWavesNormalMapStrength"));
+        setWaterOverrideColor(stream.readInt32("waterOverrideColor"));
+        setWaterEnvMapReflectivity(stream.readInt32("waterEnvMapReflectivity"));
+        setWaterUnknown(stream.readInt32("waterUnknown"));
+
+        int playersCount = stream.readInt32("playersCount");
+        for (int i = 0; i < playersCount; i++) addPlayer(new Player(stream, EncodingFormat.W3I_0x27));
+        if (stream.eof()) return;
+
+        int forcesCount = stream.readInt32("forcesCount");
+        for (int i = 0; i < forcesCount; i++) addForce(new Force(stream, EncodingFormat.W3I_0x21));
+        if (stream.eof()) return;
+
+        if (stream.readUByte() == 0xFF) return;
+        stream.rewind(1);
+
+        int upgradeModsCount = stream.readInt32("upgradeModsCount");
+        for (int i = 0; i < upgradeModsCount; i++) addUpgradeMod(new UpgradeMod(stream, EncodingFormat.W3I_0x21));
+        if (stream.eof()) return;
+
+        int techModsCount = stream.readInt32("techModsCount");
+        for (int i = 0; i < techModsCount; i++) addTechMod(new TechMod(stream, EncodingFormat.W3I_0x21));
+        if (stream.eof()) return;
+
+        int unitTablesCount = stream.readInt32("unitTablesCount");
+        for (int i = 0; i < unitTablesCount; i++) addUnitTable(new UnitTable(stream, EncodingFormat.W3I_0x21));
+        if (stream.eof()) return;
+
+        int itemTablesCount = stream.readInt32("itemTablesCount");
+        for (int i = 0; i < itemTablesCount; i++) addItemTable(new ItemTable(stream, EncodingFormat.W3I_0x21));
+    }
+
+    private void write_0x27(@Nonnull Wc3BinOutputStream stream) {
+        stream.writeInt32(EncodingFormat.W3I_0x27.getVersion());
+        stream.writeInt32(getSavesAmount());
+        stream.writeInt32(getEditorVersion());
+        stream.writeUInt32(getGameVersion_major());
+        stream.writeUInt32(getGameVersion_minor());
+        stream.writeUInt32(getGameVersion_rev());
+        stream.writeUInt32(getGameVersion_build());
+
+        stream.writeString(getMapName());
+        stream.writeString(getMapAuthor());
+        stream.writeString(getMapDescription());
+        stream.writeString(getPlayersRecommendedAmount());
+
+        for (Coords2DF bounds : Arrays.asList(getCameraBounds1(), getCameraBounds2(), getCameraBounds3(), getCameraBounds4())) {
+            stream.writeFloat32(bounds.getX());
+            stream.writeFloat32(bounds.getY());
+        }
+        stream.writeInt32(-getMargins().getMinX());
+        stream.writeInt32(getMargins().getMaxX());
+        stream.writeInt32(-getMargins().getMinY());
+        stream.writeInt32(getMargins().getMaxY());
+        stream.writeInt32(getWidth());
+        stream.writeInt32(getHeight());
+        stream.writeInt32(getFlags().toInt());
+        stream.writeChar(getTileset().getChar());
+
+        LoadingScreen loadingScreen = getLoadingScreen();
+        LoadingScreenBackground background = loadingScreen.getBackground();
+        stream.writeInt32(background instanceof LoadingScreenBackground.PresetBackground
+            ? ((LoadingScreenBackground.PresetBackground) background).getIndex() : -1);
+        stream.writeInt32(getAlphaTileMinimapColor());
+        stream.writeString(background instanceof LoadingScreenBackground.CustomBackground
+            ? ((LoadingScreenBackground.CustomBackground) background).getCustomPath().toString() : null);
+        stream.writeString(loadingScreen.getText());
+        stream.writeString(loadingScreen.getTitle());
+        stream.writeString(loadingScreen.getSubtitle());
+
+        stream.writeInt32(getGameDataSet().getIndex());
+        PrologueScreen prologueScreen = getPrologueScreen();
+        stream.writeString(prologueScreen != null ? prologueScreen.getPath() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getText() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getTitle() : null);
+        stream.writeString(prologueScreen != null ? prologueScreen.getSubtitle() : null);
+
+        TerrainFog terrainFog = getTerrainFog();
+        TerrainFogType terrainFogType = terrainFog != null ? terrainFog.getType() : null;
+        stream.writeInt32(terrainFogType != null ? terrainFogType.getVal() : 0);
+        stream.writeReal(terrainFog != null ? terrainFog.getZStart() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getZEnd() : null);
+        stream.writeReal(terrainFog != null ? terrainFog.getDensity() : null);
+        Color terrainFogColor = terrainFog != null ? terrainFog.getColor() : null;
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getRed255() : 0);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getGreen255() : 0);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue255() : 0);
+        stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha255() : 0);
+
+        stream.writeId(getGlobalWeatherId());
+        stream.writeString(getSoundEnv());
+        stream.writeChar(getTilesetLightEnv() != null ? getTilesetLightEnv().getChar() : null);
+        stream.writeUByte(getTerrainFogStyle());
+        stream.writeUByte(getDrawTerrainFogOverSky() ? 1 : 0);
+        stream.writeFloat32(getTerrainFogLinearStart());
+        stream.writeFloat32(getTerrainFogLinearEnd());
+        stream.writeFloat32(getTerrainFogMaxOpacity());
+        stream.writeFloat32(getTerrainFogHeightStart());
+        stream.writeFloat32(getTerrainFogHeightEnd());
+        stream.writeUByte(getSkyDisplay());
+        stream.writeUByte(getTimeOfDay());
+
+        Color waterColor = getWaterColor();
+        stream.writeUByte(waterColor.getRed255());
+        stream.writeUByte(waterColor.getGreen255());
+        stream.writeUByte(waterColor.getBlue255());
+        stream.writeUByte(waterColor.getAlpha255());
+        stream.writeUInt32(getScriptLang() == ScriptLang.LUA ? 1 : 0);
+        stream.writeUInt32(getGraphics().getVal());
+        stream.writeUInt32(getGameDataVersion() == GameDataVersion.TFT ? 1 : 0);
+        stream.writeInt32(getForceDefaultCameraZoom());
+        stream.writeInt32(getForceMaxCameraZoom());
+        stream.writeInt32(getForceMinCameraZoom());
+
+        stream.writeInt32(getWaterMinOpacity());
+        stream.writeInt32(getWaterMaxOpacity());
+        stream.writeInt32(getWaterReflectivity());
+        stream.writeInt32(getWaterEmissivity());
+        stream.writeInt32(getWaterEdgeSoftness());
+        stream.writeInt32(getWaterWavesVertexDisplacement());
+        stream.writeInt32(getWaterWavesNormalMapStrength());
+        stream.writeInt32(getWaterOverrideColor());
+        stream.writeInt32(getWaterEnvMapReflectivity());
+        stream.writeInt32(getWaterUnknown());
+
+        stream.writeInt32(_players.size());
+        for (Player player : _players) player.write(stream, EncodingFormat.W3I_0x27);
+        stream.writeInt32(_forces.size());
+        for (Force force : _forces) force.write(stream, EncodingFormat.W3I_0x21);
+        stream.writeInt32(_upgradeMods.size());
+        for (UpgradeMod upgradeMod : _upgradeMods) upgradeMod.write(stream, EncodingFormat.W3I_0x21);
+        stream.writeInt32(_techMods.size());
+        for (TechMod techMod : _techMods) techMod.write(stream, EncodingFormat.W3I_0x21);
+        stream.writeInt32(_unitTables.size());
+        for (UnitTable unitTable : _unitTables) unitTable.write(stream, EncodingFormat.W3I_0x21);
+        stream.writeInt32(_itemTables.size());
+        for (ItemTable itemTable : _itemTables) itemTable.write(stream, EncodingFormat.W3I_0x21);
+    }
+
     private void read_auto(@Nonnull Wc3BinInputStream stream) throws Exception {
         int version = stream.readInt32("version");
 
@@ -3683,6 +4051,9 @@ public class W3I {
             case W3I_0x21:
                 read_0x21(stream);
                 break;
+            case W3I_0x27:
+                read_0x27(stream);
+                break;
         }
     }
 
@@ -3698,6 +4069,11 @@ public class W3I {
                 break;
             case W3I_0x21: {
                 write_0x21(stream);
+
+                break;
+            }
+            case W3I_0x27: {
+                write_0x27(stream);
 
                 break;
             }

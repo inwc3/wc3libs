@@ -1,5 +1,7 @@
 package wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.app.W3I;
+import net.moonlightflower.wc3libs.bin.app.MapFlag;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import wc3libs.util.MurmurHash;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -202,5 +205,43 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(w3i2.getForceDefaultCameraZoom(), w3i.getForceDefaultCameraZoom());
         Assert.assertEquals(w3i2.getForceMaxCameraZoom(), w3i.getForceMaxCameraZoom());
         Assert.assertEquals(w3i2.getForceMinCameraZoom(), w3i.getForceMinCameraZoom());
+    }
+
+    @Test
+    public void testVersion39W3I() throws Exception {
+        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_v39.w3i").toPath());
+        W3I w3i = new W3I(input);
+
+        Assert.assertEquals(39, w3i.getFileVersion());
+        Assert.assertEquals(W3I.Graphics.SD_HD_AND_DE, w3i.getGraphics());
+        Assert.assertTrue(w3i.getFlag(MapFlag.USE_WATER_OVERRIDE_COLOR));
+        Assert.assertEquals(128, w3i.getAlphaTileMinimapColor());
+        Assert.assertEquals(0, w3i.getTerrainFogStyle());
+        Assert.assertFalse(w3i.getDrawTerrainFogOverSky());
+        Assert.assertEquals(10000F, w3i.getTerrainFogLinearStart(), 0F);
+        Assert.assertEquals(10000F, w3i.getTerrainFogLinearEnd(), 0F);
+        Assert.assertEquals(1F, w3i.getTerrainFogMaxOpacity(), 0F);
+        Assert.assertEquals(0F, w3i.getTerrainFogHeightStart(), 0F);
+        Assert.assertEquals(0F, w3i.getTerrainFogHeightEnd(), 0F);
+        Assert.assertEquals(0, w3i.getSkyDisplay());
+        Assert.assertEquals(0, w3i.getTimeOfDay());
+        Assert.assertEquals(0, w3i.getWaterMinOpacity());
+        Assert.assertEquals(100, w3i.getWaterMaxOpacity());
+        Assert.assertEquals(10, w3i.getWaterReflectivity());
+        Assert.assertEquals(0, w3i.getWaterEmissivity());
+        Assert.assertEquals(50, w3i.getWaterEdgeSoftness());
+        Assert.assertEquals(20, w3i.getWaterWavesVertexDisplacement());
+        Assert.assertEquals(100, w3i.getWaterWavesNormalMapStrength());
+        Assert.assertEquals(0, w3i.getWaterOverrideColor());
+        Assert.assertEquals(100, w3i.getWaterEnvMapReflectivity());
+        Assert.assertEquals(-1, w3i.getWaterUnknown());
+        Assert.assertEquals(0, w3i.getPlayers().get(0).getHudSkin());
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+            w3i.write(stream);
+        }
+
+        Assert.assertEquals(output.toByteArray(), input, "version 39 must round-trip byte-identically");
     }
 }

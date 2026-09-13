@@ -29,6 +29,7 @@ public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag USE_FORCE_DEFAULT_CAMERA_ZOOM = new MapFlag(20, "useForceDefaultCameraZoom");
     public final static MapFlag USE_FORCE_MAX_CAMERA_ZOOM = new MapFlag(21, "useForceMaxCameraZoom");
     public final static MapFlag USE_FORCE_MIN_CAMERA_ZOOM = new MapFlag(22, "useForceMinCameraZoom");
+    public final static MapFlag USE_WATER_OVERRIDE_COLOR = new MapFlag(23, "useWaterOverrideColor");
 
     @Nonnull
     public static Collection<MapFlag> values() {
