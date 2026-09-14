@@ -1187,26 +1187,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		int origObjsAmount = stream.readInt32("origObjsAmount");
 		
 		for (int i = 0; i < origObjsAmount; i++) {
-			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
-			ObjId id = ObjId.valueOf(stream.readId("objId"));
-			
-			ObjType obj = createObj(id, null);
-			
-			obj.read(stream, EncodingFormat.OBJ_0x1);
-			
+			ObjType obj = createObj(stream, EncodingFormat.OBJ_0x1);
+
 			addObj(obj);
 		}
 		
 		int customObjsAmount = stream.readInt32("customObjsAmount");
 
 		for (int i = 0; i < customObjsAmount; i++) {
-			ObjId baseId = ObjId.valueOf(stream.readId("baseId"));
-			ObjId id = ObjId.valueOf(stream.readId("objId"));
-			
-			ObjType obj = createObj(baseId, baseId);
-			
-			obj.read(stream, EncodingFormat.OBJ_0x1);
-			
+			ObjType obj = createObj(stream, EncodingFormat.OBJ_0x1);
+
 			addObj(obj);
 		}
 	}
@@ -1393,6 +1383,10 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		read(new Wc3BinInputStream(inStream), EncodingFormat.AUTO);
 	}
 	
+	/**
+	 * Writes the requested encoding. Pass {@link #getFormat()} or
+	 * {@link EncodingFormat#AS_DEFINED} to preserve a format detected by read.
+	 */
 	public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) throws BinStream.StreamException {
 		switch (format.toEnum()) {
         case AS_DEFINED: {
@@ -1419,6 +1413,10 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		}
 	}
 
+	/**
+	 * Writes the newest supported encoding. For a no-op read/write cycle, use
+	 * {@link #write(Wc3BinOutputStream, EncodingFormat)} with {@link #getFormat()}.
+	 */
 	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
 		write(stream, EncodingFormat.AUTO);
 	}

@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class ObjModCorrectnessTest {
@@ -41,6 +42,35 @@ public class ObjModCorrectnessTest {
         Assert.assertEquals(mods.size(), 1, "expected exactly one mod for " + fieldId);
 
         return mods.get(0);
+    }
+
+    @Test
+    public void detectedFormatRoundTripsByteIdenticallyForEverySupportedVersion() throws Exception {
+        for (ObjMod.EncodingFormat format : Arrays.asList(
+                ObjMod.EncodingFormat.OBJ_0x1,
+                ObjMod.EncodingFormat.OBJ_0x2,
+                ObjMod.EncodingFormat.OBJ_0x3)) {
+            W3A source = new W3A();
+            W3A.Abil abil = (W3A.Abil) source.addObj(OBJ_ID, null);
+            abil.set(INT_FIELD, War3Int.valueOf(123));
+
+            byte[] original = write(source, format);
+            W3A parsed;
+            try (Wc3BinInputStream in = new Wc3BinInputStream(new ByteArrayInputStream(original))) {
+                parsed = new W3A(in);
+            }
+
+            Assert.assertEquals(parsed.getFormat(), format);
+            Assert.assertEquals(write(parsed, parsed.getFormat()), original);
+        }
+    }
+
+    private byte[] write(W3A source, ObjMod.EncodingFormat format) throws Exception {
+        ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream out = new Wc3BinOutputStream(outBytes)) {
+            source.write(out, format);
+        }
+        return outBytes.toByteArray();
     }
 
     @Test

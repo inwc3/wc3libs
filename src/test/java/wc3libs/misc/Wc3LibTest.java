@@ -111,7 +111,9 @@ public abstract class Wc3LibTest {
                 if (ObjMod.class.isAssignableFrom(testClass)) {
                     Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class, ObjMod.EncodingFormat.class);
 
-                    writeMethod.invoke(testObj, outStream, ObjMod.EncodingFormat.AS_DEFINED);
+                    ObjMod<?> objMod = (ObjMod<?>) testObj;
+                    Assert.assertNotNull(objMod.getFormat(), "read must retain the detected object-data format");
+                    writeMethod.invoke(testObj, outStream, objMod.getFormat());
                 } else if (WCT.class.isAssignableFrom(testClass)) {
                     Method writeMethod = testClass.getMethod("write", Wc3BinOutputStream.class, WCT.EncodingFormat.class);
 
@@ -136,4 +138,3 @@ public abstract class Wc3LibTest {
         }
     }
 }
-

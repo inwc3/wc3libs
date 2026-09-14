@@ -10,6 +10,9 @@ public class W3ATest extends Wc3LibTest {
 	@Test()
 	public void readWriteCycle() throws IOException {
 		readWriteCycle(W3A.class, getFile("wc3data/W3A/war3map.w3a"));
+        readWriteCycle(W3A.class, getFile("wc3data/W3A/war3map_cfde.w3a"));
+        readWriteCycle(W3A.class, getFile("wc3data/W3A/war3map_large_v3.w3a"));
+        readWriteCycle(W3A.class, getFile("wc3data/W3A/war3mapSkin.w3a"));
         readWriteCycle(W3A.class, getFile("wc3data/W3A/war3map_format3.w3a"));
         readWriteCycle(W3A.class, getFile("wc3data/W3A/threeLetterId.w3a"));
 	}
