@@ -543,7 +543,7 @@ public class WTG {
 								
 								String subFuncName = func.getParam(i);
 								
-								Func subFunc = reader.getFuncMap().get(subFuncName.toLowerCase(Locale.ROOT));
+								Func subFunc = reader.getFuncMap().get(funcName.toLowerCase(Locale.ROOT));
 
 								if (subFunc != null) {
 									stream.beginGroup(String.format("param%d", i));
