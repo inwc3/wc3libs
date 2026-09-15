@@ -15,9 +15,9 @@ opaque byte preservation semantic support.
 | `war3map.w3c` | 3 | Structured read/write | A one-camera fixture gives all 16 camera floats distinct sentinels, proving every base and v3 slot; the populated map also establishes camera type 0/1. Both cycle byte-for-byte. |
 | `war3map.w3e` | 12 (`0x0C`) | Structured read/write | Populated terrain cycles byte-for-byte using the v12 tile layout. The read format is retained when writing. |
 | `war3map.w3r` | 7 | Structured read/write | A populated region establishes two appended dwords. Both are `1` in the sample, so their individual UI meanings remain raw-named. |
-| `war3map.wtg` | `0x80000004` | Opaque read/write | This is a new hierarchical trigger layout, not WTG v4. The supplied file is preserved exactly. |
+| `war3map.wtg` | `0x80000004` | Opaque read/write | This is a new hierarchical trigger layout, not WTG v4. Its concrete source format is retained and populated files are preserved exactly. |
 | `war3map.w3l` | 3 | Structured positional read/write | `W3L!`, two model-path strings, and three option dwords are established by empty and populated Light Editor fixtures. One-change saves are still needed to name their individual roles safely. |
-| `war3map.w3grp` | no established signature | Fully opaque read/write | The supplied empty-map member is three zero dwords. No field names are assigned without evidence. |
+| `war3map.w3grp` | no established signature | Fully opaque read/write | It remains three zero dwords even after nested trigger categories and populated triggers are added, disproving the earlier trigger-group hypothesis. |
 | `war3map.imp` | 1, entry flag `0x15` | Structured read/write with raw flag preservation | The Light Editor's generated MDL uses a previously unknown import flag. Unknown flag bytes no longer become `null` and crash the writer. |
 | `war3map.mmp`, `.shd`, `.wct`, `.wpm` | existing layouts | Structured read/write | The corrected fixtures cycle byte-for-byte. |
 
@@ -28,6 +28,23 @@ incomplete.
 The populated fixtures use the `_v3_filled` suffix in their format-specific
 resource directories. Archive metadata and the generated Light Editor MDL are
 kept under `wc3data/Map/v3_filled_dump`.
+
+## Editor-only members
+
+`war3map.wtg` is GUI Trigger Editor source. The runtime executes the compiled
+map script instead, so release optimizers may remove WTG/WCT source after a
+successful script build; doing so intentionally prevents reopening those
+triggers as GUI data. `war3map.w3grp` also appears editor-only, but its purpose
+is not established and the current samples remain twelve zero bytes. Treat it
+as preservable editor metadata, not as safely removable runtime data, until a
+sample identifies the editor feature that populates it.
+
+`war3map.w3c` and `war3map.w3r` feed generated camera and region setup code,
+respectively, and are editor source after that generation step. `war3map.imp`
+indexes imported editor assets; removing the table does not remove the imported
+archive members themselves. `war3map.w3l` is not marked editor-only yet because
+the available samples do not prove whether the game renderer consumes its
+custom-light configuration directly.
 
 ## Other established record extensions
 
@@ -70,6 +87,14 @@ paths, and three option dwords. The populated fixture references two generated
 UUID-named MDLs and has option values `0, 1, 0`. This establishes the record
 shape but not whether path zero/one or option zero/one/two corresponds to the
 Terrain and Unit panes or their enabled/imported state.
+
+The populated hierarchical WTG fixture contains nested categories named
+`helo` and `Untitled Category`, normal triggers named `custom Copy` and
+`custom`, and populated event/condition/action function names matching the
+provided screenshot. In the same save, `war3map.w3grp` is still twelve zero
+bytes. Therefore trigger hierarchy and functions belong to the new WTG payload,
+not W3GRP. This is sufficient for format classification and lossless opaque
+roundtrips, but not yet for safe field-level WTG edits.
 
 ## W3I version 39
 
@@ -181,17 +206,18 @@ changed. Keep all names and numeric values distinctive.
 - `war3map.w3r` v7: save two otherwise identical maps where only camera blocker
   is toggled, and another pair where only weather enabled is toggled. This is
   needed to distinguish the two appended dwords without guessing their order.
-- `war3map.wtg` `0x80000004`: multiple folders, a disabled folder, comment and
-  normal triggers, disabled/initially-off/run-on-init combinations, variables
-  including arrays, and nested event/condition/action parameters. Include a
-  custom-text trigger if supported. A sequence of one-change saves is much more
-  useful than one densely populated file for discovering flags and indexes.
+- `war3map.wtg` `0x80000004`: the current fixture establishes nested folders,
+  normal triggers, and event/condition/action payloads. Differential saves are
+  still needed for a disabled folder, comment trigger, enabled/initially-off/
+  run-on-init flags, scalar and array variables, and a custom-text trigger. A
+  sequence of one-change saves is much more useful than one densely populated
+  file for discovering flags and indexes.
 - `war3map.w3l`: save one-change pairs toggling `Enable Custom Light` separately
   for Terrain and Unit, then change/export only one pane's values. This will map
   the two path slots and three option slots to their UI meanings.
-- `war3map.w3grp`: at least two groups/folders and nested membership if this is
-  the trigger grouping member. Rename, reorder, and nesting-only comparison
-  saves will reveal IDs and parent/order fields.
+- `war3map.w3grp`: identify the editor feature that makes this file non-zero.
+  Nested trigger categories do not populate it, so it is not the trigger-group
+  hierarchy member.
 
 Include the complete extracted archive members and `(listfile)` for every
 sample, plus a short text file describing the exact editor actions and values.

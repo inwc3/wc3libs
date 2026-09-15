@@ -1783,12 +1783,14 @@ public class WTG {
 		public enum Enum {
 			AUTO,
 			WTG_0x4,
-			WTG_0x7
+			WTG_0x7,
+			WTG_0x80000004
 		}
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WTG_0x4 = new EncodingFormat(Enum.WTG_0x4, 0x4);
 		public final static EncodingFormat WTG_0x7 = new EncodingFormat(Enum.WTG_0x7, 0x7);
+		public final static EncodingFormat WTG_0x80000004 = new EncodingFormat(Enum.WTG_0x80000004, VERSION_3_0);
 
 		@Nullable
 		public static EncodingFormat valueOf(@Nonnull Integer version) {
@@ -1967,12 +1969,6 @@ public class WTG {
 		
 		stream.rewind();
 
-		if (version == VERSION_3_0) {
-			_opaqueData = stream.readBytes(Math.toIntExact(stream.size()), "opaqueVersion3Data");
-
-			return;
-		}
-
 		reader.setFormat(stream.getFormat(EncodingFormat.class, version));
 		_format = reader.getFormat();
 
@@ -1991,6 +1987,12 @@ public class WTG {
 			_format = EncodingFormat.WTG_0x7;
 			read_0x7(reader);
 			
+			break;
+		}
+		case WTG_0x80000004: {
+			_format = EncodingFormat.WTG_0x80000004;
+			_opaqueData = reader.getStream().readBytes(Math.toIntExact(reader.getStream().size()), "opaqueVersion3Data");
+
 			break;
 		}
 		case AUTO: {

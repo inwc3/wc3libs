@@ -606,6 +606,8 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 
 	public void write(@Nonnull Writer writer) throws BinStream.StreamException {
+		if (writer.getFormat() == EncodingFormat.AUTO) writer.setFormat(_format);
+
 		writer.exec();
 	}
 
