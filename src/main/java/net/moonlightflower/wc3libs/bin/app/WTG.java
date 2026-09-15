@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,21 @@ import java.util.regex.Pattern;
  */
 public class WTG {
 	public final static File GAME_PATH = new File("war3map.wtg");
+	public final static int VERSION_3_0 = 0x80000004;
+	private byte[] _opaqueData = null;
+
+	/**
+	 * The 3.0 editor uses a new hierarchical trigger layout. Preserve it exactly
+	 * until its records can be described from populated differential fixtures.
+	 */
+	public boolean isOpaque() {
+		return _opaqueData != null;
+	}
+
+	@Nullable
+	public byte[] getOpaqueData() {
+		return _opaqueData == null ? null : Arrays.copyOf(_opaqueData, _opaqueData.length);
+	}
 	
 	public static class FuncCat {
 		private File _iconFile;
@@ -1767,12 +1783,14 @@ public class WTG {
 		public enum Enum {
 			AUTO,
 			WTG_0x4,
-			WTG_0x7
+			WTG_0x7,
+			WTG_0x80000004
 		}
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WTG_0x4 = new EncodingFormat(Enum.WTG_0x4, 0x4);
 		public final static EncodingFormat WTG_0x7 = new EncodingFormat(Enum.WTG_0x7, 0x7);
+		public final static EncodingFormat WTG_0x80000004 = new EncodingFormat(Enum.WTG_0x80000004, VERSION_3_0);
 
 		@Nullable
 		public static EncodingFormat valueOf(@Nonnull Integer version) {
@@ -1782,6 +1800,13 @@ public class WTG {
 		private EncodingFormat(@Nonnull Enum enumVal, int version) {
 			super(enumVal, version);
 		}
+	}
+
+	private EncodingFormat _format = EncodingFormat.WTG_0x7;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
 	}
 
 	private void read_0x4(@Nonnull Reader reader) throws Exception {
@@ -1805,7 +1830,7 @@ public class WTG {
 			stream.endGroup();
 		}
 		
-		int unknownNumB = stream.readInt32("unknownNumB");
+		setUnknownNumB(stream.readInt32("unknownNumB"));
 		
 		int varsCount = stream.readInt32("varsCount");
 		
@@ -1945,6 +1970,7 @@ public class WTG {
 		stream.rewind();
 
 		reader.setFormat(stream.getFormat(EncodingFormat.class, version));
+		_format = reader.getFormat();
 
 		read(reader);
 	}
@@ -1952,13 +1978,21 @@ public class WTG {
 	private void read(@Nonnull Reader reader) throws Exception {
 		switch (reader.getFormat().toEnum()) {
 		case WTG_0x4: {
+			_format = EncodingFormat.WTG_0x4;
 			read_0x4(reader);
 			
 			break;
 		}
 		case WTG_0x7: {
+			_format = EncodingFormat.WTG_0x7;
 			read_0x7(reader);
 			
+			break;
+		}
+		case WTG_0x80000004: {
+			_format = EncodingFormat.WTG_0x80000004;
+			_opaqueData = reader.getStream().readBytes(Math.toIntExact(reader.getStream().size()), "opaqueVersion3Data");
+
 			break;
 		}
 		case AUTO: {
@@ -2044,6 +2078,12 @@ public class WTG {
 	}
 
 	private void write(@Nonnull Writer writer) throws IOException {
+		if (_opaqueData != null) {
+			writer.getStream().writeBytes(_opaqueData);
+
+			return;
+		}
+
 		switch (writer.getFormat().toEnum()) {
 		case WTG_0x4: {
 			write_0x4(writer);
@@ -2056,7 +2096,8 @@ public class WTG {
 			break;
 		}
 		case AUTO: {
-			write_0x7(writer);
+			writer.setFormat(_format);
+			write(writer);
 			
 			break;
 		}

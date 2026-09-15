@@ -58,6 +58,7 @@ public class IMP {
         }
 
         protected StdFlag _stdFlag = StdFlag.CUSTOM;
+        protected int _stdFlagRaw = StdFlag.CUSTOM.getVal();
 
         public StdFlag getStdFlag() {
             return _stdFlag;
@@ -65,11 +66,22 @@ public class IMP {
 
         public void setStdFlag(StdFlag val) {
             _stdFlag = val;
+            if (val != null) _stdFlagRaw = val.getVal();
+        }
+
+        public int getStdFlagRaw() {
+            return _stdFlagRaw;
+        }
+
+        public void setStdFlagRaw(int val) {
+            _stdFlagRaw = val;
+            _stdFlag = StdFlag.fromVal(val);
         }
 
         private void merge(@Nonnull Obj other) {
             _path = other.getPath();
             _stdFlag = other.getStdFlag();
+            _stdFlagRaw = other.getStdFlagRaw();
         }
 
         public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {

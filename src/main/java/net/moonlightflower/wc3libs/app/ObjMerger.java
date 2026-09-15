@@ -74,8 +74,25 @@ public class ObjMerger {
     private final Collection<ObjMod> _inObjMods = new LinkedHashSet<>();
     private final Map<File, ObjMod> _outObjMods = new LinkedHashMap<>();
 
+    private ObjMod getOrCreateOutObjMod(@Nonnull File inFile, @Nonnull ObjMod<?> source) {
+        ObjMod objMod = _outObjMods.get(inFile);
+        if (objMod == null) {
+            objMod = ObjMod.createFromInFile(inFile);
+            objMod.setFormat(source.getFormat());
+            _outObjMods.put(inFile, objMod);
+        }
+
+        return objMod;
+    }
+
     private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod<?> otherObjMod) throws Exception {
         _inObjMods.add(otherObjMod);
+
+        if (ObjMod.getSkinFiles().contains(inFile)) {
+            getOrCreateOutObjMod(inFile, otherObjMod).merge(otherObjMod);
+
+            return;
+        }
 
         ObjPack<?> pack = otherObjMod.reduce(_metaSlk, Collections.singletonList(W3D.class));
 
@@ -176,9 +193,7 @@ public class ObjMerger {
 
         addProfile(pack.getProfile());
 
-        ObjMod objMod = _outObjMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
-
-        objMod.merge(pack.getObjMod());
+        getOrCreateOutObjMod(inFile, pack.getObjMod()).merge(pack.getObjMod());
     }
 
     public interface Filter {
@@ -667,14 +682,7 @@ public class ObjMerger {
 
     private final static Collection<File> _profileInFiles = getProfilePaths();
 
-    private final static Collection<File> _objModInFiles = Arrays.asList(
-            W3A.GAME_PATH,
-            W3B.GAME_PATH,
-            W3D.GAME_PATH,
-            W3H.GAME_PATH,
-            W3Q.GAME_PATH,
-            W3T.GAME_PATH,
-            W3U.GAME_PATH);
+    private final static Collection<File> _objModInFiles = ObjMod.getMapFiles();
 
     public void addDir(File dir) throws Exception {
         log.info("Adding directory of files to be merged: " + dir.getAbsolutePath());

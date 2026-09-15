@@ -10,13 +10,13 @@ class IMP_0x1 extends IMP implements IMP_Streamable {
 	public static class Obj extends IMP.Obj {
 		@Override
 		public void read(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
-			_stdFlag = StdFlag.fromVal(stream.readUByte("stdFlag"));
+			setStdFlagRaw(stream.readUByte("stdFlag"));
 			_path = stream.readString("path");
 		}
 		
 		@Override
 		public void write(@Nonnull Wc3BinOutputStream stream) {
-			stream.writeUByte(_stdFlag.getVal());
+			stream.writeUByte(getStdFlagRaw());
 			stream.writeString(_path);
 		}
 		

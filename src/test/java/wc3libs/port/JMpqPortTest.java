@@ -127,6 +127,12 @@ public class JMpqPortTest extends Wc3LibTest {
 		}
 	}
 
+	@Test
+	public void standardFilesIncludeVersion3EditorMembers() {
+		assertTrue(War3MapFiles.paths().contains("war3map.w3l"));
+		assertTrue(War3MapFiles.paths().contains("war3map.w3grp"));
+	}
+
 	/**
 	 * The stream belongs to the caller, who may be writing several exports into
 	 * one destination, so the port must not close it.

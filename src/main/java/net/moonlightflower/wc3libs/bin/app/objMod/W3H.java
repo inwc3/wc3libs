@@ -57,6 +57,7 @@ public class W3H extends ObjMod<W3H.Buff> {
 	@Override
 	public W3H copy() {
 		W3H other = new W3H();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 

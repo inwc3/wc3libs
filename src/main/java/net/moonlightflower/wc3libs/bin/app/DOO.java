@@ -273,7 +273,24 @@ public class DOO {
 			_editorId = val;
 		}
 
-		public void read_0x8(@Nonnull Wc3BinInputStream stream, boolean withSkinId) throws BinInputStream.StreamException {
+		private int _v13Color = -1;
+		private int _v13Id = 0;
+		private int _v13UnknownA = 0;
+		private int _v13UnknownB = 0;
+		private int _v13UnknownC = 0;
+
+		public int getV13Color() { return _v13Color; }
+		public void setV13Color(int val) { _v13Color = val; }
+		public int getV13Id() { return _v13Id; }
+		public void setV13Id(int val) { _v13Id = val; }
+		public int getV13UnknownA() { return _v13UnknownA; }
+		public void setV13UnknownA(int val) { _v13UnknownA = val; }
+		public int getV13UnknownB() { return _v13UnknownB; }
+		public void setV13UnknownB(int val) { _v13UnknownB = val; }
+		public int getV13UnknownC() { return _v13UnknownC; }
+		public void setV13UnknownC(int val) { _v13UnknownC = val; }
+
+		private void readPlacement(@Nonnull Wc3BinInputStream stream, boolean withSkinId, boolean version13) throws BinInputStream.StreamException {
 			setTypeId(ObjId.valueOf(stream.readId("typeId")));
 
 			setVariation(stream.readInt32("variation"));
@@ -290,6 +307,8 @@ public class DOO {
 				setSkinId(ObjId.valueOf(stream.readId("skinId")));
 			}
 
+			if (version13) setV13Color(stream.readInt32("v13Color"));
+
 			setFlags(stream.readUByte("flags"));
 
 			setLifePerc(stream.readUByte("lifePerc"));
@@ -303,9 +322,24 @@ public class DOO {
 			}
 
 			setEditorId(stream.readInt32("editorId"));
+
+			if (version13) {
+				setV13Id(stream.readInt32("v13Id"));
+				setV13UnknownA(stream.readInt32("v13UnknownA"));
+				setV13UnknownB(stream.readInt32("v13UnknownB"));
+				setV13UnknownC(stream.readInt32("v13UnknownC"));
+			}
 		}
 
-		public void write_0x8(@Nonnull Wc3BinOutputStream stream, boolean withSkinId) {
+		public void read_0x8(@Nonnull Wc3BinInputStream stream, boolean withSkinId) throws BinInputStream.StreamException {
+			readPlacement(stream, withSkinId, false);
+		}
+
+		public void read_0xD(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+			readPlacement(stream, true, true);
+		}
+
+		private void writePlacement(@Nonnull Wc3BinOutputStream stream, boolean withSkinId, boolean version13) {
 			stream.writeId(getTypeId());
 
 			stream.writeInt32(getVariation());
@@ -333,6 +367,8 @@ public class DOO {
 				stream.writeId(getSkinId() != null ? getSkinId() : getTypeId());
 			}
 
+			if (version13) stream.writeInt32(getV13Color());
+
 			stream.writeUByte(getFlags());
 
 			stream.writeUByte(getLifePerc());
@@ -346,12 +382,32 @@ public class DOO {
 			}
 
 			stream.writeInt32(_editorId);
+
+			if (version13) {
+				stream.writeInt32(getV13Id());
+				stream.writeInt32(getV13UnknownA());
+				stream.writeInt32(getV13UnknownB());
+				stream.writeInt32(getV13UnknownC());
+			}
+		}
+
+		public void write_0x8(@Nonnull Wc3BinOutputStream stream, boolean withSkinId) {
+			writePlacement(stream, withSkinId, false);
+		}
+
+		public void write_0xD(@Nonnull Wc3BinOutputStream stream) {
+			writePlacement(stream, true, true);
 		}
 
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, boolean withSkinId) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case DOO_0x8: {
 				read_0x8(stream, withSkinId);
+
+				break;
+			}
+			case DOO_0xD: {
+				read_0xD(stream);
 
 				break;
 			}
@@ -363,6 +419,11 @@ public class DOO {
 			case AUTO:
 			case DOO_0x8: {
 				write_0x8(stream, withSkinId);
+
+				break;
+			}
+			case DOO_0xD: {
+				write_0xD(stream);
 
 				break;
 			}
@@ -598,10 +659,12 @@ public class DOO {
 		public enum Enum {
 			AUTO,
 			DOO_0x8,
+			DOO_0xD,
 		}
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
+		public final static EncodingFormat DOO_0xD = new EncodingFormat(Enum.DOO_0xD, 0xD);
 
 		@Nullable
 		public static EncodingFormat valueOf(@Nonnull Integer version) {
@@ -613,18 +676,26 @@ public class DOO {
 		}
 	}
 	
-	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	private EncodingFormat _format = EncodingFormat.DOO_0x8;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
+	}
+
+	private void read_0x8(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
 
 		int version = stream.readInt32("version");
 
-		stream.checkFormatVersion(EncodingFormat.DOO_0x8.getVersion(), version);
+		stream.checkFormatVersion(format.getVersion(), version);
+		_format = format;
 
 		_subVersion = stream.readInt32("subVersion");
 
 		int doodsCount = stream.readInt32("doodsCount");
 
-		readDoods(stream, doodsCount);
+		readDoods(stream, doodsCount, format);
 	}
 
 	/**
@@ -640,7 +711,14 @@ public class DOO {
 	 * flags byte -- which a skin id of four NULs, or one whose first character is
 	 * a control code, defeats.
 	 */
-	private void readDoods(@Nonnull Wc3BinInputStream stream, int doodsCount) throws BinInputStream.StreamException {
+	private void readDoods(@Nonnull Wc3BinInputStream stream, int doodsCount, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
+		if (format == EncodingFormat.DOO_0xD) {
+			_skinIds = SkinIds.PRESENT;
+			for (int i = 0; i < doodsCount; i++) addDood(new Dood(stream, format, true));
+
+			return;
+		}
+
 		if (_skinIds != SkinIds.AUTO) {
 			readDoods(stream, doodsCount, _skinIds == SkinIds.PRESENT);
 
@@ -733,19 +811,19 @@ public class DOO {
 	/** A special doodad: its type and three integer coordinates. */
 	private final static int SPECIAL_DOOD_SIZE = 4 + 4 + 4 + 4;
 
-	private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
+	private void write_0x8(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		stream.writeId(Id.valueOf("W3do"));
 
-		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
+		stream.writeInt32(format.getVersion());
 
 		stream.writeInt32(_subVersion);
 
 		stream.writeInt32(_doods.size());
 
-		boolean withSkinIds = writesSkinIds();
+		boolean withSkinIds = format == EncodingFormat.DOO_0xD || writesSkinIds();
 
 		for (Dood dood : _doods) {
-			dood.write(stream, EncodingFormat.DOO_0x8, withSkinIds);
+			dood.write(stream, format, withSkinIds);
 		}
 	}
 
@@ -785,8 +863,9 @@ public class DOO {
 			
 			break;
 		}
-		case DOO_0x8: {
-			read_0x8(stream);
+		case DOO_0x8:
+		case DOO_0xD: {
+			read_0x8(stream, format);
 			
 			break;
 		}
@@ -799,9 +878,14 @@ public class DOO {
 	
 	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format, @Nullable Special.EncodingFormat specialFormat) {
 		switch (format.toEnum()) {
-		case AUTO:
-		case DOO_0x8: {
-			write_0x8(stream);
+		case AUTO: {
+			write_0x8(stream, _format);
+
+			break;
+		}
+		case DOO_0x8:
+		case DOO_0xD: {
+			write_0x8(stream, format);
 			
 			break;
 		}

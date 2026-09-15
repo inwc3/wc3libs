@@ -57,6 +57,7 @@ public class W3D extends ObjMod<W3D.Dood> {
 	@Override
 	public W3D copy() {
 		W3D other = new W3D();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 

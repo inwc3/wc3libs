@@ -57,6 +57,7 @@ public class W3A extends ObjMod<W3A.Abil> {
 	@Override
 	public W3A copy() {
 		W3A other = new W3A();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 

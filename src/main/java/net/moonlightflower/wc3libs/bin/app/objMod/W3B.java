@@ -57,6 +57,7 @@ public class W3B extends ObjMod<W3B.Destr> {
 	@Override
 	public W3B copy() {
 		W3B other = new W3B();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 

@@ -782,11 +782,33 @@ public class W3I {
     }
 
     public enum GameDataVersion {
-        ROC,
-        TFT
+        ROC(0),
+        TFT(1),
+        FORSAKEN_KINGDOM(2),
+        UNKNOWN(-1);
+
+        private final long _val;
+
+        GameDataVersion(long val) {
+            _val = val;
+        }
+
+        public long getVal() {
+            return _val;
+        }
+
+        @Nonnull
+        public static GameDataVersion valueOf(long val) {
+            for (GameDataVersion version : values()) {
+                if (version.getVal() == val) return version;
+            }
+
+            return UNKNOWN;
+        }
     }
 
     private GameDataVersion _gameDataVersion = GameDataVersion.TFT;
+    private long _gameDataVersionRaw = GameDataVersion.TFT.getVal();
 
     @Nonnull
     public GameDataVersion getGameDataVersion() {
@@ -795,6 +817,12 @@ public class W3I {
 
     public void setGameDataVersion(@Nonnull GameDataVersion val) {
         _gameDataVersion = val;
+        _gameDataVersionRaw = val.getVal();
+    }
+
+    private void setGameDataVersion(long val) {
+        _gameDataVersion = GameDataVersion.valueOf(val);
+        _gameDataVersionRaw = val;
     }
 
     private int _forceDefaultCameraZoom = 1250;
@@ -827,18 +855,15 @@ public class W3I {
         _forceMinCameraZoom = val;
     }
 
-    // Version 39 fields. The byte-sized settings deliberately remain ints so
-    // unknown future enum values can be read and written without loss.
-    private int _alphaTileMinimapColor = 128;
+    // Version 39 fields retain their raw integer values so unknown future enum
+    // values can still be read and written without loss.
+    private int _loadingScreenCrestRace = 0;
     private int _terrainFogStyle = 0;
     private boolean _drawTerrainFogOverSky = false;
     private float _terrainFogLinearStart = 10000F;
     private float _terrainFogLinearEnd = 10000F;
     private float _terrainFogMaxOpacity = 1F;
-    private float _terrainFogHeightStart = 0F;
-    private float _terrainFogHeightEnd = 0F;
-    private int _skyDisplay = 0;
-    private int _timeOfDay = 0;
+    private float _terrainFogHeight = 0F;
     private int _waterMinOpacity = 0;
     private int _waterMaxOpacity = 100;
     private int _waterReflectivity = 10;
@@ -850,8 +875,8 @@ public class W3I {
     private int _waterEnvMapReflectivity = 100;
     private int _waterUnknown = -1;
 
-    public int getAlphaTileMinimapColor() { return _alphaTileMinimapColor; }
-    public void setAlphaTileMinimapColor(int val) { _alphaTileMinimapColor = val; }
+    public int getLoadingScreenCrestRace() { return _loadingScreenCrestRace; }
+    public void setLoadingScreenCrestRace(int val) { _loadingScreenCrestRace = val; }
     public int getTerrainFogStyle() { return _terrainFogStyle; }
     public void setTerrainFogStyle(int val) { _terrainFogStyle = val; }
     public boolean getDrawTerrainFogOverSky() { return _drawTerrainFogOverSky; }
@@ -862,14 +887,8 @@ public class W3I {
     public void setTerrainFogLinearEnd(float val) { _terrainFogLinearEnd = val; }
     public float getTerrainFogMaxOpacity() { return _terrainFogMaxOpacity; }
     public void setTerrainFogMaxOpacity(float val) { _terrainFogMaxOpacity = val; }
-    public float getTerrainFogHeightStart() { return _terrainFogHeightStart; }
-    public void setTerrainFogHeightStart(float val) { _terrainFogHeightStart = val; }
-    public float getTerrainFogHeightEnd() { return _terrainFogHeightEnd; }
-    public void setTerrainFogHeightEnd(float val) { _terrainFogHeightEnd = val; }
-    public int getSkyDisplay() { return _skyDisplay; }
-    public void setSkyDisplay(int val) { _skyDisplay = val; }
-    public int getTimeOfDay() { return _timeOfDay; }
-    public void setTimeOfDay(int val) { _timeOfDay = val; }
+    public float getTerrainFogHeight() { return _terrainFogHeight; }
+    public void setTerrainFogHeight(float val) { _terrainFogHeight = val; }
     public int getWaterMinOpacity() { return _waterMinOpacity; }
     public void setWaterMinOpacity(int val) { _waterMinOpacity = val; }
     public int getWaterMaxOpacity() { return _waterMaxOpacity; }
@@ -1315,8 +1334,8 @@ public class W3I {
             UnitRace race = UnitRace.valueOf(stream.readInt32("race"));
             if (race != null) setRace(race);
 
-            setStartPosFixed(stream.readInt32("startPosFixed"));
             setHudSkin(stream.readInt32("hudSkin"));
+            setStartPosFixed(stream.readInt32("startPosFixed"));
             setName(stream.readString("playerName"));
             setStartPos(new Coords2DF(stream.readFloat32("startPosX"), stream.readFloat32("startPosY")));
             setAllyLowPrioFlags(stream.readInt32("allyLowPrioFlags"));
@@ -1329,8 +1348,8 @@ public class W3I {
             stream.writeInt32(getNum());
             stream.writeInt32(getType().getVal());
             stream.writeInt32(getRace().getVal());
-            stream.writeInt32(getStartPosFixed());
             stream.writeInt32(getHudSkin());
+            stream.writeInt32(getStartPosFixed());
             stream.writeString(getName());
             stream.writeFloat32(getStartPos().getX());
             stream.writeFloat32(getStartPos().getY());
@@ -3821,7 +3840,7 @@ public class W3I {
         setTileset(Tileset.valueOf(stream.readChar("tileset")));
 
         int campaignBackgroundIndex = stream.readInt32("campaignBackgroundIndex");
-        setAlphaTileMinimapColor(stream.readInt32("alphaTileMinimapColor"));
+        setLoadingScreenCrestRace(stream.readInt32("loadingScreenCrestRace"));
         LoadingScreen loadingScreen = new LoadingScreen(null, null, null, null, campaignBackgroundIndex);
         loadingScreen.set(
             campaignBackgroundIndex,
@@ -3850,19 +3869,16 @@ public class W3I {
         );
         setTerrainFog(new TerrainFog(terrainFogType, terrainFogZStart, terrainFogZEnd, terrainFogDensity, terrainFogColor));
 
-        setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
-        setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
-        setTilesetLightEnv(Tileset.valueOf(stream.readChar("tilesetLightEnv")));
-
-        setTerrainFogStyle(stream.readUByte("terrainFogStyle"));
-        setDrawTerrainFogOverSky(stream.readUByte("drawTerrainFogOverSky") != 0);
+        setTerrainFogStyle(stream.readInt32("terrainFogStyle"));
+        setDrawTerrainFogOverSky(stream.readInt32("drawTerrainFogOverSky") != 0);
         setTerrainFogLinearStart(stream.readFloat32("terrainFogLinearStart"));
         setTerrainFogLinearEnd(stream.readFloat32("terrainFogLinearEnd"));
         setTerrainFogMaxOpacity(stream.readFloat32("terrainFogMaxOpacity"));
-        setTerrainFogHeightStart(stream.readFloat32("terrainFogHeightStart"));
-        setTerrainFogHeightEnd(stream.readFloat32("terrainFogHeightEnd"));
-        setSkyDisplay(stream.readUByte("skyDisplay"));
-        setTimeOfDay(stream.readUByte("timeOfDay"));
+        setTerrainFogHeight(stream.readFloat32("terrainFogHeight"));
+
+        setGlobalWeatherId(WeatherId.valueOf(stream.readId("globalWeatherId")));
+        setSoundEnv(SoundLabel.valueOf(stream.readString("soundEnv")));
+        setTilesetLightEnv(Tileset.valueOf(stream.readChar("tilesetLightEnv")));
 
         setWaterColor(Color.fromRGBA255(
             stream.readUByte("waterRed"), stream.readUByte("waterGreen"),
@@ -3870,7 +3886,7 @@ public class W3I {
         ));
         setScriptLang(stream.readUInt32("scriptLang") == 0 ? ScriptLang.JASS : ScriptLang.LUA);
         setGraphics(Graphics.valueOf(stream.readUInt32("graphics")));
-        setGameDataVersion(stream.readUInt32("gameDataVersion") == 0 ? GameDataVersion.ROC : GameDataVersion.TFT);
+        setGameDataVersion(stream.readUInt32("gameDataVersion"));
         setForceDefaultCameraZoom(stream.readInt32("forceDefaultCameraZoom"));
         setForceMaxCameraZoom(stream.readInt32("forceMaxCameraZoom"));
         setForceMinCameraZoom(stream.readInt32("forceMinCameraZoom"));
@@ -3944,7 +3960,7 @@ public class W3I {
         LoadingScreenBackground background = loadingScreen.getBackground();
         stream.writeInt32(background instanceof LoadingScreenBackground.PresetBackground
             ? ((LoadingScreenBackground.PresetBackground) background).getIndex() : -1);
-        stream.writeInt32(getAlphaTileMinimapColor());
+        stream.writeInt32(getLoadingScreenCrestRace());
         stream.writeString(background instanceof LoadingScreenBackground.CustomBackground
             ? ((LoadingScreenBackground.CustomBackground) background).getCustomPath().toString() : null);
         stream.writeString(loadingScreen.getText());
@@ -3970,18 +3986,16 @@ public class W3I {
         stream.writeUByte(terrainFogColor != null ? terrainFogColor.getBlue255() : 0);
         stream.writeUByte(terrainFogColor != null ? terrainFogColor.getAlpha255() : 0);
 
-        stream.writeId(getGlobalWeatherId());
-        stream.writeString(getSoundEnv());
-        stream.writeChar(getTilesetLightEnv() != null ? getTilesetLightEnv().getChar() : null);
-        stream.writeUByte(getTerrainFogStyle());
-        stream.writeUByte(getDrawTerrainFogOverSky() ? 1 : 0);
+        stream.writeInt32(getTerrainFogStyle());
+        stream.writeInt32(getDrawTerrainFogOverSky() ? 1 : 0);
         stream.writeFloat32(getTerrainFogLinearStart());
         stream.writeFloat32(getTerrainFogLinearEnd());
         stream.writeFloat32(getTerrainFogMaxOpacity());
-        stream.writeFloat32(getTerrainFogHeightStart());
-        stream.writeFloat32(getTerrainFogHeightEnd());
-        stream.writeUByte(getSkyDisplay());
-        stream.writeUByte(getTimeOfDay());
+        stream.writeFloat32(getTerrainFogHeight());
+
+        stream.writeId(getGlobalWeatherId());
+        stream.writeString(getSoundEnv());
+        stream.writeChar(getTilesetLightEnv() != null ? getTilesetLightEnv().getChar() : null);
 
         Color waterColor = getWaterColor();
         stream.writeUByte(waterColor.getRed255());
@@ -3990,7 +4004,7 @@ public class W3I {
         stream.writeUByte(waterColor.getAlpha255());
         stream.writeUInt32(getScriptLang() == ScriptLang.LUA ? 1 : 0);
         stream.writeUInt32(getGraphics().getVal());
-        stream.writeUInt32(getGameDataVersion() == GameDataVersion.TFT ? 1 : 0);
+        stream.writeUInt32(_gameDataVersionRaw);
         stream.writeInt32(getForceDefaultCameraZoom());
         stream.writeInt32(getForceMaxCameraZoom());
         stream.writeInt32(getForceMinCameraZoom());

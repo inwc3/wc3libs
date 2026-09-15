@@ -36,6 +36,19 @@ public class W3ETest extends Wc3LibTest {
 		Assert.assertEquals(roundTrip, serialized);
 	}
 
+	@Test
+	public void publicWriterKeepsParsedFormat() throws IOException {
+		byte[] expected = write(build_0xC_fixture(), W3E.EncodingFormat.W3E_0xC);
+		W3E parsed = new W3E(new Wc3BinInputStream(new ByteArrayInputStream(expected)));
+
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+			parsed.write(parsed.new Writer(stream));
+		}
+
+		Assert.assertEquals(output.toByteArray(), expected);
+	}
+
 	private byte[] write(W3E w3e, W3E.EncodingFormat format) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(out)) {
