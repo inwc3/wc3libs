@@ -4204,6 +4204,9 @@ public class W3I {
             }
             stmts.add(Statement.create("call SetPlayerColor(Player(" + player.getNum() + ")" + ", ConvertPlayerColor(" + player.getNum() + "))"));
             stmts.add(Statement.create("call SetPlayerRacePreference(Player(" + player.getNum() + ")" + ", " + player.getRace().getJassExpr() + ")"));
+            if (_fileVersion >= EncodingFormat.W3I_0x27.getVersion()) {
+                stmts.add(Statement.create("call SetPlayerRaceSkin(Player(" + player.getNum() + "), ConvertRacePref(" + player.getHudSkin() + "))"));
+            }
             stmts.add(Statement.create("call SetPlayerRaceSelectable(Player(" + player.getNum() + ")" + ", " + (player.getRace().equals(Player.UnitRace.SELECTABLE) || !getFlag(MapFlag.FIXED_PLAYER_FORCE_SETTING) ? "true" : "false") + ")"));
             stmts.add(Statement.create("call SetPlayerController(Player(" + player.getNum() + ")" + ", " + player.getType().getJassExpr() + ")"));
         }

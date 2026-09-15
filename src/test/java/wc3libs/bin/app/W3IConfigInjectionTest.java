@@ -99,6 +99,7 @@ public class W3IConfigInjectionTest {
         assertTrue(output.contains("callSetPlayerStartLocation(Player(6),3)"));
         assertTrue(output.contains("callForcePlayerStartLocation(Player(7),4)"));
         assertTrue(output.contains("callForcePlayerStartLocation(Player(8),5)"));
+        assertFalse(output.contains("SetPlayerRaceSkin"), "legacy W3I formats do not define a HUD skin field");
 
         assertTrue(output.contains("callSetPlayerState(Player(0),PLAYER_STATE_ALLIED_VICTORY,1)"));
         assertTrue(output.contains("callSetPlayerState(Player(8),PLAYER_STATE_ALLIED_VICTORY,1)"));
