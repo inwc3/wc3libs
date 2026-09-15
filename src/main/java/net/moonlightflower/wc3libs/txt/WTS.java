@@ -26,13 +26,13 @@ public class WTS {
     public final static File CAMPAIGN_PATH = new File("war3campaign.WTS");
 
     private static final Pattern ENTRY_HEADER_PATTERN = Pattern.compile(
-        "(?im)^[\\t ]*STRING[\\t ]+(\\d+)[\\t ]*\\r?\\n" +
-            "(?:(?:[\\t ]*//[^\\r\\n]*|[\\t ]*)\\r?\\n)*" +
-            "[\\t ]*\\{[\\t ]*\\r?\\n"
+        "(?im)^[\\t ]*STRING[\\t ]+(\\d+)[\\t ]*(?:\\r\\n|\\r|\\n)" +
+            "(?:(?:[\\t ]*//[^\\r\\n]*|[\\t ]*)(?:\\r\\n|\\r|\\n))*" +
+            "[\\t ]*\\{[\\t ]*(?:\\r\\n|\\r|\\n)"
     );
 
     private static final Pattern ENTRY_END_PATTERN = Pattern.compile(
-        "(?m)^[\\t ]*\\}[\\t ]*(?:\\r?\\n|\\z)"
+        "(?m)^[\\t ]*\\}[\\t ]*(?:(?:\\r\\n|\\r|\\n)|\\z)"
     );
 
     private static final class EntrySpan {
@@ -200,21 +200,12 @@ public class WTS {
     private void read(@Nonnull InputStream inStream) throws IOException {
         byte[] raw = inStream.readAllBytes();
 
-        // Detect original newline style from raw bytes (robust against reader normalization)
-        boolean hasCRLF = false;
-        for (int i = 0; i < raw.length - 1; i++) {
-            if (raw[i] == '\r' && raw[i + 1] == '\n') {
-                hasCRLF = true;
-                break;
-            }
-        }
-        _lineEnding = hasCRLF ? "\r\n" : "\n";
-
         // Decode directly; avoid UTF8 helper if it normalizes newlines
         String input = LosslessUTF8.decode(raw);
         _utf8Bom = input.startsWith("\uFEFF");
         if (_utf8Bom) input = input.substring(1);
         _sourceText = input;
+        _lineEnding = detectLineEnding(input);
 
         Matcher headerMatcher = ENTRY_HEADER_PATTERN.matcher(input);
 
@@ -247,6 +238,18 @@ public class WTS {
 
             headerMatcher.region(endMatcher.end(), input.length());
         }
+    }
+
+    @Nonnull
+    private static String detectLineEnding(@Nonnull String input) {
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '\n') return "\n";
+            if (input.charAt(i) == '\r') {
+                return i + 1 < input.length() && input.charAt(i + 1) == '\n' ? "\r\n" : "\r";
+            }
+        }
+
+        return "\r\n";
     }
 
     public WTS() {

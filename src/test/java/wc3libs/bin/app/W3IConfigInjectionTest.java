@@ -5,13 +5,16 @@ import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.dataTypes.app.Controller;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.port.GameVersion;
+import net.moonlightflower.wc3libs.misc.LosslessUTF8;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class W3IConfigInjectionTest {
@@ -199,6 +202,30 @@ public class W3IConfigInjectionTest {
         assertFalse(output.toString().contains("SetTeams(99)"), "a BOM must not hide the first config function");
         assertFalse(output.toString().replace("\r\n", "").contains("\n"),
             "injection must not introduce LF-only line endings into a CRLF script");
+    }
+
+    @Test
+    public void configInjectionSplicesWithoutNormalizingUntouchedBytes() throws Exception {
+        W3I w3i = createSparsePlayersW3I();
+        ByteArrayOutputStream source = new ByteArrayOutputStream();
+        source.write("\uFEFF// locale: ".getBytes(StandardCharsets.UTF_8));
+        source.write(0xE4);
+        source.write(("\r\nfunction config takes nothing returns nothing\n" +
+            "call SetTeams(99)\r" +
+            "endfunction\r\n" +
+            "function untouched takes nothing returns nothing\n" +
+            "// mixed endings stay mixed\r" +
+            "endfunction").getBytes(StandardCharsets.UTF_8));
+
+        StringWriter output = new StringWriter();
+        w3i.injectConfigsInJassScript(new ByteArrayInputStream(source.toByteArray()), output,
+            GameVersion.VERSION_1_32);
+        byte[] outputBytes = LosslessUTF8.encode(output.toString());
+        byte[] retainedPrefix = LosslessUTF8.encode("\uFEFF// locale: \uDCE4\r\nfunction untouched takes nothing returns nothing\n" +
+            "// mixed endings stay mixed\rendfunction");
+
+        assertEquals(java.util.Arrays.copyOf(outputBytes, retainedPrefix.length), retainedPrefix,
+            "all bytes outside replaced config functions must remain exact");
     }
 
     @Test

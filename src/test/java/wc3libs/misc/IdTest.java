@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
@@ -99,6 +100,17 @@ public class IdTest {
 			try (Wc3BinInputStream in = new Wc3BinInputStream(new ByteArrayInputStream(outBytes.toByteArray()))) {
 				assertEquals(in.readId(), Id.valueOf(spelling));
 			}
+		}
+	}
+
+	@Test
+	public void asciiCaseFoldingDoesNotDependOnHostLocale() {
+		Locale original = Locale.getDefault();
+		try {
+			Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+			assertEquals(Id.valueOf("UIID").lower(), Id.valueOf("uiid"));
+		} finally {
+			Locale.setDefault(original);
 		}
 	}
 }

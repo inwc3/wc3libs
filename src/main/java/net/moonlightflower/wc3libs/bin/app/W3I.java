@@ -4441,7 +4441,7 @@ public class W3I {
 
     public void removeConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, boolean isLua) throws IOException {
         String input = LosslessUTF8.decode(inStream.readAllBytes());
-        removeConfigsInScript(input, sw, isLua, detectLineEnding(input));
+        sw.write(removeConfigsInScript(input, isLua));
     }
 
     @Nonnull
@@ -4455,59 +4455,55 @@ public class W3I {
         return "\n";
     }
 
-    private void removeConfigsInScript(@Nonnull String input, @Nonnull StringWriter sw, boolean isLua,
-                                       @Nonnull String lineEnding) throws IOException {
-        if (input.startsWith("\uFEFF")) {
-            sw.write('\uFEFF');
-            input = input.substring(1);
-        }
+    private String removeConfigsInScript(@Nonnull String input, boolean isLua) {
+        Set<String> toBeRemovedFuncs = new HashSet<>(Arrays.asList(
+            FuncDecl.CONFIG_NAME,
+            FuncDecl.INIT_CUSTOM_PLAYER_SLOTS,
+            FuncDecl.INIT_CUSTOM_TEAMS,
+            FuncDecl.INIT_ALLY_PRIORITIES
+        ));
 
-        try (BufferedReader reader = new BufferedReader(new StringReader(input))) {
+        Pattern startPattern = isLua ? funcStartPatternLua : funcStartPattern;
+        Pattern endPattern = isLua ? funcEndPatternLua : funcEndPattern;
+        StringBuilder result = new StringBuilder(input.length());
+        int copyStart = 0;
+        int lineStart = 0;
+        boolean skip = false;
 
-            String line;
-
-            List<String> toBeRemovedFuncs = new ArrayList<>();
-
-            toBeRemovedFuncs.add(FuncDecl.CONFIG_NAME);
-            toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_PLAYER_SLOTS);
-            toBeRemovedFuncs.add(FuncDecl.INIT_CUSTOM_TEAMS);
-            toBeRemovedFuncs.add(FuncDecl.INIT_ALLY_PRIORITIES);
-
-            boolean first = true;
-            boolean skip = false;
-
-            while ((line = reader.readLine()) != null) {
-
-                Matcher funcStartMatcher = (isLua ? funcStartPatternLua : funcStartPattern).matcher(line);
-
-                if (funcStartMatcher.find()) {
-                    String funcName = funcStartMatcher.group(1);
-
-                    if (toBeRemovedFuncs.contains(funcName)) {
-                        skip = true;
-                    }
-                }
-
-                if (skip) {
-                    Matcher funcEndMatcher = (isLua ? funcEndPatternLua : funcEndPattern).matcher(line);
-
-                    if (funcEndMatcher.find()) {
-                        skip = false;
-                    }
-
-                    continue;
-                }
-
-                if (first) {
-                    first = false;
-                } else {
-                    sw.write(lineEnding);
-                }
-
-                sw.write(line);
+        while (lineStart < input.length()) {
+            int contentEnd = lineStart;
+            while (contentEnd < input.length() && input.charAt(contentEnd) != '\r' && input.charAt(contentEnd) != '\n') {
+                contentEnd++;
             }
 
+            int nextLineStart = contentEnd;
+            if (nextLineStart < input.length() && input.charAt(nextLineStart) == '\r') nextLineStart++;
+            if (nextLineStart < input.length() && input.charAt(nextLineStart) == '\n') nextLineStart++;
+
+            int matchStart = lineStart == 0 && input.startsWith("\uFEFF") ? 1 : lineStart;
+            String line = input.substring(matchStart, contentEnd);
+
+            if (!skip) {
+                Matcher funcStartMatcher = startPattern.matcher(line);
+                if (funcStartMatcher.find() && toBeRemovedFuncs.contains(funcStartMatcher.group(1))) {
+                    result.append(input, copyStart, matchStart);
+                    skip = true;
+                }
+            }
+
+            if (skip && endPattern.matcher(line).find()) {
+                copyStart = nextLineStart;
+                skip = false;
+            }
+
+            lineStart = nextLineStart;
         }
+
+        // Match the historical behavior for an unterminated target function:
+        // once its declaration is found, the remainder is removed.
+        if (!skip) result.append(input, copyStart, input.length());
+
+        return result.toString();
     }
 
 
@@ -4522,7 +4518,8 @@ public class W3I {
     public void injectConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion, boolean isLua) throws IOException {
         String input = LosslessUTF8.decode(inStream.readAllBytes());
         String lineEnding = detectLineEnding(input);
-        removeConfigsInScript(input, sw, isLua, lineEnding);
+        String retained = removeConfigsInScript(input, isLua);
+        sw.write(retained);
 
         List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
 
@@ -4532,10 +4529,21 @@ public class W3I {
         toBeAddedFuncImpls.add(makeConfig(isLua));
 
         for (FuncImpl funcImpl : toBeAddedFuncImpls) {
-            sw.write(lineEnding);
+            if (sw.getBuffer().length() > 0 && !endsWithLineEnding(sw.getBuffer())) sw.write(lineEnding);
             StringWriter generated = new StringWriter();
             funcImpl.write(generated, isLua);
-            sw.write(generated.toString().replace("\n", lineEnding));
+            sw.write(normalizeLineEndings(generated.toString(), lineEnding));
         }
+    }
+
+    private static boolean endsWithLineEnding(@Nonnull CharSequence value) {
+        if (value.length() == 0) return false;
+        char last = value.charAt(value.length() - 1);
+        return last == '\r' || last == '\n';
+    }
+
+    @Nonnull
+    private static String normalizeLineEndings(@Nonnull String value, @Nonnull String lineEnding) {
+        return value.replace("\r\n", "\n").replace('\r', '\n').replace("\n", lineEnding);
     }
 }
