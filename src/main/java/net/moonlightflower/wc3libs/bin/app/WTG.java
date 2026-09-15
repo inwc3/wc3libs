@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -464,7 +465,7 @@ public class WTG {
 						_beginFunc = stream.readInt32("beginFunc2");
 						
 						if (_beginFunc > 0) {
-							Func func = reader.getFuncMap().get(_val.toLowerCase());
+							Func func = reader.getFuncMap().get(_val.toLowerCase(Locale.ROOT));
 
 							if (func != null) {
 								int i = 0;
@@ -532,7 +533,7 @@ public class WTG {
 						
 						setVal(funcName); //beginFunc_val = val
 						
-						Func func = reader.getFuncMap().get(funcName.toLowerCase());
+						Func func = reader.getFuncMap().get(funcName.toLowerCase(Locale.ROOT));
 						
 						setBeginFunc(stream.readInt32()); //beginFunc_beginFunc = 1
 
@@ -542,7 +543,7 @@ public class WTG {
 								
 								String subFuncName = func.getParam(i);
 								
-								Func subFunc = reader.getFuncMap().get(funcName.toLowerCase());
+								Func subFunc = reader.getFuncMap().get(funcName.toLowerCase(Locale.ROOT));
 
 								if (subFunc != null) {
 									stream.beginGroup(String.format("param%d", i));

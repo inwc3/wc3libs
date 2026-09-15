@@ -4,6 +4,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Id extends War3String {
@@ -91,6 +92,6 @@ public class Id extends War3String {
 	}
 	
 	public Id lower() {
-		return Id.valueOf(getVal().toLowerCase());
+		return Id.valueOf(getVal().toLowerCase(Locale.ROOT));
 	}
 }

@@ -243,10 +243,13 @@ Four-byte IDs likewise require a one-byte-to-one-character encoding for
 unknown high bytes, and float writers must use raw IEEE-754 bits so NaN payloads
 are not canonicalized during an otherwise untouched cycle.
 
-When regenerating map-script configuration functions, retain the source
-script's CRLF, LF, or CR line-ending style. Escape the generated strings, but
-do not normalize every unrelated source line or close the caller-owned input
-stream as a side effect.
+When regenerating map-script configuration functions, splice only the named
+function ranges. Every retained byte, including mixed CRLF/LF/CR endings, a
+final missing line terminator, a UTF-8 BOM, and malformed legacy locale bytes,
+must remain unchanged. Use the first source line ending only for newly generated
+functions. Escape generated strings and do not close the caller-owned input
+stream as a side effect. Identifier case folding must use a locale-independent
+mapping; the host JVM locale must never alter serialized or looked-up IDs.
 
 Opaque handling is a corruption-prevention fallback. An opaque instance can be
 copied through a map rebuild, but its internal records cannot yet be safely
