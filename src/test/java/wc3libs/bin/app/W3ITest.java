@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -267,6 +268,13 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(w3i.getForces().get(1).getPlayerNums(w3i.getPlayers()), Set.of(3, 4, 5));
         Assert.assertEquals(w3i.getForces().get(1).getFlags().toInt(), 57);
         Assert.assertEquals(w3i.getForces().get(1).getName(), "TRIGSTR_017");
+
+        StringWriter playerSlots = new StringWriter();
+        w3i.makeInitCustomPlayerSlots(false).write(playerSlots, false);
+        String compactPlayerSlots = playerSlots.toString().replaceAll("\\s+", "");
+        Assert.assertTrue(compactPlayerSlots.contains("callSetPlayerRaceSkin(Player(0),ConvertRacePref(2))"));
+        Assert.assertTrue(compactPlayerSlots.contains("callSetPlayerRaceSkin(Player(1),ConvertRacePref(8))"));
+        Assert.assertTrue(compactPlayerSlots.contains("callSetPlayerRaceSkin(Player(2),ConvertRacePref(64))"));
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {

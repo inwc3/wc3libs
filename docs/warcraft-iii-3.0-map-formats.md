@@ -168,6 +168,12 @@ In particular, `hudSkin` precedes `fixedStartPosition`. The fixture gives each
 of six players different controller/race/HUD/fixed combinations so a symmetric
 read/write bug cannot hide a swapped slot.
 
+Tools which regenerate the map-script configuration prelude must also emit
+`SetPlayerRaceSkin` for each v39 player. Pass the raw `hudSkin` value through
+`ConvertRacePref`; reducing it to the older race enum loses values such as
+`RACE_PREF_USER_SELECTABLE` (`64`). Legacy W3I versions have no HUD-skin field
+and must not gain this call when their prelude is regenerated.
+
 Map-option bits 24 and 25 are, respectively, alpha-tile default minimap color
 and dynamic minimap. Preserve unknown flag bits as usual. The forced camera
 zoom values are serialized as default, maximum, minimum—not in the UI's visual
@@ -236,6 +242,7 @@ Do not normalize or hex-edit the binaries before committing them as fixtures.
 
 - Add version 39 W3I fields in the verified order above.
 - Put HUD skin before fixed-start-position in v39 player records.
+- Regenerate `SetPlayerRaceSkin` from the raw v39 HUD-skin value.
 - Add map flags 24 and 25.
 - Treat game-data version as numeric and preserve unknown raw values.
 - Retain each concrete source format on default write; do not silently emit an
