@@ -14,6 +14,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
+import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.MetaFieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import org.testng.Assert;
@@ -184,16 +185,21 @@ public class ObjModCorrectnessTest {
         W3A.Abil sourceAbil = (W3A.Abil) source.addObj(OBJ_ID, null);
         sourceAbil.setUnknown(new int[] { 11, 22, 33 });
         sourceAbil.set(STRING_FIELD, War3String.valueOf("source"));
+        getOnlyMod(sourceAbil, STRING_FIELD).setEndToken(Id.valueOf("ABCD"));
 
         W3A copy = source.copy();
         W3A.Abil copyAbil = copy.getObj(OBJ_ID);
 
         Assert.assertEquals(copyAbil.getUnknown(), new int[] { 11, 22, 33 });
         copyAbil.setUnknown(new int[] { 44 });
-        getOnlyMod(copyAbil, STRING_FIELD).setVal(War3String.valueOf("copy"));
+        ((War3String) getOnlyMod(copyAbil, STRING_FIELD).getVal()).set_val("copy");
+        getOnlyMod(copyAbil, STRING_FIELD).getEndToken().set_val("WXYZ");
+        copyAbil.getId().set_val("A001");
 
         Assert.assertEquals(sourceAbil.getUnknown(), new int[] { 11, 22, 33 });
         Assert.assertEquals(sourceAbil.get(STRING_FIELD).toString(), "source");
+        Assert.assertEquals(getOnlyMod(sourceAbil, STRING_FIELD).getEndToken().toString(), "ABCD");
+        Assert.assertEquals(sourceAbil.getId().toString(), OBJ_ID.toString());
     }
 
     @Test

@@ -236,6 +236,19 @@ public class WTSTest extends Wc3LibTest {
         Assert.assertEquals(output.toByteArray(), input.getBytes(StandardCharsets.UTF_8));
     }
 
+    @Test
+    public void fillingEmptyEntryRetainsClosingBraceDelimiter() throws Exception {
+        String input = "STRING 1\r\n{\r\n}\r\n";
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        wts.addEntry(1, "filled");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        Assert.assertEquals(output.toString(StandardCharsets.UTF_8), "STRING 1\r\n{\r\nfilled\r\n}\r\n");
+        Assert.assertEquals(new WTS(new ByteArrayInputStream(output.toByteArray())).getEntry(1), "filled");
+    }
+
     @Test(expectedExceptions = java.io.IOException.class, expectedExceptionsMessageRegExp = "unterminated WTS entry 9")
     public void unterminatedEntryFailsInsteadOfSilentlyDisappearing() throws Exception {
         String input = "STRING 9\n{\nmissing delimiter\n";

@@ -39,11 +39,13 @@ public class WTS {
         private final int key;
         private final int valueStart;
         private final int valueEnd;
+        private final String lineEnding;
 
-        private EntrySpan(int key, int valueStart, int valueEnd) {
+        private EntrySpan(int key, int valueStart, int valueEnd, @Nonnull String lineEnding) {
             this.key = key;
             this.valueStart = valueStart;
             this.valueEnd = valueEnd;
+            this.lineEnding = lineEnding;
         }
     }
 
@@ -136,7 +138,12 @@ public class WTS {
 
             String current = Objects.toString(_vals.get(span.key), "");
             String original = _sourceVals.get(span.key);
-            result.append(Objects.equals(current, original) ? current : normalizeLineEndings(current));
+            if (Objects.equals(current, original)) {
+                result.append(current);
+            } else {
+                result.append(normalizeLineEndings(current, span.lineEnding));
+                if (original.isEmpty() && !current.isEmpty()) result.append(span.lineEnding);
+            }
             cursor = span.valueEnd;
         }
 
@@ -175,7 +182,19 @@ public class WTS {
 
     @Nonnull
     private String normalizeLineEndings(@Nonnull String value) {
-        return value.replace("\r\n", "\n").replace('\r', '\n').replace("\n", _lineEnding);
+        return normalizeLineEndings(value, _lineEnding);
+    }
+
+    @Nonnull
+    private static String normalizeLineEndings(@Nonnull String value, @Nonnull String lineEnding) {
+        return value.replace("\r\n", "\n").replace('\r', '\n').replace("\n", lineEnding);
+    }
+
+    @Nonnull
+    private static String precedingLineEnding(@Nonnull String value, int end) {
+        if (end >= 2 && value.charAt(end - 2) == '\r' && value.charAt(end - 1) == '\n') return "\r\n";
+        if (end >= 1 && value.charAt(end - 1) == '\r') return "\r";
+        return "\n";
     }
 
     private void read(@Nonnull InputStream inStream) throws IOException {
@@ -222,7 +241,8 @@ public class WTS {
 
             if (_sourceVals.containsKey(key)) _sourcePatchable = false;
             _sourceVals.put(key, val);
-            _sourceSpans.add(new EntrySpan(key, headerMatcher.end(), valueEnd));
+            _sourceSpans.add(new EntrySpan(key, headerMatcher.end(), valueEnd,
+                precedingLineEnding(input, headerMatcher.end())));
             addEntry(key, val);
 
             headerMatcher.region(endMatcher.end(), input.length());
