@@ -1800,6 +1800,13 @@ public class WTG {
 		}
 	}
 
+	private EncodingFormat _format = EncodingFormat.WTG_0x7;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
+	}
+
 	private void read_0x4(@Nonnull Reader reader) throws Exception {
 		Wc3BinInputStream stream = reader.getStream();
 
@@ -1821,7 +1828,7 @@ public class WTG {
 			stream.endGroup();
 		}
 		
-		int unknownNumB = stream.readInt32("unknownNumB");
+		setUnknownNumB(stream.readInt32("unknownNumB"));
 		
 		int varsCount = stream.readInt32("varsCount");
 		
@@ -1967,6 +1974,7 @@ public class WTG {
 		}
 
 		reader.setFormat(stream.getFormat(EncodingFormat.class, version));
+		_format = reader.getFormat();
 
 		read(reader);
 	}
@@ -1974,11 +1982,13 @@ public class WTG {
 	private void read(@Nonnull Reader reader) throws Exception {
 		switch (reader.getFormat().toEnum()) {
 		case WTG_0x4: {
+			_format = EncodingFormat.WTG_0x4;
 			read_0x4(reader);
 			
 			break;
 		}
 		case WTG_0x7: {
+			_format = EncodingFormat.WTG_0x7;
 			read_0x7(reader);
 			
 			break;
@@ -2084,7 +2094,8 @@ public class WTG {
 			break;
 		}
 		case AUTO: {
-			write_0x7(writer);
+			writer.setFormat(_format);
+			write(writer);
 			
 			break;
 		}

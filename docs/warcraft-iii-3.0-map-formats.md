@@ -12,7 +12,7 @@ opaque byte preservation semantic support.
 | `war3map.w3i` | 39 (`0x27`) | Structured read/write | Populated, deliberately asymmetric properties, players, and forces are asserted semantically and byte-for-byte. |
 | `war3map.doo` | 13 (`0x0D`), sub-version 11 | Structured read/write | A populated 16-doodad fixture establishes the fixed v13 extension and cycles byte-for-byte. Some new fields remain raw-named. |
 | `war3mapUnits.doo` | 13 (`0x0D`), sub-versions 9 and 11 observed | Opaque read/write | Simple records expose part of the fixed v13 extension, but populated loot/ability/random subrecords diverge from v8. Bytes are preserved rather than partially decoded. |
-| `war3map.w3c` | 3 | Structured read/write | Two populated cameras plus generated JASS establish six added camera fields and the camera-type dword. Five fields are zero in both records, so a distinct-value fixture is still desirable as a slot-order guard. |
+| `war3map.w3c` | 3 | Structured read/write | A one-camera fixture gives all 16 camera floats distinct sentinels, proving every base and v3 slot; the populated map also establishes camera type 0/1. Both cycle byte-for-byte. |
 | `war3map.w3e` | 12 (`0x0C`) | Structured read/write | Populated terrain cycles byte-for-byte using the v12 tile layout. The read format is retained when writing. |
 | `war3map.w3r` | 7 | Structured read/write | A populated region establishes two appended dwords. Both are `1` in the sample, so their individual UI meanings remain raw-named. |
 | `war3map.wtg` | `0x80000004` | Opaque read/write | This is a new hierarchical trigger layout, not WTG v4. The supplied file is preserved exactly. |
@@ -54,7 +54,11 @@ int32   cameraType       // 0 standard, 1 free in the fixture
 
 These names are corroborated by the World Editor's generated JASS
 `CameraSetupSetField` calls. The free camera has absolute Z `4096` and camera
-type `1`; the standard camera has zero for both.
+type `1`; the standard camera has zero for both. A separate sentinel fixture
+sets the UI fields from Target X through Field of View to `1` through `8`, Far
+Clipping to `101`, and Near Clipping through Pos Absolute Z to `10` through
+`16`. This confirms the complete serialized order, including that the legacy
+field previously called `unknown` is Near Clipping (`nearZ`).
 
 Version 7 region records retain the version 5 record and append two int32
 values. The generated JASS enables the region's weather effect and adds a
@@ -174,10 +178,6 @@ changed. Keep all names and numeric values distinctive.
   acquisition range, hero level/attributes, inventory, modified ability,
   dropped-item sets, custom color, and waygate destination with distinctive
   values. A legacy-editor save of the same placements is especially valuable.
-- `war3map.w3c` v3: set local pitch, local yaw, local roll, depth-of-field
-  distance, and depth-of-field scale to five different non-zero sentinels on
-  one camera. The generated JASS strongly identifies their order already; this
-  makes the binary test independently catch any future slot swap.
 - `war3map.w3r` v7: save two otherwise identical maps where only camera blocker
   is toggled, and another pair where only weather enabled is toggled. This is
   needed to distinguish the two appended dwords without guessing their order.
@@ -205,6 +205,8 @@ Do not normalize or hex-edit the binaries before committing them as fixtures.
 - Treat game-data version as numeric and preserve unknown raw values.
 - Retain each concrete source format on default write; do not silently emit an
   older version.
+- Apply that rule to legacy variants too: for example, a parsed WTG v4 must
+  write v4 rather than silently upgrading to the library's v7 default.
 - Recognize WTG `0x80000004` as distinct from legacy WTG v4.
 - Add the six named v3 camera fields and preserve the numeric camera type.
 - Add the v13 doodad extension and the two v7 region dwords without guessing

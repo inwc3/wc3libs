@@ -36,6 +36,7 @@ public class V3MapFilesTest extends Wc3LibTest {
             { MMP.class, "wc3data/MMP/war3map_v3_filled.mmp" },
             { SHD.class, "wc3data/SHD/war3map_v3_filled.shd" },
             { W3C.class, "wc3data/W3C/war3map_v3_filled.w3c" },
+            { W3C.class, "wc3data/W3C/war3map_v3_camera_values.w3c" },
             { W3E.class, "wc3data/W3E/war3map_v3_filled.w3e" },
             { W3I.class, "wc3data/W3I/war3map_v3_filled.w3i" },
             { W3R.class, "wc3data/W3R/war3map_v3_filled.w3r" },
@@ -124,4 +125,33 @@ public class V3MapFilesTest extends Wc3LibTest {
             Assert.assertEquals(imports.getObjs().get(0).getPath(), "1067db77-5b50-4a5c-8b62-8008c4529a51.mdl");
         }
     }
+
+	@Test
+	public void classifyEveryVersion3CameraSlot() throws Exception {
+		try (Wc3BinInputStream stream = new Wc3BinInputStream(getFile("wc3data/W3C/war3map_v3_camera_values.w3c"))) {
+			W3C cameras = new W3C(stream);
+			Assert.assertSame(cameras.getFormat(), W3C.EncodingFormat.W3C_0x3);
+			Assert.assertEquals(cameras.getCameras().size(), 1);
+
+			W3C.Camera camera = cameras.getCameras().get(0);
+			Assert.assertEquals(camera.getTarget().getX().toFloat(), 1F, 0.0001F);
+			Assert.assertEquals(camera.getTarget().getY().toFloat(), 2F, 0.0001F);
+			Assert.assertEquals(camera.getZOffset().toFloat(), 3F, 0.0001F);
+			Assert.assertEquals(camera.getRotation().toFloat(), 4F, 0.0001F);
+			Assert.assertEquals(camera.getAngleOfAttack().toFloat(), 5F, 0.0001F);
+			Assert.assertEquals(camera.getDist().toFloat(), 6F, 0.0001F);
+			Assert.assertEquals(camera.getRoll().toFloat(), 7F, 0.0001F);
+			Assert.assertEquals(camera.getFieldOfView().toFloat(), 8F, 0.0001F);
+			Assert.assertEquals(camera.getFarZ().toFloat(), 101F, 0.0001F);
+			Assert.assertEquals(camera.getNearZ().toFloat(), 10F, 0.0001F);
+			Assert.assertEquals(camera.getLocalPitch().toFloat(), 11F, 0.0001F);
+			Assert.assertEquals(camera.getLocalYaw().toFloat(), 12F, 0.0001F);
+			Assert.assertEquals(camera.getLocalRoll().toFloat(), 13F, 0.0001F);
+			Assert.assertEquals(camera.getDepthOfFieldDistance().toFloat(), 14F, 0.0001F);
+			Assert.assertEquals(camera.getDepthOfFieldScale().toFloat(), 15F, 0.0001F);
+			Assert.assertEquals(camera.getAbsoluteZ().toFloat(), 16F, 0.0001F);
+			Assert.assertEquals(camera.getCineName().toString(), "Camera 001");
+			Assert.assertEquals(camera.getCameraType(), 0);
+		}
+	}
 }

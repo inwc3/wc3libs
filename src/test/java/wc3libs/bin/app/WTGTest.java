@@ -26,6 +26,29 @@ public class WTGTest extends Wc3LibTest {
 	}
 
 	@Test
+	public void readWriteCycleKeepsVersion4() throws Exception {
+		ByteArrayOutputStream inputBytes = new ByteArrayOutputStream();
+		try (Wc3BinOutputStream stream = new Wc3BinOutputStream(inputBytes)) {
+			stream.writeId(net.moonlightflower.wc3libs.misc.Id.valueOf("WTG!"));
+			stream.writeInt32(4);
+			stream.writeInt32(0); // categories
+			stream.writeInt32(123); // legacy unknown value
+			stream.writeInt32(0); // variables
+			stream.writeInt32(0); // triggers
+		}
+
+		byte[] expected = inputBytes.toByteArray();
+		WTG wtg = new WTG(new Wc3BinInputStream(new ByteArrayInputStream(expected)));
+		Assert.assertSame(wtg.getFormat(), WTG.EncodingFormat.WTG_0x4);
+
+		ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+		try (Wc3BinOutputStream stream = new Wc3BinOutputStream(outputBytes)) {
+			wtg.write(stream);
+		}
+		Assert.assertEquals(outputBytes.toByteArray(), expected);
+	}
+
+	@Test
 	public void readWriteCycleV3() throws Exception {
 		WTG wtg = new WTG();
 

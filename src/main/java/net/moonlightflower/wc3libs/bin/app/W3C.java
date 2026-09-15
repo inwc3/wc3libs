@@ -35,7 +35,10 @@ public class W3C {
 			public final static W3C.Camera.State<War3Real> ART_DIST = new W3C.Camera.State<>("dist", War3Real.class, War3Real.valueOf(0F));
 			public final static W3C.Camera.State<War3Real> ART_FIELD_OF_VIEW = new W3C.Camera.State<>("fieldOfView", War3Real.class, War3Real.valueOf(0F));
 			public final static W3C.Camera.State<War3Real> ART_FAR_Z = new W3C.Camera.State<>("farZ", War3Real.class, War3Real.valueOf(10000F));
-			public final static W3C.Camera.State<War3Real> ART_UNKNOWN = new W3C.Camera.State<>("unknown", War3Real.class, War3Real.valueOf(100F));
+			public final static W3C.Camera.State<War3Real> ART_NEAR_Z = new W3C.Camera.State<>("nearZ", War3Real.class, War3Real.valueOf(100F));
+			/** @deprecated use {@link #ART_NEAR_Z}. */
+			@Deprecated
+			public final static W3C.Camera.State<War3Real> ART_UNKNOWN = ART_NEAR_Z;
 			public final static W3C.Camera.State<War3Real> ART_LOCAL_PITCH = new W3C.Camera.State<>("localPitch", War3Real.class, War3Real.valueOf(0F));
 			public final static W3C.Camera.State<War3Real> ART_LOCAL_YAW = new W3C.Camera.State<>("localYaw", War3Real.class, War3Real.valueOf(0F));
 			public final static W3C.Camera.State<War3Real> ART_LOCAL_ROLL = new W3C.Camera.State<>("localRoll", War3Real.class, War3Real.valueOf(0F));
@@ -149,13 +152,21 @@ public class W3C {
 			set(State.ART_FAR_Z, val);
 		}
 		
-		public War3Real getUnknown() {
-			return get(State.ART_UNKNOWN);
+		public War3Real getNearZ() {
+			return get(State.ART_NEAR_Z);
 		}
-		
-		public void setUnknown(War3Real val) {
-			set(State.ART_UNKNOWN, val);
+
+		public void setNearZ(War3Real val) {
+			set(State.ART_NEAR_Z, val);
 		}
+
+		/** @deprecated use {@link #getNearZ()}. */
+		@Deprecated
+		public War3Real getUnknown() { return getNearZ(); }
+
+		/** @deprecated use {@link #setNearZ(War3Real)}. */
+		@Deprecated
+		public void setUnknown(War3Real val) { setNearZ(val); }
 		
 		public War3String getCineName() {
 			return get(State.EDITOR_CINE_NAME);
@@ -199,7 +210,7 @@ public class W3C {
 			stream.writeFloat32(getFieldOfView());
 			stream.writeFloat32(getFarZ());
 			
-			stream.writeFloat32(getUnknown());
+			stream.writeFloat32(getNearZ());
 		}
 
 		private void readBase(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -213,7 +224,7 @@ public class W3C {
 			setRoll(stream.readReal("roll"));
 			setFieldOfView(stream.readReal("fieldOfView"));
 			setFarZ(stream.readReal("farZ"));
-			setUnknown(stream.readReal("unknown"));
+			setNearZ(stream.readReal("nearZ"));
 		}
 
 		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
