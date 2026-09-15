@@ -139,6 +139,31 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
                 _endToken = value;
             }
 
+            @Nonnull
+            public Mod copy() {
+                Mod copy = new Mod(MetaFieldId.valueOf(_id.toString()), _valType, copyVal());
+                copy._endToken = _endToken == null ? null : Id.valueOf(_endToken.toString());
+
+                return copy;
+            }
+
+            @Nullable
+            protected DataType copyVal() {
+                if (_val == null) return null;
+
+                if (_valType == ValType.INT && _val instanceof War3Int) {
+                    return War3Int.valueOf(((War3Int) _val).toInt());
+                }
+                if ((_valType == ValType.REAL || _valType == ValType.UNREAL) && _val instanceof War3Num) {
+                    return War3Real.valueOf(((War3Num) _val).toFloat());
+                }
+
+                // Strings are the wire representation for every remaining
+                // object-data type. Reconstructing it also separates mutable
+                // War3String subclasses and collection-backed values.
+                return War3String.valueOf(_val.toString());
+            }
+
 			@Override
 			public String toString() {
 				return getId().toString();
@@ -195,6 +220,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				_level = level;
 				_dataPt = dataPt;
 			}
+
+            @Override
+            @Nonnull
+            public ExtendedMod copy() {
+                ExtendedMod copy = new ExtendedMod(MetaFieldId.valueOf(_id.toString()), getValType(),
+                    copyVal(), _level, _dataPt);
+                copy.setEndToken(getEndToken() == null ? null : Id.valueOf(getEndToken().toString()));
+
+                return copy;
+            }
 
 			@Override
 			public void print(@Nonnull Printer printer) {
@@ -299,13 +334,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		}
 		
 		public void merge(@Nonnull Obj otherObj) {
+			int[] otherUnknown = otherObj.getUnknown();
+			if (otherUnknown != null) setUnknown(otherUnknown);
+
 			for (Map.Entry<MetaFieldId, List<Mod>> otherModEntry : otherObj.getModsMapByField().entrySet()) {
 				MetaFieldId fieldId = otherModEntry.getKey();
 				List<Mod> otherModsList = otherModEntry.getValue();
 
                 remove(fieldId);
                 for (Mod mod : otherModsList) {
-                    addMod(mod);
+                    addMod(mod.copy());
                 }
 			}
 		}
@@ -334,11 +372,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
         private int[] _unknown;
 
         public int[] getUnknown() {
-            return _unknown;
+            return _unknown == null ? null : Arrays.copyOf(_unknown, _unknown.length);
         }
 
         public void setUnknown(int[] value) {
-            _unknown = value;
+            _unknown = value == null ? null : Arrays.copyOf(value, value.length);
         }
 
 		@Override
@@ -823,7 +861,9 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		public <T extends Obj> T copy() {
 			Obj ret = copySpec();
 
-			ret._newId = _newId;
+			ret._id = ObjId.valueOf(_id);
+			ret._baseId = _baseId == null ? null : ObjId.valueOf(_baseId);
+			ret._newId = _newId == null ? null : ObjId.valueOf(_newId);
 
 			ret.merge(this);
 
@@ -930,10 +970,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	}
 
     public void merge(@Nonnull ObjMod<ObjType> other) {
+        if (other.getFormat().getVersion() > getFormat().getVersion()) {
+            setFormat(other.getFormat());
+        }
+
         for (Map.Entry<ObjId, ObjType> entry : other.getObjs().entrySet()) {
             if (_objs.containsKey(entry.getKey())) {
                 ObjType obj = _objs.get(entry.getKey());
-                entry.getValue().getMods().forEach(obj::addMod);
+                int[] otherUnknown = entry.getValue().getUnknown();
+                if (otherUnknown != null) obj.setUnknown(otherUnknown);
+                entry.getValue().getMods().forEach(mod -> obj.addMod(mod.copy()));
             } else {
                 ObjType obj = entry.getValue().copy();
 

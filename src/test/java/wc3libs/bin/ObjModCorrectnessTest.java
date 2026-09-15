@@ -4,9 +4,17 @@ import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3H;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3Q;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3T;
+import net.moonlightflower.wc3libs.bin.app.objMod.W3U;
 import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
+import net.moonlightflower.wc3libs.dataTypes.app.War3String;
+import net.moonlightflower.wc3libs.misc.Id;
 import net.moonlightflower.wc3libs.misc.MetaFieldId;
 import net.moonlightflower.wc3libs.misc.ObjId;
 import org.testng.Assert;
@@ -62,6 +70,32 @@ public class ObjModCorrectnessTest {
 
             Assert.assertEquals(parsed.getFormat(), format);
             Assert.assertEquals(write(parsed, parsed.getFormat()), original);
+        }
+    }
+
+    @Test
+    public void everyBaseAndSkinObjectFamilyRetainsV3MetadataWithDefaultWriter() throws Exception {
+        List<Class<? extends ObjMod>> types = Arrays.asList(
+            W3A.class, W3B.class, W3D.class, W3H.class, W3Q.class, W3T.class, W3U.class);
+
+        for (Class<? extends ObjMod> type : types) {
+            ObjMod<?> source = type.getConstructor().newInstance();
+            ObjMod.Obj object = source.addObj(ObjId.valueOf("hfoo"), null);
+            object.setUnknown(new int[]{101, 202});
+
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            try (Wc3BinOutputStream out = new Wc3BinOutputStream(bytes)) {
+                source.write(out);
+            }
+
+            ObjMod<?> reparsed;
+            try (Wc3BinInputStream in = new Wc3BinInputStream(new ByteArrayInputStream(bytes.toByteArray()))) {
+                reparsed = type.getConstructor(Wc3BinInputStream.class).newInstance(in);
+            }
+
+            Assert.assertSame(reparsed.getFormat(), ObjMod.EncodingFormat.OBJ_0x3, type.getSimpleName());
+            Assert.assertEquals(reparsed.getObj(ObjId.valueOf("hfoo")).getUnknown(),
+                new int[]{101, 202}, type.getSimpleName());
         }
     }
 
@@ -143,5 +177,51 @@ public class ObjModCorrectnessTest {
 
         Assert.assertEquals(((War3Int) target.get(INT_FIELD)).toInt(), 1);
         Assert.assertEquals(((War3Real) target.get(REAL_FIELD)).toFloat(), 2.5f, 0.00001f);
+    }
+
+    @Test
+    public void copyPreservesV3MetadataWithoutAliasingMutableRecords() {
+        W3A source = new W3A();
+        W3A.Abil sourceAbil = (W3A.Abil) source.addObj(OBJ_ID, null);
+        sourceAbil.setUnknown(new int[] { 11, 22, 33 });
+        sourceAbil.set(STRING_FIELD, War3String.valueOf("source"));
+        getOnlyMod(sourceAbil, STRING_FIELD).setEndToken(Id.valueOf("ABCD"));
+
+        W3A copy = source.copy();
+        W3A.Abil copyAbil = copy.getObj(OBJ_ID);
+
+        Assert.assertEquals(copyAbil.getUnknown(), new int[] { 11, 22, 33 });
+        copyAbil.setUnknown(new int[] { 44 });
+        ((War3String) getOnlyMod(copyAbil, STRING_FIELD).getVal()).set_val("copy");
+        getOnlyMod(copyAbil, STRING_FIELD).getEndToken().set_val("WXYZ");
+        copyAbil.getId().set_val("A001");
+
+        Assert.assertEquals(sourceAbil.getUnknown(), new int[] { 11, 22, 33 });
+        Assert.assertEquals(sourceAbil.get(STRING_FIELD).toString(), "source");
+        Assert.assertEquals(getOnlyMod(sourceAbil, STRING_FIELD).getEndToken().toString(), "ABCD");
+        Assert.assertEquals(sourceAbil.getId().toString(), OBJ_ID.toString());
+    }
+
+    @Test
+    public void mergePromotesFormatAndPreservesV3Metadata() throws Exception {
+        W3A target = new W3A();
+        target.setFormat(ObjMod.EncodingFormat.OBJ_0x2);
+
+        W3A source = new W3A();
+        source.setFormat(ObjMod.EncodingFormat.OBJ_0x3);
+        W3A.Abil sourceAbil = (W3A.Abil) source.addObj(OBJ_ID, null);
+        sourceAbil.setUnknown(new int[] { 101, 202 });
+        sourceAbil.set(INT_FIELD, War3Int.valueOf(7));
+
+        target.merge(source);
+
+        Assert.assertSame(target.getFormat(), ObjMod.EncodingFormat.OBJ_0x3);
+        W3A reparsed;
+        byte[] bytes = write(target, target.getFormat());
+        try (Wc3BinInputStream in = new Wc3BinInputStream(new ByteArrayInputStream(bytes))) {
+            reparsed = new W3A(in);
+        }
+
+        Assert.assertEquals(reparsed.getObj(OBJ_ID).getUnknown(), new int[] { 101, 202 });
     }
 }

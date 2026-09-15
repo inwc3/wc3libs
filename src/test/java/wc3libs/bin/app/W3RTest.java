@@ -13,6 +13,8 @@ import wc3libs.misc.Wc3LibTest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class W3RTest extends Wc3LibTest {
 	@Test()
@@ -49,5 +51,17 @@ public class W3RTest extends Wc3LibTest {
 	@Test()
 	public void readWriteCycle() throws IOException {
 		readWriteCycle(W3R.class, getFile("wc3data/W3R/war3map.w3r"));
+	}
+
+	@Test
+	public void defaultFileWriterFlushesTheBufferedData() throws IOException {
+		W3R source = new W3R(getFile("wc3data/W3R/war3map.w3r"));
+		Path output = Files.createTempFile("wc3libs-w3r-", ".w3r");
+		try {
+			source.write(output.toFile());
+			Assert.assertEquals(Files.readAllBytes(output), Files.readAllBytes(getFile("wc3data/W3R/war3map.w3r").toPath()));
+		} finally {
+			Files.deleteIfExists(output);
+		}
 	}
 }

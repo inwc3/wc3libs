@@ -70,6 +70,9 @@ public class WTSTest extends Wc3LibTest {
         Path output = Files.createTempFile("war3map-v3-", ".wts");
         try {
             wts.write(output.toFile());
+            byte[] outputBytes = Files.readAllBytes(output);
+            Assert.assertEquals(new byte[]{outputBytes[0], outputBytes[1], outputBytes[2]},
+                new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}, "UTF-8 BOM must survive the cycle");
             Assert.assertEquals(new WTS(output.toFile()), wts);
         } finally {
             Files.deleteIfExists(output);
@@ -135,5 +138,120 @@ public class WTSTest extends Wc3LibTest {
         // Should keep LF, not convert to CRLF
         Assert.assertFalse(out.contains("\r\n"), "Output should preserve LF style when input used LF");
         Assert.assertTrue(out.contains("\n\nSTRING 2\n"), "Output should include blank line between entries");
+    }
+
+    @Test
+    public void valuesPreserveCommentLinesBracesAndSignificantWhitespace() throws Exception {
+        String input =
+            "// comment outside an entry\n" +
+                "STRING 7\n" +
+                "{\n" +
+                "  leading spaces\n" +
+                "// literal value line\n" +
+                "contains } inline\n" +
+                "trailing spaces  \n" +
+                "\n" +
+                "}\n";
+
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        String expected = "  leading spaces\n// literal value line\ncontains } inline\ntrailing spaces  \n";
+        Assert.assertEquals(wts.getEntry(7), expected);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        WTS reparsed = new WTS(new ByteArrayInputStream(output.toByteArray()));
+        Assert.assertEquals(reparsed.getEntry(7), expected);
+    }
+
+    @Test
+    public void streamWriterFlushesButDoesNotCloseCallerStream() throws Exception {
+        class CloseTrackingOutputStream extends ByteArrayOutputStream {
+            private boolean closed;
+
+            @Override
+            public void close() throws java.io.IOException {
+                closed = true;
+                super.close();
+            }
+        }
+
+        WTS wts = new WTS();
+        wts.addEntry(1, "value");
+        CloseTrackingOutputStream output = new CloseTrackingOutputStream();
+
+        wts.write(output);
+
+        Assert.assertFalse(output.closed, "caller retains ownership of the stream");
+        Assert.assertTrue(output.size() > 0, "write must flush buffered text");
+    }
+
+    @Test
+    public void keywordMatchingRemainsCaseInsensitive() throws Exception {
+        String input = "sTrInG 12\n{\nmixed case keyword\n}\n";
+
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        Assert.assertEquals(wts.getEntry(12), "mixed case keyword");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        Assert.assertEquals(new WTS(new ByteArrayInputStream(output.toByteArray())).getEntry(12),
+            "mixed case keyword");
+    }
+
+    @Test
+    public void mutationPreservesSurroundingSourceStyle() throws Exception {
+        String input = "\uFEFF// leading comment\r\nsTrInG 12  \r\n  // header comment\r\n {\r\nold value\r\n}\r\n// trailing comment\r\n";
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        wts.addEntry(12, "new value");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        Assert.assertEquals(output.toByteArray(), input.replace("old value", "new value").getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void malformedLegacyLocaleBytesRoundTripExactly() throws Exception {
+        ByteArrayOutputStream input = new ByteArrayOutputStream();
+        input.write("STRING 1\r\n{\r\n".getBytes(StandardCharsets.US_ASCII));
+        input.write(0xE4);
+        input.write("\r\n}\r\n".getBytes(StandardCharsets.US_ASCII));
+
+        WTS wts = new WTS(new ByteArrayInputStream(input.toByteArray()));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+
+        Assert.assertEquals(output.toByteArray(), input.toByteArray());
+    }
+
+    @Test
+    public void unchangedDuplicateKeysRemainByteIdentical() throws Exception {
+        String input = "STRING 1\n{\nfirst\n}\n// between\nSTRING 1\n{\nsecond\n}\n";
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+
+        Assert.assertEquals(output.toByteArray(), input.getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void fillingEmptyEntryRetainsClosingBraceDelimiter() throws Exception {
+        String input = "STRING 1\r\n{\r\n}\r\n";
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        wts.addEntry(1, "filled");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        Assert.assertEquals(output.toString(StandardCharsets.UTF_8), "STRING 1\r\n{\r\nfilled\r\n}\r\n");
+        Assert.assertEquals(new WTS(new ByteArrayInputStream(output.toByteArray())).getEntry(1), "filled");
+    }
+
+    @Test(expectedExceptions = java.io.IOException.class, expectedExceptionsMessageRegExp = "unterminated WTS entry 9")
+    public void unterminatedEntryFailsInsteadOfSilentlyDisappearing() throws Exception {
+        String input = "STRING 9\n{\nmissing delimiter\n";
+        new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
     }
 }

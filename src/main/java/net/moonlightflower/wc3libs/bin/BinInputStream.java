@@ -1,8 +1,9 @@
 package net.moonlightflower.wc3libs.bin;
 
+import net.moonlightflower.wc3libs.misc.LosslessUTF8;
+
 import javax.annotation.Nonnull;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public class BinInputStream extends BinStream implements AutoCloseable {
@@ -86,7 +87,7 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 			// Consume terminating zero when present, otherwise move to EOF.
 			setPos((cutPos < size()) ? (cutPos + 1) : cutPos);
 
-			return new String(retBytes, StandardCharsets.UTF_8);
+			return LosslessUTF8.decode(retBytes);
 		} catch (IndexOutOfBoundsException | ArithmeticException e) {
 			throw new StreamException(this);
 		}
@@ -106,9 +107,14 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	}
 
 	public BinInputStream(@Nonnull File file) throws IOException {
-		_inStream = Files.newInputStream(file.toPath());
+		try (InputStream inStream = Files.newInputStream(file.toPath())) {
+			read(inStream);
+		}
 
-		read(_inStream);
+		// File input is fully buffered by construction, so retaining the file
+		// handle serves no purpose and prevents callers from replacing/deleting
+		// the source on Windows. Keep close() harmless for try-with-resources.
+		_inStream = InputStream.nullInputStream();
 	}
 
 }

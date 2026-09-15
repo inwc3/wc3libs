@@ -111,7 +111,9 @@ public class W3V extends W3VUncompressed {
 	}
 
 	public void write(File file, EncodingFormat format) throws IOException {
-		write(new Wc3BinOutputStream(file), format);
+		try (Wc3BinOutputStream stream = new Wc3BinOutputStream(file)) {
+			write(stream, format);
+		}
 	}
 
 	public void read(File file) throws IOException {
@@ -119,7 +121,9 @@ public class W3V extends W3VUncompressed {
 	}
 
 	public void write(File file) throws IOException {
-		write(new Wc3BinOutputStream(file));
+		try (Wc3BinOutputStream stream = new Wc3BinOutputStream(file)) {
+			write(stream);
+		}
 	}
 
     public W3V(@Nonnull Wc3BinInputStream stream) throws Exception {

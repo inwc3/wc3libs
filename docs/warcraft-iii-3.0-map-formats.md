@@ -20,6 +20,7 @@ opaque byte preservation semantic support.
 | `war3map.w3grp` | no established signature | Fully opaque read/write | It remains three zero dwords even after nested trigger categories and populated triggers are added, disproving the earlier trigger-group hypothesis. |
 | `war3map.imp` | 1, entry flag `0x15` | Structured read/write with raw flag preservation | The Light Editor's generated MDL uses a previously unknown import flag. Unknown flag bytes no longer become `null` and crash the writer. |
 | `war3map.w3u`, `war3mapSkin.w3u` | object format 3 | Structured read/write | Base and skin unit data cycle exactly. Distinct lumber-bounty modifications `ulba/ulbd/ulbs = 1/2/3` and the skin name's `TRIGSTR_003` reference are asserted semantically. |
+| `war3map.wts` | UTF-8 text, BOM observed | Structured read/write | The corrected v3 fixture and adversarial values verify BOM/newline preservation, comments inside values, inline braces, and significant whitespace. |
 | `war3map.mmp`, `.shd`, `.wct`, `.wpm` | existing layouts | Structured read/write | The corrected fixtures cycle byte-for-byte. |
 
 `war3map.w3l` and `war3map.w3grp` are also standard archive members now. Map
@@ -32,7 +33,8 @@ kept under `wc3data/Map/v3_filled_dump`.
 
 ## Editor-only members
 
-For w3protect, editor-source members are removal targets, not mutation targets.
+For tools that strip editor data, editor-source members are removal targets,
+not mutation targets.
 Opaque preservation and version classification are sufficient for those files;
 field-level editing is not a compatibility requirement. `war3map.wtg` and
 `war3map.wct` are GUI Trigger Editor source, while the runtime executes the
@@ -49,7 +51,7 @@ custom-light configuration directly.
 
 The mutation-critical compatibility surface is different: `war3map.w3i`, WTS,
 and every base and skin object-modification member must retain its parsed binary
-version while w3protect rewrites values or inlines strings. The complete skin
+version while a map transformation rewrites values or inlines strings. The complete skin
 family is `war3mapSkin.w3a`, `.w3b`, `.w3d`, `.w3h`, `.w3q`, `.w3t`, and `.w3u`.
 All seven must be recovered from protected archives, recognized by the object
 factory/merger, and written using `AS_DEFINED`; silently converting an older
@@ -181,7 +183,10 @@ default, minimum, maximum order.
 
 Force player masks can contain bits for player slots which are not defined by
 the map. When presenting force membership, intersect the mask with the actual
-player numbers instead of treating every set bit as a player record.
+player numbers instead of treating every set bit as a player record. Do not
+normalize the stored mask when changing unrelated W3I strings: the v39 fixture
+uses `0xFFFFFFC7` for one force even though its defined membership is only
+players 0, 1, and 2. The mutation-cycle test requires the raw mask to survive.
 
 The editor displayed water emissivity `10` for this map while the corresponding
 serialized dword is `0`. The library deliberately preserves the serialized
@@ -200,6 +205,48 @@ For W3I, assert every adjacent field that could plausibly be swapped, all player
 controller/race/HUD/fixed tuples, and force membership and flags. Unknown enum
 values should retain their raw numeric value for writing even if the typed API
 returns an `UNKNOWN` value.
+
+Mutation-cycle tests are additionally required for files that transformation tools rewrite.
+They should change representative strings or object fields, serialize with the
+default writer, parse again, and assert that unrelated raw metadata did not
+move or normalize. In particular:
+
+- W3I v39 string mutation must retain the parsed version, all player tuples,
+  force flags, and the exact raw force masks.
+- Object-format v3 merge/copy must retain the file version, each object's two
+  v3 metadata dwords, modification end tokens, levels, and data pointers. A
+  merge must copy records rather than sharing mutable `Mod` instances.
+- WTS parsing must preserve literal `//` lines inside values, inline braces,
+  significant leading/trailing whitespace, newline style, and a UTF-8 BOM.
+  Only a closing brace on its own line terminates a value. Unterminated entries
+  are errors rather than silently missing strings. When only values change,
+  retain the original keyword casing, comments, indentation, separators, and
+  surrounding text instead of regenerating the whole file canonically.
+
+When WTS values are inlined into W3I and the map-script `config()` prelude is
+regenerated, escape backslash, quote, control characters, CR, and LF for both
+JASS and Lua. A correct WTS cycle is not enough if the resulting source contains
+an unescaped quote or a literal line break inside a string token.
+
+File convenience methods must close their internally-created binary streams;
+the binary output stream buffers bytes until close. Conversely, overloads that
+receive a caller-owned stream should flush when needed but must not close it.
+File-backed binary input is fully buffered and should release the source handle
+immediately so the original map member can be replaced on Windows.
+
+Binary and WTS strings are UTF-8 when valid. Older locale-specific files can
+contain byte sequences which are not valid UTF-8; permissive decoding turns
+those bytes into `U+FFFD` and irreversibly changes them on write. Preserve each
+malformed byte through the in-memory string and emit it unchanged. This gives
+valid Unicode normal semantics while keeping unknown legacy bytes lossless.
+Four-byte IDs likewise require a one-byte-to-one-character encoding for
+unknown high bytes, and float writers must use raw IEEE-754 bits so NaN payloads
+are not canonicalized during an otherwise untouched cycle.
+
+When regenerating map-script configuration functions, retain the source
+script's CRLF, LF, or CR line-ending style. Escape the generated strings, but
+do not normalize every unrelated source line or close the caller-owned input
+stream as a side effect.
 
 Opaque handling is a corruption-prevention fallback. An opaque instance can be
 copied through a map rebuild, but its internal records cannot yet be safely

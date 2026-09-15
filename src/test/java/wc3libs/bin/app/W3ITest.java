@@ -284,6 +284,35 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(output.toByteArray(), input, "version 39 must round-trip byte-identically");
     }
 
+    @Test
+    public void version39StringMutationKeepsPlayerAndForceLayout() throws Exception {
+        W3I w3i = new W3I(getFile("wc3data/W3I/war3map_v3.w3i"));
+        long[][] originalForceMasks = w3i.getForces().stream()
+            .map(force -> force.getPlayers().toLongArray())
+            .toArray(long[][]::new);
+        w3i.setMapName("inlined map name");
+        w3i.setMapDescription("inlined description");
+        w3i.getPlayers().get(0).setName("inlined player name");
+        w3i.getForces().get(0).setName("inlined force name");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+            w3i.write(stream);
+        }
+
+        W3I reparsed = new W3I(output.toByteArray());
+        Assert.assertEquals(reparsed.getFileVersion(), 39);
+        Assert.assertEquals(reparsed.getMapName(), "inlined map name");
+        Assert.assertEquals(reparsed.getMapDescription(), "inlined description");
+        assertV3Player(reparsed.getPlayers().get(0), 0, Controller.USER, W3I.Player.UnitRace.HUMAN, 2, 0, "inlined player name");
+        assertV3Player(reparsed.getPlayers().get(1), 1, Controller.USER, W3I.Player.UnitRace.ORC, 8, 1, "TRIGSTR_011");
+        Assert.assertEquals(reparsed.getForces().get(0).getPlayers().toLongArray(), originalForceMasks[0]);
+        Assert.assertEquals(reparsed.getForces().get(0).getFlags().toInt(), 2);
+        Assert.assertEquals(reparsed.getForces().get(0).getName(), "inlined force name");
+        Assert.assertEquals(reparsed.getForces().get(1).getPlayers().toLongArray(), originalForceMasks[1]);
+        Assert.assertEquals(reparsed.getForces().get(1).getFlags().toInt(), 57);
+    }
+
     private static void assertV3Player(W3I.Player player, int num, Controller controller,
                                        W3I.Player.UnitRace race, int hudSkin, int startPosFixed, String name) {
         Assert.assertEquals(player.getNum(), num);

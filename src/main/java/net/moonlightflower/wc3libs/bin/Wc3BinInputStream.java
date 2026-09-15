@@ -300,7 +300,7 @@ public class Wc3BinInputStream extends BinInputStream {
 
 			// Id.valueOf strips the padding NULs, so the same trimming no
 			// longer lives in two places with a chance of disagreeing.
-			return Id.valueOf(new String(sub, StandardCharsets.US_ASCII));
+			return Id.valueOf(new String(sub, StandardCharsets.ISO_8859_1));
 		} catch (IndexOutOfBoundsException e) {
 			throw new StreamException(this);
 		}

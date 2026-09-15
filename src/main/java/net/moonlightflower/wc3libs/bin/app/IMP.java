@@ -230,11 +230,9 @@ public class IMP {
     }
 
     public void write(@Nonnull File file) throws IOException {
-        Wc3BinOutputStream stream = new Wc3BinOutputStream(file);
-
-        write(stream);
-
-        stream.close();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(file)) {
+            write(stream);
+        }
     }
 
     public IMP(@Nonnull File file) throws IOException {
