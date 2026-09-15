@@ -1449,6 +1449,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				W3U.GAME_PATH, W3U.SKIN_PATH));
 	}
 
+	/** Skin-only object-modification members, which must not be reduced into base SLK/profile data. */
+	@Nonnull
+	public static Collection<File> getSkinFiles() {
+		return Collections.unmodifiableList(Arrays.asList(
+				W3A.SKIN_PATH, W3B.SKIN_PATH, W3D.SKIN_PATH, W3H.SKIN_PATH,
+				W3Q.SKIN_PATH, W3T.SKIN_PATH, W3U.SKIN_PATH));
+	}
+
 	@Nullable
 	public static ObjMod createFromInFile(@Nonnull File inFile, @Nonnull File outFile) throws Exception {
 		ObjMod ret = null;

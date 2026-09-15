@@ -2,6 +2,7 @@ package wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.app.ObjMerger;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -17,6 +18,7 @@ import wc3libs.misc.Wc3LibTest;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class W3UTest extends Wc3LibTest {
 	@Test()
@@ -71,6 +73,23 @@ public class W3UTest extends Wc3LibTest {
 			Assert.assertTrue(ObjMod.getMapFiles().contains(paths[i]), "object merger must include " + paths[i]);
 			Assert.assertTrue(types[i].isInstance(ObjMod.createFromInFile(paths[i])), "wrong parser for " + paths[i]);
 		}
+	}
+
+	@Test
+	public void objectMergerKeepsSkinDataSeparate() throws Exception {
+		File expectedFile = getFile("wc3data/W3U/war3mapSkin_v3_lumber_bounty.w3u");
+		Path workDir = Files.createTempDirectory("wc3libs-skin-objmod-");
+		Path inputDir = Files.createDirectory(workDir.resolve("input"));
+		Path outputDir = workDir.resolve("output");
+		Files.copy(expectedFile.toPath(), inputDir.resolve(W3U.SKIN_PATH.toString()));
+
+		ObjMerger merger = new ObjMerger();
+		merger.addDir(inputDir.toFile());
+		merger.writeToDir(outputDir.toFile(), false);
+
+		Path mergedSkin = outputDir.resolve(W3U.SKIN_PATH.toString());
+		Assert.assertTrue(Files.exists(mergedSkin));
+		Assert.assertEquals(Files.readAllBytes(mergedSkin), Files.readAllBytes(expectedFile.toPath()));
 	}
 
 	private void assertDefaultWriteIsExact(W3U data, File expectedFile) throws Exception {

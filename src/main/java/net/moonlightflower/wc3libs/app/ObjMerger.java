@@ -74,8 +74,25 @@ public class ObjMerger {
     private final Collection<ObjMod> _inObjMods = new LinkedHashSet<>();
     private final Map<File, ObjMod> _outObjMods = new LinkedHashMap<>();
 
+    private ObjMod getOrCreateOutObjMod(@Nonnull File inFile, @Nonnull ObjMod<?> source) {
+        ObjMod objMod = _outObjMods.get(inFile);
+        if (objMod == null) {
+            objMod = ObjMod.createFromInFile(inFile);
+            objMod.setFormat(source.getFormat());
+            _outObjMods.put(inFile, objMod);
+        }
+
+        return objMod;
+    }
+
     private void addObjMod(@Nonnull File inFile, @Nonnull ObjMod<?> otherObjMod) throws Exception {
         _inObjMods.add(otherObjMod);
+
+        if (ObjMod.getSkinFiles().contains(inFile)) {
+            getOrCreateOutObjMod(inFile, otherObjMod).merge(otherObjMod);
+
+            return;
+        }
 
         ObjPack<?> pack = otherObjMod.reduce(_metaSlk, Collections.singletonList(W3D.class));
 
@@ -176,14 +193,7 @@ public class ObjMerger {
 
         addProfile(pack.getProfile());
 
-        ObjMod objMod = _outObjMods.get(inFile);
-        if (objMod == null) {
-            objMod = ObjMod.createFromInFile(inFile);
-            objMod.setFormat(pack.getObjMod().getFormat());
-            _outObjMods.put(inFile, objMod);
-        }
-
-        objMod.merge(pack.getObjMod());
+        getOrCreateOutObjMod(inFile, pack.getObjMod()).merge(pack.getObjMod());
     }
 
     public interface Filter {
