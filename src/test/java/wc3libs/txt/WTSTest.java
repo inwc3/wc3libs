@@ -199,6 +199,43 @@ public class WTSTest extends Wc3LibTest {
             "mixed case keyword");
     }
 
+    @Test
+    public void mutationPreservesSurroundingSourceStyle() throws Exception {
+        String input = "\uFEFF// leading comment\r\nsTrInG 12  \r\n  // header comment\r\n {\r\nold value\r\n}\r\n// trailing comment\r\n";
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        wts.addEntry(12, "new value");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        Assert.assertEquals(output.toByteArray(), input.replace("old value", "new value").getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void malformedLegacyLocaleBytesRoundTripExactly() throws Exception {
+        ByteArrayOutputStream input = new ByteArrayOutputStream();
+        input.write("STRING 1\r\n{\r\n".getBytes(StandardCharsets.US_ASCII));
+        input.write(0xE4);
+        input.write("\r\n}\r\n".getBytes(StandardCharsets.US_ASCII));
+
+        WTS wts = new WTS(new ByteArrayInputStream(input.toByteArray()));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+
+        Assert.assertEquals(output.toByteArray(), input.toByteArray());
+    }
+
+    @Test
+    public void unchangedDuplicateKeysRemainByteIdentical() throws Exception {
+        String input = "STRING 1\n{\nfirst\n}\n// between\nSTRING 1\n{\nsecond\n}\n";
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+
+        Assert.assertEquals(output.toByteArray(), input.getBytes(StandardCharsets.UTF_8));
+    }
+
     @Test(expectedExceptions = java.io.IOException.class, expectedExceptionsMessageRegExp = "unterminated WTS entry 9")
     public void unterminatedEntryFailsInsteadOfSilentlyDisappearing() throws Exception {
         String input = "STRING 9\n{\nmissing delimiter\n";

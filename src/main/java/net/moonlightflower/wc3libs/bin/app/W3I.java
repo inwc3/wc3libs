@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.dataTypes.DataType;
 import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.*;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.LosslessUTF8;
 import net.moonlightflower.wc3libs.misc.Size;
 import net.moonlightflower.wc3libs.port.GameVersion;
 import net.moonlightflower.wc3libs.port.JMpqPort;
@@ -18,7 +19,6 @@ import net.moonlightflower.wc3libs.txt.app.jass.statement.Statement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -4440,7 +4440,29 @@ public class W3I {
     private static final Pattern funcEndPattern = Pattern.compile("^\\s*endfunction");
 
     public void removeConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, boolean isLua) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
+        String input = LosslessUTF8.decode(inStream.readAllBytes());
+        removeConfigsInScript(input, sw, isLua, detectLineEnding(input));
+    }
+
+    @Nonnull
+    private static String detectLineEnding(@Nonnull String input) {
+        for (int i = 0; i < input.length(); i++) {
+            char current = input.charAt(i);
+            if (current == '\n') return "\n";
+            if (current == '\r') return i + 1 < input.length() && input.charAt(i + 1) == '\n' ? "\r\n" : "\r";
+        }
+
+        return "\n";
+    }
+
+    private void removeConfigsInScript(@Nonnull String input, @Nonnull StringWriter sw, boolean isLua,
+                                       @Nonnull String lineEnding) throws IOException {
+        if (input.startsWith("\uFEFF")) {
+            sw.write('\uFEFF');
+            input = input.substring(1);
+        }
+
+        try (BufferedReader reader = new BufferedReader(new StringReader(input))) {
 
             String line;
 
@@ -4479,7 +4501,7 @@ public class W3I {
                 if (first) {
                     first = false;
                 } else {
-                    sw.write("\n");
+                    sw.write(lineEnding);
                 }
 
                 sw.write(line);
@@ -4498,7 +4520,9 @@ public class W3I {
     }
 
     public void injectConfigsInScript(@Nonnull InputStream inStream, @Nonnull StringWriter sw, @Nonnull GameVersion gameVersion, boolean isLua) throws IOException {
-        removeConfigsInScript(inStream, sw, isLua);
+        String input = LosslessUTF8.decode(inStream.readAllBytes());
+        String lineEnding = detectLineEnding(input);
+        removeConfigsInScript(input, sw, isLua, lineEnding);
 
         List<FuncImpl> toBeAddedFuncImpls = new ArrayList<>();
 
@@ -4508,8 +4532,10 @@ public class W3I {
         toBeAddedFuncImpls.add(makeConfig(isLua));
 
         for (FuncImpl funcImpl : toBeAddedFuncImpls) {
-            sw.write("\n");
-            funcImpl.write(sw, isLua);
+            sw.write(lineEnding);
+            StringWriter generated = new StringWriter();
+            funcImpl.write(generated, isLua);
+            sw.write(generated.toString().replace("\n", lineEnding));
         }
     }
 }

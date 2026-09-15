@@ -168,6 +168,40 @@ public class W3IConfigInjectionTest {
     }
 
     @Test
+    public void configInjectionPreservesCrLfStyleAndCallerStreamOwnership() throws Exception {
+        W3I w3i = createSparsePlayersW3I();
+        byte[] source = ("\uFEFFfunction config takes nothing returns nothing\r\n" +
+            "call SetTeams(99)\r\n" +
+            "endfunction\r\n" +
+            "function untouched takes nothing returns nothing\r\n" +
+            "endfunction\r\n").getBytes(StandardCharsets.UTF_8);
+
+        class CloseTrackingInputStream extends ByteArrayInputStream {
+            private boolean closed;
+
+            private CloseTrackingInputStream(byte[] bytes) {
+                super(bytes);
+            }
+
+            @Override
+            public void close() throws java.io.IOException {
+                closed = true;
+                super.close();
+            }
+        }
+
+        CloseTrackingInputStream input = new CloseTrackingInputStream(source);
+        StringWriter output = new StringWriter();
+        w3i.injectConfigsInJassScript(input, output, GameVersion.VERSION_1_32);
+
+        assertFalse(input.closed, "caller retains ownership of the input stream");
+        assertTrue(output.toString().startsWith("\uFEFF"), "UTF-8 BOM must remain at the start of the script");
+        assertFalse(output.toString().contains("SetTeams(99)"), "a BOM must not hide the first config function");
+        assertFalse(output.toString().replace("\r\n", "").contains("\n"),
+            "injection must not introduce LF-only line endings into a CRLF script");
+    }
+
+    @Test
     public void initCustomTeamsSupportsSharedControlFlags() throws Exception {
         W3I w3i = new W3I();
 

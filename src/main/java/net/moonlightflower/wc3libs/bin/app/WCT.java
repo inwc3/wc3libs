@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.bin.app;
 
 import net.moonlightflower.wc3libs.bin.*;
+import net.moonlightflower.wc3libs.misc.LosslessUTF8;
 import net.moonlightflower.wc3libs.port.JMpqPort;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
@@ -9,7 +10,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -43,7 +43,7 @@ public class WCT {
 			int size = stream.readInt32("length");
 
 			if (size > 0) {
-				setText(new String(stream.readBytes(size, "text"), StandardCharsets.UTF_8));
+				setText(LosslessUTF8.decode(stream.readBytes(size, "text")));
 			}
 		}
 		

@@ -1,13 +1,15 @@
 package net.moonlightflower.wc3libs.txt;
 
+import net.moonlightflower.wc3libs.misc.LosslessUTF8;
 import net.moonlightflower.wc3libs.port.Context;
 import net.moonlightflower.wc3libs.port.MpqPort;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -33,11 +35,27 @@ public class WTS {
         "(?m)^[\\t ]*\\}[\\t ]*(?:\\r?\\n|\\z)"
     );
 
+    private static final class EntrySpan {
+        private final int key;
+        private final int valueStart;
+        private final int valueEnd;
+
+        private EntrySpan(int key, int valueStart, int valueEnd) {
+            this.key = key;
+            this.valueStart = valueStart;
+            this.valueEnd = valueEnd;
+        }
+    }
+
     private final Map<Integer, String> _vals = new LinkedHashMap<>();
 
     // Preserve style from input. Default for newly-created WTS.
     private String _lineEnding = "\r\n";
     private boolean _utf8Bom;
+    private String _sourceText;
+    private final List<EntrySpan> _sourceSpans = new ArrayList<>();
+    private final Map<Integer, String> _sourceVals = new LinkedHashMap<>();
+    private boolean _sourcePatchable = true;
 
     @Nonnull
     public Map<Integer, String> getKeyedEntries() {
@@ -96,8 +114,39 @@ public class WTS {
     }
 
     public void write(@Nonnull OutputStream outputStream) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-        if (_utf8Bom) writer.write('\uFEFF');
+        String text = renderPreservingSource();
+        if (text == null) text = renderCanonical();
+        if (_utf8Bom) text = '\uFEFF' + text;
+
+        outputStream.write(LosslessUTF8.encode(text));
+        outputStream.flush();
+    }
+
+    @Nullable
+    private String renderPreservingSource() {
+        if (_sourceText == null) return null;
+        if (_sourceVals.equals(_vals)) return _sourceText;
+        if (!_sourcePatchable || !_sourceVals.keySet().equals(_vals.keySet())) return null;
+
+        StringBuilder result = new StringBuilder(_sourceText.length());
+        int cursor = 0;
+
+        for (EntrySpan span : _sourceSpans) {
+            result.append(_sourceText, cursor, span.valueStart);
+
+            String current = Objects.toString(_vals.get(span.key), "");
+            String original = _sourceVals.get(span.key);
+            result.append(Objects.equals(current, original) ? current : normalizeLineEndings(current));
+            cursor = span.valueEnd;
+        }
+
+        result.append(_sourceText, cursor, _sourceText.length());
+        return result.toString();
+    }
+
+    @Nonnull
+    private String renderCanonical() {
+        StringBuilder writer = new StringBuilder();
         int i = 0;
         int size = _vals.size();
 
@@ -105,25 +154,28 @@ public class WTS {
             int key = entry.getKey();
             String val = entry.getValue() == null ? "" : entry.getValue();
 
-            writer.write("STRING ");
-            writer.write(Integer.toString(key));
-            writer.write(_lineEnding);
-            writer.write("{");
-            writer.write(_lineEnding);
-            writer.write(val);
-            writer.write(_lineEnding);
-            writer.write("}");
-            writer.write(_lineEnding);
+            writer.append("STRING ");
+            writer.append(key);
+            writer.append(_lineEnding);
+            writer.append("{");
+            writer.append(_lineEnding);
+            writer.append(normalizeLineEndings(val));
+            writer.append(_lineEnding);
+            writer.append("}");
+            writer.append(_lineEnding);
 
             // Keep a blank line between entries for canonical compatibility
             if (++i < size) {
-                writer.write(_lineEnding);
+                writer.append(_lineEnding);
             }
         }
 
-        // The stream overload follows the binary writers and leaves ownership
-        // of the caller-provided stream with the caller.
-        writer.flush();
+        return writer.toString();
+    }
+
+    @Nonnull
+    private String normalizeLineEndings(@Nonnull String value) {
+        return value.replace("\r\n", "\n").replace('\r', '\n').replace("\n", _lineEnding);
     }
 
     private void read(@Nonnull InputStream inStream) throws IOException {
@@ -140,9 +192,10 @@ public class WTS {
         _lineEnding = hasCRLF ? "\r\n" : "\n";
 
         // Decode directly; avoid UTF8 helper if it normalizes newlines
-        String input = new String(raw, StandardCharsets.UTF_8);
+        String input = LosslessUTF8.decode(raw);
         _utf8Bom = input.startsWith("\uFEFF");
         if (_utf8Bom) input = input.substring(1);
+        _sourceText = input;
 
         Matcher headerMatcher = ENTRY_HEADER_PATTERN.matcher(input);
 
@@ -155,15 +208,21 @@ public class WTS {
 
             int key = Integer.parseInt(headerMatcher.group(1));
             String val = input.substring(headerMatcher.end(), endMatcher.start());
+            int valueEnd = endMatcher.start();
 
             // The line ending directly before the closing brace separates the
             // value from the delimiter. Any additional ending is value data.
             if (val.endsWith("\r\n")) {
                 val = val.substring(0, val.length() - 2);
+                valueEnd -= 2;
             } else if (val.endsWith("\n") || val.endsWith("\r")) {
                 val = val.substring(0, val.length() - 1);
+                valueEnd--;
             }
 
+            if (_sourceVals.containsKey(key)) _sourcePatchable = false;
+            _sourceVals.put(key, val);
+            _sourceSpans.add(new EntrySpan(key, headerMatcher.end(), valueEnd));
             addEntry(key, val);
 
             headerMatcher.region(endMatcher.end(), input.length());

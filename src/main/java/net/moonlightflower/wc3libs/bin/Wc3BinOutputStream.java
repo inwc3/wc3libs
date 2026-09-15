@@ -5,6 +5,7 @@ import net.moonlightflower.wc3libs.dataTypes.app.War3Char;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Int;
 import net.moonlightflower.wc3libs.dataTypes.app.War3Real;
 import net.moonlightflower.wc3libs.misc.Id;
+import net.moonlightflower.wc3libs.misc.LosslessUTF8;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +52,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     }
 
     public void writeFloat32(float val) {
-        writeInt32(Float.floatToIntBits(val));
+        writeInt32(Float.floatToRawIntBits(val));
     }
 
     public void writeFloat32(@Nullable War3Real val) {
@@ -74,7 +75,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     public byte[] stringToByteArray(@Nullable String val) {
         if (val == null) return null;
 
-        return val.getBytes(StandardCharsets.UTF_8);
+        return LosslessUTF8.encode(val);
     }
 
     public void writeString(@Nullable String val) {
@@ -97,7 +98,7 @@ public class Wc3BinOutputStream extends BinOutputStream {
     public void writeId(@Nullable Id val) {
         if (val == null) val = Id.valueOf("\0\0\0\0");
 
-        byte[] valBytes = val.toString().getBytes(StandardCharsets.US_ASCII);
+        byte[] valBytes = val.toString().getBytes(StandardCharsets.ISO_8859_1);
         int len = Math.min(4, valBytes.length);
 
         for (int i = 0; i < len; i++) {

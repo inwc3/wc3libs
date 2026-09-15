@@ -219,7 +219,9 @@ move or normalize. In particular:
 - WTS parsing must preserve literal `//` lines inside values, inline braces,
   significant leading/trailing whitespace, newline style, and a UTF-8 BOM.
   Only a closing brace on its own line terminates a value. Unterminated entries
-  are errors rather than silently missing strings.
+  are errors rather than silently missing strings. When only values change,
+  retain the original keyword casing, comments, indentation, separators, and
+  surrounding text instead of regenerating the whole file canonically.
 
 When WTS values are inlined into W3I and the map-script `config()` prelude is
 regenerated, escape backslash, quote, control characters, CR, and LF for both
@@ -231,6 +233,20 @@ the binary output stream buffers bytes until close. Conversely, overloads that
 receive a caller-owned stream should flush when needed but must not close it.
 File-backed binary input is fully buffered and should release the source handle
 immediately so the original map member can be replaced on Windows.
+
+Binary and WTS strings are UTF-8 when valid. Older locale-specific files can
+contain byte sequences which are not valid UTF-8; permissive decoding turns
+those bytes into `U+FFFD` and irreversibly changes them on write. Preserve each
+malformed byte through the in-memory string and emit it unchanged. This gives
+valid Unicode normal semantics while keeping unknown legacy bytes lossless.
+Four-byte IDs likewise require a one-byte-to-one-character encoding for
+unknown high bytes, and float writers must use raw IEEE-754 bits so NaN payloads
+are not canonicalized during an otherwise untouched cycle.
+
+When regenerating map-script configuration functions, retain the source
+script's CRLF, LF, or CR line-ending style. Escape the generated strings, but
+do not normalize every unrelated source line or close the caller-owned input
+stream as a side effect.
 
 Opaque handling is a corruption-prevention fallback. An opaque instance can be
 copied through a map rebuild, but its internal records cannot yet be safely
