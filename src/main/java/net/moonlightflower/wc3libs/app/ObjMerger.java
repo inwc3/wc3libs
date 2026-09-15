@@ -176,7 +176,12 @@ public class ObjMerger {
 
         addProfile(pack.getProfile());
 
-        ObjMod objMod = _outObjMods.computeIfAbsent(inFile, k -> ObjMod.createFromInFile(inFile));
+        ObjMod objMod = _outObjMods.get(inFile);
+        if (objMod == null) {
+            objMod = ObjMod.createFromInFile(inFile);
+            objMod.setFormat(pack.getObjMod().getFormat());
+            _outObjMods.put(inFile, objMod);
+        }
 
         objMod.merge(pack.getObjMod());
     }
@@ -667,14 +672,7 @@ public class ObjMerger {
 
     private final static Collection<File> _profileInFiles = getProfilePaths();
 
-    private final static Collection<File> _objModInFiles = Arrays.asList(
-            W3A.GAME_PATH,
-            W3B.GAME_PATH,
-            W3D.GAME_PATH,
-            W3H.GAME_PATH,
-            W3Q.GAME_PATH,
-            W3T.GAME_PATH,
-            W3U.GAME_PATH);
+    private final static Collection<File> _objModInFiles = ObjMod.getMapFiles();
 
     public void addDir(File dir) throws Exception {
         log.info("Adding directory of files to be merged: " + dir.getAbsolutePath());

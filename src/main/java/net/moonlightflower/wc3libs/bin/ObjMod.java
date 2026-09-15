@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * base class for object modification files
  */
 public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
-    private EncodingFormat _format;
+    private EncodingFormat _format = EncodingFormat.OBJ_0x3;
 
     public EncodingFormat getFormat() {
         return _format;
@@ -1414,11 +1414,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	}
 
 	/**
-	 * Writes the newest supported encoding. For a no-op read/write cycle, use
-	 * {@link #write(Wc3BinOutputStream, EncodingFormat)} with {@link #getFormat()}.
+	 * Writes using the concrete format retained from reading. Newly-created
+	 * object data defaults to the newest supported encoding.
 	 */
 	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-		write(stream, EncodingFormat.AUTO);
+		write(stream, EncodingFormat.AS_DEFINED);
 	}
 
 	public ObjMod(@Nonnull Wc3BinInputStream stream) throws IOException {
@@ -1436,29 +1436,42 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public ObjMod() {
 	}
 
+	/** Map and skin object-modification members handled by this factory. */
+	@Nonnull
+	public static Collection<File> getMapFiles() {
+		return Collections.unmodifiableList(Arrays.asList(
+				W3A.GAME_PATH, W3A.SKIN_PATH,
+				W3B.GAME_PATH, W3B.SKIN_PATH,
+				W3D.GAME_PATH, W3D.SKIN_PATH,
+				W3H.GAME_PATH, W3H.SKIN_PATH,
+				W3Q.GAME_PATH, W3Q.SKIN_PATH,
+				W3T.GAME_PATH, W3T.SKIN_PATH,
+				W3U.GAME_PATH, W3U.SKIN_PATH));
+	}
+
 	@Nullable
 	public static ObjMod createFromInFile(@Nonnull File inFile, @Nonnull File outFile) throws Exception {
 		ObjMod ret = null;
 
-		if (inFile.equals(W3A.GAME_PATH)) {
+		if (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3A.SKIN_PATH)) {
 			ret = new W3A(outFile);
 		}
-		if (inFile.equals(W3B.GAME_PATH)) {
+		if (inFile.equals(W3B.GAME_PATH) || inFile.equals(W3B.SKIN_PATH)) {
 			ret = new W3B(outFile);
 		}
-		if (inFile.equals(W3D.GAME_PATH)) {
+		if (inFile.equals(W3D.GAME_PATH) || inFile.equals(W3D.SKIN_PATH)) {
 			ret = new W3D(outFile);
 		}
-		if (inFile.equals(W3H.GAME_PATH)) {
+		if (inFile.equals(W3H.GAME_PATH) || inFile.equals(W3H.SKIN_PATH)) {
 			ret = new W3H(outFile);
 		}
-		if (inFile.equals(W3Q.GAME_PATH)) {
+		if (inFile.equals(W3Q.GAME_PATH) || inFile.equals(W3Q.SKIN_PATH)) {
 			ret = new W3Q(outFile);
 		}
-		if (inFile.equals(W3T.GAME_PATH)) {
+		if (inFile.equals(W3T.GAME_PATH) || inFile.equals(W3T.SKIN_PATH)) {
 			ret = new W3T(outFile);
 		}
-		if (inFile.equals(W3U.GAME_PATH)) {
+		if (inFile.equals(W3U.GAME_PATH) || inFile.equals(W3U.SKIN_PATH)) {
 			ret = new W3U(outFile);
 		}
 		
@@ -1469,25 +1482,25 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public static ObjMod createFromInFile(@Nonnull File inFile) {
 		ObjMod ret = null;
 
-		if (inFile.equals(W3A.GAME_PATH)) {
+		if (inFile.equals(W3A.GAME_PATH) || inFile.equals(W3A.SKIN_PATH)) {
 			ret = new W3A();
 		}
-		if (inFile.equals(W3B.GAME_PATH)) {
+		if (inFile.equals(W3B.GAME_PATH) || inFile.equals(W3B.SKIN_PATH)) {
 			ret = new W3B();
 		}
-		if (inFile.equals(W3D.GAME_PATH)) {
+		if (inFile.equals(W3D.GAME_PATH) || inFile.equals(W3D.SKIN_PATH)) {
 			ret = new W3D();
 		}
-		if (inFile.equals(W3H.GAME_PATH)) {
+		if (inFile.equals(W3H.GAME_PATH) || inFile.equals(W3H.SKIN_PATH)) {
 			ret = new W3H();
 		}
-		if (inFile.equals(W3Q.GAME_PATH)) {
+		if (inFile.equals(W3Q.GAME_PATH) || inFile.equals(W3Q.SKIN_PATH)) {
 			ret = new W3Q();
 		}
-		if (inFile.equals(W3T.GAME_PATH)) {
+		if (inFile.equals(W3T.GAME_PATH) || inFile.equals(W3T.SKIN_PATH)) {
 			ret = new W3T();
 		}
-		if (inFile.equals(W3U.GAME_PATH)) {
+		if (inFile.equals(W3U.GAME_PATH) || inFile.equals(W3U.SKIN_PATH)) {
 			ret = new W3U();
 		}
 		

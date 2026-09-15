@@ -57,6 +57,7 @@ public class W3Q extends ObjMod<W3Q.Upgr> {
 	@Override
 	public W3Q copy() {
 		W3Q other = new W3Q();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 

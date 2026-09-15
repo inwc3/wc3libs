@@ -19,6 +19,7 @@ opaque byte preservation semantic support.
 | `war3map.w3l` | 3 | Structured positional read/write | `W3L!`, two model-path strings, and three option dwords are established by empty and populated Light Editor fixtures. One-change saves are still needed to name their individual roles safely. |
 | `war3map.w3grp` | no established signature | Fully opaque read/write | It remains three zero dwords even after nested trigger categories and populated triggers are added, disproving the earlier trigger-group hypothesis. |
 | `war3map.imp` | 1, entry flag `0x15` | Structured read/write with raw flag preservation | The Light Editor's generated MDL uses a previously unknown import flag. Unknown flag bytes no longer become `null` and crash the writer. |
+| `war3map.w3u`, `war3mapSkin.w3u` | object format 3 | Structured read/write | Base and skin unit data cycle exactly. Distinct lumber-bounty modifications `ulba/ulbd/ulbs = 1/2/3` and the skin name's `TRIGSTR_003` reference are asserted semantically. |
 | `war3map.mmp`, `.shd`, `.wct`, `.wpm` | existing layouts | Structured read/write | The corrected fixtures cycle byte-for-byte. |
 
 `war3map.w3l` and `war3map.w3grp` are also standard archive members now. Map
@@ -31,13 +32,13 @@ kept under `wc3data/Map/v3_filled_dump`.
 
 ## Editor-only members
 
-`war3map.wtg` is GUI Trigger Editor source. The runtime executes the compiled
-map script instead, so release optimizers may remove WTG/WCT source after a
-successful script build; doing so intentionally prevents reopening those
-triggers as GUI data. `war3map.w3grp` also appears editor-only, but its purpose
-is not established and the current samples remain twelve zero bytes. Treat it
-as preservable editor metadata, not as safely removable runtime data, until a
-sample identifies the editor feature that populates it.
+For w3protect, editor-source members are removal targets, not mutation targets.
+Opaque preservation and version classification are sufficient for those files;
+field-level editing is not a compatibility requirement. `war3map.wtg` and
+`war3map.wct` are GUI Trigger Editor source, while the runtime executes the
+compiled map script. Removing them intentionally prevents reopening those
+triggers as GUI data. `war3map.w3grp` also appears editor-only and can be
+removed by the protector, although its exact editor purpose remains unknown.
 
 `war3map.w3c` and `war3map.w3r` feed generated camera and region setup code,
 respectively, and are editor source after that generation step. `war3map.imp`
@@ -45,6 +46,14 @@ indexes imported editor assets; removing the table does not remove the imported
 archive members themselves. `war3map.w3l` is not marked editor-only yet because
 the available samples do not prove whether the game renderer consumes its
 custom-light configuration directly.
+
+The mutation-critical compatibility surface is different: `war3map.w3i`, WTS,
+and every base and skin object-modification member must retain its parsed binary
+version while w3protect rewrites values or inlines strings. The complete skin
+family is `war3mapSkin.w3a`, `.w3b`, `.w3d`, `.w3h`, `.w3q`, `.w3t`, and `.w3u`.
+All seven must be recovered from protected archives, recognized by the object
+factory/merger, and written using `AS_DEFINED`; silently converting an older
+input to object format 3 is not a no-op transformation.
 
 ## Other established record extensions
 

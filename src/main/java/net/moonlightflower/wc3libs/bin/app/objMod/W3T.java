@@ -55,6 +55,7 @@ public class W3T extends ObjMod<W3T.Item> {
 	@Override
 	public W3T copy() {
 		W3T other = new W3T();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 

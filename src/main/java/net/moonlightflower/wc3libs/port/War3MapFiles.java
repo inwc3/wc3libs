@@ -67,6 +67,13 @@ public final class War3MapFiles {
         "war3map.w3q",
         "war3map.w3t",
         "war3map.w3u",
+        "war3mapSkin.w3a",
+        "war3mapSkin.w3b",
+        "war3mapSkin.w3d",
+        "war3mapSkin.w3h",
+        "war3mapSkin.w3q",
+        "war3mapSkin.w3t",
+        "war3mapSkin.w3u",
         // Overridden game data a map may carry
         "conversation.json",
         "Scripts\\war3map.j",

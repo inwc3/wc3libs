@@ -56,6 +56,7 @@ public class W3U extends ObjMod<W3U.Unit> {
 	@Override
 	public W3U copy() {
 		W3U other = new W3U();
+		other.setFormat(getFormat());
 
 		other.merge(this);
 
