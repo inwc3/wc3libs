@@ -53,8 +53,10 @@ public final class War3MapFiles {
         "war3map.wpm",
         "war3map.w3e",
         "war3map.w3c",
+        "war3map.w3grp",
         "war3map.w3r",
         "war3map.w3s",
+        "war3map.w3l",
         "war3map.doo",
         "war3mapUnits.doo",
         // Object modifications

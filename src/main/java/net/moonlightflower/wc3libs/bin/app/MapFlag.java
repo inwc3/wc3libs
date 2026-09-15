@@ -30,6 +30,8 @@ public class MapFlag extends FlagsInt.Flag {
     public final static MapFlag USE_FORCE_MAX_CAMERA_ZOOM = new MapFlag(21, "useForceMaxCameraZoom");
     public final static MapFlag USE_FORCE_MIN_CAMERA_ZOOM = new MapFlag(22, "useForceMinCameraZoom");
     public final static MapFlag USE_WATER_OVERRIDE_COLOR = new MapFlag(23, "useWaterOverrideColor");
+    public final static MapFlag USE_ALPHA_TILE_MINIMAP_COLOR = new MapFlag(24, "useAlphaTileMinimapColor");
+    public final static MapFlag USE_DYNAMIC_MINIMAP = new MapFlag(25, "useDynamicMinimap");
 
     @Nonnull
     public static Collection<MapFlag> values() {

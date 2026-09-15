@@ -20,7 +20,7 @@ public class WTSTest extends Wc3LibTest {
 
     @Test
     public void testRebuild() throws Exception {
-        List<Path> files = getFiles("wc3data/WTS/");
+        List<Path> files = List.of(getFile("wc3data/WTS/war3map.wts").toPath());
 
         files.forEach((Path p) -> {
             try {
@@ -52,6 +52,28 @@ public class WTSTest extends Wc3LibTest {
                 Assert.fail("Failed for file " + p + ": " + e.getMessage(), e);
             }
         });
+    }
+
+    @Test
+    public void testVersion3MapStrings() throws Exception {
+        Path source = getFile("wc3data/WTS/war3map_v3.wts").toPath();
+        WTS wts = new WTS(source.toFile());
+
+        Assert.assertEquals(wts.getEntry(3), "11111");
+        Assert.assertEquals(wts.getEntry(4), "22222");
+        Assert.assertEquals(wts.getEntry(5), "33333");
+        Assert.assertEquals(wts.getEntry(6), "44444");
+        Assert.assertEquals(wts.getEntry(10), "Player 11111");
+        Assert.assertEquals(wts.getEntry(16), "cccc");
+        Assert.assertEquals(wts.getEntry(17), "dddd");
+
+        Path output = Files.createTempFile("war3map-v3-", ".wts");
+        try {
+            wts.write(output.toFile());
+            Assert.assertEquals(new WTS(output.toFile()), wts);
+        } finally {
+            Files.deleteIfExists(output);
+        }
     }
 
     @Test

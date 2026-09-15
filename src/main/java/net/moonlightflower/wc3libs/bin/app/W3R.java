@@ -128,6 +128,13 @@ public class W3R {
 		}
 
 		public WeatherId NULL_WEATHER_ID = WeatherId.valueOf("\0\0\0\0");
+		private int _v7UnknownA = 0;
+		private int _v7UnknownB = 0;
+
+		public int getV7UnknownA() { return _v7UnknownA; }
+		public void setV7UnknownA(int val) { _v7UnknownA = val; }
+		public int getV7UnknownB() { return _v7UnknownB; }
+		public void setV7UnknownB(int val) { _v7UnknownB = val; }
 
 		public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			float minX = stream.readFloat32();
@@ -170,11 +177,27 @@ public class W3R {
 			stream.writeUByte(0xFF); //endToken
 		}
 
+		public void read_0x7(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+			read_0x5(stream);
+			setV7UnknownA(stream.readInt32("v7UnknownA"));
+			setV7UnknownB(stream.readInt32("v7UnknownB"));
+		}
+
+		public void write_0x7(@Nonnull Wc3BinOutputStream stream) {
+			write_0x5(stream);
+			stream.writeInt32(getV7UnknownA());
+			stream.writeInt32(getV7UnknownB());
+		}
+
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 			switch (format.toEnum()) {
 			case W3R_0x5:
 				read_0x5(stream);
 				
+				break;
+			case W3R_0x7:
+				read_0x7(stream);
+
 				break;
 			}
 		}
@@ -185,6 +208,10 @@ public class W3R {
 			case W3R_0x5:
 				write_0x5(stream);
 				
+				break;
+			case W3R_0x7:
+				write_0x7(stream);
+
 				break;
 			}
 		}
@@ -238,11 +265,13 @@ public class W3R {
 	public static class EncodingFormat extends Format<EncodingFormat.Enum> {
 		public enum Enum {
 			AUTO,
-			W3R_0x5
+			W3R_0x5,
+			W3R_0x7
 		}
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat W3R_0x5 = new EncodingFormat(Enum.W3R_0x5, 0x5);
+		public final static EncodingFormat W3R_0x7 = new EncodingFormat(Enum.W3R_0x7, 0x7);
 
 		@Nullable
 		public static EncodingFormat valueOf(@Nonnull Integer version) {
@@ -254,26 +283,42 @@ public class W3R {
 		}
 	}
 
-	public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	private EncodingFormat _format = EncodingFormat.W3R_0x5;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
+	}
+
+	private void read_0x5(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
-		stream.checkFormatVersion(EncodingFormat.W3R_0x5.getVersion(), version);
+		stream.checkFormatVersion(format.getVersion(), version);
+		_format = format;
 
 		int rectsCount = stream.readInt32("rectsCount");
 
 		for (int i = 0; i < rectsCount; i++) {					
-			addRect(new Rect(stream, EncodingFormat.W3R_0x5));
+			addRect(new Rect(stream, format));
 		}
 	}
 
-	public void write_0x5(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt32(EncodingFormat.W3R_0x5.getVersion());
+	public void read_0x5(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		read_0x5(stream, EncodingFormat.W3R_0x5);
+	}
+
+	private void write_0x5(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+		stream.writeInt32(format.getVersion());
 		
 		stream.writeInt32(_rects.size());
 		
 		for (Rect rect : _rects) {
-			rect.write(stream, EncodingFormat.W3R_0x5);
+			rect.write(stream, format);
 		}
+	}
+
+	public void write_0x5(@Nonnull Wc3BinOutputStream stream) {
+		write_0x5(stream, EncodingFormat.W3R_0x5);
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -291,8 +336,9 @@ public class W3R {
 			
 			break;
 		}
-		case W3R_0x5: {
-			read_0x5(stream);
+		case W3R_0x5:
+		case W3R_0x7: {
+			read_0x5(stream, format);
 			
 			break;
 		}
@@ -301,9 +347,14 @@ public class W3R {
 	
 	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
-		case AUTO:
-		case W3R_0x5: {
-			write_0x5(stream);
+		case AUTO: {
+			write_0x5(stream, _format);
+
+			break;
+		}
+		case W3R_0x5:
+		case W3R_0x7: {
+			write_0x5(stream, format);
 			
 			break;
 		}

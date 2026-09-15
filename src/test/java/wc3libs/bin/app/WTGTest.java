@@ -24,4 +24,23 @@ public class WTGTest extends Wc3LibTest {
 
 		readWriteCycle(wtg, getFile("wc3data/WTG/war3map.wtg"));
 	}
+
+	@Test
+	public void readWriteCycleV3() throws Exception {
+		WTG wtg = new WTG();
+
+		wtg.addTriggerData(new TXT(getFile("wc3data/UI/TriggerData.txt")));
+
+		readWriteCycle(wtg, getFile("wc3data/WTG/war3map_v3.wtg"));
+		Assert.assertTrue(wtg.isOpaque(), "3.0 triggers must not be decoded using the legacy WTG layout");
+	}
+
+	@Test
+	public void readWriteCycleV3Filled() throws Exception {
+		WTG wtg = new WTG();
+		wtg.addTriggerData(new TXT(getFile("wc3data/UI/TriggerData.txt")));
+
+		readWriteCycle(wtg, getFile("wc3data/WTG/war3map_v3_filled.wtg"));
+		Assert.assertTrue(wtg.isOpaque());
+	}
 }

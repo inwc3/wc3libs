@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,21 @@ import java.util.regex.Pattern;
  */
 public class WTG {
 	public final static File GAME_PATH = new File("war3map.wtg");
+	public final static int VERSION_3_0 = 0x80000004;
+	private byte[] _opaqueData = null;
+
+	/**
+	 * The 3.0 editor uses a new hierarchical trigger layout. Preserve it exactly
+	 * until its records can be described from populated differential fixtures.
+	 */
+	public boolean isOpaque() {
+		return _opaqueData != null;
+	}
+
+	@Nullable
+	public byte[] getOpaqueData() {
+		return _opaqueData == null ? null : Arrays.copyOf(_opaqueData, _opaqueData.length);
+	}
 	
 	public static class FuncCat {
 		private File _iconFile;
@@ -1944,6 +1960,12 @@ public class WTG {
 		
 		stream.rewind();
 
+		if (version == VERSION_3_0) {
+			_opaqueData = stream.readBytes(Math.toIntExact(stream.size()), "opaqueVersion3Data");
+
+			return;
+		}
+
 		reader.setFormat(stream.getFormat(EncodingFormat.class, version));
 
 		read(reader);
@@ -2044,6 +2066,12 @@ public class WTG {
 	}
 
 	private void write(@Nonnull Writer writer) throws IOException {
+		if (_opaqueData != null) {
+			writer.getStream().writeBytes(_opaqueData);
+
+			return;
+		}
+
 		switch (writer.getFormat().toEnum()) {
 		case WTG_0x4: {
 			write_0x4(writer);

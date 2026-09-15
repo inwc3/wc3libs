@@ -485,6 +485,13 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		}
 	}
 
+	private EncodingFormat _format = EncodingFormat.W3E_0xB;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
+	}
+
 	public class Writer extends net.moonlightflower.wc3libs.bin.Writer<EncodingFormat> {
 		@Override
 		public EncodingFormat getAutoFormat() {
@@ -592,6 +599,10 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		public Writer(@Nonnull Wc3BinOutputStream stream) {
 			super(stream);
 		}
+
+		public Writer(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+			super(stream, format);
+		}
 	}
 
 	public void write(@Nonnull Writer writer) throws BinStream.StreamException {
@@ -599,7 +610,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 
 	public void write(@Nonnull Wc3BinOutputStream stream) throws BinStream.StreamException {
-		write(new Writer(stream));
+		write(new Writer(stream, _format));
 	}
 
 	public static class Reader extends net.moonlightflower.wc3libs.bin.Reader<EncodingFormat> {
@@ -629,6 +640,8 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 
 		@Nonnull
 		private W3E read(@Nonnull EncodingFormat format) throws IOException {
+			if (format != EncodingFormat.AUTO) _w3e._format = format;
+
 			switch (format.toEnum()) {
 				case AUTO: {
 					return read_auto();
@@ -764,6 +777,7 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 		W3E other = (getBounds() == null) ? new W3E(new Bounds(0, 0, 0, 0)) : new W3E(getBounds());
 		
 		other.mergeCells(this);
+		other._format = _format;
 		
 		return other;
 	}

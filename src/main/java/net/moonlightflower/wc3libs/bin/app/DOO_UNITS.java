@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -811,6 +812,7 @@ public class DOO_UNITS {
 			setCustomColor(stream.readInt32("customColor"));
 			setWaygateTargetRectIndex(stream.readInt32("waygateTargetRectIndex"));
 			setEditorId(stream.readInt32("editorId"));
+
 		}
 
 		private void write_0x8(@Nonnull Wc3BinOutputStream stream, int subVersion, boolean withSkinId) {
@@ -923,6 +925,7 @@ public class DOO_UNITS {
 			stream.writeInt32(getCustomColor());
 			stream.writeInt32(getWaygateTargetRectIndex());
 			stream.writeInt32(getEditorId());
+
 		}
 		
 		private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format, int subVersion, boolean withSkinId) throws BinInputStream.StreamException {
@@ -978,10 +981,12 @@ public class DOO_UNITS {
 		public enum Enum {
 			AUTO,
 			DOO_0x8,
+			DOO_0xD,
 		}
 
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat DOO_0x8 = new EncodingFormat(Enum.DOO_0x8, 0x8);
+		public final static EncodingFormat DOO_0xD = new EncodingFormat(Enum.DOO_0xD, 0xD);
 
 		@Nullable
 		public static EncodingFormat valueOf(@Nonnull Integer version) {
@@ -993,10 +998,27 @@ public class DOO_UNITS {
 		}
 	}
 	
-	private void write_0x8(@Nonnull Wc3BinOutputStream stream) {
+	private EncodingFormat _format = EncodingFormat.DOO_0x8;
+	private byte[] _opaqueData = null;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
+	}
+
+	public boolean isOpaque() {
+		return _opaqueData != null;
+	}
+
+	@Nullable
+	public byte[] getOpaqueData() {
+		return _opaqueData == null ? null : Arrays.copyOf(_opaqueData, _opaqueData.length);
+	}
+
+	private void write_0x8(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		stream.writeId(Id.valueOf("W3do"));
 
-		stream.writeInt32(EncodingFormat.DOO_0x8.getVersion());
+		stream.writeInt32(format.getVersion());
 
 		stream.writeInt32(_subVersion);
 
@@ -1024,12 +1046,13 @@ public class DOO_UNITS {
 		};
 	}
 
-	private void read_0x8(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	private void read_0x8(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		Id startToken = stream.readId("startToken");
 
 		int version = stream.readInt32("version");
 
-		stream.checkFormatVersion(EncodingFormat.DOO_0x8.getVersion(), version);
+		stream.checkFormatVersion(format.getVersion(), version);
+		_format = format;
 
 		_subVersion = stream.readInt32("subVersion");
 
@@ -1127,6 +1150,13 @@ public class DOO_UNITS {
 		
 		stream.rewind();
 
+		if (version == EncodingFormat.DOO_0xD.getVersion()) {
+			_format = EncodingFormat.DOO_0xD;
+			_opaqueData = stream.readBytes(Math.toIntExact(stream.size()), "opaqueVersion13Data");
+
+			return;
+		}
+
 		read(stream, stream.getFormat(EncodingFormat.class, version));
 	}
 
@@ -1137,8 +1167,9 @@ public class DOO_UNITS {
 			
 			break;
 		}
-		case DOO_0x8: {
-			read_0x8(stream);
+		case DOO_0x8:
+		case DOO_0xD: {
+			read_0x8(stream, format);
 			
 			break;
 		}
@@ -1146,10 +1177,21 @@ public class DOO_UNITS {
 	}
 	
 	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+		if (_opaqueData != null) {
+			stream.writeBytes(_opaqueData);
+
+			return;
+		}
+
 		switch (format.toEnum()) {
-		case AUTO:
-		case DOO_0x8: {
-			write_0x8(stream);
+		case AUTO: {
+			write_0x8(stream, _format);
+
+			break;
+		}
+		case DOO_0x8:
+		case DOO_0xD: {
+			write_0x8(stream, format);
 			
 			break;
 		}

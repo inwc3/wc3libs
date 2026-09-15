@@ -36,6 +36,12 @@ public class W3C {
 			public final static W3C.Camera.State<War3Real> ART_FIELD_OF_VIEW = new W3C.Camera.State<>("fieldOfView", War3Real.class, War3Real.valueOf(0F));
 			public final static W3C.Camera.State<War3Real> ART_FAR_Z = new W3C.Camera.State<>("farZ", War3Real.class, War3Real.valueOf(10000F));
 			public final static W3C.Camera.State<War3Real> ART_UNKNOWN = new W3C.Camera.State<>("unknown", War3Real.class, War3Real.valueOf(100F));
+			public final static W3C.Camera.State<War3Real> ART_LOCAL_PITCH = new W3C.Camera.State<>("localPitch", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_LOCAL_YAW = new W3C.Camera.State<>("localYaw", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_LOCAL_ROLL = new W3C.Camera.State<>("localRoll", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_DEPTH_OF_FIELD_DISTANCE = new W3C.Camera.State<>("depthOfFieldDistance", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_DEPTH_OF_FIELD_SCALE = new W3C.Camera.State<>("depthOfFieldScale", War3Real.class, War3Real.valueOf(0F));
+			public final static W3C.Camera.State<War3Real> ART_ABSOLUTE_Z = new W3C.Camera.State<>("absoluteZ", War3Real.class, War3Real.valueOf(0F));
 
 			public final static W3C.Camera.State<War3String> EDITOR_CINE_NAME = new W3C.Camera.State<>("cineName", War3String.class, War3String.valueOf("unnamed"));
 
@@ -159,7 +165,26 @@ public class W3C {
 			set(State.EDITOR_CINE_NAME, val);
 		}
 
-		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
+		public War3Real getLocalPitch() { return get(State.ART_LOCAL_PITCH); }
+		public void setLocalPitch(War3Real val) { set(State.ART_LOCAL_PITCH, val); }
+		public War3Real getLocalYaw() { return get(State.ART_LOCAL_YAW); }
+		public void setLocalYaw(War3Real val) { set(State.ART_LOCAL_YAW, val); }
+		public War3Real getLocalRoll() { return get(State.ART_LOCAL_ROLL); }
+		public void setLocalRoll(War3Real val) { set(State.ART_LOCAL_ROLL, val); }
+		public War3Real getDepthOfFieldDistance() { return get(State.ART_DEPTH_OF_FIELD_DISTANCE); }
+		public void setDepthOfFieldDistance(War3Real val) { set(State.ART_DEPTH_OF_FIELD_DISTANCE, val); }
+		public War3Real getDepthOfFieldScale() { return get(State.ART_DEPTH_OF_FIELD_SCALE); }
+		public void setDepthOfFieldScale(War3Real val) { set(State.ART_DEPTH_OF_FIELD_SCALE, val); }
+		public War3Real getAbsoluteZ() { return get(State.ART_ABSOLUTE_Z); }
+		public void setAbsoluteZ(War3Real val) { set(State.ART_ABSOLUTE_Z, val); }
+
+		private int _cameraType = 0;
+
+		public int getCameraType() { return _cameraType; }
+		public void setCameraType(int val) { _cameraType = val; }
+		public boolean isFreeCamera() { return getCameraType() == 1; }
+
+		private void writeBase(@Nonnull Wc3BinOutputStream stream) {
 			Coords2DF target = getTarget();
 			
 			stream.writeFloat32(target.getX());
@@ -175,11 +200,9 @@ public class W3C {
 			stream.writeFloat32(getFarZ());
 			
 			stream.writeFloat32(getUnknown());
-			
-			stream.writeString(getCineName());
 		}
 
-		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		private void readBase(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
 			setTarget(new Coords2DF(stream.readFloat32("targetX"), stream.readFloat32("targetY")));
 			setZOffset(stream.readReal("zOffset"));
 
@@ -191,8 +214,40 @@ public class W3C {
 			setFieldOfView(stream.readReal("fieldOfView"));
 			setFarZ(stream.readReal("farZ"));
 			setUnknown(stream.readReal("unknown"));
-			
+		}
+
+		public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
+			writeBase(stream);
+			stream.writeString(getCineName());
+		}
+
+		public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+			readBase(stream);
 			setCineName(War3String.valueOf(stream.readString("cineName")));
+		}
+
+		public void write_0x3(@Nonnull Wc3BinOutputStream stream) {
+			writeBase(stream);
+			stream.writeFloat32(getLocalPitch());
+			stream.writeFloat32(getLocalYaw());
+			stream.writeFloat32(getLocalRoll());
+			stream.writeFloat32(getDepthOfFieldDistance());
+			stream.writeFloat32(getDepthOfFieldScale());
+			stream.writeFloat32(getAbsoluteZ());
+			stream.writeString(getCineName());
+			stream.writeInt32(getCameraType());
+		}
+
+		public void read_0x3(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+			readBase(stream);
+			setLocalPitch(stream.readReal("localPitch"));
+			setLocalYaw(stream.readReal("localYaw"));
+			setLocalRoll(stream.readReal("localRoll"));
+			setDepthOfFieldDistance(stream.readReal("depthOfFieldDistance"));
+			setDepthOfFieldScale(stream.readReal("depthOfFieldScale"));
+			setAbsoluteZ(stream.readReal("absoluteZ"));
+			setCineName(War3String.valueOf(stream.readString("cineName")));
+			setCameraType(stream.readInt32("cameraType"));
 		}
 		
 		public void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
@@ -200,6 +255,11 @@ public class W3C {
 			case W3C_0x0: {
 				read_0x0(stream);
 				
+				break;
+			}
+			case W3C_0x3: {
+				read_0x3(stream);
+
 				break;
 			}
 			}
@@ -211,6 +271,11 @@ public class W3C {
 			case W3C_0x0: {
 				write_0x0(stream);
 				
+				break;
+			}
+			case W3C_0x3: {
+				write_0x3(stream);
+
 				break;
 			}
 			}
@@ -251,10 +316,12 @@ public class W3C {
 		public enum Enum {
 			AUTO,
 			W3C_0x0,
+			W3C_0x3,
 		}
 		
 		public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
 		public final static EncodingFormat WPM_0x0 = new EncodingFormat(Enum.W3C_0x0, 0x0);
+		public final static EncodingFormat W3C_0x3 = new EncodingFormat(Enum.W3C_0x3, 0x3);
 
 		@Nullable
 		public static EncodingFormat valueOf(@Nonnull Integer version) {
@@ -266,26 +333,42 @@ public class W3C {
 		}
 	}
 	
-	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+	private EncodingFormat _format = EncodingFormat.WPM_0x0;
+
+	@Nonnull
+	public EncodingFormat getFormat() {
+		return _format;
+	}
+
+	private void read_0x0(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws BinInputStream.StreamException {
 		int version = stream.readInt32("version");
 
-		stream.checkFormatVersion(EncodingFormat.WPM_0x0.getVersion(), version);
+		stream.checkFormatVersion(format.getVersion(), version);
+		_format = format;
 
 		int camsCount = stream.readInt32("camsCount");
 
 		for (int i = 0; i < camsCount; i++) {
-			addCamera(new Camera(stream, EncodingFormat.WPM_0x0));
+			addCamera(new Camera(stream, format));
 		}
 	}
+
+	public void read_0x0(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
+		read_0x0(stream, EncodingFormat.WPM_0x0);
+	}
 	
-	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
-		stream.writeInt32(EncodingFormat.WPM_0x0.getVersion());
+	private void write_0x0(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+		stream.writeInt32(format.getVersion());
 		
 		stream.writeInt32(getCameras().size());
 		
 		for (Camera camera : getCameras()) {
-			camera.write(stream, EncodingFormat.WPM_0x0);
+			camera.write(stream, format);
 		}
+	}
+
+	public void write_0x0(@Nonnull Wc3BinOutputStream stream) {
+		write_0x0(stream, EncodingFormat.WPM_0x0);
 	}
 	
 	private void read_auto(@Nonnull Wc3BinInputStream stream) throws BinInputStream.StreamException {
@@ -303,8 +386,9 @@ public class W3C {
 			
 			break;
 		}
-		case W3C_0x0: {
-			read_0x0(stream);
+		case W3C_0x0:
+		case W3C_0x3: {
+			read_0x0(stream, format);
 			
 			break;
 		}
@@ -313,9 +397,14 @@ public class W3C {
 	
 	private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
 		switch (format.toEnum()) {
-		case AUTO:
-		case W3C_0x0: {
-			write_0x0(stream);
+		case AUTO: {
+			write_0x0(stream, _format);
+
+			break;
+		}
+		case W3C_0x0:
+		case W3C_0x3: {
+			write_0x0(stream, format);
 			
 			break;
 		}

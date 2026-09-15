@@ -2,6 +2,7 @@ package wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.app.W3I;
 import net.moonlightflower.wc3libs.bin.app.MapFlag;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
+import net.moonlightflower.wc3libs.dataTypes.app.Controller;
 import net.moonlightflower.wc3libs.dataTypes.app.UnitId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class W3ITest extends Wc3LibTest {
     private static final Logger log = LoggerFactory.getLogger(GameExeTest.class.getName());
@@ -209,25 +211,40 @@ public class W3ITest extends Wc3LibTest {
 
     @Test
     public void testVersion39W3I() throws Exception {
-        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_v39.w3i").toPath());
+        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_v3.w3i").toPath());
         W3I w3i = new W3I(input);
 
         Assert.assertEquals(39, w3i.getFileVersion());
+        Assert.assertEquals("TRIGSTR_003", w3i.getMapName());
+        Assert.assertEquals("TRIGSTR_006", w3i.getMapAuthor());
+        Assert.assertEquals("TRIGSTR_005", w3i.getMapDescription());
+        Assert.assertEquals("TRIGSTR_004", w3i.getPlayersRecommendedAmount());
         Assert.assertEquals(W3I.Graphics.SD_HD_AND_DE, w3i.getGraphics());
+        Assert.assertEquals(W3I.GameDataVersion.FORSAKEN_KINGDOM, w3i.getGameDataVersion());
         Assert.assertTrue(w3i.getFlag(MapFlag.USE_WATER_OVERRIDE_COLOR));
-        Assert.assertEquals(128, w3i.getAlphaTileMinimapColor());
+        Assert.assertTrue(w3i.getFlag(MapFlag.USE_ALPHA_TILE_MINIMAP_COLOR));
+        Assert.assertTrue(w3i.getFlag(MapFlag.USE_DYNAMIC_MINIMAP));
+        Assert.assertEquals(w3i.getLoadingScreenCrestRace(), 8);
+        Assert.assertEquals(0, w3i.getLoadingScreen().getCampaignBackgroundIndex());
+        Assert.assertEquals("TRIGSTR_009", w3i.getLoadingScreen().getText());
+        Assert.assertEquals("TRIGSTR_007", w3i.getLoadingScreen().getTitle());
+        Assert.assertEquals("TRIGSTR_008", w3i.getLoadingScreen().getSubtitle());
         Assert.assertEquals(0, w3i.getTerrainFogStyle());
         Assert.assertFalse(w3i.getDrawTerrainFogOverSky());
         Assert.assertEquals(10000F, w3i.getTerrainFogLinearStart(), 0F);
         Assert.assertEquals(10000F, w3i.getTerrainFogLinearEnd(), 0F);
         Assert.assertEquals(1F, w3i.getTerrainFogMaxOpacity(), 0F);
-        Assert.assertEquals(0F, w3i.getTerrainFogHeightStart(), 0F);
-        Assert.assertEquals(0F, w3i.getTerrainFogHeightEnd(), 0F);
-        Assert.assertEquals(0, w3i.getSkyDisplay());
-        Assert.assertEquals(0, w3i.getTimeOfDay());
-        Assert.assertEquals(0, w3i.getWaterMinOpacity());
+        Assert.assertEquals(0F, w3i.getTerrainFogHeight(), 0F);
+        Assert.assertEquals(w3i.getGlobalWeatherId().toString(), "VWbr");
+        Assert.assertEquals("lake", w3i.getSoundEnv().toString());
+        Assert.assertEquals('A', w3i.getTilesetLightEnv().getChar().getVal().charValue());
+        Assert.assertEquals(1444, w3i.getForceDefaultCameraZoom());
+        Assert.assertEquals(1555, w3i.getForceMaxCameraZoom());
+        Assert.assertEquals(1333, w3i.getForceMinCameraZoom());
+        Assert.assertEquals(20, w3i.getWaterMinOpacity());
         Assert.assertEquals(100, w3i.getWaterMaxOpacity());
         Assert.assertEquals(10, w3i.getWaterReflectivity());
+        // The 3.0 editor displays 10 here but serializes 0 in this slot.
         Assert.assertEquals(0, w3i.getWaterEmissivity());
         Assert.assertEquals(50, w3i.getWaterEdgeSoftness());
         Assert.assertEquals(20, w3i.getWaterWavesVertexDisplacement());
@@ -235,7 +252,21 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(0, w3i.getWaterOverrideColor());
         Assert.assertEquals(100, w3i.getWaterEnvMapReflectivity());
         Assert.assertEquals(-1, w3i.getWaterUnknown());
-        Assert.assertEquals(0, w3i.getPlayers().get(0).getHudSkin());
+
+        assertV3Player(w3i.getPlayers().get(0), 0, Controller.USER, W3I.Player.UnitRace.HUMAN, 2, 0, "TRIGSTR_010");
+        assertV3Player(w3i.getPlayers().get(1), 1, Controller.USER, W3I.Player.UnitRace.ORC, 8, 1, "TRIGSTR_011");
+        assertV3Player(w3i.getPlayers().get(2), 2, Controller.COMPUTER, W3I.Player.UnitRace.UNDEAD, 64, 0, "TRIGSTR_012");
+        assertV3Player(w3i.getPlayers().get(3), 3, Controller.COMPUTER, W3I.Player.UnitRace.NIGHT_ELF, 64, 1, "TRIGSTR_013");
+        assertV3Player(w3i.getPlayers().get(4), 4, Controller.NEUTRAL, W3I.Player.UnitRace.HUMAN, 64, 0, "TRIGSTR_014");
+        assertV3Player(w3i.getPlayers().get(5), 5, Controller.RESCUABLE, W3I.Player.UnitRace.ORC, 64, 0, "TRIGSTR_015");
+
+        Assert.assertEquals(w3i.getForces().size(), 2);
+        Assert.assertEquals(w3i.getForces().get(0).getPlayerNums(w3i.getPlayers()), Set.of(0, 1, 2));
+        Assert.assertEquals(w3i.getForces().get(0).getFlags().toInt(), 2);
+        Assert.assertEquals(w3i.getForces().get(0).getName(), "TRIGSTR_016");
+        Assert.assertEquals(w3i.getForces().get(1).getPlayerNums(w3i.getPlayers()), Set.of(3, 4, 5));
+        Assert.assertEquals(w3i.getForces().get(1).getFlags().toInt(), 57);
+        Assert.assertEquals(w3i.getForces().get(1).getName(), "TRIGSTR_017");
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
@@ -243,5 +274,15 @@ public class W3ITest extends Wc3LibTest {
         }
 
         Assert.assertEquals(output.toByteArray(), input, "version 39 must round-trip byte-identically");
+    }
+
+    private static void assertV3Player(W3I.Player player, int num, Controller controller,
+                                       W3I.Player.UnitRace race, int hudSkin, int startPosFixed, String name) {
+        Assert.assertEquals(player.getNum(), num);
+        Assert.assertEquals(player.getType(), controller);
+        Assert.assertEquals(player.getRace(), race);
+        Assert.assertEquals(player.getHudSkin(), hudSkin);
+        Assert.assertEquals(player.getStartPosFixed(), startPosFixed);
+        Assert.assertEquals(player.getName(), name);
     }
 }
