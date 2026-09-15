@@ -185,6 +185,20 @@ public class WTSTest extends Wc3LibTest {
         Assert.assertTrue(output.size() > 0, "write must flush buffered text");
     }
 
+    @Test
+    public void keywordMatchingRemainsCaseInsensitive() throws Exception {
+        String input = "sTrInG 12\n{\nmixed case keyword\n}\n";
+
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+
+        Assert.assertEquals(wts.getEntry(12), "mixed case keyword");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        Assert.assertEquals(new WTS(new ByteArrayInputStream(output.toByteArray())).getEntry(12),
+            "mixed case keyword");
+    }
+
     @Test(expectedExceptions = java.io.IOException.class, expectedExceptionsMessageRegExp = "unterminated WTS entry 9")
     public void unterminatedEntryFailsInsteadOfSilentlyDisappearing() throws Exception {
         String input = "STRING 9\n{\nmissing delimiter\n";

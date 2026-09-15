@@ -24,7 +24,7 @@ public class WTS {
     public final static File CAMPAIGN_PATH = new File("war3campaign.WTS");
 
     private static final Pattern ENTRY_HEADER_PATTERN = Pattern.compile(
-        "(?m)^[\\t ]*STRING[\\t ]+(\\d+)[\\t ]*\\r?\\n" +
+        "(?im)^[\\t ]*STRING[\\t ]+(\\d+)[\\t ]*\\r?\\n" +
             "(?:(?:[\\t ]*//[^\\r\\n]*|[\\t ]*)\\r?\\n)*" +
             "[\\t ]*\\{[\\t ]*\\r?\\n"
     );

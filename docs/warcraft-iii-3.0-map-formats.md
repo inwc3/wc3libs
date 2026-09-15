@@ -33,7 +33,8 @@ kept under `wc3data/Map/v3_filled_dump`.
 
 ## Editor-only members
 
-For w3protect, editor-source members are removal targets, not mutation targets.
+For tools that strip editor data, editor-source members are removal targets,
+not mutation targets.
 Opaque preservation and version classification are sufficient for those files;
 field-level editing is not a compatibility requirement. `war3map.wtg` and
 `war3map.wct` are GUI Trigger Editor source, while the runtime executes the
@@ -50,7 +51,7 @@ custom-light configuration directly.
 
 The mutation-critical compatibility surface is different: `war3map.w3i`, WTS,
 and every base and skin object-modification member must retain its parsed binary
-version while w3protect rewrites values or inlines strings. The complete skin
+version while a map transformation rewrites values or inlines strings. The complete skin
 family is `war3mapSkin.w3a`, `.w3b`, `.w3d`, `.w3h`, `.w3q`, `.w3t`, and `.w3u`.
 All seven must be recovered from protected archives, recognized by the object
 factory/merger, and written using `AS_DEFINED`; silently converting an older
@@ -205,7 +206,7 @@ controller/race/HUD/fixed tuples, and force membership and flags. Unknown enum
 values should retain their raw numeric value for writing even if the typed API
 returns an `UNKNOWN` value.
 
-Mutation-cycle tests are additionally required for files w3protect rewrites.
+Mutation-cycle tests are additionally required for files that transformation tools rewrite.
 They should change representative strings or object fields, serialize with the
 default writer, parse again, and assert that unrelated raw metadata did not
 move or normalize. In particular:
