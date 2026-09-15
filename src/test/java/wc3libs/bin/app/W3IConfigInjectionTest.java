@@ -151,6 +151,23 @@ public class W3IConfigInjectionTest {
     }
 
     @Test
+    public void configEscapesInlinedWtsTextForJassAndLua() {
+        W3I w3i = createSparsePlayersW3I();
+        w3i.setMapName("quote \" and slash \\");
+        w3i.setMapDescription("line1\nline2\r\n\"quote\"\tend");
+
+        for (boolean isLua : new boolean[]{false, true}) {
+            StringWriter sw = new StringWriter();
+            w3i.makeConfig(isLua).write(sw, isLua);
+            String output = sw.toString();
+
+            assertTrue(output.contains("SetMapName(\"quote \\\" and slash \\\\\")"), output);
+            assertTrue(output.contains("SetMapDescription(\"line1\\nline2\\r\\n\\\"quote\\\"\\tend\")"), output);
+            assertFalse(output.contains("line1\nline2"), "generated source must not contain a literal newline inside the string");
+        }
+    }
+
+    @Test
     public void initCustomTeamsSupportsSharedControlFlags() throws Exception {
         W3I w3i = new W3I();
 

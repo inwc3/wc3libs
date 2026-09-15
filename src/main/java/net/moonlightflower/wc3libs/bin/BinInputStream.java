@@ -106,9 +106,14 @@ public class BinInputStream extends BinStream implements AutoCloseable {
 	}
 
 	public BinInputStream(@Nonnull File file) throws IOException {
-		_inStream = Files.newInputStream(file.toPath());
+		try (InputStream inStream = Files.newInputStream(file.toPath())) {
+			read(inStream);
+		}
 
-		read(_inStream);
+		// File input is fully buffered by construction, so retaining the file
+		// handle serves no purpose and prevents callers from replacing/deleting
+		// the source on Windows. Keep close() harmless for try-with-resources.
+		_inStream = InputStream.nullInputStream();
 	}
 
 }

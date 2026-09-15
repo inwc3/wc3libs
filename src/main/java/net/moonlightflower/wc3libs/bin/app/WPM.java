@@ -193,11 +193,9 @@ public class WPM extends Raster<FlagsInt> {
 	}
 
 	public void write(@Nonnull File file) throws IOException {
-		Wc3BinOutputStream inStream = new Wc3BinOutputStream(file);
-
-		write(inStream);
-
-		inStream.close();
+		try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
+			write(outStream);
+		}
 	}
 	
 	public WPM(@Nonnull PathMap pathMap) {

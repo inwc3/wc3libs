@@ -766,11 +766,9 @@ public class W3E extends Raster<W3E.Tile> implements Boundable {
 	}
 
 	public void write(@Nonnull File file) throws IOException {
-		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
-		
-		write(outStream);
-		
-		outStream.close();
+		try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
+			write(outStream);
+		}
 	}
 
 	@Nonnull

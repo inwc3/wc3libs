@@ -20,6 +20,7 @@ opaque byte preservation semantic support.
 | `war3map.w3grp` | no established signature | Fully opaque read/write | It remains three zero dwords even after nested trigger categories and populated triggers are added, disproving the earlier trigger-group hypothesis. |
 | `war3map.imp` | 1, entry flag `0x15` | Structured read/write with raw flag preservation | The Light Editor's generated MDL uses a previously unknown import flag. Unknown flag bytes no longer become `null` and crash the writer. |
 | `war3map.w3u`, `war3mapSkin.w3u` | object format 3 | Structured read/write | Base and skin unit data cycle exactly. Distinct lumber-bounty modifications `ulba/ulbd/ulbs = 1/2/3` and the skin name's `TRIGSTR_003` reference are asserted semantically. |
+| `war3map.wts` | UTF-8 text, BOM observed | Structured read/write | The corrected v3 fixture and adversarial values verify BOM/newline preservation, comments inside values, inline braces, and significant whitespace. |
 | `war3map.mmp`, `.shd`, `.wct`, `.wpm` | existing layouts | Structured read/write | The corrected fixtures cycle byte-for-byte. |
 
 `war3map.w3l` and `war3map.w3grp` are also standard archive members now. Map
@@ -181,7 +182,10 @@ default, minimum, maximum order.
 
 Force player masks can contain bits for player slots which are not defined by
 the map. When presenting force membership, intersect the mask with the actual
-player numbers instead of treating every set bit as a player record.
+player numbers instead of treating every set bit as a player record. Do not
+normalize the stored mask when changing unrelated W3I strings: the v39 fixture
+uses `0xFFFFFFC7` for one force even though its defined membership is only
+players 0, 1, and 2. The mutation-cycle test requires the raw mask to survive.
 
 The editor displayed water emissivity `10` for this map while the corresponding
 serialized dword is `0`. The library deliberately preserves the serialized
@@ -200,6 +204,32 @@ For W3I, assert every adjacent field that could plausibly be swapped, all player
 controller/race/HUD/fixed tuples, and force membership and flags. Unknown enum
 values should retain their raw numeric value for writing even if the typed API
 returns an `UNKNOWN` value.
+
+Mutation-cycle tests are additionally required for files w3protect rewrites.
+They should change representative strings or object fields, serialize with the
+default writer, parse again, and assert that unrelated raw metadata did not
+move or normalize. In particular:
+
+- W3I v39 string mutation must retain the parsed version, all player tuples,
+  force flags, and the exact raw force masks.
+- Object-format v3 merge/copy must retain the file version, each object's two
+  v3 metadata dwords, modification end tokens, levels, and data pointers. A
+  merge must copy records rather than sharing mutable `Mod` instances.
+- WTS parsing must preserve literal `//` lines inside values, inline braces,
+  significant leading/trailing whitespace, newline style, and a UTF-8 BOM.
+  Only a closing brace on its own line terminates a value. Unterminated entries
+  are errors rather than silently missing strings.
+
+When WTS values are inlined into W3I and the map-script `config()` prelude is
+regenerated, escape backslash, quote, control characters, CR, and LF for both
+JASS and Lua. A correct WTS cycle is not enough if the resulting source contains
+an unescaped quote or a literal line break inside a string token.
+
+File convenience methods must close their internally-created binary streams;
+the binary output stream buffers bytes until close. Conversely, overloads that
+receive a caller-owned stream should flush when needed but must not close it.
+File-backed binary input is fully buffered and should release the source handle
+immediately so the original map member can be replaced on Windows.
 
 Opaque handling is a corruption-prevention fallback. An opaque instance can be
 copied through a map rebuild, but its internal records cannot yet be safely

@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class BinInputStreamTest {
     @Test
@@ -39,5 +41,18 @@ public class BinInputStreamTest {
         Assert.assertEquals(stream.readString(), "");
         Assert.assertEquals(stream.getPos(), 0L);
         Assert.assertTrue(stream.eof());
+    }
+
+    @Test
+    public void fileConstructorReleasesTheSourceAfterBuffering() throws IOException {
+        Path file = Files.createTempFile("wc3libs-bin-input-", ".bin");
+        Files.write(file, new byte[] { 1, 2, 3 });
+
+        Wc3BinInputStream stream = new Wc3BinInputStream(file.toFile());
+        Assert.assertEquals(stream.readBytes(3), new byte[] { 1, 2, 3 });
+
+        // This fails on Windows while the source file is still open.
+        Files.delete(file);
+        stream.close();
     }
 }

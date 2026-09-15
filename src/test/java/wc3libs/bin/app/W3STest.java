@@ -12,10 +12,24 @@ import wc3libs.misc.Wc3LibTest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class W3STest extends Wc3LibTest {
 	@Test()
 	public void readWriteCycle() throws IOException {
 		readWriteCycle(W3S.class, getFile("wc3data/W3S/war3map.w3s"));
+	}
+
+	@Test
+	public void defaultFileWriterFlushesTheBufferedData() throws IOException {
+		W3S source = new W3S(getFile("wc3data/W3S/war3map.w3s"));
+		Path output = Files.createTempFile("wc3libs-w3s-", ".w3s");
+		try {
+			source.write(output.toFile());
+			Assert.assertEquals(Files.readAllBytes(output), Files.readAllBytes(getFile("wc3data/W3S/war3map.w3s").toPath()));
+		} finally {
+			Files.deleteIfExists(output);
+		}
 	}
 }

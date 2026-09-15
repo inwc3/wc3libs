@@ -376,11 +376,9 @@ public class W3S {
 	}
 
 	public void write(@Nonnull File file, @Nonnull EncodingFormat format) throws IOException {
-		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
-
-		write(outStream, format);
-
-		outStream.close();
+		try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
+			write(outStream, format);
+		}
 	}
 
 	private void read(@Nonnull File file) throws IOException {
@@ -388,7 +386,9 @@ public class W3S {
 	}
 
 	public void write(@Nonnull File file) throws IOException {
-		write(new Wc3BinOutputStream(file));
+		try (Wc3BinOutputStream stream = new Wc3BinOutputStream(file)) {
+			write(stream);
+		}
 	}
 
 	public W3S() {

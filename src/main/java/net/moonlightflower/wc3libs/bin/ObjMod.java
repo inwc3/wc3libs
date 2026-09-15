@@ -139,6 +139,14 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
                 _endToken = value;
             }
 
+            @Nonnull
+            public Mod copy() {
+                Mod copy = new Mod(_id, _valType, _val);
+                copy._endToken = _endToken;
+
+                return copy;
+            }
+
 			@Override
 			public String toString() {
 				return getId().toString();
@@ -195,6 +203,15 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 				_level = level;
 				_dataPt = dataPt;
 			}
+
+            @Override
+            @Nonnull
+            public ExtendedMod copy() {
+                ExtendedMod copy = new ExtendedMod(_id, getValType(), _val, _level, _dataPt);
+                copy.setEndToken(getEndToken());
+
+                return copy;
+            }
 
 			@Override
 			public void print(@Nonnull Printer printer) {
@@ -299,13 +316,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 		}
 		
 		public void merge(@Nonnull Obj otherObj) {
+			int[] otherUnknown = otherObj.getUnknown();
+			if (otherUnknown != null) setUnknown(otherUnknown);
+
 			for (Map.Entry<MetaFieldId, List<Mod>> otherModEntry : otherObj.getModsMapByField().entrySet()) {
 				MetaFieldId fieldId = otherModEntry.getKey();
 				List<Mod> otherModsList = otherModEntry.getValue();
 
                 remove(fieldId);
                 for (Mod mod : otherModsList) {
-                    addMod(mod);
+                    addMod(mod.copy());
                 }
 			}
 		}
@@ -334,11 +354,11 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
         private int[] _unknown;
 
         public int[] getUnknown() {
-            return _unknown;
+            return _unknown == null ? null : Arrays.copyOf(_unknown, _unknown.length);
         }
 
         public void setUnknown(int[] value) {
-            _unknown = value;
+            _unknown = value == null ? null : Arrays.copyOf(value, value.length);
         }
 
 		@Override
@@ -930,10 +950,16 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	}
 
     public void merge(@Nonnull ObjMod<ObjType> other) {
+        if (other.getFormat().getVersion() > getFormat().getVersion()) {
+            setFormat(other.getFormat());
+        }
+
         for (Map.Entry<ObjId, ObjType> entry : other.getObjs().entrySet()) {
             if (_objs.containsKey(entry.getKey())) {
                 ObjType obj = _objs.get(entry.getKey());
-                entry.getValue().getMods().forEach(obj::addMod);
+                int[] otherUnknown = entry.getValue().getUnknown();
+                if (otherUnknown != null) obj.setUnknown(otherUnknown);
+                entry.getValue().getMods().forEach(mod -> obj.addMod(mod.copy()));
             } else {
                 ObjType obj = entry.getValue().copy();
 

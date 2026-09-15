@@ -4128,11 +4128,9 @@ public class W3I {
     }
 
     public void write(@Nonnull File file) throws IOException {
-        Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
-
-        write(outStream);
-
-        outStream.close();
+        try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
+            write(outStream);
+        }
     }
 
     public W3I() {
@@ -4373,14 +4371,17 @@ public class W3I {
         List<Statement> stmts = new ArrayList<>();
         Map<Integer, Integer> startLocIndicesByPlayerNum = getStartLocIndicesByPlayerNum();
 
-        Function<String, String> enquote = s -> "\"" + s + "\"";
+        Function<String, String> enquote = s -> "\"" + String.valueOf(s)
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\b", "\\b")
+            .replace("\f", "\\f")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
+            .replace("\t", "\\t") + "\"";
 
         stmts.add(Statement.create("call SetMapName(" + enquote.apply(getMapName()) + ")"));
-        if (isLua) {
-            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(("" + getMapDescription()).replaceAll("\n", "\\\\n")) + ")"));
-        } else {
-            stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
-        }
+        stmts.add(Statement.create("call SetMapDescription(" + enquote.apply(getMapDescription()) + ")"));
 
         stmts.add(Statement.create("call SetPlayers(" + getPlayers().size() + ")"));
         stmts.add(Statement.create("call SetTeams(" + getPlayers().size() + ")"));

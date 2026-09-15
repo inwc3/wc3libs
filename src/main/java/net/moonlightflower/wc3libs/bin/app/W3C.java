@@ -435,11 +435,9 @@ public class W3C {
 	}
 
 	public void write(@Nonnull File file) throws IOException {
-		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
-
-		write(outStream);
-
-		outStream.close();
+		try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
+			write(outStream);
+		}
 	}
 	
 	public W3C(@Nonnull Wc3BinInputStream inStream) throws BinInputStream.StreamException {

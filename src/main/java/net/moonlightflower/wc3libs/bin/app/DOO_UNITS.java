@@ -1215,11 +1215,9 @@ public class DOO_UNITS {
 	}
 
 	public void write(@Nonnull File file) throws IOException {
-		Wc3BinOutputStream outStream = new Wc3BinOutputStream(file);
-
-		write(outStream);
-
-		outStream.close();
+		try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
+			write(outStream);
+		}
 	}
 
 	public DOO_UNITS(@Nonnull Wc3BinInputStream stream) throws BinStream.StreamException {

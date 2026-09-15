@@ -70,6 +70,9 @@ public class WTSTest extends Wc3LibTest {
         Path output = Files.createTempFile("war3map-v3-", ".wts");
         try {
             wts.write(output.toFile());
+            byte[] outputBytes = Files.readAllBytes(output);
+            Assert.assertEquals(new byte[]{outputBytes[0], outputBytes[1], outputBytes[2]},
+                new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}, "UTF-8 BOM must survive the cycle");
             Assert.assertEquals(new WTS(output.toFile()), wts);
         } finally {
             Files.deleteIfExists(output);
@@ -135,5 +138,56 @@ public class WTSTest extends Wc3LibTest {
         // Should keep LF, not convert to CRLF
         Assert.assertFalse(out.contains("\r\n"), "Output should preserve LF style when input used LF");
         Assert.assertTrue(out.contains("\n\nSTRING 2\n"), "Output should include blank line between entries");
+    }
+
+    @Test
+    public void valuesPreserveCommentLinesBracesAndSignificantWhitespace() throws Exception {
+        String input =
+            "// comment outside an entry\n" +
+                "STRING 7\n" +
+                "{\n" +
+                "  leading spaces\n" +
+                "// literal value line\n" +
+                "contains } inline\n" +
+                "trailing spaces  \n" +
+                "\n" +
+                "}\n";
+
+        WTS wts = new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        String expected = "  leading spaces\n// literal value line\ncontains } inline\ntrailing spaces  \n";
+        Assert.assertEquals(wts.getEntry(7), expected);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        wts.write(output);
+        WTS reparsed = new WTS(new ByteArrayInputStream(output.toByteArray()));
+        Assert.assertEquals(reparsed.getEntry(7), expected);
+    }
+
+    @Test
+    public void streamWriterFlushesButDoesNotCloseCallerStream() throws Exception {
+        class CloseTrackingOutputStream extends ByteArrayOutputStream {
+            private boolean closed;
+
+            @Override
+            public void close() throws java.io.IOException {
+                closed = true;
+                super.close();
+            }
+        }
+
+        WTS wts = new WTS();
+        wts.addEntry(1, "value");
+        CloseTrackingOutputStream output = new CloseTrackingOutputStream();
+
+        wts.write(output);
+
+        Assert.assertFalse(output.closed, "caller retains ownership of the stream");
+        Assert.assertTrue(output.size() > 0, "write must flush buffered text");
+    }
+
+    @Test(expectedExceptions = java.io.IOException.class, expectedExceptionsMessageRegExp = "unterminated WTS entry 9")
+    public void unterminatedEntryFailsInsteadOfSilentlyDisappearing() throws Exception {
+        String input = "STRING 9\n{\nmissing delimiter\n";
+        new WTS(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
     }
 }
