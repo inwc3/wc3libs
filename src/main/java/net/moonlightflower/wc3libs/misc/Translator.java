@@ -53,7 +53,7 @@ public class Translator implements Printable {
 		
 		try {
 			return section.get(FieldId.valueOf(fieldName)).toString();
-		} catch (Exception ignored) {
+		} catch (TXT.Section.FieldDoesNotExistException ignored) {
 		}
 		
 		return null;
@@ -79,8 +79,7 @@ public class Translator implements Printable {
 
 	@Nullable
 	public String translateText(@Nonnull String text) {
-		// TODO
-		return text;
+		return translate(text);
 	}
 	
 	public void addTXT(@Nonnull TXT other) {

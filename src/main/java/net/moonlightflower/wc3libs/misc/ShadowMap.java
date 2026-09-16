@@ -55,7 +55,6 @@ public class ShadowMap extends Raster<Boolean> {
 	public ShadowMap(@Nonnull Bounds bounds) {
 		super(bounds);
 
-		//TODO: needed?
 		setBounds(bounds, false, false);
 	}
 }

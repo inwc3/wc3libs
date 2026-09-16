@@ -42,20 +42,31 @@ public class PathMap extends Raster<Integer> {
 
 		@Override
 		public DataType decode(Object val) {
-			// TODO
-			return null;
+			if (val == null) return valueOf(0);
+			
+			if (val instanceof Number) {
+				return valueOf(((Number) val).intValue());
+			}
+			
+			if (val instanceof PathingInt) {
+				return (PathingInt) val;
+			}
+			
+			if (val instanceof String) {
+				return valueOf(Integer.parseInt((String) val));
+			}
+			
+			return valueOf(Integer.parseInt(val.toString()));
 		}
 
 		@Override
 		public Object toSLKVal() {
-			// TODO
-			return null;
+			return toInt();
 		}
 
 		@Override
 		public Object toTXTVal() {
-			// TODO
-			return null;
+			return toInt();
 		}
 	}
 	
@@ -215,7 +226,6 @@ public class PathMap extends Raster<Integer> {
 	public PathMap(@Nonnull Bounds bounds) {
 		super(bounds);
 
-		//TODO: needed?
 		setBounds(bounds, false, false);
 	}
 }
