@@ -804,7 +804,6 @@ public class ObjMerger {
             SLK slk = slkEntry.getValue();
 
             if (clean) {
-                slk.cleanEmptyColumns();
                 SLKCleaner.clean(slk);
             }
             File outFile = new File(outDir, inFile.toString());

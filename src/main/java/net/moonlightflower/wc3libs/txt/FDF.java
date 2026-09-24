@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,28 +22,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FDF extends UTF8 {
-	private static String stripComments(@Nullable String val) {
-		if (val == null) return null;
-
-		val = val.replaceAll("//.*", "");
-		
-		Pattern pattern = Pattern.compile(String.format("%s.*%s", Pattern.quote("/*"), Pattern.quote("*/")), Pattern.DOTALL);
-		
-		Matcher matcher = pattern.matcher(val);
-		
-		val = matcher.replaceAll("");
-		
-		return val;
-	}
-	
 	private static String dequote(@Nullable String s) {
 		if (s == null) return null;
 
-		if ((s.charAt(0) == '\"') && (s.charAt(s.length() - 1) == '\"')) {
-			s = s.substring(1, s.length() - 1);
+		if (s.length() >= 2 && s.charAt(0) == '\"' && s.charAt(s.length() - 1) == '\"') {
+			StringBuilder result = new StringBuilder(s.length() - 2);
+			for (int i = 1; i < s.length() - 1; i++) {
+				char c = s.charAt(i);
+				if (c == '\\' && i + 1 < s.length() - 1) {
+					char escaped = s.charAt(i + 1);
+					if (escaped == '\\' || escaped == '\"') {
+						result.append(escaped);
+						i++;
+						continue;
+					}
+				}
+				result.append(c);
+			}
+			return result.toString();
 		}
-		
+
 		return s;
+	}
+
+	private static String quote(@Nonnull String value) {
+		if (value.indexOf('\r') >= 0 || value.indexOf('\n') >= 0) {
+			throw new IllegalArgumentException("FDF string values cannot contain line breaks");
+		}
+		return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
 	}
 	
 	public static int indexOfRegex(@Nonnull String input, @Nonnull String regex, int startPos) {
@@ -101,6 +108,7 @@ public class FDF extends UTF8 {
 	}
 	
 	private final Map<String, String> _map = new LinkedHashMap<>();
+	private boolean _writeable = true;
 
 	@Nonnull
 	public TXT toTXT() {
@@ -115,8 +123,8 @@ public class FDF extends UTF8 {
 	
 	private void read(@Nonnull InputStream inStream) throws IOException {
 		UTF8 reader = new UTF8(inStream);
-		
-		String input = stripComments(reader.readAll());
+		String input = reader.readAll();
+		if (input == null) input = "";
 		
 		CharStream antlrStream = CharStreams.fromString(input);
 		
@@ -125,6 +133,18 @@ public class FDF extends UTF8 {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		
 		FDFParser parser = new FDFParser(tokens);
+		boolean[] syntaxError = {false};
+		BaseErrorListener errorListener = new BaseErrorListener() {
+			@Override
+			public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
+			                        String msg, RecognitionException e) {
+				syntaxError[0] = true;
+			}
+		};
+		lexer.removeErrorListeners();
+		lexer.addErrorListener(errorListener);
+		parser.removeErrorListeners();
+		parser.addErrorListener(errorListener);
 		
 		Map<String, String> newEntries = new LinkedHashMap<>();
 		
@@ -153,74 +173,178 @@ public class FDF extends UTF8 {
 		});
 		
 		parser.root();
+		_writeable = !syntaxError[0];
 		
 		_map.putAll(newEntries);
 	}
-	
-	private void read2(@Nonnull InputStream inStream) throws IOException {
-		UTF8 reader = new UTF8(inStream);
-		
-		String input = stripComments(reader.readAll());
-		
-		int escapedBackslashReplaceChar = 1;
-		
-		while (input.indexOf(escapedBackslashReplaceChar) != -1) {
-			escapedBackslashReplaceChar++;
-		};
-		
-		int escapedQuoteReplaceChar = escapedBackslashReplaceChar + 1;
-		
-		while (input.indexOf(escapedQuoteReplaceChar) != -1) {
-			escapedQuoteReplaceChar++;
-		};
-		
-		input = input.replaceAll("\\\\", Character.toString((char) escapedBackslashReplaceChar));
-		
-		input = input.replaceAll("\\\\\"", Character.toString((char) escapedQuoteReplaceChar));
-		
-		BufferedWriter out = new BufferedWriter(new FileWriter(new File("D:\\fdf.txt")));
-		
-		out.write(input);
-		
-		out.close();
-		
-		//input = input.replaceAll("\"", "");
-		
-		input = input.replaceAll("\\p{Cntrl}", "");
-		
-		Pattern pattern = Pattern.compile("StringList\\s*\\{(.*)\\}");
-		
-		Matcher matcher = pattern.matcher(input);
-		
-		if (matcher.find()) {
-			String content = matcher.group(1);
 
-			Matcher contentMatcher = Pattern.compile("[\\s*(\\w+)\\s+\\\"(.*)\\\"]+").matcher(input);
-			
-			if (contentMatcher.find()) {
-				for (int i = 0; i < contentMatcher.groupCount() / 2; i++) {
-					String key = contentMatcher.group(i * 2);
-					String val = contentMatcher.group(i * 2 + 1);
+	/**
+	 * Returns the StringList entries represented by this FDF. Frame definitions are not
+	 * currently modeled by this class; use {@link #minify(String)} to compact a complete
+	 * FDF source without parsing or discarding its frame definitions.
+	 */
+	@Nonnull
+	public Map<String, String> getEntries() {
+		return java.util.Collections.unmodifiableMap(_map);
+	}
 
-					_map.put(key, val);
-				}
-			};
-			
-			/*List<String> tokens = tokenize(content);
-			
-			for (int i = 0; i < tokens.size() / 2; i++) {
-				String line = tokens.get(i);
-				
-				//Matcher lineMatcher = Pattern.compile("\\s*()\\s+()")line.
-				
-				String key = tokens.get(i * 2);
-				String val = tokens.get(i * 2 + 1);
-				System.out.println(key + "->" + val);
-				_map.put(key, val);
-			}*/
+	public void set(@Nonnull String id, @Nonnull String value) {
+		if (!id.matches("[A-Za-z][A-Za-z0-9_]*")) {
+			throw new IllegalArgumentException("Invalid FDF StringList identifier: " + id);
+		}
+		_map.put(id, value);
+	}
+
+	/** Writes the modeled StringList as UTF-8, preserving insertion order. */
+	public void write(@Nonnull Writer writer) throws IOException {
+		write(writer, false);
+	}
+
+	/** Writes the modeled StringList as UTF-8 with optional compact formatting. */
+	public void write(@Nonnull Writer writer, boolean minified) throws IOException {
+		ensureWriteable();
+
+		if (minified) {
+			writer.write("StringList{");
+			boolean first = true;
+			for (Map.Entry<String, String> entry : _map.entrySet()) {
+				if (!first) writer.write(',');
+				writer.write(entry.getKey());
+				writer.write(' ');
+				writer.write(quote(entry.getValue()));
+				first = false;
+			}
+			writer.write('}');
+			return;
+		}
+
+		writer.write("StringList {\n");
+		for (Map.Entry<String, String> entry : _map.entrySet()) {
+			writer.write("\t");
+			writer.write(entry.getKey());
+			writer.write(" ");
+			writer.write(quote(entry.getValue()));
+			writer.write(",\n");
+		}
+		writer.write("}\n");
+	}
+
+	public void write(@Nonnull OutputStream outputStream) throws IOException {
+		write(outputStream, false);
+	}
+
+	public void write(@Nonnull OutputStream outputStream, boolean minified) throws IOException {
+		Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+		write(writer, minified);
+		writer.flush();
+	}
+
+	public void write(@Nonnull File file) throws IOException {
+		ensureWriteable();
+		try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+			write(writer);
 		}
 	}
 
+	public void write(@Nonnull File file, boolean minified) throws IOException {
+		ensureWriteable();
+		try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+			write(writer, minified);
+		}
+	}
+
+	private void ensureWriteable() {
+		if (!_writeable) {
+			throw new IllegalStateException("This FDF contains definitions outside the supported StringList model; use FDF.minify to preserve them.");
+		}
+	}
+
+	/**
+	 * Removes FDF comments and unnecessary whitespace without interpreting frame
+	 * definitions. Whitespace inside quoted strings is preserved.
+	 */
+	@Nonnull
+	public static String minify(@Nonnull String input) {
+		StringBuilder out = new StringBuilder(input.length());
+		boolean pendingWhitespace = false;
+		boolean inString = false;
+		boolean escaped = false;
+
+		for (int i = 0; i < input.length();) {
+			char c = input.charAt(i);
+			if (inString) {
+				out.append(c);
+				i++;
+				if (escaped) escaped = false;
+				else if (c == '\\') escaped = true;
+				else if (c == '\"') inString = false;
+				continue;
+			}
+
+			if (c == '\"') {
+				appendPendingSpace(out, pendingWhitespace, c);
+				pendingWhitespace = false;
+				inString = true;
+				out.append(c);
+				i++;
+				continue;
+			}
+
+			if (Character.isWhitespace(c)) {
+				pendingWhitespace = true;
+				i++;
+				continue;
+			}
+
+			if (c == '/' && i + 1 < input.length() && input.charAt(i + 1) == '/') {
+				pendingWhitespace = true;
+				i += 2;
+				while (i < input.length() && input.charAt(i) != '\r' && input.charAt(i) != '\n') i++;
+				continue;
+			}
+
+			if (c == '/' && i + 1 < input.length() && input.charAt(i + 1) == '*') {
+				int end = input.indexOf("*/", i + 2);
+				if (end < 0) throw new IllegalArgumentException("Unterminated FDF block comment at index " + i);
+				pendingWhitespace = true;
+				i = end + 2;
+				continue;
+			}
+
+			appendPendingSpace(out, pendingWhitespace, c);
+			pendingWhitespace = false;
+			out.append(c);
+			i++;
+		}
+
+		if (inString) throw new IllegalArgumentException("Unterminated FDF string literal");
+		return out.toString();
+	}
+
+	/** Minifies an FDF source file while preserving frame definitions and string contents. */
+	public static void minify(@Nonnull File input, @Nonnull File output) throws IOException {
+		String source = Files.readString(input.toPath(), StandardCharsets.UTF_8);
+		Files.writeString(output.toPath(), minify(source), StandardCharsets.UTF_8);
+	}
+
+	private static void appendPendingSpace(@Nonnull StringBuilder out, boolean pendingWhitespace, char next) {
+		if (!pendingWhitespace || out.length() == 0) return;
+		char previous = out.charAt(out.length() - 1);
+		boolean previousOperator = "+-*/=!<>&|".indexOf(previous) >= 0;
+		boolean nextOperator = "+-*/=!<>&|".indexOf(next) >= 0;
+		if ((isWordChar(previous) && isWordChar(next))
+				|| (isWordChar(previous) && next == '\"')
+				|| (previous == '\"' && (next == '\"' || isWordChar(next)))
+				|| (previousOperator && (isWordChar(next) || nextOperator))
+				|| (nextOperator && isWordChar(previous))
+				|| (previous == '/' && (next == '/' || next == '*'))) {
+			out.append(' ');
+		}
+	}
+
+	private static boolean isWordChar(char c) {
+		return Character.isLetterOrDigit(c) || c == '_' || c == '.';
+	}
 	public FDF(@Nonnull File file) throws IOException {
 		this(Files.newInputStream(file.toPath()));
 	}
@@ -229,6 +353,10 @@ public class FDF extends UTF8 {
 		super();
 		
 		read(inStream);
+	}
+
+	public FDF() {
+		super();
 	}
 
 	@Nonnull

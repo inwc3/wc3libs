@@ -2,7 +2,11 @@ package net.moonlightflower.wc3libs.app;
 
 import net.moonlightflower.wc3libs.dataTypes.app.War3String;
 import net.moonlightflower.wc3libs.slk.SLK;
+import net.moonlightflower.wc3libs.slk.app.doodads.DoodSLK;
 import net.moonlightflower.wc3libs.slk.app.objs.*;
+import net.moonlightflower.wc3libs.slk.app.splats.SplatSLK;
+import net.moonlightflower.wc3libs.slk.app.splats.UberSplatSLK;
+import net.moonlightflower.wc3libs.slk.app.terrainArts.TerrainSLK;
 
 public class SLKCleaner {
 
@@ -25,60 +29,99 @@ public class SLKCleaner {
             clean((UnitWeaponsSLK) slk);
         } else if (slk instanceof UpgradeSLK) {
             clean((UpgradeSLK) slk);
+        } else if (slk instanceof DoodSLK) {
+            clean((DoodSLK) slk);
+        } else if (slk instanceof TerrainSLK) {
+            clean((TerrainSLK) slk);
+        } else if (slk instanceof SplatSLK) {
+            clean((SplatSLK) slk);
+        } else if (slk instanceof UberSplatSLK) {
+            clean((UberSplatSLK) slk);
         }
+
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(UnitDataSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(UnitDataSLK.State.EDITOR_COMMENTS, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(AbilSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(AbilSLK.State.EDITOR_COMMENTS, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(BuffSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(BuffSLK.State.EDITOR_COMMENTS, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(DestructableSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(DestructableSLK.State.COMMENT, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(ItemSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(ItemSLK.State.EDITOR_COMMENT, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(UnitAbilsSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(UnitAbilsSLK.State.EDITOR_COMMENT, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(UnitBalanceSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(UnitBalanceSLK.State.EDITOR_COMMENT, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(UnitWeaponsSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(UnitWeaponsSLK.State.EDITOR_COMMENTS, new War3String(""));
         });
+        slk.cleanEmptyColumns();
     }
 
     public static void clean(UpgradeSLK slk) {
         slk.getObjs().values().forEach(val -> {
             val.set(UpgradeSLK.State.EDITOR_COMMENTS, new War3String(""));
         });
+        slk.cleanEmptyColumns();
+    }
+
+    public static void clean(DoodSLK slk) {
+        slk.getObjs().values().forEach(val -> val.set(DoodSLK.State.COMMENT, new War3String("")));
+        slk.cleanEmptyColumns();
+    }
+
+    public static void clean(TerrainSLK slk) {
+        slk.getObjs().values().forEach(val -> val.set(TerrainSLK.State.EDITOR_COMMENT, new War3String("")));
+        slk.cleanEmptyColumns();
+    }
+
+    public static void clean(SplatSLK slk) {
+        slk.getObjs().values().forEach(val -> val.set(SplatSLK.State.EDITOR_COMMENT, new War3String("")));
+        slk.cleanEmptyColumns();
+    }
+
+    public static void clean(UberSplatSLK slk) {
+        slk.getObjs().values().forEach(val -> val.set(UberSplatSLK.State.EDITOR_COMMENT, new War3String("")));
+        slk.cleanEmptyColumns();
     }
 }
