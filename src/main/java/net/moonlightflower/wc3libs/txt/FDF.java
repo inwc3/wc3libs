@@ -334,6 +334,7 @@ public class FDF extends UTF8 {
 		boolean nextOperator = "+-*/=!<>&|".indexOf(next) >= 0;
 		if ((isWordChar(previous) && isWordChar(next))
 				|| (isWordChar(previous) && next == '\"')
+				|| (previous == '\"' && (next == '\"' || isWordChar(next)))
 				|| (previousOperator && (isWordChar(next) || nextOperator))
 				|| (nextOperator && isWordChar(previous))
 				|| (previous == '/' && (next == '/' || next == '*'))) {

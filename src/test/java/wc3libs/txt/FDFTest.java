@@ -88,6 +88,13 @@ public class FDFTest extends Wc3LibTest {
     }
 
     @Test
+    public void minifierPreservesBoundariesAfterQuotedFrameArguments() {
+        String source = "Frame \"TEXT\" \"Name\" {} Frame \"Name\" INHERITS \"Template\" {}";
+
+        assertEquals(FDF.minify(source), "Frame \"TEXT\" \"Name\"{}Frame \"Name\" INHERITS \"Template\"{}");
+    }
+
+    @Test
     public void structuredWriterRefusesToDropFrameDefinitions() throws Exception {
         byte[] source = "Frame \"Panel\" { Width 0.50, }".getBytes(StandardCharsets.UTF_8);
         FDF fdf = new FDF(new ByteArrayInputStream(source));
