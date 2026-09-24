@@ -24,7 +24,7 @@ public class PLD {
             sb.append("\t");
             sb.append("call Preload(");
             sb.append("\"");
-            sb.append(path.replaceAll("\\\\", "\\\\\\\\"));
+            sb.append(path.replace("\\", "\\\\").replace("\"", "\\\""));
             sb.append("\"");
             sb.append(")");
             sb.append("\n");
@@ -34,7 +34,7 @@ public class PLD {
 
         CharStream antlrStream = getAntlrStream(sb.toString());
 
-        JassLexer lexer = getJassLexer(antlrStream);
+        LightJassLexer lexer = getJassLexer(antlrStream);
 
         CommonTokenStream tokenStream = getCommonTokenStream(lexer);
 
