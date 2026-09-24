@@ -1,11 +1,11 @@
 package wc3libs.txt;
 
-import net.moonlightflower.wc3libs.antlr.JassParser;
 import net.moonlightflower.wc3libs.txt.PLD;
 import net.moonlightflower.wc3libs.txt.app.jass.FuncImpl;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.misc.Interval;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.StringWriter;
 
 public class PLDTest {
     @Test()
@@ -15,9 +15,19 @@ public class PLDTest {
         pld.addPreload("A");
         pld.addPreload("B.mdx");
         pld.addPreload("C\\D.blp");
+        pld.addPreload("quoted\"name\\E.blp");
+        pld.addPreload("A");
 
         FuncImpl funcImpl = pld.toJassFunc();
 
-        //System.out.println(CharStreams.fromString(funcImpl.getStart().getInputStream().getText(new Interval(func.start.getStartIndex(), func.stop.getStopIndex()))));
+        Assert.assertNotNull(funcImpl);
+        StringWriter writer = new StringWriter();
+        funcImpl.write(writer, false);
+        Assert.assertEquals(writer.toString(), "function PreloadFiles takes nothing returns nothing\n"
+                + "call Preload(\"A\")\n"
+                + "call Preload(\"B.mdx\")\n"
+                + "call Preload(\"C\\\\D.blp\")\n"
+                + "call Preload(\"quoted\\\"name\\\\E.blp\")\n"
+                + "endfunction");
     }
 }

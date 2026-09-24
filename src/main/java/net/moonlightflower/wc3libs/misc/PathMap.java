@@ -1,6 +1,7 @@
 package net.moonlightflower.wc3libs.misc;
 
 import net.moonlightflower.wc3libs.dataTypes.DataType;
+import net.moonlightflower.wc3libs.dataTypes.DataTypeInfo;
 import net.moonlightflower.wc3libs.dataTypes.app.Bounds;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DF;
 import net.moonlightflower.wc3libs.dataTypes.app.Coords2DI;
@@ -41,21 +42,29 @@ public class PathMap extends Raster<Integer> {
 		}
 
 		@Override
-		public DataType decode(Object val) {
-			// TODO
-			return null;
+		public PathingInt decode(Object val) throws DataTypeInfo.CastException {
+			if (val instanceof PathingInt) return (PathingInt) val;
+			if (val == null) throw new DataTypeInfo.CastException(new NumberFormatException("Pathing value cannot be null"));
+
+			try {
+				if (val instanceof Number) {
+					return valueOf(new java.math.BigDecimal(val.toString()).intValueExact());
+				}
+
+				return valueOf(Integer.parseInt(val.toString()));
+			} catch (NumberFormatException | ArithmeticException e) {
+				throw new DataTypeInfo.CastException(e);
+			}
 		}
 
 		@Override
 		public Object toSLKVal() {
-			// TODO
-			return null;
+			return toInt();
 		}
 
 		@Override
 		public Object toTXTVal() {
-			// TODO
-			return null;
+			return toInt();
 		}
 	}
 	
@@ -215,7 +224,6 @@ public class PathMap extends Raster<Integer> {
 	public PathMap(@Nonnull Bounds bounds) {
 		super(bounds);
 
-		//TODO: needed?
 		setBounds(bounds, false, false);
 	}
 }
