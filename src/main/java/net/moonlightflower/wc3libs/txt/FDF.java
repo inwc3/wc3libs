@@ -202,9 +202,7 @@ public class FDF extends UTF8 {
 
 	/** Writes the modeled StringList as UTF-8 with optional compact formatting. */
 	public void write(@Nonnull Writer writer, boolean minified) throws IOException {
-		if (!_writeable) {
-			throw new IllegalStateException("This FDF contains definitions outside the supported StringList model; use FDF.minify to preserve them.");
-		}
+		ensureWriteable();
 
 		if (minified) {
 			writer.write("StringList{");
@@ -242,14 +240,22 @@ public class FDF extends UTF8 {
 	}
 
 	public void write(@Nonnull File file) throws IOException {
+		ensureWriteable();
 		try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
 			write(writer);
 		}
 	}
 
 	public void write(@Nonnull File file, boolean minified) throws IOException {
+		ensureWriteable();
 		try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
 			write(writer, minified);
+		}
+	}
+
+	private void ensureWriteable() {
+		if (!_writeable) {
+			throw new IllegalStateException("This FDF contains definitions outside the supported StringList model; use FDF.minify to preserve them.");
 		}
 	}
 

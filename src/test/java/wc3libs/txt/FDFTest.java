@@ -13,6 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.testng.Assert.assertEquals;
 
@@ -92,5 +94,27 @@ public class FDFTest extends Wc3LibTest {
 
         Assert.expectThrows(IllegalStateException.class, () -> fdf.write(new ByteArrayOutputStream()));
         assertEquals(FDF.minify(new String(source, StandardCharsets.UTF_8)), "Frame \"Panel\"{Width 0.50,}");
+    }
+
+    @Test
+    public void fileWriterRefusesBeforeTruncatingUnsupportedSourceOrDestination() throws Exception {
+        Path source = Files.createTempFile("fdf-unsupported", ".fdf");
+        Path destination = Files.createTempFile("fdf-preserve", ".fdf");
+        byte[] sourceBytes = "Frame \"Panel\" { Width 0.50, }".getBytes(StandardCharsets.UTF_8);
+        byte[] destinationBytes = "keep existing contents".getBytes(StandardCharsets.UTF_8);
+        try {
+            Files.write(source, sourceBytes);
+            Files.write(destination, destinationBytes);
+            FDF parsed = new FDF(new ByteArrayInputStream(sourceBytes));
+
+            Assert.expectThrows(IllegalStateException.class, () -> parsed.write(source.toFile()));
+            assertEquals(Files.readAllBytes(source), sourceBytes);
+
+            Assert.expectThrows(IllegalStateException.class, () -> parsed.write(destination.toFile(), true));
+            assertEquals(Files.readAllBytes(destination), destinationBytes);
+        } finally {
+            Files.deleteIfExists(source);
+            Files.deleteIfExists(destination);
+        }
     }
 }
