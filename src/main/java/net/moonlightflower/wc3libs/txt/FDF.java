@@ -151,8 +151,6 @@ public class FDF extends UTF8 {
 		parser.addParseListener(new ParseTreeListener() {
 			@Override
 			public void enterEveryRule(ParserRuleContext arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
@@ -166,14 +164,10 @@ public class FDF extends UTF8 {
 
 			@Override
 			public void visitErrorNode(ErrorNode arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void visitTerminal(TerminalNode arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 		});
