@@ -2401,6 +2401,7 @@ public class W3I {
     public static class EncodingFormat extends Format<EncodingFormat.Enum> {
         public enum Enum {
             AUTO,
+            AS_DEFINED,
             W3I_0x27,
             W3I_0x21,
             W3I_0x20,
@@ -2411,6 +2412,7 @@ public class W3I {
         }
 
         public final static EncodingFormat AUTO = new EncodingFormat(Enum.AUTO, -1);
+        public final static EncodingFormat AS_DEFINED = new EncodingFormat(Enum.AS_DEFINED, null);
         public final static EncodingFormat W3I_0x27 = new EncodingFormat(Enum.W3I_0x27, 0x27);
         public final static EncodingFormat W3I_0x21 = new EncodingFormat(Enum.W3I_0x21, 0x21);
         public final static EncodingFormat W3I_0x20 = new EncodingFormat(Enum.W3I_0x20, 0x20);
@@ -2424,7 +2426,7 @@ public class W3I {
             return get(EncodingFormat.class, version);
         }
 
-        private EncodingFormat(@Nonnull Enum enumVal, int version) {
+        private EncodingFormat(@Nonnull Enum enumVal, @Nullable Integer version) {
             super(enumVal, version);
         }
     }
@@ -4045,6 +4047,7 @@ public class W3I {
     private void read(@Nonnull Wc3BinInputStream stream, @Nonnull EncodingFormat format) throws Exception {
         switch (format.toEnum()) {
             case AUTO:
+            case AS_DEFINED:
                 read_auto(stream);
                 break;
             case W3I_0x12:
@@ -4071,9 +4074,10 @@ public class W3I {
         }
     }
 
-    private void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
+    public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
         switch (format.toEnum()) {
             case AUTO:
+            case AS_DEFINED:
                 format = EncodingFormat.valueOf(_fileVersion);
 
                 if (format == null) throw new IllegalArgumentException("no writer for " + _fileVersion);
@@ -4124,12 +4128,16 @@ public class W3I {
     }
 
     public void write(@Nonnull Wc3BinOutputStream stream) {
-        write(stream, EncodingFormat.AUTO);
+        write(stream, EncodingFormat.AS_DEFINED);
     }
 
     public void write(@Nonnull File file) throws IOException {
+        write(file, EncodingFormat.AS_DEFINED);
+    }
+
+    public void write(@Nonnull File file, @Nonnull EncodingFormat format) throws IOException {
         try (Wc3BinOutputStream outStream = new Wc3BinOutputStream(file)) {
-            write(outStream);
+            write(outStream, format);
         }
     }
 
