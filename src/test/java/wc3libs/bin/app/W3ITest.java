@@ -313,6 +313,60 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(reparsed.getForces().get(1).getFlags().toInt(), 57);
     }
 
+    @Test
+    public void autoWriteSelectsNewestW3iVersion() throws Exception {
+        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_default.w3i").toPath());
+        W3I w3i = new W3I(input);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+            w3i.write(stream, W3I.EncodingFormat.AUTO);
+        }
+
+        W3I reparsed = new W3I(output.toByteArray());
+        Assert.assertEquals(reparsed.getFileVersion(), W3I.EncodingFormat.W3I_0x27.getVersion());
+    }
+    @Test
+    public void asDefinedWritePreservesReadW3iVersion() throws Exception {
+        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_default.w3i").toPath());
+        W3I w3i = new W3I(input);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+            w3i.write(stream, W3I.EncodingFormat.AS_DEFINED);
+        }
+
+        W3I reparsed = new W3I(output.toByteArray());
+        Assert.assertEquals(reparsed.getFileVersion(), w3i.getFileVersion());
+    }
+
+    @Test
+    public void promotingOlderW3iWritesCompleteVersion39WithDefaultedFields() throws Exception {
+        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_default.w3i").toPath());
+        W3I w3i = new W3I(input);
+        W3I defaults = new W3I();
+        w3i.setFileVersion(W3I.EncodingFormat.W3I_0x27.getVersion());
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+            w3i.write(stream, W3I.EncodingFormat.AS_DEFINED);
+        }
+
+        W3I reparsed = new W3I(output.toByteArray());
+        Assert.assertEquals(reparsed.getFileVersion(), W3I.EncodingFormat.W3I_0x27.getVersion());
+        Assert.assertTrue(output.size() > input.length, "version 39 includes additional defined fields");
+        Assert.assertEquals(reparsed.getWaterMinOpacity(), defaults.getWaterMinOpacity());
+        Assert.assertEquals(reparsed.getWaterMaxOpacity(), defaults.getWaterMaxOpacity());
+        Assert.assertEquals(reparsed.getWaterReflectivity(), defaults.getWaterReflectivity());
+        Assert.assertEquals(reparsed.getWaterEmissivity(), defaults.getWaterEmissivity());
+        Assert.assertEquals(reparsed.getWaterEdgeSoftness(), defaults.getWaterEdgeSoftness());
+        Assert.assertEquals(reparsed.getWaterWavesVertexDisplacement(), defaults.getWaterWavesVertexDisplacement());
+        Assert.assertEquals(reparsed.getWaterWavesNormalMapStrength(), defaults.getWaterWavesNormalMapStrength());
+        Assert.assertEquals(reparsed.getWaterOverrideColor(), defaults.getWaterOverrideColor());
+        Assert.assertEquals(reparsed.getWaterEnvMapReflectivity(), defaults.getWaterEnvMapReflectivity());
+        Assert.assertEquals(reparsed.getWaterUnknown(), defaults.getWaterUnknown());
+    }
+
     private static void assertV3Player(W3I.Player player, int num, Controller controller,
                                        W3I.Player.UnitRace race, int hudSkin, int startPosFixed, String name) {
         Assert.assertEquals(player.getNum(), num);
