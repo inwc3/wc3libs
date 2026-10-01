@@ -4077,6 +4077,8 @@ public class W3I {
     public void write(@Nonnull Wc3BinOutputStream stream, @Nonnull EncodingFormat format) {
         switch (format.toEnum()) {
             case AUTO:
+                write_0x27(stream);
+                break;
             case AS_DEFINED:
                 format = EncodingFormat.valueOf(_fileVersion);
 

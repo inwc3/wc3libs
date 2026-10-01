@@ -314,6 +314,19 @@ public class W3ITest extends Wc3LibTest {
     }
 
     @Test
+    public void autoWriteSelectsNewestW3iVersion() throws Exception {
+        byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_default.w3i").toPath());
+        W3I w3i = new W3I(input);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(output)) {
+            w3i.write(stream, W3I.EncodingFormat.AUTO);
+        }
+
+        W3I reparsed = new W3I(output.toByteArray());
+        Assert.assertEquals(reparsed.getFileVersion(), W3I.EncodingFormat.W3I_0x27.getVersion());
+    }
+    @Test
     public void asDefinedWritePreservesReadW3iVersion() throws Exception {
         byte[] input = Files.readAllBytes(getFile("wc3data/W3I/war3map_default.w3i").toPath());
         W3I w3i = new W3I(input);
@@ -353,6 +366,7 @@ public class W3ITest extends Wc3LibTest {
         Assert.assertEquals(reparsed.getWaterEnvMapReflectivity(), defaults.getWaterEnvMapReflectivity());
         Assert.assertEquals(reparsed.getWaterUnknown(), defaults.getWaterUnknown());
     }
+
     private static void assertV3Player(W3I.Player player, int num, Controller controller,
                                        W3I.Player.UnitRace race, int hudSkin, int startPosFixed, String name) {
         Assert.assertEquals(player.getNum(), num);
