@@ -1,12 +1,20 @@
 pipeline {
-    agent { dockerfile { filename 'ci/Dockerfile'; args '-u root --entrypoint=""' } }
+    agent {
+        dockerfile {
+            filename 'ci/Dockerfile'
+            args '-u root --entrypoint=""'
+        }
+    }
     options {
         timestamps()
         timeout(time: 45, unit: 'MINUTES')
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '30', artifactDaysToKeepStr: '14'))
     }
-    environment { JVM_OPTS = '-Xmx3200m'; TERM = 'dumb' }
+    environment {
+        JVM_OPTS = '-Xmx3200m'
+        TERM = 'dumb'
+    }
     stages {
         stage('Toolchain') {
             steps {
