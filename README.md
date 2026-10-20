@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/inwc3/wc3libs.svg?style=svg)](https://circleci.com/gh/inwc3/wc3libs) [![Jit](https://jitpack.io/v/inwc3/wc3libs.svg)](https://jitpack.io/#inwc3/wc3libs) [![codecov](https://codecov.io/gh/inwc3/wc3libs/branch/master/graph/badge.svg)](https://codecov.io/gh/inwc3/wc3libs)
+[CI and coverage on Jenkins](https://jenkins.oxbot.stream/job/wc3libs/) [![Jit](https://jitpack.io/v/inwc3/wc3libs.svg)](https://jitpack.io/#inwc3/wc3libs)
 
 
 # Wc3libs
