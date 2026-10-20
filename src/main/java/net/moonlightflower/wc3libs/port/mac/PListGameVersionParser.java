@@ -14,7 +14,10 @@ public class PListGameVersionParser {
     public static File PLIST_FILE = new File("/Applications/Warcraft III/_retail_/x86_64/Warcraft III.app/Contents/Info.plist");
 
     public static GameVersion get(@Nonnull File file) throws Exception {
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        // Reading a local version needs no DTD; Apple's plist declaration must work offline.
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        Document doc = factory.newDocumentBuilder().parse(file);
 
         doc.normalize();
 

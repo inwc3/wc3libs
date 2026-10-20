@@ -31,6 +31,22 @@ public class MacGameVersionFinderTest extends Wc3LibTest {
     }
 
     @Test
+    public void readsVersionWithoutLoadingExternalDtd() throws Exception {
+        Path dir = Files.createTempDirectory("wc3libs-mac-offline-plist-");
+        File infoPlist = writeInfoPlist(dir, "2.0.4.23745");
+        try {
+            String content = Files.readString(infoPlist.toPath(), StandardCharsets.UTF_8);
+            String doctype = "<!DOCTYPE plist SYSTEM \"" + dir.resolve("missing.dtd").toUri() + "\">\n";
+            Files.writeString(infoPlist.toPath(), content.replace("<plist", doctype + "<plist"), StandardCharsets.UTF_8);
+
+            Assert.assertEquals(PListGameVersionParser.get(infoPlist), new GameVersion("2.0.4.23745"));
+        } finally {
+            Files.deleteIfExists(infoPlist.toPath());
+            Files.deleteIfExists(dir);
+        }
+    }
+
+    @Test
     public void resolvesRetailLayoutFromGameDir() throws Exception {
         Path gameDir = Files.createTempDirectory("wc3libs-mac-game-dir-");
         Path appContentsDir = gameDir
