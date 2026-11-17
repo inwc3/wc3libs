@@ -44,6 +44,7 @@ public final class BundledGameData {
     private static final class Snapshot {
         private final Map<String, MemoryGameData> _layers = new LinkedHashMap<>();
         private final Properties _manifest = new Properties();
+        private final Map<String, GameData> _stacks = new LinkedHashMap<>();
     }
 
     @Nonnull
@@ -126,8 +127,20 @@ public final class BundledGameData {
         return stack(balance.equals(LAYER_MELEE) ? LAYER_MELEE : LAYER_CUSTOM);
     }
 
+    /** The layers combined as the game combines them; the result is kept with the snapshot, as merging takes time. */
     @Nonnull
     private static GameData stack(@Nonnull String balance) throws IOException {
-        return new LayeredGameData(Arrays.asList(layer(balance), layer(LAYER_LOCALE), layer(LAYER_BASE)));
+        Snapshot snapshot = snapshot();
+
+        synchronized (snapshot._stacks) {
+            GameData stack = snapshot._stacks.get(balance);
+
+            if (stack == null) {
+                stack = new MergedGameData(Arrays.asList(layer(balance), layer(LAYER_LOCALE), layer(LAYER_BASE)));
+                snapshot._stacks.put(balance, stack);
+            }
+
+            return stack;
+        }
     }
 }

@@ -85,9 +85,20 @@ ObjMerger.ofMap(mapFile).merge().writeToMap(mapFile);
 A map's SLK table replaces the game's table of the same name, so the merger
 starts from the game's own data and writes the tables back whole. That data
 ships with the library: `BundledGameData` is a snapshot of Warcraft III 3.0.1,
-layered the way the game layers it (base data, the `custom_v1` or `melee_v0`
-balance set the map's `war3map.w3i` selects, and the enUS strings). Tables and
-profile files the map already ships take precedence over it.
+combined the way the game combines it: base data, then the `custom_v1` or
+`melee_v0` balance set the map's `war3map.w3i` selects, then the enUS strings.
+A balance set ships only what it changes (about half of `AbilityData.slk`), so
+tables are combined cell by cell and profile files key by key
+(`MergedGameData`); taking its files whole would drop hundreds of stock
+objects. Tables and profile files the map already ships replace the game's,
+as in the game.
+
+Where the game's tables never leave a column empty, they spell "nothing" with a
+placeholder (`_` or `-`), and the game relies on it: an empty `auto` in
+`UnitAbilities.slk` crashes it on load. An emptied value is written with the
+column's placeholder. Profile files in 3.x repeat some table columns
+(`UnitSkin.txt` holds `UnitUI.slk`'s `special`, `campaign`, `teamColor`, ...);
+a custom object gets the value in both.
 
 To merge object modifications held in memory instead, as a map compiler would:
 
@@ -104,9 +115,12 @@ result.getReport();       // what moved, and what stayed and why
 
 The result is equivalent to the input; the test suite compares every affected
 field of every object before and after, across real maps and randomised input.
-What cannot be expressed in the tables -- ability levels above four, `TRIGSTR_`
-references, values the formats cannot quote, the profile changes of modified
-*base* objects, doodads and `war3mapSkin.*` files -- stays in a residual
+What cannot be expressed in the tables -- ability levels above four (the game
+reads four levels from a map's tables, though its own have columns for six;
+profile values such as tooltips have no such limit), `TRIGSTR_` references,
+values the formats cannot quote,
+the profile changes of modified *base* objects and their table changes a
+profile file repeats, doodads and `war3mapSkin.*` files -- stays in a residual
 object-modification file the game still applies on top. Strings a custom object
 inherits from its base object are baked in from the snapshot, so in English.
 

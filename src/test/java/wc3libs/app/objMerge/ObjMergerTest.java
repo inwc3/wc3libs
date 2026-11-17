@@ -325,33 +325,88 @@ public class ObjMergerTest {
 
     // --- what stays behind ---
 
+    /**
+     * The game reads four levels of a field from a map's tables (measured on
+     * the 3.0.1 client): DataA5 and DataA6 exist in its own AbilityData.slk,
+     * but values a map puts there do not arrive. Levels above four stay in the
+     * residual.
+     */
     @Test
-    public void abilityLevelsBeyondTheTableStayInTheResidual() throws Exception {
+    public void abilityLevelsBeyondFourStayInTheResidual() throws Exception {
         W3A w3a = new W3A();
 
-        obj(w3a, "A000", "AHbz", lvl("alev", 0, 0, 6), lvl("Hbz1", 1, 1, 11), lvl("Hbz1", 4, 1, 44), lvl("Hbz1", 5, 1, 55),
-            lvl("atp1", 5, 0, "Level five"), lvl("atp1", 2, 0, "Level two"));
+        obj(w3a, "A000", "AHbz", lvl("alev", 0, 0, 7), lvl("Hbz1", 1, 1, 11), lvl("Hbz1", 4, 1, 44), lvl("Hbz1", 5, 1, 55),
+            lvl("Hbz1", 7, 1, 77), lvl("atp1", 7, 0, "Level seven"), lvl("atp1", 2, 0, "Level two"));
 
         ObjMerger.Result result = merge(w3a);
         SlkTable.Row row = table(result, ABILITY_DATA).getRow("A000");
 
         Assert.assertEquals(row.get("code"), "AHbz");
-        Assert.assertEquals(row.get("levels"), "6");
+        Assert.assertEquals(row.get("levels"), "7");
         Assert.assertEquals(row.get("DataA1"), "11");
         Assert.assertEquals(row.get("DataA4"), "44");
+        Assert.assertNotEquals(row.get("DataA5"), "55");
 
         ObjMod.Obj a000 = residual(result, W3A.class, W3A.GAME_PATH.toString()).getObj(ObjId.valueOf("A000"));
 
         Assert.assertNull(a000.getNewId(), "the residual modifies A000 as an existing object");
-        Assert.assertEquals(a000.getMods().size(), 1);
-        Assert.assertEquals(fieldsOf(a000), Collections.singletonList("Hbz1"));
+        Assert.assertEquals(fieldsOf(a000), Arrays.asList("Hbz1", "Hbz1"));
         Assert.assertEquals(((ObjMod.Obj.ExtendedMod) a000.getMods().get(0)).getLevel(), 5);
+        Assert.assertEquals(((ObjMod.Obj.ExtendedMod) a000.getMods().get(1)).getLevel(), 7);
 
         List<String> tips = ProfileFile.tokenize(section(result, "Units\\CampaignAbilityFunc.txt", "A000").get("Tip").getRawValue());
 
         Assert.assertEquals(tips.get(1), "Level two");
-        Assert.assertEquals(tips.get(4), "Level five");
+        Assert.assertEquals(tips.get(6), "Level seven");
         Assert.assertTrue(tips.get(0).startsWith("Blizzard"), "untouched levels keep the base tooltip");
+    }
+
+    /**
+     * The game's tables never leave some columns empty and spell nothing as a
+     * placeholder there; an empty UnitAbilities "auto" crashes the game on
+     * load (measured on the 3.0.1 client). An emptied value takes the
+     * column's placeholder, and one for a column without a placeholder stays
+     * in the residual.
+     */
+    @Test
+    public void emptiedValuesTakeTheTablesPlaceholder() throws Exception {
+        W3U w3u = new W3U();
+
+        obj(w3u, "h000", "hfoo", mod("udaa", ""), mod("utyp", ""), mod("urac", ""), mod("uhpm", 5));
+
+        ObjMerger.Result result = merge(w3u);
+
+        Assert.assertEquals(table(result, UNIT_ABILITIES).getRow("h000").get("auto"), "_");
+        Assert.assertEquals(table(result, UNIT_BALANCE).getRow("h000").get("type"), "_");
+        Assert.assertEquals(table(result, UNIT_BALANCE).getRow("h000").get("HP"), "5");
+
+        ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
+
+        Assert.assertEquals(fieldsOf(h000), Collections.singletonList("urac"), "race has no placeholder");
+    }
+
+    /**
+     * 3.x skin files repeat UnitUI columns (special, campaign, teamColor, ...).
+     * A custom object gets the value in both; a base object's change stays in
+     * the residual, since the game's own skin copy would contradict the table.
+     */
+    @Test
+    public void columnsTheSkinRepeatsAgreeWithTheTable() throws Exception {
+        W3U w3u = new W3U();
+
+        obj(w3u, "h000", "hfoo", mod("uspe", 1));
+        obj(w3u, "hfoo", null, mod("uspe", 1));
+
+        ObjMerger.Result result = merge(w3u);
+
+        Assert.assertEquals(table(result, UNIT_UI).getRow("h000").get("special"), "1");
+        Assert.assertEquals(section(result, UNIT_SKIN_TARGET, "h000").get("special").getRawValue(), "1");
+        Assert.assertEquals(table(result, UNIT_UI).getRow("hfoo").get("special"), base().read(UNIT_UI) == null ? null
+            : SlkTable.parse(base().read(UNIT_UI)).getRow("hfoo").get("special"));
+
+        ObjMod.Obj hfoo = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("hfoo"));
+
+        Assert.assertEquals(fieldsOf(hfoo), Collections.singletonList("uspe"));
     }
 
     @Test

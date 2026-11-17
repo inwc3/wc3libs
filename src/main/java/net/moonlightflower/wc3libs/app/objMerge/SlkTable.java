@@ -147,6 +147,53 @@ public final class SlkTable {
         return row;
     }
 
+    /**
+     * Lays {@code top} over this table the way the game stacks its data mods:
+     * a balance or locale mod ships only the rows and columns it changes, and
+     * each cell it writes replaces the one beneath. A cell it leaves out, an
+     * empty one included, keeps the value beneath; rows and columns it adds
+     * are appended. Cells are addressed by column name and row id, so
+     * {@code top}'s columns without a header and rows without an id, which
+     * Blizzard's tables carry as blank padding, address nothing and are left
+     * out.
+     */
+    public void overlay(@Nonnull SlkTable top) {
+        int[] columns = new int[top._columns.size()];
+
+        for (int i = 0; i < columns.length; i++) {
+            String name = top._columns.get(i);
+
+            if (i == 0) {
+                columns[i] = 0;
+            } else if (name == null) {
+                columns[i] = -1;
+            } else {
+                int index = getColumnIndex(name);
+
+                if (index < 0) {
+                    addColumn(name);
+                    index = _columns.size() - 1;
+                }
+
+                columns[i] = index;
+            }
+        }
+
+        for (Row row : top._rows) {
+            String id = row.getId();
+
+            if (id == null || id.isEmpty()) continue;
+
+            Row target = _rowsById.get(id);
+
+            if (target == null) target = addRow(id);
+
+            for (int i = 1; i < row._cells.length && i < columns.length; i++) {
+                if (row._cells[i] != null && columns[i] > 0) target.setRaw(columns[i], row._cells[i]);
+            }
+        }
+    }
+
     @Nonnull
     public static String quote(@Nonnull String val) {
         return "\"" + val + "\"";

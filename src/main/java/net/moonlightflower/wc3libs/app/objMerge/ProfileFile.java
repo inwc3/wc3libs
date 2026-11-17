@@ -150,6 +150,31 @@ public final class ProfileFile {
     }
 
     /**
+     * Lays {@code top} over this file the way the game stacks its data mods:
+     * each key it sets replaces the one beneath, keys and sections it leaves
+     * out keep theirs, and new sections are appended.
+     */
+    public void overlay(@Nonnull ProfileFile top) {
+        for (Section section : top._sections.values()) {
+            _sections.computeIfAbsent(section.getId(), Section::new).putAll(section);
+        }
+    }
+
+    /** @return the sections as text, a blank line between them; comments are not kept */
+    @Nonnull
+    public byte[] toBytes() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Section section : _sections.values()) {
+            if (sb.length() > 0) sb.append(_lineSeparator);
+
+            sb.append(section.toText(_lineSeparator));
+        }
+
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    /**
      * Parses a profile file. Section ids are case-sensitive, as object ids
      * are; a section appearing twice continues where the first left off.
      * Only whole-line {@code //} comments are comments, since a value may

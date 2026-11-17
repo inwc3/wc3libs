@@ -5,7 +5,9 @@ import net.moonlightflower.wc3libs.app.objMerge.DirGameData;
 import net.moonlightflower.wc3libs.app.objMerge.GameData;
 import net.moonlightflower.wc3libs.app.objMerge.LayeredGameData;
 import net.moonlightflower.wc3libs.app.objMerge.MemoryGameData;
+import net.moonlightflower.wc3libs.app.objMerge.MergedGameData;
 import net.moonlightflower.wc3libs.app.objMerge.ProfileFile;
+import net.moonlightflower.wc3libs.app.objMerge.SlkTable;
 import net.moonlightflower.wc3libs.app.ObjMerger;
 import net.moonlightflower.wc3libs.bin.app.W3I;
 import org.testng.Assert;
@@ -73,24 +75,106 @@ public class GameDataTest {
     }
 
     /**
-     * The balance layers replace base files: in 3.0.1, custom_v1 and melee_v0
-     * ship their own campaignunitfunc.txt, which differ from each other.
+     * The balance layers ship only what they change: in 3.0.1, custom_v1's
+     * campaignunitfunc.txt lacks 63 of the base file's sections. The game
+     * reads them merged, and so does the stack: every base section stays,
+     * and a key the balance layer sets wins.
      */
     @Test
-    public void dataSetsSelectTheirBalanceLayer() throws Exception {
+    public void dataSetsLayTheirBalanceLayerOverTheBase() throws Exception {
         String path = "Units\\CampaignUnitFunc.txt";
 
-        byte[] custom = BundledGameData.custom().read(path);
-        byte[] melee = BundledGameData.melee().read(path);
+        ProfileFile base = ProfileFile.parse(BundledGameData.layer(BundledGameData.LAYER_BASE).read(path));
+        ProfileFile balance = ProfileFile.parse(BundledGameData.layer(BundledGameData.LAYER_CUSTOM).read(path));
+        ProfileFile custom = ProfileFile.parse(BundledGameData.custom().read(path));
 
-        Assert.assertEquals(custom, BundledGameData.layer(BundledGameData.LAYER_CUSTOM).read(path));
-        Assert.assertEquals(melee, BundledGameData.layer(BundledGameData.LAYER_MELEE).read(path));
-        Assert.assertNotEquals(custom, melee);
+        Assert.assertTrue(balance.getSections().size() < base.getSections().size(), "precondition: the balance layer is partial");
+        Assert.assertTrue(custom.getSections().keySet().containsAll(base.getSections().keySet()));
+        Assert.assertTrue(custom.getSections().keySet().containsAll(balance.getSections().keySet()));
 
-        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.STANDARD, false).read(path), custom);
-        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.STANDARD, true).read(path), melee);
-        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.MELEE_V1, false).read(path), melee);
-        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.CUSTOM_V1, true).read(path), custom);
+        for (ProfileFile.Section section : balance.getSections().values()) {
+            for (ProfileFile.Entry entry : section.getEntries().values()) {
+                Assert.assertEquals(custom.getSection(section.getId()).get(entry.getKey()).getRawValue(), entry.getRawValue(),
+                    section.getId() + "." + entry.getKey());
+            }
+        }
+
+        byte[] customBytes = BundledGameData.custom().read(path);
+        byte[] meleeBytes = BundledGameData.melee().read(path);
+
+        Assert.assertNotEquals(customBytes, meleeBytes);
+        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.STANDARD, false).read(path), customBytes);
+        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.STANDARD, true).read(path), meleeBytes);
+        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.MELEE_V1, false).read(path), meleeBytes);
+        Assert.assertEquals(BundledGameData.forDataSet(W3I.GameDataSet.CUSTOM_V1, true).read(path), customBytes);
+    }
+
+    /**
+     * Tables merge cell by cell: custom_v1's AbilityData.slk has about half
+     * the rows and columns of the base one, so a row it changes keeps the
+     * base cells it leaves out, and rows it lacks stay.
+     */
+    @Test
+    public void balanceTablesMergeCellByCell() throws Exception {
+        String path = "Units\\AbilityData.slk";
+
+        SlkTable base = SlkTable.parse(BundledGameData.layer(BundledGameData.LAYER_BASE).read(path));
+        SlkTable balance = SlkTable.parse(BundledGameData.layer(BundledGameData.LAYER_CUSTOM).read(path));
+        SlkTable custom = SlkTable.parse(BundledGameData.custom().read(path));
+
+        Assert.assertTrue(balance.getColumns().size() < base.getColumns().size(), "precondition: the balance layer is partial");
+
+        for (SlkTable.Row row : base.getRows()) {
+            if (row.getId() != null && !row.getId().isEmpty()) Assert.assertTrue(custom.containsRow(row.getId()), row.getId());
+        }
+
+        // AUan is in both; custom_v1 leaves EfctID1 out, so the base value stays.
+        Assert.assertNull(balance.getRow("AUan").get("EfctID1"));
+        Assert.assertEquals(custom.getRow("AUan").get("EfctID1"), base.getRow("AUan").get("EfctID1"));
+        Assert.assertNotNull(custom.getRow("AUan").get("EfctID1"));
+    }
+
+    @Test
+    public void mergedLayersCombineTablesAndProfilesButTakeOtherFilesWhole() throws Exception {
+        MemoryGameData top = new MemoryGameData();
+        MemoryGameData bottom = new MemoryGameData();
+
+        bottom.put("t.slk", lines("ID;PWXL;N;E", "C;X1;Y1;K\"id\"", "C;X2;K\"a\"", "C;X3;K\"b\"",
+            "C;X1;Y2;K\"r1\"", "C;X2;K1", "C;X3;K2", "C;X1;Y3;K\"r2\"", "C;X2;K3", "E"));
+        // The top layer renames nothing, adds column c and row r3, and pads with a column without a header
+        // and a row without an id, as Blizzard's tables do.
+        top.put("t.slk", lines("ID;PWXL;N;E", "C;X1;Y1;K\"id\"", "C;X2;K\"b\"", "C;X3;K\"c\"",
+            "C;X1;Y2;K\"r1\"", "C;X2;K9", "C;X3;K8", "C;X4;K6", "C;X1;Y3;K\"r3\"", "C;X3;K7", "C;X2;Y4;K5", "E"));
+        bottom.put("p.txt", lines("[x]", "A=1", "B=2"));
+        top.put("p.txt", lines("[x]", "b=3", "[y]", "C=4"));
+        bottom.put("m.mdx", new byte[]{1});
+        top.put("m.mdx", new byte[]{2});
+
+        GameData merged = new MergedGameData(top, bottom);
+        SlkTable table = SlkTable.parse(merged.read("t.slk"));
+
+        Assert.assertEquals(table.getColumns(), java.util.Arrays.asList("id", "a", "b", "c"));
+        Assert.assertEquals(table.getRows().size(), 3, "the row without an id addresses nothing");
+        Assert.assertEquals(table.getRow("r1").get("a"), "1");
+        Assert.assertEquals(table.getRow("r1").get("b"), "9");
+        Assert.assertEquals(table.getRow("r1").get("c"), "8");
+        Assert.assertEquals(table.getRow("r2").get("a"), "3");
+        Assert.assertEquals(table.getRow("r3").get("c"), "7");
+        Assert.assertNull(table.getRow("r3").get("a"));
+
+        ProfileFile profile = ProfileFile.parse(merged.read("p.txt"));
+
+        Assert.assertEquals(profile.getSection("x").get("A").getRawValue(), "1");
+        Assert.assertEquals(profile.getSection("x").get("B").getKey(), "B");
+        Assert.assertEquals(profile.getSection("x").get("B").getRawValue(), "3");
+        Assert.assertEquals(profile.getSection("y").get("C").getRawValue(), "4");
+
+        Assert.assertEquals(merged.read("m.mdx"), new byte[]{2});
+        Assert.assertNull(merged.read("none.txt"));
+    }
+
+    private static byte[] lines(String... lines) {
+        return (String.join("\r\n", lines) + "\r\n").getBytes(StandardCharsets.UTF_8);
     }
 
     /** Display strings come from the locale layer, which the base layer does not have. */
