@@ -814,9 +814,12 @@ public class ObjMerger {
                 // The game's own copy of a base object's profile cannot be changed without replacing it.
                 if (!custom || !_moveProfileMods) return false;
 
-                text = profileValue(mod);
+                String value = profileValue(mod);
 
-                if (text == null) return false;
+                if (value == null) return false;
+
+                // Profile values are comma-separated: one element, quoted if it holds a comma, as applyProfile writes.
+                text = ProfileFile.join(meta.isList() ? ProfileFile.tokenize(value) : Collections.singletonList(value));
             }
 
             SlkTable.Row row = table.getRow(id);

@@ -572,6 +572,22 @@ public class ObjMergerTest {
         Assert.assertTrue(result.getRemovedFiles().contains(W3Q.GAME_PATH.toString()));
     }
 
+    /** A table value a profile file repeats is written there as one element, quoted if it holds a comma. */
+    @Test
+    public void repeatedProfileValuesKeepTheirCommas() throws Exception {
+        W3B w3b = new W3B();
+
+        obj(w3b, "B002", "LTlt", mod("bnam", "Gate, North"));
+
+        ObjMerger.Result result = merge(w3b);
+
+        Assert.assertEquals(table(result, "Units\\DestructableData.slk").getRow("B002").get("Name"), "Gate, North");
+
+        String raw = section(result, "Units\\DestructableSkin.txt", "B002").get("Name").getRawValue();
+
+        Assert.assertEquals(ProfileFile.tokenize(raw), Collections.singletonList("Gate, North"), raw);
+    }
+
     @Test
     public void itemsBuffsAndDestructablesMerge() throws Exception {
         W3T w3t = new W3T();
