@@ -405,6 +405,8 @@ public class ObjMerger {
         private final int _data;
         private final boolean _appendIndex;
         private final String _type;
+        /** What a level resolves to, worked out once per level: most modifications share a few levels. */
+        private final Level[] _levels = new Level[32];
 
         private MetaField(@Nonnull SlkTable.Row row) {
             _field = nonNull(row.get("field"));
@@ -424,9 +426,36 @@ public class ObjMerger {
             return _type.endsWith("List");
         }
 
+        @Nonnull
+        private Level level(int level) {
+            if (level < 0 || level >= _levels.length) return new Level(this, level);
+
+            Level ret = _levels[level];
+
+            if (ret == null) _levels[level] = ret = new Level(this, level);
+
+            return ret;
+        }
+
         /** @return the SLK column for a level, or {@code null} if the field has none */
         @Nullable
         private String column(int level) {
+            return level(level)._column;
+        }
+
+        @Nullable
+        private ProfileSlot profileSlot(int level) {
+            return level(level)._slot;
+        }
+
+        /** @return an id for the storage this field writes at a level, shared by fields that alias it */
+        @Nonnull
+        private String storage(int level) {
+            return level(level)._storage;
+        }
+
+        @Nullable
+        private String computeColumn(int level) {
             String column = _field;
 
             if (column.equals("Data")) {
@@ -452,7 +481,7 @@ public class ObjMerger {
          * element per level.
          */
         @Nullable
-        private ProfileSlot profileSlot(int level) {
+        private ProfileSlot computeProfileSlot(int level) {
             if (_repeat > 0 && level < 1) return null;
 
             if (_repeat > 0 && _appendIndex) return new ProfileSlot(level > 1 ? _field + (level - 1) : _field, null);
@@ -462,16 +491,9 @@ public class ObjMerger {
             return new ProfileSlot(_field, null);
         }
 
-        /** @return an id for the storage this field writes at a level, shared by fields that alias it */
         @Nonnull
-        private String storage(int level) {
-            if (isProfile()) {
-                ProfileSlot slot = profileSlot(level);
-
-                return slot == null ? "invalid" : slot.toString();
-            }
-
-            String column = column(level);
+        private String computeStorage(@Nullable String column, @Nullable ProfileSlot slot) {
+            if (isProfile()) return slot == null ? "invalid" : slot.toString();
 
             return "slk|" + _slk + "|" + (column == null ? "invalid" : column.toLowerCase(java.util.Locale.ROOT));
         }
@@ -492,23 +514,45 @@ public class ObjMerger {
         }
     }
 
+    /** A metadata field at one level. */
+    private static final class Level {
+        @Nullable
+        private final String _column;
+        @Nullable
+        private final ProfileSlot _slot;
+        private final String _storage;
+        /** The column's index in the field's table, {@link Integer#MIN_VALUE} until looked up. */
+        private int _columnIndex = Integer.MIN_VALUE;
+
+        private Level(@Nonnull MetaField meta, int level) {
+            _column = meta.computeColumn(level);
+            _slot = meta.computeProfileSlot(level);
+            _storage = meta.computeStorage(_column, _slot);
+        }
+    }
+
     private static final class ProfileSlot {
         private final String _key;
         private final Integer _pos;
+        private final String _keyId;
+        /** The storage of the whole value, which overlaps every element of it. */
+        private final String _wholeId;
 
         private ProfileSlot(@Nonnull String key, @Nullable Integer pos) {
             _key = key;
             _pos = pos;
+            _keyId = "profile|" + _key.toLowerCase(java.util.Locale.ROOT);
+            _wholeId = _keyId + "|*";
         }
 
         @Nonnull
         private String keyId() {
-            return "profile|" + _key.toLowerCase(java.util.Locale.ROOT);
+            return _keyId;
         }
 
         @Override
         public String toString() {
-            return keyId() + "|" + (_pos == null ? "*" : _pos.toString());
+            return _pos == null ? _wholeId : _keyId + "|" + _pos;
         }
     }
 
@@ -527,13 +571,16 @@ public class ObjMerger {
 
         /** A whole profile value and its elements overlap, so either blocks the other. */
         private boolean blocks(@Nonnull MetaField meta, int level) {
+            // Most objects keep nothing, and then nothing is blocked.
+            if (_storages.isEmpty()) return false;
+
             if (_storages.contains(meta.storage(level))) return true;
 
             ProfileSlot slot = meta.isProfile() ? meta.profileSlot(level) : null;
 
             if (slot == null) return false;
 
-            return _storages.contains(slot.keyId() + "|*") || (slot._pos == null && _profileKeys.contains(slot.keyId()));
+            return _storages.contains(slot._wholeId) || (slot._pos == null && _profileKeys.contains(slot.keyId()));
         }
     }
 
@@ -691,11 +738,14 @@ public class ObjMerger {
 
             if (table == null) return false;
 
-            String column = meta.column(levelOf(mod));
+            Level level = meta.level(levelOf(mod));
 
-            if (column == null) return false;
+            if (level._column == null) return false;
 
-            int index = table.getColumnIndex(column);
+            // A run's tables never gain columns, so the index holds for the whole run.
+            if (level._columnIndex == Integer.MIN_VALUE) level._columnIndex = table.getColumnIndex(level._column);
+
+            int index = level._columnIndex;
 
             if (index < 1) return false;
 
@@ -742,7 +792,7 @@ public class ObjMerger {
                     List<String> variants = new ArrayList<>();
 
                     for (ProfileFile.Entry entry : section.getEntries().values()) {
-                        if (ProfileFile.baseKey(entry.getKey()).equalsIgnoreCase(key)) variants.add(entry.getKey());
+                        if (ProfileFile.isBaseKey(entry.getKey(), key)) variants.add(entry.getKey());
                     }
 
                     if (section.get(key) == null) variants.add(key);

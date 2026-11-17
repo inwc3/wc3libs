@@ -176,43 +176,84 @@ public final class SlkTable {
 
         if (!text.contains("\r\n")) table._lineSeparator = "\n";
 
-        Map<Integer, Map<Integer, String>> grid = new java.util.TreeMap<>();
+        // Rows by y. The game's tables list their cells row by row, so the row
+        // of the previous cell is usually the one wanted next.
+        Map<Integer, String[]> grid = new java.util.TreeMap<>();
+        String[] lastRow = null;
+        int lastY = 0;
+        int width = 0;
         int x = 1;
         int y = 1;
+        int length = text.length();
 
-        for (String line : text.split("\r?\n")) {
-            if (!line.startsWith("C;")) continue;
+        for (int start = 0; start < length; ) {
+            int end = text.indexOf('\n', start);
+            int next;
 
-            String value = null;
+            if (end < 0) {
+                end = length;
+                next = length;
+            } else {
+                next = end + 1;
 
-            for (String part : splitRecord(line)) {
-                if (part.isEmpty()) continue;
+                if (end > start && text.charAt(end - 1) == '\r') end--;
+            }
 
-                switch (part.charAt(0)) {
-                    case 'X': x = Integer.parseInt(part.substring(1)); break;
-                    case 'Y': y = Integer.parseInt(part.substring(1)); break;
-                    case 'K': value = part.substring(1); break;
-                    default: break;
+            if (end - start >= 2 && text.charAt(start) == 'C' && text.charAt(start + 1) == ';') {
+                String value = null;
+                boolean quoted = false;
+                int partStart = start;
+
+                // The fields are separated by ';', except inside a quoted value.
+                for (int i = start; i <= end; i++) {
+                    if (i < end) {
+                        char c = text.charAt(i);
+
+                        if (c == '"') quoted = !quoted;
+
+                        if (c != ';' || quoted) continue;
+                    }
+
+                    if (i > partStart) {
+                        switch (text.charAt(partStart)) {
+                            case 'X': x = Integer.parseInt(text, partStart + 1, i, 10); break;
+                            case 'Y': y = Integer.parseInt(text, partStart + 1, i, 10); break;
+                            case 'K': value = text.substring(partStart + 1, i); break;
+                            default: break;
+                        }
+                    }
+
+                    partStart = i + 1;
+                }
+
+                if (value != null) {
+                    if (lastRow == null || lastY != y) {
+                        lastRow = grid.get(y);
+
+                        if (lastRow == null) grid.put(y, lastRow = new String[Math.max(x, 16)]);
+
+                        lastY = y;
+                    }
+
+                    if (x > lastRow.length) {
+                        lastRow = Arrays.copyOf(lastRow, Math.max(x, lastRow.length * 2));
+                        grid.put(y, lastRow);
+                    }
+
+                    lastRow[x - 1] = value;
+                    width = Math.max(width, x);
                 }
             }
 
-            if (value != null) grid.computeIfAbsent(y, k -> new java.util.TreeMap<>()).put(x, value);
+            start = next;
         }
 
         if (grid.isEmpty()) throw new IllegalArgumentException("SYLK file has no cells");
 
-        int width = 0;
-
-        for (Map<Integer, String> cells : grid.values()) {
-            for (int cellX : cells.keySet()) width = Math.max(width, cellX);
-        }
-
         boolean header = true;
 
-        for (Map<Integer, String> cells : grid.values()) {
-            String[] row = new String[width];
-
-            cells.forEach((cellX, raw) -> row[cellX - 1] = raw);
+        for (String[] cells : grid.values()) {
+            String[] row = Arrays.copyOf(cells, width);
 
             if (header) {
                 for (String raw : row) table.addColumn(unquote(raw));
@@ -226,37 +267,17 @@ public final class SlkTable {
         return table;
     }
 
-    /** Splits a record at {@code ;}, except inside a quoted value. */
-    @Nonnull
-    private static List<String> splitRecord(@Nonnull String line) {
-        List<String> parts = new ArrayList<>();
-        StringBuilder cur = new StringBuilder();
-        boolean quoted = false;
-
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-
-            if (c == '"') quoted = !quoted;
-
-            if (c == ';' && !quoted) {
-                parts.add(cur.toString());
-                cur.setLength(0);
-            } else {
-                cur.append(c);
-            }
-        }
-
-        parts.add(cur.toString());
-
-        return parts;
-    }
-
     @Nonnull
     public byte[] toBytes() {
         String nl = _lineSeparator;
         int width = _columns.size();
 
         for (Row row : _rows) width = Math.max(width, row._cells.length);
+
+        // Each cell starts with its column, so that prefix is spelled once per column.
+        String[] cellStarts = new String[width];
+
+        for (int x = 0; x < width; x++) cellStarts[x] = "C;X" + (x + 1);
 
         StringBuilder sb = new StringBuilder();
 
@@ -267,24 +288,25 @@ public final class SlkTable {
 
         for (int i = 0; i < header.length; i++) header[i] = _columns.get(i) == null ? null : quote(_columns.get(i));
 
-        writeRow(sb, 1, header, nl);
+        writeRow(sb, 1, header, cellStarts, nl);
 
         int y = 2;
 
-        for (Row row : _rows) writeRow(sb, y++, row._cells, nl);
+        for (Row row : _rows) writeRow(sb, y++, row._cells, cellStarts, nl);
 
         sb.append("E").append(nl);
 
         return sb.toString().getBytes(StandardCharsets.UTF_8);
     }
 
-    private static void writeRow(@Nonnull StringBuilder sb, int y, @Nonnull String[] cells, @Nonnull String nl) {
+    private static void writeRow(@Nonnull StringBuilder sb, int y, @Nonnull String[] cells, @Nonnull String[] cellStarts,
+                                 @Nonnull String nl) {
         boolean first = true;
 
         for (int x = 0; x < cells.length; x++) {
             if (cells[x] == null) continue;
 
-            sb.append("C;X").append(x + 1);
+            sb.append(cellStarts[x]);
 
             if (first) {
                 sb.append(";Y").append(y);

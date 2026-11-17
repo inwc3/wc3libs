@@ -58,8 +58,10 @@ public final class ProfileFile {
 
         /** @return whether the section has {@code baseKey}, plain or qualified */
         public boolean hasBaseKey(@Nonnull String baseKey) {
+            if (_entries.containsKey(baseKey.toLowerCase(Locale.ROOT))) return true;
+
             for (String key : _entries.keySet()) {
-                if (ProfileFile.baseKey(key).equalsIgnoreCase(baseKey)) return true;
+                if (isBaseKey(key, baseKey)) return true;
             }
 
             return false;
@@ -67,7 +69,7 @@ public final class ProfileFile {
 
         /** Removes every qualified form of {@code baseKey}, keeping the plain one. */
         public void removeQualified(@Nonnull String baseKey) {
-            _entries.keySet().removeIf(key -> key.contains(":") && ProfileFile.baseKey(key).equalsIgnoreCase(baseKey));
+            _entries.keySet().removeIf(key -> key.indexOf(':') >= 0 && isBaseKey(key, baseKey));
         }
 
         @Nonnull
@@ -81,7 +83,13 @@ public final class ProfileFile {
 
         /** Merges {@code other}'s entries over this one's. */
         public void putAll(@Nonnull Section other) {
-            for (Entry entry : other._entries.values()) put(entry.getKey(), entry.getRawValue());
+            // Both maps are keyed by the lower-cased key already.
+            for (Map.Entry<String, Entry> entry : other._entries.entrySet()) {
+                Entry existing = _entries.get(entry.getKey());
+
+                _entries.put(entry.getKey(), existing == null ? entry.getValue()
+                    : new Entry(existing.getKey(), entry.getValue().getRawValue()));
+            }
         }
 
         @Nonnull
@@ -155,8 +163,25 @@ public final class ProfileFile {
 
         ProfileFile file = new ProfileFile(text.contains("\r\n") ? "\r\n" : "\n");
         Section cur = null;
+        int length = text.length();
 
-        for (String line : text.split("\r?\n")) {
+        for (int start = 0; start < length; ) {
+            int end = text.indexOf('\n', start);
+            int next;
+
+            if (end < 0) {
+                end = length;
+                next = length;
+            } else {
+                next = end + 1;
+
+                if (end > start && text.charAt(end - 1) == '\r') end--;
+            }
+
+            String line = text.substring(start, end);
+
+            start = next;
+
             String trimmed = line.trim();
 
             if (trimmed.isEmpty() || trimmed.startsWith("//")) continue;
@@ -181,6 +206,14 @@ public final class ProfileFile {
         }
 
         return file;
+    }
+
+    /** @return whether {@code key} without its {@code :qualifier} is {@code baseKey}, ignoring case */
+    public static boolean isBaseKey(@Nonnull String key, @Nonnull String baseKey) {
+        int colon = key.indexOf(':');
+        int length = colon < 0 ? key.length() : colon;
+
+        return length == baseKey.length() && key.regionMatches(true, 0, baseKey, 0, length);
     }
 
     /** @return {@code key} without a {@code :qualifier} */
