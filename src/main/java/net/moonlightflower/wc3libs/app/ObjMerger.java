@@ -9,6 +9,7 @@ import net.moonlightflower.wc3libs.app.objMerge.ProfileFile;
 import net.moonlightflower.wc3libs.app.objMerge.ProfileGroup;
 import net.moonlightflower.wc3libs.app.objMerge.SlkTable;
 import net.moonlightflower.wc3libs.bin.ObjMod;
+import net.moonlightflower.wc3libs.misc.ObjId;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.MapFlag;
@@ -785,7 +786,11 @@ public class ObjMerger {
                 String reason = skipReason(type, obj);
 
                 if (reason != null) {
-                    copyInto(residual.addObj(obj.getId(), obj.getBaseId()), obj, obj.getMods());
+                    // An original object read from a map carries its own id as base id; passing that on would
+                    // turn it into a custom object.
+                    ObjId baseId = obj.getNewId() == null ? null : obj.getBaseId();
+
+                    copyInto(residual.addObj(obj.getId(), baseId), obj, obj.getMods());
                     _report._skipped.add(new Report.Skipped(type, id, reason));
 
                     continue;

@@ -10,6 +10,7 @@ import net.moonlightflower.wc3libs.app.objMerge.ProfileFile;
 import net.moonlightflower.wc3libs.app.objMerge.SlkTable;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinInputStream;
+import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -27,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -419,6 +421,36 @@ public class ObjMergerTest {
         Assert.assertFalse(result.getFiles().containsKey(UNIT_BALANCE));
         Assert.assertEquals(fieldsOf(residual.getObj(ObjId.valueOf("hfoo"))), Collections.singletonList("uhpm"));
         Assert.assertEquals(result.getReport().getSkipped().size(), 2);
+    }
+
+    /** Read from a map, an original object carries its id as base id; skipped, it must stay an original object. */
+    @Test
+    public void skippedOriginalObjectReadFromAMapStaysAnOriginalObject() throws Exception {
+        W3U written = new W3U();
+
+        obj(written, "hfoo", null, mod("uhpm", 999));
+        obj(written, "h0;1", "hfoo", mod("udef", 1));
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try (Wc3BinOutputStream stream = new Wc3BinOutputStream(out)) {
+            written.write(stream);
+        }
+
+        W3U read = new W3U();
+
+        try (Wc3BinInputStream stream = new Wc3BinInputStream(new ByteArrayInputStream(out.toByteArray()))) {
+            read.read(stream);
+        }
+
+        Assert.assertNotNull(read.getObj(ObjId.valueOf("hfoo")).getBaseId(), "precondition: reading sets the base id");
+
+        W3U residual = residual(merge(read), W3U.class, W3U.GAME_PATH.toString());
+        ObjMod.Obj hfoo = residual.getObj(ObjId.valueOf("hfoo"));
+
+        Assert.assertNull(hfoo.getNewId(), "hfoo must stay an original object");
+        Assert.assertEquals(residual.getOrigObjs().size(), 1);
+        Assert.assertEquals(residual.getCustomObjs().size(), 1);
     }
 
     @Test
