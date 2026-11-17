@@ -115,9 +115,10 @@ result.getReport();       // what moved, and what stayed and why
 
 The result is equivalent to the input; the test suite compares every affected
 field of every object before and after, across real maps and randomised input.
-What cannot be expressed in the tables -- ability levels above four (the game
-reads four levels from a map's tables, though its own have columns for six;
-profile values such as tooltips have no such limit), `TRIGSTR_` references,
+What cannot be expressed in the tables -- ability levels above four, or above
+six for an ability with `UseNewDefaultLevelCap` set (the game reads no more
+from a map's tables, and columns for higher levels crash it; profile values
+such as tooltips have no such limit), `TRIGSTR_` references,
 values the formats cannot quote,
 the profile changes of modified *base* objects and their table changes a
 profile file repeats, doodads and `war3mapSkin.*` files -- stays in a residual

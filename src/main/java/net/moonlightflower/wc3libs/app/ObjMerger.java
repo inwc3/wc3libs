@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -93,8 +94,15 @@ public class ObjMerger {
     private final Set<String> _ignoredFields = new LinkedHashSet<>(DEFAULT_IGNORED_FIELDS);
     private boolean _moveProfileMods = true;
 
-    /** The highest level of a per-level field the game reads from a map's tables; see {@link Run#applySlk}. */
+    /**
+     * The highest level of a per-level field the game reads from a map's tables, unless the row sets
+     * {@link #NEW_LEVEL_CAP_COLUMN}; see {@link Run#applySlk}.
+     */
     public static final int MAX_TABLE_LEVEL = 4;
+
+    /** The AbilityData column (field {@code alcp}) that lets the game read the table's level columns above four. */
+    public static final String NEW_LEVEL_CAP_COLUMN = "UseNewDefaultLevelCap";
+    private static final String NEW_LEVEL_CAP_FIELD = "alcp";
 
     /** @param gameData the data the map plays with, its own overrides included */
     public ObjMerger(@Nonnull GameData gameData) {
@@ -770,10 +778,10 @@ public class ObjMerger {
 
             if (index < 1) return false;
 
-            // The game reads four levels of a field from a map's tables, though its own AbilityData.slk has columns
-            // for six: values in DataA5/DataA6 do not arrive, and columns for higher levels crash it on load
-            // (measured on the 3.0.1 client). Higher levels stay in the residual.
-            if (meta._repeat > 0 && levelOf(mod) > MAX_TABLE_LEVEL) return false;
+            // The game reads four levels of a field from a map's tables, and the levels its tables have columns for
+            // beyond that (six in 3.0.1) only for a row with UseNewDefaultLevelCap set, as every stock ability with
+            // more than four levels has (measured on the 3.0.1 client). Higher levels stay in the residual.
+            if (meta._repeat > 0 && levelOf(mod) > MAX_TABLE_LEVEL && !hasNewLevelCap(table, id)) return false;
 
             String raw = slkCell(mod);
 
@@ -824,6 +832,18 @@ public class ObjMerger {
             }
 
             return true;
+        }
+
+        /** @return whether the object's row, as it will be written, reads levels above four from the table */
+        private boolean hasNewLevelCap(@Nonnull SlkTable table, @Nonnull String id) {
+            int column = table.getColumnIndex(NEW_LEVEL_CAP_COLUMN);
+            SlkTable.Row row = table.getRow(id);
+
+            if (column < 1 || row == null) return false;
+
+            String value = SlkTable.unquote(row.getRaw(column));
+
+            return value != null && value.trim().equals("1");
         }
 
         /**
@@ -967,7 +987,15 @@ public class ObjMerger {
                 List<ObjMod.Obj.Mod> kept = new ArrayList<>();
                 KeptSlots keptSlots = new KeptSlots();
 
-                for (ObjMod.Obj.Mod mod : obj.getMods()) {
+                // The level cap decides where the object's higher levels can go, so it is placed first. It shares
+                // storage with no other field, so moving it ahead changes no last write.
+                List<ObjMod.Obj.Mod> mods = new ArrayList<>(obj.getMods());
+                List<ObjMod.Obj.Mod> order = new ArrayList<>();
+
+                for (ObjMod.Obj.Mod mod : mods) if (mod.getId().toString().equals(NEW_LEVEL_CAP_FIELD)) order.add(mod);
+                for (ObjMod.Obj.Mod mod : mods) if (!mod.getId().toString().equals(NEW_LEVEL_CAP_FIELD)) order.add(mod);
+
+                for (ObjMod.Obj.Mod mod : order) {
                     String fieldId = mod.getId().toString();
 
                     if (_ignoredFields.contains(fieldId)) {
@@ -1002,6 +1030,14 @@ public class ObjMerger {
                         _report._keptMods++;
                     }
                 }
+
+                // What stays keeps its place in the file.
+                Set<ObjMod.Obj.Mod> keptSet = Collections.newSetFromMap(new IdentityHashMap<>());
+
+                keptSet.addAll(kept);
+                kept.clear();
+
+                for (ObjMod.Obj.Mod mod : mods) if (keptSet.contains(mod)) kept.add(mod);
 
                 // The object exists in the tables now, so what is left
                 // modifies it as a base object.

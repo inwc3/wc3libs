@@ -362,6 +362,39 @@ public class ObjMergerTest {
     }
 
     /**
+     * With UseNewDefaultLevelCap (alcp) set, as every stock ability with more
+     * than four levels has, the game reads levels five and six from the table
+     * too (measured on the 3.0.1 client); seven and up still stay behind, since
+     * columns for them crash the game. The flag counts wherever the object
+     * sets it in its list.
+     */
+    @Test
+    public void theNewLevelCapLetsLevelsFiveAndSixIntoTheTable() throws Exception {
+        W3A w3a = new W3A();
+
+        obj(w3a, "A000", "AHbz", lvl("alev", 0, 0, 7), lvl("Hbz1", 4, 1, 44), lvl("Hbz1", 5, 1, 55), lvl("Hbz1", 6, 1, 66),
+            lvl("Hbz1", 7, 1, 77), lvl("alcp", 0, 0, 1));
+        // A stock ability with five levels already has the flag.
+        obj(w3a, "A001", "AUla", lvl("Ucs1", 5, 1, 99));
+
+        ObjMerger.Result result = merge(w3a);
+        SlkTable abilities = table(result, ABILITY_DATA);
+
+        Assert.assertEquals(abilities.getRow("A000").get(ObjMerger.NEW_LEVEL_CAP_COLUMN), "1");
+        Assert.assertEquals(abilities.getRow("A000").get("DataA4"), "44");
+        Assert.assertEquals(abilities.getRow("A000").get("DataA5"), "55");
+        Assert.assertEquals(abilities.getRow("A000").get("DataA6"), "66");
+        Assert.assertEquals(abilities.getRow("A001").get("DataA5"), "99");
+
+        W3A residual = residual(result, W3A.class, W3A.GAME_PATH.toString());
+        ObjMod.Obj a000 = residual.getObj(ObjId.valueOf("A000"));
+
+        Assert.assertEquals(fieldsOf(a000), Collections.singletonList("Hbz1"));
+        Assert.assertEquals(((ObjMod.Obj.ExtendedMod) a000.getMods().get(0)).getLevel(), 7);
+        Assert.assertNull(residual.getObj(ObjId.valueOf("A001")));
+    }
+
+    /**
      * The game's tables never leave some columns empty and spell nothing as a
      * placeholder there; an empty UnitAbilities "auto" crashes the game on
      * load (measured on the 3.0.1 client). An emptied value takes the
