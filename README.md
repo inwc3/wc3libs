@@ -74,8 +74,55 @@ Wc3libs supports read and write operations for the following data types:
 
 ## Object Data Transformation
 
-Wc3libs can transform object definitions between the binary objectmod format and raw slk/txt formats.
-The raw file handling also comes with inbuilt cleaning to prevent bloating maps.
+`ObjMerger` moves a map's object modifications (`war3map.w3u`, `.w3t`, `.w3b`,
+`.w3a`, `.w3h`, `.w3q`) into SLK tables and profile `.txt` files, which the game
+loads considerably faster than it applies object-modification files.
+
+```java
+ObjMerger.ofMap(mapFile).merge().writeToMap(mapFile);
+```
+
+A map's SLK table replaces the game's table of the same name, so the merger
+starts from the game's own data and writes the tables back whole. That data
+ships with the library: `BundledGameData` is a snapshot of Warcraft III 3.0.1,
+layered the way the game layers it (base data, the `custom_v1` or `melee_v0`
+balance set the map's `war3map.w3i` selects, and the enUS strings). Tables and
+profile files the map already ships take precedence over it.
+
+To merge object modifications held in memory instead, as a map compiler would:
+
+```java
+ObjMerger merger = new ObjMerger(BundledGameData.forDataSet(w3i.getGameDataSet(), w3i.getFlag(MapFlag.MELEE_MAP)));
+merger.add(w3u);
+merger.add(w3a);
+
+ObjMerger.Result result = merger.merge();
+result.getFiles();        // game path -> bytes to put into the map
+result.getRemovedFiles(); // object-modification files left empty
+result.getReport();       // what moved, and what stayed and why
+```
+
+The result is equivalent to the input; the test suite compares every affected
+field of every object before and after, across real maps and randomised input.
+What cannot be expressed in the tables -- ability levels above four, `TRIGSTR_`
+references, values the formats cannot quote, the profile changes of modified
+*base* objects, doodads and `war3mapSkin.*` files -- stays in a residual
+object-modification file the game still applies on top. Strings a custom object
+inherits from its base object are baked in from the snapshot, so in English.
+
+One difference is the game's own: its table reader can land a decimal one float
+step off. It reads `1.5` as 1.5000001 -- in Blizzard's tables too -- while an
+object modification holds 1.5 exactly. A real moved into a table can therefore
+differ from the original in its last bit, which matters only to code that
+compares reals for exact equality.
+
+The snapshot is regenerated from an install with
+[casc-ts](https://github.com/wurstscript/casc-ts) checked out next to this
+repository:
+
+```bash
+node tools/gamedata/extract-gamedata.mjs
+```
 
 # Contributing
 

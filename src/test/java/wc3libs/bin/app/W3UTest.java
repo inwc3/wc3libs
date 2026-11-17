@@ -3,6 +3,7 @@ package wc3libs.bin.app;
 import net.moonlightflower.wc3libs.bin.ObjMod;
 import net.moonlightflower.wc3libs.bin.Wc3BinOutputStream;
 import net.moonlightflower.wc3libs.app.ObjMerger;
+import net.moonlightflower.wc3libs.app.objMerge.BundledGameData;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3A;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3B;
 import net.moonlightflower.wc3libs.bin.app.objMod.W3D;
@@ -76,20 +77,18 @@ public class W3UTest extends Wc3LibTest {
 	}
 
 	@Test
-	public void objectMergerKeepsSkinDataSeparate() throws Exception {
-		File expectedFile = getFile("wc3data/W3U/war3mapSkin_v3_lumber_bounty.w3u");
-		Path workDir = Files.createTempDirectory("wc3libs-skin-objmod-");
-		Path inputDir = Files.createDirectory(workDir.resolve("input"));
-		Path outputDir = workDir.resolve("output");
-		Files.copy(expectedFile.toPath(), inputDir.resolve(W3U.SKIN_PATH.toString()));
+	public void objectMergerLeavesSkinDataAlone() throws Exception {
+		W3U units = new W3U(getFile("wc3data/W3U/war3map_v3_lumber_bounty.w3u"));
 
-		ObjMerger merger = new ObjMerger();
-		merger.addDir(inputDir.toFile());
-		merger.writeToDir(outputDir.toFile(), false);
+		ObjMerger merger = new ObjMerger(BundledGameData.custom());
+		merger.add(units);
 
-		Path mergedSkin = outputDir.resolve(W3U.SKIN_PATH.toString());
-		Assert.assertTrue(Files.exists(mergedSkin));
-		Assert.assertEquals(Files.readAllBytes(mergedSkin), Files.readAllBytes(expectedFile.toPath()));
+		ObjMerger.Result result = merger.merge();
+
+		for (File skinPath : ObjMod.getSkinFiles()) {
+			Assert.assertFalse(result.getFiles().containsKey(skinPath.toString()), skinPath + " must not be written");
+			Assert.assertFalse(result.getRemovedFiles().contains(skinPath.toString()), skinPath + " must not be removed");
+		}
 	}
 
 	private void assertDefaultWriteIsExact(W3U data, File expectedFile) throws Exception {
