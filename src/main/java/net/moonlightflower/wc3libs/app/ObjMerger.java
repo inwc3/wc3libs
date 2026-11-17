@@ -731,22 +731,31 @@ public class ObjMerger {
 
                 if (section == null || !section.hasBaseKey(key)) continue;
 
-                List<String> tokens;
-
                 if (pos == null) {
-                    tokens = replacement;
+                    // The whole value: the game uses it whatever variant its mode would have picked.
+                    section.removeQualified(key);
+                    section.put(key, ProfileFile.join(replacement));
                 } else {
-                    ProfileFile.Entry entry = section.get(key);
+                    // One element: it changes in every variant (Missileart, Missileart:hd, ...), each keeping
+                    // the elements the map did not modify.
+                    List<String> variants = new ArrayList<>();
 
-                    tokens = entry == null ? new ArrayList<>() : new ArrayList<>(ProfileFile.tokenize(entry.getRawValue()));
+                    for (ProfileFile.Entry entry : section.getEntries().values()) {
+                        if (ProfileFile.baseKey(entry.getKey()).equalsIgnoreCase(key)) variants.add(entry.getKey());
+                    }
 
-                    while (tokens.size() <= pos) tokens.add("");
+                    if (section.get(key) == null) variants.add(key);
 
-                    tokens.set(pos, text);
+                    for (String variant : variants) {
+                        ProfileFile.Entry entry = section.get(variant);
+                        List<String> tokens = entry == null ? new ArrayList<>() : new ArrayList<>(ProfileFile.tokenize(entry.getRawValue()));
+
+                        while (tokens.size() <= pos) tokens.add("");
+
+                        tokens.set(pos, text);
+                        section.put(variant, ProfileFile.join(tokens));
+                    }
                 }
-
-                section.removeQualified(key);
-                section.put(key, ProfileFile.join(tokens));
 
                 applied = true;
             }

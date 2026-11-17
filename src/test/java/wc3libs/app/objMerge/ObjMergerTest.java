@@ -475,6 +475,34 @@ public class ObjMergerTest {
         }
     }
 
+    @Test
+    public void oneListElementChangesInEveryVariantOfTheKey() throws Exception {
+        // 3.0.1 base data gives the Ice Troll a different attack missile in HD: Missileart and Missileart:hd
+        GameData data = BundledGameData.layer(BundledGameData.LAYER_BASE);
+        W3U w3u = new W3U();
+
+        obj(w3u, "n000", "nitr", mod("ua2m", "X.mdl"));
+
+        ProfileFile.Section n000 = section(merge(data, w3u), UNIT_FUNC_TARGET, "n000");
+
+        Assert.assertEquals(n000.get("Missileart").getRawValue(), "Abilities\\Weapons\\Axe\\AxeMissile.mdl,X.mdl");
+        Assert.assertNotNull(n000.get("Missileart:hd"), "the HD value of attack 1 must survive");
+        Assert.assertEquals(n000.get("Missileart:hd").getRawValue(), "Abilities\\Weapons\\Axe_IceTroll\\Axe_IceTroll.mdl,X.mdl");
+    }
+
+    @Test
+    public void aWholeValueReplacesEveryVariantOfTheKey() throws Exception {
+        GameData data = BundledGameData.layer(BundledGameData.LAYER_BASE);
+        W3U w3u = new W3U();
+
+        obj(w3u, "n000", "nitr", mod("ua1m", "Y.mdl"), mod("ua2m", "Z.mdl"));
+
+        ProfileFile.Section n000 = section(merge(data, w3u), UNIT_FUNC_TARGET, "n000");
+
+        Assert.assertEquals(n000.get("Missileart").getRawValue(), "Y.mdl,Z.mdl");
+        Assert.assertEquals(n000.get("Missileart:hd").getRawValue(), "Y.mdl,Z.mdl");
+    }
+
     // --- game data ---
 
     @Test
