@@ -865,7 +865,15 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 			ret._baseId = _baseId == null ? null : ObjId.valueOf(_baseId);
 			ret._newId = _newId == null ? null : ObjId.valueOf(_newId);
 
-			ret.merge(this);
+			ret.setUnknown(getUnknown());
+
+			// Copy in file order rather than through merge, which groups the
+			// modifications by field. Fields can alias the same storage -- an
+			// ability's DataA1 is written by several -- and the game applies
+			// modifications in order, so regrouping changes which write wins.
+			for (Mod mod : getMods()) {
+				ret.addMod(mod.copy());
+			}
 
 			return (T) ret;
 		}
@@ -1040,6 +1048,13 @@ public abstract class ObjMod<ObjType extends ObjMod.Obj> implements Printable {
 	public abstract Collection<File> getSLKs();
 	public abstract Collection<File> getNecessarySLKs();
 
+	/**
+	 * @deprecated produces partial tables without the game's base objects and
+	 * ignores levels, aliased fields and unwritable values; use
+	 * {@link net.moonlightflower.wc3libs.app.ObjMerger}, which merges onto the
+	 * game data and keeps whatever it cannot express.
+	 */
+	@Deprecated
 	@Nonnull
 	public ObjPack reduce(@Nonnull MetaSLK reduceMetaSlk, Collection<Class<? extends ObjMod>> excludedClasses) throws Exception {
 		ObjPack pack = new ObjPack(this);
