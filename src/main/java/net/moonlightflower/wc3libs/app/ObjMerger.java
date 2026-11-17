@@ -33,10 +33,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -91,6 +93,16 @@ public class ObjMerger {
     private final Map<ObjType, ObjMod<?>> _objMods = new EnumMap<>(ObjType.class);
     private final Set<String> _ignoredFields = new LinkedHashSet<>(DEFAULT_IGNORED_FIELDS);
     private boolean _moveProfileMods = true;
+
+    /**
+     * The highest level of a per-level field the game reads from a map's tables, unless the row sets
+     * {@link #NEW_LEVEL_CAP_COLUMN}; see {@link Run#applySlk}.
+     */
+    public static final int MAX_TABLE_LEVEL = 4;
+
+    /** The AbilityData column (field {@code alcp}) that lets the game read the table's level columns above four. */
+    public static final String NEW_LEVEL_CAP_COLUMN = "UseNewDefaultLevelCap";
+    private static final String NEW_LEVEL_CAP_FIELD = "alcp";
 
     /** @param gameData the data the map plays with, its own overrides included */
     public ObjMerger(@Nonnull GameData gameData) {
@@ -405,6 +417,8 @@ public class ObjMerger {
         private final int _data;
         private final boolean _appendIndex;
         private final String _type;
+        /** What a level resolves to, worked out once per level: most modifications share a few levels. */
+        private final Level[] _levels = new Level[32];
 
         private MetaField(@Nonnull SlkTable.Row row) {
             _field = nonNull(row.get("field"));
@@ -424,9 +438,36 @@ public class ObjMerger {
             return _type.endsWith("List");
         }
 
+        @Nonnull
+        private Level level(int level) {
+            if (level < 0 || level >= _levels.length) return new Level(this, level);
+
+            Level ret = _levels[level];
+
+            if (ret == null) _levels[level] = ret = new Level(this, level);
+
+            return ret;
+        }
+
         /** @return the SLK column for a level, or {@code null} if the field has none */
         @Nullable
         private String column(int level) {
+            return level(level)._column;
+        }
+
+        @Nullable
+        private ProfileSlot profileSlot(int level) {
+            return level(level)._slot;
+        }
+
+        /** @return an id for the storage this field writes at a level, shared by fields that alias it */
+        @Nonnull
+        private String storage(int level) {
+            return level(level)._storage;
+        }
+
+        @Nullable
+        private String computeColumn(int level) {
             String column = _field;
 
             if (column.equals("Data")) {
@@ -452,7 +493,7 @@ public class ObjMerger {
          * element per level.
          */
         @Nullable
-        private ProfileSlot profileSlot(int level) {
+        private ProfileSlot computeProfileSlot(int level) {
             if (_repeat > 0 && level < 1) return null;
 
             if (_repeat > 0 && _appendIndex) return new ProfileSlot(level > 1 ? _field + (level - 1) : _field, null);
@@ -462,16 +503,9 @@ public class ObjMerger {
             return new ProfileSlot(_field, null);
         }
 
-        /** @return an id for the storage this field writes at a level, shared by fields that alias it */
         @Nonnull
-        private String storage(int level) {
-            if (isProfile()) {
-                ProfileSlot slot = profileSlot(level);
-
-                return slot == null ? "invalid" : slot.toString();
-            }
-
-            String column = column(level);
+        private String computeStorage(@Nullable String column, @Nullable ProfileSlot slot) {
+            if (isProfile()) return slot == null ? "invalid" : slot.toString();
 
             return "slk|" + _slk + "|" + (column == null ? "invalid" : column.toLowerCase(java.util.Locale.ROOT));
         }
@@ -492,23 +526,45 @@ public class ObjMerger {
         }
     }
 
+    /** A metadata field at one level. */
+    private static final class Level {
+        @Nullable
+        private final String _column;
+        @Nullable
+        private final ProfileSlot _slot;
+        private final String _storage;
+        /** The column's index in the field's table, {@link Integer#MIN_VALUE} until looked up. */
+        private int _columnIndex = Integer.MIN_VALUE;
+
+        private Level(@Nonnull MetaField meta, int level) {
+            _column = meta.computeColumn(level);
+            _slot = meta.computeProfileSlot(level);
+            _storage = meta.computeStorage(_column, _slot);
+        }
+    }
+
     private static final class ProfileSlot {
         private final String _key;
         private final Integer _pos;
+        private final String _keyId;
+        /** The storage of the whole value, which overlaps every element of it. */
+        private final String _wholeId;
 
         private ProfileSlot(@Nonnull String key, @Nullable Integer pos) {
             _key = key;
             _pos = pos;
+            _keyId = "profile|" + _key.toLowerCase(java.util.Locale.ROOT);
+            _wholeId = _keyId + "|*";
         }
 
         @Nonnull
         private String keyId() {
-            return "profile|" + _key.toLowerCase(java.util.Locale.ROOT);
+            return _keyId;
         }
 
         @Override
         public String toString() {
-            return keyId() + "|" + (_pos == null ? "*" : _pos.toString());
+            return _pos == null ? _wholeId : _keyId + "|" + _pos;
         }
     }
 
@@ -527,15 +583,22 @@ public class ObjMerger {
 
         /** A whole profile value and its elements overlap, so either blocks the other. */
         private boolean blocks(@Nonnull MetaField meta, int level) {
+            // Most objects keep nothing, and then nothing is blocked.
+            if (_storages.isEmpty()) return false;
+
             if (_storages.contains(meta.storage(level))) return true;
 
             ProfileSlot slot = meta.isProfile() ? meta.profileSlot(level) : null;
 
             if (slot == null) return false;
 
-            return _storages.contains(slot.keyId() + "|*") || (slot._pos == null && _profileKeys.contains(slot.keyId()));
+            return _storages.contains(slot._wholeId) || (slot._pos == null && _profileKeys.contains(slot.keyId()));
         }
     }
+
+    /** {@link Run#emptySpelling}: a column the game never leaves empty and has no placeholder for. */
+    private static final String NO_SPELLING = new String("no spelling");
+    private static final String UNKNOWN = new String("unknown");
 
     /** The state of one merge. */
     private final class Run {
@@ -548,6 +611,9 @@ public class ObjMerger {
         private final Map<String, Integer> _customIdUses = new LinkedHashMap<>();
         private final Map<ObjType, Set<String>> _protectedBases = new EnumMap<>(ObjType.class);
         private final Report _report = new Report();
+        /** Per table, the ids of the rows the game data has, before any are added. */
+        private final Map<String, Set<String>> _gameRows = new LinkedHashMap<>();
+        private final Map<String, String[]> _emptySpellings = new LinkedHashMap<>();
 
         @Nullable
         private SlkTable table(@Nonnull String path) throws IOException {
@@ -557,6 +623,16 @@ public class ObjMerger {
             SlkTable table = bytes == null ? null : SlkTable.parse(bytes);
 
             _tables.put(path, table);
+
+            if (table != null) {
+                Set<String> ids = new LinkedHashSet<>();
+
+                for (SlkTable.Row row : table.getRows()) {
+                    if (row.getId() != null) ids.add(row.getId());
+                }
+
+                _gameRows.put(path, ids);
+            }
 
             return table;
         }
@@ -681,7 +757,7 @@ public class ObjMerger {
             }
         }
 
-        private boolean applySlk(@Nonnull ObjType type, @Nonnull String id, @Nonnull MetaField meta,
+        private boolean applySlk(@Nonnull ObjType type, @Nonnull String id, boolean custom, @Nonnull MetaField meta,
                                  @Nonnull ObjMod.Obj.Mod mod) throws IOException {
             String path = ObjType.tableOf(meta._slk);
 
@@ -691,26 +767,140 @@ public class ObjMerger {
 
             if (table == null) return false;
 
-            String column = meta.column(levelOf(mod));
+            Level level = meta.level(levelOf(mod));
 
-            if (column == null) return false;
+            if (level._column == null) return false;
 
-            int index = table.getColumnIndex(column);
+            // A run's tables never gain columns, so the index holds for the whole run.
+            if (level._columnIndex == Integer.MIN_VALUE) level._columnIndex = table.getColumnIndex(level._column);
+
+            int index = level._columnIndex;
 
             if (index < 1) return false;
+
+            // The game reads four levels of a field from a map's tables, and the levels its tables have columns for
+            // beyond that (six in 3.0.1) only for a row with UseNewDefaultLevelCap set, as every stock ability with
+            // more than four levels has (measured on the 3.0.1 client). Higher levels stay in the residual.
+            if (meta._repeat > 0 && levelOf(mod) > MAX_TABLE_LEVEL && !hasNewLevelCap(table, id)) return false;
 
             String raw = slkCell(mod);
 
             if (raw == null) return false;
 
+            if (raw.isEmpty()) {
+                // Columns the game's tables never leave empty spell "nothing" with a placeholder, and the game
+                // relies on it: an empty UnitAbilities "auto" crashes it on load. Without a known spelling the
+                // value cannot be written.
+                String spelling = emptySpelling(path, table, index);
+
+                if (spelling == NO_SPELLING) return false;
+
+                raw = spelling;
+            }
+
+            // 3.x profile files repeat columns -- UnitSkin.txt holds UnitUI's special, campaign, teamColor and
+            // more -- and which copy the game reads is not documented. Both have to agree.
+            List<ProfileFile.Section> mirrors = new ArrayList<>();
+
+            for (ProfileGroup group : ProfileGroup.values()) {
+                ProfileFile.Section section = (custom ? _newSections : _baseSections).get(group).get(id);
+
+                if (section != null && section.hasBaseKey(level._column)) mirrors.add(section);
+            }
+
+            String text = null;
+
+            if (!mirrors.isEmpty()) {
+                // The game's own copy of a base object's profile cannot be changed without replacing it.
+                if (!custom || !_moveProfileMods) return false;
+
+                String value = profileValue(mod);
+
+                if (value == null) return false;
+
+                // Profile values are comma-separated: one element, quoted if it holds a comma, as applyProfile writes.
+                text = ProfileFile.join(meta.isList() ? ProfileFile.tokenize(value) : Collections.singletonList(value));
+            }
+
             SlkTable.Row row = table.getRow(id);
 
             if (row == null) row = table.addRow(id);
 
-            row.setRaw(index, raw.isEmpty() ? null : raw);
+            row.setRaw(index, raw);
             _changedTables.add(path);
 
+            for (ProfileFile.Section section : mirrors) {
+                section.removeQualified(level._column);
+                section.put(level._column, text);
+            }
+
             return true;
+        }
+
+        /** @return whether the object's row, as it will be written, reads levels above four from the table */
+        private boolean hasNewLevelCap(@Nonnull SlkTable table, @Nonnull String id) {
+            int column = table.getColumnIndex(NEW_LEVEL_CAP_COLUMN);
+            SlkTable.Row row = table.getRow(id);
+
+            if (column < 1 || row == null) return false;
+
+            String value = SlkTable.unquote(row.getRaw(column));
+
+            return value != null && value.trim().equals("1");
+        }
+
+        /**
+         * @return how the game's table spells an empty cell in a column: {@code null} where it leaves cells
+         * empty, its placeholder ({@code "_"}, {@code "-"}, ...) where it never does, {@link #NO_SPELLING} if it
+         * never does and has no placeholder
+         */
+        @Nullable
+        private String emptySpelling(@Nonnull String path, @Nonnull SlkTable table, int column) {
+            String[] spellings = _emptySpellings.get(path);
+
+            if (spellings == null) {
+                spellings = new String[table.getColumns().size()];
+                _emptySpellings.put(path, spellings);
+                Arrays.fill(spellings, UNKNOWN);
+            }
+
+            if (spellings[column] != UNKNOWN) return spellings[column];
+
+            Map<String, Integer> placeholders = new LinkedHashMap<>();
+            String spelling = null;
+            boolean emptyCell = false;
+
+            for (SlkTable.Row row : table.getRows()) {
+                if (row.getId() == null || row.getId().isEmpty() || !_gameRows.get(path).contains(row.getId())) continue;
+
+                String raw = row.getRaw(column);
+
+                if (raw == null) {
+                    emptyCell = true;
+                    break;
+                }
+
+                String value = SlkTable.unquote(raw).trim();
+
+                if (value.isEmpty() || value.equals("_") || value.equals("-")) placeholders.merge(raw, 1, Integer::sum);
+            }
+
+            if (!emptyCell) {
+                spelling = NO_SPELLING;
+
+                int most = 0;
+
+                for (Map.Entry<String, Integer> entry : placeholders.entrySet()) {
+                    if (entry.getValue() > most) {
+                        most = entry.getValue();
+                        spelling = entry.getKey();
+                    }
+                }
+            }
+
+            spellings[column] = spelling;
+
+            return spelling;
         }
 
         private boolean applyProfile(@Nonnull String id, @Nonnull MetaField meta, @Nonnull ObjMod.Obj.Mod mod) {
@@ -742,7 +932,7 @@ public class ObjMerger {
                     List<String> variants = new ArrayList<>();
 
                     for (ProfileFile.Entry entry : section.getEntries().values()) {
-                        if (ProfileFile.baseKey(entry.getKey()).equalsIgnoreCase(key)) variants.add(entry.getKey());
+                        if (ProfileFile.isBaseKey(entry.getKey(), key)) variants.add(entry.getKey());
                     }
 
                     if (section.get(key) == null) variants.add(key);
@@ -800,7 +990,15 @@ public class ObjMerger {
                 List<ObjMod.Obj.Mod> kept = new ArrayList<>();
                 KeptSlots keptSlots = new KeptSlots();
 
-                for (ObjMod.Obj.Mod mod : obj.getMods()) {
+                // The level cap decides where the object's higher levels can go, so it is placed first. It shares
+                // storage with no other field, so moving it ahead changes no last write.
+                List<ObjMod.Obj.Mod> mods = new ArrayList<>(obj.getMods());
+                List<ObjMod.Obj.Mod> order = new ArrayList<>();
+
+                for (ObjMod.Obj.Mod mod : mods) if (mod.getId().toString().equals(NEW_LEVEL_CAP_FIELD)) order.add(mod);
+                for (ObjMod.Obj.Mod mod : mods) if (!mod.getId().toString().equals(NEW_LEVEL_CAP_FIELD)) order.add(mod);
+
+                for (ObjMod.Obj.Mod mod : order) {
                     String fieldId = mod.getId().toString();
 
                     if (_ignoredFields.contains(fieldId)) {
@@ -823,7 +1021,7 @@ public class ObjMerger {
                     } else if (meta.isProfile()) {
                         moved = custom && _moveProfileMods && applyProfile(id, meta, mod);
                     } else {
-                        moved = applySlk(type, id, meta, mod);
+                        moved = applySlk(type, id, custom, meta, mod);
                     }
 
                     if (moved) {
@@ -835,6 +1033,14 @@ public class ObjMerger {
                         _report._keptMods++;
                     }
                 }
+
+                // What stays keeps its place in the file.
+                Set<ObjMod.Obj.Mod> keptSet = Collections.newSetFromMap(new IdentityHashMap<>());
+
+                keptSet.addAll(kept);
+                kept.clear();
+
+                for (ObjMod.Obj.Mod mod : mods) if (keptSet.contains(mod)) kept.add(mod);
 
                 // The object exists in the tables now, so what is left
                 // modifies it as a base object.

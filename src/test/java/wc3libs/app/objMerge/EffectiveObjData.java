@@ -257,14 +257,26 @@ final class EffectiveObjData {
         return val == null ? "" : val;
     }
 
-    /** Whether two answers mean the same to the game: equal text, or equal numbers. */
+    /**
+     * Whether two answers mean the same to the game: equal text, equal
+     * numbers, or both nothing. The game's tables spell nothing as {@code _}
+     * or {@code -} in columns they never leave empty (an empty UnitAbilities
+     * "auto" crashes the game), so the merger writes an emptied value that way.
+     */
     static boolean same(String a, String b) {
         if (a.equals(b)) return true;
+        if (isNothing(a) && isNothing(b)) return true;
 
         try {
             return Float.parseFloat(a) == Float.parseFloat(b);
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    private static boolean isNothing(String s) {
+        String trimmed = s.trim();
+
+        return trimmed.isEmpty() || trimmed.equals("_") || trimmed.equals("-");
     }
 }
