@@ -419,6 +419,29 @@ public class ObjMergerTest {
     }
 
     /**
+     * An emptied unitShadow in the skin file showed the default shadow in game,
+     * where the object modification file reads "" as no shadow. Emptied
+     * profile values stay in the residual; the skin keeps the base's value.
+     */
+    @Test
+    public void emptiedProfileValuesStayInTheResidual() throws Exception {
+        W3U w3u = new W3U();
+
+        obj(w3u, "h000", "hfoo", mod("ushu", ""), mod("ushb", ""), mod("umdl", "none.mdl"));
+
+        ObjMerger.Result result = merge(w3u);
+        ProfileFile.Section skin = section(result, UNIT_SKIN_TARGET, "h000");
+
+        Assert.assertEquals(skin.get("file").getRawValue(), "none.mdl");
+        Assert.assertEquals(skin.get("unitShadow").getRawValue(), "Shadow", "the skin keeps the base's shadow");
+
+        ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
+
+        Assert.assertEquals(fieldsOf(h000), Arrays.asList("ushu", "ushb"));
+        Assert.assertEquals(valOf(h000, "ushu").toString(), "");
+    }
+
+    /**
      * 3.x skin files repeat UnitUI columns (special, campaign, teamColor, ...).
      * A custom object gets the value in both; a base object's change stays in
      * the residual, since the game's own skin copy would contradict the table.

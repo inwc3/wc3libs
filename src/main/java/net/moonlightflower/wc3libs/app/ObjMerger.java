@@ -817,6 +817,7 @@ public class ObjMerger {
                 String value = profileValue(mod);
 
                 if (value == null) return false;
+                if (value.isEmpty()) return false;
 
                 // Profile values are comma-separated: one element, quoted if it holds a comma, as applyProfile writes.
                 text = ProfileFile.join(meta.isList() ? ProfileFile.tokenize(value) : Collections.singletonList(value));
@@ -911,6 +912,11 @@ public class ObjMerger {
             ProfileSlot slot = meta.profileSlot(levelOf(mod));
 
             if (slot == null) return false;
+
+            // An emptied value stays in the residual. The object modification file reads "" as nothing, but an
+            // empty profile value is not read the same way: units emptied of their unitShadow showed the default
+            // shadow once it moved into the skin file.
+            if (slot._pos == null && text.isEmpty()) return false;
 
             String key = slot._key;
             Integer pos = slot._pos;
