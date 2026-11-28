@@ -48,7 +48,8 @@ public class ObjMergerEquivalenceTest {
         return new Object[][]{
             {"wc3data/W3U/war3map.w3u", 0},
             {"wc3data/W3U/war3mapReforged.w3u", 230},
-            {"wc3data/W3U/war3map_v3_lumber_bounty.w3u", 2},
+            // its h000 differs only in case from the game's H000 and stays, and so does hfoo, the base it derives from
+            {"wc3data/W3U/war3map_v3_lumber_bounty.w3u", 0},
             // its abilities are all unknown to 3.0.1 and are left as they are
             {"wc3data/W3A/war3map.w3a", 0},
             {"wc3data/W3A/war3map_cfde.w3a", 570},

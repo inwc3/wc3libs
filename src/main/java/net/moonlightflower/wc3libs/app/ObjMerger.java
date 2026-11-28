@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 /**
@@ -611,6 +612,8 @@ public class ObjMerger {
         private final Map<ProfileGroup, String> _lineSeparators = new EnumMap<>(ProfileGroup.class);
         private final Set<String> _takenIds = new LinkedHashSet<>();
         private final Map<String, Integer> _customIdUses = new LinkedHashMap<>();
+        /** Every id of the game data and the map, by its lower-case spelling. */
+        private final Map<String, Set<String>> _idsIgnoringCase = new LinkedHashMap<>();
         private final Map<ObjType, Set<String>> _protectedBases = new EnumMap<>(ObjType.class);
         private final Report _report = new Report();
         /** Per table, the ids of the rows the game data has, before any are added. */
@@ -676,6 +679,9 @@ public class ObjMerger {
             for (ObjMod<?> objMod : _objMods.values()) {
                 for (ObjMod.Obj obj : objMod.getCustomObjs()) _customIdUses.merge(obj.getId().toString(), 1, Integer::sum);
             }
+
+            for (String id : _takenIds) _idsIgnoringCase.computeIfAbsent(id.toLowerCase(Locale.ROOT), k -> new TreeSet<>()).add(id);
+            for (String id : _customIdUses.keySet()) _idsIgnoringCase.computeIfAbsent(id.toLowerCase(Locale.ROOT), k -> new TreeSet<>()).add(id);
         }
 
         @Nonnull
@@ -722,6 +728,12 @@ public class ObjMerger {
             if (baseId == null || !primary.containsRow(baseId)) return "base object " + baseId + " is not in the game data";
             if (_takenIds.contains(id)) return "id is already used by the game data";
             if (_customIdUses.getOrDefault(id, 0) > 1) return "id is declared by more than one object type";
+
+            // The game finds profile sections whatever the case: Castle Fight's AcfS, merged, showed the stock
+            // ACfs's Flame Strike icon and effects, which the object-file copy did not.
+            Set<String> spellings = _idsIgnoringCase.get(id.toLowerCase(Locale.ROOT));
+
+            if (spellings != null && spellings.size() > 1) return "id differs only in case from " + spellings;
             if (inheritsRequirement(type, obj, baseId)) return "inherits a techtree requirement it does not set";
 
             return profileReason(type, obj, baseId);
