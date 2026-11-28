@@ -913,10 +913,11 @@ public class ObjMerger {
 
             if (slot == null) return false;
 
-            // An emptied value stays in the residual. The object modification file reads "" as nothing, but an
-            // empty profile value is not read the same way: units emptied of their unitShadow showed the default
-            // shadow once it moved into the skin file.
-            if (slot._pos == null && text.isEmpty()) return false;
+            // An emptied value stays in the residual, a whole value or one element of a list alike. The object
+            // modification file reads "" as nothing, but an empty profile value is not read the same way: units
+            // emptied of their unitShadow showed the default shadow once it moved into the skin file, and a unit
+            // based on the Water Elemental emptied of its first missile art fired the Water Elemental's missile.
+            if (text.isEmpty()) return false;
 
             String key = slot._key;
             Integer pos = slot._pos;

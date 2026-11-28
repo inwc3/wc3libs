@@ -255,6 +255,21 @@ public class ObjMergerTest {
     }
 
     @Test
+    public void emptiedListElementsStayInTheResidual() throws Exception {
+        W3U w3u = new W3U();
+
+        // Castle Fight's Elemental of Lightning: a Water Elemental emptied of its first missile art fired the Water
+        // Elemental's missile once the empty element moved into the profile.
+        obj(w3u, "h000", "hwat", mod("ua1m", ""), mod("unam", "Elemental Of Lightning"));
+
+        ObjMerger.Result result = merge(w3u);
+        ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
+
+        Assert.assertEquals(fieldsOf(h000), Collections.singletonList("ua1m"));
+        Assert.assertEquals(valOf(h000, "ua1m").toString(), "");
+    }
+
+    @Test
     public void listFieldsAreWrittenElementWise() throws Exception {
         W3U w3u = new W3U();
 
