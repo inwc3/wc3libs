@@ -42,6 +42,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -721,8 +722,48 @@ public class ObjMerger {
             if (baseId == null || !primary.containsRow(baseId)) return "base object " + baseId + " is not in the game data";
             if (_takenIds.contains(id)) return "id is already used by the game data";
             if (_customIdUses.getOrDefault(id, 0) > 1) return "id is declared by more than one object type";
+            if (inheritsRequirement(type, obj, baseId)) return "inherits a techtree requirement it does not set";
 
             return null;
+        }
+
+        /**
+         * Whether the base object's profile carries a techtree requirement ({@code Requires}, {@code Requiresamount},
+         * per-level {@code RequiresN}) that {@code obj} does not set. A copied profile section would apply it, and the
+         * game does not treat an object-modification custom object the same way: Castle Fight's Display Range, based
+         * on Berserk (Requires=Robk) and setting no requirement, asked for the Berserker upgrade only once merged.
+         * Such an object stays in the object-modification file, where the game derives it as before.
+         */
+        private boolean inheritsRequirement(@Nonnull ObjType type, @Nonnull ObjMod.Obj obj, @Nonnull String baseId)
+            throws IOException {
+            boolean baseRequires = false;
+
+            for (ProfileGroup group : ProfileGroup.values()) {
+                ProfileFile.Section section = _baseSections.get(group).get(baseId);
+
+                if (section == null) continue;
+
+                for (ProfileFile.Entry entry : section.getEntries().values()) {
+                    if (isRequirementKey(entry.getKey()) && !entry.getRawValue().trim().isEmpty()) baseRequires = true;
+                }
+            }
+
+            if (!baseRequires) return false;
+
+            Map<String, MetaField> metaFields = meta(type);
+
+            for (ObjMod.Obj.Mod mod : obj.getMods()) {
+                MetaField meta = metaFields.get(mod.getId().toString());
+                ProfileSlot slot = meta == null ? null : meta.profileSlot(levelOf(mod));
+
+                if (slot != null && isRequirementKey(slot._key)) return false;
+            }
+
+            return true;
+        }
+
+        private boolean isRequirementKey(@Nonnull String key) {
+            return ProfileFile.baseKey(key).toLowerCase(Locale.ROOT).startsWith("requires");
         }
 
         private boolean isPlainId(@Nonnull String id) {

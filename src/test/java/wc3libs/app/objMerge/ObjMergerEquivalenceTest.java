@@ -53,7 +53,8 @@ public class ObjMergerEquivalenceTest {
             {"wc3data/W3A/war3map_cfde.w3a", 700},
             {"wc3data/W3A/war3map_format3.w3a", 40},
             {"wc3data/W3A/war3map_large_v3.w3a", 900},
-            {"wc3data/W3A/threeLetterId.w3a", 1400},
+            // abilities that inherit a techtree requirement they do not set stay as they are
+            {"wc3data/W3A/threeLetterId.w3a", 1370},
             {"wc3data/W3B/war3map.w3b", 0},
             {"wc3data/W3H/war3map.w3h", 0},
             {"wc3data/W3Q/war3map.w3q", 0},

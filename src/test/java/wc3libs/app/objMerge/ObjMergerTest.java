@@ -269,6 +269,33 @@ public class ObjMergerTest {
         Assert.assertEquals(valOf(h000, "ua1m").toString(), "");
     }
 
+    /**
+     * Castle Fight's Display Range: an ability based on Berserk (Requires=Robk) that sets no requirement asked for
+     * the Berserker upgrade only once its copied profile section carried Berserk's. It stays in the residual, where
+     * the game derives it from Berserk as before. One that sets its requirement, even to nothing, is merged.
+     */
+    @Test
+    public void customObjectsInheritingARequirementStayInTheResidual() throws Exception {
+        W3A w3a = new W3A();
+
+        obj(w3a, "A000", "Absk", mod("anam", "Check Range"));
+        obj(w3a, "A001", "Absk", mod("anam", "Rage"), mod("areq", ""));
+
+        ObjMerger.Result result = merge(w3a);
+        W3A residual = residual(result, W3A.class, W3A.GAME_PATH.toString());
+        ObjMod.Obj a000 = residual.getObj(ObjId.valueOf("A000"));
+
+        Assert.assertNotNull(a000, "A000 stays in the residual");
+        Assert.assertEquals(a000.getBaseId().toString(), "Absk", "as a custom object derived from Berserk");
+        Assert.assertEquals(fieldsOf(a000), Collections.singletonList("anam"));
+        Assert.assertFalse(table(result, ABILITY_DATA).containsRow("A000"));
+
+        Assert.assertTrue(table(result, ABILITY_DATA).containsRow("A001"), "A001 sets its requirement and is merged");
+        ObjMod.Obj a001 = residual.getObj(ObjId.valueOf("A001"));
+
+        Assert.assertEquals(fieldsOf(a001), Collections.singletonList("areq"), "its emptied requirement stays behind");
+    }
+
     @Test
     public void listFieldsAreWrittenElementWise() throws Exception {
         W3U w3u = new W3U();
@@ -741,7 +768,7 @@ public class ObjMergerTest {
         W3U b = new W3U();
 
         obj(a, "h000", "hfoo", mod("uhpm", 5));
-        obj(b, "h001", "hkni", mod("uhpm", 6));
+        obj(b, "h001", "hpea", mod("uhpm", 6));
 
         SlkTable balance = table(merge(a, b), UNIT_BALANCE);
 
