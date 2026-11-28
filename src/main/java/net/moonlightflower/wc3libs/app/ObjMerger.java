@@ -597,9 +597,6 @@ public class ObjMerger {
         }
     }
 
-    /** {@link Run#emptySpelling}: a column the game never leaves empty and has no placeholder for. */
-    private static final String NO_SPELLING = new String("no spelling");
-    private static final String UNKNOWN = new String("unknown");
 
     /** The state of one merge. */
     private final class Run {
@@ -614,7 +611,6 @@ public class ObjMerger {
         private final Report _report = new Report();
         /** Per table, the ids of the rows the game data has, before any are added. */
         private final Map<String, Set<String>> _gameRows = new LinkedHashMap<>();
-        private final Map<String, String[]> _emptySpellings = new LinkedHashMap<>();
 
         @Nullable
         private SlkTable table(@Nonnull String path) throws IOException {
@@ -762,6 +758,21 @@ public class ObjMerger {
             return true;
         }
 
+        /** Whether a table holding a row for {@code id} has a column named like the profile key. */
+        private boolean tablesHoldColumn(@Nonnull String id, @Nonnull String key) {
+            String base = ProfileFile.baseKey(key);
+
+            for (SlkTable table : _tables.values()) {
+                if (table == null || !table.containsRow(id)) continue;
+
+                for (String column : table.getColumns()) {
+                    if (column != null && column.equalsIgnoreCase(base)) return true;
+                }
+            }
+
+            return false;
+        }
+
         private boolean isRequirementKey(@Nonnull String key) {
             return ProfileFile.baseKey(key).toLowerCase(Locale.ROOT).startsWith("requires");
         }
@@ -828,16 +839,10 @@ public class ObjMerger {
 
             if (raw == null) return false;
 
-            if (raw.isEmpty()) {
-                // Columns the game's tables never leave empty spell "nothing" with a placeholder, and the game
-                // relies on it: an empty UnitAbilities "auto" crashes it on load. Without a known spelling the
-                // value cannot be written.
-                String spelling = emptySpelling(path, table, index);
-
-                if (spelling == NO_SPELLING) return false;
-
-                raw = spelling;
-            }
+            // An emptied value stays in the residual, where "" reads as nothing. A table's own placeholder does not
+            // read the same everywhere: an emptied targs2 written as "_" gave Castle Fight's Nether Drakes a second
+            // weapon allowed to hit a dozen target kinds.
+            if (raw.isEmpty()) return false;
 
             // 3.x profile files repeat columns -- UnitSkin.txt holds UnitUI's special, campaign, teamColor and
             // more -- and which copy the game reads is not documented. Both have to agree.
@@ -891,60 +896,6 @@ public class ObjMerger {
             return value != null && value.trim().equals("1");
         }
 
-        /**
-         * @return how the game's table spells an empty cell in a column: {@code null} where it leaves cells
-         * empty, its placeholder ({@code "_"}, {@code "-"}, ...) where it never does, {@link #NO_SPELLING} if it
-         * never does and has no placeholder
-         */
-        @Nullable
-        private String emptySpelling(@Nonnull String path, @Nonnull SlkTable table, int column) {
-            String[] spellings = _emptySpellings.get(path);
-
-            if (spellings == null) {
-                spellings = new String[table.getColumns().size()];
-                _emptySpellings.put(path, spellings);
-                Arrays.fill(spellings, UNKNOWN);
-            }
-
-            if (spellings[column] != UNKNOWN) return spellings[column];
-
-            Map<String, Integer> placeholders = new LinkedHashMap<>();
-            String spelling = null;
-            boolean emptyCell = false;
-
-            for (SlkTable.Row row : table.getRows()) {
-                if (row.getId() == null || row.getId().isEmpty() || !_gameRows.get(path).contains(row.getId())) continue;
-
-                String raw = row.getRaw(column);
-
-                if (raw == null) {
-                    emptyCell = true;
-                    break;
-                }
-
-                String value = SlkTable.unquote(raw).trim();
-
-                if (value.isEmpty() || value.equals("_") || value.equals("-")) placeholders.merge(raw, 1, Integer::sum);
-            }
-
-            if (!emptyCell) {
-                spelling = NO_SPELLING;
-
-                int most = 0;
-
-                for (Map.Entry<String, Integer> entry : placeholders.entrySet()) {
-                    if (entry.getValue() > most) {
-                        most = entry.getValue();
-                        spelling = entry.getKey();
-                    }
-                }
-            }
-
-            spellings[column] = spelling;
-
-            return spelling;
-        }
-
         private boolean applyProfile(@Nonnull String id, @Nonnull MetaField meta, @Nonnull ObjMod.Obj.Mod mod) {
             String text = profileValue(mod);
 
@@ -959,6 +910,11 @@ public class ObjMerger {
             // emptied of their unitShadow showed the default shadow once it moved into the skin file, and a unit
             // based on the Water Elemental emptied of its first missile art fired the Water Elemental's missile.
             if (text.isEmpty()) return false;
+
+            // A profile key the object's tables also hold as a column -- UnitUI's shadowOnWater -- is read from the
+            // table: units set to have no water shadow showed one once only the skin file said so. Both copies would
+            // have to change, so the value stays in the residual.
+            if (tablesHoldColumn(id, slot._key)) return false;
 
             String key = slot._key;
             Integer pos = slot._pos;

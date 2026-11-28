@@ -110,12 +110,14 @@ public class GameDataTest {
     }
 
     /**
-     * Tables merge cell by cell: custom_v1's AbilityData.slk has about half
-     * the rows and columns of the base one, so a row it changes keeps the
-     * base cells it leaves out, and rows it lacks stay.
+     * A balance table replaces the rows it holds whole: custom_v1's
+     * AbilityData.slk has about half the rows and columns of the base one, so
+     * a row it changes loses the base cells it leaves out, and rows it lacks
+     * stay. The game reads it so: custom_v1's UnitUI has no showAirToGround
+     * column, and flyers read 0 where the base row says 1.
      */
     @Test
-    public void balanceTablesMergeCellByCell() throws Exception {
+    public void balanceTablesReplaceRowsWhole() throws Exception {
         String path = "Units\\AbilityData.slk";
 
         SlkTable base = SlkTable.parse(BundledGameData.layer(BundledGameData.LAYER_BASE).read(path));
@@ -128,10 +130,10 @@ public class GameDataTest {
             if (row.getId() != null && !row.getId().isEmpty()) Assert.assertTrue(custom.containsRow(row.getId()), row.getId());
         }
 
-        // AUan is in both; custom_v1 leaves EfctID1 out, so the base value stays.
+        // AUan is in both; custom_v1 leaves EfctID1 out, so the merged row has none.
         Assert.assertNull(balance.getRow("AUan").get("EfctID1"));
-        Assert.assertEquals(custom.getRow("AUan").get("EfctID1"), base.getRow("AUan").get("EfctID1"));
-        Assert.assertNotNull(custom.getRow("AUan").get("EfctID1"));
+        Assert.assertNotNull(base.getRow("AUan").get("EfctID1"));
+        Assert.assertNull(custom.getRow("AUan").get("EfctID1"));
     }
 
     @Test
@@ -155,7 +157,7 @@ public class GameDataTest {
 
         Assert.assertEquals(table.getColumns(), java.util.Arrays.asList("id", "a", "b", "c"));
         Assert.assertEquals(table.getRows().size(), 3, "the row without an id addresses nothing");
-        Assert.assertEquals(table.getRow("r1").get("a"), "1");
+        Assert.assertNull(table.getRow("r1").get("a"), "r1 is replaced whole");
         Assert.assertEquals(table.getRow("r1").get("b"), "9");
         Assert.assertEquals(table.getRow("r1").get("c"), "8");
         Assert.assertEquals(table.getRow("r2").get("a"), "3");

@@ -204,8 +204,9 @@ public class ObjMergerTest {
         ProfileFile.Section func = section(result, UNIT_FUNC_TARGET, "h000");
         ProfileFile.Section skin = section(result, UNIT_SKIN_TARGET, "h000");
 
-        // humanunitfunc/strings keys land in the func target, unitskin keys in the skin target
-        Assert.assertEquals(func.get("Name").getRawValue(), "Shieldbearer");
+        // humanunitfunc/strings keys land in the func target, unitskin keys in the skin target. Name stays in the
+        // residual: UnitUI also has a name column.
+        Assert.assertEquals(func.get("Name").getRawValue(), "Footman");
         Assert.assertEquals(func.get("Buttonpos").getRawValue(), "0,2", "only the y position changes");
         Assert.assertEquals(func.get("Specialart").getRawValue(),
             "Objects\\Spawnmodels\\Human\\HumanLargeDeathExplode\\HumanLargeDeathExplode.mdl");
@@ -215,7 +216,9 @@ public class ObjMergerTest {
         Assert.assertEquals(skin.get("Art").getRawValue(), "ReplaceableTextures\\CommandButtons\\BTNFootman.blp");
         Assert.assertNull(skin.get("Name"));
 
-        Assert.assertTrue(result.getRemovedFiles().contains(W3U.GAME_PATH.toString()));
+        ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
+
+        Assert.assertEquals(fieldsOf(h000), Collections.singletonList("unam"));
     }
 
     @Test
@@ -265,7 +268,7 @@ public class ObjMergerTest {
         ObjMerger.Result result = merge(w3u);
         ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
 
-        Assert.assertEquals(fieldsOf(h000), Collections.singletonList("ua1m"));
+        Assert.assertTrue(fieldsOf(h000).contains("ua1m"), fieldsOf(h000).toString());
         Assert.assertEquals(valOf(h000, "ua1m").toString(), "");
     }
 
@@ -437,27 +440,27 @@ public class ObjMergerTest {
     }
 
     /**
-     * The game's tables never leave some columns empty and spell nothing as a
-     * placeholder there; an empty UnitAbilities "auto" crashes the game on
-     * load (measured on the 3.0.1 client). An emptied value takes the
-     * column's placeholder, and one for a column without a placeholder stays
-     * in the residual.
+     * Emptied table values stay in the residual, where "" reads as nothing:
+     * a table's placeholder does not read the same everywhere (an emptied
+     * targs2 written as "_" allowed a dozen target kinds), and an empty
+     * UnitAbilities "auto" crashes the game on load (measured on the 3.0.1
+     * client). The table keeps the base's cells.
      */
     @Test
-    public void emptiedValuesTakeTheTablesPlaceholder() throws Exception {
+    public void emptiedTableValuesStayInTheResidual() throws Exception {
         W3U w3u = new W3U();
 
         obj(w3u, "h000", "hfoo", mod("udaa", ""), mod("utyp", ""), mod("urac", ""), mod("uhpm", 5));
 
         ObjMerger.Result result = merge(w3u);
 
-        Assert.assertEquals(table(result, UNIT_ABILITIES).getRow("h000").get("auto"), "_");
-        Assert.assertEquals(table(result, UNIT_BALANCE).getRow("h000").get("type"), "_");
+        Assert.assertEquals(table(result, UNIT_ABILITIES).getRow("h000").get("auto"),
+            table(result, UNIT_ABILITIES).getRow("hfoo").get("auto"));
         Assert.assertEquals(table(result, UNIT_BALANCE).getRow("h000").get("HP"), "5");
 
         ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
 
-        Assert.assertEquals(fieldsOf(h000), Collections.singletonList("urac"), "race has no placeholder");
+        Assert.assertEquals(fieldsOf(h000), Arrays.asList("udaa", "utyp", "urac"));
     }
 
     /**
