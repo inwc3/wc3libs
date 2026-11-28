@@ -42,8 +42,10 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 /**
@@ -88,6 +90,10 @@ public class ObjMerger {
 
     /** Fields dropped from merged objects: Wurst's marker for generated objects, which the game ignores. */
     public static final Set<String> DEFAULT_IGNORED_FIELDS = Collections.singleton("wurs");
+
+    /** Profile keys, lower case and without qualifier, that start a techtree list; see {@link Run#profileReason}. */
+    private static final List<String> TECHTREE_KEYS = Arrays.asList("requires", "trains", "builds", "researches", "upgrade",
+        "sellitems", "sellunits", "makeitems", "dependencyor", "revive");
 
     private final GameData _gameData;
     private final Map<ObjType, ObjMod<?>> _objMods = new EnumMap<>(ObjType.class);
@@ -596,9 +602,6 @@ public class ObjMerger {
         }
     }
 
-    /** {@link Run#emptySpelling}: a column the game never leaves empty and has no placeholder for. */
-    private static final String NO_SPELLING = new String("no spelling");
-    private static final String UNKNOWN = new String("unknown");
 
     /** The state of one merge. */
     private final class Run {
@@ -609,11 +612,12 @@ public class ObjMerger {
         private final Map<ProfileGroup, String> _lineSeparators = new EnumMap<>(ProfileGroup.class);
         private final Set<String> _takenIds = new LinkedHashSet<>();
         private final Map<String, Integer> _customIdUses = new LinkedHashMap<>();
+        /** Every id of the game data and the map, by its lower-case spelling. */
+        private final Map<String, Set<String>> _idsIgnoringCase = new LinkedHashMap<>();
         private final Map<ObjType, Set<String>> _protectedBases = new EnumMap<>(ObjType.class);
         private final Report _report = new Report();
         /** Per table, the ids of the rows the game data has, before any are added. */
         private final Map<String, Set<String>> _gameRows = new LinkedHashMap<>();
-        private final Map<String, String[]> _emptySpellings = new LinkedHashMap<>();
 
         @Nullable
         private SlkTable table(@Nonnull String path) throws IOException {
@@ -675,6 +679,9 @@ public class ObjMerger {
             for (ObjMod<?> objMod : _objMods.values()) {
                 for (ObjMod.Obj obj : objMod.getCustomObjs()) _customIdUses.merge(obj.getId().toString(), 1, Integer::sum);
             }
+
+            for (String id : _takenIds) _idsIgnoringCase.computeIfAbsent(id.toLowerCase(Locale.ROOT), k -> new TreeSet<>()).add(id);
+            for (String id : _customIdUses.keySet()) _idsIgnoringCase.computeIfAbsent(id.toLowerCase(Locale.ROOT), k -> new TreeSet<>()).add(id);
         }
 
         @Nonnull
@@ -722,7 +729,138 @@ public class ObjMerger {
             if (_takenIds.contains(id)) return "id is already used by the game data";
             if (_customIdUses.getOrDefault(id, 0) > 1) return "id is declared by more than one object type";
 
+            // The game finds profile sections whatever the case: Castle Fight's AcfS, merged, showed the stock
+            // ACfs's Flame Strike icon and effects, which the object-file copy did not.
+            Set<String> spellings = _idsIgnoringCase.get(id.toLowerCase(Locale.ROOT));
+
+            if (spellings != null && spellings.size() > 1) return "id differs only in case from " + spellings;
+            if (inheritsRequirement(type, obj, baseId)) return "inherits a techtree requirement it does not set";
+
+            return profileReason(type, obj, baseId);
+        }
+
+        /**
+         * Profile modifications a merged custom object cannot carry the way the game derives it, measured in Castle
+         * Fight against the same map built without merging. Such an object stays in the object-modification file:
+         * <ul>
+         *   <li>A techtree list ({@code Requires}, {@code Trains}, {@code Researches}, ...): no native reports it,
+         *   so a merged object's techtree cannot be checked in game.</li>
+         *   <li>A value for a key its base's profile lacks: a Siege Golem copy given a second missile art kept
+         *   it in the residual, and the game did not apply it to the merged object.</li>
+         *   <li>A value a table repeats as a column (UnitUI's shadowOnWater, teamColor, ...): the game read the
+         *   table's copy, so units set to have no water shadow showed one. {@code Name} is exempt; UnitUI's
+         *   {@code name} column is the editor name.</li>
+         * </ul>
+         */
+        @Nullable
+        private String profileReason(@Nonnull ObjType type, @Nonnull ObjMod.Obj obj, @Nonnull String baseId)
+            throws IOException {
+            Map<String, MetaField> metaFields = meta(type);
+
+            for (ObjMod.Obj.Mod mod : obj.getMods()) {
+                String fieldId = mod.getId().toString();
+
+                if (_ignoredFields.contains(fieldId)) continue;
+
+                MetaField meta = metaFields.get(fieldId);
+
+                if (meta == null || !meta.isProfile()) continue;
+
+                ProfileSlot slot = meta.profileSlot(levelOf(mod));
+
+                if (slot == null) continue;
+
+                String key = slot._key;
+
+                if (isTechtreeKey(key)) return "modifies its techtree (" + key + ")";
+
+                String value = profileValue(mod);
+
+                if (value == null || value.isEmpty()) continue;
+
+                if (!baseHasKey(baseId, key)) return "sets " + key + ", which its base's profile does not have";
+                if (repeatedByTable(baseId, key)) return "sets " + key + ", which a table repeats";
+            }
+
             return null;
+        }
+
+        private boolean baseHasKey(@Nonnull String baseId, @Nonnull String key) {
+            for (ProfileGroup group : ProfileGroup.values()) {
+                ProfileFile.Section section = _baseSections.get(group).get(baseId);
+
+                if (section != null && section.hasBaseKey(key)) return true;
+            }
+
+            return false;
+        }
+
+        private boolean repeatedByTable(@Nonnull String id, @Nonnull String key) {
+            return !ProfileFile.baseKey(key).equalsIgnoreCase("name") && tablesHoldColumn(id, key);
+        }
+
+        private boolean isTechtreeKey(@Nonnull String key) {
+            String base = ProfileFile.baseKey(key).toLowerCase(Locale.ROOT);
+
+            for (String prefix : TECHTREE_KEYS) {
+                if (base.startsWith(prefix)) return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Whether the base object's profile carries a techtree requirement ({@code Requires}, {@code Requiresamount},
+         * per-level {@code RequiresN}) that {@code obj} does not set. A copied profile section would apply it, and the
+         * game does not treat an object-modification custom object the same way: Castle Fight's Display Range, based
+         * on Berserk (Requires=Robk) and setting no requirement, asked for the Berserker upgrade only once merged.
+         * Such an object stays in the object-modification file, where the game derives it as before.
+         */
+        private boolean inheritsRequirement(@Nonnull ObjType type, @Nonnull ObjMod.Obj obj, @Nonnull String baseId)
+            throws IOException {
+            boolean baseRequires = false;
+
+            for (ProfileGroup group : ProfileGroup.values()) {
+                ProfileFile.Section section = _baseSections.get(group).get(baseId);
+
+                if (section == null) continue;
+
+                for (ProfileFile.Entry entry : section.getEntries().values()) {
+                    if (isRequirementKey(entry.getKey()) && !entry.getRawValue().trim().isEmpty()) baseRequires = true;
+                }
+            }
+
+            if (!baseRequires) return false;
+
+            Map<String, MetaField> metaFields = meta(type);
+
+            for (ObjMod.Obj.Mod mod : obj.getMods()) {
+                MetaField meta = metaFields.get(mod.getId().toString());
+                ProfileSlot slot = meta == null ? null : meta.profileSlot(levelOf(mod));
+
+                if (slot != null && isRequirementKey(slot._key)) return false;
+            }
+
+            return true;
+        }
+
+        /** Whether a table holding a row for {@code id} has a column named like the profile key. */
+        private boolean tablesHoldColumn(@Nonnull String id, @Nonnull String key) {
+            String base = ProfileFile.baseKey(key);
+
+            for (SlkTable table : _tables.values()) {
+                if (table == null || !table.containsRow(id)) continue;
+
+                for (String column : table.getColumns()) {
+                    if (column != null && column.equalsIgnoreCase(base)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        private boolean isRequirementKey(@Nonnull String key) {
+            return ProfileFile.baseKey(key).toLowerCase(Locale.ROOT).startsWith("requires");
         }
 
         private boolean isPlainId(@Nonnull String id) {
@@ -787,16 +925,10 @@ public class ObjMerger {
 
             if (raw == null) return false;
 
-            if (raw.isEmpty()) {
-                // Columns the game's tables never leave empty spell "nothing" with a placeholder, and the game
-                // relies on it: an empty UnitAbilities "auto" crashes it on load. Without a known spelling the
-                // value cannot be written.
-                String spelling = emptySpelling(path, table, index);
-
-                if (spelling == NO_SPELLING) return false;
-
-                raw = spelling;
-            }
+            // An emptied value stays in the residual, where "" reads as nothing. A table's own placeholder does not
+            // read the same everywhere: an emptied targs2 written as "_" gave Castle Fight's Nether Drakes a second
+            // weapon allowed to hit a dozen target kinds.
+            if (raw.isEmpty()) return false;
 
             // 3.x profile files repeat columns -- UnitSkin.txt holds UnitUI's special, campaign, teamColor and
             // more -- and which copy the game reads is not documented. Both have to agree.
@@ -850,60 +982,6 @@ public class ObjMerger {
             return value != null && value.trim().equals("1");
         }
 
-        /**
-         * @return how the game's table spells an empty cell in a column: {@code null} where it leaves cells
-         * empty, its placeholder ({@code "_"}, {@code "-"}, ...) where it never does, {@link #NO_SPELLING} if it
-         * never does and has no placeholder
-         */
-        @Nullable
-        private String emptySpelling(@Nonnull String path, @Nonnull SlkTable table, int column) {
-            String[] spellings = _emptySpellings.get(path);
-
-            if (spellings == null) {
-                spellings = new String[table.getColumns().size()];
-                _emptySpellings.put(path, spellings);
-                Arrays.fill(spellings, UNKNOWN);
-            }
-
-            if (spellings[column] != UNKNOWN) return spellings[column];
-
-            Map<String, Integer> placeholders = new LinkedHashMap<>();
-            String spelling = null;
-            boolean emptyCell = false;
-
-            for (SlkTable.Row row : table.getRows()) {
-                if (row.getId() == null || row.getId().isEmpty() || !_gameRows.get(path).contains(row.getId())) continue;
-
-                String raw = row.getRaw(column);
-
-                if (raw == null) {
-                    emptyCell = true;
-                    break;
-                }
-
-                String value = SlkTable.unquote(raw).trim();
-
-                if (value.isEmpty() || value.equals("_") || value.equals("-")) placeholders.merge(raw, 1, Integer::sum);
-            }
-
-            if (!emptyCell) {
-                spelling = NO_SPELLING;
-
-                int most = 0;
-
-                for (Map.Entry<String, Integer> entry : placeholders.entrySet()) {
-                    if (entry.getValue() > most) {
-                        most = entry.getValue();
-                        spelling = entry.getKey();
-                    }
-                }
-            }
-
-            spellings[column] = spelling;
-
-            return spelling;
-        }
-
         private boolean applyProfile(@Nonnull String id, @Nonnull MetaField meta, @Nonnull ObjMod.Obj.Mod mod) {
             String text = profileValue(mod);
 
@@ -913,10 +991,16 @@ public class ObjMerger {
 
             if (slot == null) return false;
 
-            // An emptied value stays in the residual. The object modification file reads "" as nothing, but an
-            // empty profile value is not read the same way: units emptied of their unitShadow showed the default
-            // shadow once it moved into the skin file.
-            if (slot._pos == null && text.isEmpty()) return false;
+            // An emptied value stays in the residual, a whole value or one element of a list alike. The object
+            // modification file reads "" as nothing, but an empty profile value is not read the same way: units
+            // emptied of their unitShadow showed the default shadow once it moved into the skin file, and a unit
+            // based on the Water Elemental emptied of its first missile art fired the Water Elemental's missile.
+            if (text.isEmpty()) return false;
+
+            // A profile key the object's tables also hold as a column -- UnitUI's shadowOnWater -- is read from the
+            // table: units set to have no water shadow showed one once only the skin file said so. Both copies would
+            // have to change, so the value stays in the residual.
+            if (repeatedByTable(id, slot._key)) return false;
 
             String key = slot._key;
             Integer pos = slot._pos;

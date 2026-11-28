@@ -32,7 +32,8 @@ public class ProfileFileTest {
         ProfileFile file = parse("[APbs]\nA=1\n[Apbs]\nA=2\n[APbs]\nB=3\nA=4\n");
 
         Assert.assertEquals(file.getSections().size(), 2);
-        Assert.assertEquals(file.getSection("APbs").get("A").getRawValue(), "4");
+        // A key given twice keeps its first value, as the game reads it.
+        Assert.assertEquals(file.getSection("APbs").get("A").getRawValue(), "1");
         Assert.assertEquals(file.getSection("APbs").get("B").getRawValue(), "3");
         Assert.assertEquals(file.getSection("Apbs").get("A").getRawValue(), "2");
     }

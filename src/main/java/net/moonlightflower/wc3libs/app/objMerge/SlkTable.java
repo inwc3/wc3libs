@@ -149,13 +149,15 @@ public final class SlkTable {
 
     /**
      * Lays {@code top} over this table the way the game stacks its data mods:
-     * a balance or locale mod ships only the rows and columns it changes, and
-     * each cell it writes replaces the one beneath. A cell it leaves out, an
-     * empty one included, keeps the value beneath; rows and columns it adds
-     * are appended. Cells are addressed by column name and row id, so
-     * {@code top}'s columns without a header and rows without an id, which
-     * Blizzard's tables carry as blank padding, address nothing and are left
-     * out.
+     * a balance or locale mod ships only the rows it changes, and each row it
+     * ships replaces the one beneath whole. A column the mod's table lacks is
+     * empty in its rows rather than kept from beneath: the 3.0.1 custom data's
+     * UnitUI has no showAirToGround column, and the game reads 0 for every
+     * flyer whose base row says 1 (measured in Castle Fight). Rows and
+     * columns it adds are appended. Cells are addressed by column name and row
+     * id, so {@code top}'s columns without a header and rows without an id,
+     * which Blizzard's tables carry as blank padding, address nothing and are
+     * left out.
      */
     public void overlay(@Nonnull SlkTable top) {
         int[] columns = new int[top._columns.size()];
@@ -186,7 +188,11 @@ public final class SlkTable {
 
             Row target = _rowsById.get(id);
 
-            if (target == null) target = addRow(id);
+            if (target == null) {
+                target = addRow(id);
+            } else {
+                for (int i = 1; i < target._cells.length; i++) target._cells[i] = null;
+            }
 
             for (int i = 1; i < row._cells.length && i < columns.length; i++) {
                 if (row._cells[i] != null && columns[i] > 0) target.setRaw(columns[i], row._cells[i]);

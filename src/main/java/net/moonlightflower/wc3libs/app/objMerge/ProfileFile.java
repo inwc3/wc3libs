@@ -227,6 +227,10 @@ public final class ProfileFile {
 
             if (key.isEmpty()) continue;
 
+            // A key given twice keeps its first value, as the game reads it: the 3.0.1 data lists Command Aura's
+            // Art and the Voidwalker's modelScale:sd twice, and the game shows the first (measured in Castle Fight).
+            if (cur.get(key) != null) continue;
+
             cur.put(key, line.substring(eq + 1));
         }
 
