@@ -90,6 +90,10 @@ public class ObjMerger {
     /** Fields dropped from merged objects: Wurst's marker for generated objects, which the game ignores. */
     public static final Set<String> DEFAULT_IGNORED_FIELDS = Collections.singleton("wurs");
 
+    /** Profile keys, lower case and without qualifier, that start a techtree list; see {@link Run#profileReason}. */
+    private static final List<String> TECHTREE_KEYS = Arrays.asList("requires", "trains", "builds", "researches", "upgrade",
+        "sellitems", "sellunits", "makeitems", "dependencyor", "revive");
+
     private final GameData _gameData;
     private final Map<ObjType, ObjMod<?>> _objMods = new EnumMap<>(ObjType.class);
     private final Set<String> _ignoredFields = new LinkedHashSet<>(DEFAULT_IGNORED_FIELDS);
@@ -720,7 +724,77 @@ public class ObjMerger {
             if (_customIdUses.getOrDefault(id, 0) > 1) return "id is declared by more than one object type";
             if (inheritsRequirement(type, obj, baseId)) return "inherits a techtree requirement it does not set";
 
+            return profileReason(type, obj, baseId);
+        }
+
+        /**
+         * Profile modifications a merged custom object cannot carry the way the game derives it, measured in Castle
+         * Fight against the same map built without merging. Such an object stays in the object-modification file:
+         * <ul>
+         *   <li>A techtree list ({@code Requires}, {@code Trains}, {@code Researches}, ...): no native reports it,
+         *   so a merged object's techtree cannot be checked in game.</li>
+         *   <li>A value for a key its base's profile lacks: a Siege Golem copy given a second missile art kept
+         *   it in the residual, and the game did not apply it to the merged object.</li>
+         *   <li>A value a table repeats as a column (UnitUI's shadowOnWater, teamColor, ...): the game read the
+         *   table's copy, so units set to have no water shadow showed one. {@code Name} is exempt; UnitUI's
+         *   {@code name} column is the editor name.</li>
+         * </ul>
+         */
+        @Nullable
+        private String profileReason(@Nonnull ObjType type, @Nonnull ObjMod.Obj obj, @Nonnull String baseId)
+            throws IOException {
+            Map<String, MetaField> metaFields = meta(type);
+
+            for (ObjMod.Obj.Mod mod : obj.getMods()) {
+                String fieldId = mod.getId().toString();
+
+                if (_ignoredFields.contains(fieldId)) continue;
+
+                MetaField meta = metaFields.get(fieldId);
+
+                if (meta == null || !meta.isProfile()) continue;
+
+                ProfileSlot slot = meta.profileSlot(levelOf(mod));
+
+                if (slot == null) continue;
+
+                String key = slot._key;
+
+                if (isTechtreeKey(key)) return "modifies its techtree (" + key + ")";
+
+                String value = profileValue(mod);
+
+                if (value == null || value.isEmpty()) continue;
+
+                if (!baseHasKey(baseId, key)) return "sets " + key + ", which its base's profile does not have";
+                if (repeatedByTable(baseId, key)) return "sets " + key + ", which a table repeats";
+            }
+
             return null;
+        }
+
+        private boolean baseHasKey(@Nonnull String baseId, @Nonnull String key) {
+            for (ProfileGroup group : ProfileGroup.values()) {
+                ProfileFile.Section section = _baseSections.get(group).get(baseId);
+
+                if (section != null && section.hasBaseKey(key)) return true;
+            }
+
+            return false;
+        }
+
+        private boolean repeatedByTable(@Nonnull String id, @Nonnull String key) {
+            return !ProfileFile.baseKey(key).equalsIgnoreCase("name") && tablesHoldColumn(id, key);
+        }
+
+        private boolean isTechtreeKey(@Nonnull String key) {
+            String base = ProfileFile.baseKey(key).toLowerCase(Locale.ROOT);
+
+            for (String prefix : TECHTREE_KEYS) {
+                if (base.startsWith(prefix)) return true;
+            }
+
+            return false;
         }
 
         /**
@@ -914,7 +988,7 @@ public class ObjMerger {
             // A profile key the object's tables also hold as a column -- UnitUI's shadowOnWater -- is read from the
             // table: units set to have no water shadow showed one once only the skin file said so. Both copies would
             // have to change, so the value stays in the residual.
-            if (tablesHoldColumn(id, slot._key)) return false;
+            if (repeatedByTable(id, slot._key)) return false;
 
             String key = slot._key;
             Integer pos = slot._pos;

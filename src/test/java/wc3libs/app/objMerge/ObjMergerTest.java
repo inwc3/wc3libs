@@ -204,9 +204,8 @@ public class ObjMergerTest {
         ProfileFile.Section func = section(result, UNIT_FUNC_TARGET, "h000");
         ProfileFile.Section skin = section(result, UNIT_SKIN_TARGET, "h000");
 
-        // humanunitfunc/strings keys land in the func target, unitskin keys in the skin target. Name stays in the
-        // residual: UnitUI also has a name column.
-        Assert.assertEquals(func.get("Name").getRawValue(), "Footman");
+        // humanunitfunc/strings keys land in the func target, unitskin keys in the skin target
+        Assert.assertEquals(func.get("Name").getRawValue(), "Shieldbearer");
         Assert.assertEquals(func.get("Buttonpos").getRawValue(), "0,2", "only the y position changes");
         Assert.assertEquals(func.get("Specialart").getRawValue(),
             "Objects\\Spawnmodels\\Human\\HumanLargeDeathExplode\\HumanLargeDeathExplode.mdl");
@@ -216,9 +215,7 @@ public class ObjMergerTest {
         Assert.assertEquals(skin.get("Art").getRawValue(), "ReplaceableTextures\\CommandButtons\\BTNFootman.blp");
         Assert.assertNull(skin.get("Name"));
 
-        ObjMod.Obj h000 = residual(result, W3U.class, W3U.GAME_PATH.toString()).getObj(ObjId.valueOf("h000"));
-
-        Assert.assertEquals(fieldsOf(h000), Collections.singletonList("unam"));
+        Assert.assertTrue(result.getRemovedFiles().contains(W3U.GAME_PATH.toString()));
     }
 
     @Test
@@ -275,7 +272,7 @@ public class ObjMergerTest {
     /**
      * Castle Fight's Display Range: an ability based on Berserk (Requires=Robk) that sets no requirement asked for
      * the Berserker upgrade only once its copied profile section carried Berserk's. It stays in the residual, where
-     * the game derives it from Berserk as before. One that sets its requirement, even to nothing, is merged.
+     * the game derives it from Berserk as before.
      */
     @Test
     public void customObjectsInheritingARequirementStayInTheResidual() throws Exception {
@@ -293,10 +290,9 @@ public class ObjMergerTest {
         Assert.assertEquals(fieldsOf(a000), Collections.singletonList("anam"));
         Assert.assertFalse(table(result, ABILITY_DATA).containsRow("A000"));
 
-        Assert.assertTrue(table(result, ABILITY_DATA).containsRow("A001"), "A001 sets its requirement and is merged");
-        ObjMod.Obj a001 = residual.getObj(ObjId.valueOf("A001"));
-
-        Assert.assertEquals(fieldsOf(a001), Collections.singletonList("areq"), "its emptied requirement stays behind");
+        // Setting the requirement, even to nothing, changes the techtree, which no native reports: it stays too.
+        Assert.assertFalse(table(result, ABILITY_DATA).containsRow("A001"));
+        Assert.assertEquals(residual.getObj(ObjId.valueOf("A001")).getBaseId().toString(), "Absk");
     }
 
     @Test
@@ -624,20 +620,23 @@ public class ObjMergerTest {
 
     // --- other object types ---
 
+    /** No native reports a techtree, so an object that changes one stays as it is, where the game derives it. */
     @Test
-    public void upgradeRequirementsUseTheLevelSuffixedKey() throws Exception {
+    public void upgradesChangingTheirRequirementsStayInTheResidual() throws Exception {
         W3Q w3q = new W3Q();
 
         obj(w3q, "R000", "Rhme", lvl("greq", 2, 0, "hcas,hlum"), lvl("gnam", 3, 0, "Third"), lvl("glvl", 0, 0, 3));
+        obj(w3q, "R001", "Rhme", lvl("gnam", 3, 0, "Third"), lvl("glvl", 0, 0, 3));
 
         ObjMerger.Result result = merge(w3q);
-        ProfileFile.Section func = section(result, "Units\\CampaignUpgradeFunc.txt", "R000");
 
-        Assert.assertEquals(func.get("Requires1").getRawValue(), "hcas,hlum");
-        Assert.assertEquals(func.get("Requires2").getRawValue(), "hcas", "level 3 is copied from Rhme");
-        Assert.assertEquals(ProfileFile.tokenize(func.get("Name").getRawValue()).get(2), "Third");
-        Assert.assertEquals(table(result, "Units\\UpgradeData.slk").getRow("R000").get("maxlevel"), "3");
-        Assert.assertTrue(result.getRemovedFiles().contains(W3Q.GAME_PATH.toString()));
+        W3Q residual = residual(result, W3Q.class, W3Q.GAME_PATH.toString());
+
+        // R000 changes its requirements; R001 inherits Rhme's without setting them.
+        for (String id : Arrays.asList("R000", "R001")) {
+            Assert.assertFalse(table(result, "Units\\UpgradeData.slk").containsRow(id), id);
+            Assert.assertEquals(residual.getObj(ObjId.valueOf(id)).getBaseId().toString(), "Rhme", id);
+        }
     }
 
     /** A table value a profile file repeats is written there as one element, quoted if it holds a comma. */

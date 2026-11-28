@@ -44,17 +44,17 @@ public class ObjMergerEquivalenceTest {
     @DataProvider
     public static Object[][] fixtures() {
         // the second value is how many objects the fixture is expected to merge at least
+        // (objects that touch or inherit a techtree, set a profile key their base lacks or one a table repeats stay as they are)
         return new Object[][]{
             {"wc3data/W3U/war3map.w3u", 0},
-            {"wc3data/W3U/war3mapReforged.w3u", 400},
+            {"wc3data/W3U/war3mapReforged.w3u", 230},
             {"wc3data/W3U/war3map_v3_lumber_bounty.w3u", 2},
             // its abilities are all unknown to 3.0.1 and are left as they are
             {"wc3data/W3A/war3map.w3a", 0},
-            {"wc3data/W3A/war3map_cfde.w3a", 700},
-            {"wc3data/W3A/war3map_format3.w3a", 40},
-            {"wc3data/W3A/war3map_large_v3.w3a", 900},
-            // abilities that inherit a techtree requirement they do not set stay as they are
-            {"wc3data/W3A/threeLetterId.w3a", 1370},
+            {"wc3data/W3A/war3map_cfde.w3a", 570},
+            {"wc3data/W3A/war3map_format3.w3a", 35},
+            {"wc3data/W3A/war3map_large_v3.w3a", 800},
+            {"wc3data/W3A/threeLetterId.w3a", 1300},
             {"wc3data/W3B/war3map.w3b", 0},
             {"wc3data/W3H/war3map.w3h", 0},
             {"wc3data/W3Q/war3map.w3q", 0},
